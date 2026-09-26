@@ -1,6 +1,16 @@
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
+from CharacterContent.Features.Core.Improvements import (
+    SkillProficiencyChoice,
+    GrantSense,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -20,7 +30,9 @@ class Darkvision(Feature):
 
 class FeralPounce(Feature):
     def __init__(self):
-        super().__init__(name="Feral Pounce", origin="Lupin Trait", usage_tags=["damage", "control"])
+        super().__init__(
+            name="Feral Pounce", origin="Lupin Trait", usage_tags=["damage", "control"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -29,13 +41,28 @@ class FeralPounce(Feature):
             "you can use both the Damage and the Shove options. You can use this benefit only once per turn."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class Howl(Feature):
     def __init__(self):
-        super().__init__(name="Howl", origin="Lupin Trait", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Start of Next Turn", range="15-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus."))
+        super().__init__(
+            name="Howl",
+            origin="Lupin Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Start of Next Turn",
+                range="15-Foot Radius",
+            ),
+            usage_tags=["control"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -52,10 +79,14 @@ class Howl(Feature):
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

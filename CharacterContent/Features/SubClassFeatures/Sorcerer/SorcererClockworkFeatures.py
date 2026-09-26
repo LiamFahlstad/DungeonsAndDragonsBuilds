@@ -1,5 +1,12 @@
 from Core.Definitions import Ability, MAX_ABILITY_MODIFIER, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -32,7 +39,18 @@ class ClockworkSpells(Feature):
 
 class RestoreBalance(Feature):
     def __init__(self):
-        super().__init__(name="Restore Balance", origin="Clockwork Sorcerer Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+        super().__init__(
+            name="Restore Balance",
+            origin="Clockwork Sorcerer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -41,16 +59,32 @@ class RestoreBalance(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
+
+
 class BastionOfLaw(Feature):
     def __init__(self):
-        super().__init__(name="Bastion of Law", origin="Clockwork Sorcerer Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest or Used Again", range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Bastion of Law",
+            origin="Clockwork Sorcerer Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Long Rest or Used Again",
+                range="30 Feet",
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -59,7 +93,9 @@ class BastionOfLaw(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def get_table_description(
@@ -69,14 +105,24 @@ class BastionOfLaw(Feature):
             ("Action", "Magic action"),
             ("Cost", "1–5 Sorcery Points"),
             ("Range", "30 feet"),
-            ("Effect", "Create d8s equal to points spent; creature can expend to reduce damage"),
+            (
+                "Effect",
+                "Create d8s equal to points spent; creature can expend to reduce damage",
+            ),
             ("Duration", "Until Long Rest or use again"),
         ]
 
 
 class TranceOfOrder(Feature):
     def __init__(self):
-        super().__init__(name="Trance of Order", origin="Clockwork Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(
+            name="Trance of Order",
+            origin="Clockwork Sorcerer Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -85,7 +131,9 @@ class TranceOfOrder(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -103,7 +151,12 @@ class TranceOfOrder(Feature):
 class ClockworkCavalcade(Feature):
     def __init__(self):
         super().__init__(
-            name="Clockwork Cavalcade", origin="Clockwork Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.ACTION, range="30-Foot Cube"), usage_tags=["heal", "control", "utility"]
+            name="Clockwork Cavalcade",
+            origin="Clockwork Sorcerer Level 18",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30-Foot Cube"
+            ),
+            usage_tags=["heal", "control", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -115,7 +168,9 @@ class ClockworkCavalcade(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
     def get_table_description(
@@ -124,6 +179,9 @@ class ClockworkCavalcade(Feature):
         return [
             ("Action", "Magic action"),
             ("Area", "30-foot Cube from you"),
-            ("Effects", "Heal up to 100 HP (distributed), repair all damaged objects, dispel spells level 6 and lower"),
+            (
+                "Effects",
+                "Heal up to 100 HP (distributed), repair all damaged objects, dispel spells level 6 and lower",
+            ),
             ("Recharge", "Long Rest or 7 Sorcery Points"),
         ]

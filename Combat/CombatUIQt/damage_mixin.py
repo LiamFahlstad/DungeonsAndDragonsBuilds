@@ -38,7 +38,10 @@ class DamageMixin:
 
         def has_type(entries) -> bool:
             for entry in entries or []:
-                if any(_damage_type_value(t) == damage_type for t in _entry_damage_types(entry)):
+                if any(
+                    _damage_type_value(t) == damage_type
+                    for t in _entry_damage_types(entry)
+                ):
                     return True
             return False
 
@@ -93,7 +96,9 @@ class DamageMixin:
         damage_type = self.damage_type_combo.currentData()
 
         if damage_type is None:
-            QMessageBox.warning(self._window, "Error", "Select a damage type before applying damage.")
+            QMessageBox.warning(
+                self._window, "Error", "Select a damage type before applying damage."
+            )
             return
 
         for target in list(self.target_characters):
@@ -115,21 +120,31 @@ class DamageMixin:
             knockout = pre_hp > 0 and target["hp"] <= 0
 
             target.setdefault("stats", _default_stats())
-            target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
+            target["stats"]["damage_taken"] = (
+                target["stats"].get("damage_taken", 0) + dmg
+            )
             if damage_type:
                 taken_type_key = damage_taken_key(damage_type)
-                target["stats"][taken_type_key] = target["stats"].get(taken_type_key, 0) + dmg
+                target["stats"][taken_type_key] = (
+                    target["stats"].get(taken_type_key, 0) + dmg
+                )
             if knockout:
-                target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
+                target["stats"]["times_downed"] = (
+                    target["stats"].get("times_downed", 0) + 1
+                )
 
             if source is not None:
                 source.setdefault("stats", _default_stats())
-                source["stats"]["damage_dealt"] = source["stats"].get("damage_dealt", 0) + dmg
+                source["stats"]["damage_dealt"] = (
+                    source["stats"].get("damage_dealt", 0) + dmg
+                )
                 if damage_type:
                     type_key = damage_dealt_key(damage_type)
                     source["stats"][type_key] = source["stats"].get(type_key, 0) + dmg
                 if knockout:
-                    source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+                    source["stats"]["knockouts"] = (
+                        source["stats"].get("knockouts", 0) + 1
+                    )
 
             damage_value = {
                 "hp_delta": hp_delta,
@@ -329,12 +344,20 @@ class DamageMixin:
             actual_heal = char["hp"] - pre_hp
 
             char.setdefault("stats", _default_stats())
-            char["stats"]["healing_received"] = char["stats"].get("healing_received", 0) + actual_heal
+            char["stats"]["healing_received"] = (
+                char["stats"].get("healing_received", 0) + actual_heal
+            )
             if source is not None:
                 source.setdefault("stats", _default_stats())
-                source["stats"]["healing_done"] = source["stats"].get("healing_done", 0) + actual_heal
+                source["stats"]["healing_done"] = (
+                    source["stats"].get("healing_done", 0) + actual_heal
+                )
 
-            heal_value = {"heal": actual_heal, "source_name": source_name, "target_name": char["name"]}
+            heal_value = {
+                "heal": actual_heal,
+                "source_name": source_name,
+                "target_name": char["name"],
+            }
             self.history.append((Action.HEAL, heal_value))
 
             source_suffix = f" from {source_name}" if source_name else ""
@@ -430,12 +453,20 @@ class DamageMixin:
             target["temp_hp"] = old + amount
 
             target.setdefault("stats", _default_stats())
-            target["stats"]["temp_hp_received"] = target["stats"].get("temp_hp_received", 0) + amount
+            target["stats"]["temp_hp_received"] = (
+                target["stats"].get("temp_hp_received", 0) + amount
+            )
             if source is not None:
                 source.setdefault("stats", _default_stats())
-                source["stats"]["temp_hp_granted"] = source["stats"].get("temp_hp_granted", 0) + amount
+                source["stats"]["temp_hp_granted"] = (
+                    source["stats"].get("temp_hp_granted", 0) + amount
+                )
 
-            temp_hp_value = {"amount": amount, "source_name": source_name, "target_name": target["name"]}
+            temp_hp_value = {
+                "amount": amount,
+                "source_name": source_name,
+                "target_name": target["name"],
+            }
             self.history.append((Action.ADD_TEMP_HP, temp_hp_value))
 
             source_suffix = f" from {source_name}" if source_name else ""

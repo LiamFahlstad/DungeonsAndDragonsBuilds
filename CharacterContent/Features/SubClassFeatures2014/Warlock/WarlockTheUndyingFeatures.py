@@ -46,7 +46,9 @@ class AmongTheDead(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -80,7 +82,9 @@ class DefyDeath(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -132,5 +136,7 @@ class IndestructibleLife(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

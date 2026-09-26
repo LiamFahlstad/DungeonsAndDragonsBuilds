@@ -2,10 +2,20 @@ from abc import ABC, abstractmethod
 from typing import Optional, TextIO
 from Utils import DamageCalculator
 from Core.Definitions import Ability, DiceRollCondition, Die
-from CharacterContent.Features.Core.Improvements import ItemImprovement, CharacterImprovement
+from CharacterContent.Features.Core.Improvements import (
+    ItemImprovement,
+    CharacterImprovement,
+)
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from .Enums import WeaponMastery, WeaponProficiency, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
+from .Enums import (
+    WeaponMastery,
+    WeaponProficiency,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
 from .Improvements import ExtraDamage
 
 
@@ -48,7 +58,9 @@ class AbstractWeapon(Item, ABC):
     ):
         self.player_is_proficient = player_is_proficient
         self.player_has_mastery = player_has_mastery
-        self.attack_roll_bonuses = attack_roll_bonuses if attack_roll_bonuses is not None else []
+        self.attack_roll_bonuses = (
+            attack_roll_bonuses if attack_roll_bonuses is not None else []
+        )
         self.damage_roll_bonuses: list[tuple[int, str]] = []
 
         # Ability/attack-roll/damage-bonus overrides live outside base_stats()
@@ -262,8 +274,14 @@ class AbstractWeapon(Item, ABC):
 def weapon_matches_proficiency(
     weapon: AbstractWeapon, proficiency: WeaponProficiency
 ) -> bool:
-    is_simple = weapon.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.SIMPLE_RANGED)
-    is_martial = weapon.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.MARTIAL_RANGED)
+    is_simple = weapon.weapon_type in (
+        WeaponType.SIMPLE_MELEE,
+        WeaponType.SIMPLE_RANGED,
+    )
+    is_martial = weapon.weapon_type in (
+        WeaponType.MARTIAL_MELEE,
+        WeaponType.MARTIAL_RANGED,
+    )
     if proficiency == WeaponProficiency.SIMPLE:
         return is_simple
     if proficiency == WeaponProficiency.MARTIAL:
@@ -279,7 +297,8 @@ def weapon_matches_proficiency(
 
 
 def is_proficient_with(
-    weapon: AbstractWeapon, proficiencies: "set[WeaponProficiency] | list[WeaponProficiency]"
+    weapon: AbstractWeapon,
+    proficiencies: "set[WeaponProficiency] | list[WeaponProficiency]",
 ) -> bool:
     return any(weapon_matches_proficiency(weapon, p) for p in proficiencies)
 

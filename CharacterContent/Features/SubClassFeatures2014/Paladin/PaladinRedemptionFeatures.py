@@ -1,12 +1,20 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class RedemptionSpells(Feature):
     def __init__(self):
-        super().__init__(name="Oath of Redemption Spells", origin="Oath of Redemption Paladin Level 3")
+        super().__init__(
+            name="Oath of Redemption Spells",
+            origin="Oath of Redemption Paladin Level 3",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,32 +32,48 @@ class RedemptionSpells(Feature):
 
 class EmissaryOfPeace(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Emissary of Peace", origin="Oath of Redemption Paladin Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(
+            name="Channel Divinity: Emissary of Peace",
+            origin="Oath of Redemption Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use your Channel Divinity to augment your presence with divine power. As a bonus action, you grant yourself a +5 bonus to Charisma (Persuasion) checks for the next 10 minutes."
-        )
+        description = "You can use your Channel Divinity to augment your presence with divine power. As a bonus action, you grant yourself a +5 bonus to Charisma (Persuasion) checks for the next 10 minutes."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class RebukeTheViolent(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Rebuke the Violent", origin="Oath of Redemption Paladin Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Channel Divinity: Rebuke the Violent",
+            origin="Oath of Redemption Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use your Channel Divinity to rebuke those who use violence. Immediately after an attacker within 30 feet of you deals damage with an attack against a creature other than you, you can use your reaction to force the attacker to make a Wisdom saving throw. On a failed save, the attacker takes radiant damage equal to the damage it just dealt. On a successful save, it takes half as much damage."
-        )
+        description = "You can use your Channel Divinity to rebuke those who use violence. Immediately after an attacker within 30 feet of you deals damage with an attack against a creature other than you, you can use your reaction to force the attacker to make a Wisdom saving throw. On a failed save, the attacker takes radiant damage equal to the damage it just dealt. On a successful save, it takes half as much damage."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Attacker within 30 feet hits another creature"),
             ("Action", "Reaction"),
@@ -61,18 +85,26 @@ class RebukeTheViolent(Feature):
 
 class AuraOfTheGuardian(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Guardian", origin="Oath of Redemption Paladin Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"))
+        super().__init__(
+            name="Aura of the Guardian",
+            origin="Oath of Redemption Paladin Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="10 Feet"
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can shield your allies from harm at the cost of your own health. When a creature within 10 feet of you takes damage, you can use your reaction to magically take that damage, instead of that creature taking it. This feature doesn't transfer any other effects that might accompany the damage, and this damage can't be reduced in any way."
-        )
+        description = "You can shield your allies from harm at the cost of your own health. When a creature within 10 feet of you takes damage, you can use your reaction to magically take that damage, instead of that creature taking it. This feature doesn't transfer any other effects that might accompany the damage, and this damage can't be reduced in any way."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Range", "10 feet (30 at 18th level)"),
             ("Trigger", "Creature takes damage"),
@@ -84,7 +116,10 @@ class AuraOfTheGuardian(Feature):
 
 class AuraOfTheGuardianExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of the Guardian Expansion", origin="Oath of Redemption Paladin Level 18")
+        super().__init__(
+            name="Aura of the Guardian Expansion",
+            origin="Oath of Redemption Paladin Level 18",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of the Guardian increases to 30 feet."
@@ -93,18 +128,24 @@ class AuraOfTheGuardianExpansion(Feature):
 
 class ProtectiveSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Protective Spirit", origin="Oath of Redemption Paladin Level 15", usage_tags=["heal"])
+        super().__init__(
+            name="Protective Spirit",
+            origin="Oath of Redemption Paladin Level 15",
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "A holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your Paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren't incapacitated."
-        )
+        description = "A holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your Paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren't incapacitated."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         half_level = character_stat_block.character_level // 2
         return [
             ("Trigger", "End turn in combat with < half HP"),
@@ -115,7 +156,11 @@ class ProtectiveSpirit(Feature):
 
 class EmissaryOfRedemption(Feature):
     def __init__(self):
-        super().__init__(name="Emissary of Redemption", origin="Oath of Redemption Paladin Level 20", usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Emissary of Redemption",
+            origin="Oath of Redemption Paladin Level 20",
+            usage_tags=["buff", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -127,13 +172,23 @@ class EmissaryOfRedemption(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("What", "Avatar of peace"),
             ("Resistance", "All damage from creatures"),
-            ("Damage Return", "Creatures that hit you take radiant damage = half damage to you"),
-            ("Deactivation", "If you attack/spell/damage a creature: benefits don't work against it for 24 hours"),
+            (
+                "Damage Return",
+                "Creatures that hit you take radiant damage = half damage to you",
+            ),
+            (
+                "Deactivation",
+                "If you attack/spell/damage a creature: benefits don't work against it for 24 hours",
+            ),
         ]

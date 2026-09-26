@@ -11,7 +11,9 @@ from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
-from CharacterContent.Features.SubClassFeatures.Rogue import RogueArcaneTricksterFeatures
+from CharacterContent.Features.SubClassFeatures.Rogue import (
+    RogueArcaneTricksterFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,

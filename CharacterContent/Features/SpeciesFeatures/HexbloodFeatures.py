@@ -1,5 +1,12 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -20,7 +27,17 @@ class Darkvision(Feature):
 
 class EerieToken(Feature):
     def __init__(self):
-        super().__init__(name="Eerie Token", origin="Hexblood Trait", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Long Rest", range="10 Miles"), usage_tags=["utility"], uses=FeatureUses(max_uses=1))
+        super().__init__(
+            name="Eerie Token",
+            origin="Hexblood Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Long Rest",
+                range="10 Miles",
+            ),
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -34,7 +51,9 @@ class EerieToken(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -50,5 +69,7 @@ class HexMagic(Feature):
             "Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select this species)."
         )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

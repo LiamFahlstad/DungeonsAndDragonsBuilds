@@ -94,9 +94,7 @@ class TurnsMixin:
         def _roll(checked=False, inp=init_input, m=mod):
             result = random.randint(1, 20) + m
             inp.setText(str(result))
-            inp.setStyleSheet(
-                "background-color: #1a3a1a; border: 1px solid #2ecc71;"
-            )
+            inp.setStyleSheet("background-color: #1a3a1a; border: 1px solid #2ecc71;")
 
         roll_btn.clicked.connect(_roll)
         row_layout.addWidget(roll_btn)

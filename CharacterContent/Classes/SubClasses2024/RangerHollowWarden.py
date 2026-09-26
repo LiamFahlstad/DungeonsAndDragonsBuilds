@@ -52,12 +52,12 @@ class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
-            data.get_features_by_type(
-                RangerHollowWardenFeatures.WrathOfTheWild
-            )[0]
+            data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
         wrath_of_the_wild.extend_feature(RangerHollowWardenFeatures.HungeringMight())
-        data.add_feature(RangerHollowWardenFeatures.HungeringMightBonus(), apply_when=ApplyWhen.LAST)
+        data.add_feature(
+            RangerHollowWardenFeatures.HungeringMightBonus(), apply_when=ApplyWhen.LAST
+        )
         return data
 
 
@@ -80,9 +80,7 @@ class RangerHollowWardenLevel11(ClassBuilder.SubclassLevel11):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
-            data.get_features_by_type(
-                RangerHollowWardenFeatures.WrathOfTheWild
-            )[0]
+            data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
         wrath_of_the_wild.extend_feature(RangerHollowWardenFeatures.RotAndViolence())
         return data
@@ -107,9 +105,7 @@ class RangerHollowWardenLevel15(ClassBuilder.SubclassLevel15):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
-            data.get_features_by_type(
-                RangerHollowWardenFeatures.WrathOfTheWild
-            )[0]
+            data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
         wrath_of_the_wild.extend_feature(RangerHollowWardenFeatures.AncientMight())
         return data

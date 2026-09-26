@@ -1,5 +1,11 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -17,7 +23,9 @@ class DivinationSavant(Feature):
 
 class Portent(Feature):
     def __init__(self):
-        super().__init__(name="Portent", origin="Diviner Wizard Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Portent", origin="Diviner Wizard Level 3", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -26,7 +34,9 @@ class Portent(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
     def get_table_description(
@@ -35,8 +45,14 @@ class Portent(Feature):
         return [
             ("Trigger", "Finish Long Rest"),
             ("Rolls", "Roll 2d20 and record the numbers"),
-            ("Usage", "Replace any D20 Test (yours or seen creature) before the roll; once per turn"),
-            ("Expiration", "Each roll can be used once only; unused rolls lost at Long Rest"),
+            (
+                "Usage",
+                "Replace any D20 Test (yours or seen creature) before the roll; once per turn",
+            ),
+            (
+                "Expiration",
+                "Each roll can be used once only; unused rolls lost at Long Rest",
+            ),
         ]
 
 
@@ -48,13 +64,22 @@ class ExpertDivination(Feature):
         description = "Casting Divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a Divination spell using a level 2+ spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the slot you expended and can't be higher than level 5.\n"
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.OTHER
+
+
 class TheThirdEye(Feature):
     def __init__(self):
-        super().__init__(name="The Third Eye", origin="Diviner Wizard Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Short or Long Rest"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="The Third Eye",
+            origin="Diviner Wizard Level 10",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="Until Short or Long Rest"
+            ),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,13 +90,19 @@ class TheThirdEye(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class GreaterPortent(Feature):
     def __init__(self):
-        super().__init__(name="Greater Portent", origin="Diviner Wizard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Greater Portent",
+            origin="Diviner Wizard Level 14",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The visions in your dreams intensify and paint a more accurate picture in your mind of what is to come. Roll three d20s for your Portent feature rather than two."

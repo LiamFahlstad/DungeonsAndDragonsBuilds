@@ -26,10 +26,13 @@ class FeaturesMixin:
     def _feature_uses_text(self, char: dict, feature, sb) -> str:
         """'<remaining>/<max>' for a limited-use feature, or 'None' for a
         passive/unlimited one. Remaining is tracked in char['feature_uses_used'],
-        keyed by feature name, and reset by a long/short rest (see Combat/CombatUIQt/rest.py)."""
+        keyed by feature name, and reset by a long/short rest (see Combat/CombatUIQt/rest.py).
+        """
         if feature.uses is None:
             return "None"
-        max_uses = feature.number_of_uses(sb) if sb is not None else feature.uses.max_uses
+        max_uses = (
+            feature.number_of_uses(sb) if sb is not None else feature.uses.max_uses
+        )
         used = char.get("feature_uses_used", {}).get(feature.name, 0)
         remaining = max(max_uses - used, 0)
         return f"{remaining}/{max_uses}"
@@ -184,25 +187,21 @@ class FeaturesMixin:
             )
             uses_text = self._feature_uses_text(self.selected_character, feature, sb)
 
-            html_content = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
-            if feature.origin:
-                html_content += f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
-            html_content += "<br><br>"
-            html_content += (
-                f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"
+            html_content = (
+                f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
             )
+            if feature.origin:
+                html_content += (
+                    f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
+                )
+            html_content += "<br><br>"
+            html_content += f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"
             html_content += (
                 f"<span style='color:#7a9fd4;'><b>Target:</b> {target_text}</span><br>"
             )
-            html_content += (
-                f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
-            )
-            html_content += (
-                f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br>"
-            )
-            html_content += (
-                f"<span style='color:#7a9fd4;'><b>Uses Left:</b> {uses_text}</span><br><br>"
-            )
+            html_content += f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
+            html_content += f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br>"
+            html_content += f"<span style='color:#7a9fd4;'><b>Uses Left:</b> {uses_text}</span><br><br>"
             if description:
                 html_content += description.replace(chr(10) + chr(10), "<br><br>")
             else:
@@ -287,7 +286,9 @@ class FeaturesMixin:
         increments the source's features_enabled stat."""
         source = self.selected_character
         if source is None:
-            QMessageBox.warning(self._window, "Error", "Select a source (character) first.")
+            QMessageBox.warning(
+                self._window, "Error", "Select a source (character) first."
+            )
             return
 
         sb = source.get("_stat_block")
@@ -307,7 +308,9 @@ class FeaturesMixin:
 
         # Usage bookkeeping on the source
         source.setdefault("stats", _default_stats())
-        source["stats"]["features_enabled"] = source["stats"].get("features_enabled", 0) + 1
+        source["stats"]["features_enabled"] = (
+            source["stats"].get("features_enabled", 0) + 1
+        )
         increment_named_stat(source["stats"], "features_enabled_by_name", feature.name)
         feature_value = {"feature_name": feature.name}
         self.history.append((Action.ENABLE_FEATURE, feature_value))
@@ -343,7 +346,9 @@ class FeaturesMixin:
         has_duration = isinstance(duration_value, int) and duration_value > 0
 
         for char in list(recipients):
-            char.setdefault("feature_condition_descriptions", {})[feature.name] = tooltip_html
+            char.setdefault("feature_condition_descriptions", {})[
+                feature.name
+            ] = tooltip_html
             char.setdefault("feature_condition_colors", {})[feature.name] = badge_color
             self._add_condition_to(char, feature.name, source=source)
 

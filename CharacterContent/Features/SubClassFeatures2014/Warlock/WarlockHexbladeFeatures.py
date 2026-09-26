@@ -34,7 +34,11 @@ class HexbladesCurse(Feature):
         super().__init__(
             name="Hexblade's Curse",
             origin="Hexblade Patron Warlock Level 3",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute",
+                range="30 Feet",
+            ),
             usage_tags=["buff", "damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -66,7 +70,9 @@ class HexbladesCurse(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -85,7 +91,9 @@ class HexWarrior(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -123,7 +131,9 @@ class AccursedSpecter(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -149,7 +159,9 @@ class ArmorOfHexes(Feature):
             ("Effect", "Roll d6; on 4+ attack misses"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -166,5 +178,7 @@ class MasterOfHexes(Feature):
         description = "You can spread your Hexblade's Curse from a slain creature to another creature. When the creature cursed by your Hexblade's Curse dies, you can apply the curse to a different creature you can see within 30 feet of yourself, provided you don't have the Incapacitated condition. When you apply the curse in this way, you don't regain Hit Points from the death of the previously cursed creature."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

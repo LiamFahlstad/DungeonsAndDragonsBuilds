@@ -1,13 +1,24 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget, RegainedOn
-from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillProficiencyChoice
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    RegainedOn,
+)
+from CharacterContent.Features.Core.Improvements import (
+    GrantLanguage,
+    SkillProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class MoonsInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Moon's Inspiration", origin="College of the Moon Bard Level 3", activation=FeatureActivation(duration="Until Start of Your Next Turn"), usage_tags=["buff", "heal"]
+            name="Moon's Inspiration",
+            origin="College of the Moon Bard Level 3",
+            activation=FeatureActivation(duration="Until Start of Your Next Turn"),
+            usage_tags=["buff", "heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -22,8 +33,14 @@ class MoonsInspiration(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Inspired Eclipse", "When giving Bardic Inspiration, gain Invisible condition and teleport up to 30 feet; invisibility ends at start of next turn or after you attack/deal damage/cast spell"),
-            ("Lunar Vitality", "Once per turn when restoring HP with a spell, expend Bardic Inspiration die to increase HP restored by that die roll; target gains 10 feet Speed until end of its next turn"),
+            (
+                "Inspired Eclipse",
+                "When giving Bardic Inspiration, gain Invisible condition and teleport up to 30 feet; invisibility ends at start of next turn or after you attack/deal damage/cast spell",
+            ),
+            (
+                "Lunar Vitality",
+                "Once per turn when restoring HP with a spell, expend Bardic Inspiration die to increase HP restored by that die roll; target gains 10 feet Speed until end of its next turn",
+            ),
         ]
 
 
@@ -62,7 +79,10 @@ class PrimalLore(Feature):
 class BlessingOfMoonlight(Feature):
     def __init__(self):
         super().__init__(
-            name="Blessing of Moonlight", origin="College of the Moon Bard Level 6", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal"]
+            name="Blessing of Moonlight",
+            origin="College of the Moon Bard Level 6",
+            activation=FeatureActivation(range="60 Feet"),
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -79,23 +99,30 @@ class BlessingOfMoonlight(Feature):
         return [
             ("Always Prepared", "Moonbeam"),
             ("Trigger", "Cast Moonbeam"),
-            ("Effect", "You glow faintly, shed Dim Light 5 feet; when creature fails save against Moonbeam, another creature within 60 feet regains 2d4 HP"),
+            (
+                "Effect",
+                "You glow faintly, shed Dim Light 5 feet; when creature fails save against Moonbeam, another creature within 60 feet regains 2d4 HP",
+            ),
             ("Recharge", "Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+
 class EventidesSplendor(Feature):
     def __init__(self):
         super().__init__(
-            name="Eventide's Splendor", origin="College of the Moon Bard Level 14", usage_tags=["buff", "heal"]
+            name="Eventide's Splendor",
+            origin="College of the Moon Bard Level 14",
+            usage_tags=["buff", "heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -110,6 +137,12 @@ class EventidesSplendor(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Shadow of the New Moon", "When using Inspired Eclipse, recipient gains Invisible condition and Reaction to teleport up to 30 feet; stays Invisible until start of next turn"),
-            ("Vibrance of the Full Moon", "When using Lunar Vitality, roll 1d6 and use in place of expending Bardic Inspiration die"),
+            (
+                "Shadow of the New Moon",
+                "When using Inspired Eclipse, recipient gains Invisible condition and Reaction to teleport up to 30 feet; stays Invisible until start of next turn",
+            ),
+            (
+                "Vibrance of the Full Moon",
+                "When using Lunar Vitality, roll 1d6 and use in place of expending Bardic Inspiration die",
+            ),
         ]

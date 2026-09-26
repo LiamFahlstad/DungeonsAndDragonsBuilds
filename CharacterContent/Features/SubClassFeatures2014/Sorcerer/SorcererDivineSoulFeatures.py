@@ -33,7 +33,12 @@ class DivineMagic(Feature):
 
 class FavoredByTheGods(Feature):
     def __init__(self):
-        super().__init__(name="Favored by the Gods", origin="Divine Soul Sorcerer Level 3", usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
+        super().__init__(
+            name="Favored by the Gods",
+            origin="Divine Soul Sorcerer Level 3",
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -43,10 +48,14 @@ class FavoredByTheGods(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -61,12 +70,15 @@ class FavoredByTheGods(Feature):
 
 class EmpoweredHealing(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Healing", origin="Divine Soul Sorcerer Level 6", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff", "heal"])
+        super().__init__(
+            name="Empowered Healing",
+            origin="Divine Soul Sorcerer Level 6",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["buff", "heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "The divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn."
-        )
+        description = "The divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn."
         return description
 
     def get_table_description(
@@ -79,13 +91,24 @@ class EmpoweredHealing(Feature):
             ("Restriction", "Once per turn, not while incapacitated"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class AngelicForm(Feature):
     def __init__(self):
-        super().__init__(name="Angelic Form", origin="Divine Soul Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Incapacitated, Dead, or Dismissed", range="Self"), usage_tags=["utility"])
+        super().__init__(
+            name="Angelic Form",
+            origin="Divine Soul Sorcerer Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Incapacitated, Dead, or Dismissed",
+                range="Self",
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -105,13 +128,23 @@ class AngelicForm(Feature):
             ("Duration", "Until incapacitated, dead, or dismissed (bonus action)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UnearthlyRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Unearthly Recovery", origin="Divine Soul Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="Self"), usage_tags=["heal"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Unearthly Recovery",
+            origin="Divine Soul Sorcerer Level 18",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="Self"
+            ),
+            usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -121,10 +154,14 @@ class UnearthlyRecovery(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(

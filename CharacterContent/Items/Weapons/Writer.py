@@ -506,7 +506,9 @@ def _reference_ability_label(weapon: AbstractWeapon) -> str:
 def _reference_attack_roll_formula(weapon: AbstractWeapon) -> str:
     if weapon._attack_roll_override is not None:
         return f"1d20 {weapon._attack_roll_override:+} (fixed)"
-    formula = f"1d20 + {_reference_ability_label(weapon)} mod + proficiency (if proficient)"
+    formula = (
+        f"1d20 + {_reference_ability_label(weapon)} mod + proficiency (if proficient)"
+    )
     for _, label in weapon.attack_roll_bonuses:
         # label is already pre-formatted as "<value> (<reason>)" by
         # AddAttackRollBonus.apply - the raw int isn't reformatted here.
@@ -516,7 +518,9 @@ def _reference_attack_roll_formula(weapon: AbstractWeapon) -> str:
 
 def _reference_damage_roll_formula(weapon: AbstractWeapon) -> str:
     if weapon._damage_bonus_override is not None:
-        formula = f"{weapon.damage_roll.value} {weapon._damage_bonus_override:+} (fixed)"
+        formula = (
+            f"{weapon.damage_roll.value} {weapon._damage_bonus_override:+} (fixed)"
+        )
     else:
         formula = f"{weapon.damage_roll.value} + {_reference_ability_label(weapon)} mod"
         for _, label in weapon.damage_roll_bonuses:
@@ -591,9 +595,7 @@ def write_weapon_reference_card(weapon: AbstractWeapon, file: TextIO) -> None:
         for prop in visible_properties:
             tags_html += f"<span class='wtag'>{prop.value}</span> "
         if weapon.mastery:
-            tags_html += (
-                f"<span class='wtag wtag-mastery'>Mastery: {weapon.mastery.value}</span>"
-            )
+            tags_html += f"<span class='wtag wtag-mastery'>Mastery: {weapon.mastery.value}</span>"
         file.write(
             f"<div class='weapon-tags'>"
             f"<span class='wlabel-col'>Properties</span>"

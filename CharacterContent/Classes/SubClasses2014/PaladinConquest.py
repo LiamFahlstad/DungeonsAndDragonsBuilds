@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinConquestFeatures
+from CharacterContent.Features.SubClassFeatures2014.Paladin import (
+    PaladinConquestFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     WarlockLevel1Spells,
     PaladinLevel1Spells,
@@ -116,7 +118,9 @@ class PaladinConquestLevel18(ClassBuilder.SubclassLevel18):
         aura_of_conquest: PaladinConquestFeatures.AuraOfConquest = (
             data.get_features_by_type(PaladinConquestFeatures.AuraOfConquest)[0]
         )
-        aura_of_conquest.extend_feature(PaladinConquestFeatures.AuraOfConquestExpansion())
+        aura_of_conquest.extend_feature(
+            PaladinConquestFeatures.AuraOfConquestExpansion()
+        )
         return data
 
 

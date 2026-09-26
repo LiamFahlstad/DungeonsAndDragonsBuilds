@@ -10,7 +10,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass2014
 from CharacterContent.Features.CombatFeatures import Maneuvers
-from CharacterContent.Features.SubClassFeatures2014.Fighter import FighterBattleMasterFeatures
+from CharacterContent.Features.SubClassFeatures2014.Fighter import (
+    FighterBattleMasterFeatures,
+)
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -42,9 +44,9 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = data.get_features_by_type(
-            FighterBattleMasterFeatures.CombatSuperiority
-        )[0]
+        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = (
+            data.get_features_by_type(FighterBattleMasterFeatures.CombatSuperiority)[0]
+        )
         combat_superiority.extend_feature(self.maneuver_1)
         combat_superiority.extend_feature(self.maneuver_2)
         data.add_feature(FighterBattleMasterFeatures.KnowYourEnemy())
@@ -60,12 +62,14 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = data.get_features_by_type(
-            FighterBattleMasterFeatures.CombatSuperiority
-        )[0]
+        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = (
+            data.get_features_by_type(FighterBattleMasterFeatures.CombatSuperiority)[0]
+        )
         combat_superiority.extend_feature(self.maneuver_1)
         combat_superiority.extend_feature(self.maneuver_2)
-        combat_superiority.extend_feature(FighterBattleMasterFeatures.ImprovedCombatSuperiority())
+        combat_superiority.extend_feature(
+            FighterBattleMasterFeatures.ImprovedCombatSuperiority()
+        )
         return data
 
 
@@ -78,9 +82,9 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = data.get_features_by_type(
-            FighterBattleMasterFeatures.CombatSuperiority
-        )[0]
+        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = (
+            data.get_features_by_type(FighterBattleMasterFeatures.CombatSuperiority)[0]
+        )
         combat_superiority.extend_feature(self.maneuver_1)
         combat_superiority.extend_feature(self.maneuver_2)
         combat_superiority.extend_feature(FighterBattleMasterFeatures.Relentless())
@@ -94,10 +98,12 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = data.get_features_by_type(
-            FighterBattleMasterFeatures.CombatSuperiority
-        )[0]
-        combat_superiority.extend_feature(FighterBattleMasterFeatures.GreaterCombatSuperiority())
+        combat_superiority: FighterBattleMasterFeatures.CombatSuperiority = (
+            data.get_features_by_type(FighterBattleMasterFeatures.CombatSuperiority)[0]
+        )
+        combat_superiority.extend_feature(
+            FighterBattleMasterFeatures.GreaterCombatSuperiority()
+        )
         return data
 
 

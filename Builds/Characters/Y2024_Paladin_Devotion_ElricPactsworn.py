@@ -37,7 +37,12 @@ from CharacterContent.Classes.SubClasses2024.WarlockArchfey import (
     WarlockArchfeyMulticlassBuilder,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Invocations.Definitions import InvocationsLevel0

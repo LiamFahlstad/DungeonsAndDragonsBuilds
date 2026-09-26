@@ -1,12 +1,21 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Tempest Domain Cleric Level 3")
+        super().__init__(
+            name="Bonus Proficiencies", origin="Tempest Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
@@ -18,9 +27,15 @@ class WrathOfTheStorm(Feature):
         super().__init__(
             name="Wrath of the Storm",
             origin="Tempest Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="5 Feet"
+            ),
             usage_tags=["damage"],
-            uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."),
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -30,7 +45,9 @@ class WrathOfTheStorm(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(

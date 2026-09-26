@@ -115,7 +115,6 @@ class RangerFeyWandererLevel17(ClassBuilder.SubclassLevel17):
         return data
 
 
-
 class RangerFeyWandererCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,

@@ -47,9 +47,8 @@ class DruidShepherdLevel10(ClassBuilder.SubclassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         spirit_totem: DruidShepherdFeatures.SpiritTotem = cast(
-            DruidShepherdFeatures.SpiritTotem, data.get_features_by_type(
-                DruidShepherdFeatures.SpiritTotem
-            )[0]
+            DruidShepherdFeatures.SpiritTotem,
+            data.get_features_by_type(DruidShepherdFeatures.SpiritTotem)[0],
         )
         spirit_totem.extend_feature(DruidShepherdFeatures.GuardianSpirit())
         return data

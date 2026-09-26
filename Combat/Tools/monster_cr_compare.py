@@ -29,7 +29,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT))
 
-from Combat.Tools.generate_monster_cr_distributions import cr_key, extract_all  # noqa: E402
+from Combat.Tools.generate_monster_cr_distributions import (
+    cr_key,
+    extract_all,
+)  # noqa: E402
 from Combat.Tools.monster_score import (  # noqa: E402
     ATTRS,
     SCORED_ATTR_COUNT,
@@ -128,10 +131,16 @@ def implied_cr(m, attr_tiers, cr_order_nums):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("names", nargs="+", help='Monster name(s), e.g. "Air Elemental"')
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        "-v", "--verbose", action="store_true",
+        "names", nargs="+", help='Monster name(s), e.g. "Air Elemental"'
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
         help="show the composite z-score at every official CR tier",
     )
     args = parser.parse_args()
@@ -154,7 +163,9 @@ def main():
         if len(matches) > 1:
             listed = ", ".join(m["name"] for m, _ in matches[:8])
             more = "..." if len(matches) > 8 else ""
-            print(f'"{name}": {len(matches)} matches, be more specific -> {listed}{more}')
+            print(
+                f'"{name}": {len(matches)} matches, be more specific -> {listed}{more}'
+            )
             ok = False
             continue
 
@@ -169,13 +180,17 @@ def main():
         # line up on the one scale this tool exists to provide.
         results.sort(key=lambda r: r[3] if r[3] is not None else -1, reverse=True)
 
-        print(f"{'Name':<32} {'CR':<7} {'Implied CR':<12} {'Delta':<8} {'Score':<7} Attrs")
+        print(
+            f"{'Name':<32} {'CR':<7} {'Implied CR':<12} {'Delta':<8} {'Score':<7} Attrs"
+        )
         for m, is_homebrew, assigned, cr_val, clamped, scores, k in results:
             tag = "  [homebrew]" if is_homebrew else ""
             if cr_val is None:
                 implied_str, delta_str = "n/a", "n/a"
             else:
-                prefix = "<=" if clamped == "low" else (">=" if clamped == "high" else "")
+                prefix = (
+                    "<=" if clamped == "low" else (">=" if clamped == "high" else "")
+                )
                 implied_str = f"{prefix}{cr_val:.2f}"
                 delta_str = f"{cr_val - assigned:+.2f}"
             print(

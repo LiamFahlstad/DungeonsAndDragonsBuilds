@@ -1,13 +1,21 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class DivineFury(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Fury", origin="Path Of The Zealot Barbarian Level 3", usage_tags=["damage"]
+            name="Divine Fury",
+            origin="Path Of The Zealot Barbarian Level 3",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -37,7 +45,10 @@ class DivineFury(Feature):
 class WarriorOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Warrior of the Gods", origin="Path Of The Zealot Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["heal"]
+            name="Warrior of the Gods",
+            origin="Path Of The Zealot Barbarian Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -69,19 +80,23 @@ class WarriorOfTheGods(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+
 class FanaticalFocus(Feature):
     def __init__(self):
         super().__init__(
-            name="Fanatical Focus", origin="Path Of The Zealot Barbarian Level 6", usage_tags=["buff"]
+            name="Fanatical Focus",
+            origin="Path Of The Zealot Barbarian Level 6",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -97,7 +112,14 @@ class FanaticalFocus(Feature):
 class ZealousPresence(Feature):
     def __init__(self):
         super().__init__(
-            name="Zealous Presence", origin="Path Of The Zealot Barbarian Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Start of Your Next Turn", range="60 Feet"), usage_tags=["buff"]
+            name="Zealous Presence",
+            origin="Path Of The Zealot Barbarian Level 10",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Start of Your Next Turn",
+                range="60 Feet",
+            ),
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -128,7 +150,12 @@ class ZealousPresence(Feature):
 class RageOfTheGods(Feature):
     def __init__(self):
         super().__init__(
-            name="Rage of the Gods", origin="Path Of The Zealot Barbarian Level 14", activation=FeatureActivation(duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"), usage_tags=["buff", "heal", "utility"]
+            name="Rage of the Gods",
+            origin="Path Of The Zealot Barbarian Level 14",
+            activation=FeatureActivation(
+                duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"
+            ),
+            usage_tags=["buff", "heal", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -153,5 +180,8 @@ class RageOfTheGods(Feature):
             ("Recharge", "Long Rest"),
             ("Flight", "Fly Speed equal to your Speed, can hover"),
             ("Resistance", "Necrotic, Psychic, and Radiant damage"),
-            ("Revivification", f"Reaction within 30 ft, expend Rage use: restore HP to {barbarian_level}"),
+            (
+                "Revivification",
+                f"Reaction within 30 ft, expend Rage use: restore HP to {barbarian_level}",
+            ),
         ]

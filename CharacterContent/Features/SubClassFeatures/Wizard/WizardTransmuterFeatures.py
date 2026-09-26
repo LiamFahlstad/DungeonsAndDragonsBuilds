@@ -1,11 +1,20 @@
 from Core.Definitions import Ability, WIZARD_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class TransmutationSavant(Feature):
     def __init__(self):
-        super().__init__(name="Transmutation Savant", origin="Transmuter Wizard Level 3")
+        super().__init__(
+            name="Transmutation Savant", origin="Transmuter Wizard Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -17,7 +26,11 @@ class TransmutationSavant(Feature):
 
 class TransmutersStone(Feature):
     def __init__(self):
-        super().__init__(name="Transmuter's Stone", origin="Transmuter Wizard Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Transmuter's Stone",
+            origin="Transmuter Wizard Level 3",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -28,13 +41,19 @@ class TransmutersStone(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class WondrousAlteration(Feature):
     def __init__(self):
-        super().__init__(name="Wondrous Alteration", origin="Transmuter Wizard Level 3", usage_tags=["buff", "damage", "utility"])
+        super().__init__(
+            name="Wondrous Alteration",
+            origin="Transmuter Wizard Level 3",
+            usage_tags=["buff", "damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,15 +65,28 @@ class WondrousAlteration(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+
 class EmpoweredTransmutation(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Transmutation", origin="Transmuter Wizard Level 6", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Empowered Transmutation",
+            origin="Transmuter Wizard Level 6",
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -63,15 +95,22 @@ class EmpoweredTransmutation(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_intelligence_modifier())
+
+
 class PotentStone(Feature):
     def __init__(self):
-        super().__init__(name="Potent Stone", origin="Transmuter Wizard Level 10", usage_tags=["buff"])
+        super().__init__(
+            name="Potent Stone",
+            origin="Transmuter Wizard Level 10",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -82,7 +121,9 @@ class PotentStone(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -99,15 +140,25 @@ class ShapeShifter(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+
 class MasterTransmuter(Feature):
     def __init__(self):
-        super().__init__(name="Master Transmuter", origin="Transmuter Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["heal", "utility"])
+        super().__init__(
+            name="Master Transmuter",
+            origin="Transmuter Wizard Level 14",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+            usage_tags=["heal", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -125,8 +176,17 @@ class MasterTransmuter(Feature):
         return [
             ("Action", "Magic action; stone crumbles after use unless prevented"),
             ("Cost", "Stone use (or expend level 7+ slot to prevent crumbling)"),
-            ("Major Transformation", "Transmute nonmagical object (≤10 ft cube or 8×5 ft cubes) to similar object, 10 min handling"),
-            ("Panacea", "Touch creature: regain half max HP, cure contagions/curses, end Poisoned/Petrified"),
+            (
+                "Major Transformation",
+                "Transmute nonmagical object (≤10 ft cube or 8×5 ft cubes) to similar object, 10 min handling",
+            ),
+            (
+                "Panacea",
+                "Touch creature: regain half max HP, cure contagions/curses, end Poisoned/Petrified",
+            ),
             ("Restore Life", "Cast Raise Dead without slot, stone replaces components"),
-            ("Restore Youth", "Touch willing: end Exhaustion, age permanently 3d10 years younger (min adulthood)"),
+            (
+                "Restore Youth",
+                "Touch willing: end Exhaustion, age permanently 3d10 years younger (min adulthood)",
+            ),
         ]

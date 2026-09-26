@@ -1,12 +1,21 @@
 from Core.Definitions import Ability, Condition, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class CircleSporesSpells(Feature):
     def __init__(self):
-        super().__init__(name="Circle of Spores Spells", origin="Circle of Spores Druid Level 3")
+        super().__init__(
+            name="Circle of Spores Spells", origin="Circle of Spores Druid Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +33,14 @@ class CircleSporesSpells(Feature):
 
 class HaloOfSpores(Feature):
     def __init__(self):
-        super().__init__(name="Halo of Spores", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Halo of Spores",
+            origin="Circle of Spores Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="10 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,13 +54,22 @@ class HaloOfSpores(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SymbioticEntity(Feature):
     def __init__(self):
-        super().__init__(name="Symbiotic Entity", origin="Circle of Spores Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(
+            name="Symbiotic Entity",
+            origin="Circle of Spores Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,13 +80,27 @@ class SymbioticEntity(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class FungalInfestation(Feature):
     def __init__(self):
-        super().__init__(name="Fungal Infestation", origin="Circle of Spores Druid Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"), usage_tags=["utility", "summon"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Fungal Infestation",
+            origin="Circle of Spores Druid Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"
+            ),
+            usage_tags=["utility", "summon"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,10 +109,14 @@ class FungalInfestation(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

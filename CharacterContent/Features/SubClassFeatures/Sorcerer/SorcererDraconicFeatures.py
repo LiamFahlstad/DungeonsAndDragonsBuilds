@@ -1,6 +1,12 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -24,7 +30,12 @@ class DraconicSpells(Feature):
 
 class DraconicResilience(Feature):
     def __init__(self):
-        super().__init__(name="Draconic Resilience", origin="Draconic Sorcerer Level 3", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Draconic Resilience",
+            origin="Draconic Sorcerer Level 3",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -44,7 +55,11 @@ class DraconicResilience(Feature):
 
 class ElementalAffinity(Feature):
     def __init__(self):
-        super().__init__(name="Elemental Affinity", origin="Draconic Sorcerer Level 6", usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Elemental Affinity",
+            origin="Draconic Sorcerer Level 6",
+            usage_tags=["buff", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +71,14 @@ class ElementalAffinity(Feature):
 
 class DragonWings(Feature):
     def __init__(self):
-        super().__init__(name="Dragon Wings", origin="Draconic Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Dragon Wings",
+            origin="Draconic Sorcerer Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Hour"
+            ),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,7 +87,9 @@ class DragonWings(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -90,6 +114,7 @@ class DragonCompanion(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

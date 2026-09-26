@@ -1028,9 +1028,7 @@ SUBCLASSES: dict[str, list[SubclassInfo]] = {
 }
 
 
-def _legacy2014(
-    py_stem: str, display_name: str, text_stem: str
-) -> SubclassInfo:
+def _legacy2014(py_stem: str, display_name: str, text_stem: str) -> SubclassInfo:
     """Helper to build a legacy 2014 subclass info."""
     return SubclassInfo(
         py_stem, display_name, SUBCLASS_TEXT_DIR_2014, text_stem, "2014", True
@@ -1054,7 +1052,9 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
             "BarbarianPathOfTheStormHerald", "Path of the Storm Herald", "storm_herald"
         ),
         _legacy2014(
-            "BarbarianPathOfTheTotemWarrior", "Path of the Totem Warrior", "totem_warrior"
+            "BarbarianPathOfTheTotemWarrior",
+            "Path of the Totem Warrior",
+            "totem_warrior",
         ),
         _legacy2014(
             "BarbarianPathOfWildMagic", "Path of Wild Magic", "barbarian_wild_magic"

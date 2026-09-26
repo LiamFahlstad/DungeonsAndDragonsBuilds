@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import (
     GrantSense,
     HitPointsPerLevelBonus,
@@ -56,7 +63,11 @@ class Stonecunning(Feature):
         super().__init__(
             name="Stonecunning",
             origin="Dwarf Trait",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes",
+                range="60 Feet",
+            ),
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
                 current_formula="Current amount: equal to your proficiency bonus.",
@@ -70,10 +81,14 @@ class Stonecunning(Feature):
         )
         return text
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

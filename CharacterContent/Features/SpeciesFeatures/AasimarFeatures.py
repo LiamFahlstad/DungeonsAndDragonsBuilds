@@ -1,5 +1,11 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -9,7 +15,12 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 
 class CelestialResistance(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Resistance", origin="Aasimar Trait", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Celestial Resistance",
+            origin="Aasimar Trait",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistances = [
             DamageResistance(DamageType.NECROTIC, self.name),
             DamageResistance(DamageType.RADIANT, self.name),
@@ -25,7 +36,9 @@ class CelestialResistance(Feature):
 
 class Darkvision(Feature):
     def __init__(self):
-        super().__init__(name="Darkvision", origin="Aasimar Trait", skippable_in_concise=True)
+        super().__init__(
+            name="Darkvision", origin="Aasimar Trait", skippable_in_concise=True
+        )
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -57,16 +70,27 @@ class HealingHands(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest."
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class CelestialRevelation(Feature):
     def __init__(self):
-        super().__init__(name="Celestial Revelation", origin="Aasimar Trait", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["damage", "buff", "control", "utility"])
+        super().__init__(
+            name="Celestial Revelation",
+            origin="Aasimar Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["damage", "buff", "control", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         text = (

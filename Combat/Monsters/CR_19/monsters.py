@@ -30,11 +30,19 @@ class Balor(ExtendedCombatantData):
             ac=19,
             temp_hp=0,
             conditions=[],
-            ability_scores={Ability.STRENGTH: 26, Ability.DEXTERITY: 15, Ability.CONSTITUTION: 22, Ability.INTELLIGENCE: 20, Ability.WISDOM: 16, Ability.CHARISMA: 22},
+            ability_scores={
+                Ability.STRENGTH: 26,
+                Ability.DEXTERITY: 15,
+                Ability.CONSTITUTION: 22,
+                Ability.INTELLIGENCE: 20,
+                Ability.WISDOM: 16,
+                Ability.CHARISMA: 22,
+            },
             saving_throws={Ability.CONSTITUTION: 12, Ability.WISDOM: 9},
             spell_slots={},
             cr="19",
-            monster_type=MonsterType.FIEND, monster_type_note='Demon',
+            monster_type=MonsterType.FIEND,
+            monster_type_note="Demon",
             alignment=Alignment.CHAOTIC_EVIL,
             size=Size.HUGE,
             ac_note="",
@@ -42,34 +50,62 @@ class Balor(ExtendedCombatantData):
             speed_ground_ft=40,
             speed_fly_ft=80,
             speed_climb_ft=None,
-            speed_special_rules='',
+            speed_special_rules="",
             skills={Skill.PERCEPTION: 9},
             damage_vulnerabilities=[],
             damage_resistances=[
-                DamageTypeEntry(damage_types=[DamageType.COLD], note=''),
-                DamageTypeEntry(damage_types=[DamageType.LIGHTNING], note=''),
+                DamageTypeEntry(damage_types=[DamageType.COLD], note=""),
+                DamageTypeEntry(damage_types=[DamageType.LIGHTNING], note=""),
             ],
             damage_immunities=[
-                DamageTypeEntry(damage_types=[DamageType.FIRE], note=''),
-                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
+                DamageTypeEntry(damage_types=[DamageType.FIRE], note=""),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
             ],
-            condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED, Condition.POISONED],
+            condition_immunities=[
+                Condition.CHARMED,
+                Condition.FRIGHTENED,
+                Condition.POISONED,
+            ],
             senses="Truesight 120 ft., Passive Perception 19",
             languages="Abyssal; telepathy 120 ft",
             traits=[
-            DcMonsterAbility(name='Death Throes', description='The balor explodes when it dies. Dexterity Saving Throw: DC 20, each creature in a 30-foot Emanation originating from the balor. Failure: 31 (9d6) Fire damage plus 31 (9d6) Force damage. Success: Half damage. Failure or Success: If the balor dies outside the Abyss, it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss.'),
-            MonsterAbility(name='Fire Aura', description="At the end of each of the balor's turns, each creature in a 5-foot Emanation originating from the balor takes 13 (3d8) Fire damage."),
-            MonsterAbility(name='Legendary Resistance (3/Day)', description='If the balor fails a saving throw, it can choose to succeed instead.'),
-            MonsterAbility(name='Magic Resistance', description='The balor has Advantage on saving throws against spells and other magical effects.'),
-        ],
+                DcMonsterAbility(
+                    name="Death Throes",
+                    description="The balor explodes when it dies. Dexterity Saving Throw: DC 20, each creature in a 30-foot Emanation originating from the balor. Failure: 31 (9d6) Fire damage plus 31 (9d6) Force damage. Success: Half damage. Failure or Success: If the balor dies outside the Abyss, it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss.",
+                ),
+                MonsterAbility(
+                    name="Fire Aura",
+                    description="At the end of each of the balor's turns, each creature in a 5-foot Emanation originating from the balor takes 13 (3d8) Fire damage.",
+                ),
+                MonsterAbility(
+                    name="Legendary Resistance (3/Day)",
+                    description="If the balor fails a saving throw, it can choose to succeed instead.",
+                ),
+                MonsterAbility(
+                    name="Magic Resistance",
+                    description="The balor has Advantage on saving throws against spells and other magical effects.",
+                ),
+            ],
             actions=[
-            MonsterAbility(name='Multiattack', description='The balor makes one Flame Whip attack and one Lightning Blade attack.'),
-            MonsterAbility(name='Flame Whip', description='Melee Attack Roll: +14, reach 30 ft. Hit: 18 (3d6 + 8) Force damage plus 17 (5d6) Fire damage. If the target is a Huge or smaller creature, the balor pulls the target up to 25 feet straight toward itself, and the target has the Prone condition.'),
-            MonsterAbility(name='Lightning Blade', description="Melee Attack Roll: +14, reach 10 ft. Hit: 21 (3d8 + 8) Force damage plus 22 (4d10) Lightning damage, and the target can't take Reactions until the start of the balor's next turn"),
-        ],
+                MonsterAbility(
+                    name="Multiattack",
+                    description="The balor makes one Flame Whip attack and one Lightning Blade attack.",
+                ),
+                MonsterAbility(
+                    name="Flame Whip",
+                    description="Melee Attack Roll: +14, reach 30 ft. Hit: 18 (3d6 + 8) Force damage plus 17 (5d6) Fire damage. If the target is a Huge or smaller creature, the balor pulls the target up to 25 feet straight toward itself, and the target has the Prone condition.",
+                ),
+                MonsterAbility(
+                    name="Lightning Blade",
+                    description="Melee Attack Roll: +14, reach 10 ft. Hit: 21 (3d8 + 8) Force damage plus 22 (4d10) Lightning damage, and the target can't take Reactions until the start of the balor's next turn",
+                ),
+            ],
             bonus_actions=[
-            MonsterAbility(name='Teleport', description='The balor teleports itself or a willing demon within 10 feet of itself up to 60 feet to an unoccupied space the balor can see.'),
-        ],
+                MonsterAbility(
+                    name="Teleport",
+                    description="The balor teleports itself or a willing demon within 10 feet of itself up to 60 feet to an unoccupied space the balor can see.",
+                ),
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=3,
@@ -78,4 +114,4 @@ class Balor(ExtendedCombatantData):
         )
 
 
-__all__ = ['Balor']
+__all__ = ["Balor"]

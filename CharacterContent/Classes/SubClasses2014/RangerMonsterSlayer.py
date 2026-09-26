@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RangerSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerMonsterSlayerFeatures
+from CharacterContent.Features.SubClassFeatures2014.Ranger import (
+    RangerMonsterSlayerFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     PaladinLevel1Spells,
     PaladinLevel2Spells,
@@ -52,9 +54,9 @@ class RangerMonsterSlayerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = data.get_features_by_type(
-            RangerMonsterSlayerFeatures.SlayersPrey
-        )[0]
+        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = (
+            data.get_features_by_type(RangerMonsterSlayerFeatures.SlayersPrey)[0]
+        )
         slayers_prey.extend_feature(RangerMonsterSlayerFeatures.SupernaturalDefense())
         return data
 
@@ -99,9 +101,9 @@ class RangerMonsterSlayerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = data.get_features_by_type(
-            RangerMonsterSlayerFeatures.SlayersPrey
-        )[0]
+        slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = (
+            data.get_features_by_type(RangerMonsterSlayerFeatures.SlayersPrey)[0]
+        )
         slayers_prey.extend_feature(RangerMonsterSlayerFeatures.SlayersCounter())
         return data
 

@@ -13,7 +13,11 @@ from CharacterContent.Classes.SubClasses2024.WizardBladesinger import (
     WizardBladesingerLevel3,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
@@ -79,7 +83,8 @@ def get_starter_class_builder():
                 ),
                 4: WizardLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.INTELLIGENCE, 2)]),
+                        [(Ability.INTELLIGENCE, 2)]
+                    ),
                     cantrip=SpellDefs.WizardLevel0Spells.TOLL_THE_DEAD,
                     spell=SpellDefs.WizardLevel2Spells.ROPE_TRICK,
                 ),

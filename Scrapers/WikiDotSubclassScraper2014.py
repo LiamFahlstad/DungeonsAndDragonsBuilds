@@ -38,8 +38,19 @@ BASE_URL = "https://dnd5e.wikidot.com/"
 # class-page slug (all are single lowercase words, matching the wikidot
 # page-ref category exactly).
 CLASS_INDEX_PAGES = [
-    "artificer", "barbarian", "bard", "cleric", "druid", "fighter",
-    "monk", "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard",
+    "artificer",
+    "barbarian",
+    "bard",
+    "cleric",
+    "druid",
+    "fighter",
+    "monk",
+    "paladin",
+    "ranger",
+    "rogue",
+    "sorcerer",
+    "warlock",
+    "wizard",
 ]
 
 
@@ -90,11 +101,15 @@ def discover_all_subclasses() -> dict[str, list[tuple[str, str]]]:
 # suffixes before matching against the discovered short names.
 
 _STRIP_PREFIXES = [
-    "path of the ", "path of ",
-    "way of the ", "way of ",
-    "oath of the ", "oath of ",
+    "path of the ",
+    "path of ",
+    "way of the ",
+    "way of ",
+    "oath of the ",
+    "oath of ",
     "college of ",
-    "circle of the ", "circle of ",
+    "circle of the ",
+    "circle of ",
     "school of ",
     "the ",
 ]
@@ -105,7 +120,7 @@ def _strip_naming_convention(name: str) -> str:
     lower = name.lower()
     for prefix in _STRIP_PREFIXES:
         if lower.startswith(prefix):
-            name = name[len(prefix):]
+            name = name[len(prefix) :]
             lower = name.lower()
             break
     for suffix in _STRIP_SUFFIXES:

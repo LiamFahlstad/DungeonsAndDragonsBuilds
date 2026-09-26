@@ -28,7 +28,11 @@ from CharacterContent.Classes.SubClasses2014.BardSwords import (
 )
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
@@ -108,7 +112,8 @@ def get_starter_class_builder():
                 ),
                 4: BardLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                     cantrip=BardLevel0Spells.MINOR_ILLUSION,
                     spell=BardLevel2Spells.ENHANCE_ABILITY,
                 ),
@@ -124,7 +129,8 @@ def get_starter_class_builder():
                 ),
                 8: BardLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CONSTITUTION, 2)]),
+                        bonuses=[(Ability.CONSTITUTION, 2)]
+                    ),
                     spell=BardLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: BardLevel9(
@@ -142,7 +148,8 @@ def get_starter_class_builder():
                 ),
                 12: BardLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CHARISMA, 1), (Ability.WISDOM, 1)]),
+                        bonuses=[(Ability.CHARISMA, 1), (Ability.WISDOM, 1)]
+                    ),
                 ),
                 13: BardLevel13(
                     spell=BardLevel4Spells.DIMENSION_DOOR,

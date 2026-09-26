@@ -32,7 +32,11 @@ from CharacterContent.Classes.SubClasses2014.ArtificerBattleSmith import (
     ArtificerBattleSmithLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -110,7 +114,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                     spell=SpellDefinitions.ArtificerLevel1Spells.SANCTUARY,
                 ),
                 5: ArtificerLevel5(
@@ -124,7 +129,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: ArtificerLevel9(
                     spell_1=SpellDefinitions.ArtificerLevel3Spells.REVIVIFY,
@@ -140,7 +146,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: ArtificerLevel13(
                     spell=SpellDefinitions.ArtificerLevel4Spells.FREEDOM_OF_MOVEMENT,
@@ -155,7 +162,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: ArtificerLevel17(
                     spell_1=SpellDefinitions.ArtificerLevel5Spells.GREATER_RESTORATION,

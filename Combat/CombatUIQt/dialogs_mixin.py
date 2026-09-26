@@ -19,12 +19,22 @@ from PyQt6.QtWidgets import (
 )
 
 import Core.Definitions as Definitions
-from Combat.Definitions import ConditionRule, DamageType, DcMonsterAbility, extract_dc_from_text
+from Combat.Definitions import (
+    ConditionRule,
+    DamageType,
+    DcMonsterAbility,
+    extract_dc_from_text,
+)
 from Combat.Rules import Rule, group_by_category, load_rules
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
-from .stats import SPELL_SLOT_LEVELS, damage_dealt_key, damage_taken_key, spell_slots_used_key
+from .stats import (
+    SPELL_SLOT_LEVELS,
+    damage_dealt_key,
+    damage_taken_key,
+    spell_slots_used_key,
+)
 from .styles import QSS
 
 
@@ -130,7 +140,9 @@ _SAVE_TABLE_MODIFIERS = range(-5, 11)
 
 def _probability_row_html(header_cells: list[str], value_cells: list[str]) -> str:
     td = "border:1px solid #0f3460;text-align:center;padding:2px 6px;"
-    header_html = "".join(f"<th style='{td}color:#c9a84c'>{h}</th>" for h in header_cells)
+    header_html = "".join(
+        f"<th style='{td}color:#c9a84c'>{h}</th>" for h in header_cells
+    )
     value_html = "".join(f"<td style='{td}'>{v}</td>" for v in value_cells)
     return f"<table style='border-collapse:collapse'><tr>{header_html}</tr><tr>{value_html}</tr></table>"
 
@@ -731,7 +743,9 @@ class DialogsMixin:
                             caption_text = "Chance to hit, by target AC"
                         else:
                             header_suffix = f"DC {_ability_dc(ab)}"
-                            caption_text = "Target's chance to fail the save, by save modifier"
+                            caption_text = (
+                                "Target's chance to fail the save, by save modifier"
+                            )
 
                         aw = QWidget()
                         awl = QVBoxLayout(aw)
@@ -746,9 +760,7 @@ class DialogsMixin:
                         table_lbl = QLabel(table_html)
                         table_lbl.setTextFormat(Qt.TextFormat.RichText)
                         awl.addWidget(table_lbl)
-                        lay.addWidget(
-                            make_expandable(f"{name}  ({header_suffix})", aw)
-                        )
+                        lay.addWidget(make_expandable(f"{name}  ({header_suffix})", aw))
 
         lay.addStretch()
         scroll.setWidget(content)
@@ -781,9 +793,15 @@ class DialogsMixin:
         # "key" is either a flat stats key (str) or a nested-dict lookup (key, name).
         damage_columns = (
             [("Damage Dealt", "damage_dealt")]
-            + [(f"Dealt: {dtype.value}", damage_dealt_key(dtype.value)) for dtype in DamageType]
+            + [
+                (f"Dealt: {dtype.value}", damage_dealt_key(dtype.value))
+                for dtype in DamageType
+            ]
             + [("Damage Taken", "damage_taken")]
-            + [(f"Taken: {dtype.value}", damage_taken_key(dtype.value)) for dtype in DamageType]
+            + [
+                (f"Taken: {dtype.value}", damage_taken_key(dtype.value))
+                for dtype in DamageType
+            ]
         )
         healing_columns = [
             ("Healing Done", "healing_done"),
@@ -813,9 +831,18 @@ class DialogsMixin:
                 names.update(stats.get("conditions_received_by_name", {}).keys())
             sorted_names = sorted(names)
             return (
-                [("Given (Total)", "conditions_given"), ("Received (Total)", "conditions_received")]
-                + [(f"Given: {name}", ("conditions_given_by_name", name)) for name in sorted_names]
-                + [(f"Received: {name}", ("conditions_received_by_name", name)) for name in sorted_names]
+                [
+                    ("Given (Total)", "conditions_given"),
+                    ("Received (Total)", "conditions_received"),
+                ]
+                + [
+                    (f"Given: {name}", ("conditions_given_by_name", name))
+                    for name in sorted_names
+                ]
+                + [
+                    (f"Received: {name}", ("conditions_received_by_name", name))
+                    for name in sorted_names
+                ]
             )
 
         def _spell_columns(characters, stats_dict_or_none):
@@ -829,9 +856,15 @@ class DialogsMixin:
             sorted_names = sorted(names)
             return (
                 [("Spell Slots Used", "spell_slots_used")]
-                + [(f"Level {level}", spell_slots_used_key(level)) for level in SPELL_SLOT_LEVELS]
+                + [
+                    (f"Level {level}", spell_slots_used_key(level))
+                    for level in SPELL_SLOT_LEVELS
+                ]
                 + [("Spells Cast", "spells_cast")]
-                + [(f"Cast: {name}", ("spells_cast_by_name", name)) for name in sorted_names]
+                + [
+                    (f"Cast: {name}", ("spells_cast_by_name", name))
+                    for name in sorted_names
+                ]
             )
 
         # (label, columns_fn) — columns_fn(characters, stats_dict_or_none) -> [(header, key), ...]
@@ -851,7 +884,9 @@ class DialogsMixin:
             return stats.get(key, 0)
 
         # Helper function to build a stat table widget for a single category
-        def _build_table_widget(characters, stats_dict_or_none, columns, is_players_tab=False):
+        def _build_table_widget(
+            characters, stats_dict_or_none, columns, is_players_tab=False
+        ):
             """Build a scrollable table for the given characters and (header, key)
             columns. If is_players_tab and no player log, return a label instead."""
             if is_players_tab and not self.player_log_file:
@@ -893,7 +928,9 @@ class DialogsMixin:
         # Encounter tabs (this fight only), one per category
         for label, columns_fn in categories:
             columns = columns_fn(self.characters, None)
-            tab = _build_table_widget(self.characters, None, columns, is_players_tab=False)
+            tab = _build_table_widget(
+                self.characters, None, columns, is_players_tab=False
+            )
             tabs.addTab(tab, f"Encounter - {label}")
 
         # Player tabs (lifetime aggregates), one per category
@@ -901,7 +938,9 @@ class DialogsMixin:
         players = [c for c in self.characters if c.get("_is_player")]
         for label, columns_fn in categories:
             columns = columns_fn(players, stats_by_name)
-            tab = _build_table_widget(players, stats_by_name, columns, is_players_tab=True)
+            tab = _build_table_widget(
+                players, stats_by_name, columns, is_players_tab=True
+            )
             tabs.addTab(tab, f"Players - {label}")
 
         outer.addWidget(tabs)

@@ -23,9 +23,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(ROOT))
 
-from Combat.Tools.generate_monster_cr_distributions import cr_key, extract_all  # noqa: E402
-from Combat.Tools.monster_cr_compare import build_continuous_stats, implied_cr  # noqa: E402
-from Combat.Tools.monster_score import SCORED_ATTR_COUNT, build_stats, score_monster  # noqa: E402
+from Combat.Tools.generate_monster_cr_distributions import (
+    cr_key,
+    extract_all,
+)  # noqa: E402
+from Combat.Tools.monster_cr_compare import (
+    build_continuous_stats,
+    implied_cr,
+)  # noqa: E402
+from Combat.Tools.monster_score import (
+    SCORED_ATTR_COUNT,
+    build_stats,
+    score_monster,
+)  # noqa: E402
 
 OUTPUT_HTML = Path(__file__).resolve().parent / "monster_cr_compare.html"
 PLACEHOLDER = "__MONSTER_CR_COMPARE_DATA_JSON__"
@@ -41,16 +51,18 @@ def build_rows(data):
         assigned = cr_key(m["cr"])
         cr_val, clamped = implied_cr(m, attr_tiers, cr_order_nums)
         scores, k, _breakdown = score_monster(m, stats)
-        rows.append({
-            "name": m["name"],
-            "cr": m["cr"],
-            "crNum": assigned,
-            "implied": cr_val,
-            "clamped": clamped,
-            "delta": (cr_val - assigned) if cr_val is not None else None,
-            "score": scores["score"],
-            "k": k,
-        })
+        rows.append(
+            {
+                "name": m["name"],
+                "cr": m["cr"],
+                "crNum": assigned,
+                "implied": cr_val,
+                "clamped": clamped,
+                "delta": (cr_val - assigned) if cr_val is not None else None,
+                "score": scores["score"],
+                "k": k,
+            }
+        )
     return rows
 
 

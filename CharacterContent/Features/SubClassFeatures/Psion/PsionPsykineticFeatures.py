@@ -1,5 +1,9 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -19,7 +23,9 @@ class StrongerTelekinesis(Feature):
 class TelekineticTechniques(Feature):
     def __init__(self):
         super().__init__(
-            name="Telekinetic Techniques", origin="Psykinetic Psion Level 3", usage_tags=["buff", "control", "damage"]
+            name="Telekinetic Techniques",
+            origin="Psykinetic Psion Level 3",
+            usage_tags=["buff", "control", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -40,13 +46,20 @@ class TelekineticTechniques(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class DestructiveTrance(Feature):
     def __init__(self):
-        super().__init__(name="Destructive Trance", origin="Psykinetic Psion Level 6", activation=FeatureActivation(duration="10 Minutes"), usage_tags=["buff", "damage", "utility"])
+        super().__init__(
+            name="Destructive Trance",
+            origin="Psykinetic Psion Level 6",
+            activation=FeatureActivation(duration="10 Minutes"),
+            usage_tags=["buff", "damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -69,16 +82,25 @@ class DestructiveTrance(Feature):
             ("Cost", "1 Psionic Energy Die"),
             ("Duration", "10 minutes"),
             ("Fly Speed", "20 feet (can hover)"),
-            ("Damage Bonus", "Add die roll to one damage roll of Psion spells (die doesn't expend)"),
+            (
+                "Damage Bonus",
+                "Add die roll to one damage roll of Psion spells (die doesn't expend)",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class ReboundingField(Feature):
     def __init__(self):
-        super().__init__(name="Rebounding Field", origin="Psykinetic Psion Level 6", usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Rebounding Field",
+            origin="Psykinetic Psion Level 6",
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -105,19 +127,26 @@ class ReboundingField(Feature):
             ("Trigger", "Cast Shield as reaction to attack hit and cause it to miss"),
             ("Cost", "1 Psionic Energy Die"),
             ("Save", "Dexterity saving throw"),
-            ("On Failed Save", f"Attacker takes [die roll + INT mod ({int_mod})] Force damage"),
+            (
+                "On Failed Save",
+                f"Attacker takes [die roll + INT mod ({int_mod})] Force damage",
+            ),
             ("On Successful Save", "Attacker takes half damage"),
             ("Temp HP", "You gain temp HP equal to damage dealt"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class EnhancedTelekineticCrush(Feature):
     def __init__(self):
         super().__init__(
-            name="Enhanced Telekinetic Crush", origin="Psykinetic Psion Level 10", usage_tags=["damage", "control"]
+            name="Enhanced Telekinetic Crush",
+            origin="Psykinetic Psion Level 10",
+            usage_tags=["damage", "control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -138,11 +167,16 @@ class EnhancedTelekineticCrush(Feature):
         return [
             ("Spell", "Telekinetic Crush"),
             ("Cost", "1 Psionic Energy Die"),
-            ("Speed Effect", "Speed halved until start of next turn (save doesn't prevent)"),
+            (
+                "Speed Effect",
+                "Speed halved until start of next turn (save doesn't prevent)",
+            ),
             ("Damage Bonus", "Roll die and add to one damage roll of spell"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -170,6 +204,12 @@ class HeightenedTelekinesis(Feature):
         return [
             ("Spell", "Telekinesis"),
             ("Resource Cost", "4 Psionic Energy Dice (instead of spell slot)"),
-            ("Optional: Remove Concentration", "Spell no longer requires Concentration"),
-            ("If No Concentration", "Duration becomes 1 minute; you can concentrate on another spell"),
+            (
+                "Optional: Remove Concentration",
+                "Spell no longer requires Concentration",
+            ),
+            (
+                "If No Concentration",
+                "Duration becomes 1 minute; you can concentrate on another spell",
+            ),
         ]

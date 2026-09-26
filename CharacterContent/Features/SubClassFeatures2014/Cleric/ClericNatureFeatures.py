@@ -1,22 +1,29 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class AcolyteOfNature(Feature):
     def __init__(self):
-        super().__init__(name="Acolyte of Nature", origin="Nature Domain Cleric Level 3")
+        super().__init__(
+            name="Acolyte of Nature", origin="Nature Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You learn one cantrip of your choice from the druid spell list. This cantrip counts as a cleric cantrip for you, but it doesn't count against the number of cleric cantrips you know. You also gain proficiency in one of the following skills of your choice: Animal Handling, Nature, or Survival."
-        )
+        description = "You learn one cantrip of your choice from the druid spell list. This cantrip counts as a cleric cantrip for you, but it doesn't count against the number of cleric cantrips you know. You also gain proficiency in one of the following skills of your choice: Animal Handling, Nature, or Survival."
         return description
 
 
 class BonusProficiency(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiency", origin="Nature Domain Cleric Level 3")
+        super().__init__(
+            name="Bonus Proficiency", origin="Nature Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor."
@@ -25,7 +32,9 @@ class BonusProficiency(Feature):
 
 class NatureDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Nature Domain Spells", origin="Nature Domain Cleric Level 3")
+        super().__init__(
+            name="Nature Domain Spells", origin="Nature Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +55,11 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Charm Animals and Plants",
             origin="Nature Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Takes Damage",
+                range="30 Feet",
+            ),
             usage_tags=["control"],
         )
 
@@ -80,7 +93,9 @@ class DampenElements(Feature):
         super().__init__(
             name="Dampen Elements",
             origin="Nature Domain Cleric Level 6",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             usage_tags=["buff"],
         )
 
@@ -96,7 +111,11 @@ class DampenElements(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Nature Domain Cleric Level 8", usage_tags=["damage"])
+        super().__init__(
+            name="Divine Strike",
+            origin="Nature Domain Cleric Level 8",
+            usage_tags=["damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -123,7 +142,11 @@ class DivineStrike(Feature):
 
 class MasterOfNature(Feature):
     def __init__(self):
-        super().__init__(name="Master of Nature", origin="Nature Domain Cleric Level 17", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION))
+        super().__init__(
+            name="Master of Nature",
+            origin="Nature Domain Cleric Level 17",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to command animals and plant creatures. While creatures are charmed by your Charm Animals and Plants feature, you can take a bonus action on your turn to verbally command what each of those creatures will do on its next turn."

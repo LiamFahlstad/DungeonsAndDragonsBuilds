@@ -132,7 +132,9 @@ class DrakeCompanion(Feature):
         super().__init__(
             name="Drake Companion",
             origin="Drakewarden Ranger Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30 Feet"
+            ),
             usage_tags=["utility", "summon"],
         )
         self.damage_type = damage_type
@@ -156,7 +158,9 @@ class DrakeCompanion(Feature):
             "It remains until reduced to 0 HP, resummoned, or you die; recharge with long rest or by expending a 1st-level spell slot."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -184,7 +188,9 @@ class DrakesBreath(Feature):
         super().__init__(
             name="Drake's Breath",
             origin="Drakewarden Ranger Level 11",
-            activation=FeatureActivation(action_type=ActionType.ACTION, range="30-Foot Cone"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30-Foot Cone"
+            ),
             usage_tags=["damage"],
         )
 
@@ -217,7 +223,9 @@ class DrakesBreath(Feature):
             ("Recharge", "Long rest (or 3rd+ spell slot)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -239,5 +247,7 @@ class PerfectedBond(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

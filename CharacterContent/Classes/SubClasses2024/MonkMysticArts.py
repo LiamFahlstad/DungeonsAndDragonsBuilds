@@ -60,7 +60,9 @@ class MonkMysticArtsLevel17(ClassBuilder.SubclassLevel17):
         mystic_fighting_style: MonkMysticArtsFeatures.MysticFightingStyle = (
             data.get_features_by_type(MonkMysticArtsFeatures.MysticFightingStyle)[0]
         )
-        mystic_fighting_style.extend_feature(MonkMysticArtsFeatures.ImprovedMysticFightingStyle())
+        mystic_fighting_style.extend_feature(
+            MonkMysticArtsFeatures.ImprovedMysticFightingStyle()
+        )
         return data
 
 

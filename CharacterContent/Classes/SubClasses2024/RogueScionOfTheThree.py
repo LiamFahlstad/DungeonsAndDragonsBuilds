@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RogueSubclass
-from CharacterContent.Features.SubClassFeatures.Rogue import RogueScionOfTheThreeFeatures
+from CharacterContent.Features.SubClassFeatures.Rogue import (
+    RogueScionOfTheThreeFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
@@ -47,9 +49,9 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        bloodthirst: RogueScionOfTheThreeFeatures.Bloodthirst = data.get_features_by_type(
-            RogueScionOfTheThreeFeatures.Bloodthirst
-        )[0]
+        bloodthirst: RogueScionOfTheThreeFeatures.Bloodthirst = (
+            data.get_features_by_type(RogueScionOfTheThreeFeatures.Bloodthirst)[0]
+        )
         bloodthirst.extend_feature(RogueScionOfTheThreeFeatures.AuraOfMalevolence())
         return data
 

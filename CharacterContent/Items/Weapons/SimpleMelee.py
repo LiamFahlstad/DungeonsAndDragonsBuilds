@@ -1,7 +1,20 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
-from .WeaponFamilies import AxeMedium, DaggerLight, HammerLight, MaceLight, MaceMedium, SpearMedium
+from .Enums import (
+    WeaponMastery,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
+from .WeaponFamilies import (
+    AxeMedium,
+    DaggerLight,
+    HammerLight,
+    MaceLight,
+    MaceMedium,
+    SpearMedium,
+)
 
 
 class Club(MaceLight):
@@ -17,7 +30,11 @@ class Dagger(DaggerLight):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Dagger"
-        self.properties = [WeaponProperty.FINESSE, WeaponProperty.LIGHT, WeaponProperty.THROWN]
+        self.properties = [
+            WeaponProperty.FINESSE,
+            WeaponProperty.LIGHT,
+            WeaponProperty.THROWN,
+        ]
         self.value = 2
         self.is_homebrew = False
 

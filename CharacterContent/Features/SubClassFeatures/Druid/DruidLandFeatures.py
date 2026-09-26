@@ -1,10 +1,16 @@
-
 import Core.Definitions as Definitions
 from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
-from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
+from CharacterContent.Features.Core.Improvements import (
+    ConditionImmunity,
+    DamageResistance,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
     Definitions.DruidLandType.ARID: "Fire",
@@ -31,7 +37,14 @@ class CircleOfTheLandSpells(Feature):
 
 class LandsAid(Feature):
     def __init__(self):
-        super().__init__(name="Land's Aid", origin="Circle of the Land Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet (10-Foot-Radius Sphere)"), usage_tags=["damage", "heal"])
+        super().__init__(
+            name="Land's Aid",
+            origin="Circle of the Land Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="60 Feet (10-Foot-Radius Sphere)"
+            ),
+            usage_tags=["damage", "heal"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
@@ -93,7 +106,10 @@ class NaturalRecovery(Feature):
         max_slot_level_sum = (druid_level + 1) // 2
         return [
             ("Ability 1", "Cast one prepared Circle Spell without slot (1/Long Rest)"),
-            ("Ability 2", f"Short Rest: recover spell slots (max combined level {max_slot_level_sum}, no level 6+)"),
+            (
+                "Ability 2",
+                f"Short Rest: recover spell slots (max combined level {max_slot_level_sum}, no level 6+)",
+            ),
             ("Slot Recovery Recharge", "Long Rest"),
         ]
 
@@ -101,7 +117,10 @@ class NaturalRecovery(Feature):
 class NaturesWard(Feature):
     def __init__(self, land_type: Definitions.DruidLandType):
         super().__init__(
-            name="Nature's Ward", origin="Circle of the Land Druid Level 10", skippable_in_concise=True, usage_tags=["buff"]
+            name="Nature's Ward",
+            origin="Circle of the Land Druid Level 10",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
         )
         self.land_type = land_type
         self._condition_immunity = ConditionImmunity(Condition.POISONED, self.name)
@@ -130,7 +149,14 @@ class NaturesWard(Feature):
 class NaturesSanctuary(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Sanctuary", origin="Circle of the Land Druid Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Incapacitated", range="120 Feet (15-Foot Cube)"), usage_tags=["buff"]
+            name="Nature's Sanctuary",
+            origin="Circle of the Land Druid Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Incapacitated",
+                range="120 Feet (15-Foot Cube)",
+            ),
+            usage_tags=["buff"],
         )
 
     def target(

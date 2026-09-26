@@ -25,7 +25,9 @@ class Spellcasting(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -35,7 +37,9 @@ class TinkersMagic(Feature):
             name="Tinker's Magic",
             origin="Artificer Level 1",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="Until Long Rest", range="5 Feet"
+                action_type=ActionType.ACTION,
+                duration="Until Long Rest",
+                range="5 Feet",
             ),
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,
@@ -64,13 +68,17 @@ class TinkersMagic(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -157,7 +165,9 @@ class ReplicateMagicItem(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -174,7 +184,9 @@ class MagicItemTinker(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -183,7 +195,9 @@ class FlashofGenius(Feature):
         super().__init__(
             name="Flash of Genius",
             origin="Artificer Level 7",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,
@@ -212,13 +226,17 @@ class FlashofGenius(Feature):
             ("Uses", f"{uses} per Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_intelligence_modifier()
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -243,7 +261,9 @@ class SpellStoringItem(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 

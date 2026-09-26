@@ -1,18 +1,30 @@
-
 from Core.Definitions import RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class DreadfulStrikes(Feature):
     def __init__(self):
-        super().__init__(name="Dreadful Strikes", origin="Fey Wanderer Ranger Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Dreadful Strikes",
+            origin="Fey Wanderer Ranger Level 3",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -57,13 +69,22 @@ class OtherworldlyGlamour(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class BeguilingTwist(Feature):
     def __init__(self):
-        super().__init__(name="Beguiling Twist", origin="Fey Wanderer Ranger Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Minute", range="120 Feet"), usage_tags=["buff", "control"])
+        super().__init__(
+            name="Beguiling Twist",
+            origin="Fey Wanderer Ranger Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="1 Minute", range="120 Feet"
+            ),
+            usage_tags=["buff", "control"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
@@ -83,7 +104,9 @@ class BeguilingTwist(Feature):
             "it is charmed or frightened (your choice) for 1 minute."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -100,7 +123,9 @@ class FeyReinforcements(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Spell", "Summon Fey"),
             ("Material Components", "Waived"),
@@ -108,16 +133,29 @@ class FeyReinforcements(Feature):
             ("Concentration", "Optional (no Concentration = 1 minute duration)"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+
 class MistyWanderer(Feature):
     def __init__(self):
-        super().__init__(name="Misty Wanderer", origin="Fey Wanderer Ranger Level 15", activation=FeatureActivation(range="5 Feet"), uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Misty Wanderer",
+            origin="Fey Wanderer Ranger Level 15",
+            activation=FeatureActivation(range="5 Feet"),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -126,20 +164,28 @@ class MistyWanderer(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
             ("Spell", "Misty Step"),
             ("Cost", "No spell slot"),
             ("Uses", f"{uses} per Long Rest"),
-            ("Effect", "Teleport up to 30 feet; can bring 1 willing creature within 5 feet with you"),
+            (
+                "Effect",
+                "Teleport up to 30 feet; can bring 1 willing creature within 5 feet with you",
+            ),
         ]
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

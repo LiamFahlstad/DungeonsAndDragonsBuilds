@@ -31,7 +31,11 @@ from CharacterContent.Classes.SubClasses2024.MonkMysticArts import (
     MonkMysticArtsLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import Dulcimer
@@ -89,28 +93,32 @@ def get_starter_class_builder():
                 3: MonkLevel3(),
                 4: MonkLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.WISDOM, 2)]),
+                        bonuses=[(Ability.WISDOM, 2)]
+                    ),
                 ),
                 5: MonkLevel5(),
                 6: MonkLevel6(),
                 7: MonkLevel7(),
                 8: MonkLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                 ),
                 9: MonkLevel9(),
                 10: MonkLevel10(),
                 11: MonkLevel11(),
                 12: MonkLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.WISDOM, 2)]),
+                        bonuses=[(Ability.WISDOM, 2)]
+                    ),
                 ),
                 13: MonkLevel13(),
                 14: MonkLevel14(),
                 15: MonkLevel15(),
                 16: MonkLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                 ),
                 17: MonkLevel17(),
             },

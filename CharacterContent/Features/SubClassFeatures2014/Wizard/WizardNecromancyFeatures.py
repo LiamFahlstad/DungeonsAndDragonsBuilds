@@ -20,7 +20,9 @@ class NecromancySavant(Feature):
 
 class GrimHarvest(Feature):
     def __init__(self):
-        super().__init__(name="Grim Harvest", origin="Necromancy Wizard Level 3", usage_tags=["heal"])
+        super().__init__(
+            name="Grim Harvest", origin="Necromancy Wizard Level 3", usage_tags=["heal"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -29,13 +31,19 @@ class GrimHarvest(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UndeadThralls(Feature):
     def __init__(self):
-        super().__init__(name="Undead Thralls", origin="Necromancy Wizard Level 6", usage_tags=["buff"])
+        super().__init__(
+            name="Undead Thralls",
+            origin="Necromancy Wizard Level 6",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,27 +54,40 @@ class UndeadThralls(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class InuredToUndeath(Feature):
     def __init__(self):
         super().__init__(
-            name="Inured to Undeath", origin="Necromancy Wizard Level 10", usage_tags=["buff"]
+            name="Inured to Undeath",
+            origin="Necromancy Wizard Level 10",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have resistance to necrotic damage, and your hit point maximum can't be reduced. You have spent so much time dealing with undead and the forces that animate them that you have become inured to some of their worst effects."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class CommandUndead(Feature):
     def __init__(self):
-        super().__init__(name="Command Undead", origin="Necromancy Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Command Undead",
+            origin="Necromancy Wizard Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="60 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -75,7 +96,9 @@ class CommandUndead(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Target", "One undead within 60 feet that you can see"),
@@ -86,5 +109,7 @@ class CommandUndead(Feature):
             ("Int 12+", "Can repeat save at end of every hour"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

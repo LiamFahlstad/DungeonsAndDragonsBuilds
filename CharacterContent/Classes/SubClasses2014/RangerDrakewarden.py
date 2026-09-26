@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import DamageType, RangerSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerDrakewardenFeatures
+from CharacterContent.Features.SubClassFeatures2014.Ranger import (
+    RangerDrakewardenFeatures,
+)
 from CharacterContent.Spells.SpellLists import ClericLevel0Spells
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -24,7 +26,9 @@ class RangerDrakewardenLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(RangerDrakewardenFeatures.DraconicGift(language=self.language))
-        data.add_feature(RangerDrakewardenFeatures.DrakeCompanion(damage_type=self.damage_type))
+        data.add_feature(
+            RangerDrakewardenFeatures.DrakeCompanion(damage_type=self.damage_type)
+        )
         data.add_cantrip(ClericLevel0Spells.THAUMATURGY)
         return data
 
@@ -37,9 +41,8 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
-            RangerDrakewardenFeatures.DrakeCompanion, data.get_features_by_type(
-                RangerDrakewardenFeatures.DrakeCompanion
-            )[0]
+            RangerDrakewardenFeatures.DrakeCompanion,
+            data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
         )
         drake_companion.extend_feature(RangerDrakewardenFeatures.BondOfFangAndScale())
         return data
@@ -64,9 +67,8 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
-            RangerDrakewardenFeatures.DrakeCompanion, data.get_features_by_type(
-                RangerDrakewardenFeatures.DrakeCompanion
-            )[0]
+            RangerDrakewardenFeatures.DrakeCompanion,
+            data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
         )
         drake_companion.extend_feature(RangerDrakewardenFeatures.PerfectedBond())
         return data

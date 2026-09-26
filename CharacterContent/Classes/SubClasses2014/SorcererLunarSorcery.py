@@ -10,7 +10,9 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import SorcererSubclass2014
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
-from CharacterContent.Features.SubClassFeatures2014.Sorcerer import SorcererLunarSorceryFeatures
+from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
+    SorcererLunarSorceryFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     SorcererLevel1Spells,
@@ -71,9 +73,9 @@ class SorcererLunarSorceryLevel6(ClassBuilder.SubclassLevel6):
         )[0]
         metamagic.extend_feature(SorcererLunarSorceryFeatures.LunarBoons())
 
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = data.get_features_by_type(
-            SorcererLunarSorceryFeatures.LunarEmbodiment
-        )[0]
+        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
+            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        )
         lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.WaxingAndWaning())
         return data
 
@@ -111,9 +113,9 @@ class SorcererLunarSorceryLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = data.get_features_by_type(
-            SorcererLunarSorceryFeatures.LunarEmbodiment
-        )[0]
+        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
+            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        )
         lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.LunarEmpowerment())
         return data
 
@@ -125,9 +127,9 @@ class SorcererLunarSorceryLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = data.get_features_by_type(
-            SorcererLunarSorceryFeatures.LunarEmbodiment
-        )[0]
+        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
+            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        )
         lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.LunarPhenomenon())
         return data
 

@@ -12,7 +12,12 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import ItemRarity
 from .Base import AbstractArmor
-from .Improvements import AddArmorClassBonus, SetArmorClassBase, SetStealthDisadvantage, SetStrengthRequirement
+from .Improvements import (
+    AddArmorClassBonus,
+    SetArmorClassBase,
+    SetStealthDisadvantage,
+    SetStrengthRequirement,
+)
 from .Standard import ChainMailArmor, ChainShirtArmor, ShieldArmor
 
 
@@ -185,7 +190,9 @@ class VeteransChainShirt(ChainShirtArmor):
         self.add_armor_improvement(SetItemValue(None))
         self.add_armor_improvement(SetItemHomebrew())
         self.add_armor_improvement(
-            AddItemDescription("Scarred from countless campaigns, this armor bears the marks of an experienced warrior.")
+            AddItemDescription(
+                "Scarred from countless campaigns, this armor bears the marks of an experienced warrior."
+            )
         )
         self.add_armor_improvement(
             AddItemDescription(

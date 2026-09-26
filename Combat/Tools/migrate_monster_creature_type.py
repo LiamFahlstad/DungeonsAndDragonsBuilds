@@ -59,7 +59,9 @@ def migrate_file(path: str, report: dict) -> bool:
             and isinstance(func.value.func, ast.Name)
             and func.value.func.id == "super"
         )
-        is_direct_init = isinstance(func, ast.Name) and func.id == "ExtendedCombatantData"
+        is_direct_init = (
+            isinstance(func, ast.Name) and func.id == "ExtendedCombatantData"
+        )
         if not (is_super_init or is_direct_init):
             continue
 
@@ -86,7 +88,8 @@ def migrate_file(path: str, report: dict) -> bool:
     # this import per-file, so match it structurally via AST, not by literal text).
     combat_defs_import = next(
         (
-            n for n in tree.body
+            n
+            for n in tree.body
             if isinstance(n, ast.ImportFrom) and n.module == "Combat.Definitions"
         ),
         None,
@@ -94,9 +97,11 @@ def migrate_file(path: str, report: dict) -> bool:
     if combat_defs_import is not None:
         existing_names = {alias.name for alias in combat_defs_import.names}
         all_names = sorted(existing_names | {"MonsterType"})
-        new_import_src = "from Combat.Definitions import (\n" + "".join(
-            f"    {n},\n" for n in all_names
-        ) + ")"
+        new_import_src = (
+            "from Combat.Definitions import (\n"
+            + "".join(f"    {n},\n" for n in all_names)
+            + ")"
+        )
         start, end = _node_span(combat_defs_import, line_starts)
         replacements.append((start, end, new_import_src))
     else:

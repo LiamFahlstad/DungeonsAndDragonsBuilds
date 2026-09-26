@@ -1,5 +1,12 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -26,7 +33,9 @@ class GraveDomainSpells(Feature):
 class CircleOfMortality(Feature):
     def __init__(self):
         super().__init__(
-            name="Circle of Mortality", origin="Grave Domain Cleric Level 3", usage_tags=["damage", "heal"]
+            name="Circle of Mortality",
+            origin="Grave Domain Cleric Level 3",
+            usage_tags=["damage", "heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -41,7 +50,16 @@ class CircleOfMortality(Feature):
 
 class PathToTheGrave(Feature):
     def __init__(self):
-        super().__init__(name="Path to the Grave", origin="Grave Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Start of Your Next Turn", range="30 Feet"), usage_tags=["control", "damage"])
+        super().__init__(
+            name="Path to the Grave",
+            origin="Grave Domain Cleric Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Start of Your Next Turn",
+                range="30 Feet",
+            ),
+            usage_tags=["control", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,8 +88,18 @@ class PathToTheGrave(Feature):
 class SentinelAtDeathsDoor(Feature):
     def __init__(self):
         super().__init__(
-            name="Sentinel at Death's Door", origin="Grave Domain Cleric Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["buff"]
-        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+            name="Sentinel at Death's Door",
+            origin="Grave Domain Cleric Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -92,9 +120,9 @@ class SentinelAtDeathsDoor(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -104,9 +132,16 @@ class SentinelAtDeathsDoor(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+
 class DivineReaper(Feature):
     def __init__(self):
-        super().__init__(name="Divine Reaper", origin="Grave Domain Cleric Level 17", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal"])
+        super().__init__(
+            name="Divine Reaper",
+            origin="Grave Domain Cleric Level 17",
+            activation=FeatureActivation(range="60 Feet"),
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -116,6 +151,7 @@ class DivineReaper(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -1,6 +1,21 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, Condition, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
-from CharacterContent.Features.Core.Improvements import ConditionImmunity, DamageResistance
+from Core.Definitions import (
+    ARTIFICER_HIT_DIE,
+    Ability,
+    Condition,
+    DamageType,
+    MAX_ABILITY_MODIFIER,
+)
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
+from CharacterContent.Features.Core.Improvements import (
+    ConditionImmunity,
+    DamageResistance,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -34,7 +49,15 @@ class Spells(Feature):
 
 class ExperimentalElixir(Feature):
     def __init__(self):
-        super().__init__(name="Experimental Elixir", origin="Alchemist Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Drunk or End of Your Next Long Rest"), usage_tags=["utility", "heal", "buff"])
+        super().__init__(
+            name="Experimental Elixir",
+            origin="Alchemist Artificer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Drunk or End of Your Next Long Rest",
+            ),
+            usage_tags=["utility", "heal", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,7 +84,11 @@ class ExperimentalElixir(Feature):
 
 class AlchemicalSavant(Feature):
     def __init__(self):
-        super().__init__(name="Alchemical Savant", origin="Alchemist Artificer Level 5", usage_tags=["buff"])
+        super().__init__(
+            name="Alchemical Savant",
+            origin="Alchemist Artificer Level 5",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 5th level, you've developed masterful command of magical chemicals, enhancing the healing and damage you create through them. Whenever you cast a spell using your alchemist's supplies as the spellcasting focus, you gain a bonus to one roll of the spell. That roll must restore hit points or be a damage roll that deals acid, fire, necrotic, or poison damage, and the bonus equals your Intelligence modifier (minimum of +1)."
@@ -70,7 +97,16 @@ class AlchemicalSavant(Feature):
 
 class RestorativeReagents(Feature):
     def __init__(self):
-        super().__init__(name="Restorative Reagents", origin="Alchemist Artificer Level 9", usage_tags=["utility", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Restorative Reagents",
+            origin="Alchemist Artificer Level 9",
+            usage_tags=["utility", "heal"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -80,7 +116,9 @@ class RestorativeReagents(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

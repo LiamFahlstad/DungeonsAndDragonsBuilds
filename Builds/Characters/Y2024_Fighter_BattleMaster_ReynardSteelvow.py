@@ -13,7 +13,11 @@ from CharacterContent.Classes.SubClasses2024.FighterBattleMaster import (
     FighterBattleMasterLevel3,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles, Maneuvers
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human

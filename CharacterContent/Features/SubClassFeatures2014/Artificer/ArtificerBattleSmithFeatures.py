@@ -1,12 +1,18 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tool Proficiency", origin="Battle Smith Artificer Level 3")
+        super().__init__(
+            name="Tool Proficiency", origin="Battle Smith Artificer Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you adopt this specialization at 3rd level, you gain proficiency with smith's tools. If you already have this proficiency, you gain proficiency with one other type of artisan's tools of your choice."
@@ -15,7 +21,9 @@ class ToolsOfTheTrade(Feature):
 
 class Spells(Feature):
     def __init__(self):
-        super().__init__(name="Battle Smith Spells", origin="Battle Smith Artificer Level 3")
+        super().__init__(
+            name="Battle Smith Spells", origin="Battle Smith Artificer Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,7 +54,11 @@ class BattleReady(Feature):
 
 class SteelDefender(Feature):
     def __init__(self):
-        super().__init__(name="Steel Defender", origin="Battle Smith Artificer Level 3", usage_tags=["summon"])
+        super().__init__(
+            name="Steel Defender",
+            origin="Battle Smith Artificer Level 3",
+            usage_tags=["summon"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -90,7 +102,17 @@ class ExtraAttack(Feature):
 
 class ArcaneJolt(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Arcane Jolt",
+            origin="Battle Smith Artificer Level 9",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["damage", "heal"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -101,7 +123,9 @@ class ArcaneJolt(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

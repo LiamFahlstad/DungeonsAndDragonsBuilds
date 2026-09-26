@@ -85,7 +85,9 @@ class DruidLandLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(DruidLandFeatures.CircleOfTheLandSpells(land_type=self.land_type))
+        data.add_feature(
+            DruidLandFeatures.CircleOfTheLandSpells(land_type=self.land_type)
+        )
         data.add_feature(DruidLandFeatures.LandsAid())
         for spell in _LEVEL_3_CIRCLE_SPELLS[self.land_type]:
             data.add_spell(spell)

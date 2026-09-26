@@ -1,12 +1,21 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Order Domain Cleric Level 3")
+        super().__init__(
+            name="Bonus Proficiencies", origin="Order Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."
@@ -15,7 +24,11 @@ class BonusProficiencies(Feature):
 
 class VoiceOfAuthority(Feature):
     def __init__(self):
-        super().__init__(name="Voice of Authority", origin="Order Domain Cleric Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Voice of Authority",
+            origin="Order Domain Cleric Level 3",
+            usage_tags=["utility"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -32,7 +45,9 @@ class VoiceOfAuthority(Feature):
 
 class OrderDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Order Domain Spells", origin="Order Domain Cleric Level 3")
+        super().__init__(
+            name="Order Domain Spells", origin="Order Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -53,7 +68,11 @@ class OrdersDemandChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Order's Demand",
             origin="Order Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Your Next Turn or Until Takes Damage", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until End of Your Next Turn or Until Takes Damage",
+                range="30 Feet",
+            ),
             usage_tags=["control"],
         )
 
@@ -84,7 +103,16 @@ class OrdersDemandChannelDivinity(Feature):
 
 class EmbodimentOfTheLaw(Feature):
     def __init__(self):
-        super().__init__(name="Embodiment of the Law", origin="Order Domain Cleric Level 6", usage_tags=["utility"], uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Embodiment of the Law",
+            origin="Order Domain Cleric Level 6",
+            usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -94,7 +122,9 @@ class EmbodimentOfTheLaw(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

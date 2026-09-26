@@ -61,7 +61,9 @@ if __name__ == "__main__":
 
         if args.rest == "long":
             backup_path = apply_long_rest(args.player_log)
-            print(f"Long rest applied. Player log reset; old session history backed up to: {backup_path}")
+            print(
+                f"Long rest applied. Player log reset; old session history backed up to: {backup_path}"
+            )
         else:
             run_short_rest(args.player_log)
         sys.exit(0)
@@ -83,7 +85,9 @@ if __name__ == "__main__":
 
     if args.difficulty:
         if not combatants:
-            parser.error("--difficulty requires --scenario to have monsters to evaluate")
+            parser.error(
+                "--difficulty requires --scenario to have monsters to evaluate"
+            )
         if not character_sheets:
             parser.error(
                 "--difficulty requires character levels; pass --player-log to load a "

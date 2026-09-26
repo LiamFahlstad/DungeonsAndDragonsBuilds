@@ -1,5 +1,10 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,7 +12,9 @@ from Utils import StringUtils
 class ToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Battle Smith Artificer Level 3", usage_tags=["utility"]
+            name="Tools of the Trade",
+            origin="Battle Smith Artificer Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -55,14 +62,24 @@ class BattleReady(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Arcane Empowerment", "Use Intelligence modifier for attack and damage rolls with magic weapons"),
-            ("Weapon Knowledge", "Proficiency with Martial weapons; use any proficient weapon as Spellcasting Focus"),
+            (
+                "Arcane Empowerment",
+                "Use Intelligence modifier for attack and damage rolls with magic weapons",
+            ),
+            (
+                "Weapon Knowledge",
+                "Proficiency with Martial weapons; use any proficient weapon as Spellcasting Focus",
+            ),
         ]
 
 
 class SteelDefender(Feature):
     def __init__(self):
-        super().__init__(name="Steel Defender", origin="Battle Smith Artificer Level 3", usage_tags=["summon"])
+        super().__init__(
+            name="Steel Defender",
+            origin="Battle Smith Artificer Level 3",
+            usage_tags=["summon"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -92,10 +109,12 @@ class SteelDefender(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
@@ -107,7 +126,17 @@ class ExtraAttack(Feature):
 
 class ArcaneJolt(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Jolt", origin="Battle Smith Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Arcane Jolt",
+            origin="Battle Smith Artificer Level 9",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["damage", "heal"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -118,7 +147,9 @@ class ArcaneJolt(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "When you or Steel Defender hits with a magic weapon"),
@@ -127,17 +158,21 @@ class ArcaneJolt(Feature):
             ("Uses", f"{uses}/LR, at most once per turn"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_intelligence_modifier())
+
+
 class ImprovedDefender(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Defender", origin="Battle Smith Artificer Level 15", usage_tags=["damage", "heal"]
+            name="Improved Defender",
+            origin="Battle Smith Artificer Level 15",
+            usage_tags=["damage", "heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -153,5 +188,8 @@ class ImprovedDefender(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Improved Jolt", "Arcane Jolt's damage and healing both increase to 4d6"),
-            ("Improved Deflection", "When Steel Defender uses Deflect Attack, attacker takes Force damage = 1d4 + INT mod"),
+            (
+                "Improved Deflection",
+                "When Steel Defender uses Deflect Attack, attacker takes Force damage = 1d4 + INT mod",
+            ),
         ]

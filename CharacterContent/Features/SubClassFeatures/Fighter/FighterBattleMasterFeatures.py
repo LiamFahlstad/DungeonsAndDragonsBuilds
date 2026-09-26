@@ -1,5 +1,12 @@
 from Core.Definitions import Ability, FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -8,8 +15,10 @@ class SuperiorityDice(Feature):
     def __init__(self):
         self.maneuvers = []
         super().__init__(
-            name="Superiority Dice", origin="Battle Master Fighter Level 3"
-        , uses=FeatureUses(max_uses=6, regain_all_on="short or long rest"))
+            name="Superiority Dice",
+            origin="Battle Master Fighter Level 3",
+            uses=FeatureUses(max_uses=6, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if character_stat_block.character_level < 10:
@@ -28,10 +37,12 @@ class SuperiorityDice(Feature):
 
         return base_text
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+
 class CombatSuperiority(Feature):
     def __init__(self):
         super().__init__(
@@ -49,12 +60,12 @@ class CombatSuperiority(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.SHORT_OR_LONG_REST
-    def get_concise_description(
+    def regained_on(
         self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    ) -> "RegainedOn | None":
+        return RegainedOn.SHORT_OR_LONG_REST
+
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Learn maneuvers fueled by Superiority Dice (4 d8s at level 3, 5 at level 7, 6 at level 15). "
             "Learn 3 maneuvers at level 3, then 2 more at levels 7, 10, and 15; can replace one on level gain. "
@@ -73,7 +84,14 @@ class StudentOfWar(Feature):
 
 class KnowYourEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Know Your Enemy",
+            origin="Battle Master Fighter Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="30 Feet"
+            ),
+            usage_tags=["utility"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock

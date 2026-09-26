@@ -28,7 +28,11 @@ from CharacterContent.Classes.SubClasses2014.WizardEnchantment import (
     WizardEnchantmentCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
@@ -98,7 +102,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]),
+                        ]
+                    ),
                     cantrip=SpellDefinitions.WizardLevel0Spells.MIND_SLIVER,
                     spell=SpellDefinitions.WizardLevel2Spells.SUGGESTION,
                 ),
@@ -116,7 +121,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]),
+                        ]
+                    ),
                     spell=SpellDefinitions.WizardLevel4Spells.CONFUSION,
                 ),
                 9: WizardLevel9(
@@ -134,7 +140,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: WizardLevel13(
                     spell=SpellDefinitions.WizardLevel7Spells.PROJECT_IMAGE,

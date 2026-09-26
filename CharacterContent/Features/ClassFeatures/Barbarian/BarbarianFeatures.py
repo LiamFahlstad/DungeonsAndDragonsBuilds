@@ -25,7 +25,10 @@ class Rage(Feature):
         super().__init__(
             name="Rage",
             origin="Barbarian Level 1",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Next Turn"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until End of Your Next Turn",
+            ),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=6,
@@ -90,7 +93,9 @@ class Rage(Feature):
             ("Rage Damage", damage_steps),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -108,7 +113,9 @@ class Rage(Feature):
         else:
             return 2
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -196,7 +203,9 @@ class RecklessAttack(Feature):
             ("Duration", "Until start of your next turn"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -259,7 +268,9 @@ class FastMovement(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -295,7 +306,9 @@ class FeralInstinct(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -309,7 +322,9 @@ class InstinctivePounce(Feature):
         description = "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -330,7 +345,9 @@ class BrutalStrike(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -363,7 +380,9 @@ class RelentlessRage(Feature):
             ("Scaling", "DC increases by 5 each use; resets on Short or Long Rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -383,7 +402,9 @@ class ImprovedBrutalStrikeLevel13(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -398,10 +419,14 @@ class PersistentRage(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -417,7 +442,9 @@ class ImprovedBrutalStrikeLevel17(Feature):
         description = "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 

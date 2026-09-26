@@ -30,11 +30,20 @@ from CharacterContent.Classes.SubClasses2014.RangerDrakewarden import (
     RangerDrakewardenCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from CharacterContent.Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells
+from CharacterContent.Spells.SpellLists import (
+    RangerLevel1Spells,
+    RangerLevel2Spells,
+    RangerLevel3Spells,
+    RangerLevel4Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -102,7 +111,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                     spell=RangerLevel1Spells.ENTANGLE,
                 ),
                 5: RangerLevel5(
@@ -117,7 +127,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.STRENGTH, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: RangerLevel9(
                     skill_expertise_1=Skill.ATHLETICS,
@@ -134,7 +145,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.LOCATE_CREATURE,
@@ -148,7 +160,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.STRENGTH, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: RangerLevel17(
                     spell_1=RangerLevel2Spells.GUST_OF_WIND,

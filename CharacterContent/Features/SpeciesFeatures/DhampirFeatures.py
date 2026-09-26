@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantSense
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -70,10 +75,14 @@ class VampiricBite(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

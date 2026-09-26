@@ -421,7 +421,9 @@ def _parse_species(spec, node, seg, warnings):
             if index < len(params):
                 spec.species_params[params[index][0]] = seg(argument)
             else:
-                warnings.append("Species builder: dropped an extra positional argument.")
+                warnings.append(
+                    "Species builder: dropped an extra positional argument."
+                )
 
 
 def _first_list_arg(node):

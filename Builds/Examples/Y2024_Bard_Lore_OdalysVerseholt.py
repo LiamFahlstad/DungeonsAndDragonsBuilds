@@ -32,7 +32,12 @@ from CharacterContent.Classes.SubClasses2024.BardLore import (
     BardLoreLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
@@ -117,7 +122,8 @@ def get_starter_class_builder():
                         [
                             (Ability.CHARISMA, 1),
                             (Ability.DEXTERITY, 1),
-                        ]),
+                        ]
+                    ),
                     cantrip=BardLevel0Spells.BLADE_WARD,
                     spell=BardLevel2Spells.AID,
                 ),
@@ -135,7 +141,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                     spell=BardLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: BardLevel9(
@@ -156,7 +163,8 @@ def get_starter_class_builder():
                         [
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: BardLevel13(
                     spell=BardLevel7Spells.MORDENKAINENS_SWORD,

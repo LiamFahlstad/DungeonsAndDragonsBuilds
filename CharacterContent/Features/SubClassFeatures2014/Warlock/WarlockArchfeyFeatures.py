@@ -35,7 +35,11 @@ class FeyPresence(Feature):
         super().__init__(
             name="Fey Presence",
             origin="The Archfey Patron Warlock Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End of Next Turn", range="10-Foot Cube"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until End of Next Turn",
+                range="10-Foot Cube",
+            ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -58,7 +62,9 @@ class FeyPresence(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -67,7 +73,11 @@ class MistyEscape(Feature):
         super().__init__(
             name="Misty Escape",
             origin="The Archfey Patron Warlock Level 6",
-            activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until Start of Next Turn or Until Attack/Spell", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="Until Start of Next Turn or Until Attack/Spell",
+                range="60 Feet",
+            ),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -93,7 +103,9 @@ class MistyEscape(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -102,7 +114,10 @@ class BeguilingDefenses(Feature):
         super().__init__(
             name="Beguiling Defenses",
             origin="The Archfey Patron Warlock Level 10",
-            activation=FeatureActivation(action_type=ActionType.REACTION, duration="1 Minute or Until Creature Takes Damage"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="1 Minute or Until Creature Takes Damage",
+            ),
             usage_tags=["control"],
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
@@ -125,7 +140,9 @@ class BeguilingDefenses(Feature):
             ("Duration", "1 minute or until target takes damage"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -134,7 +151,11 @@ class DarkDelirium(Feature):
         super().__init__(
             name="Dark Delirium",
             origin="The Archfey Patron Warlock Level 14",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Concentration Broken", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Concentration Broken",
+                range="60 Feet",
+            ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -159,5 +180,7 @@ class DarkDelirium(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

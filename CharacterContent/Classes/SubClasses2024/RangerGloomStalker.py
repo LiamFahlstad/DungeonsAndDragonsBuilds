@@ -31,7 +31,9 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(RangerGloomStalkerFeatures.DreadAmbusher(), apply_when=ApplyWhen.LAST)
+        data.add_feature(
+            RangerGloomStalkerFeatures.DreadAmbusher(), apply_when=ApplyWhen.LAST
+        )
         data.add_feature(RangerGloomStalkerFeatures.UmbralSight())
         data.add_feature(RangerGloomStalkerFeatures.GloomStalkerSpells())
         data.add_spell(IllusionLevel1Spells.DISGUISE_SELF)

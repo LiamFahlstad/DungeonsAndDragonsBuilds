@@ -1,12 +1,20 @@
 from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class PeaceDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Peace Domain Spells", origin="Peace Domain Cleric Level 3")
+        super().__init__(
+            name="Peace Domain Spells", origin="Peace Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +32,9 @@ class PeaceDomainSpells(Feature):
 
 class ImplementOfPeace(Feature):
     def __init__(self):
-        super().__init__(name="Implement of Peace", origin="Peace Domain Cleric Level 3")
+        super().__init__(
+            name="Implement of Peace", origin="Peace Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Insight, Performance, or Persuasion skill (your choice)."
@@ -36,9 +46,18 @@ class EmboldeningBond(Feature):
         super().__init__(
             name="Emboldening Bond",
             origin="Peace Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="10 Minutes or Until You Use This Feature Again", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="10 Minutes or Until You Use This Feature Again",
+                range="30 Feet",
+            ),
             usage_tags=["buff"],
-            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -52,7 +71,9 @@ class EmboldeningBond(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

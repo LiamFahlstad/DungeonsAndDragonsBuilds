@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BarbarianSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfWildMagicFeatures
+from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
+    BarbarianPathOfWildMagicFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 

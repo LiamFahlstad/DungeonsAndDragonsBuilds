@@ -1,6 +1,9 @@
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, SkillProficiencyChoice
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    SkillProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -8,8 +11,15 @@ class FreeBackgroundAbilityBonus(Feature):
     """Also add either [+1, +1, +1] OR [+2, +1] to any abilities."""
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
-        self._bonus = AbilityScoreBonus(bonuses, total=3, error_prefix="Free Background Ability Bonus")
-        super().__init__(name="Free Background Ability Bonus", origin="Background", skippable_in_concise=True, usage_tags=["buff"])
+        self._bonus = AbilityScoreBonus(
+            bonuses, total=3, error_prefix="Free Background Ability Bonus"
+        )
+        super().__init__(
+            name="Free Background Ability Bonus",
+            origin="Background",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._bonus.apply(character_stat_block)
@@ -35,7 +45,11 @@ class FreeBackgroundSkillProficiency(Feature):
             count=2,
             error_prefix="Free Background Skill Proficiency",
         )
-        super().__init__(name="Free Background Skill Proficiency", origin="Background", skippable_in_concise=True)
+        super().__init__(
+            name="Free Background Skill Proficiency",
+            origin="Background",
+            skippable_in_concise=True,
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._choice.apply(character_stat_block)

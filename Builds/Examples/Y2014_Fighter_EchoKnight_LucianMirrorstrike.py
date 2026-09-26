@@ -34,7 +34,11 @@ from CharacterContent.Classes.SubClasses2014.FighterEchoKnight import (
     FighterEchoKnightLevel18,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
@@ -104,21 +108,24 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 5: FighterLevel5(),
                 6: FighterLevel6(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 7: FighterLevel7(),
                 8: FighterLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: FighterLevel9(),
                 10: FighterLevel10(
@@ -129,14 +136,16 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: FighterLevel13(),
                 14: FighterLevel14(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 15: FighterLevel15(),
                 16: FighterLevel16(
@@ -144,7 +153,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: FighterLevel17(),
                 18: FighterLevel18(),

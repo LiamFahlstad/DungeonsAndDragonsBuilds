@@ -1,5 +1,10 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -102,14 +107,19 @@ class MysticFocus(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_REST
+
+
 class FocusedStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Focused Strike", origin="Warrior of the Mystic Arts Monk Level 11", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["control"]
+            name="Focused Strike",
+            origin="Warrior of the Mystic Arts Monk Level 11",
+            activation=FeatureActivation(duration="Until Start of Next Turn"),
+            usage_tags=["control"],
         )
 
     def target(

@@ -12,7 +12,9 @@ from Core.Definitions import MAX_PROFICIENCY_BONUS
 
 class LunarEmbodiment(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Embodiment", origin="Lunar Sorcery Sorcerer Level 3")
+        super().__init__(
+            name="Lunar Embodiment", origin="Lunar Sorcery Sorcerer Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,18 +37,29 @@ class LunarEmbodiment(Feature):
 
 class MoonFire(Feature):
     def __init__(self):
-        super().__init__(name="Moon Fire", origin="Lunar Sorcery Sorcerer Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Moon Fire",
+            origin="Lunar Sorcery Sorcerer Level 3",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can call down the radiant light of the moon on command. You learn the Sacred Flame spell, which doesn't count against the number of sorcerer cantrips you know. When you cast the spell, you can target one creature as normal or target two creatures within range that are within 5 feet of each other."
-        )
+        description = "You can call down the radiant light of the moon on command. You learn the Sacred Flame spell, which doesn't count against the number of sorcerer cantrips you know. When you cast the spell, you can target one creature as normal or target two creatures within range that are within 5 feet of each other."
         return description
 
 
 class LunarBoons(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Boons", origin="Lunar Sorcery Sorcerer Level 6", usage_tags=["buff"], uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
+        super().__init__(
+            name="Lunar Boons",
+            origin="Lunar Sorcery Sorcerer Level 6",
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -60,7 +73,9 @@ class LunarBoons(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -69,7 +84,12 @@ class LunarBoons(Feature):
 
 class WaxingAndWaning(Feature):
     def __init__(self):
-        super().__init__(name="Waxing and Waning", origin="Lunar Sorcery Sorcerer Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="Waxing and Waning",
+            origin="Lunar Sorcery Sorcerer Level 6",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,13 +99,19 @@ class WaxingAndWaning(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class LunarEmpowerment(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Empowerment", origin="Lunar Sorcery Sorcerer Level 14", usage_tags=["utility", "buff"])
+        super().__init__(
+            name="Lunar Empowerment",
+            origin="Lunar Sorcery Sorcerer Level 14",
+            usage_tags=["utility", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -100,7 +126,17 @@ class LunarEmpowerment(Feature):
 
 class LunarPhenomenon(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Phenomenon", origin="Lunar Sorcery Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Next Turn", range="60 Feet"), usage_tags=["utility", "damage", "control", "heal", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Lunar Phenomenon",
+            origin="Lunar Sorcery Sorcerer Level 18",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until End of Next Turn",
+                range="60 Feet",
+            ),
+            usage_tags=["utility", "damage", "control", "heal", "buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -114,5 +150,7 @@ class LunarPhenomenon(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -225,7 +225,12 @@ class CharacterSheetData:
             raise ValueError(f"Cantrip {cantrip} already added.")
         self._invalidate_cache()
         self.spells.append(
-            (cantrip, spell_casting_ability, additional_ruling, self._current_grant_level)
+            (
+                cantrip,
+                spell_casting_ability,
+                additional_ruling,
+                self._current_grant_level,
+            )
         )
 
     def replace_spells(self, replace_spells: dict[str, str]):

@@ -34,7 +34,11 @@ from CharacterContent.Classes.SubClasses2014.SorcererAberrantMind import (
     SorcererAberrantMindLevel18,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -103,7 +107,8 @@ def get_starter_class_builder():
                 ),
                 4: SorcererLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                     cantrip=SpellDefinitions.SorcererLevel0Spells.SHOCKING_GRASP,
                     spell=SpellDefinitions.SorcererLevel2Spells.MIRROR_IMAGE,
                 ),
@@ -119,7 +124,8 @@ def get_starter_class_builder():
                 ),
                 8: SorcererLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                     spell=SpellDefinitions.SorcererLevel4Spells.DIMENSION_DOOR,
                 ),
                 9: SorcererLevel9(
@@ -135,7 +141,8 @@ def get_starter_class_builder():
                 ),
                 12: SorcererLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.WISDOM, 2)]),
+                        [(Ability.WISDOM, 2)]
+                    ),
                 ),
                 13: SorcererLevel13(
                     spell=SpellDefinitions.SorcererLevel5Spells.ANIMATE_OBJECTS,
@@ -146,7 +153,8 @@ def get_starter_class_builder():
                 ),
                 16: SorcererLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CONSTITUTION, 2)]),
+                        [(Ability.CONSTITUTION, 2)]
+                    ),
                 ),
                 17: SorcererLevel17(
                     spell=SpellDefinitions.SorcererLevel5Spells.SUMMON_DRACONIC_SPIRIT,

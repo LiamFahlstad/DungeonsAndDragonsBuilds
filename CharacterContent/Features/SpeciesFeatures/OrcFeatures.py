@@ -1,5 +1,12 @@
 from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -26,7 +33,10 @@ class AdrenalineRush(Feature):
             origin="Orc Trait",
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
-            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, current_formula="Current amount: equal to your proficiency bonus.")
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -36,10 +46,14 @@ class AdrenalineRush(Feature):
         )
         return text
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

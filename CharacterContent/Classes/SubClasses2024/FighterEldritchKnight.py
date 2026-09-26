@@ -10,7 +10,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass
 from CharacterContent.Features.ClassFeatures import SpellSlots
-from CharacterContent.Features.SubClassFeatures.Fighter import FighterEldritchKnightFeatures
+from CharacterContent.Features.SubClassFeatures.Fighter import (
+    FighterEldritchKnightFeatures,
+)
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 

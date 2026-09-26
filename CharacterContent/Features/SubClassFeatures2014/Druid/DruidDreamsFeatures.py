@@ -1,12 +1,30 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class BalmOfTheSummerCourt(Feature):
     def __init__(self):
-        super().__init__(name="Balm of the Summer Court", origin="Circle of Dreams Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="120 Feet"), usage_tags=["heal"], uses=FeatureUses(max_uses=20, regain_all_on="long rest", current_formula="Current amount: equal to your Druid level."))
+        super().__init__(
+            name="Balm of the Summer Court",
+            origin="Circle of Dreams Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="120 Feet"
+            ),
+            usage_tags=["heal"],
+            uses=FeatureUses(
+                max_uses=20,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Druid level.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -18,10 +36,14 @@ class BalmOfTheSummerCourt(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

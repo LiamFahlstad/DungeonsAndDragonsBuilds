@@ -1,11 +1,21 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Psion Level 1", activation=FeatureActivation(range="30 Feet"), usage_tags=["control", "buff", "utility"])
+        super().__init__(
+            name="Psionic Power",
+            origin="Psion Level 1",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["control", "buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +60,9 @@ class PsionicPower(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -92,7 +104,11 @@ class PsionicDiscipline(Feature):
 
 class PsionicRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Restoration", origin="Psion Level 5", activation=FeatureActivation(action_type=ActionType.ACTION))
+        super().__init__(
+            name="Psionic Restoration",
+            origin="Psion Level 5",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -112,13 +128,17 @@ class PsionicRestoration(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
 class PsionicSurge(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Surge", origin="Psion Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Psionic Surge", origin="Psion Level 7", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -142,7 +162,9 @@ class PsionicSurge(Feature):
 
 class PsionicReserves(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Reserves", origin="Psion Level 18", usage_tags=["buff"])
+        super().__init__(
+            name="Psionic Reserves", origin="Psion Level 18", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -152,7 +174,9 @@ class PsionicReserves(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
 
@@ -171,7 +195,9 @@ class EpicBoon(Feature):
 
 class EnkindledLifeForce(Feature):
     def __init__(self):
-        super().__init__(name="Enkindled Life Force", origin="Psion Level 20", usage_tags=["buff"])
+        super().__init__(
+            name="Enkindled Life Force", origin="Psion Level 20", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -190,8 +216,14 @@ class EnkindledLifeForce(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Trigger", "Once per turn, when rolling Psionic Energy Dice for a Psion feature or Discipline"),
+            (
+                "Trigger",
+                "Once per turn, when rolling Psionic Energy Dice for a Psion feature or Discipline",
+            ),
             ("Cost", "Expend 1 or 2 Hit Point Dice"),
-            ("Effect", "Roll additional Psionic Energy Dice (1 per Hit Die spent) and add to total"),
+            (
+                "Effect",
+                "Roll additional Psionic Energy Dice (1 per Hit Die spent) and add to total",
+            ),
             ("Special", "Bonus rolls do not expend Psionic Energy Dice"),
         ]

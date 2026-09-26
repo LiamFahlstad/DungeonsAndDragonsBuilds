@@ -13,7 +13,12 @@ from Utils import StringUtils
 
 class FancyFootwork(Feature):
     def __init__(self):
-        super().__init__(name="Fancy Footwork", origin="Swashbuckler Rogue Level 3", activation=FeatureActivation(duration="Until End of Your Turn"), usage_tags=["buff"])
+        super().__init__(
+            name="Fancy Footwork",
+            origin="Swashbuckler Rogue Level 3",
+            activation=FeatureActivation(duration="Until End of Your Turn"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -23,13 +28,20 @@ class FancyFootwork(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class RakishAudacity(Feature):
     def __init__(self):
-        super().__init__(name="Rakish Audacity", origin="Swashbuckler Rogue Level 3", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Rakish Audacity",
+            origin="Swashbuckler Rogue Level 3",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -42,7 +54,9 @@ class RakishAudacity(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -61,7 +75,14 @@ class RakishAudacityBonus(Feature):
 
 class Panache(Feature):
     def __init__(self):
-        super().__init__(name="Panache", origin="Swashbuckler Rogue Level 9", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute"), usage_tags=["control"])
+        super().__init__(
+            name="Panache",
+            origin="Swashbuckler Rogue Level 9",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,22 +100,39 @@ class Panache(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Check", "Charisma (Persuasion) vs. target's Wisdom (Insight)"),
             ("Requirements", "Target can hear you, share a language"),
-            ("If Hostile & Success", "Target has disadvantage on attacks except against you; can't make opportunity attacks except against you; lasts 1 minute or until ally attacks/affects it or you're > 60 ft apart"),
-            ("If Non-Hostile & Success", "Target is charmed by you for 1 minute, regards you as friendly acquaintance; ends if you do anything harmful to it"),
+            (
+                "If Hostile & Success",
+                "Target has disadvantage on attacks except against you; can't make opportunity attacks except against you; lasts 1 minute or until ally attacks/affects it or you're > 60 ft apart",
+            ),
+            (
+                "If Non-Hostile & Success",
+                "Target is charmed by you for 1 minute, regards you as friendly acquaintance; ends if you do anything harmful to it",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class ElegantManeuver(Feature):
     def __init__(self):
-        super().__init__(name="Elegant Maneuver", origin="Swashbuckler Rogue Level 13", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Turn"), usage_tags=["buff"])
+        super().__init__(
+            name="Elegant Maneuver",
+            origin="Swashbuckler Rogue Level 13",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="Until End of Your Turn"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -103,13 +141,19 @@ class ElegantManeuver(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class MasterDuelist(Feature):
     def __init__(self):
-        super().__init__(name="Master Duelist", origin="Swashbuckler Rogue Level 17", usage_tags=["buff"])
+        super().__init__(
+            name="Master Duelist",
+            origin="Swashbuckler Rogue Level 17",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -119,5 +163,7 @@ class MasterDuelist(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

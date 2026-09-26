@@ -1,6 +1,13 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -55,7 +62,11 @@ LEVEL_TO_FOCUS_POINTS = {
 
 class HandOfHarm(Feature):
     def __init__(self):
-        super().__init__(name="Hand of Harm", origin="Warrior of Mercy Monk Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Hand of Harm",
+            origin="Warrior of Mercy Monk Level 3",
+            usage_tags=["damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -69,7 +80,12 @@ class HandOfHarm(Feature):
 
 class HandOfHealing(Feature):
     def __init__(self):
-        super().__init__(name="Hand of Healing", origin="Warrior of Mercy Monk Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"), usage_tags=["heal"])
+        super().__init__(
+            name="Hand of Healing",
+            origin="Warrior of Mercy Monk Level 3",
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"),
+            usage_tags=["heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -91,8 +107,14 @@ class HandOfHealing(Feature):
             ("Action", "Magic action"),
             ("Cost", "1 Focus Point"),
             ("Range", "Touch"),
-            ("Effect", f"Restore 1 Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points"),
-            ("Special", "Can replace one Unarmed Strike in Flurry of Blows without spending Focus Point"),
+            (
+                "Effect",
+                f"Restore 1 Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points",
+            ),
+            (
+                "Special",
+                "Can replace one Unarmed Strike in Flurry of Blows without spending Focus Point",
+            ),
         ]
 
 
@@ -114,7 +136,10 @@ class ImplementsOfMercy(Feature):
 class PhysiciansTouch(Feature):
     def __init__(self):
         super().__init__(
-            name="Physician's Touch", origin="Warrior of Mercy Monk Level 6", activation=FeatureActivation(duration="Until End of Next Turn"), usage_tags=["control", "heal"]
+            name="Physician's Touch",
+            origin="Warrior of Mercy Monk Level 6",
+            activation=FeatureActivation(duration="Until End of Next Turn"),
+            usage_tags=["control", "heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -129,8 +154,14 @@ class PhysiciansTouch(Feature):
 class FlurryOfHealingAndHarm(Feature):
     def __init__(self):
         super().__init__(
-            name="Flurry of Healing and Harm", origin="Warrior of Mercy Monk Level 11"
-        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+            name="Flurry of Healing and Harm",
+            origin="Warrior of Mercy Monk Level 11",
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -140,16 +171,22 @@ class FlurryOfHealingAndHarm(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class HandOfUltimateMercy(Feature):
     def __init__(self):
         super().__init__(
-            name="Hand of Ultimate Mercy", origin="Warrior of Mercy Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"), usage_tags=["heal"]
+            name="Hand of Ultimate Mercy",
+            origin="Warrior of Mercy Monk Level 17",
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"),
+            usage_tags=["heal"],
         )
 
     def target(

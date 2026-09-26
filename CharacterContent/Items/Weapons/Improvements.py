@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 @dataclass
 class ExtraDamage:
     """Represents bonus damage added to a weapon attack."""
+
     damage_roll: "WeaponDamageRolls"
     damage_type: WeaponDamageTypes
     note: Optional[str] = None  # e.g. "chosen type, activate as bonus action"
@@ -38,7 +39,9 @@ class WeaponImprovement(ItemImprovement):
     """Base class for weapon improvements. Override apply() to modify the weapon."""
 
     @abstractmethod
-    def apply(self, weapon: "AbstractWeapon") -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def apply(
+        self, weapon: "AbstractWeapon"
+    ) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         # Renaming ItemImprovement.apply's generic `item` param to `weapon`
         # here (and to `armor` in ArmorImprovement) is intentional - it's
         # far more readable in every weapon-specific apply() below than a
@@ -131,7 +134,9 @@ class AddExtraDamage(WeaponImprovement):
         damage_type: WeaponDamageTypes,
         note: Optional[str] = None,
     ):
-        self.extra_damage = ExtraDamage(damage_roll=damage_roll, damage_type=damage_type, note=note)
+        self.extra_damage = ExtraDamage(
+            damage_roll=damage_roll, damage_type=damage_type, note=note
+        )
 
     def apply(self, weapon: "AbstractWeapon") -> None:
         weapon.extra_damage.append(self.extra_damage)

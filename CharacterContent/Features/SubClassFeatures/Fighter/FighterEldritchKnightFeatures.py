@@ -1,5 +1,11 @@
 from Core.Definitions import FIGHTER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -21,12 +27,12 @@ class EldritchKnightSpellcasting(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
-        return RegainedOn.LONG_REST
-    def get_concise_description(
+    def regained_on(
         self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    ) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
+
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Know two Wizard cantrips (gaining another at level 10), replacing them as you level. "
             "Prepare level 1+ Wizard spells (3 initially, scaling with levels), regaining all spell slots on long rest. "
@@ -36,7 +42,12 @@ class EldritchKnightSpellcasting(Feature):
 
 class WarBond(Feature):
     def __init__(self):
-        super().__init__(name="War Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="War Bond",
+            origin="Eldritch Knight Fighter Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -76,7 +87,9 @@ class WarMagic(Feature):
 class EldritchStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10", usage_tags=["control"]
+            name="Eldritch Strike",
+            origin="Eldritch Knight Fighter Level 10",
+            usage_tags=["control"],
         )
 
     def target(
@@ -92,7 +105,10 @@ class EldritchStrike(Feature):
 class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
-            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"]
+            name="Arcane Charge",
+            origin="Eldritch Knight Fighter Level 15",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["utility"],
         )
 
     def target(

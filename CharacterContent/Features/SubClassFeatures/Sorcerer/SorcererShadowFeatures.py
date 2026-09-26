@@ -1,5 +1,10 @@
 from Core.Definitions import SORCERER_HIT_DIE, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -23,7 +28,11 @@ class ShadowSpells(Feature):
 
 class PowerOfShadow(Feature):
     def __init__(self):
-        super().__init__(name="Power of Shadow", origin="Shadow Sorcerer Level 3", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Power of Shadow",
+            origin="Shadow Sorcerer Level 3",
+            usage_tags=["buff", "utility"],
+        )
         self._senses = [
             GrantSense(Sense.DARKVISION, 120, self.name),
             GrantSense(Sense.BLINDSIGHT, 10, self.name),
@@ -41,13 +50,20 @@ class PowerOfShadow(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class BeastsOfIllOmen(Feature):
     def __init__(self):
-        super().__init__(name="Beasts of Ill Omen", origin="Shadow Sorcerer Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["control"])
+        super().__init__(
+            name="Beasts of Ill Omen",
+            origin="Shadow Sorcerer Level 6",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,7 +72,9 @@ class BeastsOfIllOmen(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -66,26 +84,40 @@ class BeastsOfIllOmen(Feature):
             ("Action", "Bonus Action"),
             ("Cost", "3 Sorcery Points"),
             ("Spell", "Summon Beast (no slot, no prepare, no Material)"),
-            ("Effect", "Enemies within 5 feet of beast have Disadvantage on spell saves"),
+            (
+                "Effect",
+                "Enemies within 5 feet of beast have Disadvantage on spell saves",
+            ),
             ("Concentration", "Removable; 1 minute duration; ends early if cast again"),
         ]
 
 
 class ShadowWalk(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Walk", origin="Shadow Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Shadow Walk",
+            origin="Shadow Sorcerer Level 14",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you are in Dim Light or Darkness, you can take a Bonus Action to teleport up to 120 feet to an unoccupied space you can see that is also in Dim Light or Darkness."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UmbralForm(Feature):
     def __init__(self):
-        super().__init__(name="Umbral Form", origin="Shadow Sorcerer Level 18", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Umbral Form",
+            origin="Shadow Sorcerer Level 18",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -95,14 +127,21 @@ class UmbralForm(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Use Innate Sorcery"),
             ("Duration", "While Innate Sorcery active or until dismissed (no action)"),
-            ("Incorporeal Movement", "Move through creatures/objects (Difficult Terrain); 1d10 Force damage if turn ends inside"),
+            (
+                "Incorporeal Movement",
+                "Move through creatures/objects (Difficult Terrain); 1d10 Force damage if turn ends inside",
+            ),
             ("Shadow Resilience", "Resistance to all damage except Force and Radiant"),
             ("Recharge", "Long Rest or 6 Sorcery Points"),
         ]

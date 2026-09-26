@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinVengeanceFeatures
+from CharacterContent.Features.SubClassFeatures2014.Paladin import (
+    PaladinVengeanceFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel2Spells,

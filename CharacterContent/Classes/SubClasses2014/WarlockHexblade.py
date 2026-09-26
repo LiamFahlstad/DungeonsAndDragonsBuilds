@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Warlock import WarlockHexbladeFeatures
+from CharacterContent.Features.SubClassFeatures2014.Warlock import (
+    WarlockHexbladeFeatures,
+)
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
@@ -44,9 +46,9 @@ class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = data.get_features_by_type(
-            WarlockHexbladeFeatures.HexbladesCurse
-        )[0]
+        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
+            data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
+        )
         hexblades_curse.extend_feature(WarlockHexbladeFeatures.ArmorOfHexes())
         return data
 
@@ -58,9 +60,9 @@ class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = data.get_features_by_type(
-            WarlockHexbladeFeatures.HexbladesCurse
-        )[0]
+        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
+            data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
+        )
         hexblades_curse.extend_feature(WarlockHexbladeFeatures.MasterOfHexes())
         return data
 

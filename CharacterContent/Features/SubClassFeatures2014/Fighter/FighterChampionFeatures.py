@@ -7,19 +7,29 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class ImprovedCritical(Feature):
     def __init__(self):
-        super().__init__(name="Improved Critical", origin="Champion Fighter Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Improved Critical",
+            origin="Champion Fighter Level 3",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning when you choose this archetype at 3rd level, your weapon attacks score a critical hit on a roll of 19 or 20."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class RemarkableAthlete(Feature):
     def __init__(self):
-        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Remarkable Athlete",
+            origin="Champion Fighter Level 7",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -29,7 +39,9 @@ class RemarkableAthlete(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -46,25 +58,33 @@ class AdditionalFightingStyle(Feature):
 
 class SuperiorCritical(Feature):
     def __init__(self):
-        super().__init__(name="Superior Critical", origin="Champion Fighter Level 15", usage_tags=["damage"])
+        super().__init__(
+            name="Superior Critical",
+            origin="Champion Fighter Level 15",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 15th level, your weapon attacks score a critical hit on a roll of 18-20."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class Survivor(Feature):
     def __init__(self):
-        super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["heal"])
+        super().__init__(
+            name="Survivor", origin="Champion Fighter Level 18", usage_tags=["heal"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "At 18th level, you attain the pinnacle of resilience in battle. At the start of each of your turns, you regain hit points equal to 5 + your Constitution modifier if you have no more than half of your hit points left. You don't gain this benefit if you have 0 hit points."
-        )
+        description = "At 18th level, you attain the pinnacle of resilience in battle. At the start of each of your turns, you regain hit points equal to 5 + your Constitution modifier if you have no more than half of your hit points left. You don't gain this benefit if you have 0 hit points."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

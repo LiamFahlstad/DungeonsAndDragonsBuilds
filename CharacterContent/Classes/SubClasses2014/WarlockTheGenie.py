@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass2014, WarlockGenieKind
-from CharacterContent.Features.SubClassFeatures2014.Warlock import WarlockTheGenieFeatures
+from CharacterContent.Features.SubClassFeatures2014.Warlock import (
+    WarlockTheGenieFeatures,
+)
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
@@ -21,7 +23,9 @@ class WarlockTheGenieLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(WarlockTheGenieFeatures.GenieExpandedSpells(kind=self.genie_kind))
+        data.add_feature(
+            WarlockTheGenieFeatures.GenieExpandedSpells(kind=self.genie_kind)
+        )
         data.add_feature(WarlockTheGenieFeatures.GeniesVessel(kind=self.genie_kind))
         return data
 

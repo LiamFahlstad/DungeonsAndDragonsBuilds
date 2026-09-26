@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinRedemptionFeatures
+from CharacterContent.Features.SubClassFeatures2014.Paladin import (
+    PaladinRedemptionFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel2Spells,
@@ -116,7 +118,9 @@ class PaladinRedemptionLevel18(ClassBuilder.SubclassLevel18):
         aura_of_the_guardian: PaladinRedemptionFeatures.AuraOfTheGuardian = (
             data.get_features_by_type(PaladinRedemptionFeatures.AuraOfTheGuardian)[0]
         )
-        aura_of_the_guardian.extend_feature(PaladinRedemptionFeatures.AuraOfTheGuardianExpansion())
+        aura_of_the_guardian.extend_feature(
+            PaladinRedemptionFeatures.AuraOfTheGuardianExpansion()
+        )
         return data
 
 

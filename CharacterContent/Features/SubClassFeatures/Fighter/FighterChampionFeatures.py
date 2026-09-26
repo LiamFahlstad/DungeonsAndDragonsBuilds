@@ -1,6 +1,9 @@
 from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
-from CharacterContent.Features.Core.Improvements import InitiativeRollCondition, SkillRollCondition
+from CharacterContent.Features.Core.Improvements import (
+    InitiativeRollCondition,
+    SkillRollCondition,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -20,7 +23,11 @@ class ImprovedCritical(Feature):
 
 class RemarkableAthlete(Feature):
     def __init__(self):
-        super().__init__(name="Remarkable Athlete", origin="Champion Fighter Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Remarkable Athlete",
+            origin="Champion Fighter Level 3",
+            usage_tags=["buff"],
+        )
         self._initiative = InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
         self._athletics = SkillRollCondition(
             Skill.ATHLETICS, DiceRollCondition.ADVANTAGE, reason="Remarkable Athlete"
@@ -56,7 +63,11 @@ class AdditionalFightingStyle(Feature):
 
 class HeroicWarrior(Feature):
     def __init__(self):
-        super().__init__(name="Heroic Warrior", origin="Champion Fighter Level 10", usage_tags=["buff"])
+        super().__init__(
+            name="Heroic Warrior",
+            origin="Champion Fighter Level 10",
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -84,7 +95,11 @@ class SuperiorCritical(Feature):
 
 class Survivor(Feature):
     def __init__(self):
-        super().__init__(name="Survivor", origin="Champion Fighter Level 18", usage_tags=["buff", "heal"])
+        super().__init__(
+            name="Survivor",
+            origin="Champion Fighter Level 18",
+            usage_tags=["buff", "heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -103,8 +118,12 @@ class Survivor(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         from Core.Definitions import Ability
+
         con_modifier = character_stat_block.get_constitution_modifier()
         return [
             ("Defy Death", "Advantage on Death Saving Throws; rolls 18-20 count as 20"),
-            ("Heroic Rally", f"Start of turn: regain 5 + {con_modifier} HP (if Bloodied and HP ≥ 1)"),
+            (
+                "Heroic Rally",
+                f"Start of turn: regain 5 + {con_modifier} HP (if Bloodied and HP ≥ 1)",
+            ),
         ]

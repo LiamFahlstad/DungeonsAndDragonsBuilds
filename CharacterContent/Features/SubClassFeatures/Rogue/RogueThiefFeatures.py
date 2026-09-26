@@ -1,11 +1,21 @@
 from Core.Definitions import ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class FastHands(Feature):
     def __init__(self):
-        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="Fast Hands",
+            origin="Thief Rogue Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -15,13 +25,19 @@ class FastHands(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class SecondStoryWork(Feature):
     def __init__(self):
-        super().__init__(name="Second Story Work", origin="Thief Rogue Level 3", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Second Story Work",
+            origin="Thief Rogue Level 3",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -31,13 +47,17 @@ class SecondStoryWork(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class SupremeSneak(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"])
+        super().__init__(
+            name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,13 +66,19 @@ class SupremeSneak(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UseMagicDevice(Feature):
     def __init__(self):
-        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13", usage_tags=["utility"])
+        super().__init__(
+            name="Use Magic Device",
+            origin="Thief Rogue Level 13",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -68,22 +94,37 @@ class UseMagicDevice(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Attunement", "Can attune to up to 4 magic items at once"),
-            ("Charges", "Roll 1d6 when using item property with charges; on 6, don't expend"),
-            ("Scrolls (Cantrip/Level 1)", "Cast any Spell Scroll reliably using Intelligence"),
-            ("Scrolls (Level 2+)", "Intelligence (Arcana) check (DC 10 + spell level); success casts, failure destroys"),
+            (
+                "Charges",
+                "Roll 1d6 when using item property with charges; on 6, don't expend",
+            ),
+            (
+                "Scrolls (Cantrip/Level 1)",
+                "Cast any Spell Scroll reliably using Intelligence",
+            ),
+            (
+                "Scrolls (Level 2+)",
+                "Intelligence (Arcana) check (DC 10 + spell level); success casts, failure destroys",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class ThiefsReflexes(Feature):
     def __init__(self):
-        super().__init__(name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"])
+        super().__init__(
+            name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

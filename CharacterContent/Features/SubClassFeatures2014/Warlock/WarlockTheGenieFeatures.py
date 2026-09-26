@@ -44,7 +44,10 @@ class GeniesVessel(Feature):
         super().__init__(
             name="Genie's Vessel",
             origin="The Genie Patron Warlock Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Leaving Vessel or Long Rest"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Leaving Vessel or Long Rest",
+            ),
             usage_tags=["damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -75,7 +78,9 @@ class ElementalGift(Feature):
         super().__init__(
             name="Elemental Gift",
             origin="The Genie Patron Warlock Level 6",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
             usage_tags=["buff", "utility"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_PROFICIENCY_BONUS,
@@ -110,7 +115,9 @@ class ElementalGift(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -122,7 +129,9 @@ class SanctuaryVessel(Feature):
         super().__init__(
             name="Sanctuary Vessel",
             origin="The Genie Patron Warlock Level 10",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="30 Feet"
+            ),
             usage_tags=["utility"],
         )
 
@@ -136,7 +145,9 @@ class SanctuaryVessel(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 

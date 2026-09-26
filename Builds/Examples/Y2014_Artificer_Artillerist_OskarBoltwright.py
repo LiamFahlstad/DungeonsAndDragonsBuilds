@@ -32,7 +32,11 @@ from CharacterContent.Classes.SubClasses2014.ArtificerArtillerist import (
     ArtificerArtilleristLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -109,7 +113,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]),
+                        ]
+                    ),
                     spell=SpellDefinitions.ArtificerLevel1Spells.GREASE,
                 ),
                 5: ArtificerLevel5(
@@ -123,7 +128,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.INTELLIGENCE, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: ArtificerLevel9(
                     spell_1=SpellDefinitions.ArtificerLevel3Spells.HASTE,
@@ -139,7 +145,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: ArtificerLevel13(
                     spell=SpellDefinitions.ArtificerLevel4Spells.ELEMENTAL_BANE,
@@ -154,7 +161,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: ArtificerLevel17(
                     spell_1=SpellDefinitions.ArtificerLevel5Spells.WALL_OF_STONE,

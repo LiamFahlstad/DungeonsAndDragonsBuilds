@@ -186,7 +186,10 @@ def _candidate_names() -> list[str]:
     discovered by the other two sources as our candidate list.
     """
     names: set[str] = set()
-    for path in ("CharacterContent/Spells/spells_dnd2024.json", "CharacterContent/Spells/spells_dnd5e.json"):
+    for path in (
+        "CharacterContent/Spells/spells_dnd2024.json",
+        "CharacterContent/Spells/spells_dnd5e.json",
+    ):
         try:
             with open(path, "r", encoding="utf-8") as f:
                 names.update(normalize_spell_name(n) for n in json.load(f).keys())

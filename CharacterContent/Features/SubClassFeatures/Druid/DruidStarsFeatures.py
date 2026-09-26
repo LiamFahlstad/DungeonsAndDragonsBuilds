@@ -1,13 +1,27 @@
-
 from Core.Definitions import Ability, DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class StarMap(Feature):
     def __init__(self):
-        super().__init__(name="Star Map", origin="Circle of the Stars Druid Level 3", uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Star Map",
+            origin="Circle of the Stars Druid Level 3",
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -17,23 +31,30 @@ class StarMap(Feature):
         )
         return description
 
-    def get_concise_description(
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "You create a Tiny star chart that serves as your spellcasting focus. While holding it, you have Guidance and Guiding Bolt prepared, and can cast Guiding Bolt without expending a spell slot a number of times equal to your Wisdom modifier (minimum 1) per Long Rest. If lost, you can replace it by conducting a 1-hour ceremony during a Short or Long Rest."
+
+    def regained_on(
         self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        return (
-            "You create a Tiny star chart that serves as your spellcasting focus. While holding it, you have Guidance and Guiding Bolt prepared, and can cast Guiding Bolt without expending a spell slot a number of times equal to your Wisdom modifier (minimum 1) per Long Rest. If lost, you can replace it by conducting a 1-hour ceremony during a Short or Long Rest."
-        )
-
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class StarryForm(Feature):
     def __init__(self):
-        super().__init__(name="Starry Form", origin="Circle of the Stars Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Dismissed/Incapacitated", range="10-Foot Radius"), usage_tags=["damage", "heal", "buff"])
+        super().__init__(
+            name="Starry Form",
+            origin="Circle of the Stars Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes or Until Dismissed/Incapacitated",
+                range="10-Foot Radius",
+            ),
+            usage_tags=["damage", "heal", "buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -54,7 +75,21 @@ class StarryForm(Feature):
 
 class CosmicOmen(Feature):
     def __init__(self):
-        super().__init__(name="Cosmic Omen", origin="Circle of the Stars Druid Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until Next Long Rest", range="30 Feet"), usage_tags=["buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Cosmic Omen",
+            origin="Circle of the Stars Druid Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="Until Next Long Rest",
+                range="30 Feet",
+            ),
+            usage_tags=["buff", "control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,9 +100,9 @@ class CosmicOmen(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
@@ -77,10 +112,14 @@ class CosmicOmen(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class TwinklingConstellations(Feature):
     def __init__(self):
         super().__init__(
-            name="Twinkling Constellations", origin="Circle of the Stars Druid Level 10", usage_tags=["damage", "heal", "buff", "utility"]
+            name="Twinkling Constellations",
+            origin="Circle of the Stars Druid Level 10",
+            usage_tags=["damage", "heal", "buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -94,7 +133,9 @@ class TwinklingConstellations(Feature):
 class FullOfStars(Feature):
     def __init__(self):
         super().__init__(
-            name="Full of Stars", origin="Circle of the Stars Druid Level 14", usage_tags=["buff"]
+            name="Full of Stars",
+            origin="Circle of the Stars Druid Level 14",
+            usage_tags=["buff"],
         )
 
     def target(

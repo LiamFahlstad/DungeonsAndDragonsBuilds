@@ -4,7 +4,11 @@ import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterContent.Classes.BaseClasses.MonkBase import MonkLevel1, MonkLevel2, MonkLevel3
+from CharacterContent.Classes.BaseClasses.MonkBase import (
+    MonkLevel1,
+    MonkLevel2,
+    MonkLevel3,
+)
 from CharacterContent.Classes.SubClasses2014.MonkOpenHand import (
     MonkOpenHandCustomStarterClassArgs,
     MonkOpenHandLevel3,

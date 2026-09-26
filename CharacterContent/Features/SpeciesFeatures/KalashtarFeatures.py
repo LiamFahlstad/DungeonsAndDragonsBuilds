@@ -1,6 +1,14 @@
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
-from CharacterContent.Features.Core.Improvements import DamageResistance, SavingThrowAdvantage
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
+from CharacterContent.Features.Core.Improvements import (
+    DamageResistance,
+    SavingThrowAdvantage,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -9,7 +17,12 @@ SPEED = 30  # Given by your species
 
 class DualMind(Feature):
     def __init__(self):
-        super().__init__(name="Dual Mind", origin="Kalashtar Trait", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Dual Mind",
+            origin="Kalashtar Trait",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -21,7 +34,12 @@ class DualMind(Feature):
 
 class MentalDiscipline(Feature):
     def __init__(self):
-        super().__init__(name="Mental Discipline", origin="Kalashtar Trait", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Mental Discipline",
+            origin="Kalashtar Trait",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -33,7 +51,16 @@ class MentalDiscipline(Feature):
 
 class MindLink(Feature):
     def __init__(self):
-        super().__init__(name="Mind Link", origin="Kalashtar Trait", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet Per Character Level"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Mind Link",
+            origin="Kalashtar Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Hour",
+                range="10 Feet Per Character Level",
+            ),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         character_level = character_stat_block.character_level
@@ -45,13 +72,20 @@ class MindLink(Feature):
             "another Magic action to end this effect."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class SeveredFromDreams(Feature):
     def __init__(self):
-        super().__init__(name="Severed from Dreams", origin="Kalashtar Trait", activation=FeatureActivation(duration="Until Next Long Rest"), usage_tags=["buff"])
+        super().__init__(
+            name="Severed from Dreams",
+            origin="Kalashtar Trait",
+            activation=FeatureActivation(duration="Until Next Long Rest"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

@@ -35,7 +35,9 @@ class ClericDeathLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         touch_of_death: ClericDeathFeatures.TouchOfDeathChannelDivinity = (
-            data.get_features_by_type(ClericDeathFeatures.TouchOfDeathChannelDivinity)[0]
+            data.get_features_by_type(ClericDeathFeatures.TouchOfDeathChannelDivinity)[
+                0
+            ]
         )
         touch_of_death.extend_feature(ClericDeathFeatures.InescapableDestruction())
         return data

@@ -48,14 +48,15 @@ class EquipmentEntry:
     items: list[tuple[Items.Item, int]] = attr.Factory(list)
     # (item, amount paid) for every item added via Bought(...); an item with
     # no entry here was found rather than purchased. Matched by identity.
-    purchases: list[tuple[Armor.AbstractArmor | Weapons.AbstractWeapon | Items.Item, float]] = (
-        attr.Factory(list)
-    )
+    purchases: list[
+        tuple[Armor.AbstractArmor | Weapons.AbstractWeapon | Items.Item, float]
+    ] = attr.Factory(list)
     # Net GP gained (positive - loot, quest reward, sold something off the
     # sheet) or spent on a non-item cost (negative - lodging, bribes,
     # training) recorded directly on this entry, on top of whatever
     # Bought(...) purchases above already deduct.
     gold: float = 0
+
 
 # Each class's flat starting gold - the last "Choose A/B/..." alternative in
 # its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.

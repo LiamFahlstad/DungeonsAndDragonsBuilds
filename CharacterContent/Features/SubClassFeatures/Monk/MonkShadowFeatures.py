@@ -1,5 +1,10 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -66,7 +71,14 @@ class ShadowArts(Feature):
 
 class ShadowStep(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Step", origin="Warrior of Shadow Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Shadow Step",
+            origin="Warrior of Shadow Monk Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -91,7 +103,9 @@ class ShadowStep(Feature):
 class ImprovedShadowStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Shadow Step", origin="Warrior of Shadow Monk Level 11", usage_tags=["damage"]
+            name="Improved Shadow Step",
+            origin="Warrior of Shadow Monk Level 11",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -102,7 +116,13 @@ class ImprovedShadowStep(Feature):
 class CloakOfShadows(Feature):
     def __init__(self):
         super().__init__(
-            name="Cloak of Shadows", origin="Warrior of Shadow Monk Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Incapacitated or Bright Light"), usage_tags=["buff"]
+            name="Cloak of Shadows",
+            origin="Warrior of Shadow Monk Level 17",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Incapacitated or Bright Light",
+            ),
+            usage_tags=["buff"],
         )
 
     def target(
@@ -126,8 +146,14 @@ class CloakOfShadows(Feature):
             ("Action", "Magic action"),
             ("Condition", "Must be entirely within Dim Light or Darkness"),
             ("Cost", "3 Focus Points"),
-            ("Duration", "1 minute (ends if Incapacitated or end turn in Bright Light)"),
+            (
+                "Duration",
+                "1 minute (ends if Incapacitated or end turn in Bright Light)",
+            ),
             ("Invisibility", "You have the Invisible condition"),
-            ("Partially Incorporeal", "Move through occupied spaces as Difficult Terrain"),
+            (
+                "Partially Incorporeal",
+                "Move through occupied spaces as Difficult Terrain",
+            ),
             ("Shadow Flurry", "Use Flurry of Blows without expending Focus Points"),
         ]

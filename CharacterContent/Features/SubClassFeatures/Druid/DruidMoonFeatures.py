@@ -1,13 +1,23 @@
-
 from Core.Definitions import DRUID_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class CircleForms(Feature):
     def __init__(self):
-        super().__init__(name="Circle Forms", origin="Circle of the Moon Druid Level 3", usage_tags=["buff", "heal"])
+        super().__init__(
+            name="Circle Forms",
+            origin="Circle of the Moon Druid Level 3",
+            usage_tags=["buff", "heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -27,6 +37,7 @@ class CircleForms(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         import Core.Definitions as Definitions
+
         druid_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.DRUID
         )
@@ -58,7 +69,9 @@ class CircleOfTheMoonSpells(Feature):
 class ImprovedCircleForms(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Circle Forms", origin="Circle of the Moon Druid Level 6", usage_tags=["buff"]
+            name="Improved Circle Forms",
+            origin="Circle of the Moon Druid Level 6",
+            usage_tags=["buff"],
         )
 
     def target(
@@ -78,8 +91,18 @@ class ImprovedCircleForms(Feature):
 class MoonlightStep(Feature):
     def __init__(self):
         super().__init__(
-            name="Moonlight Step", origin="Circle of the Moon Druid Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["buff"]
-        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+            name="Moonlight Step",
+            origin="Circle of the Moon Druid Level 10",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -100,9 +123,9 @@ class MoonlightStep(Feature):
             ("Restore", "Spend level 2+ spell slot per use (no action required)"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
@@ -112,9 +135,15 @@ class MoonlightStep(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class LunarForm(Feature):
     def __init__(self):
-        super().__init__(name="Lunar Form", origin="Circle of the Moon Druid Level 14", usage_tags=["damage"])
+        super().__init__(
+            name="Lunar Form",
+            origin="Circle of the Moon Druid Level 14",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -128,6 +157,12 @@ class LunarForm(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Improved Lunar Radiance", "Once per turn, +2d10 Radiant damage to Wild Shape attack"),
-            ("Shared Moonlight", "Moonlight Step: teleport one willing creature within 10 feet to within 10 feet of destination"),
+            (
+                "Improved Lunar Radiance",
+                "Once per turn, +2d10 Radiant damage to Wild Shape attack",
+            ),
+            (
+                "Shared Moonlight",
+                "Moonlight Step: teleport one willing creature within 10 feet to within 10 feet of destination",
+            ),
         ]

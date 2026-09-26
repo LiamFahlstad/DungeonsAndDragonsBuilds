@@ -1,5 +1,12 @@
 from Core.Definitions import CLERIC_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,7 +25,12 @@ class LightDomainSpells(Feature):
 class RadianceOfTheDawn(Feature):
     def __init__(self):
         super().__init__(
-            name="Radiance of the Dawn", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="30-Foot Emanation"), usage_tags=["damage"]
+            name="Radiance of the Dawn",
+            origin="Light Domain Cleric Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30-Foot Emanation"
+            ),
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -33,7 +45,10 @@ class RadianceOfTheDawn(Feature):
             ("Trigger", "Magic action, Holy Symbol, Channel Divinity"),
             ("Area", "30-foot Emanation from yourself"),
             ("Effect 1", "Dispel magical Darkness"),
-            ("Effect 2", "Constitution save; 2d10 + Cleric level Radiant damage on fail (half on success)"),
+            (
+                "Effect 2",
+                "Constitution save; 2d10 + Cleric level Radiant damage on fail (half on success)",
+            ),
         ]
 
     def target(
@@ -44,7 +59,19 @@ class RadianceOfTheDawn(Feature):
 
 class WardingFlare(Feature):
     def __init__(self):
-        super().__init__(name="Warding Flare", origin="Light Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Warding Flare",
+            origin="Light Domain Cleric Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -65,9 +92,9 @@ class WardingFlare(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
@@ -77,10 +104,14 @@ class WardingFlare(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class ImprovedWardingFlare(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Warding Flare", origin="Light Domain Cleric Level 6", usage_tags=["heal"]
+            name="Improved Warding Flare",
+            origin="Light Domain Cleric Level 6",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -90,18 +121,34 @@ class ImprovedWardingFlare(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+
 class CoronaOfLight(Feature):
     def __init__(self):
-        super().__init__(name="Corona of Light", origin="Light Domain Cleric Level 17", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="60-Foot Radius"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Corona of Light",
+            origin="Light Domain Cleric Level 17",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute",
+                range="60-Foot Radius",
+            ),
+            usage_tags=["control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -119,13 +166,17 @@ class CoronaOfLight(Feature):
             ("Trigger", "Magic action"),
             ("Duration", "1 minute or dismiss (no action)"),
             ("Light", "60-foot Bright Light, +30 feet Dim Light"),
-            ("Effect", "Enemies in Bright Light have Disadvantage on saves vs Radiance/Fire/Radiant"),
+            (
+                "Effect",
+                "Enemies in Bright Light have Disadvantage on saves vs Radiance/Fire/Radiant",
+            ),
             ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
             ("Recharge", "Long Rest"),
         ]
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(

@@ -15,10 +15,18 @@ from CharacterContent.Classes.SubClasses2024.RogueAssassin import (
     RogueAssassinLevel3,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools as ThievesToolsProficiency, DisguiseKit as DisguiseKitProficiency, PoisonersKit as PoisonersKitProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import (
+    ThievesTools as ThievesToolsProficiency,
+    DisguiseKit as DisguiseKitProficiency,
+    PoisonersKit as PoisonersKitProficiency,
+)
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -80,7 +88,8 @@ def get_starter_class_builder():
             (Items.Quiver(), 1),
             (Items.ThievesTools(), 1),
             (Items.DisguiseKit(), 1),
-            (Items.PoisonersKit(), 1)],
+            (Items.PoisonersKit(), 1),
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: RogueLevel1(
@@ -106,8 +115,11 @@ def get_starter_class_builder():
                 3: RogueAssassinLevel3(),
             },
         ),
-        tool_proficiencies=[ThievesToolsProficiency(), DisguiseKitProficiency(),
-            PoisonersKitProficiency()],
+        tool_proficiencies=[
+            ThievesToolsProficiency(),
+            DisguiseKitProficiency(),
+            PoisonersKitProficiency(),
+        ],
     )
 
 

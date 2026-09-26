@@ -23,21 +23,37 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
-TransmutationSpellsUpTo2: TypeAlias = TransmutationLevel1Spells | TransmutationLevel2Spells
+TransmutationSpellsUpTo2: TypeAlias = (
+    TransmutationLevel1Spells | TransmutationLevel2Spells
+)
 
-TransmutationSpellsUpTo3: TypeAlias = TransmutationSpellsUpTo2 | TransmutationLevel3Spells
+TransmutationSpellsUpTo3: TypeAlias = (
+    TransmutationSpellsUpTo2 | TransmutationLevel3Spells
+)
 
-TransmutationSpellsUpTo4: TypeAlias = TransmutationSpellsUpTo3 | TransmutationLevel4Spells
+TransmutationSpellsUpTo4: TypeAlias = (
+    TransmutationSpellsUpTo3 | TransmutationLevel4Spells
+)
 
-TransmutationSpellsUpTo5: TypeAlias = TransmutationSpellsUpTo4 | TransmutationLevel5Spells
+TransmutationSpellsUpTo5: TypeAlias = (
+    TransmutationSpellsUpTo4 | TransmutationLevel5Spells
+)
 
-TransmutationSpellsUpTo6: TypeAlias = TransmutationSpellsUpTo5 | TransmutationLevel6Spells
+TransmutationSpellsUpTo6: TypeAlias = (
+    TransmutationSpellsUpTo5 | TransmutationLevel6Spells
+)
 
-TransmutationSpellsUpTo7: TypeAlias = TransmutationSpellsUpTo6 | TransmutationLevel7Spells
+TransmutationSpellsUpTo7: TypeAlias = (
+    TransmutationSpellsUpTo6 | TransmutationLevel7Spells
+)
 
-TransmutationSpellsUpTo8: TypeAlias = TransmutationSpellsUpTo7 | TransmutationLevel8Spells
+TransmutationSpellsUpTo8: TypeAlias = (
+    TransmutationSpellsUpTo7 | TransmutationLevel8Spells
+)
 
-TransmutationSpellsUpTo9: TypeAlias = TransmutationSpellsUpTo8 | TransmutationLevel9Spells
+TransmutationSpellsUpTo9: TypeAlias = (
+    TransmutationSpellsUpTo8 | TransmutationLevel9Spells
+)
 
 
 @attr.dataclass

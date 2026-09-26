@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, BarbarianSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheTotemWarriorFeatures
+from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
+    BarbarianPathOfTheTotemWarriorFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Spells.SpellLists import (
     DruidLevel1Spells,

@@ -57,7 +57,9 @@ class ClericTrickeryLevel6(ClassBuilder.SubclassLevel6):
         channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
             ClericFeatures.ChannelDivinity
         )[0]
-        channel_divinity.extend_feature(ClericTrickeryFeatures.TrickstersTransposition())
+        channel_divinity.extend_feature(
+            ClericTrickeryFeatures.TrickstersTransposition()
+        )
         return data
 
 

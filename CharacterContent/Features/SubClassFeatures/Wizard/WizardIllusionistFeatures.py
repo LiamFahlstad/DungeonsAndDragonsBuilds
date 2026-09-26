@@ -1,5 +1,10 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -40,7 +45,12 @@ class PhantasmalCreatures(Feature):
 
 class IllusorySelf(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Self", origin="Illusionist Wizard Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Illusory Self",
+            origin="Illusionist Wizard Level 10",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,7 +59,9 @@ class IllusorySelf(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -65,13 +77,22 @@ class IllusorySelf(Feature):
 
 class IllusoryReality(Feature):
     def __init__(self):
-        super().__init__(name="Illusory Reality", origin="Illusionist Wizard Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(
+            name="Illusory Reality",
+            origin="Illusionist Wizard Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have learned to weave shadow magic into your illusions to give them a semi-reality. When you cast an Illusion spell with a spell slot, you can choose one inanimate, nonmagical object that is part of the illusion and make that object real. You can do this on your turn as a Bonus Action while the spell is ongoing. The object remains real for 1 minute, during which it can't deal damage or give any conditions. For example, you can create an illusion of a bridge over a chasm and then make it real and cross it."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
     def get_table_description(

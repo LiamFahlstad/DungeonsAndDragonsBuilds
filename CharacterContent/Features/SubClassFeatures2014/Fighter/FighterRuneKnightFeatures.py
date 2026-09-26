@@ -1,5 +1,12 @@
 from Core.Definitions import Language, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -76,7 +83,9 @@ class GiantsMight(Feature):
         super().__init__(
             name="Giant's Might",
             origin="Rune Knight Fighter Level 3",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
             usage_tags=["buff", "damage"],
         )
 
@@ -99,12 +108,17 @@ class GiantsMight(Feature):
         return [
             ("Action", "Bonus action"),
             ("Duration", "1 minute"),
-            ("Benefits", "Become Large (if smaller); advantage on Strength checks/saves; +1d6 damage once per turn"),
+            (
+                "Benefits",
+                "Become Large (if smaller); advantage on Strength checks/saves; +1d6 damage once per turn",
+            ),
             ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
             ("Regain", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -113,9 +127,15 @@ class RunicShield(Feature):
         super().__init__(
             name="Runic Shield",
             origin="Rune Knight Fighter Level 7",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
             usage_tags=["buff"],
-            uses=FeatureUses(max_uses=MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus.")
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -139,10 +159,14 @@ class RunicShield(Feature):
             ("Regain", "Long rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -164,7 +188,9 @@ class GreatStature(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -179,7 +205,9 @@ class MasterOfRunes(Feature):
         description = "You can invoke each rune you know from your Rune Carver feature twice, rather than once, and you regain all expended uses when you finish a short or long rest."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -191,10 +219,10 @@ class RunicJuggernaut(Feature):
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You learn how to amplify your rune-powered transformation. As a result, the extra damage you deal with the Giant's Might feature increases to 1d10. Moreover, when you use that feature, your size can increase to Huge, and while you are that size, your reach increases by 5 feet."
-        )
+        description = "You learn how to amplify your rune-powered transformation. As a result, the extra damage you deal with the Giant's Might feature increases to 1d10. Moreover, when you use that feature, your size can increase to Huge, and while you are that size, your reach increases by 5 feet."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

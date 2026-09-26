@@ -7,13 +7,18 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import InitiativeBonus, SavingThrowProficiencyChoice
+from CharacterContent.Features.Core.Improvements import (
+    InitiativeBonus,
+    SavingThrowProficiencyChoice,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class GloomStalkerMagic(Feature):
     def __init__(self):
-        super().__init__(name="Gloom Stalker Magic", origin="Gloom Stalker Ranger Level 3")
+        super().__init__(
+            name="Gloom Stalker Magic", origin="Gloom Stalker Ranger Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,7 +37,11 @@ class GloomStalkerMagic(Feature):
 
 class DreadAmbusher(Feature):
     def __init__(self):
-        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage", "utility"])
+        super().__init__(
+            name="Dread Ambusher",
+            origin="Gloom Stalker Ranger Level 3",
+            usage_tags=["buff", "damage", "utility"],
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         wisdom_modifier = character_stat_block.get_wisdom_modifier()
@@ -57,13 +66,19 @@ class DreadAmbusher(Feature):
             ("Attack Damage", "+1d8 damage of weapon's type on hit"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UmbralSight(Feature):
     def __init__(self):
-        super().__init__(name="Umbral Sight", origin="Gloom Stalker Ranger Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Umbral Sight",
+            origin="Gloom Stalker Ranger Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -76,9 +91,18 @@ class UmbralSight(Feature):
 
 class IronMind(Feature):
     def __init__(self, alternate_saving_throw: Optional[Ability] = None):
-        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Iron Mind",
+            origin="Gloom Stalker Ranger Level 7",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._alternate_saving_throw = alternate_saving_throw
-        ability = alternate_saving_throw if alternate_saving_throw is not None else Ability.WISDOM
+        ability = (
+            alternate_saving_throw
+            if alternate_saving_throw is not None
+            else Ability.WISDOM
+        )
         self._proficiency_choice = SavingThrowProficiencyChoice(
             [ability],
             [Ability.WISDOM, Ability.INTELLIGENCE, Ability.CHARISMA],
@@ -90,9 +114,7 @@ class IronMind(Feature):
         self._proficiency_choice.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You have honed your ability to resist the mind-altering powers of your prey. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
-        )
+        description = "You have honed your ability to resist the mind-altering powers of your prey. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
         if self._alternate_saving_throw is not None:
             description += f"\nYou already had Wisdom saving throw proficiency, so you chose {self._alternate_saving_throw.value} instead."
         return description
@@ -100,23 +122,36 @@ class IronMind(Feature):
 
 class StalkersFlurry(Feature):
     def __init__(self):
-        super().__init__(name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", usage_tags=["damage"])
+        super().__init__(
+            name="Stalker's Flurry",
+            origin="Gloom Stalker Ranger Level 11",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to attack with such unexpected speed that you can turn a miss into another strike. Once on each of your turns when you miss with a weapon attack, you can make another weapon attack as part of the same action."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class ShadowyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["control"])
+        super().__init__(
+            name="Shadowy Dodge",
+            origin="Gloom Stalker Ranger Level 15",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can dodge in unforeseen ways, with wisps of supernatural shadow around you. Whenever a creature makes an attack roll against you and doesn't have advantage on the roll, you can use your reaction to impose disadvantage on it. You must use this feature before you know the outcome of the attack roll."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

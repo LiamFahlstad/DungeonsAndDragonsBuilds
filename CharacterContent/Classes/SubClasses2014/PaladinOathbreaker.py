@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinOathbreakerFeatures
+from CharacterContent.Features.SubClassFeatures2014.Paladin import (
+    PaladinOathbreakerFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel3Spells,
@@ -114,9 +116,9 @@ class PaladinOathbreakerLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        aura_of_hate: PaladinOathbreakerFeatures.AuraOfHate = (
-            data.get_features_by_type(PaladinOathbreakerFeatures.AuraOfHate)[0]
-        )
+        aura_of_hate: PaladinOathbreakerFeatures.AuraOfHate = data.get_features_by_type(
+            PaladinOathbreakerFeatures.AuraOfHate
+        )[0]
         aura_of_hate.extend_feature(PaladinOathbreakerFeatures.AuraOfHateExpansion())
         return data
 

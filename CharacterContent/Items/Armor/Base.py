@@ -113,7 +113,9 @@ class AbstractArmor(Item, ABC):
         self.add_improvement(armor_improvement)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)  # CharacterImprovements (gated on is_wearing)
+        super().apply(
+            character_stat_block
+        )  # CharacterImprovements (gated on is_wearing)
         if self.is_wearing:
             self.apply_worn_effects(character_stat_block)
 
@@ -133,8 +135,8 @@ class AbstractArmor(Item, ABC):
             ability_modifier_cap = (
                 2 if self.armor_type == Definitions.ArmorType.MEDIUM else None
             )
-            SetArmorClass(
-                self.base_ac, self.ac_ability, ability_modifier_cap
-            ).apply(character_stat_block)
+            SetArmorClass(self.base_ac, self.ac_ability, ability_modifier_cap).apply(
+                character_stat_block
+            )
             if self.ac_bonus:
                 ArmorClassBonus(self.ac_bonus).apply(character_stat_block)

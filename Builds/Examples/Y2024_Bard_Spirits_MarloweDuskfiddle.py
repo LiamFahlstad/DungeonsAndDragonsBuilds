@@ -32,7 +32,12 @@ from CharacterContent.Classes.SubClasses2024.BardSpirits import (
     BardSpiritsLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Items
 from CharacterContent.Species import Aasimar
 from CharacterContent.Spells.SpellLists import (
@@ -134,7 +139,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                     spell=BardLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: BardLevel9(
@@ -155,7 +161,8 @@ def get_starter_class_builder():
                         [
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: BardLevel13(
                     spell=BardLevel7Spells.MORDENKAINENS_SWORD,
@@ -197,7 +204,9 @@ def get_starter_class_builder():
     )
 
 
-class Y2024BardSpiritsMarloweDuskfiddleCharacterBuilder(CharacterBuilder.CharacterBuilder):
+class Y2024BardSpiritsMarloweDuskfiddleCharacterBuilder(
+    CharacterBuilder.CharacterBuilder
+):
     def __init__(self):
         super().__init__(
             name="Marlowe Duskfiddle",

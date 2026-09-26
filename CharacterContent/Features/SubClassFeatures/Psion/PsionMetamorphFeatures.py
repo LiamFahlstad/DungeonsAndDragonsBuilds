@@ -1,5 +1,10 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -18,7 +23,14 @@ class MetamorphSpells(Feature):
 
 class MutableForm(Feature):
     def __init__(self):
-        super().__init__(name="Mutable Form", origin="Metamorph Psion Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(
+            name="Mutable Form",
+            origin="Metamorph Psion Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,13 +63,20 @@ class MutableForm(Feature):
             ("Touch Range", "10 feet (for touch spells with action casting time)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class OrganicWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Organic Weapons", origin="Metamorph Psion Level 3", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["damage", "buff", "control"])
+        super().__init__(
+            name="Organic Weapons",
+            origin="Metamorph Psion Level 3",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+            usage_tags=["damage", "buff", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -101,13 +120,19 @@ class OrganicWeapons(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class FleshWeaver(Feature):
     def __init__(self):
-        super().__init__(name="Flesh Weaver", origin="Metamorph Psion Level 6", usage_tags=["buff", "heal"])
+        super().__init__(
+            name="Flesh Weaver",
+            origin="Metamorph Psion Level 6",
+            usage_tags=["buff", "heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -130,17 +155,24 @@ class FleshWeaver(Feature):
             ("Activation", "When using Mutable Form"),
             ("Cost", "1 additional Psionic Energy Die"),
             ("Organic Defense", "+2 bonus to AC"),
-            ("Empowered Healing", "When casting healing spell, expend die and add roll to HP regained"),
+            (
+                "Empowered Healing",
+                "When casting healing spell, expend die and add roll to HP regained",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class ImprovedMutableForm(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Mutable Form", origin="Metamorph Psion Level 10", usage_tags=["buff", "utility"]
+            name="Improved Mutable Form",
+            origin="Metamorph Psion Level 10",
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -170,13 +202,20 @@ class ImprovedMutableForm(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class LifeBendingWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Life-bending Weapons", origin="Metamorph Psion Level 14", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["damage", "heal"])
+        super().__init__(
+            name="Life-bending Weapons",
+            origin="Metamorph Psion Level 14",
+            activation=FeatureActivation(range="30-Foot Emanation"),
+            usage_tags=["damage", "heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -198,9 +237,7 @@ class LifeBendingWeapons(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "On hit with Organic Weapon, roll a Psionic Energy Die for extra Necrotic damage "
             "(no expend). Alternatively (once/turn), expend one die: deal extra Necrotic damage "

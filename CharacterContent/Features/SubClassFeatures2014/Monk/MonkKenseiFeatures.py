@@ -1,5 +1,11 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -46,7 +52,12 @@ class KenseiWeapons(Feature):
 
 class AgileParry(Feature):
     def __init__(self):
-        super().__init__(name="Agile Parry", origin="Way of the Kensei Monk Level 3", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["buff"])
+        super().__init__(
+            name="Agile Parry",
+            origin="Way of the Kensei Monk Level 3",
+            activation=FeatureActivation(duration="Until Start of Next Turn"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,13 +67,23 @@ class AgileParry(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class KenseiShot(Feature):
     def __init__(self):
-        super().__init__(name="Kensei's Shot", origin="Way of the Kensei Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn"), usage_tags=["damage"])
+        super().__init__(
+            name="Kensei's Shot",
+            origin="Way of the Kensei Monk Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until End of Current Turn",
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -72,35 +93,43 @@ class KenseiShot(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class WayOfTheBrush(Feature):
     def __init__(self):
-        super().__init__(name="Way of the Brush", origin="Way of the Kensei Monk Level 3")
+        super().__init__(
+            name="Way of the Brush", origin="Way of the Kensei Monk Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You gain proficiency with your choice of calligrapher's supplies or painter's supplies."
-        )
+        description = "You gain proficiency with your choice of calligrapher's supplies or painter's supplies."
         return description
 
 
 class MagicKenseiWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Magic Kensei Weapons", origin="Way of the Kensei Monk Level 6", usage_tags=["buff"])
+        super().__init__(
+            name="Magic Kensei Weapons",
+            origin="Way of the Kensei Monk Level 6",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Your attacks with your kensei weapons count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage."
-        )
+        description = "Your attacks with your kensei weapons count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage."
         return description
 
 
 class DeftStrike(Feature):
     def __init__(self):
-        super().__init__(name="Deft Strike", origin="Way of the Kensei Monk Level 6", usage_tags=["damage"])
+        super().__init__(
+            name="Deft Strike",
+            origin="Way of the Kensei Monk Level 6",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -109,13 +138,24 @@ class DeftStrike(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SharpenTheBlade(Feature):
     def __init__(self):
-        super().__init__(name="Sharpen the Blade", origin="Way of the Kensei Monk Level 11", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Feature Used Again", range="Touch"), usage_tags=["buff"])
+        super().__init__(
+            name="Sharpen the Blade",
+            origin="Way of the Kensei Monk Level 11",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Feature Used Again",
+                range="Touch",
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -125,10 +165,14 @@ class SharpenTheBlade(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus action"),
             ("Cost", "1-3 ki points"),
@@ -141,7 +185,11 @@ class SharpenTheBlade(Feature):
 
 class UnearringAccuracy(Feature):
     def __init__(self):
-        super().__init__(name="Unerring Accuracy", origin="Way of the Kensei Monk Level 17", usage_tags=["buff"])
+        super().__init__(
+            name="Unerring Accuracy",
+            origin="Way of the Kensei Monk Level 17",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -150,5 +198,7 @@ class UnearringAccuracy(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

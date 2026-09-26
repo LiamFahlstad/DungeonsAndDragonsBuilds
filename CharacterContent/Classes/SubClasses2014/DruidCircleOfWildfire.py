@@ -36,9 +36,7 @@ class DruidWildfireLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         summon_wildfire_spirit: DruidWildfireFeatures.SummonWildfireSpirit = (
-            data.get_features_by_type(
-                DruidWildfireFeatures.SummonWildfireSpirit
-            )[0]
+            data.get_features_by_type(DruidWildfireFeatures.SummonWildfireSpirit)[0]
         )
         summon_wildfire_spirit.extend_feature(DruidWildfireFeatures.EnhancedBond())
         return data
@@ -63,9 +61,7 @@ class DruidWildfireLevel14(ClassBuilder.SubclassLevel14):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         summon_wildfire_spirit: DruidWildfireFeatures.SummonWildfireSpirit = (
-            data.get_features_by_type(
-                DruidWildfireFeatures.SummonWildfireSpirit
-            )[0]
+            data.get_features_by_type(DruidWildfireFeatures.SummonWildfireSpirit)[0]
         )
         summon_wildfire_spirit.extend_feature(DruidWildfireFeatures.BlazingRevival())
         return data

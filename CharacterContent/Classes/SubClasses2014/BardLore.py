@@ -26,7 +26,9 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
     ) -> CharacterSheetData:
         data.add_feature(
             BardLoreFeatures.BonusProficiencies(
-                self.skill_proficiency_1, self.skill_proficiency_2, self.skill_proficiency_3
+                self.skill_proficiency_1,
+                self.skill_proficiency_2,
+                self.skill_proficiency_3,
             )
         )
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(

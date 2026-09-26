@@ -1,12 +1,19 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class DazzlingFootwork(Feature):
     def __init__(self):
         super().__init__(
-            name="Dazzling Footwork", origin="College of Dance Bard Level 3", usage_tags=["buff", "damage"]
+            name="Dazzling Footwork",
+            origin="College of Dance Bard Level 3",
+            usage_tags=["buff", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -23,17 +30,31 @@ class DazzlingFootwork(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Dance Virtuoso", "Advantage on Charisma (Performance) checks involving dancing"),
+            (
+                "Dance Virtuoso",
+                "Advantage on Charisma (Performance) checks involving dancing",
+            ),
             ("Unarmored Defense", "AC = 10 + Dex modifier + Cha modifier"),
-            ("Agile Strikes", "When expending Bardic Inspiration, make one Unarmed Strike as part of that action"),
-            ("Bardic Damage", "Unarmed Strikes use Dexterity; deal Bludgeoning damage = Bardic Inspiration die roll + Dex modifier (no cost)"),
+            (
+                "Agile Strikes",
+                "When expending Bardic Inspiration, make one Unarmed Strike as part of that action",
+            ),
+            (
+                "Bardic Damage",
+                "Unarmed Strikes use Dexterity; deal Bludgeoning damage = Bardic Inspiration die roll + Dex modifier (no cost)",
+            ),
         ]
 
 
 class InspiringMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Inspiring Movement", origin="College of Dance Bard Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["buff"]
+            name="Inspiring Movement",
+            origin="College of Dance Bard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -50,14 +71,22 @@ class InspiringMovement(Feature):
             ("Trigger", "Enemy you can see ends its turn within 5 feet of you"),
             ("Action", "Reaction"),
             ("Cost", "1 use of Bardic Inspiration"),
-            ("Effect", "You move up to half your Speed; one ally within 30 feet moves up to half its Speed using its Reaction"),
+            (
+                "Effect",
+                "You move up to half your Speed; one ally within 30 feet moves up to half its Speed using its Reaction",
+            ),
             ("Movement", "Does not provoke Opportunity Attacks"),
         ]
 
 
 class TandemFootwork(Feature):
     def __init__(self):
-        super().__init__(name="Tandem Footwork", origin="College of Dance Bard Level 6", activation=FeatureActivation(range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Tandem Footwork",
+            origin="College of Dance Bard Level 6",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
@@ -70,7 +99,10 @@ class TandemFootwork(Feature):
             ("Trigger", "Roll Initiative"),
             ("Condition", "You cannot have the Incapacitated condition"),
             ("Cost", "1 use of Bardic Inspiration"),
-            ("Effect", "Roll Bardic Inspiration die; you and each ally within 30 feet who can see/hear you gain that bonus to Initiative"),
+            (
+                "Effect",
+                "Roll Bardic Inspiration die; you and each ally within 30 feet who can see/hear you gain that bonus to Initiative",
+            ),
         ]
 
     def target(
@@ -82,7 +114,10 @@ class TandemFootwork(Feature):
 class LeadingEvasion(Feature):
     def __init__(self):
         super().__init__(
-            name="Leading Evasion", origin="College of Dance Bard Level 14", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff"]
+            name="Leading Evasion",
+            origin="College of Dance Bard Level 14",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

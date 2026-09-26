@@ -17,31 +17,43 @@ class EvocationSavant(Feature):
 
 class PotentCantrip(Feature):
     def __init__(self):
-        super().__init__(name="Potent Cantrip", origin="Evoker Wizard Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Potent Cantrip", origin="Evoker Wizard Level 3", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SculptSpells(Feature):
     def __init__(self):
-        super().__init__(name="Sculpt Spells", origin="Evoker Wizard Level 6", usage_tags=["buff"])
+        super().__init__(
+            name="Sculpt Spells", origin="Evoker Wizard Level 6", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class EmpoweredEvocation(Feature):
     def __init__(self):
-        super().__init__(name="Empowered Evocation", origin="Evoker Wizard Level 10", usage_tags=["damage"])
+        super().__init__(
+            name="Empowered Evocation",
+            origin="Evoker Wizard Level 10",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell."
@@ -50,7 +62,9 @@ class EmpoweredEvocation(Feature):
 
 class Overchannel(Feature):
     def __init__(self):
-        super().__init__(name="Overchannel", origin="Evoker Wizard Level 14", usage_tags=["damage"])
+        super().__init__(
+            name="Overchannel", origin="Evoker Wizard Level 14", usage_tags=["damage"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -60,7 +74,9 @@ class Overchannel(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -69,7 +85,10 @@ class Overchannel(Feature):
         return [
             ("What", "Deal maximum damage with spell"),
             ("Eligible Spells", "Wizard spell, level 1-5 slot, deals damage"),
-            ("Cost", "First use free; subsequent: 2d12 necrotic/slot level (escalates +1d12 per use)"),
+            (
+                "Cost",
+                "First use free; subsequent: 2d12 necrotic/slot level (escalates +1d12 per use)",
+            ),
             ("Damage Type", "Necrotic (ignores Resistance and Immunity)"),
             ("Recharge", "Long Rest"),
         ]

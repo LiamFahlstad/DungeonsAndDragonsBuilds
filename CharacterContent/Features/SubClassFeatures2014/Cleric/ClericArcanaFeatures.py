@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -13,7 +18,9 @@ class ArcaneInitiate(Feature):
 
 class ArcanaDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Arcana Domain Spells", origin="Arcana Domain Cleric Level 3")
+        super().__init__(
+            name="Arcana Domain Spells", origin="Arcana Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -34,7 +41,11 @@ class ArcaneAbjurationChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Arcane Abjuration",
             origin="Arcana Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Any Damage", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Takes Any Damage",
+                range="30 Feet",
+            ),
             usage_tags=["control"],
         )
 
@@ -76,7 +87,11 @@ class SpellBreaker(Feature):
 
 class PotentSpellcasting(Feature):
     def __init__(self):
-        super().__init__(name="Potent Spellcasting", origin="Arcana Domain Cleric Level 8", usage_tags=["damage"])
+        super().__init__(
+            name="Potent Spellcasting",
+            origin="Arcana Domain Cleric Level 8",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You add your Wisdom modifier to the damage you deal with any cleric cantrip."

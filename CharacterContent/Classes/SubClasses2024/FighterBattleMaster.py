@@ -10,7 +10,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass
 from CharacterContent.Features.CombatFeatures import Maneuvers
-from CharacterContent.Features.SubClassFeatures.Fighter import FighterBattleMasterFeatures
+from CharacterContent.Features.SubClassFeatures.Fighter import (
+    FighterBattleMasterFeatures,
+)
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -42,9 +44,9 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = data.get_features_by_type(
-            FighterBattleMasterFeatures.SuperiorityDice
-        )[0]
+        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = (
+            data.get_features_by_type(FighterBattleMasterFeatures.SuperiorityDice)[0]
+        )
         superiority_dice.extend_feature(self.maneuver_1)
         superiority_dice.extend_feature(self.maneuver_2)
         data.add_feature(FighterBattleMasterFeatures.KnowYourEnemy())
@@ -60,12 +62,14 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = data.get_features_by_type(
-            FighterBattleMasterFeatures.SuperiorityDice
-        )[0]
+        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = (
+            data.get_features_by_type(FighterBattleMasterFeatures.SuperiorityDice)[0]
+        )
         superiority_dice.extend_feature(self.maneuver_1)
         superiority_dice.extend_feature(self.maneuver_2)
-        superiority_dice.extend_feature(FighterBattleMasterFeatures.ImprovedCombatSuperiority())
+        superiority_dice.extend_feature(
+            FighterBattleMasterFeatures.ImprovedCombatSuperiority()
+        )
         return data
 
 
@@ -78,9 +82,9 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = data.get_features_by_type(
-            FighterBattleMasterFeatures.SuperiorityDice
-        )[0]
+        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = (
+            data.get_features_by_type(FighterBattleMasterFeatures.SuperiorityDice)[0]
+        )
         superiority_dice.extend_feature(self.maneuver_1)
         superiority_dice.extend_feature(self.maneuver_2)
         superiority_dice.extend_feature(FighterBattleMasterFeatures.Relentless())
@@ -94,10 +98,12 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = data.get_features_by_type(
-            FighterBattleMasterFeatures.SuperiorityDice
-        )[0]
-        superiority_dice.extend_feature(FighterBattleMasterFeatures.UltimateCombatSuperiority())
+        superiority_dice: FighterBattleMasterFeatures.SuperiorityDice = (
+            data.get_features_by_type(FighterBattleMasterFeatures.SuperiorityDice)[0]
+        )
+        superiority_dice.extend_feature(
+            FighterBattleMasterFeatures.UltimateCombatSuperiority()
+        )
         return data
 
 

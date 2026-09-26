@@ -57,7 +57,8 @@ class RangerLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
         data.add_feature(
-            RangerFeatures.DeftExplorerExpertise(self.skill_expertise), apply_when=ApplyWhen.LAST
+            RangerFeatures.DeftExplorerExpertise(self.skill_expertise),
+            apply_when=ApplyWhen.LAST,
         )
         data.add_fighting_style(self.fighting_style)
         data.add_spell(self.spell)

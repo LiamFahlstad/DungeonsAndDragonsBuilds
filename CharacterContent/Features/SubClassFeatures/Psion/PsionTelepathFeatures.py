@@ -1,5 +1,10 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,16 +32,26 @@ class MindInfiltrator(Feature):
             ("Cost", "1 Psionic Energy Die"),
             ("No Components", "Spell components waived"),
             ("No Concentration", "Spell doesn't require Concentration"),
-            ("Stealth on Read Thoughts", "Target doesn't know you're probing (if fails save)"),
+            (
+                "Stealth on Read Thoughts",
+                "Target doesn't know you're probing (if fails save)",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class TelepathicDistraction(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Distraction", origin="Telepath Psion Level 3", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Telepathic Distraction",
+            origin="Telepath Psion Level 3",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,13 +64,20 @@ class TelepathicDistraction(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class BulwarkMind(Feature):
     def __init__(self):
-        super().__init__(name="Bulwark Mind", origin="Telepath Psion Level 6", activation=FeatureActivation(duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(
+            name="Bulwark Mind",
+            origin="Telepath Psion Level 6",
+            activation=FeatureActivation(duration="10 Minutes"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,17 +101,26 @@ class BulwarkMind(Feature):
             ("Cost", "1 Psionic Energy Die"),
             ("Duration", "10 minutes"),
             ("Damage Resistance", "Psychic damage"),
-            ("Saving Throw Bonus", "Add die roll to INT/WIS/CHA saves (die doesn't expend)"),
+            (
+                "Saving Throw Bonus",
+                "Add die roll to INT/WIS/CHA saves (die doesn't expend)",
+            ),
             ("Restriction", "Not while Incapacitated"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class PotentThoughts(Feature):
     def __init__(self):
-        super().__init__(name="Potent Thoughts", origin="Telepath Psion Level 6", usage_tags=["damage", "utility"])
+        super().__init__(
+            name="Potent Thoughts",
+            origin="Telepath Psion Level 6",
+            usage_tags=["damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -102,7 +133,12 @@ class PotentThoughts(Feature):
 
 class TelepathicBolstering(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Bolstering", origin="Telepath Psion Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Telepathic Bolstering",
+            origin="Telepath Psion Level 10",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -121,19 +157,29 @@ class TelepathicBolstering(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Trigger", "You or ally within telepathy range fails check or misses attack"),
+            (
+                "Trigger",
+                "You or ally within telepathy range fails check or misses attack",
+            ),
             ("Action", "Reaction"),
             ("Effect", "Roll Psionic Energy Die and add to d20 roll"),
             ("Cost", "1 Psionic Energy Die (expended only if success)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class ScrambleMinds(Feature):
     def __init__(self):
-        super().__init__(name="Scramble Minds", origin="Telepath Psion Level 14", activation=FeatureActivation(range="30-Foot Radius"), usage_tags=["control"])
+        super().__init__(
+            name="Scramble Minds",
+            origin="Telepath Psion Level 14",
+            activation=FeatureActivation(range="30-Foot Radius"),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -152,14 +198,14 @@ class ScrambleMinds(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Cast Confusion without slot by expending 4 Psionic Energy Dice. Spell's radius becomes 30 feet, "
             "choose one creature to auto-succeed on save, and you pick each creature's confused behavior each turn "
             "(instead of rolling)."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

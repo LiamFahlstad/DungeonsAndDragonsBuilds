@@ -1,12 +1,25 @@
 from Core.Definitions import FIGHTER_HIT_DIE, DamageType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Psi Warrior Fighter Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"), usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Psionic Power",
+            origin="Psi Warrior Fighter Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30 Feet"
+            ),
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -28,13 +41,24 @@ class PsionicPower(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+
 class TelekineticAdept(Feature):
     def __init__(self):
-        super().__init__(name="Telekinetic Adept", origin="Psi Warrior Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Current Turn", range="10 Feet"), usage_tags=["buff", "control"])
+        super().__init__(
+            name="Telekinetic Adept",
+            origin="Psi Warrior Fighter Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until End of Current Turn",
+                range="10 Feet",
+            ),
+            usage_tags=["buff", "control"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         intelligence_modifier = character_stat_block.get_intelligence_modifier()
@@ -52,7 +76,11 @@ class TelekineticAdept(Feature):
 
 class GuardedMind(Feature):
     def __init__(self):
-        super().__init__(name="Guarded Mind", origin="Psi Warrior Fighter Level 10", usage_tags=["buff"])
+        super().__init__(
+            name="Guarded Mind",
+            origin="Psi Warrior Fighter Level 10",
+            usage_tags=["buff"],
+        )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -70,7 +98,16 @@ class GuardedMind(Feature):
 
 class BulwarkOfForce(Feature):
     def __init__(self):
-        super().__init__(name="Bulwark of Force", origin="Psi Warrior Fighter Level 15", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Bulwark of Force",
+            origin="Psi Warrior Fighter Level 15",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Incapacitated",
+                range="30 Feet",
+            ),
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -90,7 +127,10 @@ class BulwarkOfForce(Feature):
         return [
             ("Action", "Bonus Action"),
             ("Range", "30 feet"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_intelligence_modifier())} creatures"),
+            (
+                "Targets",
+                f"Up to {max(1, character_stat_block.get_intelligence_modifier())} creatures",
+            ),
             ("Effect", "Half Cover for 1 minute or until Incapacitated"),
             ("Recharge", "Long Rest, or expend Psionic Energy Die"),
         ]
@@ -99,7 +139,9 @@ class BulwarkOfForce(Feature):
 class TelekineticMaster(Feature):
     def __init__(self):
         super().__init__(
-            name="Telekinetic Master", origin="Psi Warrior Fighter Level 18", usage_tags=["damage"]
+            name="Telekinetic Master",
+            origin="Psi Warrior Fighter Level 18",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

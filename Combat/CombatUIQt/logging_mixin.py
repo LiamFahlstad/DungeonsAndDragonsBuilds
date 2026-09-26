@@ -79,7 +79,9 @@ class LoggingMixin:
                 player_entry["character"] = character
                 player_entry["action"] = action
                 player_entry["value"] = value
-            self.player_log_data["sessions"][-1].setdefault(key, []).append(player_entry)
+            self.player_log_data["sessions"][-1].setdefault(key, []).append(
+                player_entry
+            )
         self._write_log(data)
 
     def _undo_last(self):
@@ -196,7 +198,9 @@ class LoggingMixin:
                     source["stats"]["conditions_given"] = max(
                         source["stats"].get("conditions_given", 0) - 1, 0
                     )
-                    decrement_named_stat(source["stats"], "conditions_given_by_name", cond)
+                    decrement_named_stat(
+                        source["stats"], "conditions_given_by_name", cond
+                    )
         elif action == Action.REMOVE_CONDITION:
             cond = value["condition"] if isinstance(value, dict) else value
             if cond not in char["conditions"]:
@@ -214,7 +218,9 @@ class LoggingMixin:
         elif action == Action.CAST_SPELL:
             spell_name = value["spell_name"] if isinstance(value, dict) else value
             char.setdefault("stats", _default_stats())
-            char["stats"]["spells_cast"] = max(char["stats"].get("spells_cast", 0) - 1, 0)
+            char["stats"]["spells_cast"] = max(
+                char["stats"].get("spells_cast", 0) - 1, 0
+            )
             decrement_named_stat(char["stats"], "spells_cast_by_name", spell_name)
         elif action == Action.DEATH_SAVE_FAIL:
             char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
@@ -243,12 +249,16 @@ class LoggingMixin:
                 char["temp_hp"] -= value
         elif action == Action.ENABLE_FEATURE:
             feature_name = value["feature_name"] if isinstance(value, dict) else value
-            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(feature_name)
+            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
+                feature_name
+            )
             char.setdefault("stats", _default_stats())
             char["stats"]["features_enabled"] = max(
                 char["stats"].get("features_enabled", 0) - 1, 0
             )
-            decrement_named_stat(char["stats"], "features_enabled_by_name", feature_name)
+            decrement_named_stat(
+                char["stats"], "features_enabled_by_name", feature_name
+            )
             if feature is not None and feature.uses is not None:
                 used = char.setdefault("feature_uses_used", {})
                 used[feature_name] = max(used.get(feature_name, 0) - 1, 0)
@@ -380,7 +390,9 @@ class LoggingMixin:
             char["hp"] += value["hp_delta"]
             char["temp_hp"] += value["temp_delta"]
             char.setdefault("stats", _default_stats())
-            char["stats"]["damage_taken"] = char["stats"].get("damage_taken", 0) + value["dmg"]
+            char["stats"]["damage_taken"] = (
+                char["stats"].get("damage_taken", 0) + value["dmg"]
+            )
             if value.get("damage_type"):
                 taken_type_key = damage_taken_key(value["damage_type"])
                 char["stats"][taken_type_key] = (
@@ -401,7 +413,9 @@ class LoggingMixin:
                             source["stats"].get(type_key, 0) + value["dmg"]
                         )
                     if value.get("knockout"):
-                        source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+                        source["stats"]["knockouts"] = (
+                            source["stats"].get("knockouts", 0) + 1
+                        )
             self._apply_bloodied_condition(char)
         elif action == Action.HEAL:
             was_downed = self._char_death_state(char) != "alive"
@@ -427,7 +441,9 @@ class LoggingMixin:
             if cond not in char["conditions"]:
                 char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_received"] = char["stats"].get("conditions_received", 0) + 1
+            char["stats"]["conditions_received"] = (
+                char["stats"].get("conditions_received", 0) + 1
+            )
             increment_named_stat(char["stats"], "conditions_received_by_name", cond)
             source_name = value.get("source_name") if isinstance(value, dict) else None
             if source_name:
@@ -437,7 +453,9 @@ class LoggingMixin:
                     source["stats"]["conditions_given"] = (
                         source["stats"].get("conditions_given", 0) + 1
                     )
-                    increment_named_stat(source["stats"], "conditions_given_by_name", cond)
+                    increment_named_stat(
+                        source["stats"], "conditions_given_by_name", cond
+                    )
         elif action == Action.REMOVE_CONDITION:
             cond = value["condition"] if isinstance(value, dict) else value
             if cond in char["conditions"]:
@@ -447,7 +465,9 @@ class LoggingMixin:
         elif action == Action.REMOVE_SPELL_SLOT:
             char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
             char.setdefault("stats", _default_stats())
-            char["stats"]["spell_slots_used"] = char["stats"].get("spell_slots_used", 0) + 1
+            char["stats"]["spell_slots_used"] = (
+                char["stats"].get("spell_slots_used", 0) + 1
+            )
             level_key = spell_slots_used_key(value)
             char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
         elif action == Action.CAST_SPELL:
@@ -467,7 +487,9 @@ class LoggingMixin:
                 amount = value["amount"]
                 char["temp_hp"] = char.get("temp_hp", 0) + amount
                 char.setdefault("stats", _default_stats())
-                char["stats"]["temp_hp_received"] = char["stats"].get("temp_hp_received", 0) + amount
+                char["stats"]["temp_hp_received"] = (
+                    char["stats"].get("temp_hp_received", 0) + amount
+                )
                 source_name = value.get("source_name")
                 if source_name:
                     source = self._find_character_by_name(source_name)
@@ -481,9 +503,15 @@ class LoggingMixin:
         elif action == Action.ENABLE_FEATURE:
             feature_name = value["feature_name"] if isinstance(value, dict) else value
             char.setdefault("stats", _default_stats())
-            char["stats"]["features_enabled"] = char["stats"].get("features_enabled", 0) + 1
-            increment_named_stat(char["stats"], "features_enabled_by_name", feature_name)
-            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(feature_name)
+            char["stats"]["features_enabled"] = (
+                char["stats"].get("features_enabled", 0) + 1
+            )
+            increment_named_stat(
+                char["stats"], "features_enabled_by_name", feature_name
+            )
+            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
+                feature_name
+            )
             if feature is not None and feature.uses is not None:
                 used = char.setdefault("feature_uses_used", {})
                 used[feature_name] = used.get(feature_name, 0) + 1
@@ -623,7 +651,9 @@ class LoggingMixin:
                 round_num = key.split("_", 1)[1]
                 lines.append(f"  Round {round_num}")
                 for event in session[key]:
-                    event_text = event.get("text", "") if isinstance(event, dict) else event
+                    event_text = (
+                        event.get("text", "") if isinstance(event, dict) else event
+                    )
                     lines.append(f"    • {event_text}")
             lines.append("")
         text.setPlainText(

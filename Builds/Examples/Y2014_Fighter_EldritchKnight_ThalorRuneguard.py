@@ -36,7 +36,12 @@ from CharacterContent.Classes.SubClasses2014.FighterEldritchKnight import (
     FighterEldritchKnightLevel18,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
@@ -107,7 +112,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.Resilient(
                         character_level=4,
                         ability=Ability.CONSTITUTION,
-                    )
+                    ),
                 ),
                 5: FighterLevel5(),
                 6: FighterLevel6(
@@ -147,7 +152,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.Durable(
                         character_level=16,
                         ability=Ability.CONSTITUTION,
-                    )
+                    ),
                 ),
                 17: FighterLevel17(),
                 18: FighterLevel18(),

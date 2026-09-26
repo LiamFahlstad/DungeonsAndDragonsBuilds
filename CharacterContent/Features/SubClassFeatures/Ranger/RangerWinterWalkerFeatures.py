@@ -1,13 +1,28 @@
-
-from Core.Definitions import CharacterClass, DamageType, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from Core.Definitions import (
+    CharacterClass,
+    DamageType,
+    RANGER_HIT_DIE,
+    MAX_ABILITY_MODIFIER,
+)
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class FrigidExplorer(Feature):
     def __init__(self):
-        super().__init__(name="Frigid Explorer", origin="Winter Walker Ranger Level 3", usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Frigid Explorer",
+            origin="Winter Walker Ranger Level 3",
+            usage_tags=["buff", "damage"],
+        )
         self._resistance = DamageResistance(DamageType.COLD, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -25,7 +40,11 @@ class FrigidExplorer(Feature):
 
 class HuntersRime(Feature):
     def __init__(self):
-        super().__init__(name="Hunter's Rime", origin="Winter Walker Ranger Level 3", usage_tags=["heal", "control"])
+        super().__init__(
+            name="Hunter's Rime",
+            origin="Winter Walker Ranger Level 3",
+            usage_tags=["heal", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -57,7 +76,14 @@ class WinterWalkerSpells(Feature):
 
 class FortifyingSoul(Feature):
     def __init__(self):
-        super().__init__(name="Fortifying Soul", origin="Winter Walker Ranger Level 7", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour"), usage_tags=["heal", "buff"])
+        super().__init__(
+            name="Fortifying Soul",
+            origin="Winter Walker Ranger Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour"
+            ),
+            usage_tags=["heal", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -66,7 +92,9 @@ class FortifyingSoul(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         wis_mod = character_stat_block.get_wisdom_modifier()
         ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
         targets = max(1, wis_mod)
@@ -79,27 +107,44 @@ class FortifyingSoul(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+
 class ChillingRetribution(Feature):
     def __init__(self):
         super().__init__(
-            name="Chilling Retribution", origin="Winter Walker Ranger Level 11", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Your Next Turn"), usage_tags=["control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier.")
+            name="Chilling Retribution",
+            origin="Winter Walker Ranger Level 11",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="Until End of Your Next Turn"
+            ),
+            usage_tags=["control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -112,7 +157,9 @@ class ChillingRetribution(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "Creature hits you with attack roll"),
@@ -125,7 +172,12 @@ class ChillingRetribution(Feature):
 
 class FrozenHaunt(Feature):
     def __init__(self):
-        super().__init__(name="Frozen Haunt", origin="Winter Walker Ranger Level 15", activation=FeatureActivation(range="15-Foot Emanation"), usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Frozen Haunt",
+            origin="Winter Walker Ranger Level 15",
+            activation=FeatureActivation(range="15-Foot Emanation"),
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -135,5 +187,7 @@ class FrozenHaunt(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

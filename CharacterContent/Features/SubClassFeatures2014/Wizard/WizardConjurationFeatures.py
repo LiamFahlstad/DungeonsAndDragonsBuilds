@@ -20,7 +20,14 @@ class ConjurationSavant(Feature):
 
 class MinorConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Minor Conjuration", origin="Conjuration Wizard Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Minor Conjuration",
+            origin="Conjuration Wizard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -29,7 +36,9 @@ class MinorConjuration(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Location", "Your hand or unoccupied space within 10 feet"),
@@ -37,16 +46,28 @@ class MinorConjuration(Feature):
             ("Size", "No larger than 3 feet on a side"),
             ("Weight", "No more than 10 pounds"),
             ("Appearance", "Visibly magical, dim light 5 feet"),
-            ("Duration", "1 hour, until you use feature again, or until takes/deals damage"),
+            (
+                "Duration",
+                "1 hour, until you use feature again, or until takes/deals damage",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class BenignTransportation(Feature):
     def __init__(self):
-        super().__init__(name="Benign Transportation", origin="Conjuration Wizard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Benign Transportation",
+            origin="Conjuration Wizard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30 Feet"
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -55,7 +76,9 @@ class BenignTransportation(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Option 1", "Teleport up to 30 feet to unoccupied space you can see"),
@@ -63,29 +86,43 @@ class BenignTransportation(Feature):
             ("Recharge", "Long rest or cast conjuration spell of 1st level or higher"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class FocusedConjuration(Feature):
     def __init__(self):
-        super().__init__(name="Focused Conjuration", origin="Conjuration Wizard Level 10", usage_tags=["buff"])
+        super().__init__(
+            name="Focused Conjuration",
+            origin="Conjuration Wizard Level 10",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "While you are concentrating on a conjuration spell, your concentration can't be broken as a result of taking damage."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class DurableSummons(Feature):
     def __init__(self):
-        super().__init__(name="Durable Summons", origin="Conjuration Wizard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Durable Summons",
+            origin="Conjuration Wizard Level 14",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Any creature that you summon or create with a conjuration spell has 30 temporary hit points."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

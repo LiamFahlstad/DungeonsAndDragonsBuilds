@@ -14,7 +14,9 @@ class ChronalShift(Feature):
         super().__init__(
             name="Chronal Shift",
             origin="Chronurgy Wizard Level 3",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
 
@@ -26,7 +28,9 @@ class ChronalShift(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -44,9 +48,17 @@ class MomentaryStasis(Feature):
         super().__init__(
             name="Momentary Stasis",
             origin="Chronurgy Wizard Level 6",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End Of Your Next Turn Or Until Takes Damage", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until End Of Your Next Turn Or Until Takes Damage",
+                range="60 Feet",
+            ),
             usage_tags=["control"],
-            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,7 +84,9 @@ class MomentaryStasis(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -104,7 +118,9 @@ class ConvergentFuture(Feature):
         super().__init__(
             name="Convergent Future",
             origin="Chronurgy Wizard Level 14",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -115,5 +131,7 @@ class ConvergentFuture(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE

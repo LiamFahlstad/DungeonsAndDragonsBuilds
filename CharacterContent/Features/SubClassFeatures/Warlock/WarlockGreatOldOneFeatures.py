@@ -1,5 +1,10 @@
 from Core.Definitions import DamageType, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -18,7 +23,14 @@ class GreatOldOneSpells(Feature):
 class AwakenedMind(Feature):
     def __init__(self):
         super().__init__(
-            name="Awakened Mind", origin="Great Old One Patron Warlock Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Minutes Equal to Warlock Level", range="30 Feet"), usage_tags=["utility"]
+            name="Awakened Mind",
+            origin="Great Old One Patron Warlock Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Minutes Equal to Warlock Level",
+                range="30 Feet",
+            ),
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -28,7 +40,9 @@ class AwakenedMind(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -46,7 +60,9 @@ class PsychicSpells(Feature):
 class ClairvoyantCombatant(Feature):
     def __init__(self):
         super().__init__(
-            name="Clairvoyant Combatant", origin="Great Old One Patron Warlock Level 6", usage_tags=["buff", "control"]
+            name="Clairvoyant Combatant",
+            origin="Great Old One Patron Warlock Level 6",
+            usage_tags=["buff", "control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -59,7 +75,9 @@ class ClairvoyantCombatant(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -68,7 +86,10 @@ class ClairvoyantCombatant(Feature):
         return [
             ("Trigger", "Form telepathic bond via Awakened Mind"),
             ("Save", "Wisdom save DC"),
-            ("Effect on Fail", "Target has Disadvantage on attacks vs you; you have Advantage vs target"),
+            (
+                "Effect on Fail",
+                "Target has Disadvantage on attacks vs you; you have Advantage vs target",
+            ),
             ("Duration", "For duration of telepathic bond"),
             ("Recharge", "Short or Long Rest or expend Pact Magic spell slot"),
         ]
@@ -77,21 +98,27 @@ class ClairvoyantCombatant(Feature):
 class EldritchHex(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Hex", origin="Great Old One Patron Warlock Level 10", usage_tags=["control"]
+            name="Eldritch Hex",
+            origin="Great Old One Patron Warlock Level 10",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your alien patron grants you a powerful curse. You always have the Hex spell prepared. When you cast Hex and choose an ability, the target also has Disadvantage on saving throws of the chosen ability for the duration of the spell."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class ThoughtShield(Feature):
     def __init__(self):
         super().__init__(
-            name="Thought Shield", origin="Great Old One Patron Warlock Level 10", usage_tags=["buff", "damage"]
+            name="Thought Shield",
+            origin="Great Old One Patron Warlock Level 10",
+            usage_tags=["buff", "damage"],
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
@@ -106,7 +133,9 @@ class ThoughtShield(Feature):
 class CreateThrall(Feature):
     def __init__(self):
         super().__init__(
-            name="Create Thrall", origin="Great Old One Patron Warlock Level 14", usage_tags=["heal", "damage"]
+            name="Create Thrall",
+            origin="Great Old One Patron Warlock Level 14",
+            usage_tags=["heal", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -116,9 +145,5 @@ class CreateThrall(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        return (
-            "When casting Summon Aberration, remove Concentration requirement (duration 1 min instead); the Aberration gains Temp HP = Warlock level + CHA mod. First time each turn the Aberration hits a creature under your Hex, it deals extra Psychic damage equal to that spell's bonus damage."
-        )
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "When casting Summon Aberration, remove Concentration requirement (duration 1 min instead); the Aberration gains Temp HP = Warlock level + CHA mod. First time each turn the Aberration hits a creature under your Hex, it deals extra Psychic damage equal to that spell's bonus damage."

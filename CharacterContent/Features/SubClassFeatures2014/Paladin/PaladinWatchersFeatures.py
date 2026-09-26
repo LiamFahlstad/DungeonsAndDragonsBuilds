@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -29,14 +35,14 @@ class WatchersWill(Feature):
         super().__init__(
             name="Channel Divinity: Watcher's Will",
             origin="Oath of the Watchers Paladin Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+            ),
             usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
-        )
+        description = "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
         return description
 
     def get_table_description(
@@ -58,7 +64,11 @@ class AbjureTheExtraplanar(Feature):
         super().__init__(
             name="Channel Divinity: Abjure the Extraplanar",
             origin="Oath of the Watchers Paladin Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Takes Damage",
+                range="30 Feet",
+            ),
             usage_tags=["control"],
         )
 
@@ -120,14 +130,14 @@ class VigilantRebuke(Feature):
         super().__init__(
             name="Vigilant Rebuke",
             origin="Oath of the Watchers Paladin Level 15",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw."
-        )
+        description = "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw."
         return description
 
     def get_table_description(
@@ -146,12 +156,18 @@ class MortalBulwark(Feature):
         super().__init__(
             name="Mortal Bulwark",
             origin="Oath of the Watchers Paladin Level 20",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="120 Feet (Truesight)"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute",
+                range="120 Feet (Truesight)",
+            ),
             usage_tags=["buff", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

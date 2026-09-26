@@ -1,5 +1,12 @@
 from Core.Definitions import CharacterClass, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -15,7 +22,11 @@ class BonusProficiency(Feature):
 
 class BornToTheSaddle(Feature):
     def __init__(self):
-        super().__init__(name="Born to the Saddle", origin="Cavalier Fighter Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Born to the Saddle",
+            origin="Cavalier Fighter Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,13 +35,22 @@ class BornToTheSaddle(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UnwaveringMark(Feature):
     def __init__(self):
-        super().__init__(name="Unwavering Mark", origin="Cavalier Fighter Level 3", activation=FeatureActivation(duration="Until End of Your Next Turn", range="5 Feet"), usage_tags=["damage", "control"])
+        super().__init__(
+            name="Unwavering Mark",
+            origin="Cavalier Fighter Level 3",
+            activation=FeatureActivation(
+                duration="Until End of Your Next Turn", range="5 Feet"
+            ),
+            usage_tags=["damage", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,23 +71,40 @@ class UnwaveringMark(Feature):
 
         return [
             ("Trigger", "Hit a creature with melee weapon attack"),
-            ("Mark Effect", "Disadvantage on attacks not targeting you (5 ft, until end of your next turn)"),
-            ("Bonus Action", "Make special melee attack against marked creature with advantage"),
+            (
+                "Mark Effect",
+                "Disadvantage on attacks not targeting you (5 ft, until end of your next turn)",
+            ),
+            (
+                "Bonus Action",
+                "Make special melee attack against marked creature with advantage",
+            ),
             ("Extra Damage", f"{extra_damage} (half your fighter level)"),
             ("Uses", f"{uses} (Strength modifier, minimum 1)"),
             ("Regain", "Long rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class WardingManeuver(Feature):
     def __init__(self):
-        super().__init__(name="Warding Maneuver", origin="Cavalier Fighter Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Warding Maneuver",
+            origin="Cavalier Fighter Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="5 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -90,33 +127,48 @@ class WardingManeuver(Feature):
             ("Regain", "Long rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class HoldTheLine(Feature):
     def __init__(self):
-        super().__init__(name="Hold the Line", origin="Cavalier Fighter Level 10", activation=FeatureActivation(duration="Until End of Current Turn", range="5 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Hold the Line",
+            origin="Cavalier Fighter Level 10",
+            activation=FeatureActivation(
+                duration="Until End of Current Turn", range="5 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You become a master of locking down your enemies. Creatures provoke an opportunity attack from you when they move 5 feet or more while within your reach, and if you hit a creature with an opportunity attack, the target's speed is reduced to 0 until the end of the current turn."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class FerociousCharger(Feature):
     def __init__(self):
-        super().__init__(name="Ferocious Charger", origin="Cavalier Fighter Level 15", usage_tags=["control"])
+        super().__init__(
+            name="Ferocious Charger",
+            origin="Cavalier Fighter Level 15",
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can run down your foes, whether you're mounted or not. If you move at least 10 feet in a straight line right before attacking a creature and you hit it with the attack, that target must succeed on a Strength saving throw (DC 8 + your proficiency bonus + your Strength modifier) or be knocked prone. You can use this feature only once on each of your turns."
-        )
+        description = "You can run down your foes, whether you're mounted or not. If you move at least 10 feet in a straight line right before attacking a creature and you hit it with the attack, that target must succeed on a Strength saving throw (DC 8 + your proficiency bonus + your Strength modifier) or be knocked prone. You can use this feature only once on each of your turns."
         return description
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -124,7 +176,9 @@ class FerociousCharger(Feature):
         strength_modifier = character_stat_block.get_strength_modifier()
         return 8 + proficiency_bonus + strength_modifier
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -134,18 +188,27 @@ class FerociousCharger(Feature):
 
         return [
             ("Trigger", "Move 10+ feet in straight line, then hit with attack"),
-            ("Effect", f"Target must succeed on Strength save (DC {dc}) or be knocked prone"),
+            (
+                "Effect",
+                f"Target must succeed on Strength save (DC {dc}) or be knocked prone",
+            ),
             ("Frequency", "Once per turn"),
         ]
 
 
 class VigilantDefender(Feature):
     def __init__(self):
-        super().__init__(name="Vigilant Defender", origin="Cavalier Fighter Level 18", usage_tags=["damage"])
+        super().__init__(
+            name="Vigilant Defender",
+            origin="Cavalier Fighter Level 18",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You respond to danger with extraordinary vigilance. In combat, you get a special reaction that you can take once on every creature's turn, except your turn. You can use this special reaction only to make an opportunity attack, and you can't use it on the same turn that you take your normal reaction."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

@@ -17,10 +17,16 @@ class BuildSpec:
     level: int = 4
 
     # lowercase ability name -> score
-    abilities: dict = field(default_factory=lambda: dict(
-        strength=15, dexterity=13, constitution=14,
-        intelligence=10, wisdom=12, charisma=8,
-    ))
+    abilities: dict = field(
+        default_factory=lambda: dict(
+            strength=15,
+            dexterity=13,
+            constitution=14,
+            intelligence=10,
+            wisdom=12,
+            charisma=8,
+        )
+    )
     # "manual", "standard_array" or "point_buy"
     ability_score_mode: str = "standard_array"
 
@@ -28,7 +34,9 @@ class BuildSpec:
     class_skills: dict = field(default_factory=dict)
 
     # (Ability member name, bonus)
-    background_bonuses: list = field(default_factory=lambda: [("STRENGTH", 2), ("CONSTITUTION", 1)])
+    background_bonuses: list = field(
+        default_factory=lambda: [("STRENGTH", 2), ("CONSTITUTION", 1)]
+    )
     # Skill member names
     background_skills: list = field(default_factory=lambda: ["PERCEPTION", "SURVIVAL"])
 

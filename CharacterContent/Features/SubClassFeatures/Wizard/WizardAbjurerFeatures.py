@@ -1,6 +1,11 @@
 import Core.Definitions as Definitions
 from Core.Definitions import WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -18,7 +23,14 @@ class AbjurationSavant(Feature):
 
 class ArcaneWard(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Ward", origin="Abjurer Wizard Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Long Rest"), usage_tags=["buff"])
+        super().__init__(
+            name="Arcane Ward",
+            origin="Abjurer Wizard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="Until Long Rest"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -28,7 +40,9 @@ class ArcaneWard(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -41,7 +55,10 @@ class ArcaneWard(Feature):
         max_hp = 2 * wizard_level + int_mod
         return [
             ("Ward HP Maximum", f"{max_hp} (2 × Wizard level + INT mod)"),
-            ("Restoration", "Cast abjuration spell OR Bonus Action + spell slot (2× slot level HP)"),
+            (
+                "Restoration",
+                "Cast abjuration spell OR Bonus Action + spell slot (2× slot level HP)",
+            ),
             ("Duration", "Until Long Rest"),
             ("Usage", "Once per Long Rest"),
         ]
@@ -49,19 +66,32 @@ class ArcaneWard(Feature):
 
 class ProjectedWard(Feature):
     def __init__(self):
-        super().__init__(name="Projected Ward", origin="Abjurer Wizard Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Projected Ward",
+            origin="Abjurer Wizard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature that you can see within 30 feet of yourself takes damage, you can take a Reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 Hit Points, the warded creature takes any remaining damage. If the creature has any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class SpellBreaker(Feature):
     def __init__(self):
-        super().__init__(name="Spell Breaker", origin="Abjurer Wizard Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION))
+        super().__init__(
+            name="Spell Breaker",
+            origin="Abjurer Wizard Level 10",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,7 +113,11 @@ class SpellBreaker(Feature):
 
 class SpellResistance(Feature):
     def __init__(self):
-        super().__init__(name="Spell Resistance", origin="Abjurer Wizard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Spell Resistance",
+            origin="Abjurer Wizard Level 14",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Advantage on saving throws against spells, and you have Resistance to the damage of spells."

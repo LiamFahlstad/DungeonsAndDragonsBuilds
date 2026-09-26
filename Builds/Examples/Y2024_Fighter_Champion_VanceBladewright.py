@@ -19,7 +19,11 @@ from CharacterContent.Classes.SubClasses2024.FighterChampion import (
     FighterChampionLevel3,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
@@ -79,7 +83,9 @@ def get_starter_class_builder():
             Weapons.Colossustrike(player_is_proficient=True),  # SetDamageDie
             Weapons.FrostbrandBlade(player_is_proficient=True),  # SetDamageType
             Weapons.LungingLongsword(player_is_proficient=True),  # AddWeaponProperty
-            Weapons.LoremastersRapier(player_is_proficient=True),  # AddWeaponDescription
+            Weapons.LoremastersRapier(
+                player_is_proficient=True
+            ),  # AddWeaponDescription
             Weapons.StormcallerMace(player_is_proficient=True),  # AddExtraDamage
             # -- SetWeaponAbility showcase: a plain Shortbow using Wisdom instead
             # of Dexterity, e.g. a "guided by instinct" reskin --
@@ -87,7 +93,9 @@ def get_starter_class_builder():
             # -- Character-affecting improvement showcase: magic weapons that
             # modify the wielder (via `improvements=`), not the weapon itself --
             Weapons.SkirmishersShortsword(player_is_proficient=True),  # SkillBonus
-            Weapons.VanguardsSpear(player_is_proficient=True),  # InitiativeRollCondition
+            Weapons.VanguardsSpear(
+                player_is_proficient=True
+            ),  # InitiativeRollCondition
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

@@ -1,5 +1,11 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -7,7 +13,9 @@ from Utils import StringUtils
 class CartographerToolsOfTheTrade(Feature):
     def __init__(self):
         super().__init__(
-            name="Tools of the Trade", origin="Cartographer Artificer Level 3", usage_tags=["utility"]
+            name="Tools of the Trade",
+            origin="Cartographer Artificer Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -42,7 +50,9 @@ class CartographerSpells(Feature):
 class AdventurersAtlas(Feature):
     def __init__(self):
         super().__init__(
-            name="Adventurer's Atlas", origin="Cartographer Artificer Level 3", usage_tags=["buff"]
+            name="Adventurer's Atlas",
+            origin="Cartographer Artificer Level 3",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -54,14 +64,19 @@ class AdventurersAtlas(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         intelligence_modifier = character_stat_block.get_intelligence_modifier()
         max_creatures = max(2, 1 + intelligence_modifier)
         return [
             ("Trigger", f"End of Long Rest; touch {max_creatures} creatures (min 2)"),
             ("Duration", "Until recreated or you die"),
             ("Awareness", "Map holders add 1d4 to Initiative rolls"),
-            ("Positioning", "Map holders see each other (same plane); can target spells through obstacles"),
+            (
+                "Positioning",
+                "Map holders see each other (same plane); can target spells through obstacles",
+            ),
         ]
 
     def target(
@@ -72,7 +87,17 @@ class AdventurersAtlas(Feature):
 
 class MappingMagic(Feature):
     def __init__(self):
-        super().__init__(name="Mapping Magic", origin="Cartographer Artificer Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Mapping Magic",
+            origin="Cartographer Artificer Level 3",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -87,21 +112,31 @@ class MappingMagic(Feature):
     ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
-            ("Illuminated Cartography", f"Cast Faerie Fire without slot ({uses} times, regain on long rest)"),
-            ("Portal Jump", "Spend half Speed to teleport within 10 ft of you or within 5 ft of map-holder within 30 ft"),
+            (
+                "Illuminated Cartography",
+                f"Cast Faerie Fire without slot ({uses} times, regain on long rest)",
+            ),
+            (
+                "Portal Jump",
+                "Spend half Speed to teleport within 10 ft of you or within 5 ft of map-holder within 30 ft",
+            ),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_intelligence_modifier())
+
+
 class GuidedPrecision(Feature):
     def __init__(self):
         super().__init__(
-            name="Guided Precision", origin="Cartographer Artificer Level 5", usage_tags=["damage"]
+            name="Guided Precision",
+            origin="Cartographer Artificer Level 5",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -115,7 +150,10 @@ class GuidedPrecision(Feature):
 class IngeniousMovement(Feature):
     def __init__(self):
         super().__init__(
-            name="Ingenious Movement", origin="Cartographer Artificer Level 9", activation=FeatureActivation(range="30 Feet"), usage_tags=["buff", "utility"]
+            name="Ingenious Movement",
+            origin="Cartographer Artificer Level 9",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -131,7 +169,9 @@ class IngeniousMovement(Feature):
 class SuperiorAtlas(Feature):
     def __init__(self):
         super().__init__(
-            name="Superior Atlas", origin="Cartographer Artificer Level 15", usage_tags=["heal", "utility"]
+            name="Superior Atlas",
+            origin="Cartographer Artificer Level 15",
+            usage_tags=["heal", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -146,6 +186,12 @@ class SuperiorAtlas(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Safe Haven", "When reduced to 0 HP (not killed), destroy map to restore HP = 2 × Artificer level and teleport within 5 ft of you or another map-holder"),
-            ("Unerring Path", "Cast Find the Path with no slot, preparation, or components (1/LR)"),
+            (
+                "Safe Haven",
+                "When reduced to 0 HP (not killed), destroy map to restore HP = 2 × Artificer level and teleport within 5 ft of you or another map-holder",
+            ),
+            (
+                "Unerring Path",
+                "Cast Find the Path with no slot, preparation, or components (1/LR)",
+            ),
         ]

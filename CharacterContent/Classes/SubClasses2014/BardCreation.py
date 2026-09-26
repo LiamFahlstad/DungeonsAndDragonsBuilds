@@ -47,9 +47,9 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        performance_of_creation: BardCreationFeatures.PerformanceOfCreation = data.get_features_by_type(
-            BardCreationFeatures.PerformanceOfCreation
-        )[0]
+        performance_of_creation: BardCreationFeatures.PerformanceOfCreation = (
+            data.get_features_by_type(BardCreationFeatures.PerformanceOfCreation)[0]
+        )
         performance_of_creation.extend_feature(BardCreationFeatures.CreativeCrescendo())
         return data
 

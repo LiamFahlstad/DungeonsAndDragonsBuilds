@@ -31,10 +31,16 @@ from CharacterContent.Classes.SubClasses2014.RogueSwashbuckler import (
     RogueSwashbucklerLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools as ThievesToolsProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import (
+    ThievesTools as ThievesToolsProficiency,
+)
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
@@ -106,7 +112,8 @@ def get_starter_class_builder():
                 3: RogueLevel3(),
                 4: RogueLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                 ),
                 5: RogueLevel5(),
                 6: RogueLevel6(
@@ -116,24 +123,28 @@ def get_starter_class_builder():
                 7: RogueLevel7(),
                 8: RogueLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CHARISMA, 2)]),
+                        bonuses=[(Ability.CHARISMA, 2)]
+                    ),
                 ),
                 9: RogueLevel9(),
                 10: RogueLevel10(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                 ),
                 11: RogueLevel11(),
                 12: RogueLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CHARISMA, 2)]),
+                        bonuses=[(Ability.CHARISMA, 2)]
+                    ),
                 ),
                 13: RogueLevel13(),
                 14: RogueLevel14(),
                 15: RogueLevel15(),
                 16: RogueLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.DEXTERITY, 2)]),
+                        bonuses=[(Ability.DEXTERITY, 2)]
+                    ),
                 ),
                 17: RogueLevel17(),
             },

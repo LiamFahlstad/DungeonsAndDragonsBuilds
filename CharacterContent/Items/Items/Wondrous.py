@@ -1,5 +1,9 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, ArmorClassBonus, SpeedBonus
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    ArmorClassBonus,
+    SpeedBonus,
+)
 from .Base import Item, ItemCategory, ItemRarity
 
 

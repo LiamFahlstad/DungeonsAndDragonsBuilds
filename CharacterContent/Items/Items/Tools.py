@@ -134,8 +134,13 @@ class Mirror(Item):
 class NavigatorsTools(Item):
     def __init__(self):
         super().__init__(
-            "Navigator's Tools", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
-            weight=2.0, slots=1, value=25, is_homebrew=False,
+            "Navigator's Tools",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            weight=2.0,
+            slots=1,
+            value=25,
+            is_homebrew=False,
             description_text="Ability: Wisdom. Utilize: Plot a course (DC 10), or determine position by stargazing (DC 15).",
         )
 
@@ -143,8 +148,13 @@ class NavigatorsTools(Item):
 class PoisonersKit(Item):
     def __init__(self):
         super().__init__(
-            "Poisoner's Kit", rarity=ItemRarity.UNCOMMON, category=ItemCategory.TOOL,
-            weight=2.0, slots=1, value=50, is_homebrew=False,
+            "Poisoner's Kit",
+            rarity=ItemRarity.UNCOMMON,
+            category=ItemCategory.TOOL,
+            weight=2.0,
+            slots=1,
+            value=50,
+            is_homebrew=False,
             description_text="Ability: Intelligence. Utilize: Detect a poisoned object (DC 10).",
         )
 
@@ -152,8 +162,13 @@ class PoisonersKit(Item):
 class HerbalismKit(Item):
     def __init__(self):
         super().__init__(
-            "Herbalism Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
-            weight=3.0, slots=1, value=5, is_homebrew=False,
+            "Herbalism Kit",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            weight=3.0,
+            slots=1,
+            value=5,
+            is_homebrew=False,
             description_text="Ability: Intelligence. Utilize: Identify a plant (DC 10).",
         )
 
@@ -161,8 +176,13 @@ class HerbalismKit(Item):
 class DisguiseKit(Item):
     def __init__(self):
         super().__init__(
-            "Disguise Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
-            weight=3.0, slots=1, value=25, is_homebrew=False,
+            "Disguise Kit",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            weight=3.0,
+            slots=1,
+            value=25,
+            is_homebrew=False,
             description_text="Ability: Charisma. Utilize: Apply makeup (DC 10).",
         )
 
@@ -170,7 +190,12 @@ class DisguiseKit(Item):
 class ForgeryKit(Item):
     def __init__(self):
         super().__init__(
-            "Forgery Kit", rarity=ItemRarity.COMMON, category=ItemCategory.TOOL,
-            weight=5.0, slots=1, value=15, is_homebrew=False,
+            "Forgery Kit",
+            rarity=ItemRarity.COMMON,
+            category=ItemCategory.TOOL,
+            weight=5.0,
+            slots=1,
+            value=15,
+            is_homebrew=False,
             description_text="Ability: Dexterity. Utilize: Mimic 10 or fewer words of someone else's handwriting (DC 15), or duplicate a wax seal (DC 20).",
         )

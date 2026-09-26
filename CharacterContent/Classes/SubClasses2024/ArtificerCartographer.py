@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
-from CharacterContent.Features.SubClassFeatures.Artificer import ArtificerCartographerFeatures
+from CharacterContent.Features.SubClassFeatures.Artificer import (
+    ArtificerCartographerFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Artificer import ArtificerFeatures
 from CharacterContent.Spells.SpellLists import (
     BardLevel3Spells,
@@ -48,11 +50,14 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         cartographer_spells: ArtificerCartographerFeatures.CartographerSpells = cast(
-            ArtificerCartographerFeatures.CartographerSpells, data.get_features_by_type(
-                ArtificerCartographerFeatures.CartographerSpells
-            )[0]
+            ArtificerCartographerFeatures.CartographerSpells,
+            data.get_features_by_type(ArtificerCartographerFeatures.CartographerSpells)[
+                0
+            ],
         )
-        cartographer_spells.extend_feature(ArtificerCartographerFeatures.GuidedPrecision())
+        cartographer_spells.extend_feature(
+            ArtificerCartographerFeatures.GuidedPrecision()
+        )
         data.add_spell(DivinationLevel2Spells.LOCATE_OBJECT)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
         return data
@@ -65,11 +70,12 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         flash_of_genius: ArtificerFeatures.FlashofGenius = cast(
-            ArtificerFeatures.FlashofGenius, data.get_features_by_type(
-                ArtificerFeatures.FlashofGenius
-            )[0]
+            ArtificerFeatures.FlashofGenius,
+            data.get_features_by_type(ArtificerFeatures.FlashofGenius)[0],
         )
-        flash_of_genius.extend_feature(ArtificerCartographerFeatures.IngeniousMovement())
+        flash_of_genius.extend_feature(
+            ArtificerCartographerFeatures.IngeniousMovement()
+        )
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
         data.add_spell(BardLevel3Spells.CLAIRVOYANCE)
         return data
@@ -93,9 +99,10 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         adventurers_atlas: ArtificerCartographerFeatures.AdventurersAtlas = cast(
-            ArtificerCartographerFeatures.AdventurersAtlas, data.get_features_by_type(
-                ArtificerCartographerFeatures.AdventurersAtlas
-            )[0]
+            ArtificerCartographerFeatures.AdventurersAtlas,
+            data.get_features_by_type(ArtificerCartographerFeatures.AdventurersAtlas)[
+                0
+            ],
         )
         adventurers_atlas.extend_feature(ArtificerCartographerFeatures.SuperiorAtlas())
         return data

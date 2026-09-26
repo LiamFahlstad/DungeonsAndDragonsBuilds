@@ -1,5 +1,12 @@
 from Core.Definitions import CLERIC_HIT_DIE, DamageType, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +14,14 @@ from Utils import StringUtils
 
 class GuidedStrike(Feature):
     def __init__(self):
-        super().__init__(name="Guided Strike", origin="War Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Guided Strike",
+            origin="War Domain Cleric Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."
@@ -41,7 +55,17 @@ class WarDomainSpells(Feature):
 
 class WarPriest(Feature):
     def __init__(self):
-        super().__init__(name="War Priest", origin="War Domain Cleric Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="short or long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="War Priest",
+            origin="War Domain Cleric Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["damage"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="short or long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You regain all expended uses when you finish a Short or Long Rest."
@@ -64,16 +88,23 @@ class WarPriest(Feature):
     ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class WarGodsBlessing(Feature):
     def __init__(self):
-        super().__init__(name="War God's Blessing", origin="War Domain Cleric Level 6", activation=FeatureActivation(duration="1 Minute"), usage_tags=["buff", "damage"])
+        super().__init__(
+            name="War God's Blessing",
+            origin="War Domain Cleric Level 6",
+            activation=FeatureActivation(duration="1 Minute"),
+            usage_tags=["buff", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can expend a use of your Channel Divinity to cast Shield of Faith or Spiritual Weapon rather than expending a spell slot. When you cast either spell in this way, the spell doesn't require Concentration. Instead the spell lasts for 1 minute, but it ends early if you cast that spell again, have the Incapacitated condition, or die."
@@ -93,7 +124,12 @@ class WarGodsBlessing(Feature):
 
 class AvatarOfBattle(Feature):
     def __init__(self):
-        super().__init__(name="Avatar of Battle", origin="War Domain Cleric Level 17", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Avatar of Battle",
+            origin="War Domain Cleric Level 17",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistances = [
             DamageResistance(DamageType.BLUDGEONING, self.name),
             DamageResistance(DamageType.PIERCING, self.name),

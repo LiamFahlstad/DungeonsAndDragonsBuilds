@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WizardSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Wizard import WizardOrderOfScribesFeatures
+from CharacterContent.Features.SubClassFeatures2014.Wizard import (
+    WizardOrderOfScribesFeatures,
+)
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
@@ -33,9 +35,7 @@ class WizardOrderOfScribesLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
-            data.get_features_by_type(
-                WizardOrderOfScribesFeatures.AwakenedSpellbook
-            )[0]
+            data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )
         awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.ManifestMind())
         return data
@@ -49,11 +49,11 @@ class WizardOrderOfScribesLevel10(ClassBuilder.SubclassLevel10):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
-            data.get_features_by_type(
-                WizardOrderOfScribesFeatures.AwakenedSpellbook
-            )[0]
+            data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )
-        awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.MasterScriviner())
+        awakened_spellbook.extend_feature(
+            WizardOrderOfScribesFeatures.MasterScriviner()
+        )
         return data
 
 
@@ -65,9 +65,7 @@ class WizardOrderOfScribesLevel14(ClassBuilder.SubclassLevel14):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
-            data.get_features_by_type(
-                WizardOrderOfScribesFeatures.AwakenedSpellbook
-            )[0]
+            data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )
         awakened_spellbook.extend_feature(WizardOrderOfScribesFeatures.OneWithTheWord())
         return data

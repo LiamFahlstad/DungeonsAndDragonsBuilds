@@ -1,8 +1,17 @@
 from enum import Enum
 
 from Core.Definitions import Skill, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
+from CharacterContent.Features.Core.Improvements import (
+    SkillProficiencyChoice,
+    GrantSense,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -31,7 +40,14 @@ class Darkvision(Feature):
 class Shifting(Feature):
     def __init__(self, shift_form: ShiftForm):
         self.shift_form = shift_form
-        super().__init__(name="Shifting", origin="Shifter Trait", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["heal", "buff", "damage"])
+        super().__init__(
+            name="Shifting",
+            origin="Shifter Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["heal", "buff", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,10 +65,14 @@ class Shifting(Feature):
             description += "\n- While shifted, you have Advantage on Wisdom checks. Additionally, no creature within 30 feet of you can have Advantage on an attack roll against you unless you have the Incapacitated condition."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 

@@ -1,5 +1,10 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -14,7 +19,11 @@ class BonusProficiency(Feature):
 
 class DiscipleOfLife(Feature):
     def __init__(self):
-        super().__init__(name="Disciple of Life", origin="Life Domain Cleric Level 3", usage_tags=["heal"])
+        super().__init__(
+            name="Disciple of Life",
+            origin="Life Domain Cleric Level 3",
+            usage_tags=["heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -31,7 +40,9 @@ class PreserveLifeChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Preserve Life",
             origin="Life Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="30 Feet"
+            ),
             usage_tags=["heal"],
         )
 
@@ -83,7 +94,11 @@ class LifeDomainSpells(Feature):
 
 class BlessedHealer(Feature):
     def __init__(self):
-        super().__init__(name="Blessed Healer", origin="Life Domain Cleric Level 6", usage_tags=["heal"])
+        super().__init__(
+            name="Blessed Healer",
+            origin="Life Domain Cleric Level 6",
+            usage_tags=["heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -97,7 +112,11 @@ class BlessedHealer(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Life Domain Cleric Level 8", usage_tags=["damage"])
+        super().__init__(
+            name="Divine Strike",
+            origin="Life Domain Cleric Level 8",
+            usage_tags=["damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -124,7 +143,11 @@ class DivineStrike(Feature):
 
 class SupremeHealing(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Healing", origin="Life Domain Cleric Level 17", usage_tags=["heal"])
+        super().__init__(
+            name="Supreme Healing",
+            origin="Life Domain Cleric Level 17",
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you would normally roll one or more dice to restore hit points with a spell, you instead use the highest number possible for each die. For example, instead of restoring 2d6 hit points to a creature, you restore 12."

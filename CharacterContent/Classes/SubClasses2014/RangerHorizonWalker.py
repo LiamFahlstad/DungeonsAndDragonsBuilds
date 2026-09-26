@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RangerSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerHorizonWalkerFeatures
+from CharacterContent.Features.SubClassFeatures2014.Ranger import (
+    RangerHorizonWalkerFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     WizardLevel1Spells,
     SorcererLevel2Spells,

@@ -2,16 +2,29 @@ from typing import Optional
 
 from Core.Definitions import DamageType, RANGER_HIT_DIE
 from CharacterContent.Features.ClassFeatures.Ranger import PrimalCompanions
-from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
+from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
+    CompanionType,
+)
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class PrimalCompanion(Feature):
-    def __init__(self, companion_type: CompanionType, damage_type: Optional[DamageType] = None):
+    def __init__(
+        self, companion_type: CompanionType, damage_type: Optional[DamageType] = None
+    ):
         self.companion_type = companion_type
         self.damage_type = damage_type
-        super().__init__(name="Primal Companion", origin="Beast Master Ranger Level 3", activation=FeatureActivation(range="5 Feet"), usage_tags=["summon"])
+        super().__init__(
+            name="Primal Companion",
+            origin="Beast Master Ranger Level 3",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["summon"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -26,14 +39,18 @@ class PrimalCompanion(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class ExceptionalTraining(Feature):
     def __init__(self):
         super().__init__(
-            name="Exceptional Training", origin="Beast Master Ranger Level 7", usage_tags=["damage"]
+            name="Exceptional Training",
+            origin="Beast Master Ranger Level 7",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,13 +60,19 @@ class ExceptionalTraining(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class BestialFury(Feature):
     def __init__(self):
-        super().__init__(name="Bestial Fury", origin="Beast Master Ranger Level 11", usage_tags=["damage"])
+        super().__init__(
+            name="Bestial Fury",
+            origin="Beast Master Ranger Level 11",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,17 +81,25 @@ class BestialFury(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class ShareSpells(Feature):
     def __init__(self):
-        super().__init__(name="Share Spells", origin="Beast Master Ranger Level 15", activation=FeatureActivation(range="30 Feet"))
+        super().__init__(
+            name="Share Spells",
+            origin="Beast Master Ranger Level 15",
+            activation=FeatureActivation(range="30 Feet"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast a spell targeting yourself, you can also affect your Primal Companion beast with the spell if the beast is within 30 feet of you."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

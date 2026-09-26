@@ -1,10 +1,22 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BattleragerArmor(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Armor", origin="Path Of The Battlerager Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="5 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Battlerager Armor",
+            origin="Path Of The Battlerager Barbarian Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="5 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,12 +44,15 @@ class BattleragerArmor(Feature):
 
 class RecklessAbandon(Feature):
     def __init__(self):
-        super().__init__(name="Reckless Abandon", origin="Path Of The Battlerager Barbarian Level 6", activation=FeatureActivation(duration="Until Your Rage Ends"), usage_tags=["heal"])
+        super().__init__(
+            name="Reckless Abandon",
+            origin="Path Of The Battlerager Barbarian Level 6",
+            activation=FeatureActivation(duration="Until Your Rage Ends"),
+            usage_tags=["heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Beginning at 6th level, when you use Reckless Attack while raging, you also gain temporary hit points equal to your Constitution modifier (minimum of 1). They vanish if any of them are left when your rage ends."
-        )
+        description = "Beginning at 6th level, when you use Reckless Attack while raging, you also gain temporary hit points equal to your Constitution modifier (minimum of 1). They vanish if any of them are left when your rage ends."
         return description
 
     def target(
@@ -48,29 +63,33 @@ class RecklessAbandon(Feature):
 
 class BattleragerCharge(Feature):
     def __init__(self):
-        super().__init__(name="Battlerager Charge", origin="Path Of The Battlerager Barbarian Level 10", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="Battlerager Charge",
+            origin="Path Of The Battlerager Barbarian Level 10",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Beginning at 10th level, you can take the Dash action as a bonus action while you are raging."
-        )
+        description = "Beginning at 10th level, you can take the Dash action as a bonus action while you are raging."
         return description
 
 
 class SpikedRetribution(Feature):
     def __init__(self):
-        super().__init__(name="Spiked Retribution", origin="Path Of The Battlerager Barbarian Level 14", activation=FeatureActivation(range="5 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Spiked Retribution",
+            origin="Path Of The Battlerager Barbarian Level 14",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Starting at 14th level, when a creature within 5 feet of you hits you with a melee attack, the attacker takes 3 piercing damage if you are raging, aren't incapacitated, and are wearing spiked armor."
-        )
+        description = "Starting at 14th level, when a creature within 5 feet of you hits you with a melee attack, the attacker takes 3 piercing damage if you are raging, aren't incapacitated, and are wearing spiked armor."
         return description
 
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
-        return (
-            "When a creature within 5 feet hits you with a melee attack, the attacker takes 3 piercing damage if you're raging, not incapacitated, and wearing spiked armor."
-        )
+        return "When a creature within 5 feet hits you with a melee attack, the attacker takes 3 piercing damage if you're raging, not incapacitated, and wearing spiked armor."
 
     def target(
         self, character_stat_block: CharacterStatBlock

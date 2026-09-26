@@ -1,5 +1,12 @@
 from Core.Definitions import Skill
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,7 +14,11 @@ from Utils import StringUtils
 
 class ArcaneArcherLore(Feature):
     def __init__(self, skill: Skill, cantrip: str):
-        super().__init__(name="Arcane Archer Lore", origin="Arcane Archer Fighter Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Arcane Archer Lore",
+            origin="Arcane Archer Fighter Level 3",
+            skippable_in_concise=True,
+        )
         self._skill = skill
         self._cantrip = cantrip
         self._proficiency_choice = SkillProficiencyChoice(
@@ -31,7 +42,11 @@ class ArcaneArcherLore(Feature):
 
 class ArcaneShot(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Shot", origin="Arcane Archer Fighter Level 3", usage_tags=["damage", "control"])
+        super().__init__(
+            name="Arcane Shot",
+            origin="Arcane Archer Fighter Level 3",
+            usage_tags=["damage", "control"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         intelligence_modifier = character_stat_block.get_intelligence_modifier()
@@ -69,42 +84,65 @@ class ArcaneShot(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class MagicArrow(Feature):
     def __init__(self):
-        super().__init__(name="Magic Arrow", origin="Arcane Archer Fighter Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Magic Arrow",
+            origin="Arcane Archer Fighter Level 7",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 7th level, you gain the ability to infuse arrows with magic. Whenever you fire a nonmagical arrow from a shortbow or longbow, you can make it magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage. The magic fades from the arrow immediately after it hits or misses its target."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class CurvingShot(Feature):
     def __init__(self):
-        super().__init__(name="Curving Shot", origin="Arcane Archer Fighter Level 7", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Curving Shot",
+            origin="Arcane Archer Fighter Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 7th level, you learn how to direct an errant arrow toward a new target. When you make an attack roll with a magic arrow and miss, you can use a bonus action to reroll the attack roll against a different target within 60 feet of the original target."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class EverReadyShot(Feature):
     def __init__(self):
-        super().__init__(name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 15")
+        super().__init__(
+            name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 15"
+        )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

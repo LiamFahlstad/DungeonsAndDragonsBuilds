@@ -10,7 +10,9 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import DamageType, RangerSubclass
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerBeastMasterFeatures
-from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
+from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
+    CompanionType,
+)
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 

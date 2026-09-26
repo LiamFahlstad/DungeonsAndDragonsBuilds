@@ -405,7 +405,9 @@ def write_item_cards(
         # ── Title row: item name + carrying checkbox always stay
         # together on one line. Quick-stats flow as their own wrapping
         # line below, as a single unit instead of being split apart. ───
-        write_gear_header(file, f"<span class='gear-name'>{label}</span>", carrying_checkbox_id(label))
+        write_gear_header(
+            file, f"<span class='gear-name'>{label}</span>", carrying_checkbox_id(label)
+        )
         write_gear_meta_line(file, item_type, rarity, price, slots)
 
         # ── Description ──────────────────────────────────────────────────

@@ -44,7 +44,9 @@ class AwakenedMind(Feature):
         description = "Your alien knowledge gives you the ability to touch the minds of other creatures. You can telepathically speak to any creature you can see within 30 feet of yourself. You don't need to share a language with the creature for it to understand your telepathic utterances, but the creature must be able to understand at least one language."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -53,7 +55,9 @@ class EntropicWard(Feature):
         super().__init__(
             name="Entropic Ward",
             origin="The Great Old One Patron Warlock Level 6",
-            activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Next Turn"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="Until End of Next Turn"
+            ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -79,7 +83,9 @@ class EntropicWard(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -99,7 +105,9 @@ class ThoughtShield(Feature):
         description = "Your thoughts can't be read by telepathy or other means unless you allow it. You also have Resistance to Psychic damage, and whenever a creature deals Psychic damage to you, that creature takes the same amount of damage that you do."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -108,7 +116,11 @@ class CreateThrall(Feature):
         super().__init__(
             name="Create Thrall",
             origin="The Great Old One Patron Warlock Level 14",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Remove Curse or Charmed Removed", range="Touch"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Remove Curse or Charmed Removed",
+                range="Touch",
+            ),
             usage_tags=["control"],
         )
 
@@ -129,5 +141,7 @@ class CreateThrall(Feature):
             ("Bonus", "Telepathic communication on same plane"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

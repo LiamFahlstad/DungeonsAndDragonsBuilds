@@ -1,6 +1,12 @@
 from Core.Definitions import WARLOCK_HIT_DIE, DamageType
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -19,7 +25,12 @@ class CelestialSpells(Feature):
 class HealingLight(Feature):
     def __init__(self):
         super().__init__(
-            name="Healing Light", origin="Celestial Patron Warlock Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"), usage_tags=["heal"]
+            name="Healing Light",
+            origin="Celestial Patron Warlock Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -29,11 +40,16 @@ class HealingLight(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -55,7 +71,11 @@ class HealingLight(Feature):
 
 class RadiantSoul(Feature):
     def __init__(self):
-        super().__init__(name="Radiant Soul", origin="Celestial Patron Warlock Level 6", usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Radiant Soul",
+            origin="Celestial Patron Warlock Level 6",
+            usage_tags=["buff", "damage"],
+        )
         self._resistance = DamageResistance(DamageType.RADIANT, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -69,26 +89,31 @@ class RadiantSoul(Feature):
 class CelestialResilience(Feature):
     def __init__(self):
         super().__init__(
-            name="Celestial Resilience", origin="Celestial Patron Warlock Level 10", usage_tags=["heal"]
+            name="Celestial Resilience",
+            origin="Celestial Patron Warlock Level 10",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain Temporary Hit Points whenever you use your Magical Cunning feature or finish a Short or Long Rest. These Temporary Hit Points equal your Warlock level plus your Charisma modifier. Additionally, choose up to five creatures you can see when you gain the points. Those creatures each gain Temporary Hit Points equal to half your Warlock level plus your Charisma modifier."
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Gain temp HP (Warlock level + CHA mod) when using Magical Cunning or finishing Short or Long Rest; you can grant half that amount to up to 5 creatures you can see."
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class SearingVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Searing Vengeance", origin="Celestial Patron Warlock Level 14", activation=FeatureActivation(range="60 Feet"), usage_tags=["heal", "damage", "control"]
+            name="Searing Vengeance",
+            origin="Celestial Patron Warlock Level 14",
+            activation=FeatureActivation(range="60 Feet"),
+            usage_tags=["heal", "damage", "control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -98,7 +123,9 @@ class SearingVengeance(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def get_table_description(
@@ -107,6 +134,9 @@ class SearingVengeance(Feature):
         return [
             ("Trigger", "You or ally within 60 feet about to fail Death Save"),
             ("Target Effect", "Regain half max HP; end Prone condition"),
-            ("Area Effect", "Enemies within 30 feet take 2d8 + Charisma Radiant damage and Blinded until end of turn"),
+            (
+                "Area Effect",
+                "Enemies within 30 feet take 2d8 + Charisma Radiant damage and Blinded until end of turn",
+            ),
             ("Recharge", "Long Rest"),
         ]

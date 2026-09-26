@@ -252,9 +252,8 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
-            WarlockFeatures.MysticArcanum, data.get_features_by_type(
-                WarlockFeatures.MysticArcanum
-            )[0]
+            WarlockFeatures.MysticArcanum,
+            data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
         mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
@@ -281,9 +280,8 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
-            WarlockFeatures.MysticArcanum, data.get_features_by_type(
-                WarlockFeatures.MysticArcanum
-            )[0]
+            WarlockFeatures.MysticArcanum,
+            data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
         mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
@@ -310,9 +308,8 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
-            WarlockFeatures.MysticArcanum, data.get_features_by_type(
-                WarlockFeatures.MysticArcanum
-            )[0]
+            WarlockFeatures.MysticArcanum,
+            data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
         mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
@@ -351,9 +348,8 @@ class WarlockLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         magical_cunning: WarlockFeatures.MagicalCunning = cast(
-            WarlockFeatures.MagicalCunning, data.get_features_by_type(
-                WarlockFeatures.MagicalCunning
-            )[0]
+            WarlockFeatures.MagicalCunning,
+            data.get_features_by_type(WarlockFeatures.MagicalCunning)[0],
         )
         magical_cunning.extend_feature(WarlockFeatures.EldritchMaster())
         return data

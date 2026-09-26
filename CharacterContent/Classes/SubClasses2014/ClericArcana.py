@@ -55,9 +55,9 @@ class ClericArcanaLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        arcana_domain_spells: ClericArcanaFeatures.ArcanaDomainSpells = data.get_features_by_type(
-            ClericArcanaFeatures.ArcanaDomainSpells
-        )[0]
+        arcana_domain_spells: ClericArcanaFeatures.ArcanaDomainSpells = (
+            data.get_features_by_type(ClericArcanaFeatures.ArcanaDomainSpells)[0]
+        )
         arcana_domain_spells.extend_feature(ClericArcanaFeatures.ArcaneMastery())
         return data
 

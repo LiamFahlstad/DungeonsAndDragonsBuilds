@@ -30,7 +30,9 @@ class Portent(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -48,7 +50,10 @@ class TheThirdEye(Feature):
         super().__init__(
             name="The Third Eye",
             origin="Divination Wizard Level 10",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Incapacitated Or Until Short Or Long Rest"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Incapacitated Or Until Short Or Long Rest",
+            ),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -64,10 +69,14 @@ class TheThirdEye(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 

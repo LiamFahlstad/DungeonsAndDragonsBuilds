@@ -35,7 +35,12 @@ from CharacterContent.Classes.SubClasses2014.BarbarianPathOfTheAncestralGuardian
     BarbarianAncestralGuardianLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock

@@ -1,5 +1,10 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -27,7 +32,16 @@ def _dice_damage_value(barbarian_level: int) -> str:
 
 class StormAura(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Storm Aura", origin="Path Of The Storm Herald Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="While You Rage", range="10 Feet"), usage_tags=["damage", "heal", "control"])
+        super().__init__(
+            name="Storm Aura",
+            origin="Path Of The Storm Herald Barbarian Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="While You Rage",
+                range="10 Feet",
+            ),
+            usage_tags=["damage", "heal", "control"],
+        )
         self.environment = environment
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -56,7 +70,11 @@ class StormAura(Feature):
 
 class StormSoul(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Storm Soul", origin="Path Of The Storm Herald Barbarian Level 6", usage_tags=["utility", "buff"])
+        super().__init__(
+            name="Storm Soul",
+            origin="Path Of The Storm Herald Barbarian Level 6",
+            usage_tags=["utility", "buff"],
+        )
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -76,12 +94,14 @@ class StormSoul(Feature):
 
 class ShieldingStorm(Feature):
     def __init__(self):
-        super().__init__(name="Shielding Storm", origin="Path Of The Storm Herald Barbarian Level 10", usage_tags=["buff"])
+        super().__init__(
+            name="Shielding Storm",
+            origin="Path Of The Storm Herald Barbarian Level 10",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You learn to use your mastery of the storm to protect others. Each creature of your choice has the damage resistance you gained from the Storm Soul feature while the creature is in your Storm Aura."
-        )
+        description = "You learn to use your mastery of the storm to protect others. Each creature of your choice has the damage resistance you gained from the Storm Soul feature while the creature is in your Storm Aura."
         return description
 
     def target(
@@ -92,7 +112,12 @@ class ShieldingStorm(Feature):
 
 class RagingStorm(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
-        super().__init__(name="Raging Storm", origin="Path Of The Storm Herald Barbarian Level 14", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage", "control"])
+        super().__init__(
+            name="Raging Storm",
+            origin="Path Of The Storm Herald Barbarian Level 14",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["damage", "control"],
+        )
         self.environment = environment
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -117,7 +117,9 @@ def _starter_builder_source(spec, class_info, subclass_info):
         lines.append(f"{arg}{INDENT}{ability}={spec.abilities[ability]},")
     lines.append(f"{arg}),")
 
-    lines.append(f"{arg}background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(")
+    lines.append(
+        f"{arg}background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus("
+    )
     lines.append(f"{arg}{INDENT}[")
     for ability_name, bonus in spec.background_bonuses:
         lines.append(f"{arg}{INDENT * 2}(Ability.{ability_name}, {bonus}),")

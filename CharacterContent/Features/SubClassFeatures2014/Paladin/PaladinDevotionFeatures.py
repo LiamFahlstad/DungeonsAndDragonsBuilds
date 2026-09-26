@@ -1,12 +1,21 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureUses,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class DevotionSpells(Feature):
     def __init__(self):
-        super().__init__(name="Oath of Devotion Spells", origin="Oath of Devotion Paladin Level 3")
+        super().__init__(
+            name="Oath of Devotion Spells", origin="Oath of Devotion Paladin Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,7 +33,14 @@ class DevotionSpells(Feature):
 
 class SacredWeapon(Feature):
     def __init__(self):
-        super().__init__(name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(
+            name="Sacred Weapon",
+            origin="Oath of Devotion Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -33,10 +49,14 @@ class SacredWeapon(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Duration", "1 minute"),
@@ -49,7 +69,16 @@ class SacredWeapon(Feature):
 
 class TurnTheUnholy(Feature):
     def __init__(self):
-        super().__init__(name="Turn the Unholy", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Turn the Unholy",
+            origin="Oath of Devotion Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Takes Damage",
+                range="30 Feet",
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,26 +87,36 @@ class TurnTheUnholy(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class AuraOfDevotion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7", activation=FeatureActivation(range="10 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Aura of Devotion",
+            origin="Oath of Devotion Paladin Level 7",
+            activation=FeatureActivation(range="10 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You and friendly creatures within 10 feet of you can't be charmed while you are conscious."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class AuraOfDevotionExpansion(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Devotion Expansion", origin="Oath of Devotion Paladin Level 18"
+            name="Aura of Devotion Expansion",
+            origin="Oath of Devotion Paladin Level 18",
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -87,24 +126,44 @@ class AuraOfDevotionExpansion(Feature):
 
 class PurityOfSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Purity of Spirit", origin="Oath of Devotion Paladin Level 15")
+        super().__init__(
+            name="Purity of Spirit", origin="Oath of Devotion Paladin Level 15"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = "You are always under the effects of a Protection from Evil and Good spell."
+        description = (
+            "You are always under the effects of a Protection from Evil and Good spell."
+        )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Holy Nimbus",
+            origin="Oath of Devotion Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute",
+                range="30-Foot Radius",
+            ),
+            usage_tags=["damage", "buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

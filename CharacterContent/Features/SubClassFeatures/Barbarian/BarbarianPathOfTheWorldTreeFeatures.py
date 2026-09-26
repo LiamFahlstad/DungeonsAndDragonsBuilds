@@ -1,6 +1,11 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -10,7 +15,7 @@ class VitalityOfTheTree(Feature):
             name="Vitality of the Tree",
             origin="Path Of The World Tree Barbarian Level 3",
             activation=FeatureActivation(range="10 Feet"),
-            usage_tags=["heal"]
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -34,8 +39,10 @@ class BranchesOfTheTree(Feature):
         super().__init__(
             name="Branches of the Tree",
             origin="Path Of The World Tree Barbarian Level 6",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
-            usage_tags=["control"]
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -68,7 +75,9 @@ class BranchesOfTheTree(Feature):
 class BatteringRoots(Feature):
     def __init__(self):
         super().__init__(
-            name="Battering Roots", origin="Path Of The World Tree Barbarian Level 10", usage_tags=["buff", "control"]
+            name="Battering Roots",
+            origin="Path Of The World Tree Barbarian Level 10",
+            usage_tags=["buff", "control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -87,8 +96,10 @@ class TravelAlongTheTree(Feature):
         super().__init__(
             name="Travel along the Tree",
             origin="Path Of The World Tree Barbarian Level 14",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"),
-            usage_tags=["buff"]
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

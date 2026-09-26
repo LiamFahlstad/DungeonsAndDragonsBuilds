@@ -33,7 +33,9 @@ class HuntersSense(Feature):
         super().__init__(
             name="Hunter's Sense",
             origin="Monster Slayer Ranger Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="60 Feet"
+            ),
             usage_tags=["utility"],
         )
 
@@ -45,10 +47,14 @@ class HuntersSense(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
     def get_table_description(
@@ -71,7 +77,11 @@ class SlayersPrey(Feature):
         super().__init__(
             name="Slayer's Prey",
             origin="Monster Slayer Ranger Level 3",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Short or Long Rest", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Short or Long Rest",
+                range="60 Feet",
+            ),
             usage_tags=["damage"],
         )
 
@@ -94,7 +104,9 @@ class SlayersPrey(Feature):
             ("Duration", "Until short or long rest (ends early if redesignate)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -110,7 +122,9 @@ class SupernaturalDefense(Feature):
         description = "At 7th level, you gain extra resilience against your prey's assaults on your mind and body. Whenever the target of your Slayer's Prey forces you to make a saving throw and whenever you make an ability check to escape that target's grapple, add 1d6 to your roll."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -119,7 +133,9 @@ class MagicUsersNemesis(Feature):
         super().__init__(
             name="Magic-User's Nemesis",
             origin="Monster Slayer Ranger Level 11",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
             usage_tags=["control"],
         )
 
@@ -149,7 +165,9 @@ class MagicUsersNemesis(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -166,5 +184,7 @@ class SlayersCounter(Feature):
         description = "At 15th level, you gain the ability to counterattack when your prey tries to sabotage you. If the target of your Slayer's Prey forces you to make a saving throw, you can use your reaction to make one weapon attack against the quarry. You make this attack immediately before making the saving throw. If the attack hits, your save automatically succeeds, in addition to the attack's normal effects."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

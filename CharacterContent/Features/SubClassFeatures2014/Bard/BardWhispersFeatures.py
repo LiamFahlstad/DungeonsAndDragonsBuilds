@@ -1,12 +1,22 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class PsychicBlades(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Blades", origin="College of Whispers Bard Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Psychic Blades",
+            origin="College of Whispers Bard Level 3",
+            usage_tags=["damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -54,7 +64,14 @@ class PsychicBlades(Feature):
 
 class WordsOfTerror(Feature):
     def __init__(self):
-        super().__init__(name="Words of Terror", origin="College of Whispers Bard Level 3", activation=FeatureActivation(duration="1 Hour or Until Attacked or Damaged"), usage_tags=["control"])
+        super().__init__(
+            name="Words of Terror",
+            origin="College of Whispers Bard Level 3",
+            activation=FeatureActivation(
+                duration="1 Hour or Until Attacked or Damaged"
+            ),
+            usage_tags=["control"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -68,7 +85,10 @@ class WordsOfTerror(Feature):
             ("Requirement", "Speak to humanoid alone for 1+ minute"),
             ("Trigger", "End of conversation"),
             ("Save", "Wisdom save vs Spell Save DC"),
-            ("Effect (Fail)", "Frightened of you or creature of your choice for 1 hour (or until attacked/damaged)"),
+            (
+                "Effect (Fail)",
+                "Frightened of you or creature of your choice for 1 hour (or until attacked/damaged)",
+            ),
             ("Effect (Success)", "Target has no hint of attempt"),
             ("Recharge", "Short or long rest"),
         ]
@@ -88,7 +108,16 @@ class WordsOfTerror(Feature):
 
 class MantleOfWhispers(Feature):
     def __init__(self):
-        super().__init__(name="Mantle of Whispers", origin="College of Whispers Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Ended", range="30 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Mantle of Whispers",
+            origin="College of Whispers Bard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Hour or Until Ended",
+                range="30 Feet",
+            ),
+            usage_tags=["utility"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -112,7 +141,16 @@ class MantleOfWhispers(Feature):
 
 class ShadowLore(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Lore", origin="College of Whispers Bard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION, duration="8 Hours or Until Attacked or Damaged", range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Shadow Lore",
+            origin="College of Whispers Bard Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="8 Hours or Until Attacked or Damaged",
+                range="30 Feet",
+            ),
+            usage_tags=["control"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -143,7 +181,10 @@ class ShadowLore(Feature):
             ("Range", "30 feet"),
             ("Target", "One creature you can see"),
             ("Save", "Wisdom save vs Spell Save DC"),
-            ("Effect (Fail)", "Charmed for 8 hours or until attacked/damaged; obeys your commands"),
+            (
+                "Effect (Fail)",
+                "Charmed for 8 hours or until attacked/damaged; obeys your commands",
+            ),
             ("Effect (Success)", "No effect"),
             ("Cost", "Reusable with long rest"),
         ]

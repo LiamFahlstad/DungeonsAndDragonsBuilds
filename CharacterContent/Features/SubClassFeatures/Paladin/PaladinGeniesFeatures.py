@@ -1,4 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from Core.Definitions import MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -129,8 +136,9 @@ class ElementalRebuke(Feature):
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
@@ -140,6 +148,7 @@ class ElementalRebuke(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
@@ -170,7 +179,10 @@ class NobleScion(Feature):
         super().__init__(
             name="Noble Scion",
             origin="Oath of the Noble Genies Paladin Level 20",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Ended"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes or Until Ended",
+            ),
             usage_tags=["buff", "utility"],
         )
 

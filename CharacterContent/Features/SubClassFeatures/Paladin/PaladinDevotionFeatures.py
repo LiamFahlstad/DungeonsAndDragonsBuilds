@@ -1,5 +1,10 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -26,7 +31,12 @@ class OathOfDevotionSpells(Feature):
 class SacredWeapon(Feature):
     def __init__(self):
         super().__init__(
-            name="Sacred Weapon", origin="Oath of Devotion Paladin Level 3", activation=FeatureActivation(duration="10 Minutes or Until Used Again", range="20-Foot Radius"), usage_tags=["buff"]
+            name="Sacred Weapon",
+            origin="Oath of Devotion Paladin Level 3",
+            activation=FeatureActivation(
+                duration="10 Minutes or Until Used Again", range="20-Foot Radius"
+            ),
+            usage_tags=["buff"],
         )
 
     def target(
@@ -42,7 +52,9 @@ class SacredWeapon(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Use Attack action"),
             ("Cost", "1 Channel Divinity use"),
@@ -57,7 +69,9 @@ class SacredWeapon(Feature):
 class AuraOfDevotion(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Devotion", origin="Oath of Devotion Paladin Level 7", usage_tags=["buff"]
+            name="Aura of Devotion",
+            origin="Oath of Devotion Paladin Level 7",
+            usage_tags=["buff"],
         )
 
     def target(
@@ -73,7 +87,10 @@ class AuraOfDevotion(Feature):
 class SmiteOfProtection(Feature):
     def __init__(self):
         super().__init__(
-            name="Smite of Protection", origin="Oath of Devotion Paladin Level 15", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["buff"]
+            name="Smite of Protection",
+            origin="Oath of Devotion Paladin Level 15",
+            activation=FeatureActivation(duration="Until Start of Next Turn"),
+            usage_tags=["buff"],
         )
 
     def target(
@@ -91,7 +108,15 @@ class SmiteOfProtection(Feature):
 
 class HolyNimbus(Feature):
     def __init__(self):
-        super().__init__(name="Holy Nimbus", origin="Oath of Devotion Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Ended"), usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Holy Nimbus",
+            origin="Oath of Devotion Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes or Until Ended",
+            ),
+            usage_tags=["buff", "damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -115,6 +140,9 @@ class HolyNimbus(Feature):
             ("Duration", "10 minutes (or until ended)"),
             ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
             ("Holy Ward", "Advantage on saves against Fiends and Undead"),
-            ("Radiant Damage", "Enemies at turn start in aura take Charisma modifier + Proficiency Bonus Radiant damage"),
+            (
+                "Radiant Damage",
+                "Enemies at turn start in aura take Charisma modifier + Proficiency Bonus Radiant damage",
+            ),
             ("Sunlight", "Aura is filled with Bright Light (counts as sunlight)"),
         ]

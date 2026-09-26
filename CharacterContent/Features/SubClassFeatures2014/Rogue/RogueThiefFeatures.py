@@ -10,7 +10,12 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class FastHands(Feature):
     def __init__(self):
-        super().__init__(name="Fast Hands", origin="Thief Rogue Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="Fast Hands",
+            origin="Thief Rogue Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -19,13 +24,19 @@ class FastHands(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class SecondStoryWork(Feature):
     def __init__(self):
-        super().__init__(name="Second-Story Work", origin="Thief Rogue Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Second-Story Work",
+            origin="Thief Rogue Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,13 +46,17 @@ class SecondStoryWork(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class SupremeSneak(Feature):
     def __init__(self):
-        super().__init__(name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"])
+        super().__init__(
+            name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,13 +65,19 @@ class SupremeSneak(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class UseMagicDevice(Feature):
     def __init__(self):
-        super().__init__(name="Use Magic Device", origin="Thief Rogue Level 13", usage_tags=["utility"])
+        super().__init__(
+            name="Use Magic Device",
+            origin="Thief Rogue Level 13",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -66,13 +87,17 @@ class UseMagicDevice(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class ThiefsReflexes(Feature):
     def __init__(self):
-        super().__init__(name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"])
+        super().__init__(
+            name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"]
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -82,5 +107,7 @@ class ThiefsReflexes(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

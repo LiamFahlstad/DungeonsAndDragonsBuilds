@@ -11,21 +11,30 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Skirmisher(Feature):
     def __init__(self):
-        super().__init__(name="Skirmisher", origin="Scout Rogue Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Skirmisher",
+            origin="Scout Rogue Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="5 Feet"
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn't provoke opportunity attacks."
-        )
+        description = "Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn't provoke opportunity attacks."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class Survivalist(Feature):
     def __init__(self):
-        super().__init__(name="Survivalist", origin="Scout Rogue Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Survivalist", origin="Scout Rogue Level 3", skippable_in_concise=True
+        )
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 
@@ -34,27 +43,36 @@ class Survivalist(Feature):
         self._expertise.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
-        )
+        description = "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
         return description
 
 
 class SuperiorMobility(Feature):
     def __init__(self):
-        super().__init__(name="Superior Mobility", origin="Scout Rogue Level 9", usage_tags=["utility"])
+        super().__init__(
+            name="Superior Mobility",
+            origin="Scout Rogue Level 9",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class AmbushMaster(Feature):
     def __init__(self):
-        super().__init__(name="Ambush Master", origin="Scout Rogue Level 13", activation=FeatureActivation(duration="Until Start of Your Next Turn"), usage_tags=["buff"])
+        super().__init__(
+            name="Ambush Master",
+            origin="Scout Rogue Level 13",
+            activation=FeatureActivation(duration="Until Start of Your Next Turn"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -67,11 +85,18 @@ class AmbushMaster(Feature):
 
 class SuddenStrike(Feature):
     def __init__(self):
-        super().__init__(name="Sudden Strike", origin="Scout Rogue Level 17", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
+        super().__init__(
+            name="Sudden Strike",
+            origin="Scout Rogue Level 17",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack as a bonus action. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

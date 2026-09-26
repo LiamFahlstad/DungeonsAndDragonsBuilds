@@ -1,7 +1,13 @@
 from enum import Enum
 from typing import Optional
 
-from Combat.Definitions import Alignment, ExtendedCombatantData, MonsterAbility, MonsterType, Size
+from Combat.Definitions import (
+    Alignment,
+    ExtendedCombatantData,
+    MonsterAbility,
+    MonsterType,
+    Size,
+)
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Utils.CreatureStatBlocks import format_creature_stat_block
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -65,7 +71,14 @@ class BeastOfTheLand(ExtendedCombatantData):
             ac=13 + wisdom_modifier,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 14, "Con": 15, "Int": 8, "Wis": 14, "Cha": 11},
+            ability_scores={
+                "Str": 14,
+                "Dex": 14,
+                "Con": 15,
+                "Int": 8,
+                "Wis": 14,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="None",
@@ -123,7 +136,14 @@ class BeastOfTheSea(ExtendedCombatantData):
             ac=13 + wisdom_modifier,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 14, "Dex": 14, "Con": 15, "Int": 8, "Wis": 14, "Cha": 11},
+            ability_scores={
+                "Str": 14,
+                "Dex": 14,
+                "Con": 15,
+                "Int": 8,
+                "Wis": 14,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="None",
@@ -183,7 +203,14 @@ class BeastOfTheSky(ExtendedCombatantData):
             ac=13 + wisdom_modifier,
             temp_hp=0,
             conditions=[],
-            ability_scores={"Str": 6, "Dex": 16, "Con": 13, "Int": 8, "Wis": 14, "Cha": 11},
+            ability_scores={
+                "Str": 6,
+                "Dex": 16,
+                "Con": 13,
+                "Int": 8,
+                "Wis": 14,
+                "Cha": 11,
+            },
             saving_throws={},
             spell_slots={},
             cr="None",
@@ -233,7 +260,9 @@ def build_primal_companion(
     ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
     wisdom_modifier = character_stat_block.get_wisdom_modifier()
     proficiency_bonus = character_stat_block.get_proficiency_bonus()
-    spell_attack_modifier = character_stat_block.calculate_attack_bonus_for_ability(Ability.WISDOM)
+    spell_attack_modifier = character_stat_block.calculate_attack_bonus_for_ability(
+        Ability.WISDOM
+    )
 
     allowed_damage_types = ALLOWED_STRIKE_DAMAGE_TYPES[companion_type]
     if damage_type is None:
@@ -259,7 +288,9 @@ def build_primal_companion(
             proficiency_bonus=proficiency_bonus,
             spell_attack_modifier=spell_attack_modifier,
             damage_type=damage_type,
-            spell_save_dc=character_stat_block.calculate_difficulty_class_for_ability(Ability.WISDOM),
+            spell_save_dc=character_stat_block.calculate_difficulty_class_for_ability(
+                Ability.WISDOM
+            ),
         )
     return BeastOfTheSky(
         ranger_level=ranger_level,
@@ -274,8 +305,12 @@ def format_primal_companion(
     character_stat_block: CharacterStatBlock,
     damage_type: Optional[DamageType] = None,
 ) -> str:
-    companion = build_primal_companion(companion_type, character_stat_block, damage_type)
-    return format_creature_stat_block(companion, character_stat_block, retain_mental_abilities=False)
+    companion = build_primal_companion(
+        companion_type, character_stat_block, damage_type
+    )
+    return format_creature_stat_block(
+        companion, character_stat_block, retain_mental_abilities=False
+    )
 
 
 def format_all_primal_companions(
@@ -289,10 +324,14 @@ def format_all_primal_companions(
     for companion_type in CompanionType:
         is_selected = companion_type is selected_type
         damage_type = selected_damage_type if is_selected else None
-        companion = build_primal_companion(companion_type, character_stat_block, damage_type)
+        companion = build_primal_companion(
+            companion_type, character_stat_block, damage_type
+        )
         if is_selected:
             companion.combatant_type += " (Currently Summoned)"
         blocks.append(
-            format_creature_stat_block(companion, character_stat_block, retain_mental_abilities=False)
+            format_creature_stat_block(
+                companion, character_stat_block, retain_mental_abilities=False
+            )
         )
     return "".join(blocks)

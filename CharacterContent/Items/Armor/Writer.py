@@ -185,7 +185,9 @@ def write_armor_reference_card(armor: AbstractArmor, file: TextIO) -> None:
                 f"required (or Speed -10 ft)</span> "
             )
         if armor.stealth_disadvantage:
-            tags_html += "<span class='atag atag-warn'>Disadvantage on Stealth checks</span>"
+            tags_html += (
+                "<span class='atag atag-warn'>Disadvantage on Stealth checks</span>"
+            )
         file.write(
             f"<div class='armor-tags'>"
             f"<span class='alabel-col'>Restrictions</span>"

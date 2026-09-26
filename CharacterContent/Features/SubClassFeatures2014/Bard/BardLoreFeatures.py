@@ -1,12 +1,21 @@
 from Core.Definitions import BARD_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BonusProficiencies(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
-        super().__init__(name="Bonus Proficiencies", origin="College of Lore Bard Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Bonus Proficiencies",
+            origin="College of Lore Bard Level 3",
+            skippable_in_concise=True,
+        )
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
@@ -21,7 +30,14 @@ class BonusProficiencies(Feature):
 
 class CuttingWords(Feature):
     def __init__(self):
-        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Cutting Words",
+            origin="College of Lore Bard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -59,7 +75,11 @@ class AdditionalMagicalSecrets(Feature):
 
 class PeerlessSkill(Feature):
     def __init__(self):
-        super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Peerless Skill",
+            origin="College of Lore Bard Level 14",
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock

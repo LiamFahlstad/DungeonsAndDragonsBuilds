@@ -1,6 +1,12 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
+from .Enums import (
+    WeaponMastery,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
 
 
 class Dart(AbstractWeapon):
@@ -20,7 +26,11 @@ class LightCrossbow(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Light Crossbow"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.TWO_HANDED, WeaponProperty.LOADING]
+        self.properties = [
+            WeaponProperty.AMMUNITION,
+            WeaponProperty.TWO_HANDED,
+            WeaponProperty.LOADING,
+        ]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.SIMPLE_RANGED
         self.damage_type = WeaponDamageTypes.PIERCING
@@ -71,7 +81,11 @@ class HandCrossbow(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Hand Crossbow"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LIGHT, WeaponProperty.LOADING]
+        self.properties = [
+            WeaponProperty.AMMUNITION,
+            WeaponProperty.LIGHT,
+            WeaponProperty.LOADING,
+        ]
         self.mastery = WeaponMastery.VEX
         self.weapon_type = WeaponType.MARTIAL_RANGED
         self.damage_type = WeaponDamageTypes.PIERCING
@@ -102,7 +116,11 @@ class Longbow(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Longbow"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.AMMUNITION,
+            WeaponProperty.HEAVY,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.MARTIAL_RANGED
         self.damage_type = WeaponDamageTypes.PIERCING
@@ -115,7 +133,11 @@ class Musket(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Musket"
         self.ability = Ability.DEXTERITY
-        self.properties = [WeaponProperty.AMMUNITION, WeaponProperty.LOADING, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.AMMUNITION,
+            WeaponProperty.LOADING,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.SLOW
         self.weapon_type = WeaponType.MARTIAL_RANGED
         self.damage_type = WeaponDamageTypes.PIERCING

@@ -32,7 +32,12 @@ from CharacterContent.Classes.SubClasses2024.BardDance import (
     BardDanceLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Items
 from CharacterContent.Species import Aasimar
 from CharacterContent.Spells.SpellLists import (
@@ -117,7 +122,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                     cantrip=BardLevel0Spells.MINOR_ILLUSION,
                     spell=BardLevel2Spells.ENHANCE_ABILITY,
                 ),
@@ -135,7 +141,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                     spell=BardLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: BardLevel9(
@@ -156,7 +163,8 @@ def get_starter_class_builder():
                         [
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: BardLevel13(
                     spell=BardLevel7Spells.MORDENKAINENS_SWORD,
@@ -170,7 +178,8 @@ def get_starter_class_builder():
                         [
                             (Ability.DEXTERITY, 1),
                             (Ability.CHARISMA, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: BardLevel17(
                     spell=BardLevel9Spells.PRISMATIC_WALL,

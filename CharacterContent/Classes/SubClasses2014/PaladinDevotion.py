@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import PaladinSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinDevotionFeatures
+from CharacterContent.Features.SubClassFeatures2014.Paladin import (
+    PaladinDevotionFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel3Spells,
@@ -117,7 +119,9 @@ class PaladinDevotionLevel18(ClassBuilder.SubclassLevel18):
         aura_of_devotion: PaladinDevotionFeatures.AuraOfDevotion = (
             data.get_features_by_type(PaladinDevotionFeatures.AuraOfDevotion)[0]
         )
-        aura_of_devotion.extend_feature(PaladinDevotionFeatures.AuraOfDevotionExpansion())
+        aura_of_devotion.extend_feature(
+            PaladinDevotionFeatures.AuraOfDevotionExpansion()
+        )
         return data
 
 

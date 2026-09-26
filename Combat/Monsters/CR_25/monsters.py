@@ -30,11 +30,19 @@ class Colossus(ExtendedCombatantData):
             ac=23,
             temp_hp=0,
             conditions=[],
-            ability_scores={Ability.STRENGTH: 30, Ability.DEXTERITY: 11, Ability.CONSTITUTION: 30, Ability.INTELLIGENCE: 3, Ability.WISDOM: 11, Ability.CHARISMA: 8},
+            ability_scores={
+                Ability.STRENGTH: 30,
+                Ability.DEXTERITY: 11,
+                Ability.CONSTITUTION: 30,
+                Ability.INTELLIGENCE: 3,
+                Ability.WISDOM: 11,
+                Ability.CHARISMA: 8,
+            },
             saving_throws={Ability.DEXTERITY: 8, Ability.WISDOM: 8},
             spell_slots={},
             cr="25",
-            monster_type=MonsterType.CONSTRUCT, monster_type_note='Titan',
+            monster_type=MonsterType.CONSTRUCT,
+            monster_type_note="Titan",
             alignment=Alignment.UNALIGNED,
             size=Size.GARGANTUAN,
             ac_note="",
@@ -42,42 +50,80 @@ class Colossus(ExtendedCombatantData):
             speed_ground_ft=60,
             speed_fly_ft=None,
             speed_climb_ft=None,
-            speed_special_rules='',
+            speed_special_rules="",
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
-                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=''),
-                DamageTypeEntry(damage_types=[DamageType.RADIANT], note=''),
+                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note=""),
+                DamageTypeEntry(damage_types=[DamageType.RADIANT], note=""),
             ],
             damage_immunities=[
-                DamageTypeEntry(damage_types=[DamageType.POISON], note=''),
-                DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=''),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+                DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=""),
             ],
-            condition_immunities=[Condition.CHARMED, Condition.EXHAUSTION, Condition.FRIGHTENED, Condition.PARALYZED, Condition.PETRIFIED, Condition.POISONED, Condition.STUNNED, Condition.UNCONSCIOUS],
+            condition_immunities=[
+                Condition.CHARMED,
+                Condition.EXHAUSTION,
+                Condition.FRIGHTENED,
+                Condition.PARALYZED,
+                Condition.PETRIFIED,
+                Condition.POISONED,
+                Condition.STUNNED,
+                Condition.UNCONSCIOUS,
+            ],
             senses="Truesight 300 ft., Passive Perception 10",
             languages="Understands Celestial and Common but can't speak",
             traits=[
-            MonsterAbility(name='Immutable Form', description="The colossus can't shape-shift."),
-            MonsterAbility(name='Legendary Resistance (4/Day)', description='If the colossus fails a saving throw, it can choose to succeed instead.'),
-            MonsterAbility(name='Magic Resistance', description='The colossus has Advantage on saving throws against spells and other magical effects.'),
-            MonsterAbility(name='Siege Monster', description='The colossus deals double damage to objects and structures.'),
-        ],
+                MonsterAbility(
+                    name="Immutable Form", description="The colossus can't shape-shift."
+                ),
+                MonsterAbility(
+                    name="Legendary Resistance (4/Day)",
+                    description="If the colossus fails a saving throw, it can choose to succeed instead.",
+                ),
+                MonsterAbility(
+                    name="Magic Resistance",
+                    description="The colossus has Advantage on saving throws against spells and other magical effects.",
+                ),
+                MonsterAbility(
+                    name="Siege Monster",
+                    description="The colossus deals double damage to objects and structures.",
+                ),
+            ],
             actions=[
-            MonsterAbility(name='Multiattack', description='The colossus makes three attacks, using Slam or Radiant Ray in any combination.'),
-            MonsterAbility(name='Slam', description='Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself.'),
-            MonsterAbility(name='Radiant Ray', description='Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition.'),
-            DcMonsterAbility(name='Divine Beam (Recharge 5–6)', description='Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying.'),
-        ],
+                MonsterAbility(
+                    name="Multiattack",
+                    description="The colossus makes three attacks, using Slam or Radiant Ray in any combination.",
+                ),
+                MonsterAbility(
+                    name="Slam",
+                    description="Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself.",
+                ),
+                MonsterAbility(
+                    name="Radiant Ray",
+                    description="Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                ),
+                DcMonsterAbility(
+                    name="Divine Beam (Recharge 5–6)",
+                    description="Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying.",
+                ),
+            ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-            MonsterAbility(name='Smite', description='The colossus makes one Radiant Ray attack.'),
-            MonsterAbility(name='Stomp', description='The colossus moves up to half its Speed without provoking Opportunity Attacks, and it can make one Slam attack at any point during that move.'),
-        ],
+                MonsterAbility(
+                    name="Smite",
+                    description="The colossus makes one Radiant Ray attack.",
+                ),
+                MonsterAbility(
+                    name="Stomp",
+                    description="The colossus moves up to half its Speed without provoking Opportunity Attacks, and it can make one Slam attack at any point during that move.",
+                ),
+            ],
             legendary_resistances=4,
             lair_actions=[],
             mythic_actions=[],
         )
 
 
-__all__ = ['Colossus']
+__all__ = ["Colossus"]

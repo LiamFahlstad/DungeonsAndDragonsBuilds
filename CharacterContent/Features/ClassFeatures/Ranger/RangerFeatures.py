@@ -34,7 +34,9 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Wisdom"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -100,7 +102,9 @@ class FavoredEnemy(Feature):
             ("Regain", "Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -169,7 +173,9 @@ class Roving(Feature):
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -198,7 +204,11 @@ class Tireless(Feature):
             origin="Ranger Level 10",
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["heal"],
-            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -221,13 +231,17 @@ class Tireless(Feature):
             ("Exhaustion Reduction", "Decrease by 1 on Short Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_wisdom_modifier()
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -245,9 +259,16 @@ class NaturesVeil(Feature):
         super().__init__(
             name="Nature's Veil",
             origin="Ranger Level 14",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until End of Your Next Turn"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until End of Your Next Turn",
+            ),
             usage_tags=["buff"],
-            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -269,13 +290,17 @@ class NaturesVeil(Feature):
             ("Uses", f"{uses}, regain on Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.get_wisdom_modifier()
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -289,19 +314,27 @@ class PreciseHunter(Feature):
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class FeralSenses(Feature):
     def __init__(self):
-        super().__init__(name="Feral Senses", origin="Ranger Level 18", activation=FeatureActivation(range="30 Feet"))
+        super().__init__(
+            name="Feral Senses",
+            origin="Ranger Level 18",
+            activation=FeatureActivation(range="30 Feet"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 

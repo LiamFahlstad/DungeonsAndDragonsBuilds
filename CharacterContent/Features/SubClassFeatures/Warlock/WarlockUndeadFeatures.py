@@ -1,5 +1,12 @@
 from Core.Definitions import Ability, DamageType, MAX_ABILITY_MODIFIER, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -7,18 +14,36 @@ from Utils import StringUtils
 
 class FormOfDread(Feature):
     def __init__(self):
-        super().__init__(name="Form of Dread", origin="Undead Patron Warlock Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["heal", "buff", "control"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+        super().__init__(
+            name="Form of Dread",
+            origin="Undead Patron Warlock Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["heal", "buff", "control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "As a Bonus Action, you transform into an avatar of your patron's dreadful power, gaining the benefits below for 1 minute, until you have the Incapacitated condition, or until you end the form (no action required). You can transform a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
@@ -27,6 +52,7 @@ class FormOfDread(Feature):
             "Frightful Avatar. Once per turn, when you hit a creature with an attack roll, you can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target has the Frightened condition until the end of your next turn."
         )
         return description
+
 
 class UndeadSpells(Feature):
     def __init__(self):
@@ -47,7 +73,11 @@ class UndeadSpells(Feature):
 
 class GraveTouched(Feature):
     def __init__(self):
-        super().__init__(name="Grave Touched", origin="Undead Patron Warlock Level 6", usage_tags=["damage", "utility"])
+        super().__init__(
+            name="Grave Touched",
+            origin="Undead Patron Warlock Level 6",
+            usage_tags=["damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,7 +91,12 @@ class GraveTouched(Feature):
 
 class NecroticHusk(Feature):
     def __init__(self):
-        super().__init__(name="Necrotic Husk", origin="Undead Patron Warlock Level 10", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Necrotic Husk",
+            origin="Undead Patron Warlock Level 10",
+            activation=FeatureActivation(range="30-Foot Emanation"),
+            usage_tags=["buff", "damage"],
+        )
         # Only the base Resistance is unconditional; the upgrade to Immunity
         # while using Form of Dread is conditional/temporary and stays
         # prose-only.
@@ -82,21 +117,25 @@ class NecroticHusk(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "Gain Resistance to Necrotic damage (Immunity while Form of Dread). "
             "When you drop to 0 HP and don't die, trigger area effect: creatures in 30-foot Emanation make CON save (DC your spell save), taking 2d10 + CHA Necrotic damage on fail (half on success); you regain HP to twice your Warlock level and gain 1 Exhaustion (recharge Short or Long Rest)."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
 class SuperiorDread(Feature):
     def __init__(self):
-        super().__init__(name="Superior Dread", origin="Undead Patron Warlock Level 14", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Superior Dread",
+            origin="Undead Patron Warlock Level 14",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -107,12 +146,10 @@ class SuperiorDread(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        return (
-            "While Form of Dread active: gain Resistance to Bludgeoning/Piercing/Slashing, Fly Speed equal to your Speed with hover (moving through creatures and objects as difficult terrain but taking 1d10 Force if ending turn inside), and cast Conjuration or Necromancy Warlock spells without components (except costly or consumed Material)."
-        )
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+        return "While Form of Dread active: gain Resistance to Bludgeoning/Piercing/Slashing, Fly Speed equal to your Speed with hover (moving through creatures and objects as difficult terrain but taking 1d10 Force if ending turn inside), and cast Conjuration or Necromancy Warlock spells without components (except costly or consumed Material)."
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

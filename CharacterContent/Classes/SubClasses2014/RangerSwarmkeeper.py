@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import RangerSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Ranger import RangerSwarmkeeperFeatures
+from CharacterContent.Features.SubClassFeatures2014.Ranger import (
+    RangerSwarmkeeperFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     DruidLevel1Spells,
@@ -75,9 +77,9 @@ class RangerSwarmkeeperLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        gathered_swarm: RangerSwarmkeeperFeatures.GatheredSwarm = data.get_features_by_type(
-            RangerSwarmkeeperFeatures.GatheredSwarm
-        )[0]
+        gathered_swarm: RangerSwarmkeeperFeatures.GatheredSwarm = (
+            data.get_features_by_type(RangerSwarmkeeperFeatures.GatheredSwarm)[0]
+        )
         gathered_swarm.extend_feature(RangerSwarmkeeperFeatures.MightySwarm())
         return data
 

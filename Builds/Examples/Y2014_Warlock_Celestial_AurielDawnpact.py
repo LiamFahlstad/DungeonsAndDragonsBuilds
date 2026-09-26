@@ -27,7 +27,11 @@ from CharacterContent.Classes.SubClasses2014.WarlockTheCelestial import (
     WarlockTheCelestialCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,
@@ -114,7 +118,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                     cantrip=WarlockLevel0Spells.MINOR_ILLUSION,
                     spell=WarlockLevel2Spells.RAY_OF_ENFEEBLEMENT,
                 ),
@@ -135,7 +140,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.WISDOM, 1),
-                        ]),
+                        ]
+                    ),
                     spell=WarlockLevel4Spells.DIMENSION_DOOR,
                 ),
                 9: WarlockLevel9(
@@ -153,7 +159,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.CHARISMA, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                     eldritch_invocation=InvocationsLevel12.DEVOURING_BLADE,
                 ),
                 13: WarlockLevel13(

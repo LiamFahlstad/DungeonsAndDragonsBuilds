@@ -32,7 +32,16 @@ class PsionicSpells(Feature):
 
 class TelepathicSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Speech", origin="Aberrant Mind Sorcerer Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Sorcerer Level Minutes", range="30 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Telepathic Speech",
+            origin="Aberrant Mind Sorcerer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Sorcerer Level Minutes",
+                range="30 Feet",
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -46,27 +55,34 @@ class TelepathicSpeech(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_charisma_modifier()
-        sorcerer_level = character_stat_block.get_class_level(Definitions.CharacterClass.SORCERER)
+        sorcerer_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.SORCERER
+        )
         return [
             ("Action", "Bonus action"),
             ("Range", "30 feet"),
-            ("Distance", f"Charisma modifier miles (min 1 mile) = {max(1, charisma_modifier)} mile(s)"),
+            (
+                "Distance",
+                f"Charisma modifier miles (min 1 mile) = {max(1, charisma_modifier)} mile(s)",
+            ),
             ("Duration", f"{sorcerer_level} minute(s)"),
             ("Ends Early", "If incapacitated, dead, or you form another connection"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class PsionicSorcery(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Sorcery", origin="Aberrant Mind Sorcerer Level 6")
+        super().__init__(
+            name="Psionic Sorcery", origin="Aberrant Mind Sorcerer Level 6"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "When you cast any spell of 1st level or higher from your Psionic Spells feature, you can cast it by expending a spell slot as normal or by spending a number of sorcery points equal to the spell's level. If you cast the spell using sorcery points, it requires no verbal or somatic components, and it requires no material components, unless they are consumed by the spell."
-        )
+        description = "When you cast any spell of 1st level or higher from your Psionic Spells feature, you can cast it by expending a spell slot as normal or by spending a number of sorcery points equal to the spell's level. If you cast the spell using sorcery points, it requires no verbal or somatic components, and it requires no material components, unless they are consumed by the spell."
         return description
 
     def get_table_description(
@@ -83,19 +99,34 @@ class PsionicSorcery(Feature):
 
 class PsychicDefenses(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Defenses", origin="Aberrant Mind Sorcerer Level 6", usage_tags=["buff"])
+        super().__init__(
+            name="Psychic Defenses",
+            origin="Aberrant Mind Sorcerer Level 6",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain resistance to psychic damage, and you have advantage on saving throws against being charmed or frightened."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class RevelationInFlesh(Feature):
     def __init__(self):
-        super().__init__(name="Revelation in Flesh", origin="Aberrant Mind Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes", range="60 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Revelation in Flesh",
+            origin="Aberrant Mind Sorcerer Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes",
+                range="60 Feet",
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -108,13 +139,22 @@ class RevelationInFlesh(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class WarpingImplosion(Feature):
     def __init__(self):
-        super().__init__(name="Warping Implosion", origin="Aberrant Mind Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.ACTION, range="120 Feet"), usage_tags=["damage", "control"])
+        super().__init__(
+            name="Warping Implosion",
+            origin="Aberrant Mind Sorcerer Level 18",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="120 Feet"
+            ),
+            usage_tags=["damage", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -136,5 +176,7 @@ class WarpingImplosion(Feature):
             ("Recharge", "Long rest or 5 sorcery points"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

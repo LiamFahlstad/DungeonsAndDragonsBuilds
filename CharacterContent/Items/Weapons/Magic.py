@@ -11,8 +11,24 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import ItemRarity
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
-from .Improvements import AddAttackRollBonus, AddDamageRollBonus, AddExtraDamage, AddWeaponProperty, ExtraDamage, SetAttackRollBonus, SetDamageDie, SetDamageRollBonus, SetDamageType
+from .Enums import (
+    WeaponMastery,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
+from .Improvements import (
+    AddAttackRollBonus,
+    AddDamageRollBonus,
+    AddExtraDamage,
+    AddWeaponProperty,
+    ExtraDamage,
+    SetAttackRollBonus,
+    SetDamageDie,
+    SetDamageRollBonus,
+    SetDamageType,
+)
 from .MartialMelee import Longsword, Maul, Rapier, Shortsword
 from .Ranged import Longbow
 from .SimpleMelee import Dagger, Greatclub, Mace, Spear
@@ -330,7 +346,9 @@ class LoremastersRapier(Rapier):
         self.add_weapon_improvement(SetItemValue(None))
         self.add_weapon_improvement(SetItemHomebrew())
         self.add_weapon_improvement(
-            AddItemDescription("An inquisitive blade that whispers secrets to its wielder.")
+            AddItemDescription(
+                "An inquisitive blade that whispers secrets to its wielder."
+            )
         )
         self.add_weapon_improvement(
             AddItemDescription(
@@ -393,7 +411,9 @@ class FlameTongueSword(AbstractWeapon):
         self.requires_attunement = True
         self.add_character_improvement(
             AbilityScoreBonus(
-                [(Ability.STRENGTH, 1)], total=1, error_prefix="Flame Tongue Sword bonus"
+                [(Ability.STRENGTH, 1)],
+                total=1,
+                error_prefix="Flame Tongue Sword bonus",
             )
         )
 
@@ -430,7 +450,9 @@ class VanguardsSpear(Spear):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self.add_character_improvement(InitiativeRollCondition(DiceRollCondition.ADVANTAGE))
+        self.add_character_improvement(
+            InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
+        )
 
     def setup_improvements(self) -> None:
         self.add_weapon_improvement(
@@ -522,7 +544,8 @@ class SulvesburgsFolly(AbstractWeapon):
     Dual Hammer mode: two hammers dealing 1d6 each with +1 bonus.
     Two-Handed Hammer mode: deals 1d8 with +1 bonus.
     Segway mode: doubles speed, can only use action for Dismount, Ram, or movement.
-    Ram ability (Segway mode): spend movement to ram; target makes DEX save or falls prone."""
+    Ram ability (Segway mode): spend movement to ram; target makes DEX save or falls prone.
+    """
 
     def base_stats(self) -> None:
         self.name = "Sulvesburg's Folly"

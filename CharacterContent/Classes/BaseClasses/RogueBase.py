@@ -252,7 +252,9 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
                 Weapons.WeaponProficiency.SIMPLE,
                 Weapons.WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT,
             ],
-            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            spell_casting_ability=(
+                Ability.INTELLIGENCE if caster_type is not None else None
+            ),
             caster_type=caster_type,
             default_pack=Packs.BurglarsPack(),
         )
@@ -275,6 +277,8 @@ class RogueMulticlassBuilder(ClassBuilder.MulticlassBuilder):
             base_class_level=rogue_level,
             subclass=subclass,
             replace_spells=replace_spells,
-            spell_casting_ability=Ability.INTELLIGENCE if caster_type is not None else None,
+            spell_casting_ability=(
+                Ability.INTELLIGENCE if caster_type is not None else None
+            ),
             caster_type=caster_type,
         )

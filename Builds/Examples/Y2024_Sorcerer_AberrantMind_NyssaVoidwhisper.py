@@ -34,7 +34,11 @@ from CharacterContent.Classes.SubClasses2024.SorcererAberrant import (
     SorcererAberrantLevel18,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -104,7 +108,8 @@ def get_starter_class_builder():
                 ),
                 4: SorcererLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                     cantrip=SpellDefinitions.SorcererLevel0Spells.MINOR_ILLUSION,
                     spell=SpellDefinitions.SorcererLevel2Spells.MISTY_STEP,
                 ),
@@ -120,7 +125,8 @@ def get_starter_class_builder():
                 ),
                 8: SorcererLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                     spell=SpellDefinitions.SorcererLevel4Spells.GREATER_INVISIBILITY,
                 ),
                 9: SorcererLevel9(
@@ -136,7 +142,8 @@ def get_starter_class_builder():
                 ),
                 12: SorcererLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                 ),
                 13: SorcererLevel13(
                     spell=SpellDefinitions.SorcererLevel7Spells.PLANE_SHIFT,
@@ -147,7 +154,8 @@ def get_starter_class_builder():
                 ),
                 16: SorcererLevel16(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                 ),
                 17: SorcererLevel17(
                     spell=SpellDefinitions.SorcererLevel9Spells.PSYCHIC_SCREAM,

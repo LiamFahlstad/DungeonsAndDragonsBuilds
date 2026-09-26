@@ -1,13 +1,28 @@
-
 from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class DreadAmbusher(Feature):
     def __init__(self):
-        super().__init__(name="Dread Ambusher", origin="Gloom Stalker Ranger Level 3", usage_tags=["buff", "damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+        super().__init__(
+            name="Dread Ambusher",
+            origin="Gloom Stalker Ranger Level 3",
+            usage_tags=["buff", "damage"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         wis_mod = character_stat_block.get_wisdom_modifier()
@@ -22,13 +37,15 @@ class DreadAmbusher(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class GloomStalkerSpells(Feature):
     def __init__(self):
         super().__init__(
@@ -42,7 +59,12 @@ class GloomStalkerSpells(Feature):
 
 class UmbralSight(Feature):
     def __init__(self):
-        super().__init__(name="Umbral Sight", origin="Gloom Stalker Ranger Level 3", activation=FeatureActivation(range="60 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Umbral Sight",
+            origin="Gloom Stalker Ranger Level 3",
+            activation=FeatureActivation(range="60 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -51,21 +73,33 @@ class UmbralSight(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class IronMind(Feature):
     def __init__(self):
-        super().__init__(name="Iron Mind", origin="Gloom Stalker Ranger Level 7", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Iron Mind",
+            origin="Gloom Stalker Ranger Level 7",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
 
     def apply(self, character_stat_block: CharacterStatBlock):
         if not character_stat_block.saving_throws.is_proficient(Ability.WISDOM):
             character_stat_block.add_proficiency_in_saving_throw(Ability.WISDOM)
         else:
             # If already proficient in Wisdom, find the first ability not proficient and add it
-            abilities = [Ability.INTELLIGENCE, Ability.CHARISMA, Ability.STRENGTH,
-                        Ability.DEXTERITY, Ability.CONSTITUTION]
+            abilities = [
+                Ability.INTELLIGENCE,
+                Ability.CHARISMA,
+                Ability.STRENGTH,
+                Ability.DEXTERITY,
+                Ability.CONSTITUTION,
+            ]
             for ability in abilities:
                 if not character_stat_block.saving_throws.is_proficient(ability):
                     character_stat_block.add_proficiency_in_saving_throw(ability)
@@ -79,7 +113,12 @@ class IronMind(Feature):
 class StalkersFlurry(Feature):
     def __init__(self):
         super().__init__(
-            name="Stalker's Flurry", origin="Gloom Stalker Ranger Level 11", activation=FeatureActivation(duration="Until Start of Your Next Turn", range="10 Feet"), usage_tags=["damage", "control"]
+            name="Stalker's Flurry",
+            origin="Gloom Stalker Ranger Level 11",
+            activation=FeatureActivation(
+                duration="Until Start of Your Next Turn", range="10 Feet"
+            ),
+            usage_tags=["damage", "control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -93,17 +132,28 @@ class StalkersFlurry(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class ShadowyDodge(Feature):
     def __init__(self):
-        super().__init__(name="Shadowy Dodge", origin="Gloom Stalker Ranger Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Shadowy Dodge",
+            origin="Gloom Stalker Ranger Level 15",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

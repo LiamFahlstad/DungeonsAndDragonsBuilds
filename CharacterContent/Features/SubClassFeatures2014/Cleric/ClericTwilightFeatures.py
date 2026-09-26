@@ -1,12 +1,20 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="Twilight Domain Cleric Level 3")
+        super().__init__(
+            name="Bonus Proficiencies", origin="Twilight Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
@@ -15,7 +23,9 @@ class BonusProficiencies(Feature):
 
 class TwilightDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Twilight Domain Spells", origin="Twilight Domain Cleric Level 3")
+        super().__init__(
+            name="Twilight Domain Spells", origin="Twilight Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -36,7 +46,9 @@ class EyesOfNight(Feature):
         super().__init__(
             name="Eyes of Night",
             origin="Twilight Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"
+            ),
             usage_tags=["utility"],
         )
 
@@ -91,7 +103,11 @@ class TwilightSanctuaryChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity: Twilight Sanctuary",
             origin="Twilight Domain Cleric Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until You Are Incapacitated or Die", range="Self (30-Foot-Radius Sphere)"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until You Are Incapacitated or Die",
+                range="Self (30-Foot-Radius Sphere)",
+            ),
             usage_tags=["heal", "buff"],
         )
 
@@ -118,7 +134,10 @@ class TwilightSanctuaryChannelDivinity(Feature):
             ("Light", "Dim light"),
             ("Movement", "Moves with you"),
             ("Duration", "1 minute or until you are incapacitated or die"),
-            ("Effect per Turn", "Choose: grant 1d6 + cleric level temp HP, or remove charmed/frightened"),
+            (
+                "Effect per Turn",
+                "Choose: grant 1d6 + cleric level temp HP, or remove charmed/frightened",
+            ),
         ]
 
 
@@ -127,9 +146,16 @@ class StepsOfNight(Feature):
         super().__init__(
             name="Steps of Night",
             origin="Twilight Domain Cleric Level 6",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
             usage_tags=["utility"],
-            uses=FeatureUses(max_uses=Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -137,12 +163,12 @@ class StepsOfNight(Feature):
         return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You regain all expended uses when you finish a long rest."
-        )
+        description = "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You regain all expended uses when you finish a long rest."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

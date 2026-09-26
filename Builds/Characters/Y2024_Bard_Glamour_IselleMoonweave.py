@@ -30,7 +30,12 @@ from CharacterContent.Classes.SubClasses2024.BardGlamour import (
     BardGlamourLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Items
 from CharacterContent.Species import Aasimar
 from CharacterContent.Spells.SpellLists import (
@@ -198,7 +203,9 @@ def get_starter_class_builder():
     )
 
 
-class Y2024BardGlamourIselleMoonweaveCharacterBuilder(CharacterBuilder.CharacterBuilder):
+class Y2024BardGlamourIselleMoonweaveCharacterBuilder(
+    CharacterBuilder.CharacterBuilder
+):
     def __init__(self):
         super().__init__(
             name="Iselle Moonweave",

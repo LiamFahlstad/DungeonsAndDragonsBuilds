@@ -1,4 +1,10 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -21,9 +27,11 @@ class Spellcasting(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -45,46 +53,68 @@ class Spellcasting(Feature):
 class MageHandLegerdemain(Feature):
     def __init__(self):
         super().__init__(
-            name="Mage Hand Legerdemain", origin="Arcane Trickster Rogue Level 3", usage_tags=["utility"]
+            name="Mage Hand Legerdemain",
+            origin="Arcane Trickster Rogue Level 3",
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you cast Mage Hand, you can cast it as a Bonus Action, and you can make the spectral hand Invisible. You can control the hand as a Bonus Action, and through it, you can make Dexterity (Sleight of Hand) checks."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class MagicalAmbush(Feature):
     def __init__(self):
-        super().__init__(name="Magical Ambush", origin="Arcane Trickster Rogue Level 9", usage_tags=["buff"])
+        super().__init__(
+            name="Magical Ambush",
+            origin="Arcane Trickster Rogue Level 9",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "If you have the Invisible condition when you cast a spell on a creature, it has Disadvantage on any saving throw it makes against the spell on the same turn."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class VersatileTrickster(Feature):
     def __init__(self):
         super().__init__(
-            name="Versatile Trickster", origin="Arcane Trickster Rogue Level 13", activation=FeatureActivation(range="5 Feet"), usage_tags=["control"]
+            name="Versatile Trickster",
+            origin="Arcane Trickster Rogue Level 13",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain the ability to distract targets with your Mage Hand. When you use the Trip option of your Cunning Strike on a creature, you can also use that option on another creature within 5 feet of the spectral hand."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SpellThief(Feature):
     def __init__(self):
-        super().__init__(name="Spell Thief", origin="Arcane Trickster Rogue Level 17", activation=FeatureActivation(action_type=ActionType.REACTION, duration="8 Hours"), usage_tags=["buff", "control"])
+        super().__init__(
+            name="Spell Thief",
+            origin="Arcane Trickster Rogue Level 17",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="8 Hours"
+            ),
+            usage_tags=["buff", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -109,5 +139,7 @@ class SpellThief(Feature):
             ("Limitation", "Once per Long Rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

@@ -135,9 +135,7 @@ class DnD5eSpellParser:
             if response.status_code == 200:
                 candidate_soup = BeautifulSoup(response.text, "html.parser")
                 candidate_content = candidate_soup.find("div", id="page-content")
-                if candidate_content and candidate_content.find(
-                    "p", id="404-message"
-                ):
+                if candidate_content and candidate_content.find("p", id="404-message"):
                     # Some CDN configs return HTTP 200 for wikidot's own
                     # soft-404 page instead of propagating the 404 status.
                     last_status = 404
@@ -157,8 +155,8 @@ class DnD5eSpellParser:
             )
 
     def format_text(self, text: str) -> str:
-        return text.replace("´", "'").replace("’", "'").replace("“", '"').replace(
-            "”", '"'
+        return (
+            text.replace("´", "'").replace("’", "'").replace("“", '"').replace("”", '"')
         )
 
     def get_name(self):

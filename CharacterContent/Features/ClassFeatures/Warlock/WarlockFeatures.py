@@ -1,5 +1,9 @@
 from Core.Definitions import WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -18,17 +22,33 @@ class ReplacingEldritchInvocations(Feature):
         )
         return description
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Whenever you gain a Warlock level, replace one invocation with another you qualify for (unless it's a prerequisite). Gain additional invocations at higher levels. Cannot pick the same invocation twice unless its description says otherwise."
 
     def get_resource_tiles(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         invocations_known_by_level = {
-            1: 1, 2: 3, 3: 3, 4: 3, 5: 5, 6: 5, 7: 6, 8: 6, 9: 7, 10: 7,
-            11: 7, 12: 8, 13: 8, 14: 8, 15: 9, 16: 9, 17: 9, 18: 10, 19: 10, 20: 10,
+            1: 1,
+            2: 3,
+            3: 3,
+            4: 3,
+            5: 5,
+            6: 5,
+            7: 6,
+            8: 6,
+            9: 7,
+            10: 7,
+            11: 7,
+            12: 8,
+            13: 8,
+            14: 8,
+            15: 9,
+            16: 9,
+            17: 9,
+            18: 10,
+            19: 10,
+            20: 10,
         }
         steps = [
             (f"Lv {level_range}", str(value))
@@ -59,27 +79,40 @@ class RegainingSpellSlots(Feature):
         description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
 class MagicalCunning(Feature):
     def __init__(self):
-        super().__init__(name="Magical Cunning", origin="Warlock Level 2", activation=FeatureActivation(duration="1 Minute"))
+        super().__init__(
+            name="Magical Cunning",
+            origin="Warlock Level 2",
+            activation=FeatureActivation(duration="1 Minute"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Perform an esoteric rite"),
             ("Duration", "1 minute"),
-            ("Effect", "Regain expended Pact Magic spell slots up to half your maximum (round up)"),
+            (
+                "Effect",
+                "Regain expended Pact Magic spell slots up to half your maximum (round up)",
+            ),
             ("Recharge", "Once per Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -94,7 +127,9 @@ class ContactPatron(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Spell", "Contact Other Plane (always prepared)"),
             ("Casting", "Cast without expending a spell slot"),
@@ -123,7 +158,9 @@ class MysticArcanum(Feature):
             "You can replace any arcanum spell when you gain a Warlock level."
         )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 

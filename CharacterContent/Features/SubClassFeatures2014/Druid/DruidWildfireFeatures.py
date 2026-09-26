@@ -1,12 +1,29 @@
-from Combat.Definitions import Alignment, Condition, DamageTypeEntry, ExtendedCombatantData, MonsterAbility, MonsterType, Size
+from Combat.Definitions import (
+    Alignment,
+    Condition,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterAbility,
+    MonsterType,
+    Size,
+)
 from Core.Definitions import CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 from Utils.CreatureStatBlocks import format_creature_stat_block
 
 
-def _build_wildfire_spirit(druid_level: int, proficiency_bonus: int, spell_attack_modifier: int) -> ExtendedCombatantData:
+def _build_wildfire_spirit(
+    druid_level: int, proficiency_bonus: int, spell_attack_modifier: int
+) -> ExtendedCombatantData:
     flame_seed_description = (
         f"Ranged Weapon Attack: {spell_attack_modifier:+} to hit, range 60 ft., one target you can see. "
         f"Hit: 1d6 + {proficiency_bonus} Fire damage."
@@ -23,7 +40,14 @@ def _build_wildfire_spirit(druid_level: int, proficiency_bonus: int, spell_attac
         ac=13,
         temp_hp=0,
         conditions=[],
-        ability_scores={"Str": 10, "Dex": 14, "Con": 14, "Int": 13, "Wis": 15, "Cha": 11},
+        ability_scores={
+            "Str": 10,
+            "Dex": 14,
+            "Con": 14,
+            "Int": 13,
+            "Wis": 15,
+            "Cha": 11,
+        },
         saving_throws={},
         spell_slots={},
         cr="—",
@@ -48,7 +72,9 @@ def _build_wildfire_spirit(druid_level: int, proficiency_bonus: int, spell_attac
         traits=[],
         actions=[
             MonsterAbility(name="Flame Seed", description=flame_seed_description),
-            MonsterAbility(name="Fiery Teleportation", description=fiery_teleportation_description),
+            MonsterAbility(
+                name="Fiery Teleportation", description=fiery_teleportation_description
+            ),
         ],
         bonus_actions=[],
         reactions=[],
@@ -64,13 +90,19 @@ def format_wildfire_spirit(character_stat_block: CharacterStatBlock) -> str:
     proficiency_bonus = character_stat_block.get_proficiency_bonus()
     wisdom_modifier = character_stat_block.get_wisdom_modifier()
     spell_attack_modifier = proficiency_bonus + wisdom_modifier
-    spirit = _build_wildfire_spirit(druid_level, proficiency_bonus, spell_attack_modifier)
-    return format_creature_stat_block(spirit, character_stat_block, retain_mental_abilities=False)
+    spirit = _build_wildfire_spirit(
+        druid_level, proficiency_bonus, spell_attack_modifier
+    )
+    return format_creature_stat_block(
+        spirit, character_stat_block, retain_mental_abilities=False
+    )
 
 
 class CircleSpells(Feature):
     def __init__(self):
-        super().__init__(name="Circle Spells", origin="Circle of Wildfire Druid Level 3")
+        super().__init__(
+            name="Circle Spells", origin="Circle of Wildfire Druid Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -90,7 +122,15 @@ class CircleSpells(Feature):
 
 class SummonWildfireSpirit(Feature):
     def __init__(self):
-        super().__init__(name="Summon Wildfire Spirit", origin="Circle of Wildfire Druid Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"), usage_tags=["damage", "utility", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"))
+        super().__init__(
+            name="Summon Wildfire Spirit",
+            origin="Circle of Wildfire Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"
+            ),
+            usage_tags=["damage", "utility", "summon"],
+            uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -103,13 +143,16 @@ class SummonWildfireSpirit(Feature):
             "In combat, the spirit shares your initiative count, but it takes its turn immediately after yours. The only action it takes on its turn is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. If you are incapacitated, the spirit can take any action of its choice, not just Dodge.\n"
             "\n"
             "The spirit manifests for 1 hour, until it is reduced to 0 hit points, until you use this feature to summon the spirit again, or until you die.\n"
-            "\n"
-            + format_wildfire_spirit(character_stat_block)
+            "\n" + format_wildfire_spirit(character_stat_block)
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.OTHER
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

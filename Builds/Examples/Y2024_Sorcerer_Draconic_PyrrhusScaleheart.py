@@ -15,7 +15,11 @@ from CharacterContent.Classes.SubClasses2024.SorcererDraconic import (
     SorcererDraconicLevel3,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species import Dragonborn
@@ -86,7 +90,8 @@ def get_starter_class_builder():
                 ),
                 4: SorcererLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [(Ability.CHARISMA, 2)]),
+                        [(Ability.CHARISMA, 2)]
+                    ),
                     cantrip=SpellDefinitions.SorcererLevel0Spells.MAGE_HAND,
                     spell=SpellDefinitions.SorcererLevel2Spells.MISTY_STEP,
                 ),

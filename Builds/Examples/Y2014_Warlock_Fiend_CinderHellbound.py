@@ -27,7 +27,11 @@ from CharacterContent.Classes.SubClasses2014.WarlockFiend import (
     WarlockFiendCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Invocations.Definitions import (
     InvocationsLevel0,
     InvocationsLevel2,
@@ -113,7 +117,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                     cantrip=WarlockLevel0Spells.MINOR_ILLUSION,
                     spell=WarlockLevel2Spells.RAY_OF_ENFEEBLEMENT,
                 ),
@@ -133,7 +138,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                     spell=WarlockLevel4Spells.SHADOW_OF_MOIL,
                 ),
                 9: WarlockLevel9(
@@ -150,7 +156,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                     eldritch_invocation=InvocationsLevel12.DEVOURING_BLADE,
                 ),
                 13: WarlockLevel13(

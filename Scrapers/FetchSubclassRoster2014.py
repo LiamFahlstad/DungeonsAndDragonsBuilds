@@ -5,6 +5,7 @@ every match, and write it to SourceTexts/SubclassTexts2014/.
 
 Usage: python Scrapers/FetchSubclassRoster2014.py
 """
+
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path

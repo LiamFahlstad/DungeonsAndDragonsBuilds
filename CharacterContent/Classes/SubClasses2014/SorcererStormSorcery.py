@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import SorcererSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Sorcerer import SorcererStormSorceryFeatures
+from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
+    SorcererStormSorceryFeatures,
+)
 from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 

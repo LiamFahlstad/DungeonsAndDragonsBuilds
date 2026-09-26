@@ -58,7 +58,12 @@ def write_build_group_pages(
         max_level,
     )
     _write_spells_page(
-        writer, output_folder_obj / "spells.html", group_name, prepared, min_level, max_level
+        writer,
+        output_folder_obj / "spells.html",
+        group_name,
+        prepared,
+        min_level,
+        max_level,
     )
     _write_weapons_page(
         writer,
@@ -81,7 +86,9 @@ def _write_features_page(
 ):
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
-        file.write(f"<h1>{group_name} - Features{_level_label(min_level, max_level)}</h1>\n")
+        file.write(
+            f"<h1>{group_name} - Features{_level_label(min_level, max_level)}</h1>\n"
+        )
         file.write("<div class='features'>\n")
         for character_sheet_data, stat_block in prepared:
             text_features = [
@@ -99,7 +106,9 @@ def _write_features_page(
                 # max_level caps nested extension cards to the requested
                 # range's upper bound, same mechanism the per-level shard
                 # pages use (see HtmlCharacterSheetWriter._write_features_page).
-                feature.write_to_file(stat_block, file, description_mode, max_level=max_level)
+                feature.write_to_file(
+                    stat_block, file, description_mode, max_level=max_level
+                )
         file.write("</div>\n")
 
 
@@ -113,7 +122,9 @@ def _write_spells_page(
 ):
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
-        file.write(f"<h1>{group_name} - Spells{_level_label(min_level, max_level)}</h1>\n")
+        file.write(
+            f"<h1>{group_name} - Spells{_level_label(min_level, max_level)}</h1>\n"
+        )
         for character_sheet_data, stat_block in prepared:
             level_filtered_spells = [
                 spell
@@ -151,7 +162,10 @@ def _write_weapons_page(
 
 
 def _write_items_page(
-    writer: HtmlCharacterSheetWriter, path: pathlib.Path, group_name: str, prepared: list
+    writer: HtmlCharacterSheetWriter,
+    path: pathlib.Path,
+    group_name: str,
+    prepared: list,
 ):
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
@@ -166,7 +180,9 @@ def _write_items_page(
                 continue
             combined_rows = []
             for entry in non_empty_entries:
-                is_starting_equipment = entry is character_sheet_data.starting_equipment_entry
+                is_starting_equipment = (
+                    entry is character_sheet_data.starting_equipment_entry
+                )
                 sections = writer._build_item_sections(entry, is_starting_equipment)
                 for title, rows in sections:
                     if title == "Weapons":

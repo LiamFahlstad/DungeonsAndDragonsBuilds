@@ -1,12 +1,21 @@
 from Core.Definitions import BARD_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BonusProficiencies(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill, skill_3: Skill):
-        super().__init__(name="Bonus Proficiencies", origin="College of Lore Bard Level 3", skippable_in_concise=True)
+        super().__init__(
+            name="Bonus Proficiencies",
+            origin="College of Lore Bard Level 3",
+            skippable_in_concise=True,
+        )
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
@@ -21,7 +30,14 @@ class BonusProficiencies(Feature):
 
 class CuttingWords(Feature):
     def __init__(self):
-        super().__init__(name="Cutting Words", origin="College of Lore Bard Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Cutting Words",
+            origin="College of Lore Bard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."
@@ -31,10 +47,16 @@ class CuttingWords(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Trigger", "Creature within 60 feet makes damage roll or succeeds on ability check/attack roll"),
+            (
+                "Trigger",
+                "Creature within 60 feet makes damage roll or succeeds on ability check/attack roll",
+            ),
             ("Action", "Reaction"),
             ("Cost", "1 use of Bardic Inspiration"),
-            ("Effect", "Roll Bardic Inspiration die, subtract from creature's roll (can turn success into failure)"),
+            (
+                "Effect",
+                "Roll Bardic Inspiration die, subtract from creature's roll (can turn success into failure)",
+            ),
         ]
 
     def target(
@@ -59,7 +81,11 @@ class MagicalDiscoveries(Feature):
 
 class PeerlessSkill(Feature):
     def __init__(self):
-        super().__init__(name="Peerless Skill", origin="College of Lore Bard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Peerless Skill",
+            origin="College of Lore Bard Level 14",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."
@@ -70,7 +96,10 @@ class PeerlessSkill(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "You fail an ability check or attack roll"),
-            ("Cost", "1 use of Bardic Inspiration (only if it turns failure to success)"),
+            (
+                "Cost",
+                "1 use of Bardic Inspiration (only if it turns failure to success)",
+            ),
             ("Effect", "Roll Bardic Inspiration die, add to failed d20"),
             ("Failure Recovery", "If still fails, Bardic Inspiration isn't expended"),
         ]

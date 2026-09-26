@@ -36,7 +36,12 @@ from CharacterContent.Classes.SubClasses2014.FighterChampion import (
     FighterChampionLevel18,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
@@ -106,7 +111,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.GreatWeaponMaster(
                         character_level=4,
                         ability=Ability.STRENGTH,
-                    )
+                    ),
                 ),
                 5: FighterLevel5(),
                 6: FighterLevel6(
@@ -146,7 +151,7 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.GreatWeaponMaster(
                         character_level=16,
                         ability=Ability.STRENGTH,
-                    )
+                    ),
                 ),
                 17: FighterLevel17(),
                 18: FighterLevel18(),

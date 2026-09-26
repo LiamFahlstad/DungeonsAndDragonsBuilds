@@ -1,6 +1,9 @@
 from Core.Definitions import CreatureSize, Skill, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice, GrantSense
+from CharacterContent.Features.Core.Improvements import (
+    SkillProficiencyChoice,
+    GrantSense,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 SPEED = 30  # Given by your species
@@ -10,7 +13,9 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
-        super().__init__(name="Darkvision", origin="Elf Trait", skippable_in_concise=True)
+        super().__init__(
+            name="Darkvision", origin="Elf Trait", skippable_in_concise=True
+        )
         self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -31,7 +36,9 @@ class FeyAncestry(Feature):
 
 class KeenSenses(Feature):
     def __init__(self, skill: Skill):
-        super().__init__(name="Keen Senses", origin="Elf Trait", skippable_in_concise=True)
+        super().__init__(
+            name="Keen Senses", origin="Elf Trait", skippable_in_concise=True
+        )
         self._choice = SkillProficiencyChoice(
             [skill],
             [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT],

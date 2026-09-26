@@ -74,10 +74,14 @@ class IllusorySelf(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -86,7 +90,9 @@ class IllusoryReality(Feature):
         super().__init__(
             name="Illusory Reality",
             origin="Illusion Wizard Level 14",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
             usage_tags=["utility"],
         )
 
@@ -109,5 +115,7 @@ class IllusoryReality(Feature):
             ("Limitation", "Can't deal damage or directly harm anyone"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT

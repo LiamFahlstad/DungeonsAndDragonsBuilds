@@ -1,13 +1,27 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import LEVEL_TO_MARTIAL_ARTS_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
+    LEVEL_TO_MARTIAL_ARTS_DIE,
+)
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class RadiantSunBolt(Feature):
     def __init__(self):
-        super().__init__(name="Radiant Sun Bolt", origin="Way of the Sun Soul Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Radiant Sun Bolt",
+            origin="Way of the Sun Soul Monk Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="30 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -21,13 +35,20 @@ class RadiantSunBolt(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SearingArcStrike(Feature):
     def __init__(self):
-        super().__init__(name="Searing Arc Strike", origin="Way of the Sun Soul Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
+        super().__init__(
+            name="Searing Arc Strike",
+            origin="Way of the Sun Soul Monk Level 6",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -37,11 +58,17 @@ class SearingArcStrike(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
-        monk_level = character_stat_block.get_class_level(Definitions.CharacterClass.MONK)
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
+        monk_level = character_stat_block.get_class_level(
+            Definitions.CharacterClass.MONK
+        )
         max_ki_spent = monk_level // 2
         return [
             ("Trigger", "After you take the Attack action on your turn"),
@@ -55,7 +82,14 @@ class SearingArcStrike(Feature):
 
 class SearingSunburst(Feature):
     def __init__(self):
-        super().__init__(name="Searing Sunburst", origin="Way of the Sun Soul Monk Level 11", activation=FeatureActivation(action_type=ActionType.ACTION, range="150 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"])
+        super().__init__(
+            name="Searing Sunburst",
+            origin="Way of the Sun Soul Monk Level 11",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="150 Feet (20-Foot-Radius Sphere)"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -67,10 +101,14 @@ class SearingSunburst(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "150 feet (target point)"),
@@ -84,7 +122,14 @@ class SearingSunburst(Feature):
 
 class SunShield(Feature):
     def __init__(self):
-        super().__init__(name="Sun Shield", origin="Way of the Sun Soul Monk Level 17", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Sun Shield",
+            origin="Way of the Sun Soul Monk Level 17",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -94,5 +139,7 @@ class SunShield(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

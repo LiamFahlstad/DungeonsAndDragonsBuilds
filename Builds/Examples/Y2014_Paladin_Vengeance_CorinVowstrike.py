@@ -37,7 +37,12 @@ from CharacterContent.Classes.SubClasses2014.PaladinVengeance import (
     PaladinVengeanceCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
@@ -113,7 +118,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                     spell=PaladinLevel1Spells.SEARING_SMITE,
                 ),
                 5: PaladinLevel5(
@@ -127,7 +133,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: PaladinLevel9(
                     spell_1=PaladinLevel3Spells.BLINDING_SMITE,
@@ -141,7 +148,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.STRENGTH, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: PaladinLevel13(
                     spell=PaladinLevel4Spells.STAGGERING_SMITE,
@@ -154,7 +162,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CHARISMA, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: PaladinLevel17(
                     spell_1=PaladinLevel5Spells.BANISHING_SMITE,

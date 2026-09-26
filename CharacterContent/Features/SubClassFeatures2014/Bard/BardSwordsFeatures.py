@@ -1,10 +1,16 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BonusProficiencies(Feature):
     def __init__(self):
-        super().__init__(name="Bonus Proficiencies", origin="College of Swords Bard Level 3")
+        super().__init__(
+            name="Bonus Proficiencies", origin="College of Swords Bard Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -17,7 +23,12 @@ class BonusProficiencies(Feature):
 
 class BladeFlourish(Feature):
     def __init__(self):
-        super().__init__(name="Blade Flourish", origin="College of Swords Bard Level 3", activation=FeatureActivation(duration="Until Start of Next Turn"), usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Blade Flourish",
+            origin="College of Swords Bard Level 3",
+            activation=FeatureActivation(duration="Until Start of Next Turn"),
+            usage_tags=["damage", "buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -41,21 +52,25 @@ class BladeFlourish(Feature):
 
 class ExtraAttack(Feature):
     def __init__(self):
-        super().__init__(name="Extra Attack", origin="College of Swords Bard Level 6", usage_tags=["damage"])
+        super().__init__(
+            name="Extra Attack",
+            origin="College of Swords Bard Level 6",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Starting at 6th level, you can attack twice, instead of once, whenever you take the Attack action on your turn."
-        )
+        description = "Starting at 6th level, you can attack twice, instead of once, whenever you take the Attack action on your turn."
         return description
 
 
 class MastersFlourish(Feature):
     def __init__(self):
-        super().__init__(name="Master's Flourish", origin="College of Swords Bard Level 14", usage_tags=["buff"])
+        super().__init__(
+            name="Master's Flourish",
+            origin="College of Swords Bard Level 14",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die."
-        )
+        description = "Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die."
         return description

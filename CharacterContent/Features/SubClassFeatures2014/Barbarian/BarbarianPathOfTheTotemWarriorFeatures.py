@@ -9,7 +9,7 @@ class SpiritSeeker(Feature):
         super().__init__(
             name="Spirit Seeker",
             origin="Path Of The Totem Warrior Barbarian Level 3",
-            usage_tags=["utility"]
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -22,7 +22,7 @@ class TotemSpirit(Feature):
         super().__init__(
             name="Totem Spirit",
             origin="Path Of The Totem Warrior Barbarian Level 3",
-            usage_tags=["utility", "buff"]
+            usage_tags=["utility", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -43,7 +43,7 @@ class AspectOfTheBeast(Feature):
         super().__init__(
             name="Aspect of the Beast",
             origin="Path Of The Totem Warrior Barbarian Level 6",
-            usage_tags=["utility", "buff"]
+            usage_tags=["utility", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -63,7 +63,7 @@ class SpiritWalker(Feature):
         super().__init__(
             name="Spirit Walker",
             origin="Path Of The Totem Warrior Barbarian Level 10",
-            usage_tags=["utility"]
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -76,7 +76,7 @@ class TotemicAttunement(Feature):
         super().__init__(
             name="Totemic Attunement",
             origin="Path Of The Totem Warrior Barbarian Level 14",
-            usage_tags=["utility", "control", "damage"]
+            usage_tags=["utility", "control", "damage"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:

@@ -23,7 +23,9 @@ class Reaper(Feature):
 
 class DeathDomainSpells(Feature):
     def __init__(self):
-        super().__init__(name="Death Domain Spells", origin="Death Domain Cleric Level 3")
+        super().__init__(
+            name="Death Domain Spells", origin="Death Domain Cleric Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +86,11 @@ class InescapableDestruction(Feature):
 
 class DivineStrike(Feature):
     def __init__(self):
-        super().__init__(name="Divine Strike", origin="Death Domain Cleric Level 8", usage_tags=["damage"])
+        super().__init__(
+            name="Divine Strike",
+            origin="Death Domain Cleric Level 8",
+            usage_tags=["damage"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock

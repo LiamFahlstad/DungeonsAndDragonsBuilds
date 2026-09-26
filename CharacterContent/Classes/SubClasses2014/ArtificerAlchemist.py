@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Artificer import ArtificerAlchemistFeatures
+from CharacterContent.Features.SubClassFeatures2014.Artificer import (
+    ArtificerAlchemistFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
     ClericLevel3Spells,

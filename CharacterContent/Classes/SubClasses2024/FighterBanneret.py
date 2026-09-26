@@ -39,9 +39,9 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        group_recovery: FighterBanneretFeatures.GroupRecovery = data.get_features_by_type(
-            FighterBanneretFeatures.GroupRecovery
-        )[0]
+        group_recovery: FighterBanneretFeatures.GroupRecovery = (
+            data.get_features_by_type(FighterBanneretFeatures.GroupRecovery)[0]
+        )
         group_recovery.extend_feature(FighterBanneretFeatures.TeamTactics())
         return data
 

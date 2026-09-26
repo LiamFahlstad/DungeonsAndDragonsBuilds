@@ -1,12 +1,25 @@
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class Bladesong(Feature):
     def __init__(self):
-        super().__init__(name="Bladesong", origin="Bladesinger Wizard Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"), usage_tags=["buff"])
+        super().__init__(
+            name="Bladesong",
+            origin="Bladesinger Wizard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -25,17 +38,27 @@ class Bladesong(Feature):
         int_mod = character_stat_block.get_intelligence_modifier()
         return [
             ("Activation", "Bonus Action (while no armor or Shield)"),
-            ("Duration", "1 minute (ends if Incapacitated, don armor/Shield, or use two hands on attack)"),
+            (
+                "Duration",
+                "1 minute (ends if Incapacitated, don armor/Shield, or use two hands on attack)",
+            ),
             ("Uses", f"{int_mod} per Long Rest (minimum 1); +1 from Arcane Recovery"),
-            ("Agility", f"AC +{int_mod} (min +1), Speed +10 ft, Advantage on Acrobatics"),
+            (
+                "Agility",
+                f"AC +{int_mod} (min +1), Speed +10 ft, Advantage on Acrobatics",
+            ),
             ("Bladework", f"Use INT mod ({int_mod}) for attack and damage rolls"),
             ("Focus", f"Add INT mod ({int_mod}) to CON saves for Concentration"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -52,7 +75,9 @@ class TrainingInWarAndSong(Feature):
             [skill], self.VALID_SKILLS, count=1, error_prefix="Training in War and Song"
         )
         super().__init__(
-            name="Training in War and Song", origin="Bladesinger Wizard Level 3", skippable_in_concise=True
+            name="Training in War and Song",
+            origin="Bladesinger Wizard Level 3",
+            skippable_in_concise=True,
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -77,19 +102,31 @@ class ExtraAttack(Feature):
 
 class SongOfDefense(Feature):
     def __init__(self):
-        super().__init__(name="Song of Defense", origin="Bladesinger Wizard Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Song of Defense",
+            origin="Bladesinger Wizard Level 10",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you take damage while your Bladesong is active, you can take a Reaction to expend one spell slot and reduce the damage taken by an amount equal to five times the spell slot's level."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class SongOfVictory(Feature):
     def __init__(self):
-        super().__init__(name="Song of Victory", origin="Bladesinger Wizard Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage"])
+        super().__init__(
+            name="Song of Victory",
+            origin="Bladesinger Wizard Level 14",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."

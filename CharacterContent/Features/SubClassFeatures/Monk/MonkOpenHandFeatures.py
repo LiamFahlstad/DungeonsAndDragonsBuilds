@@ -1,6 +1,13 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -55,7 +62,9 @@ LEVEL_TO_FOCUS_POINTS = {
 class OpenHandTechnique(Feature):
     def __init__(self):
         super().__init__(
-            name="Open Hand Technique", origin="Warrior of the Open Hand Monk Level 3", usage_tags=["control"]
+            name="Open Hand Technique",
+            origin="Warrior of the Open Hand Monk Level 3",
+            usage_tags=["control"],
         )
 
     def target(
@@ -85,8 +94,16 @@ class OpenHandTechnique(Feature):
 class WholenessOfBody(Feature):
     def __init__(self):
         super().__init__(
-            name="Wholeness of Body", origin="Warrior of the Open Hand Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["heal"]
-        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Wisdom modifier."))
+            name="Wholeness of Body",
+            origin="Warrior of the Open Hand Monk Level 6",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["heal"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -107,17 +124,22 @@ class WholenessOfBody(Feature):
         uses = self.number_of_uses(character_stat_block)
         return [
             ("Action", "Bonus Action"),
-            ("Effect", f"Roll Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points (minimum 1)"),
+            (
+                "Effect",
+                f"Roll Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points (minimum 1)",
+            ),
             ("Uses", f"{uses}/Long Rest"),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_wisdom_modifier())
+
+
 class FleetStep(Feature):
     def __init__(self):
         super().__init__(
@@ -132,7 +154,10 @@ class FleetStep(Feature):
 class QuiveringPalm(Feature):
     def __init__(self):
         super().__init__(
-            name="Quivering Palm", origin="Warrior of the Open Hand Monk Level 17", activation=FeatureActivation(duration="Monk Level Days"), usage_tags=["damage"]
+            name="Quivering Palm",
+            origin="Warrior of the Open Hand Monk Level 17",
+            activation=FeatureActivation(duration="Monk Level Days"),
+            usage_tags=["damage"],
         )
 
     def target(
@@ -160,5 +185,8 @@ class QuiveringPalm(Feature):
             ("Activation", "Action required to end (or forgo Attack)"),
             ("Save", "Constitution (to take damage)"),
             ("Damage", "10d12 Force on failed save, half on successful save"),
-            ("Special", "Only one creature at a time; can end harmlessly with no action"),
+            (
+                "Special",
+                "Only one creature at a time; can end harmlessly with no action",
+            ),
         ]

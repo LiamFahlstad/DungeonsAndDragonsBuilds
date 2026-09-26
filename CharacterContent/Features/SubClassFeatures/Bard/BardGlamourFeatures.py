@@ -1,12 +1,20 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class BeguilingMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Magic", origin="College of Glamour Bard Level 3", activation=FeatureActivation(duration="1 Minute", range="60 Feet"), usage_tags=["control"]
+            name="Beguiling Magic",
+            origin="College of Glamour Bard Level 3",
+            activation=FeatureActivation(duration="1 Minute", range="60 Feet"),
+            usage_tags=["control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -28,7 +36,10 @@ class BeguilingMagic(Feature):
             ("Trigger", "After casting Enchantment or Illusion spell with spell slot"),
             ("Target", "Creature you can see within 60 feet"),
             ("Save", "Wisdom save vs. your spell save DC"),
-            ("Effect", "Failed save: Charmed or Frightened condition (your choice) for 1 minute; repeats save at end of each turn"),
+            (
+                "Effect",
+                "Failed save: Charmed or Frightened condition (your choice) for 1 minute; repeats save at end of each turn",
+            ),
             ("Recharge", "Long Rest (restore early by expending 1 Bardic Inspiration)"),
         ]
 
@@ -41,7 +52,12 @@ class BeguilingMagic(Feature):
 class MantleOfInspiration(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Inspiration", origin="College of Glamour Bard Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"), usage_tags=["heal", "buff"]
+            name="Mantle of Inspiration",
+            origin="College of Glamour Bard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+            usage_tags=["heal", "buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -56,7 +72,10 @@ class MantleOfInspiration(Feature):
             ("Cost", "1 use of Bardic Inspiration"),
             ("Targets", "Up to Charisma modifier creatures (minimum 1) within 60 feet"),
             ("Temporary HP", "2 × the number rolled on Bardic Inspiration die"),
-            ("Movement", "Each target can use Reaction to move up to its Speed without provoking Opportunity Attacks"),
+            (
+                "Movement",
+                "Each target can use Reaction to move up to its Speed without provoking Opportunity Attacks",
+            ),
         ]
 
     def target(
@@ -68,7 +87,13 @@ class MantleOfInspiration(Feature):
 class MantleOfMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Mantle of Majesty", origin="College of Glamour Bard Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Concentration Ends"), usage_tags=["control"]
+            name="Mantle of Majesty",
+            origin="College of Glamour Bard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Concentration Ends",
+            ),
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -85,9 +110,15 @@ class MantleOfMajesty(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Always Prepared", "Command"),
-            ("Action", "Bonus Action (first cast); Bonus Action (subsequent casts during effect)"),
+            (
+                "Action",
+                "Bonus Action (first cast); Bonus Action (subsequent casts during effect)",
+            ),
             ("Duration", "1 minute or until Concentration ends"),
-            ("Effect", "Cast Command without spell slot; creatures Charmed by you auto-fail its save"),
+            (
+                "Effect",
+                "Cast Command without spell slot; creatures Charmed by you auto-fail its save",
+            ),
             ("Recharge", "Long Rest (restore early with level 3+ spell slot)"),
         ]
 
@@ -100,7 +131,13 @@ class MantleOfMajesty(Feature):
 class UnbreakableMajesty(Feature):
     def __init__(self):
         super().__init__(
-            name="Unbreakable Majesty", origin="College of Glamour Bard Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated"), usage_tags=["buff"]
+            name="Unbreakable Majesty",
+            origin="College of Glamour Bard Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Incapacitated",
+            ),
+            usage_tags=["buff"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:

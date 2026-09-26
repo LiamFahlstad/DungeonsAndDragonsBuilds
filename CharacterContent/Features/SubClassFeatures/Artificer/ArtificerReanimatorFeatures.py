@@ -1,5 +1,11 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -27,14 +33,23 @@ class ReanimatorSpells(Feature):
 class ReanimatorSkillSet(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimator's Skill Set", origin="Reanimator Artificer Level 3", activation=FeatureActivation(range="10-Foot Emanation"), usage_tags=["heal", "damage", "utility"]
-        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+            name="Reanimator's Skill Set",
+            origin="Reanimator Artificer Level 3",
+            activation=FeatureActivation(range="10-Foot Emanation"),
+            usage_tags=["heal", "damage", "utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -49,10 +64,18 @@ class ReanimatorSkillSet(Feature):
         )
         return description
 
+
 class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
-            name="Reanimated Companion", origin="Reanimator Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest", range="5 Feet"), usage_tags=["summon"]
+            name="Reanimated Companion",
+            origin="Reanimator Artificer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until Long Rest",
+                range="5 Feet",
+            ),
+            usage_tags=["summon"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -68,7 +91,10 @@ class ReanimatedCompanion(Feature):
 class StrangeModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Strange Modifications", origin="Reanimator Artificer Level 5", activation=FeatureActivation(range="120 Feet"), usage_tags=["damage"]
+            name="Strange Modifications",
+            origin="Reanimator Artificer Level 5",
+            activation=FeatureActivation(range="120 Feet"),
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -83,7 +109,10 @@ class StrangeModifications(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Arcane Conduit", "Cast spells from companion's space (use own senses); +INT mod to Evocation/Necromancy spell damage (1/turn)"),
+            (
+                "Arcane Conduit",
+                "Cast spells from companion's space (use own senses); +INT mod to Evocation/Necromancy spell damage (1/turn)",
+            ),
             ("Ferocity", "Companion's Dreadful Swipe damage die increases to 1d6"),
         ]
 
@@ -91,7 +120,9 @@ class StrangeModifications(Feature):
 class ImprovedReanimation(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved Reanimation", origin="Reanimator Artificer Level 9", usage_tags=["damage"]
+            name="Improved Reanimation",
+            origin="Reanimator Artificer Level 9",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -102,7 +133,9 @@ class ImprovedReanimation(Feature):
 class MacabreModifications(Feature):
     def __init__(self):
         super().__init__(
-            name="Macabre Modifications", origin="Reanimator Artificer Level 9", usage_tags=["control", "damage", "utility"]
+            name="Macabre Modifications",
+            origin="Reanimator Artificer Level 9",
+            usage_tags=["control", "damage", "utility"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -121,7 +154,10 @@ class MacabreModifications(Feature):
 class RefinedReanimation(Feature):
     def __init__(self):
         super().__init__(
-            name="Refined Reanimation", origin="Reanimator Artificer Level 15", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["heal", "utility"]
+            name="Refined Reanimation",
+            origin="Reanimator Artificer Level 15",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["heal", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -137,7 +173,13 @@ class RefinedReanimation(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Facilitated Revival", "Cast Raise Dead with no slot or components (1/LR)"),
-            ("Life Transfer", "React to damage to gain HP = companion's current HP; companion dies"),
+            (
+                "Facilitated Revival",
+                "Cast Raise Dead with no slot or components (1/LR)",
+            ),
+            (
+                "Life Transfer",
+                "React to damage to gain HP = companion's current HP; companion dies",
+            ),
             ("Superior Modifications", "Companions gain three modification options"),
         ]

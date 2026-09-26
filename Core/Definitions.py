@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 ###### RESOURCE CAPS ######
 
 # get_proficiency_bonus() = 2 + (character_level - 1) // 4, maxed at

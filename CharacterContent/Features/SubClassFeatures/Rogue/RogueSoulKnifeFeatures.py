@@ -1,13 +1,32 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class PsionicPower(Feature):
     def __init__(self):
-        super().__init__(name="Psionic Power", origin="Soulknife Rogue Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Hours Based on Energy Die Roll", range="1 Mile"), usage_tags=["utility"], uses=FeatureUses(max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")))
+        super().__init__(
+            name="Psionic Power",
+            origin="Soulknife Rogue Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Hours Based on Energy Die Roll",
+                range="1 Mile",
+            ),
+            usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -27,13 +46,19 @@ class PsionicPower(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
+
+
 class PsychicBlades(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Blades", origin="Soulknife Rogue Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Psychic Blades",
+            origin="Soulknife Rogue Level 3",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -47,13 +72,20 @@ class PsychicBlades(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SoulBlades(Feature):
     def __init__(self):
-        super().__init__(name="Soul Blades", origin="Soulknife Rogue Level 9", activation=FeatureActivation(range="Up to 120 Feet"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Soul Blades",
+            origin="Soulknife Rogue Level 9",
+            activation=FeatureActivation(range="Up to 120 Feet"),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -66,7 +98,14 @@ class SoulBlades(Feature):
 
 class PsychicVeil(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Veil", origin="Soulknife Rogue Level 13", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Dismissed"), usage_tags=["buff"])
+        super().__init__(
+            name="Psychic Veil",
+            origin="Soulknife Rogue Level 13",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour or Until Dismissed"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -86,20 +125,29 @@ class PsychicVeil(Feature):
             ("Recharge", "Long Rest (or expend 1 Psionic Energy Die)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class RendMind(Feature):
     def __init__(self):
-        super().__init__(name="Rend Mind", origin="Soulknife Rogue Level 17", activation=FeatureActivation(duration="1 Minute"), usage_tags=["control"])
+        super().__init__(
+            name="Rend Mind",
+            origin="Soulknife Rogue Level 17",
+            activation=FeatureActivation(duration="1 Minute"),
+            usage_tags=["control"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         dexterity_modifier = character_stat_block.get_dexterity_modifier()
         proficiency_bonus = character_stat_block.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -42,11 +42,7 @@ def player_roster() -> list[str]:
 
 def escape(text: str) -> str:
     """Escape HTML special characters."""
-    return (
-        text.replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-    )
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def main() -> None:
@@ -83,11 +79,7 @@ def main() -> None:
     sessions = log_data.get("sessions", [])
     session_count = len(sessions)
 
-    started_ats = [
-        s.get("started_at")
-        for s in sessions
-        if s.get("started_at")
-    ]
+    started_ats = [s.get("started_at") for s in sessions if s.get("started_at")]
     first_session = min(started_ats) if started_ats else None
     last_session = max(started_ats) if started_ats else None
 
@@ -106,24 +98,27 @@ def main() -> None:
     # Build summary chip content
     session_chip = f"Sessions: {session_count}"
     first_chip = (
-        f"First session: {first_session[:10]}"
-        if first_session else "First session: —"
+        f"First session: {first_session[:10]}" if first_session else "First session: —"
     )
     last_chip = (
-        f"Latest session: {last_session[:10]}"
-        if last_session else "Latest session: —"
+        f"Latest session: {last_session[:10]}" if last_session else "Latest session: —"
     )
     scenario_chip = "Scenarios: " + ", ".join(
         f"{escape(name)} ({count})" for name, count in scenario_items
     )
 
-
     # Damage columns (flat keys + per-type breakdowns)
     damage_columns = (
         [("Damage Dealt", "damage_dealt")]
-        + [(f"Dealt: {dtype.value}", damage_dealt_key(dtype.value)) for dtype in DamageType]
+        + [
+            (f"Dealt: {dtype.value}", damage_dealt_key(dtype.value))
+            for dtype in DamageType
+        ]
         + [("Damage Taken", "damage_taken")]
-        + [(f"Taken: {dtype.value}", damage_taken_key(dtype.value)) for dtype in DamageType]
+        + [
+            (f"Taken: {dtype.value}", damage_taken_key(dtype.value))
+            for dtype in DamageType
+        ]
     )
 
     # Healing columns
@@ -149,9 +144,18 @@ def main() -> None:
         condition_names.update(stats.get("conditions_received_by_name", {}).keys())
     sorted_condition_names = sorted(condition_names)
     condition_columns = (
-        [("Given (Total)", "conditions_given"), ("Received (Total)", "conditions_received")]
-        + [(f"Given: {name}", ("conditions_given_by_name", name)) for name in sorted_condition_names]
-        + [(f"Received: {name}", ("conditions_received_by_name", name)) for name in sorted_condition_names]
+        [
+            ("Given (Total)", "conditions_given"),
+            ("Received (Total)", "conditions_received"),
+        ]
+        + [
+            (f"Given: {name}", ("conditions_given_by_name", name))
+            for name in sorted_condition_names
+        ]
+        + [
+            (f"Received: {name}", ("conditions_received_by_name", name))
+            for name in sorted_condition_names
+        ]
     )
 
     # Spell columns (dynamic per actually-cast spells)
@@ -162,9 +166,15 @@ def main() -> None:
     sorted_spell_names = sorted(spell_names)
     spell_columns = (
         [("Spell Slots Used", "spell_slots_used")]
-        + [(f"Level {level}", spell_slots_used_key(level)) for level in SPELL_SLOT_LEVELS]
+        + [
+            (f"Level {level}", spell_slots_used_key(level))
+            for level in SPELL_SLOT_LEVELS
+        ]
         + [("Spells Cast", "spells_cast")]
-        + [(f"Cast: {name}", ("spells_cast_by_name", name)) for name in sorted_spell_names]
+        + [
+            (f"Cast: {name}", ("spells_cast_by_name", name))
+            for name in sorted_spell_names
+        ]
     )
 
     def _column_value(stats, key):
@@ -190,8 +200,14 @@ def main() -> None:
             row += "</tr>"
             rows.append(row)
 
-        return "<table>" + "<thead>" + rows[0] + "</thead><tbody>" + "".join(rows[1:]) + "</tbody></table>"
-
+        return (
+            "<table>"
+            + "<thead>"
+            + rows[0]
+            + "</thead><tbody>"
+            + "".join(rows[1:])
+            + "</tbody></table>"
+        )
 
     party_cards = []
     for name in names:
@@ -211,14 +227,12 @@ def main() -> None:
 </div>"""
         party_cards.append(card)
 
-    party_grid = "<div class=\"player-grid\">" + "".join(party_cards) + "</div>"
-
+    party_grid = '<div class="player-grid">' + "".join(party_cards) + "</div>"
 
     def _build_bar_section(stat_key, css_class):
         """Build a bar-chart comparison section for a single stat."""
         values = [
-            (name, stats_by_name.get(name, {}).get(stat_key, 0))
-            for name in names
+            (name, stats_by_name.get(name, {}).get(stat_key, 0)) for name in names
         ]
         # Sort descending by value
         values.sort(key=lambda x: x[1], reverse=True)
@@ -233,13 +247,12 @@ def main() -> None:
             rows.append(
                 f'<div class="bar-row"><span>{escape(name)}</span><div class="bar-track"><div class="bar-fill {css_class}" style="width:{pct}%"></div></div><span>{value}</span></div>'
             )
-        return "<div class=\"bar-section\">" + "".join(rows) + "</div>"
+        return '<div class="bar-section">' + "".join(rows) + "</div>"
 
     damage_dealt_section = _build_bar_section("damage_dealt", "dealt")
     damage_taken_section = _build_bar_section("damage_taken", "taken")
     healing_done_section = _build_bar_section("healing_done", "heal")
     spells_cast_section = _build_bar_section("spells_cast", "spells")
-
 
     detailed_tables = [
         ("Damage", _build_table_html(damage_columns)),
@@ -258,7 +271,6 @@ def main() -> None:
 </div>
 </details>
 """
-
 
     CSS = """
 :root {
@@ -297,7 +309,6 @@ th { color: var(--muted); font-weight: 600; }
 td { color: var(--text); }
 .empty-note { color: var(--muted); font-style: italic; padding: 1rem 0; }
 """
-
 
     html = f"""<!doctype html>
 <html lang="en">

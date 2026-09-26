@@ -198,9 +198,18 @@ def find_matches(name, official, homebrew):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("names", nargs="+", help='Monster name(s), e.g. "Air Elemental"')
-    parser.add_argument("-v", "--verbose", action="store_true", help="show the per-attribute z-score breakdown")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "names", nargs="+", help='Monster name(s), e.g. "Air Elemental"'
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="show the per-attribute z-score breakdown",
+    )
     args = parser.parse_args()
 
     data, errors = extract_all()
@@ -218,23 +227,31 @@ def main():
         if len(matches) > 1:
             listed = ", ".join(m["name"] for m, _ in matches[:8])
             more = "..." if len(matches) > 8 else ""
-            print(f'"{name}": {len(matches)} matches, be more specific -> {listed}{more}')
+            print(
+                f'"{name}": {len(matches)} matches, be more specific -> {listed}{more}'
+            )
             ok = False
             continue
 
         m, is_homebrew = matches[0]
         scores, k, breakdown = score_monster(m, stats)
         tag = "  [homebrew]" if is_homebrew else ""
-        print(f"{m['name']:<32} CR {m['cr']:<5} ({k}/{SCORED_ATTR_COUNT} scored attrs){tag}")
+        print(
+            f"{m['name']:<32} CR {m['cr']:<5} ({k}/{SCORED_ATTR_COUNT} scored attrs){tag}"
+        )
         cols = [f"{key} {scores[key]:.2f}" for key, _desc in AGGREGATIONS]
         per_row = 4
         for i in range(0, len(cols), per_row):
-            print("    " + "   ".join(f"{c:<14}" for c in cols[i:i + per_row]).rstrip())
+            print(
+                "    " + "   ".join(f"{c:<14}" for c in cols[i : i + per_row]).rstrip()
+            )
         if args.verbose:
             for label, v, mean, std, median, lo, hi, z in breakdown:
                 v_str = f"{v:.1f}" if isinstance(v, float) else str(v)
                 if z is None:
-                    print(f"    {label:<7} {v_str:>6}   n/a (insufficient CR-tier data)")
+                    print(
+                        f"    {label:<7} {v_str:>6}   n/a (insufficient CR-tier data)"
+                    )
                 else:
                     print(
                         f"    {label:<7} {v_str:>6}   mean {mean:6.1f}  median {median:6.1f}  "

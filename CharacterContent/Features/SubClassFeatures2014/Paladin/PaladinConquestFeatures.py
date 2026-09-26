@@ -1,12 +1,21 @@
 from Core.Definitions import Ability, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureUses,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class ConquestSpells(Feature):
     def __init__(self):
-        super().__init__(name="Oath of Conquest Spells", origin="Oath of Conquest Paladin Level 3")
+        super().__init__(
+            name="Oath of Conquest Spells", origin="Oath of Conquest Paladin Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -24,18 +33,27 @@ class ConquestSpells(Feature):
 
 class ConqueringPresence(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Conquering Presence", origin="Oath of Conquest Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Channel Divinity: Conquering Presence",
+            origin="Oath of Conquest Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use your Channel Divinity to exude a terrifying presence. As an action, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success."
-        )
+        description = "You can use your Channel Divinity to exude a terrifying presence. As an action, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("What", "Exude terrifying presence"),
             ("Action", "Action"),
@@ -47,18 +65,24 @@ class ConqueringPresence(Feature):
 
 class GuidedStrike(Feature):
     def __init__(self):
-        super().__init__(name="Channel Divinity: Guided Strike", origin="Oath of Conquest Paladin Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Channel Divinity: Guided Strike",
+            origin="Oath of Conquest Paladin Level 3",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses."
-        )
+        description = "You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("What", "Gain accuracy bonus to attack roll"),
             ("Effect", "+10 to attack roll"),
@@ -68,7 +92,12 @@ class GuidedStrike(Feature):
 
 class AuraOfConquest(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest", origin="Oath of Conquest Paladin Level 7", activation=FeatureActivation(range="10 Feet (30 at 18th Level)"), usage_tags=["damage", "control"])
+        super().__init__(
+            name="Aura of Conquest",
+            origin="Oath of Conquest Paladin Level 7",
+            activation=FeatureActivation(range="10 Feet (30 at 18th Level)"),
+            usage_tags=["damage", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -80,10 +109,14 @@ class AuraOfConquest(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         half_paladin_level = character_stat_block.character_level // 2
         range_text = "10 feet (30 at 18th level)"
         return [
@@ -96,7 +129,10 @@ class AuraOfConquest(Feature):
 
 class AuraOfConquestExpansion(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Conquest Expansion", origin="Oath of Conquest Paladin Level 18")
+        super().__init__(
+            name="Aura of Conquest Expansion",
+            origin="Oath of Conquest Paladin Level 18",
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The range of your Aura of Conquest increases to 30 feet."
@@ -105,26 +141,42 @@ class AuraOfConquestExpansion(Feature):
 
 class ScornfulRebuke(Feature):
     def __init__(self):
-        super().__init__(name="Scornful Rebuke", origin="Oath of Conquest Paladin Level 15", usage_tags=["damage"])
+        super().__init__(
+            name="Scornful Rebuke",
+            origin="Oath of Conquest Paladin Level 15",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1 hp) if you're not incapacitated."
-        )
+        description = "Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1 hp) if you're not incapacitated."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class InvincibleConqueror(Feature):
     def __init__(self):
-        super().__init__(name="Invincible Conqueror", origin="Oath of Conquest Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute"), usage_tags=["buff"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Invincible Conqueror",
+            origin="Oath of Conquest Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute"
+            ),
+            usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

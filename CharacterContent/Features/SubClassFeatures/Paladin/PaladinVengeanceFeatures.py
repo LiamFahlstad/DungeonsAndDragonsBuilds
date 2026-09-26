@@ -1,5 +1,10 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -26,7 +31,12 @@ class OathOfVengeanceSpells(Feature):
 class VowOfEnmity(Feature):
     def __init__(self):
         super().__init__(
-            name="Vow of Enmity", origin="Oath of Vengeance Paladin Level 3", activation=FeatureActivation(duration="1 Minute or Until Used Again", range="30 Feet"), usage_tags=["buff"]
+            name="Vow of Enmity",
+            origin="Oath of Vengeance Paladin Level 3",
+            activation=FeatureActivation(
+                duration="1 Minute or Until Used Again", range="30 Feet"
+            ),
+            usage_tags=["buff"],
         )
 
     def target(
@@ -41,21 +51,31 @@ class VowOfEnmity(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Use Attack action"),
             ("Cost", "1 Channel Divinity use"),
             ("Range", "30 feet"),
             ("Effect", "Advantage on attack rolls against target"),
             ("Duration", "1 minute or until used again"),
-            ("Transfer", "If target drops to 0 HP, transfer vow to new target within 30 ft (no action)"),
+            (
+                "Transfer",
+                "If target drops to 0 HP, transfer vow to new target within 30 ft (no action)",
+            ),
         ]
 
 
 class RelentlessAvenger(Feature):
     def __init__(self):
         super().__init__(
-            name="Relentless Avenger", origin="Oath of Vengeance Paladin Level 7", activation=FeatureActivation(action_type=ActionType.REACTION, duration="Until End of Current Turn"), usage_tags=["control"]
+            name="Relentless Avenger",
+            origin="Oath of Vengeance Paladin Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, duration="Until End of Current Turn"
+            ),
+            usage_tags=["control"],
         )
 
     def target(
@@ -67,7 +87,9 @@ class RelentlessAvenger(Feature):
         description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Hit with Opportunity Attack"),
             ("Action", "Reaction"),
@@ -80,7 +102,10 @@ class RelentlessAvenger(Feature):
 class SoulOfVengeance(Feature):
     def __init__(self):
         super().__init__(
-            name="Soul of Vengeance", origin="Oath of Vengeance Paladin Level 15", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["damage"]
+            name="Soul of Vengeance",
+            origin="Oath of Vengeance Paladin Level 15",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["damage"],
         )
 
     def target(
@@ -96,7 +121,13 @@ class SoulOfVengeance(Feature):
 class AvengingAngel(Feature):
     def __init__(self):
         super().__init__(
-            name="Avenging Angel", origin="Oath of Vengeance Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes or Until Ended"), usage_tags=["buff", "control", "utility"]
+            name="Avenging Angel",
+            origin="Oath of Vengeance Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes or Until Ended",
+            ),
+            usage_tags=["buff", "control", "utility"],
         )
 
     def target(
@@ -120,5 +151,8 @@ class AvengingAngel(Feature):
             ("Duration", "10 minutes (or until ended)"),
             ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
             ("Flight", "Fly Speed 60 ft, can hover"),
-            ("Frightful Aura", "Enemies at turn start in aura save Wisdom or Frightened for 1 min (or until damaged); attack rolls against Frightened have Advantage"),
+            (
+                "Frightful Aura",
+                "Enemies at turn start in aura save Wisdom or Frightened for 1 min (or until damaged); attack rolls against Frightened have Advantage",
+            ),
         ]

@@ -1,6 +1,11 @@
 from Core.Definitions import WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -17,22 +22,33 @@ class FiendSpells(Feature):
 class DarkOnesBlessing(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Blessing", origin="Fiend Patron Warlock Level 3", usage_tags=["heal"]
+            name="Dark One's Blessing",
+            origin="Fiend Patron Warlock Level 3",
+            usage_tags=["heal"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you reduce an enemy to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier plus your Warlock level (minimum of 1 Temporary Hit Point). You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class DarkOnesOwnLuck(Feature):
     def __init__(self):
         super().__init__(
-            name="Dark One's Own Luck", origin="Fiend Patron Warlock Level 6", usage_tags=["buff"]
-        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+            name="Dark One's Own Luck",
+            origin="Fiend Patron Warlock Level 6",
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -41,13 +57,19 @@ class DarkOnesOwnLuck(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
@@ -64,7 +86,9 @@ class DarkOnesOwnLuck(Feature):
 class FiendishResilience(Feature):
     def __init__(self):
         super().__init__(
-            name="Fiendish Resilience", origin="Fiend Patron Warlock Level 10", usage_tags=["buff"]
+            name="Fiendish Resilience",
+            origin="Fiend Patron Warlock Level 10",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -75,7 +99,9 @@ class FiendishResilience(Feature):
 class HurlThroughHell(Feature):
     def __init__(self):
         super().__init__(
-            name="Hurl Through Hell", origin="Fiend Patron Warlock Level 14", usage_tags=["damage", "control"]
+            name="Hurl Through Hell",
+            origin="Fiend Patron Warlock Level 14",
+            usage_tags=["damage", "control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -88,7 +114,9 @@ class HurlThroughHell(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -98,6 +126,9 @@ class HurlThroughHell(Feature):
             ("Frequency", "Once per turn"),
             ("Trigger", "Hit creature with attack roll"),
             ("Save", "Charisma save DC"),
-            ("Effect on Fail", "8d10 Psychic damage (non-Fiends only); Incapacitated until end of your next turn"),
+            (
+                "Effect on Fail",
+                "8d10 Psychic damage (non-Fiends only); Incapacitated until end of your next turn",
+            ),
             ("Recharge", "Long Rest or expend Pact Magic spell slot"),
         ]

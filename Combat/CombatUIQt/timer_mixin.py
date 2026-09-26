@@ -13,9 +13,7 @@ from PyQt6.QtWidgets import (
 class TimerMixin:
     """Mixin for session and player timer widgets."""
 
-    _COMPACT_BTN_STYLE = (
-        "padding: 2px 6px; min-height: 18px; font-size: 10px;"
-    )
+    _COMPACT_BTN_STYLE = "padding: 2px 6px; min-height: 18px; font-size: 10px;"
 
     def _build_timer_section(self) -> QWidget:
         """Build and return a compact widget with the round/session status
@@ -34,9 +32,7 @@ class TimerMixin:
         status_row.addWidget(self.round_label)
         status_row.addStretch()
         self._session_timer_label = QLabel("Session 00:00:00")
-        self._session_timer_label.setStyleSheet(
-            "color: #a0a0b0; font-size: 11px;"
-        )
+        self._session_timer_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         status_row.addWidget(self._session_timer_label)
         layout.addLayout(status_row)
 
@@ -115,9 +111,7 @@ class TimerMixin:
     def _tick_player_timer(self):
         """Increment player timer and update label."""
         self._player_elapsed_seconds += 1
-        self._player_timer_label.setText(
-            self._format_ms(self._player_elapsed_seconds)
-        )
+        self._player_timer_label.setText(self._format_ms(self._player_elapsed_seconds))
 
     @staticmethod
     def _format_hms(seconds: int) -> str:

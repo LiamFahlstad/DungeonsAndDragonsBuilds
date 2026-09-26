@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass
-from CharacterContent.Features.SubClassFeatures.Warlock import WarlockGreatOldOneFeatures
+from CharacterContent.Features.SubClassFeatures.Warlock import (
+    WarlockGreatOldOneFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     BardLevel1Spells,
     BardLevel5Spells,

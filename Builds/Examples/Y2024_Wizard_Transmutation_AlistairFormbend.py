@@ -40,7 +40,12 @@ from CharacterContent.Classes.SubClasses2024.WizardTransmuter import (
     WizardTransmuterLevel17,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells import SpellLists as SpellDefinitions

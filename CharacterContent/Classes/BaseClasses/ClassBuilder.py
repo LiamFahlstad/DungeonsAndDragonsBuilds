@@ -255,7 +255,10 @@ class BaseClassLevelFeatures:
         class_level = data.get_level_for_class(base_class)
 
         for features_by_level, applied_levels in [
-            (self.base_class_features_by_level, applied_level_features.base_class_levels),
+            (
+                self.base_class_features_by_level,
+                applied_level_features.base_class_levels,
+            ),
             (self.subclass_features_by_level, applied_level_features.subclass_levels),
         ]:
             for level in sorted(features_by_level):

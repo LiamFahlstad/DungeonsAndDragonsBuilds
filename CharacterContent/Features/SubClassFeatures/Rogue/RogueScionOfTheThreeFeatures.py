@@ -1,30 +1,58 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class Bloodthirst(Feature):
     def __init__(self):
-        super().__init__(name="Bloodthirst", origin="Scion of the Three Rogue Level 3", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["damage"], uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."))
+        super().__init__(
+            name="Bloodthirst",
+            origin="Scion of the Three Rogue Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["damage"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times based on your Intelligence modifier, and you regain all expended uses when you finish a Long Rest."
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_intelligence_modifier())
+
     def get_table_description(
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
-            ("Trigger", "Enemy within 30 feet takes damage and becomes Bloodied (not killed)"),
+            (
+                "Trigger",
+                "Enemy within 30 feet takes damage and becomes Bloodied (not killed)",
+            ),
             ("Action", "Reaction"),
             ("Effect", "Teleport within 5 feet of that enemy; make one melee attack"),
             ("Uses", f"{uses} uses (Intelligence modifier, minimum 1)"),
@@ -35,7 +63,9 @@ class Bloodthirst(Feature):
 class DreadAllegiance(Feature):
     def __init__(self):
         super().__init__(
-            name="Dread Allegiance", origin="Scion of the Three Rogue Level 3", usage_tags=["buff", "utility"]
+            name="Dread Allegiance",
+            origin="Scion of the Three Rogue Level 3",
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -48,13 +78,20 @@ class DreadAllegiance(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class StrikeFear(Feature):
     def __init__(self):
-        super().__init__(name="Strike Fear", origin="Scion of the Three Rogue Level 9", activation=FeatureActivation(duration="1 Minute"), usage_tags=["buff", "control"])
+        super().__init__(
+            name="Strike Fear",
+            origin="Scion of the Three Rogue Level 9",
+            activation=FeatureActivation(duration="1 Minute"),
+            usage_tags=["buff", "control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,32 +108,44 @@ class StrikeFear(Feature):
             ("Cunning Strike Option", "Terrify"),
             ("Cost", "1d6 Cunning Strike"),
             ("Save", "Wisdom"),
-            ("Effect", "Frightened for 1 minute; you have Advantage on attacks against target"),
+            (
+                "Effect",
+                "Frightened for 1 minute; you have Advantage on attacks against target",
+            ),
             ("Repeat Save", "End of target's turn (success ends effect)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class AuraOfMalevolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Malevolence", origin="Scion of the Three Rogue Level 13", activation=FeatureActivation(range="10 Feet"), usage_tags=["damage"]
+            name="Aura of Malevolence",
+            origin="Scion of the Three Rogue Level 13",
+            activation=FeatureActivation(range="10 Feet"),
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You radiate malignant power associated with one of the Dead Three. When you use Bloodthirst and teleport, each creature of your choice within 10 feet of either the space you left or your destination space (your choice) takes damage equal to your Intelligence modifier; the damage type is the same as the damage Resistance granted by your choice in the Dread Allegiance feature. Damage dealt by this feature ignores Resistance."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
 class DreadIncarnate(Feature):
     def __init__(self):
         super().__init__(
-            name="Dread Incarnate", origin="Scion of the Three Rogue Level 17", usage_tags=["damage"]
+            name="Dread Incarnate",
+            origin="Scion of the Three Rogue Level 17",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -112,5 +161,8 @@ class DreadIncarnate(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Cutthroat", "Regain one Bloodthirst use on Short Rest"),
-            ("Murderous Intent", "On Sneak Attack damage, treat 1 or 2 rolled on die as 3"),
+            (
+                "Murderous Intent",
+                "On Sneak Attack damage, treat 1 or 2 rolled on die as 3",
+            ),
         ]

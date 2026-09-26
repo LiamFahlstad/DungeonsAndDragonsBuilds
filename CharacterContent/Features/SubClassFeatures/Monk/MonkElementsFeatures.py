@@ -1,5 +1,10 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -53,7 +58,10 @@ LEVEL_TO_FOCUS_POINTS = {
 class ElementalAttunement(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Attunement", origin="Warrior of the Elements Monk Level 3", activation=FeatureActivation(duration="10 Minutes or Until Incapacitated"), usage_tags=["damage", "control"]
+            name="Elemental Attunement",
+            origin="Warrior of the Elements Monk Level 3",
+            activation=FeatureActivation(duration="10 Minutes or Until Incapacitated"),
+            usage_tags=["damage", "control"],
         )
 
     def target(
@@ -77,7 +85,10 @@ class ElementalAttunement(Feature):
             ("Cost", "1 Focus Point"),
             ("Duration", "10 minutes or until Incapacitated"),
             ("Reach", "Unarmed Strikes gain 10-foot increased reach"),
-            ("Elemental Strikes", "Change damage type to Acid/Cold/Fire/Lightning/Thunder; target Strength save or moved 10 feet"),
+            (
+                "Elemental Strikes",
+                "Change damage type to Acid/Cold/Fire/Lightning/Thunder; target Strength save or moved 10 feet",
+            ),
         ]
 
 
@@ -95,7 +106,12 @@ class ManipulateElements(Feature):
 class ElementalBurst(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Burst", origin="Warrior of the Elements Monk Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, range="120 Feet (20-Foot-Radius Sphere)"), usage_tags=["damage"]
+            name="Elemental Burst",
+            origin="Warrior of the Elements Monk Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="120 Feet (20-Foot-Radius Sphere)"
+            ),
+            usage_tags=["damage"],
         )
 
     def target(
@@ -128,7 +144,7 @@ class StrideOfTheElements(Feature):
         super().__init__(
             name="Stride of the Elements",
             origin="Warrior of the Elements Monk Level 11",
-            usage_tags=["buff", "utility"]
+            usage_tags=["buff", "utility"],
         )
 
     def target(
@@ -144,7 +160,10 @@ class StrideOfTheElements(Feature):
 class ElementalEpitome(Feature):
     def __init__(self):
         super().__init__(
-            name="Elemental Epitome", origin="Warrior of the Elements Monk Level 17", activation=FeatureActivation(range="5 Feet"), usage_tags=["buff", "damage"]
+            name="Elemental Epitome",
+            origin="Warrior of the Elements Monk Level 17",
+            activation=FeatureActivation(range="5 Feet"),
+            usage_tags=["buff", "damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

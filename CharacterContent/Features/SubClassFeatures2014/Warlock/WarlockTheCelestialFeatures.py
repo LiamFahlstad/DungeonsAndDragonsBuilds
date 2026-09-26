@@ -44,7 +44,9 @@ class HealingLight(Feature):
         super().__init__(
             name="Healing Light",
             origin="The Celestial Patron Warlock Level 3",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
             usage_tags=["heal"],
         )
 
@@ -68,7 +70,9 @@ class HealingLight(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -84,7 +88,9 @@ class RadiantSoul(Feature):
         description = "Your link to the Celestial allows you to serve as a conduit for radiant energy. You have resistance to radiant damage, and when you cast a spell that deals radiant or fire damage, you add your Charisma modifier to one radiant or fire damage roll of that spell against one of its targets."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -110,7 +116,9 @@ class CelestialResistance(Feature):
             ("Who", "Up to 5 creatures you can see"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -119,7 +127,9 @@ class SearingVengeance(Feature):
         super().__init__(
             name="Searing Vengeance",
             origin="The Celestial Patron Warlock Level 14",
-            activation=FeatureActivation(duration="Until End of Current Turn", range="30 Feet"),
+            activation=FeatureActivation(
+                duration="Until End of Current Turn", range="30 Feet"
+            ),
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -144,5 +154,7 @@ class SearingVengeance(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

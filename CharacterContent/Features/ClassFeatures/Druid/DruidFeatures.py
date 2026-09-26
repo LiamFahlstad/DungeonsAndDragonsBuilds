@@ -48,7 +48,9 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Wisdom"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -93,7 +95,10 @@ class WildShape(Feature):
         super().__init__(
             name="Wild Shape",
             origin="Druid Level 2",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until You Leave Form or are Incapacitated"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until You Leave Form or are Incapacitated",
+            ),
             usage_tags=["heal"],
             uses=FeatureUses(
                 max_uses=4,
@@ -144,7 +149,9 @@ class WildShape(Feature):
         ]
         return [("Wild Shape Uses", steps)]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -156,7 +163,9 @@ class WildShape(Feature):
         else:
             return 2
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -177,7 +186,9 @@ class WildCompanion(Feature):
         super().__init__(
             name="Wild Companion",
             origin="Druid Level 2",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Long Rest"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="Until Long Rest"
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -255,7 +266,9 @@ class PrimalStrike(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -280,7 +293,9 @@ class ImprovedPrimalStrike(Feature):
         description = "The extra damage of your Primal Strike increases to 2d8."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -321,5 +336,7 @@ class Archdruid(Feature):
             ("Longevity", "Age 1 year for every 10 years that pass"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL

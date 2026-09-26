@@ -1,5 +1,11 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -52,13 +58,20 @@ class Spellcasting(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
 class WeaponBond(Feature):
     def __init__(self):
-        super().__init__(name="Weapon Bond", origin="Eldritch Knight Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["utility"])
+        super().__init__(
+            name="Weapon Bond",
+            origin="Eldritch Knight Fighter Level 3",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,59 +83,81 @@ class WeaponBond(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
 class WarMagic(Feature):
     def __init__(self):
-        super().__init__(name="War Magic", origin="Eldritch Knight Fighter Level 7", usage_tags=["damage"])
+        super().__init__(
+            name="War Magic",
+            origin="Eldritch Knight Fighter Level 7",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Beginning at 7th level, when you use your action to cast a cantrip, you can make one weapon attack as a bonus action."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class EldritchStrike(Feature):
     def __init__(self):
         super().__init__(
-            name="Eldritch Strike", origin="Eldritch Knight Fighter Level 10", activation=FeatureActivation(duration="Until End of Your Next Turn"), usage_tags=["control"]
+            name="Eldritch Strike",
+            origin="Eldritch Knight Fighter Level 10",
+            activation=FeatureActivation(duration="Until End of Your Next Turn"),
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 10th level, you learn how to make your weapon strikes undercut a creature's resistance to your spells. When you hit a creature with a weapon attack, that creature has disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class ArcaneCharge(Feature):
     def __init__(self):
         super().__init__(
-            name="Arcane Charge", origin="Eldritch Knight Fighter Level 15", activation=FeatureActivation(range="30 Feet"), usage_tags=["utility"]
+            name="Arcane Charge",
+            origin="Eldritch Knight Fighter Level 15",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 15th level, you gain the ability to teleport up to 30 feet to an unoccupied space you can see when you use your Action Surge. You can teleport before or after the additional action."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class ImprovedWarMagic(Feature):
     def __init__(self):
         super().__init__(
-            name="Improved War Magic", origin="Eldritch Knight Fighter Level 18", usage_tags=["damage"]
+            name="Improved War Magic",
+            origin="Eldritch Knight Fighter Level 18",
+            usage_tags=["damage"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 18th level, when you use your action to cast a spell, you can make one weapon attack as a bonus action."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

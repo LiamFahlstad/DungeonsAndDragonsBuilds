@@ -35,7 +35,12 @@ from CharacterContent.Classes.SubClasses2014.BarbarianPathOfTheStormHerald impor
     BarbarianStormHeraldLevel14,
 )
 from Core.Definitions import Ability, BarbarianStormEnvironment, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
@@ -135,10 +140,16 @@ def get_starter_class_builder():
                 20: BarbarianLevel20(),
             },
             subclass_features_by_level={
-                3: BarbarianStormHeraldLevel3(environment=BarbarianStormEnvironment.SEA),
-                6: BarbarianStormHeraldLevel6(environment=BarbarianStormEnvironment.SEA),
+                3: BarbarianStormHeraldLevel3(
+                    environment=BarbarianStormEnvironment.SEA
+                ),
+                6: BarbarianStormHeraldLevel6(
+                    environment=BarbarianStormEnvironment.SEA
+                ),
                 10: BarbarianStormHeraldLevel10(),
-                14: BarbarianStormHeraldLevel14(environment=BarbarianStormEnvironment.SEA),
+                14: BarbarianStormHeraldLevel14(
+                    environment=BarbarianStormEnvironment.SEA
+                ),
             },
         ),
     )

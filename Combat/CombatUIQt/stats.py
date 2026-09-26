@@ -5,23 +5,26 @@ from Combat.Definitions import Action, DamageType
 SPELL_SLOT_LEVELS = range(1, 10)
 
 STAT_KEYS = (
-    "damage_dealt",
-    "damage_taken",
-    "healing_done",
-    "healing_received",
-    "temp_hp_granted",
-    "temp_hp_received",
-    "conditions_given",
-    "conditions_received",
-    "spell_slots_used",
-    "spells_cast",
-    "features_enabled",
-    "knockouts",
-    "times_downed",
-    "deaths",
-) + tuple(f"damage_dealt_{dtype.name.lower()}" for dtype in DamageType) + tuple(
-    f"damage_taken_{dtype.name.lower()}" for dtype in DamageType
-) + tuple(f"spell_slots_used_{level}" for level in SPELL_SLOT_LEVELS)
+    (
+        "damage_dealt",
+        "damage_taken",
+        "healing_done",
+        "healing_received",
+        "temp_hp_granted",
+        "temp_hp_received",
+        "conditions_given",
+        "conditions_received",
+        "spell_slots_used",
+        "spells_cast",
+        "features_enabled",
+        "knockouts",
+        "times_downed",
+        "deaths",
+    )
+    + tuple(f"damage_dealt_{dtype.name.lower()}" for dtype in DamageType)
+    + tuple(f"damage_taken_{dtype.name.lower()}" for dtype in DamageType)
+    + tuple(f"spell_slots_used_{level}" for level in SPELL_SLOT_LEVELS)
+)
 
 # Per-condition and per-spell breakdowns are open-ended (spells can apply custom
 # pseudo-conditions by name, and the spell list isn't a fixed enum), so they're
@@ -122,7 +125,9 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                 elif action == Action.ADD_TEMP_HP and character:
                     amount = value["amount"] if isinstance(value, dict) else value
                     stats_for(character)["temp_hp_received"] += amount
-                    source_name = value.get("source_name") if isinstance(value, dict) else None
+                    source_name = (
+                        value.get("source_name") if isinstance(value, dict) else None
+                    )
                     if source_name:
                         stats_for(source_name)["temp_hp_granted"] += amount
                 elif action == Action.ADD_CONDITION and character:
@@ -132,7 +137,9 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                     increment_named_stat(
                         target_stats, "conditions_received_by_name", cond
                     )
-                    source_name = value.get("source_name") if isinstance(value, dict) else None
+                    source_name = (
+                        value.get("source_name") if isinstance(value, dict) else None
+                    )
                     if source_name:
                         source_stats = stats_for(source_name)
                         source_stats["conditions_given"] += 1
@@ -146,7 +153,9 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                     if level is not None:
                         s[spell_slots_used_key(level)] += 1
                 elif action == Action.CAST_SPELL and character:
-                    spell_name = value["spell_name"] if isinstance(value, dict) else value
+                    spell_name = (
+                        value["spell_name"] if isinstance(value, dict) else value
+                    )
                     s = stats_for(character)
                     s["spells_cast"] += 1
                     increment_named_stat(s, "spells_cast_by_name", spell_name)

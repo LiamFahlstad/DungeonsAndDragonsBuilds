@@ -223,7 +223,9 @@ class MeleeAttack(MonsterAbility):
         secondary = ""
         if self.secondary_dice_count > 0 and self.secondary_damage_type is not None:
             sec_notation, sec_average = _format_dice_notation(
-                self.secondary_dice_count, self.secondary_dice_type, self.secondary_damage_bonus
+                self.secondary_dice_count,
+                self.secondary_dice_type,
+                self.secondary_damage_bonus,
             )
             secondary = f" plus {sec_average} ({sec_notation}) {self.secondary_damage_type.value} damage"
         ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
@@ -280,7 +282,9 @@ class RangedAttack(MonsterAbility):
         secondary = ""
         if self.secondary_dice_count > 0 and self.secondary_damage_type is not None:
             sec_notation, sec_average = _format_dice_notation(
-                self.secondary_dice_count, self.secondary_dice_type, self.secondary_damage_bonus
+                self.secondary_dice_count,
+                self.secondary_dice_type,
+                self.secondary_damage_bonus,
             )
             secondary = f" plus {sec_average} ({sec_notation}) {self.secondary_damage_type.value} damage"
         ruling = f" {self.additional_ruling}" if self.additional_ruling else ""
@@ -521,7 +525,9 @@ class Multiattack(MonsterAbility):
     def __post_init__(self):
         article = "The " if self.use_article else ""
         ruling = f" {self.extra_ruling}" if self.extra_ruling else ""
-        self.description = f"{article}{self.creature_name} makes {self.attacks_text}.{ruling}"
+        self.description = (
+            f"{article}{self.creature_name} makes {self.attacks_text}.{ruling}"
+        )
 
 
 @dataclass_decorator
@@ -607,7 +613,9 @@ class WebWalker(MonsterAbility):
     knows_location: bool = True
 
     def __post_init__(self):
-        self.description = f"The {self.creature_name} ignores movement restrictions caused by webs"
+        self.description = (
+            f"The {self.creature_name} ignores movement restrictions caused by webs"
+        )
         if self.knows_location:
             self.description += (
                 f", and the {self.creature_name} knows the location of any "
@@ -758,9 +766,7 @@ class NamedAttackAction(MonsterAbility):
     def __post_init__(self):
         article = "The " if self.use_article else ""
         ruling = f" {self.extra_ruling}" if self.extra_ruling else ""
-        self.description = (
-            f"{article}{self.creature_name} makes one {self.attack_name} attack.{ruling}"
-        )
+        self.description = f"{article}{self.creature_name} makes one {self.attack_name} attack.{ruling}"
 
 
 @dataclass

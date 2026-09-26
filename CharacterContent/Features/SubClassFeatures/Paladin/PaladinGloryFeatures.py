@@ -1,12 +1,24 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class InspiringSmite(Feature):
     def __init__(self):
-        super().__init__(name="Inspiring Smite", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["heal"])
+        super().__init__(
+            name="Inspiring Smite",
+            origin="Oath of Glory Paladin Level 3",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -17,13 +29,18 @@ class InspiringSmite(Feature):
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Immediately after you cast Divine Smite"),
             ("Cost", "1 Channel Divinity use"),
             ("Range", "30 feet"),
             ("Temporary HP", "2d8 + your Paladin level (total)"),
-            ("Distribution", "Allocate among chosen creatures however you wish (can include yourself)"),
+            (
+                "Distribution",
+                "Allocate among chosen creatures however you wish (can include yourself)",
+            ),
         ]
 
 
@@ -50,7 +67,12 @@ class GlorySpells(Feature):
 class PeerlessAthlete(Feature):
     def __init__(self):
         super().__init__(
-            name="Peerless Athlete", origin="Oath of Glory Paladin Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour"), usage_tags=["buff"]
+            name="Peerless Athlete",
+            origin="Oath of Glory Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Hour"
+            ),
+            usage_tags=["buff"],
         )
 
     def target(
@@ -66,7 +88,9 @@ class PeerlessAthlete(Feature):
 class AuraOfAlacrity(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Alacrity", origin="Oath of Glory Paladin Level 7", usage_tags=["buff"]
+            name="Aura of Alacrity",
+            origin="Oath of Glory Paladin Level 7",
+            usage_tags=["buff"],
         )
 
     def target(
@@ -85,8 +109,18 @@ class AuraOfAlacrity(Feature):
 class GloriousDefense(Feature):
     def __init__(self):
         super().__init__(
-            name="Glorious Defense", origin="Oath of Glory Paladin Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="10 Feet"), usage_tags=["buff", "damage"]
-        , uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+            name="Glorious Defense",
+            origin="Oath of Glory Paladin Level 15",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="10 Feet"
+            ),
+            usage_tags=["buff", "damage"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -95,8 +129,9 @@ class GloriousDefense(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(
@@ -106,21 +141,34 @@ class GloriousDefense(Feature):
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character_stat_block)
         return [
             ("Trigger", "You or ally within 10 ft is hit by attack roll"),
             ("Action", "Reaction"),
             ("AC Bonus", "+Charisma modifier (minimum +1)"),
             ("Range", "10 feet for trigger, weapon range for counterattack"),
-            ("Counterattack", "If attack misses, make one weapon attack against attacker"),
+            (
+                "Counterattack",
+                "If attack misses, make one weapon attack against attacker",
+            ),
             ("Uses", f"{uses} per Long Rest"),
         ]
 
 
 class LivingLegend(Feature):
     def __init__(self):
-        super().__init__(name="Living Legend", origin="Oath of Glory Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(
+            name="Living Legend",
+            origin="Oath of Glory Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -144,6 +192,12 @@ class LivingLegend(Feature):
             ("Duration", "10 minutes"),
             ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
             ("Charismatic", "Advantage on all Charisma checks"),
-            ("Saving Throw Reroll", "As Reaction, reroll failed save (must use new result)"),
-            ("Unerring Strike", "Once per turn, when you miss with weapon attack, cause it to hit instead"),
+            (
+                "Saving Throw Reroll",
+                "As Reaction, reroll failed save (must use new result)",
+            ),
+            (
+                "Unerring Strike",
+                "Once per turn, when you miss with weapon attack, cause it to hit instead",
+            ),
         ]

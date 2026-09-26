@@ -38,7 +38,9 @@ class WindowMixin:
     def _select_target_character(self, char: dict, additive: bool = False):
         if additive:
             if any(char is t for t in self.target_characters):
-                self.target_characters = [t for t in self.target_characters if t is not char]
+                self.target_characters = [
+                    t for t in self.target_characters if t is not char
+                ]
             else:
                 self.target_characters.append(char)
         else:
@@ -473,8 +475,12 @@ class WindowMixin:
         # C / Ctrl+C / Ctrl+Shift+C: Concentrating on the source, cleared from the target.
         self._concentration_shortcut = QShortcut(QKeySequence("C"), self._window)
         self._concentration_shortcut.activated.connect(self._shortcut_add_concentration)
-        self._remove_concentration_shortcut = QShortcut(QKeySequence("Ctrl+C"), self._window)
-        self._remove_concentration_shortcut.activated.connect(self._shortcut_remove_concentration)
+        self._remove_concentration_shortcut = QShortcut(
+            QKeySequence("Ctrl+C"), self._window
+        )
+        self._remove_concentration_shortcut.activated.connect(
+            self._shortcut_remove_concentration
+        )
         self._clear_target_conditions_shortcut = QShortcut(
             QKeySequence("Ctrl+Shift+C"), self._window
         )
@@ -492,7 +498,9 @@ class WindowMixin:
         self._undo_shortcut.activated.connect(self._undo_last)
 
         # Escape: clear source and target selection
-        self._clear_selection_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Escape), self._window)
+        self._clear_selection_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Escape), self._window
+        )
         self._clear_selection_shortcut.activated.connect(self._clear_selection)
 
         # Enter / Return: Next Combatant / Next Round
@@ -507,7 +515,9 @@ class WindowMixin:
         self._spell_slot_shortcuts = []
         for level in range(1, 10):
             shortcut = QShortcut(QKeySequence(str(level)), self._window)
-            shortcut.activated.connect(lambda lvl=level: self._cast_spell_slot_level(lvl))
+            shortcut.activated.connect(
+                lambda lvl=level: self._cast_spell_slot_level(lvl)
+            )
             self._spell_slot_shortcuts.append(shortcut)
         self._combo_sensitive_shortcuts += self._spell_slot_shortcuts
 
@@ -516,21 +526,47 @@ class WindowMixin:
         # aliases): same, as target. A focused text field keeps its own
         # cursor-movement arrow keys regardless (see the class docstring above).
         self._cycle_source_next_shortcut = QShortcut(QKeySequence("N"), self._window)
-        self._cycle_source_next_shortcut.activated.connect(lambda: self._cycle_source(1))
+        self._cycle_source_next_shortcut.activated.connect(
+            lambda: self._cycle_source(1)
+        )
         self._cycle_source_prev_shortcut = QShortcut(QKeySequence("P"), self._window)
-        self._cycle_source_prev_shortcut.activated.connect(lambda: self._cycle_source(-1))
-        self._cycle_target_next_shortcut = QShortcut(QKeySequence("Shift+N"), self._window)
-        self._cycle_target_next_shortcut.activated.connect(lambda: self._cycle_target(1))
-        self._cycle_target_prev_shortcut = QShortcut(QKeySequence("Shift+P"), self._window)
-        self._cycle_target_prev_shortcut.activated.connect(lambda: self._cycle_target(-1))
+        self._cycle_source_prev_shortcut.activated.connect(
+            lambda: self._cycle_source(-1)
+        )
+        self._cycle_target_next_shortcut = QShortcut(
+            QKeySequence("Shift+N"), self._window
+        )
+        self._cycle_target_next_shortcut.activated.connect(
+            lambda: self._cycle_target(1)
+        )
+        self._cycle_target_prev_shortcut = QShortcut(
+            QKeySequence("Shift+P"), self._window
+        )
+        self._cycle_target_prev_shortcut.activated.connect(
+            lambda: self._cycle_target(-1)
+        )
 
-        self._cycle_source_right_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Right), self._window)
-        self._cycle_source_right_shortcut.activated.connect(lambda: self._cycle_source(1))
-        self._cycle_source_left_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Left), self._window)
-        self._cycle_source_left_shortcut.activated.connect(lambda: self._cycle_source(-1))
-        self._cycle_target_down_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Down), self._window)
-        self._cycle_target_down_shortcut.activated.connect(lambda: self._cycle_target(1))
-        self._cycle_target_up_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Up), self._window)
+        self._cycle_source_right_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Right), self._window
+        )
+        self._cycle_source_right_shortcut.activated.connect(
+            lambda: self._cycle_source(1)
+        )
+        self._cycle_source_left_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Left), self._window
+        )
+        self._cycle_source_left_shortcut.activated.connect(
+            lambda: self._cycle_source(-1)
+        )
+        self._cycle_target_down_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Down), self._window
+        )
+        self._cycle_target_down_shortcut.activated.connect(
+            lambda: self._cycle_target(1)
+        )
+        self._cycle_target_up_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Up), self._window
+        )
         self._cycle_target_up_shortcut.activated.connect(lambda: self._cycle_target(-1))
         self._combo_sensitive_shortcuts += [
             self._cycle_source_next_shortcut,
@@ -544,8 +580,12 @@ class WindowMixin:
         ]
 
         # Space: select whoever's turn it is as the source
-        self._select_active_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Space), self._window)
-        self._select_active_shortcut.activated.connect(self._shortcut_select_active_source)
+        self._select_active_shortcut = QShortcut(
+            QKeySequence(Qt.Key.Key_Space), self._window
+        )
+        self._select_active_shortcut.activated.connect(
+            self._shortcut_select_active_source
+        )
         self._combo_sensitive_shortcuts.append(self._select_active_shortcut)
 
         # D / H / T: jump straight into the Damage / Heal / Temp HP amount field
@@ -568,7 +608,9 @@ class WindowMixin:
 
         # Keep the shortcuts above disabled while focus is on a combo box, and
         # restored the instant it moves elsewhere (see the method docstring).
-        QApplication.instance().focusChanged.connect(self._update_combo_sensitive_shortcuts)
+        QApplication.instance().focusChanged.connect(
+            self._update_combo_sensitive_shortcuts
+        )
         self._update_combo_sensitive_shortcuts(None, QApplication.focusWidget())
 
     @staticmethod

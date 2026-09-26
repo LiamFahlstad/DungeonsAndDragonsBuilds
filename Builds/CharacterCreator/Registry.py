@@ -395,7 +395,9 @@ class Registry:
             if path.stem in ("SpeciesBuilder", "__init__"):
                 continue
             try:
-                module = importlib.import_module(f"CharacterContent.Species.{path.stem}")
+                module = importlib.import_module(
+                    f"CharacterContent.Species.{path.stem}"
+                )
             except Exception:
                 continue
             for cls in _classes_defined_in(module):
@@ -411,7 +413,9 @@ class Registry:
     # ----------------------------------------------------- feats and spells
 
     def feat_module(self, name):
-        return importlib.import_module(f"CharacterContent.Features.CharacterFeats.{name}")
+        return importlib.import_module(
+            f"CharacterContent.Features.CharacterFeats.{name}"
+        )
 
     def concrete_subclasses(self, base) -> list:
         """Non-abstract subclasses of `base` defined in base's module."""
@@ -467,14 +471,20 @@ class Registry:
         mapping["Armor"] = ("CharacterContent.Items", "Armor")
         mapping["Weapons"] = ("CharacterContent.Items", "Weapons")
         mapping["Items"] = ("CharacterContent.Items", "Items")
-        mapping["SpellSlots"] = ("CharacterContent.Features.ClassFeatures", "SpellSlots")
+        mapping["SpellSlots"] = (
+            "CharacterContent.Features.ClassFeatures",
+            "SpellSlots",
+        )
         mapping["ToolProficiency"] = (
             "CharacterContent.ToolProficiencies.Proficiencies",
             "ToolProficiency",
         )
         # Module alias so Proficiencies.ThievesTools() style expressions
         # (emitted by the tool proficiency picker) import cleanly.
-        mapping["Proficiencies"] = ("CharacterContent.ToolProficiencies", "Proficiencies")
+        mapping["Proficiencies"] = (
+            "CharacterContent.ToolProficiencies",
+            "Proficiencies",
+        )
 
         import StatBlocks.AbilitiesStatBlock as abilities_module
 
@@ -516,16 +526,26 @@ class Registry:
 
         # Warlock invocations, e.g. InvocationsLevel2.AGONIZING_BLAST.
         try:
-            invocations = importlib.import_module("CharacterContent.Invocations.Definitions")
+            invocations = importlib.import_module(
+                "CharacterContent.Invocations.Definitions"
+            )
             for name, obj in vars(invocations).items():
                 if inspect.isclass(obj) and obj.__module__ == invocations.__name__:
-                    mapping.setdefault(name, ("CharacterContent.Invocations.Definitions", name))
+                    mapping.setdefault(
+                        name, ("CharacterContent.Invocations.Definitions", name)
+                    )
         except Exception:
             pass
 
         # Aliases some hand-written builds use for the spells module.
-        mapping.setdefault("SpellDefinitions", ("CharacterContent.Spells", "SpellLists as SpellDefinitions"))
-        mapping.setdefault("SpellsDefinitions", ("CharacterContent.Spells", "SpellLists as SpellsDefinitions"))
+        mapping.setdefault(
+            "SpellDefinitions",
+            ("CharacterContent.Spells", "SpellLists as SpellDefinitions"),
+        )
+        mapping.setdefault(
+            "SpellsDefinitions",
+            ("CharacterContent.Spells", "SpellLists as SpellsDefinitions"),
+        )
         mapping.setdefault("Definitions", ("Core", "Definitions"))
 
         self._name_to_import = mapping
@@ -640,7 +660,11 @@ def resolve_annotation(annotation) -> ResolvedAnnotation:
         item_origin = typing.get_origin(item)
         if item_origin in (tuple, typing.Tuple):
             tuple_args = typing.get_args(item)
-            if len(tuple_args) == 2 and tuple_args[0] is Ability and tuple_args[1] is int:
+            if (
+                len(tuple_args) == 2
+                and tuple_args[0] is Ability
+                and tuple_args[1] is int
+            ):
                 return ResolvedAnnotation(
                     EditorKind.ABILITY_BONUS_LIST, optional=optional
                 )

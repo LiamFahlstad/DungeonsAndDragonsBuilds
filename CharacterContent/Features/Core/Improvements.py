@@ -60,7 +60,6 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
             raise ValueError(f"{error_prefix}: {item} is not in the allowed pool.")
 
 
-
 class SkillProficiency(CharacterImprovement):
     """Grants proficiency in a fixed list of skills.
 
@@ -168,7 +167,6 @@ class SavingThrowBonus(CharacterImprovement):
             character_stat_block.saving_throws.add_bonus(ability, self.bonus)
 
 
-
 class AbilityScoreBonus(CharacterImprovement):
     """Applies (Ability, bonus) pairs, validated to sum to `total`."""
 
@@ -271,7 +269,6 @@ class StealthDisadvantage(SkillRollCondition):
         super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE, reason)
 
 
-
 class InitiativeProficiency(CharacterImprovement):
     """Grants proficiency bonus to initiative rolls."""
 
@@ -300,7 +297,6 @@ class InitiativeBonus(CharacterImprovement):
         character_stat_block.add_initiative_bonus(self.bonus)
 
 
-
 class HitPointsPerLevelBonus(CharacterImprovement):
     """Adds `multiplier × character_level` to the hit points bonus."""
 
@@ -311,7 +307,6 @@ class HitPointsPerLevelBonus(CharacterImprovement):
         character_stat_block.combat.hit_points_bonus += (
             self.multiplier * character_stat_block.character_level
         )
-
 
 
 class SkillBonus(CharacterImprovement):
@@ -358,7 +353,6 @@ class JackOfAllTradesBonus(CharacterImprovement):
                 character_stat_block.skills.add_skill_bonus(
                     skill, half_proficiency, "Jack of All Trades"
                 )
-
 
 
 class SpeedBonus(CharacterImprovement):

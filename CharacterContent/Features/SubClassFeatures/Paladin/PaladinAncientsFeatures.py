@@ -1,12 +1,23 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class NaturesWrath(Feature):
     def __init__(self):
         super().__init__(
-            name="Nature's Wrath", origin="Oath of the Ancients Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="15 Feet"), usage_tags=["control"]
+            name="Nature's Wrath",
+            origin="Oath of the Ancients Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute", range="15 Feet"
+            ),
+            usage_tags=["control"],
         )
 
     def target(
@@ -18,13 +29,18 @@ class NaturesWrath(Feature):
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Magic action"),
             ("Cost", "1 Channel Divinity use"),
             ("Range", "15 feet"),
             ("Save", "Strength"),
-            ("Effect", "Restrained condition for 1 minute (repeats save at end of turn)"),
+            (
+                "Effect",
+                "Restrained condition for 1 minute (repeats save at end of turn)",
+            ),
         ]
 
 
@@ -52,7 +68,9 @@ class OathOfTheAncientsSpells(Feature):
 class AuraOfWarding(Feature):
     def __init__(self):
         super().__init__(
-            name="Aura of Warding", origin="Oath of the Ancients Paladin Level 7", usage_tags=["buff"]
+            name="Aura of Warding",
+            origin="Oath of the Ancients Paladin Level 7",
+            usage_tags=["buff"],
         )
 
     def target(
@@ -68,7 +86,9 @@ class AuraOfWarding(Feature):
 class UndyingSentinel(Feature):
     def __init__(self):
         super().__init__(
-            name="Undying Sentinel", origin="Oath of the Ancients Paladin Level 15", usage_tags=["heal"]
+            name="Undying Sentinel",
+            origin="Oath of the Ancients Paladin Level 15",
+            usage_tags=["heal"],
         )
 
     def target(
@@ -83,9 +103,11 @@ class UndyingSentinel(Feature):
         )
         return description
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
     def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
             "When reduced to 0 HP and not killed, drop to 1 HP instead and regain 3× your Paladin level HP (1/Long Rest). "
@@ -96,7 +118,12 @@ class UndyingSentinel(Feature):
 class ElderChampion(Feature):
     def __init__(self):
         super().__init__(
-            name="Elder Champion", origin="Oath of the Ancients Paladin Level 20", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"), usage_tags=["heal", "control"]
+            name="Elder Champion",
+            origin="Oath of the Ancients Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"
+            ),
+            usage_tags=["heal", "control"],
         )
 
     def target(
@@ -120,7 +147,13 @@ class ElderChampion(Feature):
             ("Action", "Bonus Action"),
             ("Duration", "1 minute (or until ended)"),
             ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            ("Diminish Defiance", "Enemies in aura have Disadvantage on saves against your spells and Channel Divinity"),
+            (
+                "Diminish Defiance",
+                "Enemies in aura have Disadvantage on saves against your spells and Channel Divinity",
+            ),
             ("Regeneration", "Regain 10 HP at start of each turn"),
-            ("Swift Spells", "Cast spells with action casting time as Bonus Action instead"),
+            (
+                "Swift Spells",
+                "Cast spells with action casting time as Bonus Action instead",
+            ),
         ]

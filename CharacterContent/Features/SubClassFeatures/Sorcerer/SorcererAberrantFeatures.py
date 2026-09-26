@@ -1,5 +1,10 @@
 from Core.Definitions import CharacterClass, DamageType, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -23,7 +28,16 @@ class PsionicSpells(Feature):
 
 class TelepathicSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Telepathic Speech", origin="Aberrant Sorcerer Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Minutes Equal to Sorcerer Level", range="30 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Telepathic Speech",
+            origin="Aberrant Sorcerer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Minutes Equal to Sorcerer Level",
+                range="30 Feet",
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,10 +46,14 @@ class TelepathicSpeech(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_charisma_modifier()
         sorcerer_level = character_stat_block.get_class_level(CharacterClass.SORCERER)
         distance = max(1, charisma_modifier)
@@ -60,7 +78,12 @@ class PsionicSorcery(Feature):
 
 class PsychicDefenses(Feature):
     def __init__(self):
-        super().__init__(name="Psychic Defenses", origin="Aberrant Sorcerer Level 6", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Psychic Defenses",
+            origin="Aberrant Sorcerer Level 6",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -70,13 +93,22 @@ class PsychicDefenses(Feature):
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class RevelationInFlesh(Feature):
     def __init__(self):
-        super().__init__(name="Revelation in Flesh", origin="Aberrant Sorcerer Level 14", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Revelation in Flesh",
+            origin="Aberrant Sorcerer Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -88,10 +120,14 @@ class RevelationInFlesh(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus Action"),
             ("Cost", "1+ Sorcery Points (1 per benefit)"),
@@ -99,13 +135,23 @@ class RevelationInFlesh(Feature):
             ("Aquatic Adaptation", "Swim Speed = 2x Speed, breathe underwater"),
             ("Glistening Flight", "Fly Speed = Speed, can hover"),
             ("See the Invisible", "See Invisible creatures within 60 feet"),
-            ("Wormlike Movement", "Move through 1-inch spaces, escape restraints/grapple"),
+            (
+                "Wormlike Movement",
+                "Move through 1-inch spaces, escape restraints/grapple",
+            ),
         ]
 
 
 class WarpingImplosion(Feature):
     def __init__(self):
-        super().__init__(name="Warping Implosion", origin="Aberrant Sorcerer Level 18", activation=FeatureActivation(action_type=ActionType.ACTION, range="120 Feet"), usage_tags=["damage", "control"])
+        super().__init__(
+            name="Warping Implosion",
+            origin="Aberrant Sorcerer Level 18",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="120 Feet"
+            ),
+            usage_tags=["damage", "control"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
@@ -117,7 +163,9 @@ class WarpingImplosion(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
     def get_table_description(

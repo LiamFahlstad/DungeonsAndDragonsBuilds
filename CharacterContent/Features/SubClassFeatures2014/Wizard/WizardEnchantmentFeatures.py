@@ -20,7 +20,16 @@ class EnchantmentSavant(Feature):
 
 class HypnoticGaze(Feature):
     def __init__(self):
-        super().__init__(name="Hypnotic Gaze", origin="Enchantment Wizard Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until End Of Your Next Turn", range="5 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Hypnotic Gaze",
+            origin="Enchantment Wizard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until End Of Your Next Turn",
+                range="5 Feet",
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -30,7 +39,9 @@ class HypnoticGaze(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Target", "One creature within 5 feet that can see or hear you"),
@@ -38,17 +49,29 @@ class HypnoticGaze(Feature):
             ("Effect", "Charmed, speed 0, incapacitated and dazed"),
             ("Duration", "Until end of your next turn"),
             ("Maintain", "Use action on subsequent turns to extend"),
-            ("Ends if", "You move >5 feet away, creature can't see/hear you, or takes damage"),
+            (
+                "Ends if",
+                "You move >5 feet away, creature can't see/hear you, or takes damage",
+            ),
             ("Recharge", "Long rest (per target)"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class InstinctiveCharm(Feature):
     def __init__(self):
-        super().__init__(name="Instinctive Charm", origin="Enchantment Wizard Level 6", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Instinctive Charm",
+            origin="Enchantment Wizard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +81,9 @@ class InstinctiveCharm(Feature):
         )
         return description
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Creature within 30 feet makes attack roll against you"),
             ("Action", "Reaction"),
@@ -70,7 +95,9 @@ class InstinctiveCharm(Feature):
             ("Immunity", "Creatures that can't be charmed are immune"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -85,7 +112,12 @@ class SplitEnchantment(Feature):
 
 class AlterMemories(Feature):
     def __init__(self):
-        super().__init__(name="Alter Memories", origin="Enchantment Wizard Level 14", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["control"])
+        super().__init__(
+            name="Alter Memories",
+            origin="Enchantment Wizard Level 14",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -94,5 +126,7 @@ class AlterMemories(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

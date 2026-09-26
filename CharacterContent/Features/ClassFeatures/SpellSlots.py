@@ -130,7 +130,11 @@ class SpellSlots(Feature):
     ) -> None:
         self.caster_type = caster_type
         self.character_class = character_class
-        super().__init__(name="Spell Slots", origin=f"{character_class.value} Spellcasting", skippable_in_concise=True)
+        super().__init__(
+            name="Spell Slots",
+            origin=f"{character_class.value} Spellcasting",
+            skippable_in_concise=True,
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         caster_map = {
@@ -139,7 +143,9 @@ class SpellSlots(Feature):
             CasterType.WARLOCK_CASTER: "You are a warlock and gain pact magic slots that refresh on short or long rests.",
             CasterType.THIRD_CASTER: "You are a one-third spellcaster and gain spell slots according to one-third of your class level.",
         }
-        description = caster_map.get(self.caster_type, "You gain spell slots for spellcasting.")
+        description = caster_map.get(
+            self.caster_type, "You gain spell slots for spellcasting."
+        )
         return f"{self.character_class.value} Spellcasting.\n{description}"
 
     def apply(self, character_stat_block: CharacterStatBlock):

@@ -51,7 +51,9 @@ class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
     skill_proficiency: Definitions.Skill
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
-        data.add_feature(BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill_proficiency))
+        data.add_feature(
+            BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill_proficiency)
+        )
         data.add_feature(BarbarianFeatures.PrimalKnowledge())
         return data
 

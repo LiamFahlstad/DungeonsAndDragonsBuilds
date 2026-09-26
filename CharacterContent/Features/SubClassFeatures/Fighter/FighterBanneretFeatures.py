@@ -1,12 +1,21 @@
 from Core.Definitions import FIGHTER_HIT_DIE, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class KnightlyEnvoy(Feature):
     def __init__(self):
-        super().__init__(name="Knightly Envoy", origin="Banneret Fighter Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Knightly Envoy",
+            origin="Banneret Fighter Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -20,7 +29,12 @@ class KnightlyEnvoy(Feature):
 
 class GroupRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Group Recovery", origin="Banneret Fighter Level 3", activation=FeatureActivation(range="30-Foot Emanation"), usage_tags=["heal"])
+        super().__init__(
+            name="Group Recovery",
+            origin="Banneret Fighter Level 3",
+            activation=FeatureActivation(range="30-Foot Emanation"),
+            usage_tags=["heal"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -37,7 +51,10 @@ class GroupRecovery(Feature):
         return [
             ("Trigger", "When you use Second Wind"),
             ("Range", "30-foot Emanation"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies"),
+            (
+                "Targets",
+                f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies",
+            ),
             ("Effect", "Each ally regains 1d4 + Fighter level HP"),
             ("Recharge", "Short or Long Rest"),
         ]
@@ -45,7 +62,9 @@ class GroupRecovery(Feature):
 
 class TeamTactics(Feature):
     def __init__(self):
-        super().__init__(name="Team Tactics", origin="Banneret Fighter Level 7", usage_tags=["buff"])
+        super().__init__(
+            name="Team Tactics", origin="Banneret Fighter Level 7", usage_tags=["buff"]
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -59,7 +78,11 @@ class TeamTactics(Feature):
 
 class RallyingSurge(Feature):
     def __init__(self):
-        super().__init__(name="Rallying Surge", origin="Banneret Fighter Level 10", activation=FeatureActivation(range="30-Foot Emanation"))
+        super().__init__(
+            name="Rallying Surge",
+            origin="Banneret Fighter Level 10",
+            activation=FeatureActivation(range="30-Foot Emanation"),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -80,14 +103,24 @@ class RallyingSurge(Feature):
         return [
             ("Trigger", "When you use Action Surge"),
             ("Range", "30-foot Emanation"),
-            ("Targets", f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies"),
+            (
+                "Targets",
+                f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies",
+            ),
             ("Reaction Options", "One attack, or move up to half Speed without OAs"),
         ]
 
 
 class SharedResilience(Feature):
     def __init__(self):
-        super().__init__(name="Shared Resilience", origin="Banneret Fighter Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Shared Resilience",
+            origin="Banneret Fighter Level 15",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -110,7 +143,12 @@ class SharedResilience(Feature):
 
 class InspiringCommander(Feature):
     def __init__(self):
-        super().__init__(name="Inspiring Commander", origin="Banneret Fighter Level 18", skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(
+            name="Inspiring Commander",
+            origin="Banneret Fighter Level 18",
+            skippable_in_concise=True,
+            usage_tags=["buff"],
+        )
         self._immunities = [
             ConditionImmunity(Condition.CHARMED, self.name),
             ConditionImmunity(Condition.FRIGHTENED, self.name),

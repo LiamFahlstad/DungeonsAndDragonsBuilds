@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
-from CharacterContent.Features.SubClassFeatures.Artificer import ArtificerArtilleristFeatures
+from CharacterContent.Features.SubClassFeatures.Artificer import (
+    ArtificerArtilleristFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     BardLevel1Spells,
     BardLevel2Spells,
@@ -56,9 +58,9 @@ class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = data.get_features_by_type(
-            ArtificerArtilleristFeatures.EldritchCannon
-        )[0]
+        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = (
+            data.get_features_by_type(ArtificerArtilleristFeatures.EldritchCannon)[0]
+        )
         eldritch_cannon.extend_feature(ArtificerArtilleristFeatures.ExplosiveCannon())
         data.add_spell(SorcererLevel3Spells.FIREBALL)
         data.add_spell(DruidLevel3Spells.WIND_WALL)
@@ -82,9 +84,9 @@ class ArtificerArtilleristLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = data.get_features_by_type(
-            ArtificerArtilleristFeatures.EldritchCannon
-        )[0]
+        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = (
+            data.get_features_by_type(ArtificerArtilleristFeatures.EldritchCannon)[0]
+        )
         eldritch_cannon.extend_feature(ArtificerArtilleristFeatures.FortifiedPosition())
         return data
 

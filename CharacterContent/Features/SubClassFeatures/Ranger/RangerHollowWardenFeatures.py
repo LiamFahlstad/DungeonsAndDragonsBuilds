@@ -1,7 +1,14 @@
-
 from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
-from CharacterContent.Features.Core.Improvements import ConditionImmunity, SavingThrowBonus
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
+from CharacterContent.Features.Core.Improvements import (
+    ConditionImmunity,
+    SavingThrowBonus,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -28,7 +35,14 @@ class HollowWardenSpells(Feature):
 class WrathOfTheWild(Feature):
     def __init__(self):
         super().__init__(
-            name="Wrath of the Wild", origin="Hollow Warden Ranger Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated", range="10-Foot Emanation"), usage_tags=["buff", "control"]
+            name="Wrath of the Wild",
+            origin="Hollow Warden Ranger Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Incapacitated",
+                range="10-Foot Emanation",
+            ),
+            usage_tags=["buff", "control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -43,13 +57,19 @@ class WrathOfTheWild(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
 class HungeringMight(Feature):
     def __init__(self):
-        super().__init__(name="Hungering Might", origin="Hollow Warden Ranger Level 7", usage_tags=["buff", "heal"])
+        super().__init__(
+            name="Hungering Might",
+            origin="Hollow Warden Ranger Level 7",
+            usage_tags=["buff", "heal"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -58,7 +78,9 @@ class HungeringMight(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -79,7 +101,9 @@ class HungeringMightBonus(Feature):
 class RotAndViolence(Feature):
     def __init__(self):
         super().__init__(
-            name="Rot and Violence", origin="Hollow Warden Ranger Level 11", usage_tags=["control"]
+            name="Rot and Violence",
+            origin="Hollow Warden Ranger Level 11",
+            usage_tags=["control"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -93,7 +117,11 @@ class RotAndViolence(Feature):
 
 class AncientMight(Feature):
     def __init__(self):
-        super().__init__(name="Ancient Might", origin="Hollow Warden Ranger Level 15", usage_tags=["damage", "heal", "buff"])
+        super().__init__(
+            name="Ancient Might",
+            origin="Hollow Warden Ranger Level 15",
+            usage_tags=["damage", "heal", "buff"],
+        )
         self._immunity = ConditionImmunity(Condition.EXHAUSTION, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):

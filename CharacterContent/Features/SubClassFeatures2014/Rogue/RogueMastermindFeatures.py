@@ -9,7 +9,11 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class MasterOfIntrigue(Feature):
     def __init__(self):
-        super().__init__(name="Master of Intrigue", origin="Mastermind Rogue Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Master of Intrigue",
+            origin="Mastermind Rogue Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -18,25 +22,40 @@ class MasterOfIntrigue(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class MasterOfTactics(Feature):
     def __init__(self):
-        super().__init__(name="Master of Tactics", origin="Mastermind Rogue Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="30 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Master of Tactics",
+            origin="Mastermind Rogue Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="30 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can use the Help action as a bonus action. Additionally, when you use the Help action to aid an ally in attacking a creature, the target of that attack can be within 30 feet of you, rather than 5 feet of you, if the target can see or hear you."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class InsightfulManipulator(Feature):
     def __init__(self):
-        super().__init__(name="Insightful Manipulator", origin="Mastermind Rogue Level 9", usage_tags=["utility"])
+        super().__init__(
+            name="Insightful Manipulator",
+            origin="Mastermind Rogue Level 9",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -49,25 +68,40 @@ class InsightfulManipulator(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class Misdirection(Feature):
     def __init__(self):
-        super().__init__(name="Misdirection", origin="Mastermind Rogue Level 13", activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Misdirection",
+            origin="Mastermind Rogue Level 13",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="5 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can sometimes cause another creature to suffer an attack meant for you. When you are targeted by an attack while a creature within 5 feet of you is granting you cover against that attack, you can use your reaction to have the attack target that creature instead of you."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
 class SoulOfDeceit(Feature):
     def __init__(self):
-        super().__init__(name="Soul of Deceit", origin="Mastermind Rogue Level 17", usage_tags=["utility"])
+        super().__init__(
+            name="Soul of Deceit",
+            origin="Mastermind Rogue Level 17",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -76,5 +110,7 @@ class SoulOfDeceit(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

@@ -33,8 +33,15 @@ from CharacterContent.Classes.SubClasses2024.RangerBeastMaster import (
     RangerBeastMasterLevel15,
 )
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
+from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
+    CompanionType,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Gnome
@@ -125,7 +132,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: RangerLevel9(
                     skill_expertise_1=Skill.ATHLETICS,
@@ -141,7 +149,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.CONSTITUTION, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.CONJURE_WOODLAND_BEINGS,
@@ -154,7 +163,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: RangerLevel17(
                     spell_1=RangerLevel5Spells.SWIFT_QUIVER,

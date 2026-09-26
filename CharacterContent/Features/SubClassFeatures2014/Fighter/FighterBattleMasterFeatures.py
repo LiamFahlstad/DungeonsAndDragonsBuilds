@@ -1,4 +1,9 @@
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -54,7 +59,9 @@ class CombatSuperiority(Feature):
             ("Regain", "Short or long rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -69,7 +76,11 @@ class StudentOfWar(Feature):
 
 class KnowYourEnemy(Feature):
     def __init__(self):
-        super().__init__(name="Know Your Enemy", origin="Battle Master Fighter Level 7", usage_tags=["utility"])
+        super().__init__(
+            name="Know Your Enemy",
+            origin="Battle Master Fighter Level 7",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -84,7 +95,9 @@ class KnowYourEnemy(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -103,7 +116,9 @@ class Relentless(Feature):
     def __init__(self):
         super().__init__(name="Relentless", origin="Battle Master Fighter Level 15")
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

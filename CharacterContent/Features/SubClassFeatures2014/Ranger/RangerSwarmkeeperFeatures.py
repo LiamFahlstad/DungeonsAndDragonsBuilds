@@ -58,7 +58,10 @@ class WrithingTide(Feature):
         super().__init__(
             name="Writhing Tide",
             origin="Swarmkeeper Ranger Level 7",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Incapacitated"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute or Until Incapacitated",
+            ),
             usage_tags=["utility"],
         )
 
@@ -70,10 +73,14 @@ class WrithingTide(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -113,7 +120,9 @@ class SwarmingDispersal(Feature):
         super().__init__(
             name="Swarming Dispersal",
             origin="Swarmkeeper Ranger Level 15",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             usage_tags=["buff", "utility"],
         )
 
@@ -125,10 +134,14 @@ class SwarmingDispersal(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(

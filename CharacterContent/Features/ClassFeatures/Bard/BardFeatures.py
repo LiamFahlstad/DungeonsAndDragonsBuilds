@@ -30,7 +30,9 @@ class Spellcasting(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -39,7 +41,9 @@ class BardicInspiration(Feature):
         super().__init__(
             name="Bardic Inspiration",
             origin="Bard Level 1",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Hour", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Hour", range="60 Feet"
+            ),
             usage_tags=["buff"],
             uses=FeatureUses(
                 max_uses=Definitions.MAX_ABILITY_MODIFIER,
@@ -78,7 +82,9 @@ class BardicInspiration(Feature):
         ]
         return [("Bardic Inspiration Die", steps)]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -111,7 +117,9 @@ class BardicInspiration(Feature):
             ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -186,7 +194,9 @@ class FontOfInspiration(Feature):
             ("Alternative Cost", "1 spell slot (no action required)"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -195,7 +205,9 @@ class Countercharm(Feature):
         super().__init__(
             name="Countercharm",
             origin="Bard Level 7",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
             usage_tags=["buff"],
         )
 
@@ -212,7 +224,9 @@ class Countercharm(Feature):
             ("Effect", "Reroll save with Advantage"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -233,19 +247,25 @@ class SuperiorInspiration(Feature):
         description = "When you roll Initiative, you regain expended uses of Bardic Inspiration until you have two if you have fewer than that."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
 
 class WordsOfCreation(Feature):
     def __init__(self):
         super().__init__(
-            name="Words of Creation", origin="Bard Level 20", activation=FeatureActivation(range="10 Feet")
+            name="Words of Creation",
+            origin="Bard Level 20",
+            activation=FeatureActivation(range="10 Feet"),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have mastered two of the Words of Creation: the words of life and death. You therefore always have the Power Word: Heal and Power Word: Kill spells prepared. When you cast either spell, you can target a second creature with it if that creature is within 10 feet of the first target."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE

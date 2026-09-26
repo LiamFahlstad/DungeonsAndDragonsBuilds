@@ -82,7 +82,10 @@ class SpellsMixin:
             return
         char["active_spells"] = [e for e in active_spells if not e.get("concentration")]
         for entry in ended:
-            self._log_event(f"{char['name']}'s {entry['name']} ends (concentration lost)", note_turn=False)
+            self._log_event(
+                f"{char['name']}'s {entry['name']} ends (concentration lost)",
+                note_turn=False,
+            )
 
     def _tick_active_spells(self):
         """Deduct 6 seconds (one round) from every combatant's active spell timers,
@@ -221,7 +224,9 @@ class SpellsMixin:
             elif self.target_characters:
                 cast_btn.setEnabled(True)
                 target_names = ", ".join(t["name"] for t in self.target_characters)
-                cast_btn.setToolTip(f"Cast on {target_names} (requires: {spell.target.value})")
+                cast_btn.setToolTip(
+                    f"Cast on {target_names} (requires: {spell.target.value})"
+                )
             else:
                 cast_btn.setEnabled(False)
                 cast_btn.setToolTip(
@@ -289,7 +294,9 @@ class SpellsMixin:
         recipient(s) and increments the caster's spells_cast stat."""
         source = self.selected_character
         if source is None:
-            QMessageBox.warning(self._window, "Error", "Select a caster (character) first.")
+            QMessageBox.warning(
+                self._window, "Error", "Select a caster (character) first."
+            )
             return
 
         if spell.target is None or spell.target == FeatureTarget.SELF:
@@ -383,7 +390,9 @@ class SpellsMixin:
         # Store the tooltip description and badge color, and add the condition,
         # on every recipient (the caster for a self-cast, each target otherwise).
         for char in list(recipients):
-            char.setdefault("spell_condition_descriptions", {})[spell.name] = tooltip_html
+            char.setdefault("spell_condition_descriptions", {})[
+                spell.name
+            ] = tooltip_html
             char.setdefault("spell_condition_colors", {})[spell.name] = badge_color
             self._add_condition_to(char, spell.name, source=source)
 

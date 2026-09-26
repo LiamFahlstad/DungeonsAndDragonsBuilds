@@ -36,7 +36,9 @@ class Spellcasting(Feature):
             ("Regaining Spell Slots", "All expended slots return on Long Rest"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -74,7 +76,9 @@ class ChannelDivinity(Feature):
         super().__init__(
             name="Channel Divinity",
             origin="Cleric Level 2",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+            ),
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(
                 max_uses=4,
@@ -114,7 +118,9 @@ class ChannelDivinity(Feature):
         ]
         return [("Channel Divinity Uses", steps)]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -125,7 +131,9 @@ class ChannelDivinity(Feature):
         else:
             return 2
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -139,7 +147,9 @@ class SearUndead(Feature):
         description = "Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -153,7 +163,9 @@ class DivineStrike(Feature):
         description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -173,7 +185,9 @@ class PotentSpellcasting(Feature):
 class DivineIntervention(Feature):
     def __init__(self):
         super().__init__(
-            name="Divine Intervention", origin="Cleric Level 10", activation=FeatureActivation(action_type=ActionType.ACTION)
+            name="Divine Intervention",
+            origin="Cleric Level 10",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -206,7 +220,9 @@ class ImprovedDivineStrike(Feature):
         description = "The extra damage of your Divine Strike increases to 2d8."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -223,7 +239,9 @@ class ImprovedPotentSpellcasting(Feature):
         description = "When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 

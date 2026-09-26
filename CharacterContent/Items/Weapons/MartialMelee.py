@@ -1,6 +1,12 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
+from .Enums import (
+    WeaponMastery,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
 from .WeaponFamilies import (
     AxeGreater,
     AxeHeavy,
@@ -38,7 +44,11 @@ class Glaive(AxeGreater):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Glaive"
-        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.HEAVY,
+            WeaponProperty.REACH,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.GRAZE
         self.is_homebrew = False
 
@@ -64,7 +74,11 @@ class Halberd(AxeGreater):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Halberd"
-        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.HEAVY,
+            WeaponProperty.REACH,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.is_homebrew = False
 
 
@@ -72,7 +86,11 @@ class Lance(SpearGreater):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Lance"
-        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.HEAVY,
+            WeaponProperty.REACH,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.is_homebrew = False
 
 
@@ -112,7 +130,11 @@ class Pike(SpearGreater):
     def base_stats(self) -> None:
         super().base_stats()
         self.name = "Pike"
-        self.properties = [WeaponProperty.HEAVY, WeaponProperty.REACH, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.HEAVY,
+            WeaponProperty.REACH,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.PUSH
         self.weight = 18
         self.value = 5

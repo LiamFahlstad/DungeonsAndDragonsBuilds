@@ -1,5 +1,12 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureUses, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureUses,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -26,7 +33,14 @@ class OathbreakerSpells(Feature):
 
 class ControlUndead(Feature):
     def __init__(self):
-        super().__init__(name="Control Undead", origin="Oathbreaker Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="24 Hours", range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Control Undead",
+            origin="Oathbreaker Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="24 Hours", range="30 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -35,10 +49,14 @@ class ControlUndead(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("What", "Control undead creature"),
             ("Action", "Action"),
@@ -52,7 +70,14 @@ class ControlUndead(Feature):
 
 class DreadfulAspect(Feature):
     def __init__(self):
-        super().__init__(name="Dreadful Aspect", origin="Oathbreaker Paladin Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Dreadful Aspect",
+            origin="Oathbreaker Paladin Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+            ),
+            usage_tags=["control"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -61,10 +86,14 @@ class DreadfulAspect(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("What", "Channel magical menace"),
             ("Action", "Action"),
@@ -78,7 +107,12 @@ class DreadfulAspect(Feature):
 
 class AuraOfHate(Feature):
     def __init__(self):
-        super().__init__(name="Aura of Hate", origin="Oathbreaker Paladin Level 7", activation=FeatureActivation(range="10 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Aura of Hate",
+            origin="Oathbreaker Paladin Level 7",
+            activation=FeatureActivation(range="10 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -87,7 +121,9 @@ class AuraOfHate(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -105,7 +141,9 @@ class AuraOfHateExpansion(Feature):
 class SupernaturalResistance(Feature):
     def __init__(self):
         super().__init__(
-            name="Supernatural Resistance", origin="Oathbreaker Paladin Level 15", usage_tags=["buff"]
+            name="Supernatural Resistance",
+            origin="Oathbreaker Paladin Level 15",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -115,12 +153,26 @@ class SupernaturalResistance(Feature):
 
 class DreadLord(Feature):
     def __init__(self):
-        super().__init__(name="Dread Lord", origin="Oathbreaker Paladin Level 20", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute", range="30-Foot Radius"), usage_tags=["damage", "control"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Dread Lord",
+            origin="Oathbreaker Paladin Level 20",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute",
+                range="30-Foot Radius",
+            ),
+            usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

@@ -34,11 +34,21 @@ from CharacterContent.Classes.SubClasses2014.RangerGloomStalker import (
     RangerGloomStalkerCustomStarterClassArgs,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
-from CharacterContent.Spells.SpellLists import RangerLevel1Spells, RangerLevel2Spells, RangerLevel3Spells, RangerLevel4Spells, RangerLevel5Spells
+from CharacterContent.Spells.SpellLists import (
+    RangerLevel1Spells,
+    RangerLevel2Spells,
+    RangerLevel3Spells,
+    RangerLevel4Spells,
+    RangerLevel5Spells,
+)
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
@@ -107,7 +117,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                     spell=RangerLevel1Spells.LONGSTRIDER,
                 ),
                 5: RangerLevel5(
@@ -122,7 +133,8 @@ def get_starter_class_builder():
                         bonuses=[
                             (Ability.WISDOM, 1),
                             (Ability.CONSTITUTION, 1),
-                        ]),
+                        ]
+                    ),
                 ),
                 9: RangerLevel9(
                     skill_expertise_1=Skill.SURVIVAL,
@@ -138,7 +150,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.DEXTERITY, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 13: RangerLevel13(
                     spell=RangerLevel4Spells.LOCATE_CREATURE,
@@ -151,7 +164,8 @@ def get_starter_class_builder():
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         bonuses=[
                             (Ability.WISDOM, 2),
-                        ]),
+                        ]
+                    ),
                 ),
                 17: RangerLevel17(
                     spell_1=RangerLevel5Spells.SWIFT_QUIVER,

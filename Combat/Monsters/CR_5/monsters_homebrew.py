@@ -36,7 +36,8 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
             },
             spell_slots={},
             cr="5",
-            monster_type=MonsterType.HUMANOID, monster_type_note='Cultist',
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Cultist",
             alignment=Alignment.NEUTRAL_EVIL,
             size=Size.MEDIUM,
             ac_note="ragged vestments and a bone gorget",
@@ -52,7 +53,10 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
             },
             damage_vulnerabilities=[],
             damage_resistances=[
-                DamageTypeEntry(damage_types=[DamageType.NECROTIC], note="from the curse's lingering touch"),
+                DamageTypeEntry(
+                    damage_types=[DamageType.NECROTIC],
+                    note="from the curse's lingering touch",
+                ),
             ],
             damage_immunities=[],
             condition_immunities=[Condition.FRIGHTENED],

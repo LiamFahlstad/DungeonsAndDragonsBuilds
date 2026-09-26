@@ -1,11 +1,18 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tool Proficiency", origin="Artillerist Artificer Level 3")
+        super().__init__(
+            name="Tool Proficiency", origin="Artillerist Artificer Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you adopt this specialization at 3rd level, you gain proficiency with woodcarver's tools. If you already have this proficiency, you gain proficiency with one other type of artisan's tools of your choice."
@@ -14,7 +21,9 @@ class ToolsOfTheTrade(Feature):
 
 class Spells(Feature):
     def __init__(self):
-        super().__init__(name="Artillerist Spells", origin="Artillerist Artificer Level 3")
+        super().__init__(
+            name="Artillerist Spells", origin="Artillerist Artificer Level 3"
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,7 +41,16 @@ class Spells(Feature):
 
 class EldritchCannon(Feature):
     def __init__(self):
-        super().__init__(name="Eldritch Cannon", origin="Artillerist Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Destroyed", range="5 Feet"), usage_tags=["damage", "heal", "buff"])
+        super().__init__(
+            name="Eldritch Cannon",
+            origin="Artillerist Artificer Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Hour or Until Destroyed",
+                range="5 Feet",
+            ),
+            usage_tags=["damage", "heal", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -50,7 +68,11 @@ class EldritchCannon(Feature):
 
 class ArcaneFirearm(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Firearm", origin="Artillerist Artificer Level 5", usage_tags=["buff"])
+        super().__init__(
+            name="Arcane Firearm",
+            origin="Artillerist Artificer Level 5",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -67,7 +89,14 @@ class ArcaneFirearm(Feature):
 
 class ExplosiveCannon(Feature):
     def __init__(self):
-        super().__init__(name="Explosive Cannon", origin="Artillerist Artificer Level 9", activation=FeatureActivation(action_type=ActionType.ACTION, range="20 Feet"), usage_tags=["damage"])
+        super().__init__(
+            name="Explosive Cannon",
+            origin="Artillerist Artificer Level 9",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, range="20 Feet"
+            ),
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -85,7 +114,12 @@ class ExplosiveCannon(Feature):
 
 class FortifiedPosition(Feature):
     def __init__(self):
-        super().__init__(name="Fortified Position", origin="Artillerist Artificer Level 15", activation=FeatureActivation(range="10 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Fortified Position",
+            origin="Artillerist Artificer Level 15",
+            activation=FeatureActivation(range="10 Feet"),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

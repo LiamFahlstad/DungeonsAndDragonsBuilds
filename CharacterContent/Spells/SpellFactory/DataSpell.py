@@ -101,6 +101,4 @@ class DataSpell(Spell):
         try:
             return FeatureTarget(value)
         except ValueError:
-            raise ValueError(
-                f"Invalid target value for spell {self.name!r}: {value!r}"
-            )
+            raise ValueError(f"Invalid target value for spell {self.name!r}: {value!r}")

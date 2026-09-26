@@ -267,8 +267,12 @@ class CardsMixin:
             cond_row.setSpacing(3)
             cond_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
             for cond in conditions:
-                spell_desc = char.get("spell_condition_descriptions", {}).get(cond) or char.get("feature_condition_descriptions", {}).get(cond)
-                spell_color = char.get("spell_condition_colors", {}).get(cond) or char.get("feature_condition_colors", {}).get(cond)
+                spell_desc = char.get("spell_condition_descriptions", {}).get(
+                    cond
+                ) or char.get("feature_condition_descriptions", {}).get(cond)
+                spell_color = char.get("spell_condition_colors", {}).get(
+                    cond
+                ) or char.get("feature_condition_colors", {}).get(cond)
                 if spell_desc is None:
                     # Feature-condition tooltips/colors are transient UI state, not
                     # persisted to the player log — after replaying a saved session
@@ -284,7 +288,11 @@ class CardsMixin:
                     feature = owner = None
                     for candidate in self.characters:
                         feature = next(
-                            (f for f in candidate.get("_feature_objects", []) if f.name == cond),
+                            (
+                                f
+                                for f in candidate.get("_feature_objects", [])
+                                if f.name == cond
+                            ),
                             None,
                         )
                         if feature is not None:
@@ -311,7 +319,9 @@ class CardsMixin:
                         )
                     else:
                         badge.clicked.connect(
-                            lambda _=False, c=cond, d=spell_desc: self._show_rule_popup(c, c, d)
+                            lambda _=False, c=cond, d=spell_desc: self._show_rule_popup(
+                                c, c, d
+                            )
                         )
                 else:
                     badge = QLabel(cond)
@@ -364,7 +374,9 @@ class CardsMixin:
             ("Resist", char.get("damage_resistances") or [], "#4caf82"),
             ("Immune", char.get("damage_immunities") or [], "#4a9fc4"),
         ]
-        defense_rows = [(label, entries, color) for label, entries, color in defense_rows if entries]
+        defense_rows = [
+            (label, entries, color) for label, entries, color in defense_rows if entries
+        ]
         if defense_rows or char.get("condition_immunities"):
             sep_def = QFrame()
             sep_def.setFrameShape(QFrame.Shape.HLine)

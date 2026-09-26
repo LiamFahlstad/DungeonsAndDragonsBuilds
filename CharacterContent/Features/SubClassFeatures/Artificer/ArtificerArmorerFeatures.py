@@ -1,11 +1,21 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class ToolsOfTheTrade(Feature):
     def __init__(self):
-        super().__init__(name="Tools of the Trade", origin="Armorer Artificer Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Tools of the Trade",
+            origin="Armorer Artificer Level 3",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -37,7 +47,12 @@ class Spells(Feature):
 
 class ArcaneArmor(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION), usage_tags=["buff"])
+        super().__init__(
+            name="Arcane Armor",
+            origin="Armorer Artificer Level 3",
+            activation=FeatureActivation(action_type=ActionType.ACTION),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -54,8 +69,14 @@ class ArcaneArmor(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("No Strength Requirement", "Arcane Armor has no Strength requirement"),
-            ("Quick Don and Doff", "Don or doff as a Utilize action; can't be removed against your will"),
-            ("Spellcasting Focus", "Use Arcane Armor as Spellcasting Focus for your Artificer spells"),
+            (
+                "Quick Don and Doff",
+                "Don or doff as a Utilize action; can't be removed against your will",
+            ),
+            (
+                "Spellcasting Focus",
+                "Use Arcane Armor as Spellcasting Focus for your Artificer spells",
+            ),
         ]
 
     def target(
@@ -66,7 +87,11 @@ class ArcaneArmor(Feature):
 
 class ArmorModel(Feature):
     def __init__(self):
-        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3", usage_tags=["damage", "buff", "control", "utility"])
+        super().__init__(
+            name="Armor Model",
+            origin="Armorer Artificer Level 3",
+            usage_tags=["damage", "buff", "control", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -89,10 +114,12 @@ class ArmorModel(Feature):
         )
         return description
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
@@ -104,7 +131,11 @@ class ExtraAttack(Feature):
 
 class ImprovedArmorer(Feature):
     def __init__(self):
-        super().__init__(name="Improved Armorer", origin="Armorer Artificer Level 9", usage_tags=["damage"])
+        super().__init__(
+            name="Improved Armorer",
+            origin="Armorer Artificer Level 9",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -119,21 +150,33 @@ class ImprovedArmorer(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Armor Replication", "Learn additional Replicate Magic Item plan in Armor category; create additional item in Armor category"),
-            ("Improved Arsenal", "+1 bonus to attack and damage rolls with Arcane Armor model's special weapon"),
+            (
+                "Armor Replication",
+                "Learn additional Replicate Magic Item plan in Armor category; create additional item in Armor category",
+            ),
+            (
+                "Improved Arsenal",
+                "+1 bonus to attack and damage rolls with Arcane Armor model's special weapon",
+            ),
         ]
 
 
 class PerfectedArmor(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", usage_tags=["damage", "control", "buff", "utility"])
+        super().__init__(
+            name="Perfected Armor",
+            origin="Armorer Artificer Level 15",
+            usage_tags=["damage", "control", "buff", "utility"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your Arcane Armor gains additional benefits based on its model, as detailed below.\n"

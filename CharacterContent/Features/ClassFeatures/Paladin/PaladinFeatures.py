@@ -18,7 +18,9 @@ class LayOnHands(Feature):
         super().__init__(
             name="Lay on Hands",
             origin="Paladin Level 1",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="Touch"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="Touch"
+            ),
             usage_tags=["heal"],
         )
 
@@ -43,10 +45,14 @@ class LayOnHands(Feature):
             ("Alternative", "Expend 5 HP to remove Poisoned condition"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -173,7 +179,9 @@ class ChannelDivinity(Feature):
         ]
         return [("Channel Divinity Uses", steps)]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -200,7 +208,9 @@ class FaithfulSteed(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -238,7 +248,9 @@ class AuraOfProtection(Feature):
             ("Stacking", "Creature benefits from one aura at a time"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -247,7 +259,11 @@ class AbjureFoes(Feature):
         super().__init__(
             name="Abjure Foes",
             origin="Paladin Level 9",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute or Until Takes Damage", range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute or Until Takes Damage",
+                range="60 Feet",
+            ),
             usage_tags=["control"],
         )
 
@@ -270,7 +286,9 @@ class AbjureFoes(Feature):
             ("Restriction", "Can only move, take an action, or Bonus Action per turn"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -284,7 +302,9 @@ class AuraOfCourage(Feature):
         description = "You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -298,7 +318,9 @@ class RadiantStrikes(Feature):
         description = "Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -325,7 +347,9 @@ class RestoringTouch(Feature):
             ("Note", "Expended HP doesn't restore hit points"),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 

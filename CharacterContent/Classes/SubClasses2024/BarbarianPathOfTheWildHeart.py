@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, BarbarianSubclass
-from CharacterContent.Features.SubClassFeatures.Barbarian import BarbarianPathOfTheWildHeartFeatures
+from CharacterContent.Features.SubClassFeatures.Barbarian import (
+    BarbarianPathOfTheWildHeartFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Spells.SpellLists import (
     DruidLevel1Spells,

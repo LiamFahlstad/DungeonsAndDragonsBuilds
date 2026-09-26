@@ -30,7 +30,12 @@ from CharacterContent.Classes.SubClasses2024.BardLore import (
     BardLoreLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,

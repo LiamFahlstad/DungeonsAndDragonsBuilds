@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass2014, Skill
-from CharacterContent.Features.SubClassFeatures2014.Fighter import FighterArcaneArcherFeatures
+from CharacterContent.Features.SubClassFeatures2014.Fighter import (
+    FighterArcaneArcherFeatures,
+)
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -22,7 +24,9 @@ class FighterArcaneArcherLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(FighterArcaneArcherFeatures.ArcaneArcherLore(self.skill, self.cantrip))
+        data.add_feature(
+            FighterArcaneArcherFeatures.ArcaneArcherLore(self.skill, self.cantrip)
+        )
         data.add_feature(FighterArcaneArcherFeatures.ArcaneShot())
         return data
 

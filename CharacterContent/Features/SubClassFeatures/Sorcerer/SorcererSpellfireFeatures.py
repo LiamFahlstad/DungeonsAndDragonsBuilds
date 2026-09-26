@@ -1,5 +1,9 @@
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -22,7 +26,12 @@ class SpellfireSpells(Feature):
 
 class SpellfireBurst(Feature):
     def __init__(self):
-        super().__init__(name="Spellfire Burst", origin="Spellfire Sorcerer Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["heal", "damage"])
+        super().__init__(
+            name="Spellfire Burst",
+            origin="Spellfire Sorcerer Level 3",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["heal", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -32,13 +41,20 @@ class SpellfireBurst(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_charisma_modifier()
         return [
-            ("Trigger", "Spend 1+ Sorcery Points as Magic action or Bonus Action (once per turn)"),
+            (
+                "Trigger",
+                "Spend 1+ Sorcery Points as Magic action or Bonus Action (once per turn)",
+            ),
             ("Range", "30 feet (for both options)"),
             ("Bolstering Flames", f"Target gains Temp HP = 1d4 + {charisma_modifier}"),
             ("Radiant Fire", "Target takes 1d4 Fire or Radiant damage (your choice)"),
@@ -69,7 +85,9 @@ class HonedSpellfire(Feature):
 class CrownOfSpellfire(Feature):
     def __init__(self):
         super().__init__(
-            name="Crown of Spellfire", origin="Spellfire Sorcerer Level 18", usage_tags=["buff", "utility"]
+            name="Crown of Spellfire",
+            origin="Spellfire Sorcerer Level 18",
+            usage_tags=["buff", "utility"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -81,16 +99,26 @@ class CrownOfSpellfire(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         charisma_modifier = character_stat_block.get_charisma_modifier()
         return [
             ("Trigger", "Use Innate Sorcery"),
             ("Duration", "While Innate Sorcery active"),
-            ("Burning Life Force", f"Once per turn when hit: expend Hit Point Dice (max {charisma_modifier}) to reduce damage"),
+            (
+                "Burning Life Force",
+                f"Once per turn when hit: expend Hit Point Dice (max {charisma_modifier}) to reduce damage",
+            ),
             ("Flight", "Fly Speed 60 feet, can hover"),
-            ("Spell Avoidance", "Spells/effects: take no damage on successful save, half on failed (not Incapacitated)"),
+            (
+                "Spell Avoidance",
+                "Spells/effects: take no damage on successful save, half on failed (not Incapacitated)",
+            ),
             ("Recharge", "Long Rest or 5 Sorcery Points"),
         ]

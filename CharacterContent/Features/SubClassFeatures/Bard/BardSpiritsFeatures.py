@@ -1,5 +1,10 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -19,7 +24,10 @@ class Channeler(Feature):
 class SpiritsFromBeyond(Feature):
     def __init__(self):
         super().__init__(
-            name="Spirits from Beyond", origin="College of Spirits Bard Level 3", activation=FeatureActivation(range="30 Feet"), usage_tags=["damage", "heal", "buff", "control"]
+            name="Spirits from Beyond",
+            origin="College of Spirits Bard Level 3",
+            activation=FeatureActivation(range="30 Feet"),
+            usage_tags=["damage", "heal", "buff", "control"],
         )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
@@ -56,7 +64,9 @@ class SpiritsFromBeyond(Feature):
 class EmpoweredChanneling(Feature):
     def __init__(self):
         super().__init__(
-            name="Empowered Channeling", origin="College of Spirits Bard Level 6", usage_tags=["buff"]
+            name="Empowered Channeling",
+            origin="College of Spirits Bard Level 6",
+            usage_tags=["buff"],
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -72,16 +82,24 @@ class EmpoweredChanneling(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> list[tuple[str, str]]:
         return [
-            ("Power from Beyond", "Once per turn when casting Bard spell with slot (damage/heal), roll 1d6; add to one damage roll or total HP restored"),
+            (
+                "Power from Beyond",
+                "Once per turn when casting Bard spell with slot (damage/heal), roll 1d6; add to one damage roll or total HP restored",
+            ),
             ("Always Prepared", "Spirit Guardians"),
             ("Cast Free", "Once per Long Rest without spell slot"),
-            ("Spiritual Modification", "When casting Spirit Guardians, grant Half Cover to you and allies in spell's Emanation; recharge Short or Long Rest"),
+            (
+                "Spiritual Modification",
+                "When casting Spirit Guardians, grant Half Cover to you and allies in spell's Emanation; recharge Short or Long Rest",
+            ),
         ]
 
-
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+
 class MysticalConnection(Feature):
     def __init__(self):
         super().__init__(

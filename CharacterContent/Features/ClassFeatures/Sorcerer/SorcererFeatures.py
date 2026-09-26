@@ -35,7 +35,9 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Charisma"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -44,7 +46,9 @@ class InnateSorcery(Feature):
         super().__init__(
             name="Innate Sorcery",
             origin="Sorcerer Level 1",
-            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute"),
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+            ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
@@ -68,10 +72,14 @@ class InnateSorcery(Feature):
             ("Effect", "Spell save DC +1; Advantage on Sorcerer spell attack rolls"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -116,7 +124,9 @@ class FontOfMagic(Feature):
         ]
         return [("Sorcery Points", steps)]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -179,7 +189,9 @@ class SorcerousRestoration(Feature):
         description = "When you finish a Short Rest, you can regain expended Sorcery Points, but no more than a number equal to half your Sorcerer level (round down). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 

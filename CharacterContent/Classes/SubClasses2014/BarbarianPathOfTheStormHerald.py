@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BarbarianStormEnvironment, BarbarianSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Barbarian import BarbarianPathOfTheStormHeraldFeatures
+from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
+    BarbarianPathOfTheStormHeraldFeatures,
+)
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
@@ -25,7 +27,11 @@ class BarbarianStormHeraldLevel3(ClassBuilder.SubclassLevel3):
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
-        rage.extend_feature(BarbarianPathOfTheStormHeraldFeatures.StormAura(environment=self.environment))
+        rage.extend_feature(
+            BarbarianPathOfTheStormHeraldFeatures.StormAura(
+                environment=self.environment
+            )
+        )
         return data
 
 
@@ -37,7 +43,11 @@ class BarbarianStormHeraldLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment=self.environment))
+        data.add_feature(
+            BarbarianPathOfTheStormHeraldFeatures.StormSoul(
+                environment=self.environment
+            )
+        )
         return data
 
 
@@ -60,7 +70,11 @@ class BarbarianStormHeraldLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BarbarianPathOfTheStormHeraldFeatures.RagingStorm(environment=self.environment))
+        data.add_feature(
+            BarbarianPathOfTheStormHeraldFeatures.RagingStorm(
+                environment=self.environment
+            )
+        )
         return data
 
 

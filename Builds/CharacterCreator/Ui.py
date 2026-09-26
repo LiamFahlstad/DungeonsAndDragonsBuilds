@@ -70,6 +70,7 @@ def _point_buy_cost(score: int) -> int:
         return score - 8
     return 5 + 2 * (score - 13)
 
+
 # ---------------------------------------------------------------------------
 # Global stylesheet — dark fantasy theme (matches Combat/CombatUIQt.py)
 # ---------------------------------------------------------------------------
@@ -528,11 +529,13 @@ class EnumEditor(Editor):
         # Skill -- see SkillListEditor/AbilityBonusListEditor which don't use
         # EnumEditor at all, and plain Skill dropdowns which do use it).
         self._spell_enum_classes = [
-            cls for cls in enum_classes if getattr(cls, "__module__", "") == "CharacterContent.Spells.SpellLists"
+            cls
+            for cls in enum_classes
+            if getattr(cls, "__module__", "") == "CharacterContent.Spells.SpellLists"
         ]
-        self._is_spell_enum = bool(enum_classes) and len(self._spell_enum_classes) == len(
-            list(enum_classes)
-        )
+        self._is_spell_enum = bool(enum_classes) and len(
+            self._spell_enum_classes
+        ) == len(list(enum_classes))
         self.description_label = None
 
         if self._is_spell_enum:
@@ -568,7 +571,9 @@ class EnumEditor(Editor):
             self.description_label.setWordWrap(True)
             self.description_label.setVisible(False)
             outer.addWidget(self.description_label)
-            self.combo.currentIndexChanged.connect(lambda _i: self._update_spell_description())
+            self.combo.currentIndexChanged.connect(
+                lambda _i: self._update_spell_description()
+            )
 
         if optional:
             self.combo.setCurrentIndex(0)
@@ -588,7 +593,8 @@ class EnumEditor(Editor):
             try:
                 class_name, _, member_name = expr.partition(".")
                 enum_cls = next(
-                    (c for c in self._spell_enum_classes if c.__name__ == class_name), None
+                    (c for c in self._spell_enum_classes if c.__name__ == class_name),
+                    None,
                 )
                 if enum_cls is not None:
                     member = enum_cls[member_name]
@@ -1341,14 +1347,11 @@ def _default_enum_expr(enum_classes, context):
         ]
         if enum_class.__name__ == "Skill":
             preferred = [
-                expr.rsplit(".", 1)[-1]
-                for expr in context.get("preferred_skills", ())
+                expr.rsplit(".", 1)[-1] for expr in context.get("preferred_skills", ())
             ]
             members.sort(
                 key=lambda item: (
-                    preferred.index(item[1])
-                    if item[1] in preferred
-                    else len(preferred)
+                    preferred.index(item[1]) if item[1] in preferred else len(preferred)
                 )
             )
         candidates.extend(members)
@@ -1673,9 +1676,7 @@ class CreatorApp(QMainWindow):
 
     def _build_equipment(self):
         layout = self.equipment_layout
-        self.add_default_equipment_check = QCheckBox(
-            "Add the class' default equipment"
-        )
+        self.add_default_equipment_check = QCheckBox("Add the class' default equipment")
         self.add_default_equipment_check.setChecked(True)
         _insert_before_stretch(layout, self.add_default_equipment_check)
 
@@ -1806,7 +1807,9 @@ class CreatorApp(QMainWindow):
 
     def on_class_changed(self, initial=False):
         class_key = self.current_class_key()
-        subclasses = sorted(self.registry.subclasses_for(class_key)) if class_key else []
+        subclasses = (
+            sorted(self.registry.subclasses_for(class_key)) if class_key else []
+        )
         self.subclass_combo.clear()
         if class_key:
             self.subclass_combo.setEnabled(True)
@@ -1933,9 +1936,7 @@ class CreatorApp(QMainWindow):
             self.levels_layout.addWidget(no_class_label)
             self.levels_layout.addStretch()
             return
-        subclass_info = self.registry.subclasses().get(
-            self.current_subclass_key()
-        )
+        subclass_info = self.registry.subclasses().get(self.current_subclass_key())
         level = self.current_level()
         context = self._context()
         preferred_skills = []
@@ -1956,11 +1957,11 @@ class CreatorApp(QMainWindow):
         # editors' defaults must avoid the members those picks already use.
         for cached_expr in self._level_cache.values():
             enum_used |= _member_names_in_expr(cached_expr)
-        context = dict(
-            context, enum_used=enum_used, preferred_skills=preferred_skills
-        )
+        context = dict(context, enum_used=enum_used, preferred_skills=preferred_skills)
 
-        def add_param_rows(box_layout, params, kind, lvl, row_context, pools=None, cls=None):
+        def add_param_rows(
+            box_layout, params, kind, lvl, row_context, pools=None, cls=None
+        ):
             # str-annotated params that actually hold enum members (e.g.
             # MagicInitiate-style spell picks) get an enum dropdown instead
             # of free text, same convention as ClassPickerEditor._rebuild_params.
@@ -1973,9 +1974,7 @@ class CreatorApp(QMainWindow):
                     # restrict skill-list dropdowns to it.
                     param_context = dict(
                         row_context,
-                        preferred_skills=[
-                            f"Skill.{member}" for member in pools[name]
-                        ],
+                        preferred_skills=[f"Skill.{member}" for member in pools[name]],
                         skill_pool=list(pools[name]),
                     )
                 row = QWidget()
@@ -1988,7 +1987,8 @@ class CreatorApp(QMainWindow):
                 row_layout.addWidget(label)
                 resolved = resolve_annotation(annotation) if annotation else None
                 if name in enum_hints and (
-                    resolved is None or resolved.kind in (EditorKind.STR, EditorKind.RAW)
+                    resolved is None
+                    or resolved.kind in (EditorKind.STR, EditorKind.RAW)
                 ):
                     enums = enum_hints[name]
                     if required:
@@ -2112,9 +2112,7 @@ class CreatorApp(QMainWindow):
                     + "."
                 )
             else:
-                spent = sum(
-                    _point_buy_cost(score) for score in spec.abilities.values()
-                )
+                spent = sum(_point_buy_cost(score) for score in spec.abilities.values())
                 if spent != 27:
                     problems.append(
                         f"Point buy is selected but spends {spent} points; "
@@ -2189,7 +2187,9 @@ class CreatorApp(QMainWindow):
                 ("sub", subclass_info.level_classes if subclass_info else {}),
             ):
                 params_by_level = (
-                    spec.base_level_params if kind == "base" else spec.subclass_level_params
+                    spec.base_level_params
+                    if kind == "base"
+                    else spec.subclass_level_params
                 )
                 for level, cls in info_levels.items():
                     if level > spec.level:
@@ -2235,16 +2235,16 @@ class CreatorApp(QMainWindow):
             self.level_spin.setValue(spec.level)
             if spec.class_key in self.registry.classes():
                 self.set_class_key(spec.class_key)
-            subclasses = sorted(
-                self.registry.subclasses_for(self.current_class_key())
-            )
+            subclasses = sorted(self.registry.subclasses_for(self.current_class_key()))
             self.subclass_combo.clear()
             if self.current_class_key():
                 self.subclass_combo.setEnabled(True)
                 self.subclass_combo.addItem("Choose a subclass…", None)
                 for subclass_key in subclasses:
                     self.subclass_combo.addItem(
-                        self._subclass_display_name(subclass_key, self.current_class_key()),
+                        self._subclass_display_name(
+                            subclass_key, self.current_class_key()
+                        ),
                         subclass_key,
                     )
                 if spec.subclass_key in subclasses:

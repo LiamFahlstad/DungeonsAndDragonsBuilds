@@ -15,7 +15,11 @@ class AdjustDensity(Feature):
         super().__init__(
             name="Adjust Density",
             origin="Graviturgy Wizard Level 3",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="Up To 1 Minute Or Until Concentration Ends", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Up To 1 Minute Or Until Concentration Ends",
+                range="30 Feet",
+            ),
             usage_tags=["buff", "control"],
         )
 
@@ -44,7 +48,9 @@ class GravityWell(Feature):
         description = "When you reach 6th level, whenever you cast a spell on a creature, you can move the target 5 feet to an unoccupied space of your choice if the target is willing to move, the spell hits it with an attack, or it fails a saving throw against the spell."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -53,9 +59,15 @@ class ViolentAttraction(Feature):
         super().__init__(
             name="Violent Attraction",
             origin="Graviturgy Wizard Level 10",
-            activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
             usage_tags=["damage"],
-            uses=FeatureUses(max_uses=MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Intelligence modifier."),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
@@ -68,7 +80,9 @@ class ViolentAttraction(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
@@ -80,7 +94,11 @@ class EventHorizon(Feature):
         super().__init__(
             name="Event Horizon",
             origin="Graviturgy Wizard Level 14",
-            activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Minute Or Until Concentration Ends", range="30 Feet"),
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Minute Or Until Concentration Ends",
+                range="30 Feet",
+            ),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -107,8 +125,12 @@ class EventHorizon(Feature):
             ("Recharge", "Long rest or 3rd+ level spell slot"),
         ]
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

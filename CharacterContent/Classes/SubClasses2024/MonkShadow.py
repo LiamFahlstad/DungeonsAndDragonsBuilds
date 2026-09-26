@@ -11,7 +11,10 @@ from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, MonkSubclass
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
-from CharacterContent.Spells.SpellLists import EvocationLevel2Spells, IllusionLevel0Spells
+from CharacterContent.Spells.SpellLists import (
+    EvocationLevel2Spells,
+    IllusionLevel0Spells,
+)
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 

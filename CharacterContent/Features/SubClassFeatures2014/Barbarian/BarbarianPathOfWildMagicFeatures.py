@@ -1,12 +1,31 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class MagicAwareness(Feature):
     def __init__(self):
-        super().__init__(name="Magic Awareness", origin="Path Of Wild Magic Barbarian Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until the End of Your Next Turn", range="60 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=Definitions.MAX_PROFICIENCY_BONUS, regain_all_on="long rest", current_formula="Current amount: equal to your proficiency bonus."))
+        super().__init__(
+            name="Magic Awareness",
+            origin="Path Of Wild Magic Barbarian Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until the End of Your Next Turn",
+                range="60 Feet",
+            ),
+            usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+            ),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -16,7 +35,9 @@ class MagicAwareness(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:

@@ -1,6 +1,13 @@
 from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureUses, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -18,19 +25,32 @@ class ArchfeySpells(Feature):
 class StepsOfTheFey(Feature):
     def __init__(self):
         super().__init__(
-            name="Steps of the Fey", origin="Archfey Patron Warlock Level 3", usage_tags=["heal", "control"]
-        , uses=FeatureUses(max_uses=Definitions.MAX_ABILITY_MODIFIER, regain_all_on="long rest", current_formula="Current amount: equal to your Charisma modifier."))
+            name="Steps of the Fey",
+            origin="Archfey Patron Warlock Level 3",
+            usage_tags=["heal", "control"],
+            uses=FeatureUses(
+                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Charisma modifier.",
+            ),
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
 
-
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
     def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
         return max(1, character_stat_block.get_charisma_modifier())
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
@@ -40,9 +60,15 @@ class StepsOfTheFey(Feature):
         )
         return description
 
+
 class MistyEscape(Feature):
     def __init__(self):
-        super().__init__(name="Misty Escape", origin="Archfey Patron Warlock Level 6", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Misty Escape",
+            origin="Archfey Patron Warlock Level 6",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff", "damage"],
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()
@@ -56,14 +82,19 @@ class MistyEscape(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class BeguilingDefenses(Feature):
     def __init__(self):
         super().__init__(
-            name="Beguiling Defenses", origin="Archfey Patron Warlock Level 10", activation=FeatureActivation(action_type=ActionType.REACTION), usage_tags=["buff", "damage"]
+            name="Beguiling Defenses",
+            origin="Archfey Patron Warlock Level 10",
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+            usage_tags=["buff", "damage"],
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 
@@ -80,7 +111,9 @@ class BeguilingDefenses(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -89,7 +122,10 @@ class BeguilingDefenses(Feature):
         return [
             ("Passive", "Immunity to Charmed condition"),
             ("Trigger", "Creature hits you with attack roll"),
-            ("Reaction Effect", "Reduce damage by half (round down); force Wisdom save DC"),
+            (
+                "Reaction Effect",
+                "Reduce damage by half (round down); force Wisdom save DC",
+            ),
             ("Save Effect", "On fail: attacker takes Psychic damage = damage you took"),
             ("Recharge", "Long Rest or expend Pact Magic spell slot"),
         ]
@@ -105,5 +141,7 @@ class BewitchingMagic(Feature):
         description = "Your patron grants you the ability to weave your magic with teleportation. Immediately after you cast an Enchantment or Illusion spell using an action and a spell slot, you can cast Misty Step as part of the same action and without expending a spell slot."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

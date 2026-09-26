@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WizardSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Wizard import WizardConjurationFeatures
+from CharacterContent.Features.SubClassFeatures2014.Wizard import (
+    WizardConjurationFeatures,
+)
 from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 

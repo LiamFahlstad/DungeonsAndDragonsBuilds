@@ -1,12 +1,22 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class SilverTongue(Feature):
     def __init__(self):
-        super().__init__(name="Silver Tongue", origin="College of Eloquence Bard Level 3", usage_tags=["buff"])
+        super().__init__(
+            name="Silver Tongue",
+            origin="College of Eloquence Bard Level 3",
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -23,7 +33,16 @@ class SilverTongue(Feature):
 
 class UnsettlingWords(Feature):
     def __init__(self):
-        super().__init__(name="Unsettling Words", origin="College of Eloquence Bard Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="Until Start of Your Next Turn", range="60 Feet"), usage_tags=["control"])
+        super().__init__(
+            name="Unsettling Words",
+            origin="College of Eloquence Bard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until Start of Your Next Turn",
+                range="60 Feet",
+            ),
+            usage_tags=["control"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -42,7 +61,11 @@ class UnsettlingWords(Feature):
 
 class UnfailingInspiration(Feature):
     def __init__(self):
-        super().__init__(name="Unfailing Inspiration", origin="College of Eloquence Bard Level 6", usage_tags=["buff"])
+        super().__init__(
+            name="Unfailing Inspiration",
+            origin="College of Eloquence Bard Level 6",
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -60,7 +83,14 @@ class UnfailingInspiration(Feature):
 
 class UniversalSpeech(Feature):
     def __init__(self):
-        super().__init__(name="Universal Speech", origin="College of Eloquence Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour", range="60 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Universal Speech",
+            origin="College of Eloquence Bard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="1 Hour", range="60 Feet"
+            ),
+            usage_tags=["utility"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -96,7 +126,14 @@ class UniversalSpeech(Feature):
 
 class InfectiousInspiration(Feature):
     def __init__(self):
-        super().__init__(name="Infectious Inspiration", origin="College of Eloquence Bard Level 14", activation=FeatureActivation(action_type=ActionType.REACTION, range="60 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Infectious Inspiration",
+            origin="College of Eloquence Bard Level 14",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock

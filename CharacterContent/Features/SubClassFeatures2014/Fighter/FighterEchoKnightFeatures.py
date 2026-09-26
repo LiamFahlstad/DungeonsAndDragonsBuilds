@@ -1,12 +1,26 @@
 from Core.Definitions import MAX_ABILITY_MODIFIER
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class ManifestEcho(Feature):
     def __init__(self):
-        super().__init__(name="Manifest Echo", origin="Echo Knight Fighter Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, range="15 Feet"), usage_tags=["damage", "utility"])
+        super().__init__(
+            name="Manifest Echo",
+            origin="Echo Knight Fighter Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="15 Feet"
+            ),
+            usage_tags=["damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -22,13 +36,19 @@ class ManifestEcho(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class UnleashIncarnation(Feature):
     def __init__(self):
-        super().__init__(name="Unleash Incarnation", origin="Echo Knight Fighter Level 3", usage_tags=["damage"])
+        super().__init__(
+            name="Unleash Incarnation",
+            origin="Echo Knight Fighter Level 3",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -38,10 +58,14 @@ class UnleashIncarnation(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
     def get_table_description(
@@ -60,13 +84,24 @@ class UnleashIncarnation(Feature):
 
 class EchoAvatar(Feature):
     def __init__(self):
-        super().__init__(name="Echo Avatar", origin="Echo Knight Fighter Level 7", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Up to 10 Minutes", range="1,000 Feet"), usage_tags=["utility"])
+        super().__init__(
+            name="Echo Avatar",
+            origin="Echo Knight Fighter Level 7",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Up to 10 Minutes",
+                range="1,000 Feet",
+            ),
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 7th level, you can temporarily transfer your consciousness to your echo. As an action, you can see through your echo's eyes and hear through its ears. During this time, you are deafened and blinded. You can sustain this effect for up to 10 minutes, and you can end it at any time (requires no action). While your echo is being used in this way, it can be up to 1,000 feet away from you without being destroyed."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -82,13 +117,22 @@ class EchoAvatar(Feature):
 
 class ShadowMartyr(Feature):
     def __init__(self):
-        super().__init__(name="Shadow Martyr", origin="Echo Knight Fighter Level 10", activation=FeatureActivation(action_type=ActionType.REACTION, range="5 Feet"), usage_tags=["buff"])
+        super().__init__(
+            name="Shadow Martyr",
+            origin="Echo Knight Fighter Level 10",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="5 Feet"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Starting at 10th level, you can make your echo throw itself in front of an attack directed at another creature that you can see. Before the attack roll is made, you can use your reaction to teleport the echo to an unoccupied space within 5 feet of the targeted creature. The attack roll that triggered the reaction is instead made against your echo.\n\nOnce you use this feature, you can't use it again until you finish a short or long rest."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
     def get_table_description(
@@ -104,7 +148,11 @@ class ShadowMartyr(Feature):
 
 class ReclaimPotential(Feature):
     def __init__(self):
-        super().__init__(name="Reclaim Potential", origin="Echo Knight Fighter Level 15", usage_tags=["buff"])
+        super().__init__(
+            name="Reclaim Potential",
+            origin="Echo Knight Fighter Level 15",
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -114,10 +162,14 @@ class ReclaimPotential(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
     def get_table_description(
@@ -137,7 +189,12 @@ class ReclaimPotential(Feature):
 
 class LegionOfOne(Feature):
     def __init__(self):
-        super().__init__(name="Legion of One", origin="Echo Knight Fighter Level 18", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION), usage_tags=["damage", "utility"])
+        super().__init__(
+            name="Legion of One",
+            origin="Echo Knight Fighter Level 18",
+            activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
+            usage_tags=["damage", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -147,5 +204,7 @@ class LegionOfOne(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL

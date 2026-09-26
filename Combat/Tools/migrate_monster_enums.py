@@ -133,7 +133,9 @@ def migrate_file(path: str, report: dict) -> bool:
     if OLD_IMPORT in text:
         count = text.count(OLD_IMPORT)
         if count != 1:
-            report.setdefault("import_line_ambiguous", []).append(f"{path}: {count} occurrences")
+            report.setdefault("import_line_ambiguous", []).append(
+                f"{path}: {count} occurrences"
+            )
         else:
             text = text.replace(OLD_IMPORT, NEW_IMPORT)
     else:

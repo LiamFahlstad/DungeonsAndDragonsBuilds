@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Warlock import WarlockFathomlessFeatures
+from CharacterContent.Features.SubClassFeatures2014.Warlock import (
+    WarlockFathomlessFeatures,
+)
 from CharacterContent.Spells.SpellLists import ConjurationLevel4Spells
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
@@ -35,9 +37,9 @@ class WarlockFathomlessLevel6(ClassBuilder.SubclassLevel6):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(WarlockFathomlessFeatures.OceanicSoul())
-        tentacle_of_the_deep: WarlockFathomlessFeatures.TentacleOfTheDeep = data.get_features_by_type(
-            WarlockFathomlessFeatures.TentacleOfTheDeep
-        )[0]
+        tentacle_of_the_deep: WarlockFathomlessFeatures.TentacleOfTheDeep = (
+            data.get_features_by_type(WarlockFathomlessFeatures.TentacleOfTheDeep)[0]
+        )
         tentacle_of_the_deep.extend_feature(WarlockFathomlessFeatures.GuardianCoil())
         return data
 

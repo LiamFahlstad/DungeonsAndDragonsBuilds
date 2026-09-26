@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
-from CharacterContent.Features.SubClassFeatures.Artificer import ArtificerReanimatorFeatures
+from CharacterContent.Features.SubClassFeatures.Artificer import (
+    ArtificerReanimatorFeatures,
+)
 from CharacterContent.Spells.SpellLists import (
     ArtificerLevel2Spells,
     BardLevel2Spells,
@@ -48,9 +50,9 @@ class ArtificerReanimatorLevel5(ClassBuilder.SubclassLevel5):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         reanimated_companion: ArtificerReanimatorFeatures.ReanimatedCompanion = (
-            data.get_features_by_type(
-                ArtificerReanimatorFeatures.ReanimatedCompanion
-            )[0]
+            data.get_features_by_type(ArtificerReanimatorFeatures.ReanimatedCompanion)[
+                0
+            ]
         )
         reanimated_companion.extend_feature(
             ArtificerReanimatorFeatures.StrangeModifications()
@@ -67,9 +69,9 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         reanimated_companion: ArtificerReanimatorFeatures.ReanimatedCompanion = (
-            data.get_features_by_type(
-                ArtificerReanimatorFeatures.ReanimatedCompanion
-            )[0]
+            data.get_features_by_type(ArtificerReanimatorFeatures.ReanimatedCompanion)[
+                0
+            ]
         )
         reanimated_companion.extend_feature(
             ArtificerReanimatorFeatures.ImprovedReanimation()

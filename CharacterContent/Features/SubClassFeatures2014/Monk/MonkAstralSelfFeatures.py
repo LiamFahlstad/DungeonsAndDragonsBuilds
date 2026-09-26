@@ -1,11 +1,25 @@
 from Core.Definitions import MONK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
 class ArmsOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Arms of the Astral Self", origin="Way of the Astral Self Monk Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes", range="10 Feet"), usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Arms of the Astral Self",
+            origin="Way of the Astral Self Monk Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="10 Minutes",
+                range="10 Feet",
+            ),
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -21,10 +35,14 @@ class ArmsOfTheAstralSelf(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus action"),
             ("Cost", "1 ki point"),
@@ -32,13 +50,23 @@ class ArmsOfTheAstralSelf(Feature):
             ("Range", "10 feet"),
             ("Save", "Dexterity"),
             ("Damage", "2d (force, where d = Martial Arts die)"),
-            ("Benefits", "Use Wisdom for Strength checks/saves, reach +5 ft, use Wisdom for attack/damage rolls with arms"),
+            (
+                "Benefits",
+                "Use Wisdom for Strength checks/saves, reach +5 ft, use Wisdom for attack/damage rolls with arms",
+            ),
         ]
 
 
 class VisageOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Visage of the Astral Self", origin="Way of the Astral Self Monk Level 6", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Visage of the Astral Self",
+            origin="Way of the Astral Self Monk Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -56,13 +84,19 @@ class VisageOfTheAstralSelf(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class BodyOfTheAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Body of the Astral Self", origin="Way of the Astral Self Monk Level 11", usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Body of the Astral Self",
+            origin="Way of the Astral Self Monk Level 11",
+            usage_tags=["damage", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -76,13 +110,22 @@ class BodyOfTheAstralSelf(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
 class AwakenedAstralSelf(Feature):
     def __init__(self):
-        super().__init__(name="Awakened Astral Self", origin="Way of the Astral Self Monk Level 17", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="10 Minutes"), usage_tags=["buff"])
+        super().__init__(
+            name="Awakened Astral Self",
+            origin="Way of the Astral Self Monk Level 17",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -96,14 +139,21 @@ class AwakenedAstralSelf(Feature):
         )
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character_stat_block: CharacterStatBlock) -> list[tuple[str, str]]:
+    def get_table_description(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus action"),
             ("Cost", "5 ki points"),
             ("Duration", "10 minutes"),
             ("AC Bonus", "+2"),
-            ("Extra Attacks", "3 attacks with Extra Attack (instead of 2) if all use astral arms"),
+            (
+                "Extra Attacks",
+                "3 attacks with Extra Attack (instead of 2) if all use astral arms",
+            ),
         ]

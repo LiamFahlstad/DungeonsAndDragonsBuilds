@@ -1,6 +1,12 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Language
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
@@ -8,7 +14,11 @@ from Utils import StringUtils
 
 class SpeechOfTheWoods(Feature):
     def __init__(self):
-        super().__init__(name="Speech of the Woods", origin="Circle of the Shepherd Druid Level 3", usage_tags=["utility"])
+        super().__init__(
+            name="Speech of the Woods",
+            origin="Circle of the Shepherd Druid Level 3",
+            usage_tags=["utility"],
+        )
         self._language = GrantLanguage(Language.SYLVAN, self.name)
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -25,7 +35,17 @@ class SpeechOfTheWoods(Feature):
 
 class SpiritTotem(Feature):
     def __init__(self):
-        super().__init__(name="Spirit Totem", origin="Circle of the Shepherd Druid Level 3", activation=FeatureActivation(action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="60 Feet"), usage_tags=["buff", "summon"], uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"))
+        super().__init__(
+            name="Spirit Totem",
+            origin="Circle of the Shepherd Druid Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="1 Minute",
+                range="60 Feet",
+            ),
+            usage_tags=["buff", "summon"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -43,8 +63,12 @@ class SpiritTotem(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.AREA

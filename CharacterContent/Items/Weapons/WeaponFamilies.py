@@ -1,6 +1,12 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import WeaponMastery, WeaponProperty, WeaponType, WeaponDamageRolls, WeaponDamageTypes
+from .Enums import (
+    WeaponMastery,
+    WeaponProperty,
+    WeaponType,
+    WeaponDamageRolls,
+    WeaponDamageTypes,
+)
 
 ### WEAPON FAMILIES (homebrew: Sword/Axe/Mace/Hammer/Spear, each spanning 1d4-2d6.
 ### Light/Medium are Simple Melee; Heavy/Greater/Massive/Colossal are Martial Melee.
@@ -405,7 +411,11 @@ class SpearMassive(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Spear Massive"
         self.ability = Ability.STRENGTH
-        self.properties = [WeaponProperty.REACH, WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.REACH,
+            WeaponProperty.HEAVY,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.PIERCING
@@ -419,7 +429,11 @@ class SpearColossal(AbstractWeapon):
     def base_stats(self) -> None:
         self.name = "Spear Colossal"
         self.ability = Ability.STRENGTH
-        self.properties = [WeaponProperty.REACH, WeaponProperty.HEAVY, WeaponProperty.TWO_HANDED]
+        self.properties = [
+            WeaponProperty.REACH,
+            WeaponProperty.HEAVY,
+            WeaponProperty.TWO_HANDED,
+        ]
         self.mastery = WeaponMastery.TOPPLE
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.PIERCING

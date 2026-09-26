@@ -24,9 +24,7 @@ class Spell(ABC):
     }
 
     # Matches ranges like "150 feet", "1,000 feet", "60ft", "90 ft", "120 feet."
-    _RANGE_FEET_PATTERN = re.compile(
-        r"^([\d,]+)\s*(?:feet|foot|ft)\.?$", re.IGNORECASE
-    )
+    _RANGE_FEET_PATTERN = re.compile(r"^([\d,]+)\s*(?:feet|foot|ft)\.?$", re.IGNORECASE)
     # Matches ranges like "1 mile", "500 miles"
     _RANGE_MILE_PATTERN = re.compile(r"^([\d,]+)\s*miles?$", re.IGNORECASE)
 
@@ -113,14 +111,16 @@ class Spell(ABC):
     def usage_tags(self) -> list[str]:
         """Zero or more of "heal"/"buff"/"control"/"damage"/"utility" flagging what the
         spell's effect functionally does, for a quick-scan chip on the card. Defaults to
-        empty (no chips) for any Spell subclass that doesn't provide its own data for this."""
+        empty (no chips) for any Spell subclass that doesn't provide its own data for this.
+        """
         return []
 
     @property
     def target(self) -> Optional[FeatureTarget]:
         """Who or what the spell's effect can be aimed at (self, ally, creature, enemy,
         object, area - see FeatureTarget), as stated in the spell's own description.
-        Defaults to None for any Spell subclass that doesn't provide its own data for this."""
+        Defaults to None for any Spell subclass that doesn't provide its own data for this.
+        """
         return None
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #

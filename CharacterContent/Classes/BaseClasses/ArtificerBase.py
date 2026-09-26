@@ -6,7 +6,12 @@ import Core.Definitions as Definitions
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Artificer import ArtificerFeatures
 from CharacterContent.Items import Armor, Weapons
@@ -112,9 +117,9 @@ class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        replicate_magic_item: ArtificerFeatures.ReplicateMagicItem = data.get_features_by_type(
-            ArtificerFeatures.ReplicateMagicItem
-        )[0]
+        replicate_magic_item: ArtificerFeatures.ReplicateMagicItem = (
+            data.get_features_by_type(ArtificerFeatures.ReplicateMagicItem)[0]
+        )
         replicate_magic_item.extend_feature(ArtificerFeatures.MagicItemTinker())
         return data
 

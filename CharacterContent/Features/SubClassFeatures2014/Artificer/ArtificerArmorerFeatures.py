@@ -1,5 +1,11 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget, RegainedOn
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    RegainedOn,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -32,7 +38,12 @@ class Spells(Feature):
 
 class ArcaneArmor(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Armor", origin="Armorer Artificer Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, range="Self"), usage_tags=["utility", "buff"])
+        super().__init__(
+            name="Arcane Armor",
+            origin="Armorer Artificer Level 3",
+            activation=FeatureActivation(action_type=ActionType.ACTION, range="Self"),
+            usage_tags=["utility", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -54,7 +65,11 @@ class ArcaneArmor(Feature):
 
 class ArmorModel(Feature):
     def __init__(self):
-        super().__init__(name="Armor Model", origin="Armorer Artificer Level 3", usage_tags=["utility", "damage", "heal", "buff"])
+        super().__init__(
+            name="Armor Model",
+            origin="Armorer Artificer Level 3",
+            usage_tags=["utility", "damage", "heal", "buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -71,7 +86,9 @@ class ArmorModel(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -86,18 +103,27 @@ class ExtraAttack(Feature):
 
 class ArmorModifications(Feature):
     def __init__(self):
-        super().__init__(name="Armor Modifications", origin="Armorer Artificer Level 9", usage_tags=["utility"])
+        super().__init__(
+            name="Armor Modifications",
+            origin="Armorer Artificer Level 9",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        description = (
-            "At 9th level, you learn how to use your artificer infusions to specially modify your Arcane Armor. That armor now counts as separate items for the purposes of your Infuse Item feature: armor (the chest piece), boots, helmet, and the armor's special weapon. Each of those items can bear one of your infusions, and the infusions transfer over if you change your armor's model with the Armor Model feature. In addition, the maximum number of items you can infuse at once increases by 2, but those extra items must be part of your Arcane Armor."
-        )
+        description = "At 9th level, you learn how to use your artificer infusions to specially modify your Arcane Armor. That armor now counts as separate items for the purposes of your Infuse Item feature: armor (the chest piece), boots, helmet, and the armor's special weapon. Each of those items can bear one of your infusions, and the infusions transfer over if you change your armor's model with the Armor Model feature. In addition, the maximum number of items you can infuse at once increases by 2, but those extra items must be part of your Arcane Armor."
         return description
 
 
 class PerfectedArmor(Feature):
     def __init__(self):
-        super().__init__(name="Perfected Armor", origin="Armorer Artificer Level 15", activation=FeatureActivation(action_type=ActionType.REACTION, range="30 Feet"), usage_tags=["control", "damage"])
+        super().__init__(
+            name="Perfected Armor",
+            origin="Armorer Artificer Level 15",
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+            usage_tags=["control", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -108,7 +134,9 @@ class PerfectedArmor(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
     def target(

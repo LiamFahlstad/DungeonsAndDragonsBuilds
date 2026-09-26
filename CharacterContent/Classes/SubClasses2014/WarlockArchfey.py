@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import WarlockSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Warlock import WarlockArchfeyFeatures
+from CharacterContent.Features.SubClassFeatures2014.Warlock import (
+    WarlockArchfeyFeatures,
+)
 from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 

@@ -122,7 +122,7 @@ def _parse_damage_phrase(phrase: str) -> tuple[list[str], str]:
     m = re.search(r"\bfrom\b", phrase, flags=re.IGNORECASE)
     if m:
         main = phrase[: m.start()].strip().rstrip(",")
-        note = phrase[m.start():].strip()
+        note = phrase[m.start() :].strip()
     fragments = [f.strip() for f in re.split(r",|\band\b", main) if f.strip()]
     if not fragments:
         return [], phrase
@@ -147,7 +147,9 @@ def format_damage_entries(lst: list) -> tuple[str, list[str]]:
         types, note = _parse_damage_phrase(str(phrase))
         if types:
             types_src = ", ".join(f"DamageType.{t}" for t in types)
-            entries.append(f"DamageTypeEntry(damage_types=[{types_src}], note={note!r})")
+            entries.append(
+                f"DamageTypeEntry(damage_types=[{types_src}], note={note!r})"
+            )
         else:
             entries.append(f"DamageTypeEntry(damage_types=[], note={phrase!r})")
             unparsed.append(str(phrase))
@@ -219,11 +221,11 @@ def parse_monster_type(raw: str) -> tuple[str, str, str, list[str]]:
         flags.append(f"no leading size in: {type_and_size!r}")
         return "", type_and_size, alignment_name, flags
     size_name = m.group(1).upper()
-    rest = type_and_size[m.end():]
+    rest = type_and_size[m.end() :]
     m2 = _SIZE_OR_QUALIFIER_RE.match(rest)
     if m2:
         flags.append(f"compound size reduced to {size_name}: {type_and_size!r}")
-        rest = rest[m2.end():]
+        rest = rest[m2.end() :]
     return size_name, rest.strip(), alignment_name, flags
 
 
@@ -305,7 +307,9 @@ def parse_creature_type(raw: str) -> tuple[str, str, list[str]]:
 
 
 _SPEED_BARE_RE = re.compile(r"^(\d+)\s*ft\.?$", re.IGNORECASE)
-_SPEED_KEYWORD_RE = re.compile(r"^(climb|fly|swim|burrow)\s+(\d+)\s*ft\.?\s*(\(.*\))?$", re.IGNORECASE)
+_SPEED_KEYWORD_RE = re.compile(
+    r"^(climb|fly|swim|burrow)\s+(\d+)\s*ft\.?\s*(\(.*\))?$", re.IGNORECASE
+)
 
 
 def parse_speed(raw: str) -> tuple[int | None, int | None, int | None, str, list[str]]:

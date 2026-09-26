@@ -1,5 +1,10 @@
 from Core.Definitions import Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+)
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -16,7 +21,11 @@ class ChangelingInstincts(Feature):
     ]
 
     def __init__(self, skills: list[Skill]):
-        super().__init__(name="Changeling Instincts", origin="Changeling Trait", skippable_in_concise=True)
+        super().__init__(
+            name="Changeling Instincts",
+            origin="Changeling Trait",
+            skippable_in_concise=True,
+        )
         self._choice = SkillProficiencyChoice(
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
@@ -26,7 +35,9 @@ class ChangelingInstincts(Feature):
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if len(self._choice.skills) == 2:
-            skill_text = f"{self._choice.skills[0].value} and {self._choice.skills[1].value}"
+            skill_text = (
+                f"{self._choice.skills[0].value} and {self._choice.skills[1].value}"
+            )
         else:
             skill_text = self._choice.skills[0].value
         return f"You have proficiency in the {skill_text} skills."
@@ -34,7 +45,14 @@ class ChangelingInstincts(Feature):
 
 class ShapeShifter(Feature):
     def __init__(self):
-        super().__init__(name="Shape-Shifter", origin="Changeling Trait", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Until Reverted As an Action"), usage_tags=["buff"])
+        super().__init__(
+            name="Shape-Shifter",
+            origin="Changeling Trait",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION, duration="Until Reverted As an Action"
+            ),
+            usage_tags=["buff"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -54,5 +72,7 @@ class ShapeShifter(Feature):
             "Gain Advantage on Charisma checks while shifted. Revert as an action; clothing and equipment don't change."
         )
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.SELF

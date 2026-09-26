@@ -1,12 +1,26 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import FeatureUses, Feature, FeatureActivation, ActionType, RegainedOn, FeatureTarget
+from CharacterContent.Features.Core.BaseFeatures import (
+    FeatureUses,
+    Feature,
+    FeatureActivation,
+    ActionType,
+    RegainedOn,
+    FeatureTarget,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
 
 class MoteOfPotential(Feature):
     def __init__(self):
-        super().__init__(name="Mote of Potential", origin="College of Creation Bard Level 3", activation=FeatureActivation(duration="Until Bardic Inspiration Die is Lost", range="5 Feet"), usage_tags=["damage", "buff"])
+        super().__init__(
+            name="Mote of Potential",
+            origin="College of Creation Bard Level 3",
+            activation=FeatureActivation(
+                duration="Until Bardic Inspiration Die is Lost", range="5 Feet"
+            ),
+            usage_tags=["damage", "buff"],
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -19,8 +33,14 @@ class MoteOfPotential(Feature):
         return [
             ("Trigger", "Give a creature a Bardic Inspiration die"),
             ("Mote Effect: Ability Check", "Roll die again, choose which roll to use"),
-            ("Mote Effect: Attack Roll", "Targets within 5 ft make CON save or take thunder damage equal to die roll"),
-            ("Mote Effect: Saving Throw", "Creature gains temp HP equal to die roll + CHA modifier (min 1)"),
+            (
+                "Mote Effect: Attack Roll",
+                "Targets within 5 ft make CON save or take thunder damage equal to die roll",
+            ),
+            (
+                "Mote Effect: Saving Throw",
+                "Creature gains temp HP equal to die roll + CHA modifier (min 1)",
+            ),
             ("Duration", "Until Bardic Inspiration die is lost"),
         ]
 
@@ -41,7 +61,17 @@ class MoteOfPotential(Feature):
 
 class PerformanceOfCreation(Feature):
     def __init__(self):
-        super().__init__(name="Performance of Creation", origin="College of Creation Bard Level 3", activation=FeatureActivation(action_type=ActionType.ACTION, duration="Proficiency Bonus Hours", range="10 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Performance of Creation",
+            origin="College of Creation Bard Level 3",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Proficiency Bonus Hours",
+                range="10 Feet",
+            ),
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -58,13 +88,25 @@ class PerformanceOfCreation(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
 class AnimatingPerformance(Feature):
     def __init__(self):
-        super().__init__(name="Animating Performance", origin="College of Creation Bard Level 6", activation=FeatureActivation(action_type=ActionType.ACTION, duration="1 Hour or Until Reduced to 0 HP or Death", range="30 Feet"), usage_tags=["utility"], uses=FeatureUses(max_uses=1, regain_all_on="long rest"))
+        super().__init__(
+            name="Animating Performance",
+            origin="College of Creation Bard Level 6",
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="1 Hour or Until Reduced to 0 HP or Death",
+                range="30 Feet",
+            ),
+            usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def target(
         self, character_stat_block: CharacterStatBlock
@@ -101,13 +143,19 @@ class AnimatingPerformance(Feature):
         )
         return description
 
-    def regained_on(self, character_stat_block: CharacterStatBlock) -> "RegainedOn | None":
+    def regained_on(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
 class CreativeCrescendo(Feature):
     def __init__(self):
-        super().__init__(name="Creative Crescendo", origin="College of Creation Bard Level 14", usage_tags=["utility"])
+        super().__init__(
+            name="Creative Crescendo",
+            origin="College of Creation Bard Level 14",
+            usage_tags=["utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -6,7 +6,11 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 class Assassinate(Feature):
     def __init__(self):
-        super().__init__(name="Assassinate", origin="Assassin Rogue Level 3", usage_tags=["buff", "damage"])
+        super().__init__(
+            name="Assassinate",
+            origin="Assassin Rogue Level 3",
+            usage_tags=["buff", "damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -21,11 +25,19 @@ class Assassinate(Feature):
     ) -> list[tuple[str, str]]:
         return [
             ("Initiative", "Advantage on Initiative rolls"),
-            ("Surprising Strikes", "Advantage on attacks vs. creatures that haven't taken a turn in round 1"),
-            ("Extra Damage", "Weapon damage type equal to your Rogue level when Sneak Attack hits in round 1"),
+            (
+                "Surprising Strikes",
+                "Advantage on attacks vs. creatures that haven't taken a turn in round 1",
+            ),
+            (
+                "Extra Damage",
+                "Weapon damage type equal to your Rogue level when Sneak Attack hits in round 1",
+            ),
         ]
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -40,7 +52,11 @@ class AssassinsTools(Feature):
 
 class InfiltrationExpertise(Feature):
     def __init__(self):
-        super().__init__(name="Infiltration Expertise", origin="Assassin Rogue Level 9", usage_tags=["buff", "utility"])
+        super().__init__(
+            name="Infiltration Expertise",
+            origin="Assassin Rogue Level 9",
+            usage_tags=["buff", "utility"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -53,19 +69,27 @@ class InfiltrationExpertise(Feature):
 
 class EnvenomWeapons(Feature):
     def __init__(self):
-        super().__init__(name="Envenom Weapons", origin="Assassin Rogue Level 13", usage_tags=["damage"])
+        super().__init__(
+            name="Envenom Weapons",
+            origin="Assassin Rogue Level 13",
+            usage_tags=["damage"],
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class DeathStrike(Feature):
     def __init__(self):
-        super().__init__(name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"])
+        super().__init__(
+            name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"]
+        )
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         dexterity_modifier = character_stat_block.get_dexterity_modifier()
@@ -76,5 +100,7 @@ class DeathStrike(Feature):
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."
         return description
 
-    def target(self, character_stat_block: CharacterStatBlock) -> "FeatureTarget | None":
+    def target(
+        self, character_stat_block: CharacterStatBlock
+    ) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import FighterSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Fighter import FighterEchoKnightFeatures
+from CharacterContent.Features.SubClassFeatures2014.Fighter import (
+    FighterEchoKnightFeatures,
+)
 from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
@@ -65,9 +67,9 @@ class FighterEchoKnightLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        manifest_echo: FighterEchoKnightFeatures.ManifestEcho = data.get_features_by_type(
-            FighterEchoKnightFeatures.ManifestEcho
-        )[0]
+        manifest_echo: FighterEchoKnightFeatures.ManifestEcho = (
+            data.get_features_by_type(FighterEchoKnightFeatures.ManifestEcho)[0]
+        )
         manifest_echo.extend_feature(FighterEchoKnightFeatures.LegionOfOne())
         return data
 

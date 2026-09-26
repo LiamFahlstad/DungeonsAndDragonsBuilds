@@ -27,7 +27,11 @@ from CharacterContent.Classes.SubClasses2014.BardWhispers import (
     BardWhispersLevel14,
 )
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
@@ -104,7 +108,8 @@ def get_starter_class_builder():
                 ),
                 4: BardLevel4(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CHARISMA, 2)]),
+                        bonuses=[(Ability.CHARISMA, 2)]
+                    ),
                     cantrip=BardLevel0Spells.MAGE_HAND,
                     spell=BardLevel2Spells.INVISIBILITY,
                 ),
@@ -120,7 +125,8 @@ def get_starter_class_builder():
                 ),
                 8: BardLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CONSTITUTION, 2)]),
+                        bonuses=[(Ability.CONSTITUTION, 2)]
+                    ),
                     spell=BardLevel4Spells.CHARM_MONSTER,
                 ),
                 9: BardLevel9(
@@ -138,7 +144,8 @@ def get_starter_class_builder():
                 ),
                 12: BardLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
-                        bonuses=[(Ability.CHARISMA, 1), (Ability.WISDOM, 1)]),
+                        bonuses=[(Ability.CHARISMA, 1), (Ability.WISDOM, 1)]
+                    ),
                 ),
                 13: BardLevel13(
                     spell=BardLevel4Spells.DIMENSION_DOOR,

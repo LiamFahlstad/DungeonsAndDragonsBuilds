@@ -31,8 +31,15 @@ from CharacterContent.Classes.SubClasses2024.RangerBeastMaster import (
     RangerBeastMasterLevel15,
 )
 from Core.Definitions import Ability, DamageType, Skill
-from CharacterContent.Features.CharacterFeats import Backgrounds, EpicBoon, GeneralFeats, OriginFeats
-from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import CompanionType
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    EpicBoon,
+    GeneralFeats,
+    OriginFeats,
+)
+from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
+    CompanionType,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Gnome

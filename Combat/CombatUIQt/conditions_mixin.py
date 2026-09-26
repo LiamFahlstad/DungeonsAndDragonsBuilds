@@ -4,7 +4,13 @@ from Combat.Definitions import Action, Condition
 from .stats import _default_stats, increment_named_stat
 
 # Conditions that incapacitate a creature and break concentration per 2024 D&D rules
-INCAPACITATING_CONDITIONS = {"Incapacitated", "Paralyzed", "Petrified", "Stunned", "Unconscious"}
+INCAPACITATING_CONDITIONS = {
+    "Incapacitated",
+    "Paralyzed",
+    "Petrified",
+    "Stunned",
+    "Unconscious",
+}
 
 
 class ConditionsMixin:
@@ -14,17 +20,27 @@ class ConditionsMixin:
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_received"] = char["stats"].get("conditions_received", 0) + 1
+            char["stats"]["conditions_received"] = (
+                char["stats"].get("conditions_received", 0) + 1
+            )
             increment_named_stat(char["stats"], "conditions_received_by_name", cond)
             source_name = source["name"] if source is not None else None
             if source is not None:
                 source.setdefault("stats", _default_stats())
-                source["stats"]["conditions_given"] = source["stats"].get("conditions_given", 0) + 1
+                source["stats"]["conditions_given"] = (
+                    source["stats"].get("conditions_given", 0) + 1
+                )
                 increment_named_stat(source["stats"], "conditions_given_by_name", cond)
-            cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
+            cond_value = {
+                "condition": cond,
+                "source_name": source_name,
+                "target_name": char["name"],
+            }
             self.history.append((Action.ADD_CONDITION, cond_value))
             source_suffix = (
-                f" from {source_name}" if source_name and source_name != char["name"] else ""
+                f" from {source_name}"
+                if source_name and source_name != char["name"]
+                else ""
             )
             self._log_event(
                 f"{char['name']} gains {cond}{source_suffix}",
@@ -34,7 +50,11 @@ class ConditionsMixin:
             )
             self._rebuild_card(char)
             # Break concentration if an incapacitating condition is applied to a concentrating character
-            if cond in INCAPACITATING_CONDITIONS and cond != "Concentrating" and "Concentrating" in char.get("conditions", []):
+            if (
+                cond in INCAPACITATING_CONDITIONS
+                and cond != "Concentrating"
+                and "Concentrating" in char.get("conditions", [])
+            ):
                 self._remove_condition_from(char, "Concentrating", source=char)
 
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
@@ -45,10 +65,16 @@ class ConditionsMixin:
             char.get("feature_condition_descriptions", {}).pop(cond, None)
             char.get("feature_condition_colors", {}).pop(cond, None)
             source_name = source["name"] if source is not None else None
-            cond_value = {"condition": cond, "source_name": source_name, "target_name": char["name"]}
+            cond_value = {
+                "condition": cond,
+                "source_name": source_name,
+                "target_name": char["name"],
+            }
             self.history.append((Action.REMOVE_CONDITION, cond_value))
             source_suffix = (
-                f" from {source_name}" if source_name and source_name != char["name"] else ""
+                f" from {source_name}"
+                if source_name and source_name != char["name"]
+                else ""
             )
             self._log_event(
                 f"{char['name']} loses {cond}{source_suffix}",
@@ -84,7 +110,9 @@ class ConditionsMixin:
         if not self.selected_character:
             return
         self._add_condition_to(
-            self.selected_character, Condition.CONCENTRATING.value, source=self.selected_character
+            self.selected_character,
+            Condition.CONCENTRATING.value,
+            source=self.selected_character,
         )
 
     def _shortcut_remove_concentration(self):
@@ -92,7 +120,9 @@ class ConditionsMixin:
         if not self.selected_character:
             return
         self._remove_condition_from(
-            self.selected_character, Condition.CONCENTRATING.value, source=self.selected_character
+            self.selected_character,
+            Condition.CONCENTRATING.value,
+            source=self.selected_character,
         )
 
     def _shortcut_clear_target_conditions(self):
@@ -105,7 +135,8 @@ class ConditionsMixin:
 
     def _add_action_use(self, action_type: str):
         """Log a use of Action/Bonus Action/Reaction for the source, this round.
-        Tallies reset when it becomes that combatant's turn again (see _advance_turn)."""
+        Tallies reset when it becomes that combatant's turn again (see _advance_turn).
+        """
         if not self.selected_character:
             return
         counts = self.selected_character.setdefault("action_uses", {})

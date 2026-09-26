@@ -9,7 +9,9 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, MonkSubclass2014
-from CharacterContent.Features.SubClassFeatures2014.Monk import MonkDrunkenMasterFeatures
+from CharacterContent.Features.SubClassFeatures2014.Monk import (
+    MonkDrunkenMasterFeatures,
+)
 from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 

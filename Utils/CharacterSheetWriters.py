@@ -4,7 +4,11 @@ from typing import Literal, Optional, TextIO
 import Core.Definitions as Definitions
 from Builds.EquipmentHandler import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature, parse_feature_level
+from CharacterContent.Features.Core.BaseFeatures import (
+    FEATURE_CARD_CSS,
+    Feature,
+    parse_feature_level,
+)
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
 from CharacterContent.Items.Armor.Writer import ARMOR_CARD_CSS, write_armors_to_file
@@ -215,9 +219,7 @@ class HtmlCharacterSheetWriter:
             initiative_sub = character.initiative_roll_condition.value
 
         file.write("<div class='overview-tiles'>\n")
-        file.write(
-            self._stat_tile_hp("HP", character.calculate_hit_points())
-        )
+        file.write(self._stat_tile_hp("HP", character.calculate_hit_points()))
         file.write(self._stat_tile("AC", ac, sub=ac_sub))
         file.write(
             self._stat_tile(
@@ -324,12 +326,8 @@ class HtmlCharacterSheetWriter:
 
             tile_class = "ability-tile st-proficient" if proficient else "ability-tile"
             file.write(f"<div class='{tile_class}'>\n")
-            file.write(
-                f"<span class='ability-tile-name'>{ability.short_name}</span>\n"
-            )
-            file.write(
-                f"<span class='ability-tile-mod'>{ability_mod:+}</span>\n"
-            )
+            file.write(f"<span class='ability-tile-name'>{ability.short_name}</span>\n")
+            file.write(f"<span class='ability-tile-mod'>{ability_mod:+}</span>\n")
             file.write(
                 f"<span class='ability-tile-score'>{character.get_ability_score(ability)}</span>\n"
             )
@@ -788,12 +786,16 @@ class HtmlCharacterSheetWriter:
             {ability for _, ability, _, _ in spells},
             key=lambda a: a.value,
         )
-        self._write_spellcasting_headline(character, file, casting_abilities, include_probability_tables)
+        self._write_spellcasting_headline(
+            character, file, casting_abilities, include_probability_tables
+        )
         self._write_spell_cards(character, file, spells)
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
-    def _item_type_rarity_value(item: Items.Item, quantity: int = 1) -> tuple[str, str, str]:
+    def _item_type_rarity_value(
+        item: Items.Item, quantity: int = 1
+    ) -> tuple[str, str, str]:
         value = item.get_value_display()
         sell_value = item.get_sell_value_display()
         prefix = f"{quantity} x " if quantity != 1 else ""
@@ -836,7 +838,9 @@ class HtmlCharacterSheetWriter:
         slot-table format. Rows are sorted by item type."""
         sections = []
         if entry.armors:
-            sorted_armors = sorted(entry.armors, key=lambda a: (a.category.value, a.name))
+            sorted_armors = sorted(
+                entry.armors, key=lambda a: (a.category.value, a.name)
+            )
             armor_rows = [
                 (
                     f"{armor.name}{self._worn_tag(armor)}{Html.attunement_tag(armor)}"
@@ -1007,7 +1011,9 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
             file.write(f"<div class='skill-breakdown'>{breakdown}</div>\n")
             if craft:
-                file.write(f"<div class='tool-craft'><span class='glabel'>Craft</span> {craft}</div>\n")
+                file.write(
+                    f"<div class='tool-craft'><span class='glabel'>Craft</span> {craft}</div>\n"
+                )
             file.write("</div>\n")
 
         file.write("</div>\n<br class='section-gap'>\n")
@@ -1071,15 +1077,22 @@ class HtmlCharacterSheetWriter:
                 ext_level = self._feature_level(extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page
-                if extension.render_html_description(character, description_mode) is None:
+                if (
+                    extension.render_html_description(character, description_mode)
+                    is None
+                ):
                     continue
-                extensions_by_level.setdefault(ext_level, []).append((feature, extension))
+                extensions_by_level.setdefault(ext_level, []).append(
+                    (feature, extension)
+                )
 
         # A level page is needed for any level that grants a displayed
         # feature OR a spell/cantrip - a level that only grants spells
         # (no feature with a rendered description) would otherwise be
         # missed entirely.
-        level_page_levels = sorted(set(features_by_level) | set(spells_by_level) | set(extensions_by_level))
+        level_page_levels = sorted(
+            set(features_by_level) | set(spells_by_level) | set(extensions_by_level)
+        )
 
         has_fighting_styles_page = bool(fighting_styles)
         non_empty_equipment_entries = [
@@ -1088,7 +1101,9 @@ class HtmlCharacterSheetWriter:
             if entry.armors or entry.weapons or entry.items or entry.gold
         ]
         has_items_page = (
-            bool(non_empty_equipment_entries) or bool(tool_proficiencies) or bool(weapons)
+            bool(non_empty_equipment_entries)
+            or bool(tool_proficiencies)
+            or bool(weapons)
         )
 
         pages: list[tuple[str, str]] = [
@@ -1467,7 +1482,9 @@ class HtmlCharacterSheetWriter:
             file.write(f"<h1>{character.name} - Level {level} Features</h1>\n")
             file.write("<div class='features'>\n")
             for feature in level_features:
-                feature.write_to_file(character, file, description_mode, max_level=level)
+                feature.write_to_file(
+                    character, file, description_mode, max_level=level
+                )
             sorted_level_extensions = sorted(
                 level_extensions,
                 key=lambda pe: (
@@ -1476,7 +1493,9 @@ class HtmlCharacterSheetWriter:
                 ),
             )
             for parent, extension in sorted_level_extensions:
-                extension.write_extension_card_to_file(character, file, parent.name, description_mode)
+                extension.write_extension_card_to_file(
+                    character, file, parent.name, description_mode
+                )
             file.write("</div>\n")
 
             if level_spells:
