@@ -93,8 +93,9 @@ class HungeringMightBonus(Feature):
         super().__init__(skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        wisdom_mod = character_stat_block.get_wisdom_modifier()
-        bonus = max(1, wisdom_mod)
+        def bonus(cs: CharacterStatBlock) -> int:
+            return max(1, cs.get_wisdom_modifier())
+
         SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(character_stat_block)
 
 

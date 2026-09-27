@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Callable, Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
@@ -6,6 +6,13 @@ from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
+
+# A bonus whose value depends on other stats (e.g. "equal to your Wisdom
+# modifier"). Stored as a formula and evaluated at read time, so it always
+# reflects the final stats no matter which feature, armor or item applied
+# first - snapshotting such a value inside apply() would freeze it at
+# whatever the stat was when that feature happened to run.
+DerivedBonus = Callable[["CharacterStatBlock"], int]
 
 
 class CharacterStatBlock:
@@ -48,6 +55,10 @@ class CharacterStatBlock:
         self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
         self._initiative_roll_conditions: set[Definitions.DiceRollCondition] = set()
         self.initiative_bonus = 0
+        # Formula-valued bonuses (see DerivedBonus), resolved on every read.
+        self._derived_initiative_bonuses: list[DerivedBonus] = []
+        self._derived_saving_throw_bonuses: dict[Ability, list[DerivedBonus]] = {}
+        self._derived_skill_bonuses: dict[Skill, list[tuple[DerivedBonus, str]]] = {}
         self.spell_save_dc_bonus = 0
         # (source, slots) pairs; bonus sources only (Person is computed dynamically)
         self.carrying_capacity_sources: list[tuple[str, int]] = []
@@ -76,7 +87,8 @@ class CharacterStatBlock:
         modifier = self.abilities.get_modifier(Ability.DEXTERITY)
         if self.initiative_proficiency:
             modifier += self.get_proficiency_bonus()
-        return modifier + self.initiative_bonus
+        derived = sum(bonus(self) for bonus in self._derived_initiative_bonuses)
+        return modifier + self.initiative_bonus + derived
 
     def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
@@ -107,6 +119,19 @@ class CharacterStatBlock:
 
     def add_initiative_bonus(self, bonus: int) -> None:
         self.initiative_bonus += bonus
+
+    def add_derived_initiative_bonus(self, bonus: DerivedBonus) -> None:
+        self._derived_initiative_bonuses.append(bonus)
+
+    def add_derived_saving_throw_bonus(
+        self, ability: Ability, bonus: DerivedBonus
+    ) -> None:
+        self._derived_saving_throw_bonuses.setdefault(ability, []).append(bonus)
+
+    def add_derived_skill_bonus(
+        self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
+    ) -> None:
+        self._derived_skill_bonuses.setdefault(skill, []).append((bonus, source))
 
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
         self.spell_save_dc_bonus += bonus
@@ -180,14 +205,26 @@ class CharacterStatBlock:
             proficiency_bonus = self.get_proficiency_bonus()
         else:
             proficiency_bonus = 0
-        bonus = self.skills.bonuses.get(skill, 0)
-        return ability_modifier + proficiency_bonus + bonus
+        return ability_modifier + proficiency_bonus + self.get_skill_bonus(skill)
 
     def get_skill_bonus(self, skill: Skill) -> int:
-        return self.skills.bonuses.get(skill, 0)
+        return self.skills.bonuses.get(skill, 0) + sum(
+            value for value, _source in self._derived_skill_bonus_sources(skill)
+        )
 
     def get_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
-        return self.skills.get_bonus_sources(skill)
+        return self.skills.get_bonus_sources(skill) + self._derived_skill_bonus_sources(
+            skill
+        )
+
+    def _derived_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
+        # A derived bonus that currently evaluates to 0 (e.g. Jack of All
+        # Trades on a skill you're proficient in) isn't a source worth listing.
+        resolved = [
+            (bonus(self), source)
+            for bonus, source in self._derived_skill_bonuses.get(skill, [])
+        ]
+        return [(value, source) for value, source in resolved if value != 0]
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
@@ -222,7 +259,15 @@ class CharacterStatBlock:
             if self.is_proficient_in_saving_throw(ability)
             else 0
         )
-        return base_modifier + proficiency_bonus + self.saving_throws.get_bonus(ability)
+        derived = sum(
+            bonus(self) for bonus in self._derived_saving_throw_bonuses.get(ability, [])
+        )
+        return (
+            base_modifier
+            + proficiency_bonus
+            + self.saving_throws.get_bonus(ability)
+            + derived
+        )
 
     def calculate_hit_points(self) -> int:
         constitution_modifier = self.get_constitution_modifier()

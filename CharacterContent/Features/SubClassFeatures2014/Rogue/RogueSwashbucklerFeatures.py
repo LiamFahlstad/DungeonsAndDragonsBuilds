@@ -69,8 +69,9 @@ class RakishAudacityBonus(Feature):
         super().__init__(skippable_in_concise=True)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        cha_mod = character_stat_block.get_charisma_modifier()
-        InitiativeBonus(cha_mod).apply(character_stat_block)
+        InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(
+            character_stat_block
+        )
 
 
 class Panache(Feature):

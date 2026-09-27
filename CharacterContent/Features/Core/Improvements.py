@@ -18,16 +18,23 @@ A CharacterImprovement falls into one of three categories:
   last writer wins, so only their order relative to each other matters.
   Armor applying after all features is what lets worn armor override an
   Unarmored Defense formula, matching the game rules.
-- Eager readers (SkillExpertise, JackOfAllTradesBonus, StrengthRequirement):
-  they read state at apply time, so every write they depend on must already
-  have happened. Features carrying these must be added with ApplyWhen.LAST,
-  unless the feature itself performs the prerequisite write first (e.g.
-  SkillExpert and BlessingsOfKnowledge grant the proficiency before the
-  expertise within one apply call).
+- Eager readers (SkillExpertise, StrengthRequirement): they read state at
+  apply time, so every write they depend on must already have happened.
+  Features carrying these must be added with ApplyWhen.LAST, unless the
+  feature itself performs the prerequisite write first (e.g. SkillExpert and
+  BlessingsOfKnowledge grant the proficiency before the expertise within one
+  apply call).
+
+A bonus whose size depends on other stats ("equal to your Wisdom modifier",
+"half your Proficiency Bonus") must never be computed inside apply() - that
+freezes it at whatever the stat was when the feature ran, missing later ASIs
+and ability-raising items. Pass a formula instead (the Value type below:
+SkillBonus/SavingThrowBonus/InitiativeBonus accept `lambda cs: ...`), which
+the stat block evaluates at read time, making the bonus order-insensitive.
 """
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Callable, Optional
 
 from Core.Definitions import (
     Ability,
@@ -39,6 +46,10 @@ from Core.Definitions import (
     Skill,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+
+# A flat bonus, or a formula evaluated against the final stat block at read
+# time (see the ordering contract above).
+Value = int | Callable[[CharacterStatBlock], int]
 
 
 class CharacterImprovement(ABC):
@@ -156,15 +167,19 @@ class SavingThrowAdvantage(CharacterImprovement):
 
 
 class SavingThrowBonus(CharacterImprovement):
-    """Adds a flat bonus to saving throws for one or more abilities."""
+    """Adds a bonus to saving throws for one or more abilities - flat, or a
+    formula evaluated at read time (e.g. "equal to your Charisma modifier")."""
 
-    def __init__(self, abilities: list[Ability], bonus: int):
+    def __init__(self, abilities: list[Ability], bonus: Value):
         self.abilities = abilities
         self.bonus = bonus
 
     def apply(self, character_stat_block: CharacterStatBlock):
         for ability in self.abilities:
-            character_stat_block.saving_throws.add_bonus(ability, self.bonus)
+            if callable(self.bonus):
+                character_stat_block.add_derived_saving_throw_bonus(ability, self.bonus)
+            else:
+                character_stat_block.saving_throws.add_bonus(ability, self.bonus)
 
 
 class AbilityScoreBonus(CharacterImprovement):
@@ -312,14 +327,18 @@ class InitiativeRollCondition(CharacterImprovement):
 
 
 class InitiativeBonus(CharacterImprovement):
-    """Adds a flat bonus to initiative rolls (as distinct from
-    InitiativeProficiency, which adds the full proficiency bonus)."""
+    """Adds a bonus to initiative rolls - flat, or a formula evaluated at read
+    time (as distinct from InitiativeProficiency, which adds the full
+    proficiency bonus)."""
 
-    def __init__(self, bonus: int):
+    def __init__(self, bonus: Value):
         self.bonus = bonus
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_initiative_bonus(self.bonus)
+        if callable(self.bonus):
+            character_stat_block.add_derived_initiative_bonus(self.bonus)
+        else:
+            character_stat_block.add_initiative_bonus(self.bonus)
 
 
 class HitPointsPerLevelBonus(CharacterImprovement):
@@ -335,16 +354,21 @@ class HitPointsPerLevelBonus(CharacterImprovement):
 
 
 class SkillBonus(CharacterImprovement):
-    """Adds a flat bonus to a specific skill. `source` names where the bonus
-    comes from (e.g. the item or feature name) on the character sheet."""
+    """Adds a bonus to a specific skill - flat, or a formula evaluated at read
+    time (e.g. "equal to your Wisdom modifier"). `source` names where the
+    bonus comes from (e.g. the item or feature name) on the character sheet."""
 
-    def __init__(self, skill: Skill, bonus: int, source: Optional[str] = None):
+    def __init__(self, skill: Skill, bonus: Value, source: Optional[str] = None):
         self.skill = skill
         self.bonus = bonus
         self.source = source
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        if self.source is not None:
+        if callable(self.bonus):
+            character_stat_block.add_derived_skill_bonus(
+                self.skill, self.bonus, self.source or "Other"
+            )
+        elif self.source is not None:
             character_stat_block.skills.add_skill_bonus(
                 self.skill, self.bonus, self.source
             )
@@ -367,17 +391,24 @@ class SkillToAbilityOverride(CharacterImprovement):
 class JackOfAllTradesBonus(CharacterImprovement):
     """Adds half proficiency bonus to every skill the character lacks proficiency in.
 
-    Ordering: eager reader - snapshots is_proficient for every skill, so the
-    owning feature must be added with ApplyWhen.LAST, after every proficiency
-    grant from every builder."""
+    Ordering: order-insensitive - both proficiency and the bonus are checked
+    at read time, so a proficiency granted later (by any builder, the
+    species, or an item) correctly switches the bonus off for that skill."""
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        half_proficiency = character_stat_block.get_proficiency_bonus() // 2
         for skill in Skill:
-            if not character_stat_block.skills.is_proficient(skill):
-                character_stat_block.skills.add_skill_bonus(
-                    skill, half_proficiency, "Jack of All Trades"
-                )
+            character_stat_block.add_derived_skill_bonus(
+                skill, self._bonus_for(skill), "Jack of All Trades"
+            )
+
+    @staticmethod
+    def _bonus_for(skill: Skill) -> Callable[[CharacterStatBlock], int]:
+        def bonus(character_stat_block: CharacterStatBlock) -> int:
+            if character_stat_block.skills.is_proficient(skill):
+                return 0
+            return character_stat_block.get_proficiency_bonus() // 2
+
+        return bonus
 
 
 class SpeedBonus(CharacterImprovement):

@@ -61,8 +61,9 @@ class DivineOrderThaumaturge(Feature):
         self.extra_cantrip = extra_cantrip
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        bonus = max(1, wisdom_modifier)
+        def bonus(cs: CharacterStatBlock) -> int:
+            return max(1, cs.get_wisdom_modifier())
+
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
         SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(character_stat_block)
 

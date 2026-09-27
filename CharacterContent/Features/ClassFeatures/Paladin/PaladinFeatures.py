@@ -225,8 +225,9 @@ class AuraOfProtection(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        cha_mod = character_stat_block.get_charisma_modifier()
-        bonus = max(1, cha_mod)
+        def bonus(cs: CharacterStatBlock) -> int:
+            return max(1, cs.get_charisma_modifier())
+
         SavingThrowBonus(list(Ability), bonus).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

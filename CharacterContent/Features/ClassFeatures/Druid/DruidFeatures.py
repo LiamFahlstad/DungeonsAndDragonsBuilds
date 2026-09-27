@@ -80,7 +80,10 @@ class PrimalOrder(Feature):
     def apply(self, character_stat_block: CharacterStatBlock):
         if self.order != PrimalOrderType.MAGICIAN:
             return
-        bonus = max(1, character_stat_block.get_wisdom_modifier())
+
+        def bonus(cs: CharacterStatBlock) -> int:
+            return max(1, cs.get_wisdom_modifier())
+
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
         SkillBonus(Skill.NATURE, bonus, source=self.name).apply(character_stat_block)
 

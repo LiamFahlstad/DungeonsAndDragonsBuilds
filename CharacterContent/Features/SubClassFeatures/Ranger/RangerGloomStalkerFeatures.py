@@ -25,8 +25,7 @@ class DreadAmbusher(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        wis_mod = character_stat_block.get_wisdom_modifier()
-        InitiativeBonus(wis_mod).apply(character_stat_block)
+        InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
