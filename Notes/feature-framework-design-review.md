@@ -14,6 +14,21 @@ building blocks, extensions, and rendering responsibilities.
 Findings marked **Verified** were reproduced. Findings marked **By inspection** were reasoned
 from the code but not run.
 
+## Status (after the follow-up refactor)
+
+The sections below describe the framework **as reviewed**. Since then:
+
+| Finding | Status |
+|---|---|
+| C1 snapshots | **Fixed.** Stat-dependent bonuses are read-time formulas. |
+| H1 phase chosen at call site | **Resolved by removal.** `ApplyWhen` and all 19 `apply_when=LAST` call sites are gone. Features apply in grant order, and that order provably doesn't matter: a test shuffles every build's features and compares all stats. |
+| H2 ad-hoc pipeline | **Partly.** Expertise-needs-proficiency moved from apply order to a validation step. Pipeline stages are documented in `setup_character_stat_block`. Armor and items are still fixed stages rather than one phase model. |
+| M1 extensions render-only | **Fixed, and it was a real bug.** Extensions now apply. This fixed Forge Cleric *Saint of Forge and Fire* (fire immunity) and Hollow Warden *Ancient Might* (Exhaustion immunity), which had been silently dropped. The `HungeringMightBonus` / `RakishAudacityBonus` workaround classes were folded back into their extensions. |
+| M4 shared weapons | **Fixed, verified bug.** A dropped Bracers of Archery bonus stuck to the bow. Each build now gets its own weapon copies. |
+| M5 two lists | **Fixed.** There is a single `features` list in grant order. |
+| L1 rendering in `Feature` | **Partly.** The three duplicated card and tag renderers now share helpers. Rendering still lives on `Feature`. |
+| M2, M3, L2, L3 | Open. These are the deliberately chronological effects (ability caps, "if already proficient" choices), string-typed levels, and mixed metadata styles. |
+
 ---
 
 ## Current architecture (summary)

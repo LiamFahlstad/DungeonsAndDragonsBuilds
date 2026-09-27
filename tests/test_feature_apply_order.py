@@ -3,13 +3,16 @@
 A bonus "equal to your <ability> modifier" used to be computed inside apply()
 and stored as a constant, freezing it at whatever the score was when that
 feature happened to run. Primal Order (added at Druid level 1) therefore
-missed every later Ability Score Improvement, and LAST-phase features still
+missed every later Ability Score Improvement, and late-applied features still
 missed ability-raising magic items (items apply after every feature). Such
-bonuses are now formulas evaluated at read time - these tests pin that down.
+bonuses are now formulas evaluated at read time, requirements are validated
+after every feature has applied, and extensions apply like any feature - so
+features apply simply in grant order. These tests pin that down.
 """
 
 import ast
 import pathlib
+import random
 
 import pytest
 
@@ -21,10 +24,18 @@ from CharacterContent.Features.SubClassFeatures.Ranger import (
     RangerGloomStalkerFeatures,
     RangerHollowWardenFeatures,
 )
+from CharacterContent.Features.Core.BaseFeatures import Feature
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    SkillExpertise,
+    SkillProficiency,
+)
+from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericForgeFeatures
 from CharacterContent.Features.SubClassFeatures2014.Rogue import (
     RogueSwashbucklerFeatures,
 )
-from Core.Definitions import Ability, CharacterClass, Skill
+from CharacterContent.Items.Items.Wondrous import BracersOfArchery
+from Core.Definitions import Ability, CharacterClass, DamageType, Skill
 from RunCharacterCreator import BuildSelector, ExampleSelector
 
 
@@ -80,7 +91,7 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_hungering_might(self, make_character):
         character = make_character(wisdom=12)  # +1
-        RangerHollowWardenFeatures.HungeringMightBonus().apply(character)
+        RangerHollowWardenFeatures.HungeringMight().apply(character)
         character.abilities.add_bonus(Ability.WISDOM, 6)  # 18 -> +4
         assert character.get_saving_throw_modifier(Ability.CONSTITUTION) == 4
         assert character.get_saving_throw_modifier(Ability.STRENGTH) == 0
@@ -93,7 +104,7 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_rakish_audacity(self, make_character):
         character = make_character(charisma=16)  # +3
-        RogueSwashbucklerFeatures.RakishAudacityBonus().apply(character)
+        RogueSwashbucklerFeatures.RakishAudacity().apply(character)
         character.abilities.add_bonus(Ability.CHARISMA, 4)  # 20 -> +5
         assert character.initiative == 5
 
@@ -137,6 +148,135 @@ def test_wisdom_skill_bonuses_use_final_wisdom(name):
             continue
         for value in _source_bonus(character, skill, feature.name):
             assert value == expected, feature.name
+
+
+# ── The pipeline is order-insensitive ─────────────────────────────────────────
+
+# Chronological by design: they resolve against what was granted before them
+# (ability increases "to a maximum of 20", "if already proficient, choose
+# another"), so they keep their position while everything else is shuffled.
+_CHRONOLOGICAL = {"SkillExpert", "IronMind", "UnfetteredMind"}
+
+
+def _is_chronological(feature) -> bool:
+    return type(feature).__name__ in _CHRONOLOGICAL or any(
+        isinstance(value, AbilityScoreBonus) for value in vars(feature).values()
+    )
+
+
+def _stats(data):
+    cs = data.setup_character_stat_block()
+    return {
+        "ac": cs.calculate_armor_class(),
+        "hp": cs.calculate_hit_points(),
+        "initiative": cs.initiative,
+        "initiative_roll": cs.initiative_roll_condition,
+        "speed": cs.combat.speed,
+        "skills": [cs.get_skill_modifier(s) for s in Skill],
+        "saves": [cs.get_saving_throw_modifier(a) for a in Ability],
+        "resistances": sorted(map(str, cs.damage_resistances)),
+        "immunities": sorted(map(str, cs.damage_immunities)),
+        "condition_immunities": sorted(map(str, cs.condition_immunities)),
+        "senses": sorted((str(k), v) for k, v in cs.senses.items()),
+        "spell_save_dc_bonus": cs.spell_save_dc_bonus,
+    }
+
+
+@pytest.mark.parametrize("name", sorted(ALL_BUILDS))
+def test_feature_grant_order_does_not_change_stats(name):
+    expected = _stats(type(ALL_BUILDS[name])().build())
+    for seed in range(3):
+        data = type(ALL_BUILDS[name])().build()
+        slots = [i for i, f in enumerate(data.features) if not _is_chronological(f)]
+        movable = [data.features[i] for i in slots]
+        random.Random(seed).shuffle(movable)
+        for i, feature in zip(slots, movable):
+            data.features[i] = feature
+        data._invalidate_cache()
+        assert _stats(data) == expected, f"feature order changed stats (seed {seed})"
+
+
+class _GrantExpertise(Feature):
+    def __init__(self, skill: Skill):
+        super().__init__(name="Test Expertise")
+        self._expertise = SkillExpertise([skill])
+
+    def apply(self, character_stat_block):
+        self._expertise.apply(character_stat_block)
+
+
+class _GrantProficiency(Feature):
+    def __init__(self, skill: Skill):
+        super().__init__(name="Test Proficiency")
+        self._proficiency = SkillProficiency([skill])
+
+    def apply(self, character_stat_block):
+        self._proficiency.apply(character_stat_block)
+
+
+class TestExpertiseRequirement:
+    def _data_and_unproficient_skill(self):
+        data = type(ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"])()
+        data = data.build()
+        character = data.setup_character_stat_block()
+        skill = next(s for s in Skill if not character.is_proficient_in_skill(s))
+        return data, skill
+
+    def test_expertise_without_proficiency_is_rejected(self):
+        data, skill = self._data_and_unproficient_skill()
+        data.add_feature(_GrantExpertise(skill))
+        with pytest.raises(ValueError, match="unproficient skill"):
+            data.setup_character_stat_block()
+
+    def test_proficiency_granted_after_the_expertise_satisfies_it(self):
+        # e.g. a class's Expertise pick relying on a species proficiency,
+        # which merges after every class builder.
+        data, skill = self._data_and_unproficient_skill()
+        data.add_feature(_GrantExpertise(skill))
+        data.add_feature(_GrantProficiency(skill))
+        character = data.setup_character_stat_block()
+        assert character.has_expertise_in_skill(skill)
+
+
+class TestExtensionsApply:
+    def test_extension_mechanics_reach_the_stat_block(self):
+        # Regression: Saint of Forge and Fire (Forge Cleric 17) is wired as
+        # an extension of Soul of the Forge, and extensions were render-only,
+        # so its fire immunity silently never applied.
+        data = type(ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"])()
+        character = data.build().setup_character_stat_block()
+        assert character.is_immune_to_damage(DamageType.FIRE)
+
+    def test_extending_after_setup_refreshes_the_cached_stat_block(self):
+        data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
+        data = data.build()
+        assert not data.setup_character_stat_block().is_immune_to_damage(
+            DamageType.FIRE
+        )
+        # extend_feature() can't invalidate the cache itself.
+        data.features[0].extend_feature(ClericForgeFeatures.SaintOfForgeAndFire())
+        assert data.setup_character_stat_block().is_immune_to_damage(DamageType.FIRE)
+
+
+def test_dropped_gear_does_not_leave_bonuses_on_weapons():
+    # Regression: weapons were shared between a builder and every sheet it
+    # built, so Bracers of Archery's +2 damage (and bow proficiency) stuck to
+    # the bow after the bracers were dropped and the character rebuilt.
+    builder = type(
+        ALL_BUILDS["Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder"]
+    )()
+    bracers = BracersOfArchery()
+    builder.add_adventuring_gear("Loot", items=[(bracers, 1)])
+
+    def longbow_damage_bonuses():
+        data = builder.build()
+        data.setup_character_stat_block()
+        bow = next(w for w in data.weapons if w.name == "Longbow")
+        return bow.damage_roll_bonuses
+
+    assert (2, "2 (Bracers of Archery)") in longbow_damage_bonuses()
+    builder.drop_item(bracers)
+    assert (2, "2 (Bracers of Archery)") not in longbow_damage_bonuses()
 
 
 # ── Guard: apply() must not snapshot derived stats ────────────────────────────

@@ -591,6 +591,71 @@ class Feature:
             return None
         return self._description_to_html(description)
 
+    def _shows_passive_tag(
+        self, description_mode: Literal["table", "concise"] | None
+    ) -> bool:
+        # A skippable-in-concise feature that's still showing means we're on a
+        # full-mode sheet - flag it as passive so the player knows there's
+        # nothing here to actively track.
+        return description_mode is None and self.skippable_in_concise
+
+    def _header_tags_html(
+        self, description_mode: Literal["table", "concise"] | None
+    ) -> list[str]:
+        """The tag chips shown beside this feature's name (Passive, action
+        economy, duration, range, usage roles), in display order."""
+        tags = [
+            (
+                "<span class='feature-passive-tag'>Passive</span>"
+                if self._shows_passive_tag(description_mode)
+                else ""
+            ),
+            self._action_tag_html(self.activation.action_type),
+            self._duration_tag_html(self.activation.duration),
+            self._range_tag_html(self.activation.range, self.activation.range_shape),
+            self._usage_tags_html(self.usage_tags),
+        ]
+        return [tag for tag in tags if tag]
+
+    def _write_card_open(
+        self, file: TextIO, description_mode: Literal["table", "concise"] | None
+    ) -> None:
+        """Write a card's header (name, tag chips, origin) and open its body.
+        Close with _write_card_close."""
+        card_class = (
+            "feature-card is-passive"
+            if self._shows_passive_tag(description_mode)
+            else "feature-card"
+        )
+        file.write(f"<div class='{card_class}'>\n")
+        file.write("<div class='feature-header'>\n")
+        file.write("<span class='feature-name-group'>\n")
+        file.write(f"<span class='feature-name'>{self.name}</span>\n")
+        for tag in self._header_tags_html(description_mode):
+            file.write(f"{tag}\n")
+        file.write("</span>\n")
+        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
+        file.write("</div>\n")
+        file.write("<div class='feature-body'>\n")
+
+    @staticmethod
+    def _write_card_close(file: TextIO) -> None:
+        file.write("</div>\n")
+        file.write("</div>\n")
+
+    @staticmethod
+    def _upgrade_block_html(
+        label: str, body_html: str, uses: "FeatureUses | None"
+    ) -> str:
+        """An extension rendered as a blue-labelled .feature-upgrade block."""
+        uses_html = "\n" + Feature._uses_html(uses) if uses is not None else ""
+        return (
+            f"<div class='feature-upgrade'>\n"
+            f"<span class='feature-upgrade-label'>{label}</span>\n"
+            f"<div class='feature-upgrade-body'>{body_html}{uses_html}</div>\n"
+            f"</div>\n"
+        )
+
     def write_to_file(
         self,
         character_stat_block: CharacterStatBlock,
@@ -604,41 +669,7 @@ class Feature:
         if html_description is None:
             return
 
-        # A skippable-in-concise feature that's still showing means we're on a
-        # full-mode sheet — flag it as passive so the player knows there's
-        # nothing here to actively track.
-        passive_tag = (
-            "<span class='feature-passive-tag'>Passive</span>"
-            if description_mode is None and self.skippable_in_concise
-            else ""
-        )
-
-        action_tag = self._action_tag_html(self.activation.action_type)
-        duration_tag = self._duration_tag_html(self.activation.duration)
-        range_tag = self._range_tag_html(
-            self.activation.range, self.activation.range_shape
-        )
-        usage_tags_html = self._usage_tags_html(self.usage_tags)
-
-        card_class = "feature-card is-passive" if passive_tag else "feature-card"
-        file.write(f"<div class='{card_class}'>\n")
-        file.write("<div class='feature-header'>\n")
-        file.write("<span class='feature-name-group'>\n")
-        file.write(f"<span class='feature-name'>{self.name}</span>\n")
-        if passive_tag:
-            file.write(f"{passive_tag}\n")
-        if action_tag:
-            file.write(f"{action_tag}\n")
-        if duration_tag:
-            file.write(f"{duration_tag}\n")
-        if range_tag:
-            file.write(f"{range_tag}\n")
-        if usage_tags_html:
-            file.write(f"{usage_tags_html}\n")
-        file.write("</span>\n")
-        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
-        file.write("</div>\n")
-        file.write("<div class='feature-body'>\n")
+        self._write_card_open(file, description_mode)
 
         resource_tiles = self.get_resource_tiles(character_stat_block)
         if resource_tiles:
@@ -679,37 +710,18 @@ class Feature:
             )
             if ext_html is None:
                 continue
-            ext_passive_tag = (
-                " <span class='feature-passive-tag'>Passive</span>"
-                if description_mode is None and extension.skippable_in_concise
-                else ""
-            )
-            ext_action_tag = self._action_tag_html(extension.activation.action_type)
-            ext_action_tag = f" {ext_action_tag}" if ext_action_tag else ""
-            ext_duration_tag = self._duration_tag_html(extension.activation.duration)
-            ext_duration_tag = f" {ext_duration_tag}" if ext_duration_tag else ""
-            ext_range_tag = self._range_tag_html(
-                extension.activation.range, extension.activation.range_shape
-            )
-            ext_range_tag = f" {ext_range_tag}" if ext_range_tag else ""
-            ext_usage_tags_html = self._usage_tags_html(extension.usage_tags)
-            ext_usage_tags_html = (
-                f" {ext_usage_tags_html}" if ext_usage_tags_html else ""
-            )
-            ext_uses_html = (
-                "\n" + self._uses_html(extension.uses)
-                if extension.uses is not None
-                else ""
+            ext_tags = "".join(
+                f" {tag}" for tag in extension._header_tags_html(description_mode)
             )
             file.write(
-                f"<div class='feature-upgrade'>\n"
-                f"<span class='feature-upgrade-label'>{extension.origin}: {extension.name}{ext_passive_tag}{ext_action_tag}{ext_duration_tag}{ext_range_tag}{ext_usage_tags_html}</span>\n"
-                f"<div class='feature-upgrade-body'>{ext_html}{ext_uses_html}</div>\n"
-                f"</div>\n"
+                self._upgrade_block_html(
+                    f"{extension.origin}: {extension.name}{ext_tags}",
+                    ext_html,
+                    extension.uses,
+                )
             )
 
-        file.write("</div>\n")
-        file.write("</div>\n")
+        self._write_card_close(file)
 
     def write_extension_card_to_file(
         self,
@@ -728,54 +740,20 @@ class Feature:
         if html_description is None:
             return
 
+        self._write_card_open(file, description_mode)
         passive_tag = (
-            "<span class='feature-passive-tag'>Passive</span>"
-            if description_mode is None and self.skippable_in_concise
-            else ""
-        )
-
-        card_class = "feature-card is-passive" if passive_tag else "feature-card"
-        file.write(f"<div class='{card_class}'>\n")
-        file.write("<div class='feature-header'>\n")
-        file.write("<span class='feature-name-group'>\n")
-        file.write(f"<span class='feature-name'>{self.name}</span>\n")
-        action_tag = self._action_tag_html(self.activation.action_type)
-        duration_tag = self._duration_tag_html(self.activation.duration)
-        range_tag = self._range_tag_html(
-            self.activation.range, self.activation.range_shape
-        )
-        usage_tags_html = self._usage_tags_html(self.usage_tags)
-        if passive_tag:
-            file.write(f"{passive_tag}\n")
-        if action_tag:
-            file.write(f"{action_tag}\n")
-        if duration_tag:
-            file.write(f"{duration_tag}\n")
-        if range_tag:
-            file.write(f"{range_tag}\n")
-        if usage_tags_html:
-            file.write(f"{usage_tags_html}\n")
-        file.write("</span>\n")
-        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
-        file.write("</div>\n")
-        file.write("<div class='feature-body'>\n")
-
-        # Write the extension as an upgrade block with the parent feature name
-        ext_passive_tag = (
             " <span class='feature-passive-tag'>Passive</span>"
-            if description_mode is None and self.skippable_in_concise
+            if self._shows_passive_tag(description_mode)
             else ""
         )
-        uses_html = "\n" + self._uses_html(self.uses) if self.uses is not None else ""
         file.write(
-            f"<div class='feature-upgrade'>\n"
-            f"<span class='feature-upgrade-label'>{parent_name} Feature Extension{ext_passive_tag}</span>\n"
-            f"<div class='feature-upgrade-body'>{html_description}{uses_html}</div>\n"
-            f"</div>\n"
+            self._upgrade_block_html(
+                f"{parent_name} Feature Extension{passive_tag}",
+                html_description,
+                self.uses,
+            )
         )
-
-        file.write("</div>\n")
-        file.write("</div>\n")
+        self._write_card_close(file)
 
     @staticmethod
     def _action_tag_html(

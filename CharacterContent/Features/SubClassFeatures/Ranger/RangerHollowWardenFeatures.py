@@ -71,6 +71,12 @@ class HungeringMight(Feature):
             usage_tags=["buff", "heal"],
         )
 
+    def apply(self, character_stat_block: CharacterStatBlock):
+        def bonus(cs: CharacterStatBlock) -> int:
+            return max(1, cs.get_wisdom_modifier())
+
+        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(character_stat_block)
+
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
             "You gain a bonus to Constitution saving throws equal to your Wisdom modifier (minimum of +1).\n"
@@ -82,21 +88,6 @@ class HungeringMight(Feature):
         self, character_stat_block: CharacterStatBlock
     ) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-
-class HungeringMightBonus(Feature):
-    """Mechanical half of Hungering Might, kept separate from the descriptive
-    HungeringMight feature since extend_feature()'d features never get apply()
-    called on them - this one must be add_feature()'d directly."""
-
-    def __init__(self):
-        super().__init__(skippable_in_concise=True)
-
-    def apply(self, character_stat_block: CharacterStatBlock):
-        def bonus(cs: CharacterStatBlock) -> int:
-            return max(1, cs.get_wisdom_modifier())
-
-        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(character_stat_block)
 
 
 class RotAndViolence(Feature):

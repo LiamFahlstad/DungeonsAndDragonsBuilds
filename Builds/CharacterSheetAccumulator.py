@@ -1,5 +1,5 @@
 import copy
-from typing import Any, Literal, Optional
+from typing import Any, Iterator, Literal, Optional
 
 import attr
 
@@ -20,7 +20,7 @@ from CharacterContent.Items.Weapons import (
     is_proficient_with,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
-from Core.Definitions import Ability, ApplyWhen, CharacterClass
+from Core.Definitions import Ability, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
@@ -57,6 +57,10 @@ class CharacterSheetData:
     size: Optional[Definitions.CreatureSize] = None
     saving_throws: Optional[SavingThrowsStatBlock] = None
 
+    # Every feature in the order it was granted - which is also the order
+    # features apply to the CharacterStatBlock (see setup_character_stat_block
+    # for the full pipeline and the ordering contract). merge_with's generic
+    # list-concat keeps that order across builders and the species.
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
@@ -96,6 +100,11 @@ class CharacterSheetData:
     # check `entry is starting_equipment_entry` instead of matching on label.
     starting_equipment_entry: Optional[EquipmentEntry] = None
     _character_cached: Optional[CharacterStatBlock] = None
+    # Identity of every feature + extension the cached stat block was built
+    # from. Extensions apply too, but parent.extend_feature() can't reach
+    # this object to invalidate the cache - so the cache is also dropped
+    # whenever this set changes.
+    _cached_feature_ids: tuple[int, ...] = ()
     # Class-relative level currently being applied by
     # BaseClassLevelFeatures.add_features, used to tag each spell/cantrip
     # with the level it was granted on (see set_current_grant_level). Defaults
@@ -109,17 +118,6 @@ class CharacterSheetData:
     # Maintained by ClassBuilder.create (private, so merge_with skips it).
     _active_subclasses: dict[CharacterClass, str] = attr.Factory(dict)
 
-    # Records (apply_when, feature) in the order add_feature was called.
-    # Unlike `features` (ordered for display - newest IMMEDIATE feature
-    # first), this drives the order features are applied to the
-    # CharacterStatBlock: all IMMEDIATE features first, then all LAST
-    # features, each group preserving call order - so a later builder's
-    # (e.g. a multiclass dip's) IMMEDIATE features never apply ahead of an
-    # earlier builder's LAST features. A plain (non-underscore) field so
-    # merge_with's generic list-concat combines it across builders/species
-    # in the order they were merged in.
-    feature_apply_order: list[tuple[ApplyWhen, Feature]] = attr.Factory(list)
-
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
@@ -130,26 +128,26 @@ class CharacterSheetData:
         rebuilds instead of returning stale state."""
         self._character_cached = None
 
-    def add_feature(
-        self, feature: Feature, apply_when: ApplyWhen = ApplyWhen.IMMEDIATE
-    ):
+    def add_feature(self, feature: Feature):
         self._invalidate_cache()
-        if apply_when == ApplyWhen.IMMEDIATE:
-            self.features.insert(0, feature)
-        elif apply_when == ApplyWhen.LAST:
-            self.features.append(feature)
-        else:
-            raise ValueError(f"Unknown ApplyWhen value: {apply_when}")
-        self.feature_apply_order.append((apply_when, feature))
+        self.features.append(feature)
 
     def remove_features(self, should_remove) -> None:
-        """Remove every feature for which `should_remove(feature)` is true,
-        keeping `features` and `feature_apply_order` consistent."""
+        """Remove every feature for which `should_remove(feature)` is true."""
         self._invalidate_cache()
         self.features = [f for f in self.features if not should_remove(f)]
-        self.feature_apply_order = [
-            (when, f) for when, f in self.feature_apply_order if not should_remove(f)
-        ]
+
+    def iter_features_with_extensions(self) -> Iterator[Feature]:
+        """Every granted feature followed by its extensions (depth-first) -
+        the unit the apply pipeline works on. Extensions are real features:
+        their apply()/apply_after_armor() run like any other feature's."""
+
+        def walk(features: list[Feature]) -> Iterator[Feature]:
+            for feature in features:
+                yield feature
+                yield from walk(feature.extensions)
+
+        return walk(self.features)
 
     def add_origin_feat(self, origin_feat: OriginFeats.OriginFeat):
         self.add_feature(origin_feat)
@@ -341,7 +339,12 @@ class CharacterSheetData:
         )
 
     def setup_character_stat_block(self) -> CharacterStatBlock:
-        if self._character_cached is not None:
+        features = list(self.iter_features_with_extensions())
+        feature_ids = tuple(id(feature) for feature in features)
+        if (
+            self._character_cached is not None
+            and self._cached_feature_ids == feature_ids
+        ):
             return self._character_cached
 
         # Validate one-armor rule: at most one worn non-shield armor
@@ -412,26 +415,30 @@ class CharacterSheetData:
             current_gold=self.current_gold,
         )
 
-        # Apply every IMMEDIATE feature (in call order) before any LAST
-        # feature, regardless of which builder contributed it - so features
-        # from a starter/multiclass builder never interleave out of order
-        # (e.g. a later builder's expertise pick always applies after an
-        # earlier builder's prerequisite skill proficiency, and no LAST
-        # feature jumps ahead of an IMMEDIATE one from another builder).
-        for apply_when in (ApplyWhen.IMMEDIATE, ApplyWhen.LAST):
-            for when, feature in self.feature_apply_order:
-                if when == apply_when:
-                    feature.apply(character)
+        # Ordering contract (see also CharacterContent/Features/Core/Improvements.py):
+        # features apply in the order they were granted, and must not depend
+        # on it - stat-dependent bonuses are formulas resolved at read time,
+        # and requirements (expertise needs proficiency, multiclass ability
+        # minimums) are validated once every feature has applied. The only
+        # deliberately order-dependent effects are chronological ones ("to a
+        # maximum of 20", "if you're already proficient, choose another"),
+        # which grant order models directly.
+        for feature in features:
+            feature.apply(character)
 
+        character.skills.validate()
         self._validate_multiclass_prerequisites(character)
 
+        # Worn armor overrides feature-provided AC formulas (Unarmored
+        # Defense) and is checked against Strength before items apply, so a
+        # Strength-raising item can't satisfy an armor's requirement.
         for armor in self.armors:
             armor.apply(character)
 
-        for apply_when in (ApplyWhen.IMMEDIATE, ApplyWhen.LAST):
-            for when, feature in self.feature_apply_order:
-                if when == apply_when:
-                    feature.apply_after_armor(character)
+        # Effects conditioned on armor ("while you aren't wearing Heavy
+        # armor") need to know what's worn, so they run after armor.
+        for feature in features:
+            feature.apply_after_armor(character)
 
         for weapon in self.weapons:
             weapon.apply(character)
@@ -449,6 +456,7 @@ class CharacterSheetData:
             if item.is_wearing is not False:
                 item.apply_to_weapons(self.weapons)
         self._character_cached = character
+        self._cached_feature_ids = feature_ids
 
         return character
 
@@ -498,7 +506,7 @@ class CharacterSheetData:
         """Merge another CharacterSheetData into this one.
 
         Merge rules, by field kind:
-        - lists (features, spells, weapons, feature_apply_order, ...) are
+        - lists (features, spells, weapons, ...) are
           concatenated, preserving each side's internal order with `other`'s
           entries after `self`'s;
         - dicts (level_per_class, spell_slots) are combined with `other`'s

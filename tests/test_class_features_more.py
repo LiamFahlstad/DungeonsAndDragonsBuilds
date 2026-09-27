@@ -199,15 +199,17 @@ class TestRogueExpertise:
         assert character.get_skill_modifier(Skill.STEALTH) == dex_mod + 2 * 3
         assert character.get_skill_modifier(Skill.PERCEPTION) == wis_mod + 2 * 3
 
-    def test_requires_prior_proficiency(self, make_character):
-        # SkillExpertise.apply() raises if the skill isn't already proficient -
-        # expertise can only double an existing proficiency bonus.
+    def test_requires_proficiency(self, make_character):
+        # Expertise can only double an existing proficiency bonus. The
+        # proficiency may be granted by any feature, before or after, so the
+        # requirement is enforced once all features have applied.
         character = make_character(levels={CharacterClass.ROGUE: 1})
-        with pytest.raises(ValueError):
-            apply_features(
-                character,
-                [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)],
-            )
+        apply_features(
+            character,
+            [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)],
+        )
+        with pytest.raises(ValueError, match="unproficient skill"):
+            character.skills.validate()
 
 
 class TestRogueCunningStrike:

@@ -551,11 +551,6 @@ class Condition(str, Enum):
         return sorted(Condition, key=lambda condition: condition.value)
 
 
-class ApplyWhen(str, Enum):
-    IMMEDIATE = "immediate"
-    LAST = "last"
-
-
 class Die(int, Enum):
     D1 = 1
     D4 = 4

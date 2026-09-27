@@ -4,7 +4,7 @@ import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, ApplyWhen, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
 from CharacterContent.Items import Packs
@@ -77,12 +77,7 @@ class WizardLevel2(ClassBuilder.BaseClassLevel2):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        # LAST: expertise requires the proficiency to exist already, and it
-        # may come from any builder, including the species (merged last).
-        data.add_feature(
-            WizardFeatures.Scholar(self.skill_expertise),
-            apply_when=ApplyWhen.LAST,
-        )
+        data.add_feature(WizardFeatures.Scholar(self.skill_expertise))
         data.add_spell(self.spell)
         return data
 

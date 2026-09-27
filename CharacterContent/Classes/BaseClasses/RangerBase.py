@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, ApplyWhen, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
@@ -56,10 +56,7 @@ class RangerLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
-        data.add_feature(
-            RangerFeatures.DeftExplorerExpertise(self.skill_expertise),
-            apply_when=ApplyWhen.LAST,
-        )
+        data.add_feature(RangerFeatures.DeftExplorerExpertise(self.skill_expertise))
         data.add_fighting_style(self.fighting_style)
         data.add_spell(self.spell)
         return data
@@ -133,8 +130,7 @@ class RangerLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(
-            RangerFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
-            apply_when=ApplyWhen.LAST,
+            RangerFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2)
         )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)

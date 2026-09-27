@@ -45,9 +45,16 @@ class SkillsStatBlock(StatBlock):
         return self.bonus_sources.get(skill, [])
 
     def add_skill_expertise(self, skill: Skill):
-        if not self.is_proficient(skill):
-            raise ValueError(f"Cannot add expertise to unproficient skill: {skill}")
+        """Expertise requires proficiency, but that proficiency may come from
+        a feature applied later (another class builder, the species), so the
+        requirement is checked by validate() once every feature has applied
+        rather than here - granting expertise is order-insensitive."""
         self.expertise[skill] = True
+
+    def validate(self) -> None:
+        for skill, has_expertise in self.expertise.items():
+            if has_expertise and not self.is_proficient(skill):
+                raise ValueError(f"Cannot add expertise to unproficient skill: {skill}")
 
     def is_proficient(self, skill: Skill) -> bool:
         return self.proficiencies.get(skill, False)

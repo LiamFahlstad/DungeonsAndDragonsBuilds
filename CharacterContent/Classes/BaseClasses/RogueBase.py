@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, ApplyWhen, CharacterClass
+from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Items import Armor, Weapons
@@ -29,11 +29,8 @@ class RogueLevel1(ClassBuilder.BaseClassLevel1):
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
-        # LAST: expertise requires the proficiency to exist already, and it
-        # may come from any builder, including the species (merged last).
         data.add_feature(
-            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
-            apply_when=ApplyWhen.LAST,
+            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2)
         )
         data.add_feature(RogueFeatures.SneakAttack())
         data.add_feature(RogueFeatures.ThievesCant())
@@ -86,8 +83,7 @@ class RogueLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
         data.add_feature(
-            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2),
-            apply_when=ApplyWhen.LAST,
+            RogueFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2)
         )
         return data
 

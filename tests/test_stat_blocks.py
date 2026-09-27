@@ -220,10 +220,18 @@ class TestSkillsStatBlock:
         basic_skills.add_skill_proficiency(Skill.ACROBATICS)
         assert basic_skills.is_proficient(Skill.ACROBATICS)
 
-    def test_add_skill_expertise_without_proficiency(self, basic_skills):
-        """Test that adding expertise without proficiency raises error."""
+    def test_expertise_without_proficiency_fails_validation(self, basic_skills):
+        """Expertise without proficiency is rejected once validated."""
+        basic_skills.add_skill_expertise(Skill.ACROBATICS)
         with pytest.raises(ValueError, match="unproficient skill"):
-            basic_skills.add_skill_expertise(Skill.ACROBATICS)
+            basic_skills.validate()
+
+    def test_expertise_before_proficiency_is_valid(self, basic_skills):
+        """The proficiency may be granted after the expertise."""
+        basic_skills.add_skill_expertise(Skill.ARCANA)
+        basic_skills.add_skill_proficiency(Skill.ARCANA)
+        basic_skills.validate()
+        assert basic_skills.has_expertise(Skill.ARCANA)
 
     def test_add_skill_expertise_with_proficiency(self, basic_skills):
         """Test adding expertise after proficiency."""

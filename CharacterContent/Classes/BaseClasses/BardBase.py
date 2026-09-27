@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, ApplyWhen, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
@@ -77,13 +77,12 @@ class BardLevel2(ClassBuilder.BaseClassLevel2):
         self,
         data: CharacterSheetData,
     ) -> CharacterSheetData:
-        data.add_feature(BardFeatures.JackOfAllTrades(), apply_when=ApplyWhen.LAST)
+        data.add_feature(BardFeatures.JackOfAllTrades())
         data.add_spell(self.spell)
         data.add_feature(
             BardFeatures.ExpertiseLevel1(
                 skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2
-            ),
-            apply_when=ApplyWhen.LAST,
+            )
         )
         return data
 
@@ -191,8 +190,7 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
         data.add_feature(
             BardFeatures.ExpertiseLevel1(
                 skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2
-            ),
-            apply_when=ApplyWhen.LAST,
+            )
         )
         return data
 

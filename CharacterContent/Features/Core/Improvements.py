@@ -5,32 +5,32 @@ subclasses - see CharacterContent.Items.Weapons/Armor).
 
 Ordering contract
 -----------------
-Features apply in two phases (see CharacterSheetData.setup_character_stat_block):
-every ApplyWhen.IMMEDIATE feature first, then every ApplyWhen.LAST feature,
-each phase in call order. Armors, weapons and items apply after all features.
-A CharacterImprovement falls into one of three categories:
+Features (and their extensions) apply in the order they were granted, then
+armor, then armor-conditional effects (Feature.apply_after_armor), then
+weapons and items - see CharacterSheetData.setup_character_stat_block. An
+improvement must give the same result wherever it lands in that order:
 
-- Additive or flag-setting writes (proficiencies, ability/AC/skill/speed
-  bonuses): order-insensitive because derived values (AC, skill totals, HP)
-  are computed lazily at read time. Safe as IMMEDIATE - and proficiency
-  grants MUST stay IMMEDIATE so that phase-LAST readers see them.
-- Overwrites (SetArmorClass, MultiAbilityArmorClass, roll conditions):
-  last writer wins, so only their order relative to each other matters.
-  Armor applying after all features is what lets worn armor override an
-  Unarmored Defense formula, matching the game rules.
-- Eager readers (SkillExpertise, StrengthRequirement): they read state at
-  apply time, so every write they depend on must already have happened.
-  Features carrying these must be added with ApplyWhen.LAST, unless the
-  feature itself performs the prerequisite write first (e.g. SkillExpert and
-  BlessingsOfKnowledge grant the proficiency before the expertise within one
-  apply call).
+- Writes (proficiencies, flat ability/AC/skill/speed bonuses) are
+  order-insensitive because derived values (AC, skill totals, HP) are
+  computed at read time.
+- A bonus whose size depends on other stats ("equal to your Wisdom
+  modifier", "half your Proficiency Bonus") must never be computed inside
+  apply() - that freezes it at whatever the stat was when the feature ran,
+  missing later ASIs and ability-raising items. Pass a formula instead (the
+  Value type below: SkillBonus/SavingThrowBonus/InitiativeBonus accept
+  `lambda cs: ...`), which the stat block evaluates at read time.
+- Requirements ("expertise needs proficiency") are recorded and validated
+  once every feature has applied, so the prerequisite may come from any
+  builder or the species, in any order.
+- Overwrites (SetArmorClass, MultiAbilityArmorClass, roll conditions): last
+  writer wins. Armor applying after all features is what lets worn armor
+  override an Unarmored Defense formula, matching the game rules.
 
-A bonus whose size depends on other stats ("equal to your Wisdom modifier",
-"half your Proficiency Bonus") must never be computed inside apply() - that
-freezes it at whatever the stat was when the feature ran, missing later ASIs
-and ability-raising items. Pass a formula instead (the Value type below:
-SkillBonus/SavingThrowBonus/InitiativeBonus accept `lambda cs: ...`), which
-the stat block evaluates at read time, making the bonus order-insensitive.
+The only deliberately order-dependent effects are chronological ones - an
+increase "to a maximum of 20" (AbilityScoreBonus.max_score), or "if you're
+already proficient, choose another" (SkillExpert, IronMind) - which resolve
+against what was granted before them. tests/test_feature_apply_order.py
+enforces this: it fails on any other apply() that reads derived stats.
 """
 
 from abc import ABC, abstractmethod
@@ -72,11 +72,7 @@ def _validate_pool(items, pool, count: int, error_prefix: str):
 
 
 class SkillProficiency(CharacterImprovement):
-    """Grants proficiency in a fixed list of skills.
-
-    Ordering: idempotent flag set - but keep the owning feature IMMEDIATE,
-    since phase-LAST readers (SkillExpertise, JackOfAllTradesBonus) must see
-    every proficiency."""
+    """Grants proficiency in a fixed list of skills (idempotent flag set)."""
 
     def __init__(self, skills: list[Skill]):
         self.skills = skills
@@ -103,10 +99,9 @@ class SkillProficiencyChoice(SkillProficiency):
 class SkillExpertise(CharacterImprovement):
     """Grants expertise in a fixed list of skills.
 
-    Ordering: eager reader - raises if the skill isn't already proficient, so
-    the owning feature must be added with ApplyWhen.LAST (proficiency can come
-    from any builder, including the species, which merges last), unless the
-    feature itself grants the proficiency earlier in its own apply()."""
+    Ordering: order-insensitive - the proficiency it requires may be granted
+    before or after it; the stat block validates the pairing once every
+    feature has applied (SkillsStatBlock.validate)."""
 
     def __init__(self, skills: list[Skill]):
         self.skills = skills
