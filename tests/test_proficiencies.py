@@ -7,6 +7,7 @@ that describes it. Expected values come from SourceTexts/ClassTexts/<class>.txt
 and the features' own text.
 """
 
+import itertools
 import pathlib
 import re
 
@@ -23,11 +24,23 @@ from CharacterContent.Features.ClassFeatures.ClassProficiencies import (
     MulticlassProficiencies,
 )
 from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
+from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
+from CharacterContent.Features.Core.Improvements import (
+    GrantArmorTraining,
+    InitiativeRollCondition,
+    SkillToAbilityOverride,
+)
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericForgeFeatures
-from CharacterContent.Items import Weapons
+from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items.Weapons import WeaponProficiency
 from CharacterContent.ToolProficiencies import Proficiencies as Tools
-from Core.Definitions import Ability, ArmorType, CharacterClass
+from Core.Definitions import (
+    Ability,
+    ArmorType,
+    CharacterClass,
+    DiceRollCondition,
+    Skill,
+)
 from RunCharacterCreator import BuildSelector, ExampleSelector
 
 ALL_BUILDS = {**BuildSelector.builds(), **ExampleSelector.builds()}
@@ -115,9 +128,7 @@ class TestFeaturesGrantProficiencies:
         # weapons and training with Medium armor." (only Medium armor used to
         # be granted)
         character = make_character()
-        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(
-            character
-        )
+        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(character)
         assert MARTIAL in character.weapon_proficiencies
         assert MEDIUM in character.armor_training
 
@@ -152,3 +163,109 @@ def test_builders_grant_proficiencies_only_through_features():
         if re.search(r"\bdata\.add_(weapon|armor|tool)_proficiency\(", line)
     ]
     assert not offenders, "\n".join(offenders)
+
+
+# ── Armor training (2024 PHB) ─────────────────────────────────────────────────
+# "If you wear armor and lack training with it, you have Disadvantage on any
+# D20 Test that involves Strength or Dexterity, and you can't cast spells. If
+# you use a Shield and lack training with it, you don't gain its AC bonus."
+
+DIS, ADV, NEUTRAL = (
+    DiceRollCondition.DISADVANTAGE,
+    DiceRollCondition.ADVANTAGE,
+    DiceRollCondition.NEUTRAL,
+)
+
+
+class TestArmorTraining:
+    def test_untrained_shield_grants_no_ac(self, make_character):
+        untrained = make_character(dexterity=14)
+        Armor.ShieldArmor().apply(untrained)
+        assert untrained.calculate_armor_class() == 12
+        assert untrained.warnings == [
+            "Wielding a Shield without Shield training: it grants no AC bonus."
+        ]
+        trained = make_character(dexterity=14, armor_training=[SHIELD])
+        Armor.ShieldArmor().apply(trained)
+        assert trained.calculate_armor_class() == 14
+        assert trained.warnings == []
+
+    def test_untrained_armor_disadvantage_on_strength_and_dexterity(
+        self, make_character
+    ):
+        character = make_character(dexterity=14)
+        Armor.LeatherArmor().apply(character)
+        # AC itself is unaffected.
+        assert character.calculate_armor_class() == 11 + 2
+        for skill in (Skill.ATHLETICS, Skill.ACROBATICS, Skill.STEALTH):
+            assert character.get_skill_roll_condition(skill) == DIS
+            assert character.get_skill_roll_condition_reasons(skill) == [
+                "Untrained armor"
+            ]
+        assert character.get_skill_roll_condition(Skill.ARCANA) == NEUTRAL
+        for ability in (Ability.STRENGTH, Ability.DEXTERITY):
+            assert character.get_saving_throw_roll_condition(ability) == DIS
+        assert character.get_saving_throw_roll_condition(Ability.WISDOM) == NEUTRAL
+        assert character.initiative_roll_condition == DIS
+        assert Weapons.Longsword().attack_roll_condition(character) == DIS
+        assert Weapons.Longbow().attack_roll_condition(character) == DIS
+        assert (
+            Weapons.Longsword(ability=Ability.INTELLIGENCE).attack_roll_condition(
+                character
+            )
+            == NEUTRAL
+        )
+        assert character.warnings == [
+            "Wearing Leather Armor without Light armor training: Disadvantage on "
+            "every D20 Test that involves Strength or Dexterity, and you can't "
+            "cast spells."
+        ]
+
+    def test_skill_uses_its_actual_ability(self, make_character):
+        # Athletics rolled with Wisdom isn't a Strength test.
+        character = make_character(wisdom=14)
+        SkillToAbilityOverride([Skill.ATHLETICS], Ability.WISDOM).apply(character)
+        Armor.LeatherArmor().apply(character)
+        assert character.get_skill_roll_condition(Skill.ATHLETICS) == NEUTRAL
+
+    def test_cancels_with_advantage(self, make_character):
+        character = make_character()
+        Armor.LeatherArmor().apply(character)
+        InitiativeRollCondition(ADV).apply(character)
+        character.saving_throws.add_advantage(Ability.DEXTERITY)
+        assert character.initiative_roll_condition == NEUTRAL
+        assert character.get_saving_throw_roll_condition(Ability.DEXTERITY) == NEUTRAL
+
+    def test_training_granted_after_the_armor_counts(self, make_character):
+        effects = [
+            Armor.LeatherArmor(),
+            Armor.ShieldArmor(),
+            GrantArmorTraining([LIGHT, SHIELD]),
+        ]
+        for ordered in itertools.permutations(effects):
+            character = make_character(dexterity=14)
+            for effect in ordered:
+                effect.apply(character)
+            assert character.warnings == []
+            assert character.get_skill_roll_condition(Skill.STEALTH) == NEUTRAL
+            assert character.calculate_armor_class() == 11 + 2 + 2
+
+    def test_armor_class_without_the_shield(self, make_character):
+        # A Monk's Unarmored Defense stops working with a Shield; setting the
+        # Shield aside brings it back (the sheet's "w/o Shield" figure).
+        character = make_character(dexterity=14, wisdom=16, armor_training=[SHIELD])
+        MonkFeatures.UnarmoredDefense().apply(character)
+        Armor.ShieldArmor().apply(character)
+        assert character.calculate_armor_class() == 10 + 2 + 2
+        assert character.calculate_armor_class(ignore_shield=True) == 10 + 2 + 3
+
+    def test_sheet_shows_the_warning(self, tmp_path, monkeypatch):
+        data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()  # no armor training
+        data.add_armor(Armor.LeatherArmor())
+        monkeypatch.setattr(
+            type(data), "get_output_folder", lambda self, mode=None: str(tmp_path)
+        )
+        data.create_character_sheet()
+        page = (tmp_path / "character.html").read_text(encoding="utf-8")
+        assert "class='sheet-warning'" in page
+        assert "without Light armor training" in page

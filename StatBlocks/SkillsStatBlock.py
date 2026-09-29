@@ -1,7 +1,7 @@
 from typing import Optional
 
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, DiceRollCondition, Skill
+from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
 from StatBlocks.StatBlock import StatBlock
 
 
@@ -63,12 +63,18 @@ class SkillsStatBlock(StatBlock):
         return self.expertise.get(skill, False)
 
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
-        sources = self._roll_condition_sources.get(skill, {})
-        advantage = DiceRollCondition.ADVANTAGE in sources
-        disadvantage = DiceRollCondition.DISADVANTAGE in sources
-        if advantage == disadvantage:
-            return DiceRollCondition.NEUTRAL
-        return DiceRollCondition.ADVANTAGE if advantage else DiceRollCondition.DISADVANTAGE
+        return combine_roll_conditions(self._roll_condition_sources.get(skill, {}))
+
+    def get_roll_condition_sources(
+        self, skill: Skill
+    ) -> dict[DiceRollCondition, list[str]]:
+        """{condition: [reasons]} for every recorded source (a copy)."""
+        return {
+            condition: list(reasons)
+            for condition, reasons in self._roll_condition_sources.get(
+                skill, {}
+            ).items()
+        }
 
     def set_roll_condition(
         self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None

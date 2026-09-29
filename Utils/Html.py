@@ -1226,6 +1226,15 @@ BASE_CHARACTER_SHEET_CSS = """
             margin: 0.5rem 0 0.75rem 0;
         }
 
+        /* Legal but bad build choices (e.g. armor worn without training). */
+        .sheet-warning {
+            margin: 0.4rem 0;
+            padding: 0.45rem 0.7rem;
+            border-left: 4px solid #d97706;
+            background: #fff4e5;
+            color: var(--text-color);
+        }
+
         .overview-tiles {
             display: flex;
             flex-wrap: wrap;

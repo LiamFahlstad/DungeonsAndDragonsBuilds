@@ -20,9 +20,8 @@ being the starting class instead of Bard:
   AC 14 + her +3 Dex mod capped at +2 = 16, since Fighter doesn't fix her
   poor Strength. Heavy armor access mostly matters for Str-based builds.
 - Weapons: same Rapier + 2x Scimitar, all auto-proficient now (no more
-  player_is_proficient overrides - Fighter's Martial proficiency covers them
-  natively, unlike Valor's Martial Training which isn't wired into
-  weapon_proficiencies in this codebase). Added a Longsword purely so all 3
+  player_is_proficient overrides - Fighter's Martial proficiency covers them,
+  as would Valor's Martial Training). Added a Longsword purely so all 3
   of Fighter's weapon-mastery slots (Bards/Paladins/Rogues only get 2) have a
   distinct owned weapon type to apply to.
 - Fighting Style: Dueling (+2 damage with a one-handed melee weapon and

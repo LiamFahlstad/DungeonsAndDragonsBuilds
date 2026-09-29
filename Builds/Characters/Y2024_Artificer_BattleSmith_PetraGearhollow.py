@@ -68,7 +68,7 @@ def get_starter_class_builder():
             Armor.ShieldArmor(),
         ],
         weapons=[
-            Weapons.Longsword(player_is_proficient=True, ability=Ability.INTELLIGENCE),
+            Weapons.Longsword(ability=Ability.INTELLIGENCE),
             Weapons.Dagger(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(

@@ -54,7 +54,10 @@ class CharacterStatBlock:
         # fighting style, Unarmored Movement, Fast Movement, ...) read these
         # inside a formula, i.e. once everything has applied.
         self.worn_armor_type: Optional[Definitions.ArmorType] = None
+        self.worn_armor_name: Optional[str] = None
         self.is_wielding_shield = False
+        # A wielded Shield's AC bonus; only counts with Shield training.
+        self._shield_armor_class_bonuses: list[int] = []
         self.initiative_proficiency = False
         self._initiative_roll_conditions: set[Definitions.DiceRollCondition] = set()
         self.initiative_bonus = 0
@@ -122,15 +125,62 @@ class CharacterStatBlock:
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
-        # Advantage and Disadvantage from any number of sources cancel out.
-        conditions = self._initiative_roll_conditions
-        advantage = Definitions.DiceRollCondition.ADVANTAGE in conditions
-        disadvantage = Definitions.DiceRollCondition.DISADVANTAGE in conditions
-        if advantage == disadvantage:
-            return Definitions.DiceRollCondition.NEUTRAL
-        if advantage:
-            return Definitions.DiceRollCondition.ADVANTAGE
-        return Definitions.DiceRollCondition.DISADVANTAGE
+        # Initiative is a Dexterity check, so untrained armor imposes
+        # Disadvantage. Advantage and Disadvantage cancel out.
+        conditions = set(self._initiative_roll_conditions)
+        if self.has_untrained_armor_disadvantage(Ability.DEXTERITY):
+            conditions.add(Definitions.DiceRollCondition.DISADVANTAGE)
+        return Definitions.combine_roll_conditions(conditions)
+
+    # ── Armor training (2024 PHB) ────────────────────────────────────────────
+    # "If you wear armor and lack training with it, you have Disadvantage on
+    # any D20 Test that involves Strength or Dexterity, and you can't cast
+    # spells. If you use a Shield and lack training with it, you don't gain
+    # its AC bonus." Worked out on read from the worn armor and the training
+    # granted, so it doesn't matter which applied first.
+
+    UNTRAINED_ARMOR_REASON = "Untrained armor"
+
+    @property
+    def is_wearing_untrained_armor(self) -> bool:
+        return (
+            self.worn_armor_type is not None
+            and self.worn_armor_type not in self.armor_training
+        )
+
+    @property
+    def has_shield_training(self) -> bool:
+        return Definitions.ArmorType.SHIELD in self.armor_training
+
+    def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
+        """Disadvantage on D20 Tests with `ability` from untrained armor."""
+        return self.is_wearing_untrained_armor and ability in (
+            Ability.STRENGTH,
+            Ability.DEXTERITY,
+        )
+
+    def add_shield(self, armor_class_bonus: int) -> None:
+        """Wield a Shield granting `armor_class_bonus` (with training)."""
+        self.is_wielding_shield = True
+        self._shield_armor_class_bonuses.append(armor_class_bonus)
+
+    @property
+    def warnings(self) -> list[str]:
+        """Legal but bad choices the player should know about."""
+        warnings = []
+        if self.is_wearing_untrained_armor:
+            assert self.worn_armor_type is not None
+            warnings.append(
+                f"Wearing {self.worn_armor_name or 'armor'} without "
+                f"{self.worn_armor_type.value} armor training: Disadvantage on "
+                "every D20 Test that involves Strength or Dexterity, and you "
+                "can't cast spells."
+            )
+        if self.is_wielding_shield and not self.has_shield_training:
+            warnings.append(
+                "Wielding a Shield without Shield training: it grants no AC bonus."
+            )
+        return warnings
 
     @property
     def initiative(self) -> int:
@@ -306,11 +356,33 @@ class CharacterStatBlock:
     def has_advantage_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_advantaged(ability)
 
+    def get_saving_throw_roll_condition(
+        self, ability: Ability
+    ) -> Definitions.DiceRollCondition:
+        conditions = set()
+        if self.saving_throws.is_advantaged(ability):
+            conditions.add(Definitions.DiceRollCondition.ADVANTAGE)
+        if self.has_untrained_armor_disadvantage(ability):
+            conditions.add(Definitions.DiceRollCondition.DISADVANTAGE)
+        return Definitions.combine_roll_conditions(conditions)
+
     def add_advantage_in_saving_throw(self, ability: Ability) -> None:
         self.saving_throws.add_advantage(ability)
 
-    def get_skill_roll_condition(self, skill: Skill):
-        return self.skills.get_roll_condition(skill)
+    def _skill_roll_condition_sources(
+        self, skill: Skill
+    ) -> dict[Definitions.DiceRollCondition, list[str]]:
+        sources = self.skills.get_roll_condition_sources(skill)
+        if self.has_untrained_armor_disadvantage(self.get_skill_ability(skill)):
+            sources.setdefault(Definitions.DiceRollCondition.DISADVANTAGE, []).append(
+                self.UNTRAINED_ARMOR_REASON
+            )
+        return sources
+
+    def get_skill_roll_condition(self, skill: Skill) -> Definitions.DiceRollCondition:
+        return Definitions.combine_roll_conditions(
+            self._skill_roll_condition_sources(skill)
+        )
 
     def set_skill_roll_condition(
         self,
@@ -321,7 +393,8 @@ class CharacterStatBlock:
         self.skills.set_roll_condition(skill, condition, reason)
 
     def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        return self.skills.get_roll_condition_reasons(skill)
+        condition = self.get_skill_roll_condition(skill)
+        return self._skill_roll_condition_sources(skill).get(condition, [])
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
         base_modifier = self.get_ability_modifier(ability)
@@ -348,14 +421,20 @@ class CharacterStatBlock:
             constitution_modifier=constitution_modifier,
         )
 
-    def calculate_armor_class(self) -> int:
-        """The best applicable AC formula plus every AC bonus."""
-        formulas = self.combat.get_applicable_armor_class_formulas(
-            self.is_wielding_shield
-        )
+    def calculate_armor_class(self, ignore_shield: bool = False) -> int:
+        """The best applicable AC formula plus every AC bonus. ignore_shield:
+        the AC with the Shield set aside (its bonus gone, and formulas it
+        disables - Monk's Unarmored Defense - available again)."""
+        wielding_shield = self.is_wielding_shield and not ignore_shield
+        formulas = self.combat.get_applicable_armor_class_formulas(wielding_shield)
         base = max(self._armor_class_from(formula) for formula in formulas)
         derived = sum(bonus(self) for bonus in self._derived_armor_class_bonuses)
-        return base + self.combat.armor_class_modifier + derived
+        shield = (
+            sum(self._shield_armor_class_bonuses)
+            if wielding_shield and self.has_shield_training
+            else 0
+        )
+        return base + self.combat.armor_class_modifier + derived + shield
 
     def _armor_class_from(self, formula: ArmorClassFormula) -> int:
         ability_modifier = sum(

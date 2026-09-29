@@ -128,11 +128,11 @@ class AbstractArmor(Item, ABC):
         if self.stealth_disadvantage:
             StealthDisadvantage(reason=self.name).apply(character_stat_block)
         if self.is_shield:
-            character_stat_block.is_wielding_shield = True
-            if self.ac_bonus:
-                ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
+            # The AC bonus only counts with Shield training (worked out on read).
+            character_stat_block.add_shield(self.ac_bonus or 0)
         else:
             character_stat_block.worn_armor_type = self.armor_type
+            character_stat_block.worn_armor_name = self.name
             # Medium armor: "add your Dexterity modifier, to a maximum of
             # +2" - Light armor is uncapped and Heavy armor has no ability
             # modifier at all, so the cap only ever applies here.

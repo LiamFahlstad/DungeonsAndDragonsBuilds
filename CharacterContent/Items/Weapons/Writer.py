@@ -1,5 +1,6 @@
 from typing import TextIO
 
+from Core.Definitions import DiceRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import DamageCalculator, Html, ItemSheetSettings
 
@@ -373,6 +374,13 @@ def _write_single_weapon(
         f"<span class='wsep'>·</span>"
         f"{proficient_label}"
     )
+    if (
+        weapon.attack_roll_condition(character_stat_block)
+        == DiceRollCondition.DISADVANTAGE
+    ):
+        type_cell += (
+            "<span class='wsep'>·</span>Attacks with Disadvantage (untrained armor)"
+        )
     damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(weapon.damage_type, "")
     damage_type_tag = (
         f" <span class='wtag {damage_type_class}'>{weapon.damage_type.value}</span>"

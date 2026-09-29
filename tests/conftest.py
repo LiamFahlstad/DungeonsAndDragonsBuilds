@@ -47,6 +47,7 @@ def make_character():
     """Factory for a bare CharacterStatBlock (no features applied).
 
     make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
+    make_character(armor_training=[ArmorType.SHIELD])
     """
     from Core.Definitions import CharacterClass
     from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
@@ -60,9 +61,10 @@ def make_character():
         wisdom=10,
         charisma=10,
         levels=None,
+        armor_training=(),
     ):
         levels = levels or {CharacterClass.FIGHTER: 1}
-        return CharacterStatBlock(
+        character = CharacterStatBlock(
             name="Test",
             character_subclass="Test",
             base_class=next(iter(levels)),
@@ -75,5 +77,8 @@ def make_character():
             saving_throws=SavingThrowsStatBlock(),
             spell_slots={},
         )
+        # Armor training (ArmorType values) - untrained armor has penalties.
+        character.armor_training.update(armor_training)
+        return character
 
     return _make

@@ -76,26 +76,22 @@ def get_starter_class_builder():
         ],
         weapons=[
             # -- WeaponImprovement showcase: one of each improvement --
-            Weapons.UnerringBlade(player_is_proficient=True),  # SetAttackRollBonus
-            Weapons.MarksmansLongbow(player_is_proficient=True),  # AddAttackRollBonus
-            Weapons.Skullcrusher(player_is_proficient=True),  # SetDamageRollBonus
-            Weapons.VenomfangDagger(player_is_proficient=True),  # AddDamageRollBonus
-            Weapons.Colossustrike(player_is_proficient=True),  # SetDamageDie
-            Weapons.FrostbrandBlade(player_is_proficient=True),  # SetDamageType
-            Weapons.LungingLongsword(player_is_proficient=True),  # AddWeaponProperty
-            Weapons.LoremastersRapier(
-                player_is_proficient=True
-            ),  # AddWeaponDescription
-            Weapons.StormcallerMace(player_is_proficient=True),  # AddExtraDamage
+            Weapons.UnerringBlade(),  # SetAttackRollBonus
+            Weapons.MarksmansLongbow(),  # AddAttackRollBonus
+            Weapons.Skullcrusher(),  # SetDamageRollBonus
+            Weapons.VenomfangDagger(),  # AddDamageRollBonus
+            Weapons.Colossustrike(),  # SetDamageDie
+            Weapons.FrostbrandBlade(),  # SetDamageType
+            Weapons.LungingLongsword(),  # AddWeaponProperty
+            Weapons.LoremastersRapier(),  # AddWeaponDescription
+            Weapons.StormcallerMace(),  # AddExtraDamage
             # -- SetWeaponAbility showcase: a plain Shortbow using Wisdom instead
             # of Dexterity, e.g. a "guided by instinct" reskin --
-            Weapons.Shortbow(player_is_proficient=True, ability=Ability.WISDOM),
+            Weapons.Shortbow(ability=Ability.WISDOM),
             # -- Character-affecting improvement showcase: magic weapons that
             # modify the wielder (via `improvements=`), not the weapon itself --
-            Weapons.SkirmishersShortsword(player_is_proficient=True),  # SkillBonus
-            Weapons.VanguardsSpear(
-                player_is_proficient=True
-            ),  # InitiativeRollCondition
+            Weapons.SkirmishersShortsword(),  # SkillBonus
+            Weapons.VanguardsSpear(),  # InitiativeRollCondition
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

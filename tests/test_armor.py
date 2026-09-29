@@ -90,13 +90,22 @@ class TestArmorClass:
         assert character.calculate_armor_class() == 18
 
     def test_shield_stacks_with_armor(self, make_character):
-        character = make_character(dexterity=14, strength=13)
+        character = make_character(
+            dexterity=14,
+            strength=13,
+            armor_training=[
+                ArmorType.LIGHT,
+                ArmorType.MEDIUM,
+                ArmorType.HEAVY,
+                ArmorType.SHIELD,
+            ],
+        )
         Armor.ChainMailArmor().apply(character)
         Armor.ShieldArmor().apply(character)
         assert character.calculate_armor_class() == 16 + 2
 
     def test_shield_alone_adds_to_unarmored(self, make_character):
-        character = make_character(dexterity=14)
+        character = make_character(dexterity=14, armor_training=[ArmorType.SHIELD])
         Armor.ShieldArmor().apply(character)
         assert character.calculate_armor_class() == 10 + 2 + 2
 
@@ -114,7 +123,7 @@ class TestArmorClass:
         )
 
     def test_no_stealth_disadvantage_for_leather(self, make_character):
-        character = make_character()
+        character = make_character(armor_training=[ArmorType.LIGHT])
         Armor.LeatherArmor().apply(character)
         assert (
             character.get_skill_roll_condition(Skill.STEALTH)

@@ -16,6 +16,7 @@ import pytest
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import (
     Ability,
+    ArmorType,
     CharacterClass,
     Condition,
     DamageType,
@@ -686,15 +687,15 @@ class TestPromisedPassiveBenefits:
         # "...your base Armor Class equals 10 plus your Dexterity and Charisma
         # modifiers. You can use a Shield and still gain this benefit."
         character = apply_features(
-            make_character(dexterity=14, charisma=16),
+            make_character(
+                dexterity=14, charisma=16, armor_training=[ArmorType.SHIELD]
+            ),
             [PaladinGeniesFeatures.GeniesSplendor()],
             [Armor.ShieldArmor()],
         )
         assert character.calculate_armor_class() == 10 + 2 + 3 + 2
 
-    def test_dazzling_footwork_unarmored_defense_not_with_shield(
-        self, make_character
-    ):
+    def test_dazzling_footwork_unarmored_defense_not_with_shield(self, make_character):
         # "While you aren't wearing armor or wielding a Shield... Your base
         # Armor Class equals 10 plus your Dexterity and Charisma modifiers."
         unarmored = apply_features(
@@ -703,7 +704,9 @@ class TestPromisedPassiveBenefits:
         )
         assert unarmored.calculate_armor_class() == 10 + 2 + 3
         with_shield = apply_features(
-            make_character(dexterity=14, charisma=16),
+            make_character(
+                dexterity=14, charisma=16, armor_training=[ArmorType.SHIELD]
+            ),
             [BardDanceFeatures.DazzlingFootwork()],
             [Armor.ShieldArmor()],
         )

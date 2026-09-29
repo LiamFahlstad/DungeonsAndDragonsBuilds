@@ -1,3 +1,4 @@
+import html
 import pathlib
 from typing import Literal, Optional, TextIO
 
@@ -206,10 +207,16 @@ class HtmlCharacterSheetWriter:
         they don't already know today's HP total.
         """
         file.write("<h2>Overview</h2>\n")
+        for warning in character.warnings:
+            file.write(f"<p class='sheet-warning'>⚠ {html.escape(warning)}</p>\n")
         file.write("<div class='overview-section'>\n")
 
         ac = character.calculate_armor_class()
-        ac_sub = f"w/o Shield {ac - 2}" if self._has_shield_armor(armors) else ""
+        ac_sub = (
+            f"w/o Shield {character.calculate_armor_class(ignore_shield=True)}"
+            if self._has_shield_armor(armors)
+            else ""
+        )
 
         initiative_sub = ""
         if character.initiative_roll_condition in (
@@ -321,8 +328,11 @@ class HtmlCharacterSheetWriter:
 
             save_total = ability_mod + (proficiency_bonus if proficient else 0)
             saving_throw_text = f"{save_total:+}"
-            if character.has_advantage_in_saving_throw(ability):
+            save_condition = character.get_saving_throw_roll_condition(ability)
+            if save_condition == Definitions.DiceRollCondition.ADVANTAGE:
                 saving_throw_text += " (Adv)"
+            elif save_condition == Definitions.DiceRollCondition.DISADVANTAGE:
+                saving_throw_text += " (Dis)"
 
             tile_class = "ability-tile st-proficient" if proficient else "ability-tile"
             file.write(f"<div class='{tile_class}'>\n")

@@ -84,7 +84,7 @@ def get_starter_class_builder():
             Armor.StalwartsAegis(is_wearing=False),  # SavingThrowAdvantage
         ],
         weapons=[
-            Weapons.Longsword(player_is_proficient=True),
+            Weapons.Longsword(),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

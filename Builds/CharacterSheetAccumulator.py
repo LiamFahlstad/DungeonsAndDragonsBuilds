@@ -14,13 +14,7 @@ from CharacterContent.Features.CombatFeatures.FightingStyles import (
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Items import Items
 from CharacterContent.Items.Armor import AbstractArmor
-from CharacterContent.Features.Core.Improvements import (
-    GrantArmorTraining,
-    GrantToolProficiency,
-    GrantWeaponProficiency,
-)
-from CharacterContent.Items.Weapons import AbstractWeapon, WeaponProficiency
-from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
+from CharacterContent.Items.Weapons import AbstractWeapon
 from Core.Definitions import Ability, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -72,8 +66,6 @@ class CharacterSheetData:
     weapons: list[AbstractWeapon] = attr.Factory(list)
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
-    armor_proficiencies: set[Definitions.ArmorType] = attr.Factory(set)
-    weapon_proficiencies: set[WeaponProficiency] = attr.Factory(set)
     items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
     # Same gear as armors/weapons/items above, grouped into labeled batches
     # (Starting Equipment, then whatever adventuring gear was added later via
@@ -81,7 +73,6 @@ class CharacterSheetData:
     # show where each item came from. armors/weapons/items stay the flat
     # lists everything else (AC, attacks, carrying capacity) reads.
     equipment_entries: list[EquipmentEntry] = attr.Factory(list)
-    tool_proficiencies: list[ToolProficiency] = attr.Factory(list)
     experience_points: int = 0
     # GP left over after "buying" the base class's granted starting gear at
     # listed prices, from that class's flat Starting Equipment gold option.
@@ -185,14 +176,6 @@ class CharacterSheetData:
         self._invalidate_cache()
         self.weapon_masteries.append(weapon)
 
-    def add_armor_proficiency(self, armor_type: Definitions.ArmorType):
-        self._invalidate_cache()
-        self.armor_proficiencies.add(armor_type)
-
-    def add_weapon_proficiency(self, weapon_proficiency: WeaponProficiency):
-        self._invalidate_cache()
-        self.weapon_proficiencies.add(weapon_proficiency)
-
     def add_fighting_style(self, fighting_style: FightingStyle):
         self._invalidate_cache()
         self.fighting_styles.append(fighting_style)
@@ -283,13 +266,6 @@ class CharacterSheetData:
                 self.items[i] = (existing_item, existing_quantity + quantity)
                 return
         self.items.append((item, quantity))
-
-    def add_tool_proficiency(self, tool_proficiency: ToolProficiency):
-        if tool_proficiency not in self.tool_proficiencies:
-            self._invalidate_cache()
-            self.tool_proficiencies.append(tool_proficiency)
-        else:
-            raise ValueError(f"Tool proficiency {tool_proficiency} already added.")
 
     def create_character_sheet(
         self,
@@ -439,17 +415,14 @@ class CharacterSheetData:
         return character
 
     def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
-        """Everything that records effects on the stat block: the builders'
-        armor/weapon/tool proficiencies, features and their extensions, armor,
-        weapons, items and stat fighting styles (Defense). Each has apply(character_stat_block); the order is
-        irrelevant."""
+        """Everything that records effects on the stat block: features and
+        their extensions, armor, weapons, items and stat fighting styles
+        (Defense). Each has apply(character_stat_block); the order is
+        irrelevant. (Proficiencies come from features too - e.g.
+        ClassProficiencies.)"""
         if features is None:
             features = list(self.iter_features_with_extensions())
         return [
-            # Proficiencies granted directly by the class/subclass builders.
-            GrantArmorTraining(sorted(self.armor_proficiencies, key=str)),
-            GrantWeaponProficiency(sorted(self.weapon_proficiencies, key=str)),
-            GrantToolProficiency(list(self.tool_proficiencies)),
             *features,
             *self.armors,
             *self.weapons,
@@ -515,8 +488,7 @@ class CharacterSheetData:
           later builder redeclaring an existing class states that class's
           final total level (e.g. a starter Paladin 1 resumed by a Paladin 19
           builder ends at 19, not 20);
-        - sets (armor_proficiencies, weapon_proficiencies) are combined with
-          set union;
+        - sets are combined with set union;
         - scalars are overwritten only when `other`'s value is actually set
           (see _MERGE_EMPTY_VALUES), so an untouched default never erases an
           earlier builder's value.

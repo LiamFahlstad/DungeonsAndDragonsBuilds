@@ -98,8 +98,8 @@ def get_starter_class_builder():
             Armor.ChainMailArmor(),
         ],
         weapons=[
-            Weapons.Warhammer(player_is_proficient=True, player_has_mastery=False),
-            Weapons.Maul(player_is_proficient=True, player_has_mastery=False),
+            Weapons.Warhammer(player_has_mastery=False),
+            Weapons.Maul(player_has_mastery=False),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={

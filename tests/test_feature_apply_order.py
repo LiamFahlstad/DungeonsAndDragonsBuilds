@@ -201,7 +201,10 @@ def _stats(data):
             (cs.is_proficient_in_skill(s), cs.has_expertise_in_skill(s)) for s in Skill
         ],
         "skill_rolls": [
-            (cs.get_skill_roll_condition(s), sorted(cs.get_skill_roll_condition_reasons(s)))
+            (
+                cs.get_skill_roll_condition(s),
+                sorted(cs.get_skill_roll_condition_reasons(s)),
+            )
             for s in Skill
         ],
         "saves": [cs.get_saving_throw_modifier(a) for a in Ability],
@@ -268,9 +271,7 @@ class TestPreviouslyChronologicalEffects:
         for character in _in_every_order(make_character, effects, strength=19):
             assert character.get_ability_score(Ability.STRENGTH) == 22
 
-    def test_armor_strength_requirement_met_by_any_later_increase(
-        self, make_character
-    ):
+    def test_armor_strength_requirement_met_by_any_later_increase(self, make_character):
         effects = [
             Armor.PlateArmor(),
             GeneralFeats.AbilityScoreImprovement([(Ability.STRENGTH, 2)]),
@@ -342,7 +343,10 @@ class TestCompetingEffectsNeverOverwrite:
     def test_two_unarmored_defenses_use_the_best_not_both(self, make_character):
         # Barbarian 10+DEX+CON (16) vs Monk 10+DEX+WIS (15): the rules let
         # you use one AC calculation - their abilities must not stack.
-        effects = [BarbarianFeatures.UnarmoredDefense(), MonkFeatures.UnarmoredDefense()]
+        effects = [
+            BarbarianFeatures.UnarmoredDefense(),
+            MonkFeatures.UnarmoredDefense(),
+        ]
         for character in _in_every_order(
             make_character, effects, dexterity=14, constitution=18, wisdom=16
         ):
@@ -359,7 +363,11 @@ class TestCompetingEffectsNeverOverwrite:
         # "While you aren't wearing armor or wielding a Shield..."
         effects = [MonkFeatures.UnarmoredDefense(), Armor.ShieldArmor()]
         for character in _in_every_order(
-            make_character, effects, dexterity=14, wisdom=16
+            make_character,
+            effects,
+            dexterity=14,
+            wisdom=16,
+            armor_training=[ArmorType.SHIELD],
         ):
             assert character.calculate_armor_class() == 10 + 2 + 2
 
@@ -648,7 +656,9 @@ def _apply_methods_reading_derived_stats():
                     ):
                         reads.add(node.attr)
                 if reads:
-                    yield f"{cls.name}.{method.name}", path, method.lineno, sorted(reads)
+                    yield f"{cls.name}.{method.name}", path, method.lineno, sorted(
+                        reads
+                    )
 
 
 def test_apply_methods_do_not_snapshot_derived_stats():
@@ -710,9 +720,7 @@ class TestProficienciesResolveOnRead:
         }
         assert character.armor_training == set()
 
-    def test_bracers_of_archery_grant_bow_proficiency_while_worn(
-        self, make_character
-    ):
+    def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_character):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
         worn = make_character()
         BracersOfArchery().apply(worn)

@@ -7,7 +7,7 @@ import pytest
 
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
-from Core.Definitions import CharacterClass
+from Core.Definitions import ArmorType, CharacterClass
 
 
 def bug(reason):
@@ -47,7 +47,7 @@ class TestDefense:
         assert character.calculate_armor_class() == 11 + 2 + 1
 
     def test_shield_alone_is_not_armor(self, make_character):
-        character = make_character(dexterity=14)
+        character = make_character(dexterity=14, armor_training=[ArmorType.SHIELD])
         Armor.ShieldArmor().apply(character)
         FightingStyles.Defense().apply(character)
         assert character.calculate_armor_class() == 10 + 2 + 2

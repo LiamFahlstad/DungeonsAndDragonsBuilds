@@ -78,9 +78,8 @@ def get_starter_class_builder():
         ],
         # Dagger and Spear are both Simple weapons, so Artificers
         # (weapon_proficiencies=[SIMPLE] in ArtificerBase) are proficient
-        # with both and add_weapon auto-detects it without needing a
-        # player_is_proficient override. The Spear is swapped for a Light
-        # Hammer at Stonehill - see __init__.
+        # with both - worked out automatically, no override needed. The
+        # Spear is swapped for a Light Hammer at Stonehill - see __init__.
         weapons=[
             Weapons.Dagger(),
             Weapons.Spear(),

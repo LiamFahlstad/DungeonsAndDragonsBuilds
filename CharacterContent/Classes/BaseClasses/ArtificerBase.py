@@ -351,7 +351,7 @@ class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
     ):
         default_equipment = [
             Armor.StuddedLeatherArmor(),
-            Weapons.Dagger(player_is_proficient=True),
+            Weapons.Dagger(),
         ]
         super().__init__(
             base_class=CharacterClass.ARTIFICER,

@@ -167,6 +167,16 @@ class AbstractWeapon(Item, ABC):
             self, character_stat_block.weapon_proficiencies
         )
 
+    def attack_roll_condition(
+        self, character_stat_block: CharacterStatBlock
+    ) -> DiceRollCondition:
+        """Disadvantage when the attack uses Strength or Dexterity while
+        wearing armor the wielder lacks training with (2024 PHB)."""
+        _, ability_name = self._calculate_ability_modifier_bonus(character_stat_block)
+        if character_stat_block.has_untrained_armor_disadvantage(Ability(ability_name)):
+            return DiceRollCondition.DISADVANTAGE
+        return DiceRollCondition.NEUTRAL
+
     def _calculate_proficiency_damage_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> int:

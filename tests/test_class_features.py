@@ -15,7 +15,13 @@ from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
 from CharacterContent.Items import Armor
-from Core.Definitions import Ability, CharacterClass, DiceRollCondition, Skill
+from Core.Definitions import (
+    Ability,
+    ArmorType,
+    CharacterClass,
+    DiceRollCondition,
+    Skill,
+)
 from RunCharacterCreator import BuildSelector
 
 
@@ -34,7 +40,9 @@ class TestUnarmoredDefense:
         assert character.calculate_armor_class() == 10 + 2 + 3
 
     def test_barbarian_keeps_it_with_shield(self, make_character):
-        character = make_character(dexterity=14, constitution=16)
+        character = make_character(
+            dexterity=14, constitution=16, armor_training=[ArmorType.SHIELD]
+        )
         apply_features(
             character, [BarbarianFeatures.UnarmoredDefense()], [Armor.ShieldArmor()]
         )

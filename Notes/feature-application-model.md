@@ -53,6 +53,7 @@ without that second check a late extension would be missed.
 | Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses`: best plain grant + every extension |
 | Weapon proficiency | `weapon_proficiencies` on the stat block (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
 | Armor training, tools | `armor_training`, `tool_proficiencies` on the stat block | Read directly (the same tool from two sources is listed once) |
+| Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield, `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `initiative`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
@@ -183,9 +184,9 @@ These are rules or content decisions rather than ordering problems:
    Core Traits (`ClassProficiencies`), a class gained by multiclassing grants its "As a Multiclass
    Character" subset (`MulticlassProficiencies`), and subclass/feat grants live in the feature that
    describes them. `tests/test_proficiencies.py` fails on any builder that grants one directly. The
-   multiclass skill and Musical Instrument *choices* aren't modelled. The old
-   `CharacterSheetData.add_*_proficiency` methods and sets have no callers left; they can be
-   removed.
+   multiclass skill and Musical Instrument *choices* aren't modelled. The stat block is the only
+   place proficiencies live; `player_is_proficient=True` on a weapon is only for proficiency no
+   grant describes (Unarmed Strike).
 5. **Choices with no parameter yet.** Otherworldly Glamour, Genie's Splendor, Knightly Envoy and
    Dragonscarred describe a skill or resistance choice the builders don't take, so only their
    choice-independent parts apply.

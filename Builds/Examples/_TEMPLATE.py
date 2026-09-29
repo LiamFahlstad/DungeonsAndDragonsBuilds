@@ -184,7 +184,7 @@ def get_starter_class_builder():
         # weapons: Weapons you carry
         # =====================================================================
         # TODO: Choose weapons from CharacterContent/Items/Weapons/
-        # Set player_is_proficient=True if your class has proficiency
+        # Proficiency is worked out automatically from your class/subclass/feats
         # Set player_has_mastery=True if you have weapon mastery (Fighter-specific)
         weapons=[
             Weapons.Shortsword(),

@@ -208,6 +208,16 @@ class DiceRollCondition(str, Enum):
     NEUTRAL = "Neutral"
 
 
+def combine_roll_conditions(conditions) -> DiceRollCondition:
+    """The roll to make given every Advantage/Disadvantage source: having both
+    cancels out to a straight roll, however many of each there are."""
+    advantage = DiceRollCondition.ADVANTAGE in conditions
+    disadvantage = DiceRollCondition.DISADVANTAGE in conditions
+    if advantage == disadvantage:
+        return DiceRollCondition.NEUTRAL
+    return DiceRollCondition.ADVANTAGE if advantage else DiceRollCondition.DISADVANTAGE
+
+
 class ArtificerSubclass(str, Enum):
     ALCHEMIST = "Alchemist"
     ARMORER = "Armorer"
