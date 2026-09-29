@@ -1,6 +1,7 @@
 from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
+from CharacterContent.Features.Core.Improvements import InitiativeRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -10,6 +11,12 @@ class Assassinate(Feature):
             name="Assassinate",
             origin="Assassin Rogue Level 3",
             usage_tags=["buff", "damage"],
+        )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "Initiative. You have Advantage on Initiative rolls."
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
+            character_stat_block
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

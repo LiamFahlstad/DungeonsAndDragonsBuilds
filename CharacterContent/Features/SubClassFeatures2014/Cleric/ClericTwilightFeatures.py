@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -52,6 +53,12 @@ class EyesOfNight(Feature):
             ),
             usage_tags=["utility"],
         )
+        # "You have darkvision out to a range of 300 feet." (sharing it is
+        # the activated part)
+        self._darkvision = GrantSense(Definitions.Sense.DARKVISION, 300, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._darkvision.apply(character_stat_block)
 
     def target(
         self, character_stat_block: CharacterStatBlock

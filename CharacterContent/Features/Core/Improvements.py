@@ -555,6 +555,23 @@ class GrantSense(CharacterImprovement):
         character_stat_block.add_sense(self.sense, self.range_feet, self.source)
 
 
+class GrantOrExtendSense(CharacterImprovement):
+    """"You gain Darkvision with a range of 60 feet. If you already have
+    Darkvision, its range increases by 60 feet." Resolved on read: the range
+    is the best other grant of the sense plus `range_feet`, whether those
+    grants applied before or after this one."""
+
+    def __init__(self, sense: Sense, range_feet: int, source: str):
+        self.sense = sense
+        self.range_feet = range_feet
+        self.source = source
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.add_sense_or_extension(
+            self.sense, self.range_feet, self.source
+        )
+
+
 class GrantLanguage(CharacterImprovement):
     """Grants knowledge of a language. `source` names where the language
     comes from (e.g. species or feat name) on the character sheet."""

@@ -72,15 +72,34 @@ from CharacterContent.Classes.SubClasses2014.WizardNecromancy import (
     WizardNecromancyLevel3,
 )
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
+    WarlockFathomlessFeatures,
     WarlockHexbladeFeatures,
+    WarlockTheGenieFeatures,
 )
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardNecromancyFeatures,
 )
+from CharacterContent.Classes.SubClasses2014.BardSwords import BardSwordsLevel3
+from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
+    BarbarianPathOfTheStormHeraldFeatures,
+)
+from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericArcanaFeatures
+from CharacterContent.Items.Weapons import MartialMelee
+from CharacterContent.Items.Weapons.Base import is_proficient_with
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Items import Armor
 from CharacterContent.Items.Weapons.Enums import WeaponProficiency
-from Core.Definitions import ArmorType, CharacterClass, DamageType
+from Core.Definitions import (
+    ArmorType,
+    BarbarianStormEnvironment,
+    CharacterClass,
+    DamageType,
+    DiceRollCondition,
+    Sense,
+    Skill,
+    WarlockGenieKind,
+)
 
 
 def bug(reason):
@@ -445,3 +464,95 @@ class TestOtherCorrectlyWiredEffects:
         assert character.is_immune_to_condition(Condition.FRIGHTENED)
         assert character.is_immune_to_condition(Condition.POISONED)
         assert not character.is_immune_to_condition(Condition.CHARMED)
+
+
+# ── Feature text promises a proficiency the builder never granted ─────────────
+
+
+class TestPromisedProficienciesGranted:
+    def test_hexblade_hex_warrior(self):
+        # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
+        data = features_at(WarlockHexbladeLevel3, CharacterClass.WARLOCK, 3)
+        assert ArmorType.MEDIUM in data.armor_proficiencies
+        assert ArmorType.SHIELD in data.armor_proficiencies
+        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+
+    def test_college_of_swords_bonus_proficiencies(self):
+        # "...you gain proficiency with medium armor and the scimitar."
+        data = CharacterSheetData(level_per_class={CharacterClass.BARD: 3})
+        BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)
+        assert ArmorType.MEDIUM in data.armor_proficiencies
+        assert WeaponProficiency.SCIMITAR in data.weapon_proficiencies
+        assert is_proficient_with(MartialMelee.Scimitar(), data.weapon_proficiencies)
+        assert not is_proficient_with(
+            MartialMelee.Longsword(), data.weapon_proficiencies
+        )
+
+    def test_arcana_domain_arcane_initiate(self, make_character):
+        # "You gain proficiency in the Arcana skill..."
+        character = make_character()
+        ClericArcanaFeatures.ArcaneInitiate().apply(character)
+        assert character.is_proficient_in_skill(Skill.ARCANA)
+
+
+class TestPromisedPassiveBenefits:
+    """Always-on benefits in the feature text that used to be description-only."""
+
+    def test_eyes_of_night_darkvision(self, make_character):
+        # "You have darkvision out to a range of 300 feet."
+        character = make_character()
+        ClericTwilightFeatures.EyesOfNight().apply(character)
+        assert character.get_sense_range(Sense.DARKVISION) == 300
+
+    def test_ambush_master_initiative_advantage(self, make_character):
+        # "You have advantage on initiative rolls."
+        character = make_character()
+        RogueScoutFeatures.AmbushMaster().apply(character)
+        assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
+
+    def test_oceanic_soul_cold_resistance(self, make_character):
+        # "You gain resistance to cold damage."
+        character = make_character()
+        WarlockFathomlessFeatures.OceanicSoul().apply(character)
+        assert character.is_resistant_to_damage(DamageType.COLD)
+
+    def test_inured_to_undeath_necrotic_resistance(self, make_character):
+        # "You have resistance to necrotic damage..."
+        character = make_character()
+        WizardNecromancyFeatures.InuredToUndeath().apply(character)
+        assert character.is_resistant_to_damage(DamageType.NECROTIC)
+
+    @pytest.mark.parametrize(
+        "kind, damage_type",
+        [
+            (WarlockGenieKind.DAO, DamageType.BLUDGEONING),
+            (WarlockGenieKind.DJINNI, DamageType.THUNDER),
+            (WarlockGenieKind.EFREETI, DamageType.FIRE),
+            (WarlockGenieKind.MARID, DamageType.COLD),
+        ],
+    )
+    def test_elemental_gift_resistance_by_patron_kind(
+        self, make_character, kind, damage_type
+    ):
+        # "...resistance to a damage type determined by your patron's kind:
+        # bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid)."
+        character = make_character()
+        WarlockTheGenieFeatures.ElementalGift(kind).apply(character)
+        assert list(character.damage_resistances) == [damage_type]
+
+    @pytest.mark.parametrize(
+        "environment, damage_type",
+        [
+            (BarbarianStormEnvironment.DESERT, DamageType.FIRE),
+            (BarbarianStormEnvironment.SEA, DamageType.LIGHTNING),
+            (BarbarianStormEnvironment.TUNDRA, DamageType.COLD),
+        ],
+    )
+    def test_storm_soul_resistance_by_environment(
+        self, make_character, environment, damage_type
+    ):
+        # "Desert. You gain resistance to fire damage... Sea. ...lightning...
+        # Tundra. ...cold"
+        character = make_character()
+        BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment).apply(character)
+        assert list(character.damage_resistances) == [damage_type]

@@ -299,6 +299,10 @@ def weapon_matches_proficiency(
             and WeaponProperty.HEAVY not in weapon.properties
             and WeaponProperty.TWO_HANDED not in weapon.properties
         )
+    if proficiency == WeaponProficiency.SCIMITAR:
+        # By class name, so magic scimitars (subclasses) match too - importing
+        # the weapon module here would be circular.
+        return any(cls.__name__ == "Scimitar" for cls in type(weapon).__mro__)
     raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
 
 

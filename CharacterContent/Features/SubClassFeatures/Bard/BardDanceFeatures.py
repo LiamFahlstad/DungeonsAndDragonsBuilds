@@ -1,10 +1,11 @@
-from Core.Definitions import BARD_HIT_DIE
+from Core.Definitions import BARD_HIT_DIE, Ability
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -15,6 +16,15 @@ class DazzlingFootwork(Feature):
             origin="College of Dance Bard Level 3",
             usage_tags=["buff", "damage"],
         )
+        # "While you aren't wearing armor or wielding a Shield... Unarmored
+        # Defense. Your base Armor Class equals 10 plus your Dexterity and
+        # Charisma modifiers."
+        self._ac = MultiAbilityArmorClass(
+            10, [Ability.DEXTERITY, Ability.CHARISMA], allows_shield=False
+        )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._ac.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

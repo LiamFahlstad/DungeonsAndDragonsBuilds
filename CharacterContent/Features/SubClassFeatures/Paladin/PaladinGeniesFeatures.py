@@ -6,7 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from Core.Definitions import MAX_ABILITY_MODIFIER
+from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
+from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -84,6 +85,12 @@ class GeniesSplendor(Feature):
             origin="Oath of the Noble Genies Paladin Level 3",
             usage_tags=["buff"],
         )
+        # "When you aren't wearing any armor, your base Armor Class equals 10
+        # plus your Dexterity and Charisma modifiers. You can use a Shield..."
+        self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._ac.apply(character_stat_block)
 
     def target(
         self, character_stat_block: CharacterStatBlock

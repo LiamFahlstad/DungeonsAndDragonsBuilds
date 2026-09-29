@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import SpeedBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -92,6 +93,10 @@ class AuraOfAlacrity(Feature):
             origin="Oath of Glory Paladin Level 7",
             usage_tags=["buff"],
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "Your Speed increases by 10 feet." (the allies' boost is situational)
+        SpeedBonus(10).apply(character_stat_block)
 
     def target(
         self, character_stat_block: CharacterStatBlock

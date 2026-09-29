@@ -6,6 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 _WRATH_DAMAGE_TYPE = {
@@ -13,6 +14,12 @@ _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DJINNI: "thunder",
     Definitions.WarlockGenieKind.EFREETI: "fire",
     Definitions.WarlockGenieKind.MARID: "cold",
+}
+_ELEMENTAL_GIFT_RESISTANCE = {
+    Definitions.WarlockGenieKind.DAO: Definitions.DamageType.BLUDGEONING,
+    Definitions.WarlockGenieKind.DJINNI: Definitions.DamageType.THUNDER,
+    Definitions.WarlockGenieKind.EFREETI: Definitions.DamageType.FIRE,
+    Definitions.WarlockGenieKind.MARID: Definitions.DamageType.COLD,
 }
 
 
@@ -89,6 +96,13 @@ class ElementalGift(Feature):
             ),
         )
         self.kind = kind
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "You now have resistance to a damage type determined by your
+        # patron's kind" (the flight is the activated part).
+        DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind], self.name).apply(
+            character_stat_block
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]

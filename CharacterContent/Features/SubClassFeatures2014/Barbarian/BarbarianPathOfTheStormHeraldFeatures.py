@@ -5,7 +5,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+
+_STORM_SOUL_RESISTANCE = {
+    Definitions.BarbarianStormEnvironment.DESERT: Definitions.DamageType.FIRE,
+    Definitions.BarbarianStormEnvironment.SEA: Definitions.DamageType.LIGHTNING,
+    Definitions.BarbarianStormEnvironment.TUNDRA: Definitions.DamageType.COLD,
+}
 
 
 def _flat_damage_value(barbarian_level: int) -> int:
@@ -76,6 +83,13 @@ class StormSoul(Feature):
             usage_tags=["utility", "buff"],
         )
         self.environment = environment
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # Desert: fire, Sea: lightning, Tundra: cold resistance - always on,
+        # "even when your aura isn't active".
+        DamageResistance(_STORM_SOUL_RESISTANCE[self.environment], self.name).apply(
+            character_stat_block
+        )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

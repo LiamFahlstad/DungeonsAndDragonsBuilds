@@ -8,7 +8,8 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass2014
+from Core.Definitions import ArmorType, WarlockSubclass2014
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockHexbladeFeatures,
 )
@@ -25,6 +26,9 @@ class WarlockHexbladeLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(WarlockHexbladeFeatures.HexbladeExpandedSpells())
         data.add_feature(WarlockHexbladeFeatures.HexbladesCurse())
         data.add_feature(WarlockHexbladeFeatures.HexWarrior())
+        data.add_armor_proficiency(ArmorType.MEDIUM)
+        data.add_armor_proficiency(ArmorType.SHIELD)
+        data.add_weapon_proficiency(WeaponProficiency.MARTIAL)
         return data
 
 

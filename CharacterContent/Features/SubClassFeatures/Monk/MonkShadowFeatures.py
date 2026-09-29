@@ -1,10 +1,11 @@
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import MONK_HIT_DIE, Sense
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
@@ -58,6 +59,10 @@ LEVEL_TO_FOCUS_POINTS = {
 class ShadowArts(Feature):
     def __init__(self):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
+        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._darkvision.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

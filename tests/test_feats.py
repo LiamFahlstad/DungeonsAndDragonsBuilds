@@ -506,3 +506,15 @@ class TestEpicBoon:
         boon.apply(character)
         assert character.get_ability_score(STR) == 20
         assert boon.name == "Epic Boon"
+
+
+class TestSpeedy:
+    def test_speed_and_ability_increase(self, make_character):
+        # "Increase your Dexterity or Constitution score by 1... Your Speed
+        # increases by 10 feet."
+        character = make_character(dexterity=14)
+        GeneralFeats.Speedy(character_level=4, ability=Ability.DEXTERITY).apply(
+            character
+        )
+        assert character.speed == 40
+        assert character.get_ability_score(Ability.DEXTERITY) == 15

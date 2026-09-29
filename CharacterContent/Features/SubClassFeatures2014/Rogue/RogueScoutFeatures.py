@@ -1,4 +1,4 @@
-from Core.Definitions import ROGUE_HIT_DIE, Skill
+from Core.Definitions import ROGUE_HIT_DIE, DiceRollCondition, Skill
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
@@ -6,6 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import (
+    InitiativeRollCondition,
     SkillProficiency,
     SkillExpertise,
     SpeedBonus,
@@ -81,6 +82,10 @@ class AmbushMaster(Feature):
             activation=FeatureActivation(duration="Until Start of Your Next Turn"),
             usage_tags=["buff"],
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "You have advantage on initiative rolls."
+        InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

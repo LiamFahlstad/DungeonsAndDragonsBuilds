@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER
+from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER, Sense
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import (
+    GrantOrExtendSense,
     InitiativeBonus,
     SavingThrowProficiencyOrAlternative,
 )
@@ -67,6 +68,10 @@ class UmbralSight(Feature):
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["buff"],
         )
+        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._darkvision.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

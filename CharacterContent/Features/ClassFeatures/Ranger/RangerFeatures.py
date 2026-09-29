@@ -6,7 +6,11 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice, SpeedBonus
+from CharacterContent.Features.Core.Improvements import (
+    GrantSense,
+    SkillExpertiseChoice,
+    SpeedBonus,
+)
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -333,6 +337,10 @@ class FeralSenses(Feature):
             origin="Ranger Level 18",
             activation=FeatureActivation(range="30 Feet"),
         )
+        self._blindsight = GrantSense(Definitions.Sense.BLINDSIGHT, 30, self.name)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        self._blindsight.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."

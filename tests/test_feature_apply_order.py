@@ -28,11 +28,13 @@ from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
+from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, SpellSlots
 from CharacterContent.Features.CombatFeatures.FightingStyles import Defense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
+    GrantSense,
     InitiativeRollCondition,
     SavingThrowProficiency,
     SkillExpertise,
@@ -56,6 +58,7 @@ from Core.Definitions import (
     CharacterClass,
     DamageType,
     DiceRollCondition,
+    Sense,
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
@@ -303,6 +306,18 @@ class TestPreviouslyChronologicalEffects:
         # Both fall back, each to a different save the character lacked.
         assert len(results.pop()) == 4
 
+    def test_darkvision_extension_sees_grants_applied_after_it(self, make_character):
+        # "You gain Darkvision with a range of 60 feet. If you already have
+        # Darkvision, its range increases by 60 feet." - species Darkvision 60
+        # plus Umbral Sight and Shadow Arts is 180 in every order.
+        effects = [
+            RangerGloomStalkerFeatures.UmbralSight(),
+            MonkShadowFeatures.ShadowArts(),
+            GrantSense(Sense.DARKVISION, 60, "Species"),
+        ]
+        for character in _in_every_order(make_character, effects):
+            assert character.get_sense_range(Sense.DARKVISION) == 180
+
     def test_skill_expert_on_a_skill_proficient_from_elsewhere(self, make_character):
         effects = [
             GeneralFeats.SkillExpert(
@@ -507,6 +522,7 @@ _MUTABLE_STAT_PROPERTIES = (
     "spell_slots",
     "pact_magic_slots",
     "is_wearing_armor",
+    "senses",
 )
 _EFFECT_METHODS = {"apply", "apply_to_weapons"}
 

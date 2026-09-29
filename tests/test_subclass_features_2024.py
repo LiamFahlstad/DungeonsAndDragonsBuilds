@@ -21,6 +21,7 @@ from Core.Definitions import (
     DamageType,
     DiceRollCondition,
     DruidLandType,
+    Sense,
     Skill,
 )
 from RunCharacterCreator import BuildSelector
@@ -48,7 +49,19 @@ from CharacterContent.Features.SubClassFeatures.Bard import BardLoreFeatures
 from CharacterContent.Features.SubClassFeatures.Druid import DruidLandFeatures
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
 
-from CharacterContent.Classes.SubClasses2024 import DruidLand
+from CharacterContent.Classes.SubClasses2024 import ArtificerBattleSmith, DruidLand
+from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
+from CharacterContent.Features.Core.Improvements import GrantSense
+from CharacterContent.Features.SubClassFeatures.Bard import BardDanceFeatures
+from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
+from CharacterContent.Features.SubClassFeatures.Paladin import (
+    PaladinGeniesFeatures,
+    PaladinGloryFeatures,
+)
+from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererFeatures
+from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures
+from CharacterContent.Items import Armor
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 
 
 def apply_features(character, features, armors=()):
@@ -622,3 +635,99 @@ class TestBladesingerWeaponProficiencyScope:
             Ranged.HandCrossbow(),
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         )
+
+
+# ── Always-on benefits the feature text promises ──────────────────────────────
+
+
+class TestPromisedPassiveBenefits:
+    def test_umbral_sight_grants_darkvision(self, make_character):
+        # gloom_stalker.txt: "You gain Darkvision with a range of 60 feet."
+        character = apply_features(
+            make_character(), [RangerGloomStalkerFeatures.UmbralSight()]
+        )
+        assert character.get_sense_range(Sense.DARKVISION) == 60
+
+    def test_umbral_sight_extends_existing_darkvision(self, make_character):
+        # "If you already have Darkvision when you gain this feature, its
+        # range increases by 60 feet."
+        character = make_character()
+        GrantSense(Sense.DARKVISION, 60, "Species").apply(character)
+        apply_features(character, [RangerGloomStalkerFeatures.UmbralSight()])
+        assert character.get_sense_range(Sense.DARKVISION) == 120
+
+    def test_shadow_arts_extends_existing_darkvision(self, make_character):
+        character = make_character()
+        GrantSense(Sense.DARKVISION, 60, "Species").apply(character)
+        apply_features(character, [MonkShadowFeatures.ShadowArts()])
+        assert character.get_sense_range(Sense.DARKVISION) == 120
+
+    def test_feral_senses_blindsight(self, make_character):
+        # "...grants you Blindsight with a range of 30 feet."
+        character = apply_features(make_character(), [RangerFeatures.FeralSenses()])
+        assert character.get_sense_range(Sense.BLINDSIGHT) == 30
+
+    def test_aura_of_alacrity_speed(self, make_character):
+        # glory.txt: "Your Speed increases by 10 feet."
+        character = apply_features(
+            make_character(), [PaladinGloryFeatures.AuraOfAlacrity()]
+        )
+        assert character.speed == 40
+
+    def test_assassinate_initiative_advantage(self, make_character):
+        # assassin.txt: "Initiative. You have Advantage on Initiative rolls."
+        character = apply_features(
+            make_character(), [RogueAssassinFeatures.Assassinate()]
+        )
+        assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
+
+    def test_genies_splendor_unarmored_defense_keeps_shield(self, make_character):
+        # "...your base Armor Class equals 10 plus your Dexterity and Charisma
+        # modifiers. You can use a Shield and still gain this benefit."
+        character = apply_features(
+            make_character(dexterity=14, charisma=16),
+            [PaladinGeniesFeatures.GeniesSplendor()],
+            [Armor.ShieldArmor()],
+        )
+        assert character.calculate_armor_class() == 10 + 2 + 3 + 2
+
+    def test_dazzling_footwork_unarmored_defense_not_with_shield(
+        self, make_character
+    ):
+        # "While you aren't wearing armor or wielding a Shield... Your base
+        # Armor Class equals 10 plus your Dexterity and Charisma modifiers."
+        unarmored = apply_features(
+            make_character(dexterity=14, charisma=16),
+            [BardDanceFeatures.DazzlingFootwork()],
+        )
+        assert unarmored.calculate_armor_class() == 10 + 2 + 3
+        with_shield = apply_features(
+            make_character(dexterity=14, charisma=16),
+            [BardDanceFeatures.DazzlingFootwork()],
+            [Armor.ShieldArmor()],
+        )
+        assert with_shield.calculate_armor_class() == 10 + 2 + 2
+
+    @pytest.mark.parametrize("wisdom, expected", [(16, 3), (8, 1)])
+    def test_otherworldly_glamour_charisma_checks(
+        self, make_character, wisdom, expected
+    ):
+        # fey_wanderer.txt: "Whenever you make a Charisma check, you gain a
+        # bonus to the check equal to your Wisdom modifier (Minimum of +1)."
+        character = apply_features(
+            make_character(wisdom=wisdom),
+            [RangerFeyWandererFeatures.OtherworldlyGlamour()],
+        )
+        for skill in (Skill.DECEPTION, Skill.INTIMIDATION, Skill.PERSUASION):
+            assert character.get_skill_bonus(skill) == expected
+        assert character.get_skill_bonus(Skill.STEALTH) == 0
+
+    def test_battle_smith_martial_weapons(self):
+        # battle_smith.txt: "Weapon Knowledge. You gain proficiency with
+        # Martial weapons."
+        data = CharacterSheetData(
+            level_per_class={CharacterClass.ARTIFICER: 3},
+            spell_casting_ability=Ability.INTELLIGENCE,
+        )
+        ArtificerBattleSmith.ArtificerBattleSmithLevel3().add_features(data)
+        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies

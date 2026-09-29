@@ -50,6 +50,7 @@ without that second check a late extension would be missed.
 | Saving throw | Proficiency flags, conditional grants, flat and formula bonuses | `get_saving_throw_modifier`, `SavingThrowsStatBlock.is_proficient` |
 | AC | Every `ArmorClassFormula` (unarmored default, Unarmored Defense, worn armor), flat and formula bonuses | `calculate_armor_class`: the best applicable formula + bonuses |
 | Speed | Base + flat and formula bonuses | `CharacterStatBlock.speed` |
+| Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses`: best plain grant + every extension |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `initiative`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
@@ -116,6 +117,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 |---|---|
 | "You gain proficiency in X" | `SkillProficiency([X])` / `SavingThrowProficiency([...])` |
 | "…if you already have it, choose another" | `SavingThrowProficiencyOrAlternative(X, [alternatives])` |
+| "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
 | "a bonus equal to your *ability* modifier" / "half your proficiency bonus" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus` |
 | "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor_type`, `cs.is_wearing_armor`, `cs.is_wielding_shield` |
@@ -174,8 +176,10 @@ These are rules or content decisions rather than ordering problems:
    in `CharacterBuilder.build()`, before background, ASI and feat increases.
 3. **Finesse weapon damage label.** When Strength and Dexterity modifiers are equal, the label
    depends on set ordering. The number is the same either way.
-4. **Weapon proficiency is decided when a weapon is added** (`CharacterSheetData.add_weapon`).
-   `build()` adds weapons last, after every proficiency, so builds are correct. A proficiency added
-   to the sheet data *after* `build()` wouldn't reach weapons that are already there.
-5. **"If you already have Darkvision, its range increases by 60 feet"** (Gloom Stalker, Way of
-   Shadow, Wild Heart Owl) is description-only; those features don't grant a sense mechanically.
+4. **Weapon and armor proficiency live on `CharacterSheetData`, not the stat block**, and a
+   weapon's proficiency is decided when it's added (`CharacterSheetData.add_weapon`). Subclass
+   builders grant them directly; a feature's `apply()` can't, so a *feat* such as Martial Weapon
+   Training has no way to grant its proficiency.
+5. **Choices with no parameter yet.** Otherworldly Glamour, Genie's Splendor, Knightly Envoy and
+   Dragonscarred describe a skill or resistance choice the builders don't take, so only their
+   choice-independent parts apply.

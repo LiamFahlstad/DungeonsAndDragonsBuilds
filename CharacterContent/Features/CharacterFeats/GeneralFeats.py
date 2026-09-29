@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
     GrantSense,
     SkillExpertiseChoice,
     SkillProficiencyChoice,
+    SpeedBonus,
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, DamageType, Sense, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
@@ -801,6 +802,11 @@ class Slasher(_AbilityScoreFeat):
 class Speedy(_AbilityScoreFeat):
     _NAME = "Speedy"
     _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)
+        # "Speed Increase. Your Speed increases by 10 feet."
+        SpeedBonus(10).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
