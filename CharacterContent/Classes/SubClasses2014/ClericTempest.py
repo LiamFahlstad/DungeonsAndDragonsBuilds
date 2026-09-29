@@ -8,8 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArmorType, ClericSubclass2014
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from Core.Definitions import ClericSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericTempestFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -22,8 +21,6 @@ class ClericTempestLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericTempestFeatures.BonusProficiencies())
-        data.add_armor_proficiency(ArmorType.HEAVY)
-        data.add_weapon_proficiency(WeaponProficiency.MARTIAL)
         data.add_feature(ClericTempestFeatures.WrathOfTheStorm())
         data.add_feature(ClericTempestFeatures.TempestDomainSpells())
         data.add_feature(ClericTempestFeatures.DestructiveWrathChannelDivinity())

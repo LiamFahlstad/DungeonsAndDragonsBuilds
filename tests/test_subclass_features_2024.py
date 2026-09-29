@@ -491,7 +491,8 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
 
         # Scimitar: Martial Melee, Finesse + Light (no Two-Handed/Heavy), so a
         # Bladesinger with Training in War and Song should be proficient.
-        assert is_proficient_with(Scimitar(), data.weapon_proficiencies)
+        character = data.setup_character_stat_block()
+        assert is_proficient_with(Scimitar(), character.weapon_proficiencies)
 
 
 # ---------------------------------------------------------------------------
@@ -722,7 +723,7 @@ class TestPromisedPassiveBenefits:
             assert character.get_skill_bonus(skill) == expected
         assert character.get_skill_bonus(Skill.STEALTH) == 0
 
-    def test_battle_smith_martial_weapons(self):
+    def test_battle_smith_martial_weapons(self, make_character):
         # battle_smith.txt: "Weapon Knowledge. You gain proficiency with
         # Martial weapons."
         data = CharacterSheetData(
@@ -730,4 +731,7 @@ class TestPromisedPassiveBenefits:
             spell_casting_ability=Ability.INTELLIGENCE,
         )
         ArtificerBattleSmith.ArtificerBattleSmithLevel3().add_features(data)
-        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+        character = make_character(levels={CharacterClass.ARTIFICER: 3})
+        for feature in data.iter_features_with_extensions():
+            feature.apply(character)
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies

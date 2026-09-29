@@ -8,7 +8,7 @@ from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
-from CharacterContent.Features.ClassFeatures import SpellSlots
+from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
@@ -350,9 +350,12 @@ class ClassBuilder(ABC):
                     f"level."
                 )
             # The builder that introduced the class already registered its
-            # SpellSlots feature; don't add a duplicate for the same class.
+            # SpellSlots feature and granted its proficiencies; don't add
+            # duplicates for the same class.
             base_sheet_data.remove_features(
-                lambda f: isinstance(f, SpellSlots.SpellSlots)
+                lambda f: isinstance(
+                    f, (SpellSlots.SpellSlots, ClassProficiencies.ClassProficiencies)
+                )
                 and f.character_class == self.base_class
             )
 
@@ -515,11 +518,14 @@ class StarterClassBuilder(ClassBuilder):
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
 
-        for armor_type in self.armor_proficiencies or []:
-            data.add_armor_proficiency(armor_type)
-
-        for weapon_proficiency in self.weapon_proficiencies or []:
-            data.add_weapon_proficiency(weapon_proficiency)
+        data.add_feature(
+            ClassProficiencies.ClassProficiencies(
+                self.base_class,
+                armor=list(self.armor_proficiencies or []),
+                weapons=list(self.weapon_proficiencies or []),
+                tools=list(self.tool_proficiencies or []),
+            )
+        )
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by
@@ -527,9 +533,6 @@ class StarterClassBuilder(ClassBuilder):
         # EquipmentHandler.py), not here - this builder only stores those
         # values (see properties above and __init__) for CharacterBuilder to
         # read when it constructs the handler.
-        for tool_proficiency in self.tool_proficiencies or []:
-            data.add_tool_proficiency(tool_proficiency)
-
         return data
 
 
@@ -563,4 +566,7 @@ class MulticlassBuilder(ClassBuilder):
         )
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
+        # Only part of the class's proficiencies (removed again by create()
+        # when this builder resumes a class the character already has).
+        data.add_feature(ClassProficiencies.MulticlassProficiencies(self.base_class))
         return data

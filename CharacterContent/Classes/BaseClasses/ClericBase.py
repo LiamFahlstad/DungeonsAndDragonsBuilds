@@ -87,8 +87,6 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
             data.add_cantrip(self.divine_order.extra_cantrip)
         else:
             data.add_feature(ClericFeatures.DivineOrderProtector())
-            data.add_weapon_proficiency(Weapons.WeaponProficiency.MARTIAL)
-            data.add_armor_proficiency(Definitions.ArmorType.HEAVY)
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_cantrip(self.cantrip_3)

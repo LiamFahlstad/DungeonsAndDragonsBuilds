@@ -3,6 +3,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import GrantArmorTraining, GrantWeaponProficiency
+from CharacterContent.Items.Weapons import WeaponProficiency
+from Core.Definitions import ArmorType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -11,6 +14,11 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies", origin="College of Swords Bard Level 3"
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...proficiency with medium armor and the scimitar."
+        GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.MEDIUM]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

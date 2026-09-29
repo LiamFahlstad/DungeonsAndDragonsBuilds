@@ -1,10 +1,12 @@
-from Core.Definitions import BARD_HIT_DIE
+from Core.Definitions import BARD_HIT_DIE, ArmorType
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import GrantArmorTraining, GrantWeaponProficiency
+from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -49,6 +51,11 @@ class MartialTraining(Feature):
         super().__init__(
             name="Martial Training", origin="College of Valor Bard Level 3"
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...proficiency with Martial weapons and training with Medium armor and Shields."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

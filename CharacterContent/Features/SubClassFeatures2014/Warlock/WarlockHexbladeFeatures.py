@@ -6,6 +6,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
+from CharacterContent.Features.Core.Improvements import GrantArmorTraining, GrantWeaponProficiency
+from CharacterContent.Items.Weapons import WeaponProficiency
+from Core.Definitions import ArmorType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -83,6 +86,11 @@ class HexWarrior(Feature):
             origin="Hexblade Patron Warlock Level 3",
             usage_tags=["buff"],
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

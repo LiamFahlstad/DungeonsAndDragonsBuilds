@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArmorType, ClericSubclass2014
+from Core.Definitions import ClericSubclass2014
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericForgeFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
@@ -21,7 +21,6 @@ class ClericForgeLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericForgeFeatures.BonusProficiencies())
-        data.add_armor_proficiency(ArmorType.HEAVY)
         data.add_feature(ClericForgeFeatures.BlessingOfTheForge())
         data.add_feature(ClericForgeFeatures.ForgeDomainSpells())
         data.add_feature(ClericForgeFeatures.ArtisansBlessingChannelDivinity())

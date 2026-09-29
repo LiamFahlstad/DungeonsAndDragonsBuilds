@@ -179,12 +179,13 @@ These are rules or content decisions rather than ordering problems:
    in `CharacterBuilder.build()`, before background, ASI and feat increases.
 3. **Finesse weapon damage label.** When Strength and Dexterity modifiers are equal, the label
    depends on set ordering. The number is the same either way.
-4. **Class and subclass builders still grant weapon/armor/tool proficiencies on the sheet data**
-   (`data.add_weapon_proficiency` etc.). `iter_stat_effects()` turns those sets into grant effects,
-   so they end up on the stat block like any feature's grants. Moving the builder grants into
-   features (a class/multiclass proficiency bundle, subclass features granting their own), and
-   giving multiclass builders their bundle, is the planned next step. Until then Martial Weapon
-   Training can be fixed with `GrantWeaponProficiency`, but multiclassing still grants nothing.
+4. **Weapon, armor and tool proficiencies come from features.** The starting class grants its
+   Core Traits (`ClassProficiencies`), a class gained by multiclassing grants its "As a Multiclass
+   Character" subset (`MulticlassProficiencies`), and subclass/feat grants live in the feature that
+   describes them. `tests/test_proficiencies.py` fails on any builder that grants one directly. The
+   multiclass skill and Musical Instrument *choices* aren't modelled. The old
+   `CharacterSheetData.add_*_proficiency` methods and sets have no callers left; they can be
+   removed.
 5. **Choices with no parameter yet.** Otherworldly Glamour, Genie's Splendor, Knightly Envoy and
    Dragonscarred describe a skill or resistance choice the builders don't take, so only their
    choice-independent parts apply.

@@ -9,7 +9,6 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import ArtificerSubclass
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerBattleSmithFeatures,
 )
@@ -36,7 +35,6 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(ArtificerBattleSmithFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerBattleSmithFeatures.Spells())
         data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
-        data.add_weapon_proficiency(WeaponProficiency.MARTIAL)
         data.add_feature(ArtificerBattleSmithFeatures.SteelDefender())
         data.add_spell(PaladinLevel1Spells.HEROISM)
         data.add_spell(SorcererLevel1Spells.SHIELD)

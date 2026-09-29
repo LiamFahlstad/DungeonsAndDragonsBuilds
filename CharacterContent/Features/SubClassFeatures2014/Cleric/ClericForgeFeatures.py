@@ -11,7 +11,10 @@ from CharacterContent.Features.Core.Improvements import (
     ArmorClassBonus,
     DamageImmunity,
     DamageResistance,
+    GrantArmorTraining,
+    GrantToolProficiency,
 )
+from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -21,6 +24,11 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "You gain proficiency with heavy armor and smith's tools."
+        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
+        GrantToolProficiency([SmithsTools()]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor and smith's tools."

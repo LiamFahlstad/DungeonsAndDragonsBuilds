@@ -124,6 +124,15 @@ def features_at(
     return data
 
 
+def granted(data, make_character):
+    """A bare stat block with every feature of `data` applied - what the
+    builder's features grant (proficiencies live on the stat block)."""
+    character = make_character(levels=dict(data.level_per_class))
+    for feature in data.iter_features_with_extensions():
+        feature.apply(character)
+    return character
+
+
 # ── Subclass-selection level: always 3 (house rule) ─────────────────────────
 
 
@@ -170,40 +179,36 @@ class TestSubclassesStartAtLevel3:
 # ── Cleric domain "Bonus Proficiency"/"Bonus Proficiencies": text vs wiring ────
 
 
-class TestClericDomainBonusProficienciesNotWired:
+class TestClericDomainBonusProficiencies:
     """Every 2014 Cleric domain below grants a proficiency as its very first
-    feature ("You gain proficiency with heavy armor[...]", per each feature's
-    own get_description()). CharacterSheetData.add_armor_proficiency /
-    add_weapon_proficiency exist and are used by other subclasses (e.g.
-    SubClasses2024/BardValor.py calls add_armor_proficiency directly), but none
-    of the Cleric domain builder files below ever call them - the promised
-    proficiency never reaches the sheet's proficiency set."""
+    feature ("You gain proficiency with heavy armor[...]"). The feature itself
+    grants it (Feature.apply), so it reaches the stat block's proficiencies."""
 
-    def test_forge_domain_heavy_armor(self):
-        data = features_at(ClericForgeLevel3, CharacterClass.CLERIC, 3)
-        assert ArmorType.HEAVY in data.armor_proficiencies
+    def test_forge_domain_heavy_armor(self, make_character):
+        character = granted(features_at(ClericForgeLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert ArmorType.HEAVY in character.armor_training
 
-    def test_tempest_domain_heavy_armor_and_martial_weapons(self):
-        data = features_at(ClericTempestLevel3, CharacterClass.CLERIC, 3)
-        assert ArmorType.HEAVY in data.armor_proficiencies
-        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+    def test_tempest_domain_heavy_armor_and_martial_weapons(self, make_character):
+        character = granted(features_at(ClericTempestLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert ArmorType.HEAVY in character.armor_training
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
-    def test_nature_domain_heavy_armor(self):
-        data = features_at(ClericNatureLevel3, CharacterClass.CLERIC, 3)
-        assert ArmorType.HEAVY in data.armor_proficiencies
+    def test_nature_domain_heavy_armor(self, make_character):
+        character = granted(features_at(ClericNatureLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert ArmorType.HEAVY in character.armor_training
 
-    def test_order_domain_heavy_armor(self):
-        data = features_at(ClericOrderLevel3, CharacterClass.CLERIC, 3)
-        assert ArmorType.HEAVY in data.armor_proficiencies
+    def test_order_domain_heavy_armor(self, make_character):
+        character = granted(features_at(ClericOrderLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert ArmorType.HEAVY in character.armor_training
 
-    def test_twilight_domain_heavy_armor_and_martial_weapons(self):
-        data = features_at(ClericTwilightLevel3, CharacterClass.CLERIC, 3)
-        assert ArmorType.HEAVY in data.armor_proficiencies
-        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+    def test_twilight_domain_heavy_armor_and_martial_weapons(self, make_character):
+        character = granted(features_at(ClericTwilightLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert ArmorType.HEAVY in character.armor_training
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
-    def test_death_domain_martial_weapons(self):
-        data = features_at(ClericDeathLevel3, CharacterClass.CLERIC, 3)
-        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+    def test_death_domain_martial_weapons(self, make_character):
+        character = granted(features_at(ClericDeathLevel3, CharacterClass.CLERIC, 3), make_character)
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
 
 # ── Blessed Strikes: the 2024 base feature replaces the 2014 domain version ───
@@ -470,23 +475,24 @@ class TestOtherCorrectlyWiredEffects:
 
 
 class TestPromisedProficienciesGranted:
-    def test_hexblade_hex_warrior(self):
+    def test_hexblade_hex_warrior(self, make_character):
         # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
-        data = features_at(WarlockHexbladeLevel3, CharacterClass.WARLOCK, 3)
-        assert ArmorType.MEDIUM in data.armor_proficiencies
-        assert ArmorType.SHIELD in data.armor_proficiencies
-        assert WeaponProficiency.MARTIAL in data.weapon_proficiencies
+        character = granted(
+            features_at(WarlockHexbladeLevel3, CharacterClass.WARLOCK, 3),
+            make_character,
+        )
+        assert ArmorType.MEDIUM in character.armor_training
+        assert ArmorType.SHIELD in character.armor_training
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
-    def test_college_of_swords_bonus_proficiencies(self):
+    def test_college_of_swords_bonus_proficiencies(self, make_character):
         # "...you gain proficiency with medium armor and the scimitar."
         data = CharacterSheetData(level_per_class={CharacterClass.BARD: 3})
         BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)
-        assert ArmorType.MEDIUM in data.armor_proficiencies
-        assert WeaponProficiency.SCIMITAR in data.weapon_proficiencies
-        assert is_proficient_with(MartialMelee.Scimitar(), data.weapon_proficiencies)
-        assert not is_proficient_with(
-            MartialMelee.Longsword(), data.weapon_proficiencies
-        )
+        character = granted(data, make_character)
+        assert ArmorType.MEDIUM in character.armor_training
+        assert MartialMelee.Scimitar().is_proficient(character)
+        assert not MartialMelee.Longsword().is_proficient(character)
 
     def test_arcana_domain_arcane_initiate(self, make_character):
         # "You gain proficiency in the Arcana skill..."

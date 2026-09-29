@@ -5,6 +5,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     RegainedOn,
 )
+from CharacterContent.Features.Core.Improvements import GrantWeaponProficiency
+from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -49,6 +51,10 @@ class Spells(Feature):
 class BattleReady(Feature):
     def __init__(self):
         super().__init__(name="Battle Ready", origin="Battle Smith Artificer Level 3")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "Weapon Knowledge. You gain proficiency with Martial weapons."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

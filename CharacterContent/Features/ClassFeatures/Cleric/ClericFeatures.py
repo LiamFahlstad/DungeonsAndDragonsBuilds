@@ -6,8 +6,13 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import SkillBonus
-from Core.Definitions import CharacterClass, Skill
+from CharacterContent.Features.Core.Improvements import (
+    SkillBonus,
+    GrantArmorTraining,
+    GrantWeaponProficiency,
+)
+from Core.Definitions import CharacterClass, Skill, ArmorType
+from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -45,6 +50,11 @@ class Spellcasting(Feature):
 class DivineOrderProtector(Feature):
     def __init__(self):
         super().__init__(name="Divine Order: Protector", origin="Cleric Level 1")
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...proficiency with Martial weapons and training with Heavy armor."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."

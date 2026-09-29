@@ -7,7 +7,13 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantSense
+from CharacterContent.Features.Core.Improvements import (
+    GrantSense,
+    GrantArmorTraining,
+    GrantWeaponProficiency,
+)
+from CharacterContent.Items.Weapons import WeaponProficiency
+from Core.Definitions import ArmorType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -17,6 +23,11 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies", origin="Twilight Domain Cleric Level 3"
         )
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "You gain proficiency with martial weapons and heavy armor."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."

@@ -699,14 +699,16 @@ class TestProficienciesResolveOnRead:
         assert longbow.is_proficient(character)
         assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
-    def test_builder_proficiencies_reach_the_stat_block(self):
+    def test_class_proficiencies_reach_the_stat_block(self):
+        # Wizard's Core Traits: Simple weapons, no armor. Its Bladesinger
+        # subclass adds Melee Martial weapons without Two-Handed or Heavy.
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
         character = data.setup_character_stat_block()
-        assert character.weapon_proficiencies == data.weapon_proficiencies
-        assert character.armor_training == data.armor_proficiencies
-        assert {type(t) for t in character.tool_proficiencies} == {
-            type(t) for t in data.tool_proficiencies
+        assert character.weapon_proficiencies == {
+            WeaponProficiency.SIMPLE,
+            WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         }
+        assert character.armor_training == set()
 
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(
         self, make_character

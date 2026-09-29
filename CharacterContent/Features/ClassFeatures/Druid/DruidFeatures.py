@@ -12,9 +12,15 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import GrantLanguage, SkillBonus
+from CharacterContent.Features.Core.Improvements import (
+    GrantLanguage,
+    SkillBonus,
+    GrantArmorTraining,
+    GrantWeaponProficiency,
+)
 from Combat.Definitions import ExtendedCombatantData
-from Core.Definitions import CharacterClass, Language, Skill
+from Core.Definitions import CharacterClass, Language, Skill, ArmorType
+from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import StringUtils
 
@@ -78,6 +84,10 @@ class PrimalOrder(Feature):
         self.order = order
 
     def apply(self, character_stat_block: CharacterStatBlock):
+        # Warden: "...proficiency with Martial weapons and training with Medium armor."
+        if self.order == PrimalOrderType.WARDEN:
+            GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+            GrantArmorTraining([ArmorType.MEDIUM]).apply(character_stat_block)
         if self.order != PrimalOrderType.MAGICIAN:
             return
 

@@ -12,8 +12,10 @@ from CharacterContent.Features.Core.Improvements import (
     SkillExpertiseChoice,
     SkillProficiencyChoice,
     SpeedBonus,
+    GrantWeaponProficiency,
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, DamageType, Sense, Skill
+from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -445,6 +447,11 @@ class MartialWeaponTraining(_AbilityScoreFeat):
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        super().apply(character_stat_block)
+        # "Weapon Proficiency. You gain proficiency with Martial weapons."
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

@@ -8,8 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArmorType, BardSubclass2014
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from Core.Definitions import BardSubclass2014
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardSwordsFeatures
 from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
@@ -24,8 +23,6 @@ class BardSwordsLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(BardSwordsFeatures.BonusProficiencies())
-        data.add_armor_proficiency(ArmorType.MEDIUM)
-        data.add_weapon_proficiency(WeaponProficiency.SCIMITAR)
         data.add_feature(BardSwordsFeatures.BladeFlourish())
         data.add_fighting_style(self.fighting_style)
         return data

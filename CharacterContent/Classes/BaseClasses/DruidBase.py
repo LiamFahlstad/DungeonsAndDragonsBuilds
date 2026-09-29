@@ -74,8 +74,6 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
             DruidLevel1Spells.SPEAK_WITH_ANIMALS, additional_ruling="Always prepared"
         )
         data.add_feature(DruidFeatures.PrimalOrder(order=self.primal_order))
-        if self.primal_order == DruidFeatures.PrimalOrderType.WARDEN:
-            data.add_armor_proficiency(Definitions.ArmorType.MEDIUM)
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)

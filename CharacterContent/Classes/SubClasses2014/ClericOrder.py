@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArmorType, ClericSubclass2014
+from Core.Definitions import ClericSubclass2014
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericOrderFeatures
 from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
@@ -22,7 +22,6 @@ class ClericOrderLevel3(ClassBuilder.SubclassLevel3):
         data: CharacterSheetData,
     ) -> CharacterSheetData:
         data.add_feature(ClericOrderFeatures.BonusProficiencies())
-        data.add_armor_proficiency(ArmorType.HEAVY)
         data.add_feature(ClericOrderFeatures.VoiceOfAuthority())
         data.add_feature(ClericOrderFeatures.OrderDomainSpells())
         data.add_feature(ClericOrderFeatures.OrdersDemandChannelDivinity())
