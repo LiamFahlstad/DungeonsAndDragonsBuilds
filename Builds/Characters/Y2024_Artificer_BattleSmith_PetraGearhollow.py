@@ -16,7 +16,6 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import (
     SmithsTools,
     ThievesTools,
@@ -27,17 +26,10 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=ArtificerBattleSmithCustomStarterClassArgs(
-            skills=ArtificerSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.HISTORY: True,
-                    Skill.NATURE: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.MEDICINE: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SLEIGHT_OF_HAND: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.HISTORY,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

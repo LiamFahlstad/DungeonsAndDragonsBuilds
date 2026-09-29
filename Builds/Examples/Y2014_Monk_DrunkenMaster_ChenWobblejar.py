@@ -20,7 +20,6 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import BrewersSupplies
 
 
@@ -28,16 +27,10 @@ def get_starter_class_builder():
     monk_level = 17
     return StarterClassBuilder(
         non_generic_arguments=MonkDrunkenMasterCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.RELIGION: False,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.STEALTH,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

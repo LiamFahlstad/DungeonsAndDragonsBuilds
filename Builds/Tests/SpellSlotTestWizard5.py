@@ -22,7 +22,6 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 # Wizard 5 (full caster).
@@ -30,17 +29,10 @@ from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=WizardBladesingerCustomStarterClassArgs(
-            skills=WizardSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.HISTORY: True,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.MEDICINE: False,
-                    Skill.NATURE: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.HISTORY,
+            ],
         ),
         base_class_level=5,
         abilities=StandardArrayAbilitiesStatBlock(
@@ -60,9 +52,7 @@ def get_starter_class_builder():
         add_default_equipment=True,
         origin_feat=OriginFeats.Alert(),
         armor=[],
-        weapons=[
-            Weapons.Longsword(ability=Ability.INTELLIGENCE)
-        ],
+        weapons=[Weapons.Longsword(ability=Ability.INTELLIGENCE)],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: WizardLevel1(

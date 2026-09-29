@@ -42,22 +42,15 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Orc
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=BarbarianBerserkerCustomStarterClassArgs(
-            skills=BarbarianSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: True,
-                    Skill.INTIMIDATION: True,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INTIMIDATION,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

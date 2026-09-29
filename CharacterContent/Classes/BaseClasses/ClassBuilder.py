@@ -5,14 +5,12 @@ import attr
 
 import Core.Definitions as Definitions
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import ClassSkillsStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
 
@@ -406,8 +404,7 @@ class CustomStarterClassArgs:
         self,
         base_class: CharacterClass,
         default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
-        saving_throws: SavingThrowsStatBlock,
-        skills: ClassSkillsStatBlock,
+        skills: list[Skill],
         subclass: str,
         spell_casting_ability: Optional[Ability] = None,
         caster_type: Optional[SpellSlots.CasterType] = None,
@@ -417,7 +414,10 @@ class CustomStarterClassArgs:
     ):
         self.base_class = base_class
         self.default_equipment = default_equipment
-        self.saving_throws = saving_throws
+        # The class's chosen skills (ClassProficiencies.CLASS_SKILL_CHOICES
+        # holds the pool/count every class picks from; saving throw
+        # proficiencies come from the same table, granted by
+        # ClassProficiencies - neither is a caller argument).
         self.skills = skills
         self.subclass = subclass
         self.spell_casting_ability = spell_casting_ability
@@ -466,15 +466,11 @@ class StarterClassBuilder(ClassBuilder):
         )
 
     @property
-    def saving_throws(self) -> SavingThrowsStatBlock:
-        return self.non_generic_arguments.saving_throws
-
-    @property
     def subclass(self) -> str:
         return self.non_generic_arguments.subclass
 
     @property
-    def skills(self) -> ClassSkillsStatBlock:
+    def skills(self) -> list[Skill]:
         return self.non_generic_arguments.skills
 
     @property
@@ -506,8 +502,6 @@ class StarterClassBuilder(ClassBuilder):
             character_subclass=self.subclass,
             level_per_class={self.base_class: self.base_class_level},
             abilities=self.abilities,
-            skills=self.skills,
-            saving_throws=self.saving_throws,
             base_class=self.base_class,
             spell_casting_ability=self.spell_casting_ability,
         )
@@ -526,6 +520,8 @@ class StarterClassBuilder(ClassBuilder):
                 tools=list(self.tool_proficiencies or []),
             )
         )
+        pool, count = ClassProficiencies.CLASS_SKILL_CHOICES[self.base_class]
+        data.add_feature(ClassProficiencies.ClassSkillChoice(pool, count, self.skills))
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by

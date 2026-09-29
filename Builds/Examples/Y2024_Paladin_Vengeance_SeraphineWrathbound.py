@@ -23,22 +23,15 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel1Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=PaladinVengeanceCustomStarterClassArgs(
-            skills=PaladinSkillsStatBlock(
-                proficiencies={
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: True,
-                    Skill.INTIMIDATION: False,
-                    Skill.MEDICINE: False,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INSIGHT,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

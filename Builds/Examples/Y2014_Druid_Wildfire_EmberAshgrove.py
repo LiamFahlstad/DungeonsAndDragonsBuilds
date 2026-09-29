@@ -45,24 +45,15 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=DruidWildfireCustomStarterClassArgs(
-            skills=DruidSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: False,
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.INSIGHT: False,
-                    Skill.MEDICINE: True,
-                    Skill.NATURE: True,
-                    Skill.PERCEPTION: False,
-                    Skill.RELIGION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.MEDICINE,
+                Skill.NATURE,
+            ],
         ),
         base_class_level=14,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

@@ -22,24 +22,16 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RangerHunterCustomStarterClassArgs(
-            skills=RangerSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: True,
-                    Skill.ATHLETICS: False,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: True,
-                    Skill.STEALTH: False,
-                    Skill.SURVIVAL: True,
-                }
-            ),
+            skills=[
+                Skill.ANIMAL_HANDLING,
+                Skill.PERCEPTION,
+                Skill.SURVIVAL,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

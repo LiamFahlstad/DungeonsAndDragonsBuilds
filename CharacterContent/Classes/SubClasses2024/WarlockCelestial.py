@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass
+from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockCelestialFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel5Spells,
     SorcererLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -116,7 +115,7 @@ class WarlockCelestialLevel14(ClassBuilder.SubclassLevel14):
 class WarlockCelestialCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass.THE_CELESTIAL.value,

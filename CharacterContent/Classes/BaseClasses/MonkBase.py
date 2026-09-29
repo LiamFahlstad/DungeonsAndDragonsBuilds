@@ -4,14 +4,12 @@ import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
-from StatBlocks.SavingThrowsStatBlock import MonkSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 @attr.dataclass
@@ -256,7 +254,7 @@ class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: MonkSkillsStatBlock,
+        skills: list[Skill],
         monk_level: int,
         unarmed_strike: Ability,
         caster_type: Optional[SpellSlots.CasterType] = None,
@@ -267,7 +265,6 @@ class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
         super().__init__(
             base_class=CharacterClass.MONK,
             subclass=subclass,
-            saving_throws=MonkSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.UnarmedStrike(
                     player_is_proficient=True,

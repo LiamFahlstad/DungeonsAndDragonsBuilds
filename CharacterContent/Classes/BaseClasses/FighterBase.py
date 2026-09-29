@@ -5,15 +5,13 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from StatBlocks.SavingThrowsStatBlock import FighterSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -241,13 +239,12 @@ class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
         caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         super().__init__(
             base_class=CharacterClass.FIGHTER,
             subclass=subclass,
-            saving_throws=FighterSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Greatsword(),
                 Weapons.Flail(),

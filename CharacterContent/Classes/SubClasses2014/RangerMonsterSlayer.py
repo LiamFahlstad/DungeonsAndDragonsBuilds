@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass2014
+from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerMonsterSlayerFeatures,
 )
@@ -19,7 +19,6 @@ from CharacterContent.Spells.SpellLists import (
     PaladinLevel4Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -122,7 +121,7 @@ class RangerMonsterSlayerLevel17(ClassBuilder.SubclassLevel17):
 class RangerMonsterSlayerCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass2014.MONSTER_SLAYER.value,

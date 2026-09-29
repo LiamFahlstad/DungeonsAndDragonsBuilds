@@ -49,24 +49,16 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel4Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RangerHorizonWalkerCustomStarterClassArgs(
-            skills=RangerSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: False,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: True,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: True,
-                    Skill.STEALTH: False,
-                    Skill.SURVIVAL: True,
-                }
-            ),
+            skills=[
+                Skill.INVESTIGATION,
+                Skill.PERCEPTION,
+                Skill.SURVIVAL,
+            ],
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

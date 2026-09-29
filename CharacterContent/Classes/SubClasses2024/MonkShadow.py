@@ -8,14 +8,13 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, MonkSubclass
+from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Spells.SpellLists import (
     EvocationLevel2Spells,
     IllusionLevel0Spells,
 )
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 @attr.dataclass
@@ -78,7 +77,7 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
 class MonkShadowCustomStarterClassArgs(MonkCustomStarterClassArgs):
     def __init__(
         self,
-        skills: MonkSkillsStatBlock,
+        skills: list[Skill],
         monk_level: int,
         unarmed_strike: Ability,
     ):

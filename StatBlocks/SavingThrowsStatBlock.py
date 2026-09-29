@@ -4,10 +4,6 @@ from Core.Definitions import Ability
 from StatBlocks.StatBlock import StatBlock
 
 
-def _proficiency_map(*abilities: Ability) -> dict[Ability, bool]:
-    return {ability: True for ability in abilities}
-
-
 class SavingThrowsStatBlock(StatBlock):
     def __init__(
         self,
@@ -61,94 +57,3 @@ class SavingThrowsStatBlock(StatBlock):
 
     def add_bonus(self, ability: Ability, bonus: int) -> None:
         self.bonuses[ability] = self.get_bonus(ability) + bonus
-
-
-class PaladinSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.WISDOM, Ability.CHARISMA)
-        )
-
-
-class FighterSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.STRENGTH, Ability.CONSTITUTION)
-        )
-
-
-class WarlockSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.WISDOM, Ability.CHARISMA)
-        )
-
-
-class RangerSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.STRENGTH, Ability.DEXTERITY)
-        )
-
-
-class WizardSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.WISDOM, Ability.INTELLIGENCE)
-        )
-
-
-class BarbarianSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.STRENGTH, Ability.CONSTITUTION)
-        )
-
-
-class RogueSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.DEXTERITY, Ability.INTELLIGENCE)
-        )
-
-
-class DruidSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.WISDOM, Ability.INTELLIGENCE)
-        )
-
-
-class BardSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.DEXTERITY, Ability.CHARISMA)
-        )
-
-
-class ClericSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.WISDOM, Ability.CHARISMA)
-        )
-
-
-class SorcererSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.CONSTITUTION, Ability.CHARISMA)
-        )
-
-
-class MonkSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.STRENGTH, Ability.DEXTERITY)
-        )
-
-
-class ArtificerSavingThrowsStatBlock(SavingThrowsStatBlock):
-    def __init__(self):
-        super().__init__(
-            proficiencies=_proficiency_map(Ability.CONSTITUTION, Ability.INTELLIGENCE)
-        )

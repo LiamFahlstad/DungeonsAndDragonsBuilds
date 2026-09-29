@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass2014
+from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardNecromancyFeatures,
 )
 from CharacterContent.Spells.SpellLists import NecromancyLevel3Spells
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
@@ -65,7 +64,7 @@ class WizardNecromancyLevel14(ClassBuilder.SubclassLevel14):
 class WizardNecromancyCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass2014.NECROMANCY.value,

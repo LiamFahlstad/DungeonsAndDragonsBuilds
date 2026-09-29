@@ -21,8 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     EnchantmentLevel2Spells,
     TransmutationLevel5Spells,
 )
-from Core.Definitions import SorcererSubclass
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
+from Core.Definitions import SorcererSubclass, Skill
 
 
 @attr.dataclass
@@ -111,7 +110,7 @@ class SorcererAberrantLevel18(ClassBuilder.SubclassLevel18):
 class SorcererAberrantCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass.ABERRANT.value,

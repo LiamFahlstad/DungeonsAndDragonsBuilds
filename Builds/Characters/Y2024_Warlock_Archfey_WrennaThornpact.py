@@ -32,23 +32,15 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel3Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=WarlockArchfeyCustomStarterClassArgs(
-            skills=WarlockSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.DECEPTION: False,
-                    Skill.HISTORY: True,
-                    Skill.INTIMIDATION: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.NATURE: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.HISTORY,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

@@ -54,8 +54,7 @@ class SpeciesInfo:
 
 
 class SkillsBlockInfo:
-    def __init__(self, cls, allowed_skills, num_proficiencies):
-        self.cls = cls
+    def __init__(self, allowed_skills, num_proficiencies):
         self.allowed_skills = allowed_skills  # list[Skill]
         self.num_proficiencies = num_proficiencies
 
@@ -307,16 +306,20 @@ class Registry:
         return result
 
     def _skills_block_for(self, key):
-        import StatBlocks.SkillsStatBlock as skills_module
+        from CharacterContent.Features.ClassFeatures.ClassProficiencies import (
+            CLASS_SKILL_CHOICES,
+        )
+        from Core.Definitions import CharacterClass
 
-        cls = getattr(skills_module, f"{key}SkillsStatBlock", None)
-        if cls is None:
-            return None
         try:
-            allowed, num = _parse_skills_block_source(cls)
-        except Exception:
+            character_class = CharacterClass(key)
+        except ValueError:
             return None
-        return SkillsBlockInfo(cls, allowed, num)
+        choice = CLASS_SKILL_CHOICES.get(character_class)
+        if choice is None:
+            return None
+        allowed, num = choice
+        return SkillsBlockInfo(list(allowed), num)
 
     # ---------------------------------------------------------- subclasses
 
@@ -492,12 +495,6 @@ class Registry:
             if inspect.isclass(obj) and obj.__module__ == abilities_module.__name__:
                 mapping[name] = ("StatBlocks.AbilitiesStatBlock", name)
 
-        import StatBlocks.SkillsStatBlock as skills_module
-
-        for name, obj in vars(skills_module).items():
-            if inspect.isclass(obj) and obj.__module__ == skills_module.__name__:
-                mapping[name] = ("StatBlocks.SkillsStatBlock", name)
-
         for info in self.species().values():
             mapping[info.module_name] = ("CharacterContent.Species", info.module_name)
 
@@ -566,29 +563,6 @@ class Registry:
             annotation = hints.get(field.name, field.type)
             params.append((field.name, annotation, field.default is attr.NOTHING))
         return params
-
-
-def _parse_skills_block_source(cls):
-    """Extract allowed_skills and num_proficiencies from a skills block class."""
-    source = textwrap.dedent(inspect.getsource(cls))
-    tree = ast.parse(source)
-    allowed = None
-    num = None
-    namespace = {"Skill": Skill, "list": list}
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name) and target.id == "allowed_skills":
-                    allowed = eval(  # noqa: S307 - trusted repo source
-                        compile(ast.Expression(node.value), "<skills>", "eval"),
-                        namespace,
-                    )
-        if isinstance(node, ast.keyword) and node.arg == "num_proficiencies":
-            if isinstance(node.value, ast.Constant):
-                num = node.value.value
-    if allowed is None or num is None:
-        raise ValueError(f"Could not parse skills block {cls.__name__}")
-    return list(allowed), num
 
 
 # ------------------------------------------------------ annotation editors

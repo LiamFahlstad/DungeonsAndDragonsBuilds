@@ -133,21 +133,17 @@ abilities=StandardArrayAbilitiesStatBlock(
 
 ### Step 4: Choose Your Skills
 
-Each class has a limited set of skill proficiencies. Check `StatBlocks/SkillsStatBlock.py` for your class.
+Each class has a limited set of skill proficiencies. Check `CLASS_SKILL_CHOICES` in
+`CharacterContent/Features/ClassFeatures/ClassProficiencies.py` for your class's
+allowed pool and how many you pick.
 
-Example for Fighter:
+Example for Fighter (pick 2):
 
 ```python
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
-
-skills=FighterSkillsStatBlock(
-    proficiencies={
-        Skill.ACROBATICS: True,      # Choose 2 skills
-        Skill.ANIMAL_HANDLING: True,
-        Skill.ATHLETICS: False,      # Rest are False
-        # ... fill in all options
-    }
-)
+skills=[
+    Skill.ACROBATICS,
+    Skill.ANIMAL_HANDLING,
+]
 ```
 
 **Bonus skills from background** (+2 additional):

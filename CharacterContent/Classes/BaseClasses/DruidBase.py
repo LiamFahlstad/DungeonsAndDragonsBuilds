@@ -6,7 +6,7 @@ import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
@@ -24,8 +24,6 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel8Spells,
     DruidLevel9Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import DruidSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 DruidSpellsUpTo2: TypeAlias = DruidLevel1Spells | DruidLevel2Spells
 
@@ -356,12 +354,11 @@ class DruidCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: DruidSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.DRUID,
             subclass=subclass,
-            saving_throws=DruidSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.LeatherArmor(),
                 Armor.ShieldArmor(),

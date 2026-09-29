@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass
+from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import (
     WarlockGreatOldOneFeatures,
 )
@@ -23,7 +23,6 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel3Spells,
     WarlockLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -120,7 +119,7 @@ class WarlockGreatOldOneLevel14(ClassBuilder.SubclassLevel14):
 class WarlockGreatOldOneCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass.THE_GREAT_OLD_ONE.value,

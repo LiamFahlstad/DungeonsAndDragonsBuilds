@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass
+from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardDivinerFeatures
 from CharacterContent.Spells.SpellLists import (
     DivinationLevel1Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     DivinationLevel8Spells,
     DivinationLevel9Spells,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells
 
@@ -179,7 +178,7 @@ class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
 class WizardDivinerCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.DIVINER.value,

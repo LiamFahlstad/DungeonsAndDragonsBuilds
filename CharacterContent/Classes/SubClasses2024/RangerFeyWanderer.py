@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass
+from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererFeatures
 from CharacterContent.Spells.SpellLists import (
     BardLevel4Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -118,7 +117,7 @@ class RangerFeyWandererLevel17(ClassBuilder.SubclassLevel17):
 class RangerFeyWandererCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass.FEY_WANDERER.value,

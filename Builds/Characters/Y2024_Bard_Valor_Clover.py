@@ -42,7 +42,6 @@ from CharacterContent.Spells.SpellLists import (
 from CharacterContent.ToolProficiencies.Proficiencies import Lute
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 # Tactics:
 # - Prioritize control and support spells over weapon attacks when they can swing the encounter.
@@ -56,13 +55,11 @@ from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=BardValorCustomStarterClassArgs(
-            skills=BardSkillsStatBlock(
-                proficiencies={
-                    Skill.NATURE: True,
-                    Skill.PERFORMANCE: True,
-                    Skill.PERSUASION: True,
-                }
-            ),
+            skills=[
+                Skill.NATURE,
+                Skill.PERFORMANCE,
+                Skill.PERSUASION,
+            ],
         ),
         base_class_level=3,
         abilities=PointBuyAbilitiesStatBlock(

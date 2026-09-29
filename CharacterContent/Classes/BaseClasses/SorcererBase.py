@@ -4,7 +4,7 @@ import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
 from CharacterContent.Items import Packs
@@ -22,8 +22,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel8Spells,
     SorcererLevel9Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import SorcererSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 SorcererSpellsUpTo2: TypeAlias = SorcererLevel1Spells | SorcererLevel2Spells
 
@@ -327,12 +325,11 @@ class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.SORCERER,
             subclass=subclass,
-            saving_throws=SorcererSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Dagger(),
                 Weapons.Quarterstaff(),

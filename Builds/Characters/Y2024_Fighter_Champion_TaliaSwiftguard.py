@@ -24,24 +24,15 @@ from CharacterContent.Items import Items
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellsDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=FighterChampionCustomStarterClassArgs(
-            skills=FighterSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: False,
-                    Skill.ANIMAL_HANDLING: True,
-                    Skill.ATHLETICS: True,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ANIMAL_HANDLING,
+                Skill.ATHLETICS,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

@@ -36,23 +36,15 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Species import Elf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=WizardNecromancyCustomStarterClassArgs(
-            skills=WizardSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.MEDICINE: False,
-                    Skill.NATURE: False,
-                    Skill.RELIGION: True,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.RELIGION,
+            ],
         ),
         base_class_level=14,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

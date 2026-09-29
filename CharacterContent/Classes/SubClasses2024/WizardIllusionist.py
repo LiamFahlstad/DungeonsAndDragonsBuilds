@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass
+from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardIllusionistFeatures
 from CharacterContent.Spells.SpellLists import (
     ConjurationLevel2Spells,
@@ -24,7 +24,6 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel8Spells,
     IllusionLevel9Spells,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 IllusionSpellsUpTo2: TypeAlias = IllusionLevel1Spells | IllusionLevel2Spells
 
@@ -182,7 +181,7 @@ class IllusionistWizardLevel17(ClassBuilder.SubclassLevel17):
 class IllusionistWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.ILLUSIONIST.value,

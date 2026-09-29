@@ -63,7 +63,6 @@ from CharacterContent.Spells.SpellLists import (
 from CharacterContent.ToolProficiencies.Proficiencies import Lute
 from Core.Definitions import Ability, FighterSubclass, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 # Tactics: same as the pure-Bard version (Y2024_Bard_Valor_Clover.py) -
 # control/support spells first, weapon attacks (now with Dueling's +2)
@@ -82,12 +81,10 @@ def get_fighter_starter_class_builder():
             # Nature and Performance aren't on Fighter's skill list, unlike
             # Bard's - see module docstring. Persuasion survives; Athletics
             # fills the second slot instead of Performance.
-            skills=FighterSkillsStatBlock(
-                proficiencies={
-                    Skill.PERSUASION: True,
-                    Skill.ATHLETICS: True,
-                }
-            ),
+            skills=[
+                Skill.PERSUASION,
+                Skill.ATHLETICS,
+            ],
         ),
         base_class_level=1,
         abilities=PointBuyAbilitiesStatBlock(

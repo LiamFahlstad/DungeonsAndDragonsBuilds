@@ -8,10 +8,9 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BardSubclass
+from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardSpiritsFeatures
 from CharacterContent.Spells.SpellLists import ClericLevel0Spells, ClericLevel3Spells
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
@@ -54,7 +53,7 @@ class BardSpiritsLevel14(ClassBuilder.SubclassLevel14):
 class BardSpiritsCustomStarterClassArgs(BardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BardSubclass.SPIRITS.value,

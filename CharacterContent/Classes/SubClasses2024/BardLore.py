@@ -12,7 +12,6 @@ from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardLoreFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
@@ -91,7 +90,7 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
 class BardLoreCustomStarterClassArgs(BardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BardSubclass.LORE.value,

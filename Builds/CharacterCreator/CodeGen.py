@@ -87,13 +87,11 @@ def _starter_builder_source(spec, class_info, subclass_info):
     # non_generic_arguments
     lines.append(f"{arg}non_generic_arguments={subclass_info.args_class.__name__}(")
     if skills_block is not None:
-        lines.append(f"{arg}{INDENT}skills={skills_block.cls.__name__}(")
-        lines.append(f"{arg}{INDENT * 2}proficiencies={{")
+        lines.append(f"{arg}{INDENT}skills=[")
         for skill in skills_block.allowed_skills:
-            value = bool(spec.class_skills.get(skill.name, False))
-            lines.append(f"{arg}{INDENT * 3}Skill.{skill.name}: {value},")
-        lines.append(f"{arg}{INDENT * 2}}}")
-        lines.append(f"{arg}{INDENT}),")
+            if spec.class_skills.get(skill.name, False):
+                lines.append(f"{arg}{INDENT * 2}Skill.{skill.name},")
+        lines.append(f"{arg}{INDENT}],")
     for name, expr in spec.starter_args_extra.items():
         lines.append(f"{arg}{INDENT}{name}={expr},")
     lines.append(f"{arg}),")
@@ -263,8 +261,6 @@ def _imports_source(spec, registry, class_info, subclass_info):
     subclass_names.add(subclass_info.args_class.__name__)
     from_imports[subclass_info.module.__name__] = subclass_names
 
-    if class_info.skills_block is not None:
-        add("StatBlocks.SkillsStatBlock", class_info.skills_block.cls.__name__)
     abilities_class = _abilities_class_name(spec)
     add("StatBlocks.AbilitiesStatBlock", abilities_class)
 

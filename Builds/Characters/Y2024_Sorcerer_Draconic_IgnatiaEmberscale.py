@@ -24,22 +24,15 @@ from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species import Dragonborn
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=SorcererDraconicCustomStarterClassArgs(
-            skills=SorcererSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.DECEPTION: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: True,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.INTIMIDATION,
+            ],
         ),
         base_class_level=5,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

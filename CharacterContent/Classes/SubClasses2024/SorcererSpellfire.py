@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass
+from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
     SorcererSpellfireFeatures,
@@ -24,7 +24,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel3Spells,
     SorcererLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -115,7 +114,7 @@ class SorcererSpellfireLevel18(ClassBuilder.SubclassLevel18):
 class SorcererSpellfireCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass.SPELLFIRE.value,

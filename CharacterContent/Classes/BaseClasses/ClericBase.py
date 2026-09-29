@@ -21,9 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel8Spells,
     ClericLevel9Spells,
 )
-from Core.Definitions import Ability, CharacterClass
-from StatBlocks.SavingThrowsStatBlock import ClericSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
+from Core.Definitions import Ability, CharacterClass, Skill
 
 ClericSpellsUpTo2: TypeAlias = ClericLevel1Spells | ClericLevel2Spells
 
@@ -365,12 +363,11 @@ class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: ClericSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.CLERIC,
             subclass=subclass,
-            saving_throws=ClericSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.ChainShirtArmor(),
                 Armor.ShieldArmor(),

@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
@@ -19,8 +19,6 @@ from CharacterContent.Spells.SpellLists import (
     PaladinLevel4Spells,
     PaladinLevel5Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import PaladinSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
@@ -305,12 +303,11 @@ class PaladinCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: PaladinSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.PALADIN,
             subclass=subclass,
-            saving_throws=PaladinSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.ChainMailArmor(),
                 Armor.ShieldArmor(),

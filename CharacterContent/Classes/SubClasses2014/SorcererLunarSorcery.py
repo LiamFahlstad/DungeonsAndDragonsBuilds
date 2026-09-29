@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass2014
+from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererLunarSorceryFeatures,
@@ -26,7 +26,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel5Spells,
     SorcererLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -137,7 +136,7 @@ class SorcererLunarSorceryLevel18(ClassBuilder.SubclassLevel18):
 class SorcererLunarSorceryCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass2014.LUNAR_SORCERY.value,

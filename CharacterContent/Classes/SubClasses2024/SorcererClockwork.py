@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass
+from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
     SorcererClockworkFeatures,
 )
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     EvocationLevel5Spells,
     SorcererLevel3Spells,
 )
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -105,7 +104,7 @@ class SorcererClockworkLevel18(ClassBuilder.SubclassLevel18):
 class SorcererClockworkCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass.CLOCKWORK.value,

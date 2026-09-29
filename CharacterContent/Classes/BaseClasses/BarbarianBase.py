@@ -5,13 +5,11 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import CharacterClass
+from Core.Definitions import CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
-from StatBlocks.SavingThrowsStatBlock import BarbarianSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
@@ -244,12 +242,11 @@ class BarbarianCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: BarbarianSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.BARBARIAN,
             subclass=subclass,
-            saving_throws=BarbarianSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.UnarmedStrike(),
                 Weapons.Greataxe(),

@@ -8,11 +8,10 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, MonkSubclass2014
+from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import (
     MonkDrunkenMasterFeatures,
 )
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 @attr.dataclass
@@ -61,7 +60,7 @@ class MonkDrunkenMasterLevel17(ClassBuilder.SubclassLevel17):
 class MonkDrunkenMasterCustomStarterClassArgs(MonkCustomStarterClassArgs):
     def __init__(
         self,
-        skills: MonkSkillsStatBlock,
+        skills: list[Skill],
         monk_level: int,
         unarmed_strike: Ability,
     ):

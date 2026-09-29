@@ -346,17 +346,13 @@ def _parse_starter_call(spec, call, seg, warnings):
 
 
 def _parse_skills(spec, node, seg, warnings):
-    if not isinstance(node, ast.Call):
-        warnings.append("Could not parse the class skills stat block.")
+    if not isinstance(node, ast.List):
+        warnings.append("Could not parse the class skills list.")
         return
-    proficiencies = _call_kwargs(node).get("proficiencies")
-    if not isinstance(proficiencies, ast.Dict):
-        warnings.append("Could not parse class skill proficiencies.")
-        return
-    for key, value in zip(proficiencies.keys, proficiencies.values):
-        member = _enum_member(key)
-        if member and isinstance(value, ast.Constant):
-            spec.class_skills[member] = bool(value.value)
+    for element in node.elts:
+        member = _enum_member(element)
+        if member:
+            spec.class_skills[member] = True
         else:
             warnings.append("Skipped an unparseable class skill entry.")
 

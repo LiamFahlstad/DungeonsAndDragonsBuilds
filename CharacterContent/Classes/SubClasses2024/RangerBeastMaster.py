@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DamageType, RangerSubclass
+from Core.Definitions import DamageType, RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerBeastMasterFeatures
 from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
     CompanionType,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -79,7 +78,7 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
 class RangerBeastMasterCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass.BEAST_MASTER.value,

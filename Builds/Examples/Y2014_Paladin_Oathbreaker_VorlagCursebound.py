@@ -55,22 +55,15 @@ from CharacterContent.Spells.SpellLists import (
     PaladinLevel5Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=PaladinOathbreakerCustomStarterClassArgs(
-            skills=PaladinSkillsStatBlock(
-                proficiencies={
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: True,
-                    Skill.MEDICINE: False,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INTIMIDATION,
+            ],
         ),
         base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

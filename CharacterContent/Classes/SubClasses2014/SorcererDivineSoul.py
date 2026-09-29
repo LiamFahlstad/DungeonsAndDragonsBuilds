@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass2014
+from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererDivineSoulFeatures,
 )
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -67,7 +66,7 @@ class SorcererDivineSoulLevel18(ClassBuilder.SubclassLevel18):
 class SorcererDivineSoulCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass2014.DIVINE_SOUL.value,

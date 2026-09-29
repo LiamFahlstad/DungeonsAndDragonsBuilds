@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import SorcererSubclass
+from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererShadowFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -23,7 +23,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel4Spells,
     SorcererLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -110,7 +109,7 @@ class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
 class SorcererShadowCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass.SHADOW.value,

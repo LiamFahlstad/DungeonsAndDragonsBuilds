@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, BarbarianSubclass
+from Core.Definitions import Ability, BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheWildHeartFeatures,
 )
@@ -18,7 +18,6 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel2Spells,
     DruidLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
@@ -90,7 +89,7 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
 class BarbarianWildHeartCustomStarterClassArgs(BarbarianCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BarbarianSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BarbarianSubclass.PATH_OF_THE_WILD_HEART.value,

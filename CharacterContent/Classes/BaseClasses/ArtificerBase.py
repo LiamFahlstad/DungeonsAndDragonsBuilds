@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,
     EpicBoon,
@@ -24,9 +24,6 @@ from CharacterContent.Spells.SpellLists import (
     ArtificerLevel4Spells,
     ArtificerLevel5Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SavingThrowsStatBlock import ArtificerSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
 # Artificer is a half-caster whose spell slots never exceed 5th level.
 ArtificerSpellsUpTo2: TypeAlias = ArtificerLevel1Spells | ArtificerLevel2Spells
@@ -308,12 +305,11 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: ArtificerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.ARTIFICER,
             subclass=subclass,
-            saving_throws=ArtificerSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.StuddedLeatherArmor(),
                 Weapons.Dagger(),
@@ -328,55 +324,6 @@ class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
             spell_casting_ability=Ability.INTELLIGENCE,
             caster_type=SpellSlots.CasterType.HALF_CASTER,
             default_pack=Packs.DungeoneersPack(),
-        )
-
-
-class ArtificerStarterClassBuilder(ClassBuilder.StarterClassBuilder):
-
-    def __init__(
-        self,
-        artificer_level_features: ClassBuilder.BaseClassLevelFeatures,
-        artificer_level: int,
-        subclass: str,
-        abilities: AbilitiesStatBlock,
-        artificer_skills: ArtificerSkillsStatBlock,
-        background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
-        background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
-        add_default_equipment: bool,
-        origin_feat: OriginFeats.OriginFeat,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        replace_spells: Optional[dict[str, str]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
-    ):
-        default_equipment = [
-            Armor.StuddedLeatherArmor(),
-            Weapons.Dagger(),
-        ]
-        super().__init__(
-            base_class=CharacterClass.ARTIFICER,
-            base_class_level_features=artificer_level_features,
-            base_class_level=artificer_level,
-            subclass=subclass,
-            abilities=abilities,
-            skills=artificer_skills,
-            background_ability_bonuses=background_ability_bonuses,
-            background_skill_proficiencies=background_skill_proficiencies,
-            saving_throws=ArtificerSavingThrowsStatBlock(),
-            add_default_equipment=add_default_equipment,
-            default_equipment=default_equipment,
-            origin_feat=origin_feat,
-            armor_proficiencies=[
-                Definitions.ArmorType.LIGHT,
-                Definitions.ArmorType.MEDIUM,
-                Definitions.ArmorType.SHIELD,
-            ],
-            armor=armor,
-            weapons=weapons,
-            replace_spells=replace_spells,
-            spell_casting_ability=Ability.INTELLIGENCE,
-            caster_type=SpellSlots.CasterType.HALF_CASTER,
-            items=items,
         )
 
 

@@ -28,7 +28,6 @@ from CharacterContent.Spells import SpellLists
 from CharacterContent.ToolProficiencies.Proficiencies import Drum, NavigatorsTools
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
@@ -36,16 +35,10 @@ def get_starter_class_builder():
     martial_arts_die = MonkFeatures.LEVEL_TO_MARTIAL_ARTS_DIE[monk_level]
     return StarterClassBuilder(
         non_generic_arguments=MonkElementsCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.RELIGION: False,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.STEALTH,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

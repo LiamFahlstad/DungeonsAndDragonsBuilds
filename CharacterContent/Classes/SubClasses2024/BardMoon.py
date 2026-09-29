@@ -12,7 +12,6 @@ from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardMoonFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells, DruidLevel2Spells
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
@@ -61,7 +60,7 @@ class BardMoonLevel14(ClassBuilder.SubclassLevel14):
 class BardMoonCustomStarterClassArgs(BardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BardSubclass.MOON.value,

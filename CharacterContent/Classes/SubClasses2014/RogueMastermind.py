@@ -8,9 +8,8 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RogueSubclass2014
+from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueMastermindFeatures
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
@@ -61,7 +60,7 @@ class RogueMastermindLevel17(ClassBuilder.SubclassLevel17):
 class RogueMastermindCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RogueSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RogueSubclass2014.MASTERMIND.value,

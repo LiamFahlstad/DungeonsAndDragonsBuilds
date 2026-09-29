@@ -8,10 +8,9 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RogueSubclass
+from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueThiefFeatures
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
@@ -65,7 +64,7 @@ class RogueThiefLevel17(ClassBuilder.SubclassLevel17):
 class RogueThiefCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RogueSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RogueSubclass.THIEF.value,

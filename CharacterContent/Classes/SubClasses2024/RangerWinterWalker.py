@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass
+from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerWinterWalkerFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel3Spells,
@@ -22,7 +22,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -119,7 +118,7 @@ class RangerWinterWalkerLevel17(ClassBuilder.SubclassLevel17):
 class RangerWinterWalkerCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass.WINTER_WALKER.value,

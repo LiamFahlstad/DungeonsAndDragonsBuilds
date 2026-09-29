@@ -5,14 +5,12 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
-from StatBlocks.SavingThrowsStatBlock import RogueSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
@@ -227,13 +225,12 @@ class RogueCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: RogueSkillsStatBlock,
+        skills: list[Skill],
         caster_type: Optional[SpellSlots.CasterType] = None,
     ):
         super().__init__(
             base_class=CharacterClass.ROGUE,
             subclass=subclass,
-            saving_throws=RogueSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Shortsword(),
                 Weapons.Dagger(),

@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BarbarianSubclass2014
+from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfTheAncestralGuardianFeatures,
 )
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
@@ -78,7 +77,7 @@ class BarbarianAncestralGuardianLevel14(ClassBuilder.SubclassLevel14):
 class BarbarianAncestralGuardianCustomStarterClassArgs(BarbarianCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BarbarianSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BarbarianSubclass2014.PATH_OF_THE_ANCESTRAL_GUARDIAN.value,

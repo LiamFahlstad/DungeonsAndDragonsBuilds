@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RogueSubclass
+from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from CharacterContent.Features.SubClassFeatures.Rogue import (
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 # 2024 rules dropped the 2014 Enchantment/Illusion school restriction: prepared
 # spells can be any Wizard spell of a level for which the Arcane Trickster has
@@ -211,7 +210,7 @@ class RogueArcaneTricksterLevel20(ClassBuilder.SubclassLevel20):
 class RogueArcaneTricksterCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RogueSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RogueSubclass.ARCANE_TRICKSTER.value,

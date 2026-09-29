@@ -62,10 +62,10 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 
-# TODO: Import your class's skill block. Available skill blocks:
-#   StatBlocks/SkillsStatBlock.py has: FighterSkillsStatBlock, ClericSkillsStatBlock,
-#   WizardSkillsStatBlock, etc. for each class
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
+# Your class's skill choices are a plain list of Skill members (see `skills=`
+# below) - CharacterContent/Features/ClassFeatures/ClassProficiencies.py's
+# CLASS_SKILL_CHOICES table has the allowed pool and how many you pick for
+# each class.
 
 # TODO: If your class uses spells (Cleric, Wizard, Bard, Druid, etc.), import spell definitions:
 #   from CharacterContent.Spells.SpellLists import (
@@ -105,21 +105,10 @@ def get_starter_class_builder():
         # for a "CustomStarterClassArgs" class to see what's required.
         # Example: FighterChampion requires skills, Fighter BattleMaster would need maneuvers, etc.
         non_generic_arguments=FighterChampionCustomStarterClassArgs(
-            skills=FighterSkillsStatBlock(
-                proficiencies={
-                    # TODO: Set True for 2 skill proficiencies from your class's list
-                    # Example: Fighter can choose from Acrobatics, Animal Handling, Athletics,
-                    # History, Insight, Intimidation, Perception, Survival
-                    Skill.ACROBATICS: True,
-                    Skill.ANIMAL_HANDLING: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.ANIMAL_HANDLING,
+            ],
         ),
         # =====================================================================
         # base_class_level: Character level (1-20)
@@ -303,5 +292,6 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # Spells: Spells/SpellLists.py (check spell availability per class/level)
 # Feats: CharacterContent/Features/CharacterFeats/OriginFeats.py, GeneralFeats.py
 # Equipment: CharacterContent/Items/Armor/, CharacterContent/Items/Weapons/
-# Skills: StatBlocks/SkillsStatBlock.py for class-specific skill blocks
+# Skills: CharacterContent/Features/ClassFeatures/ClassProficiencies.py's
+#   CLASS_SKILL_CHOICES table for each class's skill pool and pick count
 # ============================================================================

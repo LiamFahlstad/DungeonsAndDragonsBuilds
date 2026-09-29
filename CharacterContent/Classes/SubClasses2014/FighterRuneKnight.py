@@ -8,11 +8,10 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import FighterSubclass2014
+from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterRuneKnightFeatures,
 )
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -84,7 +83,7 @@ class FighterRuneKnightLevel18(ClassBuilder.SubclassLevel18):
 class FighterRuneKnightCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=FighterSubclass2014.RUNE_KNIGHT.value,

@@ -51,21 +51,15 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=ClericNatureCustomStarterClassArgs(
-            skills=ClericSkillsStatBlock(
-                proficiencies={
-                    Skill.INSIGHT: True,
-                    Skill.MEDICINE: True,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
-                    Skill.HISTORY: False,
-                }
-            ),
+            skills=[
+                Skill.INSIGHT,
+                Skill.MEDICINE,
+            ],
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

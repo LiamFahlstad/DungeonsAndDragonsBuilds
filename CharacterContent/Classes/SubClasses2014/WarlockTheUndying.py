@@ -8,11 +8,10 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass2014
+from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockTheUndyingFeatures,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -63,7 +62,7 @@ class WarlockTheUndyingLevel14(ClassBuilder.SubclassLevel14):
 class WarlockTheUndyingCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass2014.THE_UNDYING.value,

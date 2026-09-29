@@ -45,19 +45,16 @@ from CharacterContent.Spells.SpellLists import (
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import Bagpipes, Drum, Horn
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=BardSwordsCustomStarterClassArgs(
-            skills=BardSkillsStatBlock(
-                proficiencies={
-                    Skill.PERFORMANCE: True,
-                    Skill.ACROBATICS: True,
-                    Skill.PERSUASION: True,
-                }
-            ),
+            skills=[
+                Skill.PERFORMANCE,
+                Skill.ACROBATICS,
+                Skill.PERSUASION,
+            ],
         ),
         base_class_level=14,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

@@ -23,8 +23,6 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel8Spells,
     BardLevel9Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import BardSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 BardSpellsUpTo2: TypeAlias = BardLevel1Spells | BardLevel2Spells
 
@@ -339,12 +337,11 @@ class BardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: BardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.BARD,
             subclass=subclass,
-            saving_throws=BardSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.LeatherArmor(),
                 Weapons.Dagger(),

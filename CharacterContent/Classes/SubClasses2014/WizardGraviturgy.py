@@ -8,11 +8,10 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass2014
+from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardGraviturgyFeatures,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
@@ -62,7 +61,7 @@ class WizardGraviturgyLevel14(ClassBuilder.SubclassLevel14):
 class WizardGraviturgyCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass2014.GRAVITURGY.value,

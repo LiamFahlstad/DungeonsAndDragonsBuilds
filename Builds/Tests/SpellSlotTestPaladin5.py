@@ -24,7 +24,6 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells, PaladinLevel2Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 # Paladin 5 (half caster, single class).
@@ -32,16 +31,10 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=PaladinGloryCustomStarterClassArgs(
-            skills=PaladinSkillsStatBlock(
-                proficiencies={
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.MEDICINE: True,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.MEDICINE,
+            ],
         ),
         base_class_level=5,
         abilities=StandardArrayAbilitiesStatBlock(

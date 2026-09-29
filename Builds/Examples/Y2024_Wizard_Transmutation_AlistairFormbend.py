@@ -50,23 +50,15 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Gnome
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=WizardTransmuterCustomStarterClassArgs(
-            skills=WizardSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.INVESTIGATION: True,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.MEDICINE: False,
-                    Skill.NATURE: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.INVESTIGATION,
+            ],
         ),
         base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

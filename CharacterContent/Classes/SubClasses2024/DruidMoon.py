@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DruidSubclass
+from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidMoonFeatures
 from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
@@ -18,7 +18,6 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel4Spells,
     DruidLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 @attr.dataclass
@@ -111,7 +110,7 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
 class DruidMoonCustomStarterClassArgs(DruidCustomStarterClassArgs):
     def __init__(
         self,
-        skills: DruidSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=DruidSubclass.MOON.value,

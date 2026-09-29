@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass
+from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockUndeadFeatures
 from CharacterContent.Spells.SpellLists import (
     BardLevel3Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel1Spells,
     WarlockLevel3Spells,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -115,7 +114,7 @@ class WarlockUndeadLevel14(ClassBuilder.SubclassLevel14):
 class WarlockUndeadCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass.THE_UNDEAD.value,

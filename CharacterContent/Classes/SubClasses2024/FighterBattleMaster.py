@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import FighterSubclass
+from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.CombatFeatures import Maneuvers
 from CharacterContent.Features.SubClassFeatures.Fighter import (
     FighterBattleMasterFeatures,
 )
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -110,7 +109,7 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
 class FighterBattleMasterCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=FighterSubclass.BATTLE_MASTER.value,

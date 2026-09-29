@@ -18,23 +18,16 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import CobblersTools
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
     monk_level = 3
     return StarterClassBuilder(
         non_generic_arguments=MonkShadowCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.RELIGION: False,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.STEALTH,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

@@ -45,24 +45,16 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel4Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RangerDrakewardenCustomStarterClassArgs(
-            skills=RangerSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: True,
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.NATURE: True,
-                    Skill.PERCEPTION: False,
-                    Skill.STEALTH: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ANIMAL_HANDLING,
+                Skill.ATHLETICS,
+                Skill.NATURE,
+            ],
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

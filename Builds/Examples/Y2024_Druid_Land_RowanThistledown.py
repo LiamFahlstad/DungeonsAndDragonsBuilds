@@ -75,7 +75,6 @@ from CharacterContent.Spells.SpellLists import (
     TransmutationLevel9Spells,
 )
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 # Circle land type is chosen independently at each subclass level (3, 5, 7, 9, 10).
@@ -88,18 +87,10 @@ _LATE_LAND = DruidLandType.ARID
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=DruidLandCustomStarterClassArgs(
-            skills=DruidSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: True,
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.INSIGHT: False,
-                    Skill.MEDICINE: False,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: True,
-                    Skill.RELIGION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ARCANA,
+                Skill.PERCEPTION,
+            ],
         ),
         base_class_level=20,
         # Custom array (not standard array, since it repeats 8 three times):

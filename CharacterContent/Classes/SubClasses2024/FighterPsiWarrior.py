@@ -8,10 +8,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, FighterSubclass
+from Core.Definitions import Ability, FighterSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterPsiWarriorFeatures
 from CharacterContent.Spells.SpellLists import WizardLevel5Spells
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -80,7 +79,7 @@ class FighterPsiWarriorLevel18(ClassBuilder.SubclassLevel18):
 class FighterPsiWarriorCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=FighterSubclass.PSI_WARRIOR.value,

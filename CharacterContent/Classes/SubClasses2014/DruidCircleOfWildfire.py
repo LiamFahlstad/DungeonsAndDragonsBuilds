@@ -8,9 +8,8 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DruidSubclass2014
+from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidWildfireFeatures
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 @attr.dataclass
@@ -70,7 +69,7 @@ class DruidWildfireLevel14(ClassBuilder.SubclassLevel14):
 class DruidWildfireCustomStarterClassArgs(DruidCustomStarterClassArgs):
     def __init__(
         self,
-        skills: DruidSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=DruidSubclass2014.WILDFIRE.value,

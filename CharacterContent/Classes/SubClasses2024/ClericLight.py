@@ -9,10 +9,9 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ClericSubclass
+from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericLightFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 @attr.dataclass
@@ -98,7 +97,7 @@ class ClericLightLevel17(ClassBuilder.SubclassLevel17):
 class ClericLightCustomStarterClassArgs(ClericCustomStarterClassArgs):
     def __init__(
         self,
-        skills: ClericSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=ClericSubclass.LIGHT.value,

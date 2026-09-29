@@ -16,23 +16,16 @@ from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Species import Goliath
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import Drum
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
     monk_level = 3
     return StarterClassBuilder(
         non_generic_arguments=MonkElementsCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: False,
-                    Skill.ATHLETICS: True,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: True,
-                    Skill.RELIGION: False,
-                    Skill.STEALTH: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INSIGHT,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

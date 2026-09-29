@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import PaladinSubclass2014
+from Core.Definitions import PaladinSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Paladin import (
     PaladinOathbreakerFeatures,
 )
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel4Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
@@ -137,7 +136,7 @@ class PaladinOathbreakerLevel20(ClassBuilder.SubclassLevel20):
 class PaladinOathbreakerCustomStarterClassArgs(PaladinCustomStarterClassArgs):
     def __init__(
         self,
-        skills: PaladinSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=PaladinSubclass2014.OATHBREAKER.value,

@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DruidLandType, DruidSubclass
+from Core.Definitions import DruidLandType, DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidLandFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel4Spells,
@@ -28,7 +28,6 @@ from CharacterContent.Spells.SpellLists import (
     NecromancyLevel4Spells,
     TransmutationLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 # Circle Spells granted by the Circle of the Land Spells feature, keyed by chosen
 # land type and the Druid level at which they are gained (3, 5, 7, and 9).
@@ -167,7 +166,7 @@ class DruidLandLevel14(ClassBuilder.SubclassLevel14):
 class DruidLandCustomStarterClassArgs(DruidCustomStarterClassArgs):
     def __init__(
         self,
-        skills: DruidSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=DruidSubclass.LAND.value,

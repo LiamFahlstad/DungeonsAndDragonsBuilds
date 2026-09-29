@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DamageType, SorcererSubclass
+from Core.Definitions import DamageType, SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererDraconicFeatures
 from CharacterContent.Spells.SpellLists import (
     SorcererLevel1Spells,
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel4Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import SorcererSkillsStatBlock
 
 
 @attr.dataclass
@@ -108,7 +107,7 @@ class SorcererDraconicLevel18(ClassBuilder.SubclassLevel18):
 class SorcererDraconicCustomStarterClassArgs(SorcererCustomStarterClassArgs):
     def __init__(
         self,
-        skills: SorcererSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=SorcererSubclass.DRACONIC.value,

@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import PaladinSubclass
+from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinDevotionFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -19,7 +19,6 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel5Spells,
     PaladinLevel1Spells,
 )
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
@@ -131,7 +130,7 @@ class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
 class PaladinDevotionCustomStarterClassArgs(PaladinCustomStarterClassArgs):
     def __init__(
         self,
-        skills: PaladinSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=PaladinSubclass.OATH_OF_DEVOTION.value,

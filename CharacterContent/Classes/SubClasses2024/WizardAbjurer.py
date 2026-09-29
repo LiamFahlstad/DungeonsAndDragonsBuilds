@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass
+from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardAbjurerFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel1Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     AbjurationLevel8Spells,
     AbjurationLevel9Spells,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 AbjurationSpellsUpTo2: TypeAlias = AbjurationLevel1Spells | AbjurationLevel2Spells
 
@@ -181,7 +180,7 @@ class AbjurerWizardLevel17(ClassBuilder.SubclassLevel17):
 class AbjurerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.ABJURER.value,

@@ -12,7 +12,6 @@ from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterArcaneArcherFeatures,
 )
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -60,7 +59,7 @@ class FighterArcaneArcherLevel15(ClassBuilder.SubclassLevel15):
 class FighterArcaneArcherCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=FighterSubclass2014.ARCANE_ARCHER.value,

@@ -11,8 +11,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.SubClassFeatures.Monk import MonkElementsFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells
-from Core.Definitions import Ability, MonkSubclass
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
+from Core.Definitions import Ability, MonkSubclass, Skill
 
 
 @attr.dataclass
@@ -74,7 +73,7 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
 class MonkElementsCustomStarterClassArgs(MonkCustomStarterClassArgs):
     def __init__(
         self,
-        skills: MonkSkillsStatBlock,
+        skills: list[Skill],
         monk_level: int,
         unarmed_strike: Ability,
     ):

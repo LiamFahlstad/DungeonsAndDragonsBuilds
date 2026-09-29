@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArtificerSubclass
+from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerBattleSmithFeatures,
 )
@@ -23,7 +23,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel1Spells,
     SorcererLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
 
 @attr.dataclass
@@ -103,7 +102,7 @@ class ArtificerBattleSmithLevel17(ClassBuilder.SubclassLevel17):
 class ArtificerBattleSmithCustomStarterClassArgs(ArtificerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: ArtificerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=ArtificerSubclass.BATTLE_SMITH.value,

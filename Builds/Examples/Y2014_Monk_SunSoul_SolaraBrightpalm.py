@@ -21,23 +21,16 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import Horn
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
     monk_level = 17
     return StarterClassBuilder(
         non_generic_arguments=MonkSunSoulCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: True,
-                    Skill.RELIGION: False,
-                    Skill.STEALTH: False,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.INSIGHT,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

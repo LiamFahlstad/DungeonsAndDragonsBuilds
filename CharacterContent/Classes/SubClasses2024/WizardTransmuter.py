@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass
+from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardTransmuterFeatures
 from CharacterContent.Spells.SpellLists import (
     TransmutationLevel1Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     TransmutationLevel8Spells,
     TransmutationLevel9Spells,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 TransmutationSpellsUpTo2: TypeAlias = (
     TransmutationLevel1Spells | TransmutationLevel2Spells
@@ -208,7 +207,7 @@ class WizardTransmuterLevel17(ClassBuilder.SubclassLevel17):
 class WizardTransmuterCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.TRANSMUTER.value,

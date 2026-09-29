@@ -33,18 +33,15 @@ from CharacterContent.Spells.SpellLists import (
 from CharacterContent.ToolProficiencies.Proficiencies import CooksUtensils
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=ClericLightCustomStarterClassArgs(
-            skills=ClericSkillsStatBlock(
-                proficiencies={
-                    Skill.INSIGHT: True,
-                    Skill.PERSUASION: True,
-                }
-            ),
+            skills=[
+                Skill.INSIGHT,
+                Skill.PERSUASION,
+            ],
         ),
         base_class_level=3,
         # Point buy (27 pts): WIS 15 (9) + CON 14 (7) + CHA 13 (5) + DEX 12 (4)

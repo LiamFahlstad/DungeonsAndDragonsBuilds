@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DamageType, RangerSubclass2014
+from Core.Definitions import DamageType, RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerDrakewardenFeatures,
 )
 from CharacterContent.Spells.SpellLists import ClericLevel0Spells
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -77,7 +76,7 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
 class RangerDrakewardenCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass2014.DRAKEWARDEN.value,

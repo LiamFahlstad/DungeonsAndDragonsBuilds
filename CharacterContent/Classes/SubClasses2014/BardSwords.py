@@ -8,10 +8,9 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BardSubclass2014
+from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardSwordsFeatures
-from StatBlocks.SkillsStatBlock import BardSkillsStatBlock
 
 
 @attr.dataclass
@@ -56,7 +55,7 @@ class BardSwordsLevel14(ClassBuilder.SubclassLevel14):
 class BardSwordsCustomStarterClassArgs(BardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BardSubclass2014.SWORD.value,

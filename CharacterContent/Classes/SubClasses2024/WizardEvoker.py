@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WizardSubclass
+from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardEvokerFeatures
 from CharacterContent.Spells.SpellLists import (
     EvocationLevel1Spells,
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     EvocationLevel8Spells,
     EvocationLevel9Spells,
 )
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 EvocationSpellsUpTo2: TypeAlias = EvocationLevel1Spells | EvocationLevel2Spells
 
@@ -176,7 +175,7 @@ class EvokerWizardLevel17(ClassBuilder.SubclassLevel17):
 class EvokerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.EVOKER.value,

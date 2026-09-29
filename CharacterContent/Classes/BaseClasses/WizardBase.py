@@ -22,8 +22,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel8Spells,
     WizardLevel9Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import WizardSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 WizardSpellsUpTo2: TypeAlias = WizardLevel1Spells | WizardLevel2Spells
 
@@ -322,12 +320,11 @@ class WizardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.WIZARD,
             subclass=subclass,
-            saving_throws=WizardSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Dagger(),
                 Weapons.Quarterstaff(),

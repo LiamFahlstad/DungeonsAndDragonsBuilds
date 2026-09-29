@@ -41,25 +41,16 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
     fighter_level = 18
     return StarterClassBuilder(
         non_generic_arguments=FighterEldritchKnightCustomStarterClassArgs(
-            skills=FighterSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: False,
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: True,
-                    Skill.HISTORY: True,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.HISTORY,
+            ],
         ),
         base_class_level=fighter_level,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

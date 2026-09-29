@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass2014
+from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerSwarmkeeperFeatures,
 )
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel4Spells,
     DruidLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -120,7 +119,7 @@ class RangerSwarmkeeperLevel17(ClassBuilder.SubclassLevel17):
 class RangerSwarmkeeperCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass2014.SWARMKEEPER.value,

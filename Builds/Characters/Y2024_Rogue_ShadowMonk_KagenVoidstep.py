@@ -44,7 +44,6 @@ from CharacterContent.Species import Halfling
 from Core.Definitions import Ability, RogueSubclass, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def get_starter_class_builder():
@@ -57,20 +56,12 @@ def get_starter_class_builder():
             # Monk multiclass builder's "Warrior of Shadow" subclass once the
             # sheets are merged (see CharacterBuilder.build()/merge_with()).
             subclass=RogueSubclass.THIEF.value,
-            skills=RogueSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.DECEPTION: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.INVESTIGATION: False,
-                    Skill.PERCEPTION: True,
-                    Skill.PERSUASION: False,
-                    Skill.SLEIGHT_OF_HAND: True,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.PERCEPTION,
+                Skill.SLEIGHT_OF_HAND,
+                Skill.STEALTH,
+            ],
         ),
         base_class_level=1,
         # Point Buy (27 points), reverse-engineered so that, after the +2

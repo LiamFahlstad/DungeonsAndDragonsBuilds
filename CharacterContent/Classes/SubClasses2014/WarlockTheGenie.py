@@ -8,11 +8,10 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass2014, WarlockGenieKind
+from Core.Definitions import WarlockSubclass2014, WarlockGenieKind, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockTheGenieFeatures,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -73,7 +72,7 @@ class WarlockTheGenieLevel14(ClassBuilder.SubclassLevel14):
 class WarlockTheGenieCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass2014.THE_GENIE.value,

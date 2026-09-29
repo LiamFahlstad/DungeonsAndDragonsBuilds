@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
@@ -32,8 +32,6 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel8Spells,
     WarlockLevel9Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import WarlockSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 WarlockSpellsUpTo2: TypeAlias = WarlockLevel1Spells | WarlockLevel2Spells
 
@@ -359,12 +357,11 @@ class WarlockCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.WARLOCK,
             subclass=subclass,
-            saving_throws=WarlockSavingThrowsStatBlock(),
             default_equipment=[
                 Weapons.Sickle(),
                 Weapons.Dagger(),

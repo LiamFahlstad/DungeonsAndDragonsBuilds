@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import FighterSubclass
+from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.SubClassFeatures.Fighter import (
     FighterEldritchKnightFeatures,
 )
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 @attr.dataclass
@@ -78,7 +77,7 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
 class FighterEldritchKnightCustomStarterClassArgs(FighterCustomStarterClassArgs):
     def __init__(
         self,
-        skills: FighterSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=FighterSubclass.ELDRITCH_KNIGHT.value,

@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ArtificerSubclass
+from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerReanimatorFeatures,
 )
@@ -25,7 +25,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel3Spells,
     WizardLevel1Spells,
 )
-from StatBlocks.SkillsStatBlock import ArtificerSkillsStatBlock
 
 
 @attr.dataclass
@@ -119,7 +118,7 @@ class ArtificerReanimatorLevel17(ClassBuilder.SubclassLevel17):
 class ArtificerReanimatorCustomStarterClassArgs(ArtificerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: ArtificerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=ArtificerSubclass.REANIMATOR.value,

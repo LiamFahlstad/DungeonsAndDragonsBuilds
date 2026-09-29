@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import ClericSubclass
+from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericGraveFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -23,7 +23,6 @@ from CharacterContent.Spells.SpellLists import (
     NecromancyLevel3Spells,
     NecromancyLevel4Spells,
 )
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 @attr.dataclass
@@ -107,7 +106,7 @@ class ClericGraveLevel17(ClassBuilder.SubclassLevel17):
 class ClericGraveCustomStarterClassArgs(ClericCustomStarterClassArgs):
     def __init__(
         self,
-        skills: ClericSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=ClericSubclass.GRAVE.value,

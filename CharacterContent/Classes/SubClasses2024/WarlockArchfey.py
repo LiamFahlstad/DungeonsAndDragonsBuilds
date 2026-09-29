@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import WarlockSubclass
+from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockArchfeyFeatures
 from CharacterContent.Spells.SpellLists import (
     BardLevel1Spells,
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel5Spells,
     WarlockLevel2Spells,
 )
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 @attr.dataclass
@@ -115,7 +114,7 @@ class WarlockArchfeyLevel14(ClassBuilder.SubclassLevel14):
 class WarlockArchfeyCustomStarterClassArgs(WarlockCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WarlockSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WarlockSubclass.THE_ARCHFEY.value,

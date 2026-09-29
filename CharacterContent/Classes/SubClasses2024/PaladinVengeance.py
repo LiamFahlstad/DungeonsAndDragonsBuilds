@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import PaladinSubclass
+from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinVengeanceFeatures
 from CharacterContent.Spells.SpellLists import (
     ClericLevel1Spells,
@@ -18,7 +18,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel4Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
@@ -121,7 +120,7 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
 class PaladinVengeanceCustomStarterClassArgs(PaladinCustomStarterClassArgs):
     def __init__(
         self,
-        skills: PaladinSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=PaladinSubclass.OATH_OF_VENGEANCE.value,

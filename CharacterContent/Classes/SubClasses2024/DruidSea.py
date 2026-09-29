@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import DruidSubclass
+from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidSeaFeatures
 from CharacterContent.Spells.SpellLists import (
     ArtificerLevel0Spells,
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel5Spells,
     SorcererLevel3Spells,
 )
-from StatBlocks.SkillsStatBlock import DruidSkillsStatBlock
 
 
 @attr.dataclass
@@ -120,7 +119,7 @@ class DruidSeaLevel14(ClassBuilder.SubclassLevel14):
 class DruidSeaCustomStarterClassArgs(DruidCustomStarterClassArgs):
     def __init__(
         self,
-        skills: DruidSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=DruidSubclass.SEA.value,

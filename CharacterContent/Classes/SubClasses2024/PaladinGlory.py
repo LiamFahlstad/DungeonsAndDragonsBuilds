@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import PaladinSubclass
+from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinGloryFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -21,7 +21,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 @attr.dataclass
@@ -128,7 +127,7 @@ class PaladinGloryLevel20(ClassBuilder.SubclassLevel20):
 class PaladinGloryCustomStarterClassArgs(PaladinCustomStarterClassArgs):
     def __init__(
         self,
-        skills: PaladinSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=PaladinSubclass.OATH_OF_GLORY.value,

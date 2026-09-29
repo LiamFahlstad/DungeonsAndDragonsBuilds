@@ -46,10 +46,8 @@ class CharacterSheetData:
     # in level_per_class.
     class_by_character_level: dict[int, CharacterClass] = attr.Factory(dict)
     abilities: Optional[AbilitiesStatBlock] = None
-    skills: Optional[SkillsStatBlock] = None
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
-    saving_throws: Optional[SavingThrowsStatBlock] = None
 
     # Every feature in the order it was granted. The order only decides how
     # the sheet lists them: no stat depends on it (see
@@ -279,16 +277,12 @@ class CharacterSheetData:
             raise ValueError("Character subclass must be set.")
         if self.abilities is None:
             raise ValueError("Character abilities must be set.")
-        if self.skills is None:
-            raise ValueError("Character skills must be set.")
         if self.speed is None:
             raise ValueError("Character speed must be set.")
         if self.size is None:
             raise ValueError("Character size must be set.")
         if self.base_class is None:
             raise ValueError("Character base class must be set.")
-        if self.saving_throws is None:
-            raise ValueError("Character saving throws must be set.")
 
         # Validate one-armor rule: at most one worn non-shield armor
         worn_body_armors = [
@@ -330,21 +324,24 @@ class CharacterSheetData:
         assert self.character_name is not None
         assert self.character_subclass is not None
         assert self.abilities is not None
-        assert self.skills is not None
         assert self.speed is not None
         assert self.size is not None
         assert self.base_class is not None
-        assert self.saving_throws is not None
 
         combat = CombatStatBlock(
             speed=self.speed,
             size=self.size,
         )
-        # Features mutate these sub-blocks in place (ability bonuses, skill
-        # proficiencies, ...), so the stat block gets its own copies. Sharing
-        # them would re-apply every bonus on the next rebuild after a cache
-        # invalidation, and on every build() of the same builder instance
-        # (which hands the same AbilitiesStatBlock to each CharacterSheetData).
+        # Skills and saving throws hold no state of their own here - every
+        # proficiency, expertise and bonus arrives as a feature effect (e.g.
+        # ClassProficiencies, ClassSkillChoice, FreeBackgroundSkillProficiency),
+        # so the stat block always starts them empty. Abilities are still an
+        # accumulator field (base scores are a build choice, not a feature
+        # grant), and get their own deep copy: features mutate it in place, and
+        # sharing the accumulator's instance would re-apply every bonus on the
+        # next rebuild after a cache invalidation, or on every build() of the
+        # same builder instance (which hands the same AbilitiesStatBlock to
+        # each CharacterSheetData).
         character = CharacterStatBlock(
             name=self.character_name,
             character_subclass=self.character_subclass,
@@ -352,9 +349,9 @@ class CharacterSheetData:
             level_per_class=self.level_per_class,
             class_by_character_level=self.class_by_character_level,
             abilities=copy.deepcopy(self.abilities),
-            skills=copy.deepcopy(self.skills),
+            skills=SkillsStatBlock(),
             combat=combat,
-            saving_throws=copy.deepcopy(self.saving_throws),
+            saving_throws=SavingThrowsStatBlock(),
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
             starting_gold=self.starting_gold,

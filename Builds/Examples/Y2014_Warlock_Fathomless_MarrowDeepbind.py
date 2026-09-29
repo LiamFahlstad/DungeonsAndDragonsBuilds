@@ -52,23 +52,15 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel7Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import WarlockSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=WarlockFathomlessCustomStarterClassArgs(
-            skills=WarlockSkillsStatBlock(
-                proficiencies={
-                    Skill.ARCANA: False,
-                    Skill.DECEPTION: True,
-                    Skill.HISTORY: False,
-                    Skill.INTIMIDATION: True,
-                    Skill.INVESTIGATION: False,
-                    Skill.NATURE: False,
-                    Skill.RELIGION: False,
-                }
-            ),
+            skills=[
+                Skill.DECEPTION,
+                Skill.INTIMIDATION,
+            ],
         ),
         base_class_level=14,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

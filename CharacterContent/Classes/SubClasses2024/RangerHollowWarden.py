@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass
+from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerHollowWardenFeatures
 from CharacterContent.Spells.SpellLists import (
     IllusionLevel3Spells,
@@ -17,7 +17,6 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel5Spells,
     TransmutationLevel2Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -122,7 +121,7 @@ class RangerHollowWardenLevel17(ClassBuilder.SubclassLevel17):
 class RangerHollowWardenCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass.HOLLOW_WARDEN.value,

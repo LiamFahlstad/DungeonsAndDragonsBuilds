@@ -32,7 +32,6 @@ from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 # Paladin 4 / Wizard 3 multiclass (the PHB example scenario).
@@ -41,16 +40,10 @@ from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=PaladinGloryCustomStarterClassArgs(
-            skills=PaladinSkillsStatBlock(
-                proficiencies={
-                    Skill.ATHLETICS: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: True,
-                    Skill.MEDICINE: False,
-                    Skill.PERSUASION: False,
-                    Skill.RELIGION: True,
-                }
-            ),
+            skills=[
+                Skill.INTIMIDATION,
+                Skill.RELIGION,
+            ],
         ),
         base_class_level=4,
         abilities=StandardArrayAbilitiesStatBlock(

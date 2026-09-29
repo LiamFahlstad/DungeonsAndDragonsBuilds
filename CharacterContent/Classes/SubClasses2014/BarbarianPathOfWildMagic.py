@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import BarbarianSubclass2014
+from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfWildMagicFeatures,
 )
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
-from StatBlocks.SkillsStatBlock import BarbarianSkillsStatBlock
 
 
 @attr.dataclass
@@ -73,7 +72,7 @@ class BarbarianWildMagicLevel14(ClassBuilder.SubclassLevel14):
 class BarbarianWildMagicCustomStarterClassArgs(BarbarianCustomStarterClassArgs):
     def __init__(
         self,
-        skills: BarbarianSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=BarbarianSubclass2014.PATH_OF_WILD_MAGIC.value,

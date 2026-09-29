@@ -24,7 +24,6 @@ from CharacterContent.Spells.SpellLists import (
     EnchantmentLevel4Spells,
     WarlockLevel5Spells,
 )
-from StatBlocks.SkillsStatBlock import ClericSkillsStatBlock
 
 
 @attr.dataclass
@@ -154,7 +153,7 @@ class ClericKnowledgeLevel17(ClassBuilder.SubclassLevel17):
 class ClericKnowledgeCustomStarterClassArgs(ClericCustomStarterClassArgs):
     def __init__(
         self,
-        skills: ClericSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=ClericSubclass.KNOWLEDGE.value,

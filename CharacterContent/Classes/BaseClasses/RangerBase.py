@@ -19,8 +19,6 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel4Spells,
     RangerLevel5Spells,
 )
-from StatBlocks.SavingThrowsStatBlock import RangerSavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -295,12 +293,11 @@ class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):
     def __init__(
         self,
         subclass: str,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             base_class=CharacterClass.RANGER,
             subclass=subclass,
-            saving_throws=RangerSavingThrowsStatBlock(),
             default_equipment=[
                 Armor.StuddedLeatherArmor(),
                 Weapons.Scimitar(),

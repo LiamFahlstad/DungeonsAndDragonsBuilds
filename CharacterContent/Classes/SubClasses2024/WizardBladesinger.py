@@ -10,7 +10,6 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
 from Builds.CharacterSheetAccumulator import CharacterSheetData
 from Core.Definitions import Skill, WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
-from StatBlocks.SkillsStatBlock import WizardSkillsStatBlock
 
 
 @attr.dataclass
@@ -68,7 +67,7 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
 class WizardBladesingerCustomStarterClassArgs(WizardCustomStarterClassArgs):
     def __init__(
         self,
-        skills: WizardSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=WizardSubclass.BLADESINGER.value,

@@ -27,24 +27,15 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Elf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import FighterSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=FighterBattleMasterCustomStarterClassArgs(
-            skills=FighterSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: True,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.PERCEPTION: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.HISTORY,
+            ],
         ),
         base_class_level=1,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

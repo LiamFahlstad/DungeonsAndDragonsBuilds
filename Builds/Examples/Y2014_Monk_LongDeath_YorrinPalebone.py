@@ -21,23 +21,16 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Human
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
 from CharacterContent.ToolProficiencies.Proficiencies import WoodcarversTools
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 def get_starter_class_builder():
     monk_level = 17
     return StarterClassBuilder(
         non_generic_arguments=MonkLongDeathCustomStarterClassArgs(
-            skills=MonkSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.HISTORY: False,
-                    Skill.INSIGHT: False,
-                    Skill.RELIGION: True,
-                    Skill.STEALTH: False,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.RELIGION,
+            ],
             monk_level=monk_level,
             unarmed_strike=Ability.DEXTERITY,
         ),

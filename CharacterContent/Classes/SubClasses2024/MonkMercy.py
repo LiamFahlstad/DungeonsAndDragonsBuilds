@@ -8,9 +8,8 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import Ability, MonkSubclass
+from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkMercyFeatures
-from StatBlocks.SkillsStatBlock import MonkSkillsStatBlock
 
 
 @attr.dataclass
@@ -63,7 +62,7 @@ class MonkMercyLevel17(ClassBuilder.SubclassLevel17):
 class MonkMercyCustomStarterClassArgs(MonkCustomStarterClassArgs):
     def __init__(
         self,
-        skills: MonkSkillsStatBlock,
+        skills: list[Skill],
         monk_level: int,
         unarmed_strike: Ability,
     ):

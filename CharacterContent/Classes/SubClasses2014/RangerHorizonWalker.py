@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RangerSubclass2014
+from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerHorizonWalkerFeatures,
 )
@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel5Spells,
     WizardLevel7Spells,
 )
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 @attr.dataclass
@@ -121,7 +120,7 @@ class RangerHorizonWalkerLevel17(ClassBuilder.SubclassLevel17):
 class RangerHorizonWalkerCustomStarterClassArgs(RangerCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RangerSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RangerSubclass2014.HORIZON_WALKER.value,

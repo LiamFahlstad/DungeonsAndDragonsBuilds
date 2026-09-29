@@ -50,24 +50,16 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel5Spells,
 )
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RangerMonsterSlayerCustomStarterClassArgs(
-            skills=RangerSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: True,
-                    Skill.INVESTIGATION: False,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: True,
-                    Skill.STEALTH: False,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INSIGHT,
+                Skill.PERCEPTION,
+            ],
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

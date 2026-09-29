@@ -18,24 +18,16 @@ from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species import Dragonborn
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RangerSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RangerGloomStalkerCustomStarterClassArgs(
-            skills=RangerSkillsStatBlock(
-                proficiencies={
-                    Skill.ANIMAL_HANDLING: False,
-                    Skill.ATHLETICS: False,
-                    Skill.INSIGHT: False,
-                    Skill.INVESTIGATION: True,
-                    Skill.NATURE: False,
-                    Skill.PERCEPTION: True,
-                    Skill.STEALTH: True,
-                    Skill.SURVIVAL: False,
-                }
-            ),
+            skills=[
+                Skill.INVESTIGATION,
+                Skill.PERCEPTION,
+                Skill.STEALTH,
+            ],
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

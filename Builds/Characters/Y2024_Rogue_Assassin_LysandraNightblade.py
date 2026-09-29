@@ -29,25 +29,17 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
 )
 from CharacterContent.Species import Elf
 from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RogueAssassinCustomStarterClassArgs(
-            skills=RogueSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: True,
-                    Skill.ATHLETICS: False,
-                    Skill.DECEPTION: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: False,
-                    Skill.INVESTIGATION: True,
-                    Skill.PERCEPTION: False,
-                    Skill.SLEIGHT_OF_HAND: True,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.ACROBATICS,
+                Skill.INVESTIGATION,
+                Skill.SLEIGHT_OF_HAND,
+                Skill.STEALTH,
+            ],
         ),
         base_class_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.

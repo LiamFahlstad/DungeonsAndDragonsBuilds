@@ -29,18 +29,15 @@ from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from CharacterContent.ToolProficiencies.Proficiencies import NavigatorsTools
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import PaladinSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=PaladinDevotionCustomStarterClassArgs(
-            skills=PaladinSkillsStatBlock(
-                proficiencies={
-                    Skill.ATHLETICS: True,
-                    Skill.INSIGHT: True,
-                }
-            ),
+            skills=[
+                Skill.ATHLETICS,
+                Skill.INSIGHT,
+            ],
         ),
         base_class_level=3,
         abilities=PointBuyAbilitiesStatBlock(

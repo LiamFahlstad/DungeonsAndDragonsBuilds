@@ -24,26 +24,17 @@ from CharacterContent.Spells.SpellLists import (
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from Core.Definitions import Ability, Skill
 from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=RogueArcaneTricksterCustomStarterClassArgs(
-            skills=RogueSkillsStatBlock(
-                proficiencies={
-                    Skill.ACROBATICS: False,
-                    Skill.ATHLETICS: False,
-                    Skill.DECEPTION: False,
-                    Skill.INSIGHT: False,
-                    Skill.INTIMIDATION: True,
-                    Skill.INVESTIGATION: True,
-                    Skill.PERCEPTION: False,
-                    Skill.PERSUASION: False,
-                    Skill.SLEIGHT_OF_HAND: True,
-                    Skill.STEALTH: True,
-                }
-            ),
+            skills=[
+                Skill.INTIMIDATION,
+                Skill.INVESTIGATION,
+                Skill.SLEIGHT_OF_HAND,
+                Skill.STEALTH,
+            ],
         ),
         base_class_level=3,
         # Point buy: scores 8-15, total cost must equal 27.

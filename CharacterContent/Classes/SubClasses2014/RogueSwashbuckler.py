@@ -8,12 +8,11 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Core.Definitions import RogueSubclass2014
+from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import (
     RogueSwashbucklerFeatures,
 )
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
-from StatBlocks.SkillsStatBlock import RogueSkillsStatBlock
 
 
 @attr.dataclass
@@ -67,7 +66,7 @@ class RogueSwashbucklerLevel17(ClassBuilder.SubclassLevel17):
 class RogueSwashbucklerCustomStarterClassArgs(RogueCustomStarterClassArgs):
     def __init__(
         self,
-        skills: RogueSkillsStatBlock,
+        skills: list[Skill],
     ):
         super().__init__(
             subclass=RogueSubclass2014.SWASHBUCKLER.value,
