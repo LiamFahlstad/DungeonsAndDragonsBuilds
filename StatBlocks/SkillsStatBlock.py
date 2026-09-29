@@ -21,17 +21,17 @@ class SkillsStatBlock(StatBlock):
         if bonuses:
             for skill, bonus in bonuses.items():
                 self.add_skill_bonus(skill, bonus)
-        self.dice_roll_conditions = (
-            dice_roll_conditions if dice_roll_conditions is not None else {}
-        )
-        # Per-skill list of reasons for the currently active roll condition
-        self.roll_condition_reasons: dict[Skill, list[str]] = {}
-        # Per-skill {condition: [reasons]} for every source seen, so that
-        # Advantage and Disadvantage can cancel out.
+        # Per-skill {condition: [reasons]} for every source of Advantage or
+        # Disadvantage, so the effective condition can be worked out on read
+        # (both cancel out) regardless of the order they were granted in.
         self._roll_condition_sources: dict[
             Skill, dict[DiceRollCondition, list[str]]
         ] = {}
-        self.skill_to_ability = self.get_default_skill_to_ability_mapping()
+        for skill, condition in (dice_roll_conditions or {}).items():
+            self.set_roll_condition(skill, condition)
+        # Per-skill abilities that replace the default one (e.g. "use Wisdom
+        # for Arcana"). See get_skill_abilities.
+        self._skill_ability_overrides: dict[Skill, list[Ability]] = {}
 
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
@@ -63,54 +63,58 @@ class SkillsStatBlock(StatBlock):
         return self.expertise.get(skill, False)
 
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
-        return self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
+        sources = self._roll_condition_sources.get(skill, {})
+        advantage = DiceRollCondition.ADVANTAGE in sources
+        disadvantage = DiceRollCondition.DISADVANTAGE in sources
+        if advantage == disadvantage:
+            return DiceRollCondition.NEUTRAL
+        return DiceRollCondition.ADVANTAGE if advantage else DiceRollCondition.DISADVANTAGE
 
     def set_roll_condition(
         self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
     ):
         """Add a source of Advantage/Disadvantage on a skill. Per the rules,
         having both cancels out to a straight roll no matter how many sources
-        of each there are. NEUTRAL clears every source."""
+        of each there are. A NEUTRAL source changes nothing."""
         if condition == DiceRollCondition.NEUTRAL:
-            self._roll_condition_sources.pop(skill, None)
-            self.dice_roll_conditions[skill] = condition
-            self.roll_condition_reasons.pop(skill, None)
             return
-        sources = self._roll_condition_sources.setdefault(skill, {})
-        initial = self.dice_roll_conditions.get(skill, DiceRollCondition.NEUTRAL)
-        if not sources and initial != DiceRollCondition.NEUTRAL:
-            sources[initial] = []  # condition passed to __init__
-        sources.setdefault(condition, [])
+        reasons = self._roll_condition_sources.setdefault(skill, {}).setdefault(
+            condition, []
+        )
         if reason is not None:
-            sources[condition].append(reason)
-        if (
-            DiceRollCondition.ADVANTAGE in sources
-            and DiceRollCondition.DISADVANTAGE in sources
-        ):
-            effective = DiceRollCondition.NEUTRAL
-        else:
-            effective = condition
-        self.dice_roll_conditions[skill] = effective
-        if effective == DiceRollCondition.NEUTRAL:
-            self.roll_condition_reasons.pop(skill, None)
-        else:
-            self.roll_condition_reasons[skill] = list(sources[effective])
+            reasons.append(reason)
 
     def get_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        return self.roll_condition_reasons.get(skill, [])
+        condition = self.get_roll_condition(skill)
+        return list(self._roll_condition_sources.get(skill, {}).get(condition, []))
+
+    def get_skill_abilities(self, skill: Skill) -> list[Ability]:
+        """The abilities a check with `skill` may use: the default one, or every
+        override granted for it (the character uses the best -
+        CharacterStatBlock.get_skill_ability)."""
+        return self._skill_ability_overrides.get(skill) or [
+            self.get_default_skill_to_ability_mapping()[skill]
+        ]
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        return self.skill_to_ability[skill]
+        abilities = self.get_skill_abilities(skill)
+        if len(abilities) > 1:
+            raise ValueError(
+                f"{skill} has several ability overrides; the best one depends on "
+                "ability scores - use CharacterStatBlock.get_skill_ability."
+            )
+        return abilities[0]
 
     def update_skill_to_ability(self, skill: Skill, ability: Ability):
-        self.skill_to_ability[skill] = ability
+        overrides = self._skill_ability_overrides.setdefault(skill, [])
+        if ability not in overrides:
+            overrides.append(ability)
 
     def reset_skill_to_ability(self, skill: Skill):
-        default_mapping = self.get_default_skill_to_ability_mapping()
-        self.skill_to_ability[skill] = default_mapping[skill]
+        self._skill_ability_overrides.pop(skill, None)
 
     def reset_all_skill_to_ability(self):
-        self.skill_to_ability = self.get_default_skill_to_ability_mapping()
+        self._skill_ability_overrides.clear()
 
     def get_default_skill_to_ability_mapping(self) -> dict[Skill, Ability]:
         return {

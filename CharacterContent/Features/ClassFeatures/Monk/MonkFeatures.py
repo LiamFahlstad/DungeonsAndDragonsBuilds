@@ -106,8 +106,11 @@ class UnarmoredDefenseText(Feature):
 class UnarmoredDefense(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True)
+        # "While you aren't wearing armor or wielding a Shield..."
         self._ac = MultiAbilityArmorClass(
-            10, [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM]
+            10,
+            [Definitions.Ability.DEXTERITY, Definitions.Ability.WISDOM],
+            allows_shield=False,
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
@@ -257,19 +260,16 @@ class UnarmoredMovement(Feature):
             name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
         )
 
-    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
-        # "...while you aren't wearing armor or wielding a Shield."
-        if (
-            character_stat_block.is_wearing_armor
-            or character_stat_block.is_wielding_shield
-        ):
-            return
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
-        bonus = LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
-        if bonus:
-            SpeedBonus(bonus).apply(character_stat_block)
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...while you aren't wearing armor or wielding a Shield." A formula,
+        # so the armor is checked once everything (armor included) has applied.
+        def bonus(cs: CharacterStatBlock) -> int:
+            if cs.is_wearing_armor or cs.is_wielding_shield:
+                return 0
+            monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
+            return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
+
+        SpeedBonus(bonus).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."

@@ -57,10 +57,9 @@ class CharacterSheetData:
     size: Optional[Definitions.CreatureSize] = None
     saving_throws: Optional[SavingThrowsStatBlock] = None
 
-    # Every feature in the order it was granted - which is also the order
-    # features apply to the CharacterStatBlock (see setup_character_stat_block
-    # for the full pipeline and the ordering contract). merge_with's generic
-    # list-concat keeps that order across builders and the species.
+    # Every feature in the order it was granted. The order only decides how
+    # the sheet lists them: no stat depends on it (see
+    # setup_character_stat_block).
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
@@ -138,9 +137,8 @@ class CharacterSheetData:
         self.features = [f for f in self.features if not should_remove(f)]
 
     def iter_features_with_extensions(self) -> Iterator[Feature]:
-        """Every granted feature followed by its extensions (depth-first) -
-        the unit the apply pipeline works on. Extensions are real features:
-        their apply()/apply_after_armor() run like any other feature's."""
+        """Every granted feature followed by its extensions (depth-first).
+        Extensions are real features: their apply() runs like any other's."""
 
         def walk(features: list[Feature]) -> Iterator[Feature]:
             for feature in features:
@@ -415,43 +413,23 @@ class CharacterSheetData:
             current_gold=self.current_gold,
         )
 
-        # Ordering contract (see also CharacterContent/Features/Core/Improvements.py):
-        # features apply in the order they were granted, and must not depend
-        # on it - stat-dependent bonuses are formulas resolved at read time,
-        # and requirements (expertise needs proficiency, multiclass ability
-        # minimums) are validated once every feature has applied. The only
-        # deliberately order-dependent effects are chronological ones ("to a
-        # maximum of 20", "if you're already proficient, choose another"),
-        # which grant order models directly.
-        for feature in features:
-            feature.apply(character)
+        # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
+        # every effect only records facts, and every value is worked out when
+        # it's read - so features, armor, weapons, items and fighting styles
+        # may apply in any order. tests/test_feature_apply_order.py shuffles
+        # iter_stat_effects() to prove it.
+        for effect in self.iter_stat_effects(features):
+            effect.apply(character)
 
-        character.skills.validate()
+        # Requirements are checked against the complete set of effects.
+        character.validate()
         self._validate_multiclass_prerequisites(character)
 
-        # Worn armor overrides feature-provided AC formulas (Unarmored
-        # Defense) and is checked against Strength before items apply, so a
-        # Strength-raising item can't satisfy an armor's requirement.
-        for armor in self.armors:
-            armor.apply(character)
-
-        # Effects conditioned on armor ("while you aren't wearing Heavy
-        # armor") need to know what's worn, so they run after armor.
-        for feature in features:
-            feature.apply_after_armor(character)
-
-        for weapon in self.weapons:
-            weapon.apply(character)
-
-        for item, _quantity in self.items:
-            item.apply(character)
-
+        # These write into the weapon objects, not the stat block, and read
+        # nothing from it - their order doesn't matter either.
         for fighting_style in self.fighting_styles:
-            if isinstance(fighting_style, FightStyleModifier):
-                fighting_style.apply(character)
-            elif isinstance(fighting_style, FightStyleWeaponFeature):
+            if isinstance(fighting_style, FightStyleWeaponFeature):
                 fighting_style.apply(self.weapons)
-
         for item, _quantity in self.items:
             if item.is_wearing is not False:
                 item.apply_to_weapons(self.weapons)
@@ -460,17 +438,36 @@ class CharacterSheetData:
 
         return character
 
+    def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
+        """Everything that records effects on the stat block: features and
+        their extensions, armor, weapons, items and stat fighting styles
+        (Defense). Each has apply(character_stat_block); the order is
+        irrelevant."""
+        if features is None:
+            features = list(self.iter_features_with_extensions())
+        return [
+            *features,
+            *self.armors,
+            *self.weapons,
+            *(item for item, _quantity in self.items),
+            *(
+                style
+                for style in self.fighting_styles
+                if isinstance(style, FightStyleModifier)
+            ),
+        ]
+
     def _validate_multiclass_prerequisites(self, character: CharacterStatBlock):
         """A multiclass character needs 13+ in the prerequisite abilities of
-        every class it has. Checked on the scores after class/feat/background
-        bonuses but before items - the engine has no per-level score history,
-        so this is the end-of-build approximation of "at the time you
-        multiclass"."""
+        every class it has. Checked on the character's own final scores
+        (equipment bonuses don't count) - the engine has no per-level score
+        history, so this is the end-of-build approximation of "at the time
+        you multiclass"."""
         if len(self.level_per_class) < 2:
             return
         for character_class in self.level_per_class:
             for group in character_class.multiclass_prerequisites:
-                if not any(character.get_ability_score(a) >= 13 for a in group):
+                if not any(character.abilities.get_own_score(a) >= 13 for a in group):
                     needed = " or ".join(a.value for a in group)
                     raise ValueError(
                         f"Multiclassing into or out of {character_class.value} "

@@ -2,8 +2,9 @@ from typing import Callable, Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
+from Core.SpellcastingRules import CasterType, calculate_spell_slots
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
-from StatBlocks.CombatStatBlock import CombatStatBlock
+from StatBlocks.CombatStatBlock import ArmorClassFormula, CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 
@@ -42,21 +43,24 @@ class CharacterStatBlock:
         self.combat = combat
         self.saving_throws = saving_throws
         self.spell_casting_ability = spell_casting_ability
-        self.spell_slots = spell_slots
+        # Slots for a character with no Spell Slots feature (e.g. companions);
+        # otherwise worked out from the registered casters - see spell_slots.
+        self._fixed_spell_slots = spell_slots
+        self._casters: dict[CharacterClass, CasterType] = {}
         self.starting_gold = starting_gold
         self.current_gold = current_gold
-        self.pact_magic_slots: dict[int, int] = {}
-        # Set by worn armor as it applies; read by armor-conditional effects
-        # (Defense fighting style, Unarmored Movement, Fast Movement, ...).
+        # Set by worn armor as it applies. Armor-conditional effects (Defense
+        # fighting style, Unarmored Movement, Fast Movement, ...) read these
+        # inside a formula, i.e. once everything has applied.
         self.worn_armor_type: Optional[Definitions.ArmorType] = None
         self.is_wielding_shield = False
-        self._caster_registry: dict = {}
         self.initiative_proficiency = False
-        self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
         self._initiative_roll_conditions: set[Definitions.DiceRollCondition] = set()
         self.initiative_bonus = 0
         # Formula-valued bonuses (see DerivedBonus), resolved on every read.
         self._derived_initiative_bonuses: list[DerivedBonus] = []
+        self._derived_armor_class_bonuses: list[DerivedBonus] = []
+        self._derived_speed_bonuses: list[DerivedBonus] = []
         self._derived_saving_throw_bonuses: dict[Ability, list[DerivedBonus]] = {}
         self._derived_skill_bonuses: dict[Skill, list[tuple[DerivedBonus, str]]] = {}
         self.spell_save_dc_bonus = 0
@@ -72,6 +76,9 @@ class CharacterStatBlock:
         self.sense_sources: dict[Definitions.Sense, list[tuple[int, str]]] = {}
         # (language -> [source, ...]) grants of a known language
         self.languages: dict[Definitions.Language, list[str]] = {}
+        # (ability, minimum score, reason) - checked by validate() once
+        # everything has applied, against the character's own score.
+        self._ability_requirements: list[tuple[Ability, int, str]] = []
 
     @property
     def is_wearing_armor(self) -> bool:
@@ -81,6 +88,38 @@ class CharacterStatBlock:
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
+
+    @property
+    def speed(self) -> int:
+        derived = sum(bonus(self) for bonus in self._derived_speed_bonuses)
+        return self.combat.speed + derived
+
+    @property
+    def spell_slots(self) -> Optional[dict[int, int]]:
+        if not self._casters:
+            return self._fixed_spell_slots
+        return calculate_spell_slots(self._casters, self.level_per_class)[0]
+
+    @property
+    def pact_magic_slots(self) -> dict[int, int]:
+        return calculate_spell_slots(self._casters, self.level_per_class)[1]
+
+    def register_caster(
+        self, character_class: CharacterClass, caster_type: CasterType
+    ) -> None:
+        self._casters[character_class] = caster_type
+
+    @property
+    def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
+        # Advantage and Disadvantage from any number of sources cancel out.
+        conditions = self._initiative_roll_conditions
+        advantage = Definitions.DiceRollCondition.ADVANTAGE in conditions
+        disadvantage = Definitions.DiceRollCondition.DISADVANTAGE in conditions
+        if advantage == disadvantage:
+            return Definitions.DiceRollCondition.NEUTRAL
+        if advantage:
+            return Definitions.DiceRollCondition.ADVANTAGE
+        return Definitions.DiceRollCondition.DISADVANTAGE
 
     @property
     def initiative(self) -> int:
@@ -108,20 +147,35 @@ class CharacterStatBlock:
         self.initiative_proficiency = True
 
     def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
-        # Advantage and Disadvantage from any number of sources cancel out.
         self._initiative_roll_conditions.add(condition)
-        advantage = Definitions.DiceRollCondition.ADVANTAGE
-        disadvantage = Definitions.DiceRollCondition.DISADVANTAGE
-        if {advantage, disadvantage} <= self._initiative_roll_conditions:
-            self.initiative_roll_condition = Definitions.DiceRollCondition.NEUTRAL
-        else:
-            self.initiative_roll_condition = condition
 
     def add_initiative_bonus(self, bonus: int) -> None:
         self.initiative_bonus += bonus
 
     def add_derived_initiative_bonus(self, bonus: DerivedBonus) -> None:
         self._derived_initiative_bonuses.append(bonus)
+
+    def add_derived_armor_class_bonus(self, bonus: DerivedBonus) -> None:
+        self._derived_armor_class_bonuses.append(bonus)
+
+    def add_derived_speed_bonus(self, bonus: DerivedBonus) -> None:
+        self._derived_speed_bonuses.append(bonus)
+
+    def add_ability_requirement(
+        self, ability: Ability, min_score: int, reason: str
+    ) -> None:
+        self._ability_requirements.append((ability, min_score, reason))
+
+    def validate(self) -> None:
+        """Check every requirement against the complete set of effects. Run
+        once everything has applied - a requirement may be met by an effect
+        granted before or after the one that imposes it."""
+        self.skills.validate()
+        for ability, min_score, reason in self._ability_requirements:
+            if self.abilities.get_own_score(ability) < min_score:
+                raise ValueError(
+                    f"{ability.value} score must be at least {min_score} ({reason})."
+                )
 
     def add_derived_saving_throw_bonus(
         self, ability: Ability, bonus: DerivedBonus
@@ -195,7 +249,13 @@ class CharacterStatBlock:
         return self.skills.has_expertise(skill)
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        return self.skills.get_skill_ability(skill)
+        # Several overrides for one skill: use the best (ties keep the first
+        # in Ability order, so grant order never decides).
+        order = list(Ability)
+        return max(
+            sorted(self.skills.get_skill_abilities(skill), key=order.index),
+            key=self.get_ability_modifier,
+        )
 
     def get_skill_modifier(self, skill: Skill) -> int:
         ability_modifier = self.get_ability_modifier(self.get_skill_ability(skill))
@@ -278,18 +338,21 @@ class CharacterStatBlock:
         )
 
     def calculate_armor_class(self) -> int:
+        """The best applicable AC formula plus every AC bonus."""
+        formulas = self.combat.get_applicable_armor_class_formulas(
+            self.is_wielding_shield
+        )
+        base = max(self._armor_class_from(formula) for formula in formulas)
+        derived = sum(bonus(self) for bonus in self._derived_armor_class_bonuses)
+        return base + self.combat.armor_class_modifier + derived
+
+    def _armor_class_from(self, formula: ArmorClassFormula) -> int:
         ability_modifier = sum(
-            self.get_ability_modifier(ability)
-            for ability in self.combat.armor_class_abilities
+            self.get_ability_modifier(ability) for ability in formula.abilities
         )
-        cap = self.combat.armor_class_ability_modifier_cap
-        if cap is not None:
-            ability_modifier = min(ability_modifier, cap)
-        return (
-            self.combat.armor_class_base
-            + ability_modifier
-            + self.combat.armor_class_modifier
-        )
+        if formula.ability_modifier_cap is not None:
+            ability_modifier = min(ability_modifier, formula.ability_modifier_cap)
+        return formula.base + ability_modifier
 
     def get_spell_casting_ability(self) -> Ability:
         return self._require_spell_casting_ability()
@@ -313,9 +376,10 @@ class CharacterStatBlock:
         return self.get_proficiency_bonus() + ability_modifier
 
     def get_spell_slots(self) -> dict[int, int]:
-        if self.spell_slots is None:
+        spell_slots = self.spell_slots
+        if spell_slots is None:
             raise ValueError("Character does not have spell slots.")
-        return self.spell_slots
+        return spell_slots
 
     def add_damage_resistance(
         self, damage_type: Definitions.DamageType, source: str

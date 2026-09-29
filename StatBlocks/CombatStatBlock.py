@@ -1,7 +1,34 @@
+from dataclasses import dataclass
 from typing import Optional
 
 import Core.Definitions as Definitions
 from StatBlocks.StatBlock import StatBlock
+
+
+@dataclass(frozen=True)
+class ArmorClassFormula:
+    """One way to calculate base AC: `base` + the summed modifiers of
+    `abilities`, capped at `ability_modifier_cap` (None = uncapped).
+
+    A character with several formulas uses the best one that applies (the
+    rules let you pick one), so granting another never overwrites anything:
+    - is_armor: worn body armor. While any is worn, only armor formulas apply
+      - it replaces every "while you aren't wearing armor" formula.
+    - allows_shield: False for formulas that stop working while a Shield is
+      wielded (Monk's Unarmored Defense).
+    """
+
+    base: int
+    abilities: frozenset[Definitions.Ability]
+    ability_modifier_cap: Optional[int] = None
+    is_armor: bool = False
+    allows_shield: bool = True
+
+
+# Everyone's AC without armor or a feature: 10 + Dexterity modifier.
+UNARMORED_ARMOR_CLASS = ArmorClassFormula(
+    base=10, abilities=frozenset({Definitions.Ability.DEXTERITY})
+)
 
 
 class CombatStatBlock(StatBlock):
@@ -13,32 +40,26 @@ class CombatStatBlock(StatBlock):
         self.hit_points_bonus = 0
         self.speed = speed
         self.size = size
-        self.armor_class_base = 10  # Overridden during character creation
-        self.armor_class_abilities = {Definitions.Ability.DEXTERITY}
+        self.armor_class_formulas: list[ArmorClassFormula] = [UNARMORED_ARMOR_CLASS]
         self.armor_class_modifier = 0  # Non-ability related modifier
-        # Ceiling on the summed ability modifier added to AC (e.g. Medium
-        # armor: "add your Dexterity modifier, to a maximum of +2"). None
-        # means uncapped. Set alongside the ability itself so switching to
-        # armor without a cap (light/heavy) clears a stale one.
-        self.armor_class_ability_modifier_cap: Optional[int] = None
 
-    def update_armor_class_base(self, new_armor_class_base: int):
-        self.armor_class_base = new_armor_class_base
+    def add_armor_class_formula(self, formula: ArmorClassFormula):
+        self.armor_class_formulas.append(formula)
+
+    def get_applicable_armor_class_formulas(
+        self, is_wielding_shield: bool
+    ) -> list[ArmorClassFormula]:
+        armor = [formula for formula in self.armor_class_formulas if formula.is_armor]
+        if armor:
+            return armor
+        return [
+            formula
+            for formula in self.armor_class_formulas
+            if formula.allows_shield or not is_wielding_shield
+        ]
 
     def increase_armor_class(self, increase_by: int):
         self.armor_class_modifier += increase_by
-
-    def add_armor_class_ability(self, ability: Definitions.Ability):
-        self.armor_class_abilities.add(ability)
-
-    def change_armor_class_ability(self, new_ability: Optional[Definitions.Ability]):
-        if new_ability is None:
-            self.armor_class_abilities.clear()
-        else:
-            self.armor_class_abilities = {new_ability}
-
-    def update_armor_class_ability_modifier_cap(self, cap: Optional[int]):
-        self.armor_class_ability_modifier_cap = cap
 
     def calculate_hit_points(
         self,

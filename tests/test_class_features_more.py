@@ -44,8 +44,7 @@ from Core.Definitions import Ability, CharacterClass, Skill
 def apply_features(character, features):
     for feature in features:
         feature.apply(character)
-    for feature in features:
-        feature.apply_after_armor(character)
+    character.validate()
     return character
 
 
@@ -204,12 +203,11 @@ class TestRogueExpertise:
         # proficiency may be granted by any feature, before or after, so the
         # requirement is enforced once all features have applied.
         character = make_character(levels={CharacterClass.ROGUE: 1})
-        apply_features(
-            character,
-            [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)],
-        )
         with pytest.raises(ValueError, match="unproficient skill"):
-            character.skills.validate()
+            apply_features(
+                character,
+                [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)],
+            )
 
 
 class TestRogueCunningStrike:

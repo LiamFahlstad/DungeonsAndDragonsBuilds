@@ -5,6 +5,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import (
+    SavingThrowProficiencyOrAlternative,
     SkillExpertiseChoice,
     SkillProficiencyChoice,
 )
@@ -95,22 +96,17 @@ class UnfetteredMind(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        # Check if already has Intelligence saving throw proficiency
-        if not character_stat_block.saving_throws.is_proficient(Ability.INTELLIGENCE):
-            character_stat_block.add_proficiency_in_saving_throw(Ability.INTELLIGENCE)
-        else:
-            # If already proficient in Intelligence, find the first ability not proficient and add it
-            abilities = [
+        # Intelligence, or - if already proficient - the first ability that isn't.
+        SavingThrowProficiencyOrAlternative(
+            Ability.INTELLIGENCE,
+            [
                 Ability.STRENGTH,
                 Ability.DEXTERITY,
                 Ability.CONSTITUTION,
                 Ability.WISDOM,
                 Ability.CHARISMA,
-            ]
-            for ability in abilities:
-                if not character_stat_block.saving_throws.is_proficient(ability):
-                    character_stat_block.add_proficiency_in_saving_throw(ability)
-                    break
+            ],
+        ).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

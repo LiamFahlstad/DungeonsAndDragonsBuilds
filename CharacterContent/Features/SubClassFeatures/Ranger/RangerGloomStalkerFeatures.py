@@ -7,7 +7,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import InitiativeBonus
+from CharacterContent.Features.Core.Improvements import (
+    InitiativeBonus,
+    SavingThrowProficiencyOrAlternative,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -88,21 +91,17 @@ class IronMind(Feature):
         )
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        if not character_stat_block.saving_throws.is_proficient(Ability.WISDOM):
-            character_stat_block.add_proficiency_in_saving_throw(Ability.WISDOM)
-        else:
-            # If already proficient in Wisdom, find the first ability not proficient and add it
-            abilities = [
+        # Wisdom, or - if already proficient - the first ability that isn't.
+        SavingThrowProficiencyOrAlternative(
+            Ability.WISDOM,
+            [
                 Ability.INTELLIGENCE,
                 Ability.CHARISMA,
                 Ability.STRENGTH,
                 Ability.DEXTERITY,
                 Ability.CONSTITUTION,
-            ]
-            for ability in abilities:
-                if not character_stat_block.saving_throws.is_proficient(ability):
-                    character_stat_block.add_proficiency_in_saving_throw(ability)
-                    break
+            ],
+        ).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."

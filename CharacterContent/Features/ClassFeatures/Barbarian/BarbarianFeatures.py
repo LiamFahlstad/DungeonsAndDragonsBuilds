@@ -284,10 +284,12 @@ class FastMovementBonus(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
-    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
-        # "...while you aren't wearing Heavy armor."
-        if character_stat_block.worn_armor_type != Definitions.ArmorType.HEAVY:
-            SpeedBonus(10).apply(character_stat_block)
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...while you aren't wearing Heavy armor." A formula, so the armor
+        # is checked once everything (armor included) has applied.
+        SpeedBonus(
+            lambda cs: 0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10
+        ).apply(character_stat_block)
 
 
 class FeralInstinct(Feature):

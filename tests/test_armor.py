@@ -127,8 +127,9 @@ class TestStrengthRequirement:
     # rejects the build outright. (PHB: speed -10 ft instead.)
     def test_below_requirement_rejected(self, make_character):
         character = make_character(strength=14)
+        Armor.PlateArmor().apply(character)
         with pytest.raises(ValueError, match="Strength"):
-            Armor.PlateArmor().apply(character)
+            character.validate()
 
     def test_exactly_meets_requirement(self, make_character):
         character = make_character(strength=15)

@@ -17,7 +17,11 @@ from StatBlocks.AbilitiesStatBlock import (
 )
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.CombatStatBlock import CombatStatBlock
+from StatBlocks.CombatStatBlock import (
+    UNARMORED_ARMOR_CLASS,
+    ArmorClassFormula,
+    CombatStatBlock,
+)
 
 
 class TestAbilitiesStatBlock:
@@ -288,40 +292,40 @@ class TestCombatStatBlock:
         assert basic_combat.speed == 30
         assert basic_combat.size == CreatureSize.MEDIUM
 
-    def test_armor_class_base(self, basic_combat):
-        """Test armor class base value."""
-        assert basic_combat.armor_class_base == 10
-
-    def test_update_armor_class_base(self, basic_combat):
-        """Test updating armor class base."""
-        basic_combat.update_armor_class_base(15)
-        assert basic_combat.armor_class_base == 15
+    def test_default_armor_class_formula(self, basic_combat):
+        """Without armor or features: 10 + Dexterity modifier."""
+        assert basic_combat.armor_class_formulas == [UNARMORED_ARMOR_CLASS]
+        assert UNARMORED_ARMOR_CLASS.base == 10
+        assert UNARMORED_ARMOR_CLASS.abilities == {Ability.DEXTERITY}
 
     def test_increase_armor_class(self, basic_combat):
         """Test increasing armor class modifier."""
         basic_combat.increase_armor_class(2)
         assert basic_combat.armor_class_modifier == 2
 
-    def test_armor_class_ability_default(self, basic_combat):
-        """Test that armor class includes Dexterity by default."""
-        assert Ability.DEXTERITY in basic_combat.armor_class_abilities
+    def test_added_formulas_are_kept_not_overwritten(self, basic_combat):
+        unarmored = ArmorClassFormula(10, frozenset({Ability.CONSTITUTION}))
+        basic_combat.add_armor_class_formula(unarmored)
+        assert basic_combat.get_applicable_armor_class_formulas(False) == [
+            UNARMORED_ARMOR_CLASS,
+            unarmored,
+        ]
 
-    def test_change_armor_class_ability(self, basic_combat):
-        """Test changing armor class ability."""
-        basic_combat.change_armor_class_ability(Ability.STRENGTH)
-        assert basic_combat.armor_class_abilities == {Ability.STRENGTH}
-        assert Ability.DEXTERITY not in basic_combat.armor_class_abilities
+    def test_worn_armor_replaces_unarmored_formulas(self, basic_combat):
+        armor = ArmorClassFormula(18, frozenset(), is_armor=True)
+        basic_combat.add_armor_class_formula(armor)
+        basic_combat.add_armor_class_formula(
+            ArmorClassFormula(10, frozenset({Ability.WISDOM}))
+        )
+        assert basic_combat.get_applicable_armor_class_formulas(False) == [armor]
 
-    def test_change_armor_class_ability_to_none(self, basic_combat):
-        """Test clearing armor class abilities."""
-        basic_combat.change_armor_class_ability(None)
-        assert len(basic_combat.armor_class_abilities) == 0
-
-    def test_add_armor_class_ability(self, basic_combat):
-        """Test adding an additional armor class ability."""
-        basic_combat.add_armor_class_ability(Ability.CONSTITUTION)
-        assert Ability.DEXTERITY in basic_combat.armor_class_abilities
-        assert Ability.CONSTITUTION in basic_combat.armor_class_abilities
+    def test_shield_disables_formulas_that_forbid_it(self, basic_combat):
+        no_shield = ArmorClassFormula(
+            10, frozenset({Ability.WISDOM}), allows_shield=False
+        )
+        basic_combat.add_armor_class_formula(no_shield)
+        assert no_shield in basic_combat.get_applicable_armor_class_formulas(False)
+        assert no_shield not in basic_combat.get_applicable_armor_class_formulas(True)
 
     def test_calculate_hit_points_single_class(self, basic_combat, standard_abilities):
         """Test hit point calculation for single-class character."""

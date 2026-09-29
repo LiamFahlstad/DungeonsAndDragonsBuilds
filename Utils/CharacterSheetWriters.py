@@ -226,7 +226,7 @@ class HtmlCharacterSheetWriter:
                 "Initiative", f"{character.initiative:+}", sub=initiative_sub
             )
         )
-        file.write(self._stat_tile("Speed", f"{character.combat.speed} ft"))
+        file.write(self._stat_tile("Speed", f"{character.speed} ft"))
         file.write(
             self._stat_tile("Prof. Bonus", f"{character.get_proficiency_bonus():+}")
         )

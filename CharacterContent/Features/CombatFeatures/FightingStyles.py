@@ -7,6 +7,7 @@ from CharacterContent.Items.Weapons import (
     WeaponProperty,
     WeaponType,
 )
+from CharacterContent.Features.Core.Improvements import ArmorClassBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -67,8 +68,10 @@ class BlindFighting(FightingStyle):
 
 class Defense(FightStyleModifier):
     def apply(self, character_stat_block: CharacterStatBlock):
-        if character_stat_block.is_wearing_armor:
-            character_stat_block.combat.increase_armor_class(1)
+        # A formula, so the armor is checked once everything has applied.
+        ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(
+            character_stat_block
+        )
 
     def description(self):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"

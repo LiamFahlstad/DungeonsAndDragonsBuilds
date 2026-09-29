@@ -21,13 +21,15 @@ The sections below describe the framework **as reviewed**. Since then:
 | Finding | Status |
 |---|---|
 | C1 snapshots | **Fixed.** Stat-dependent bonuses are read-time formulas. |
-| H1 phase chosen at call site | **Resolved by removal.** `ApplyWhen` and all 19 `apply_when=LAST` call sites are gone. Features apply in grant order, and that order provably doesn't matter: a test shuffles every build's features and compares all stats. |
-| H2 ad-hoc pipeline | **Partly.** Expertise-needs-proficiency moved from apply order to a validation step. Pipeline stages are documented in `setup_character_stat_block`. Armor and items are still fixed stages rather than one phase model. |
+| H1 phase chosen at call site | **Resolved by removal.** `ApplyWhen` and all 19 `apply_when=LAST` call sites are gone. Every effect only records facts and every value is computed on read, so order provably doesn't matter: a test shuffles every build's features, armor, weapons, items and fighting styles together and compares all stats. |
+| H2 ad-hoc pipeline | **Fixed.** One unordered pass applies every effect (`CharacterSheetData.iter_stat_effects`), then `CharacterStatBlock.validate()` checks requirements (expertise needs proficiency, armor Strength). `apply_after_armor` is gone: armor-conditional effects are formulas. |
 | M1 extensions render-only | **Fixed, and it was a real bug.** Extensions now apply. This fixed Forge Cleric *Saint of Forge and Fire* (fire immunity) and Hollow Warden *Ancient Might* (Exhaustion immunity), which had been silently dropped. The `HungeringMightBonus` / `RakishAudacityBonus` workaround classes were folded back into their extensions. |
 | M4 shared weapons | **Fixed, verified bug.** A dropped Bracers of Archery bonus stuck to the bow. Each build now gets its own weapon copies. |
 | M5 two lists | **Fixed.** There is a single `features` list in grant order. |
 | L1 rendering in `Feature` | **Partly.** The three duplicated card and tag renderers now share helpers. Rendering still lives on `Feature`. |
-| M2, M3, L2, L3 | Open. These are the deliberately chronological effects (ability caps, "if already proficient" choices), string-typed levels, and mixed metadata styles. |
+| M2 partial-character choices | **Fixed.** "If already proficient, choose another" is a conditional grant resolved on read against every other grant (`SavingThrowProficiencyOrAlternative`); Skill Expert just records its grants. |
+| M3 incremental ability caps | **Fixed.** Increases are recorded with their cap and resolved on read, lowest cap first (`AbilitiesStatBlock`). |
+| L2, L3 | Open. String-typed levels and mixed metadata styles. |
 
 ---
 

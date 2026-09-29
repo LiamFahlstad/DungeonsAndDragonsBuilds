@@ -120,11 +120,10 @@ class SoulOfTheForge(Feature):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         self._resistance.apply(character_stat_block)
-
-    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
         # "While wearing heavy armor, you gain a +1 bonus to AC."
-        if character_stat_block.worn_armor_type == ArmorType.HEAVY:
-            ArmorClassBonus(1).apply(character_stat_block)
+        ArmorClassBonus(
+            lambda cs: 1 if cs.worn_armor_type == ArmorType.HEAVY else 0
+        ).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

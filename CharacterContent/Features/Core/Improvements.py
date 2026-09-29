@@ -5,32 +5,34 @@ subclasses - see CharacterContent.Items.Weapons/Armor).
 
 Ordering contract
 -----------------
-Features (and their extensions) apply in the order they were granted, then
-armor, then armor-conditional effects (Feature.apply_after_armor), then
-weapons and items - see CharacterSheetData.setup_character_stat_block. An
-improvement must give the same result wherever it lands in that order:
+apply() only RECORDS a fact on the stat block; the stat block works every
+value out when it's read. Nothing reads the stat block while it's being
+filled, so features, extensions, armor, weapons, items and fighting styles
+can apply in any order and give the same sheet
+(CharacterSheetData.setup_character_stat_block):
 
-- Writes (proficiencies, flat ability/AC/skill/speed bonuses) are
-  order-insensitive because derived values (AC, skill totals, HP) are
-  computed at read time.
+- Flat facts (proficiencies, +N bonuses, resistances, senses) just add up.
 - A bonus whose size depends on other stats ("equal to your Wisdom
-  modifier", "half your Proficiency Bonus") must never be computed inside
-  apply() - that freezes it at whatever the stat was when the feature ran,
-  missing later ASIs and ability-raising items. Pass a formula instead (the
-  Value type below: SkillBonus/SavingThrowBonus/InitiativeBonus accept
-  `lambda cs: ...`), which the stat block evaluates at read time.
-- Requirements ("expertise needs proficiency") are recorded and validated
-  once every feature has applied, so the prerequisite may come from any
-  builder or the species, in any order.
-- Overwrites (SetArmorClass, MultiAbilityArmorClass, roll conditions): last
-  writer wins. Armor applying after all features is what lets worn armor
-  override an Unarmored Defense formula, matching the game rules.
+  modifier", "while you aren't wearing Heavy armor") is a formula - the Value
+  type below, `lambda cs: ...` - evaluated against the finished stat block.
+  Never compute it inside apply(): that freezes it at whatever the stat was
+  when the feature ran.
+- Ability increases are recorded with their cap and resolved on read, lowest
+  cap first (AbilitiesStatBlock) - "to a maximum of 20" no longer depends on
+  what applied before.
+- Alternatives ("if you already have this proficiency, choose another") are
+  recorded as conditional grants and resolved on read against every other
+  grant (SavingThrowProficiencyOrAlternative).
+- Competing formulas never overwrite each other: every AC formula is kept and
+  the best applicable one is used (SetArmorClass, MultiAbilityArmorClass);
+  roll conditions collect their sources and cancel out on read.
+- Requirements (expertise needs proficiency, an armor's Strength) are
+  recorded and checked by CharacterStatBlock.validate() once everything has
+  applied, so what meets them may be granted before or after.
 
-The only deliberately order-dependent effects are chronological ones - an
-increase "to a maximum of 20" (AbilityScoreBonus.max_score), or "if you're
-already proficient, choose another" (SkillExpert, IronMind) - which resolve
-against what was granted before them. tests/test_feature_apply_order.py
-enforces this: it fails on any other apply() that reads derived stats.
+tests/test_feature_apply_order.py enforces this: it applies every effect of
+every build in shuffled orders, and fails on any effect that reads a stat
+while the sheet is being set up.
 """
 
 from abc import ABC, abstractmethod
@@ -46,6 +48,7 @@ from Core.Definitions import (
     Skill,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.CombatStatBlock import ArmorClassFormula
 
 # A flat bonus, or a formula evaluated against the final stat block at read
 # time (see the ordering contract above).
@@ -150,6 +153,24 @@ class SavingThrowProficiencyChoice(SavingThrowProficiency):
         super().__init__(abilities)
 
 
+class SavingThrowProficiencyOrAlternative(CharacterImprovement):
+    """Grants saving throw proficiency in `ability` - or, if the character is
+    proficient in it from anything else, in the first of `alternatives` they
+    lack ("If you already have this proficiency, you instead gain...").
+
+    Resolved on read against every other grant, whether it applied before or
+    after this one (SavingThrowsStatBlock.add_proficiency_or_alternative)."""
+
+    def __init__(self, ability: Ability, alternatives: list[Ability]):
+        self.ability = ability
+        self.alternatives = alternatives
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.saving_throws.add_proficiency_or_alternative(
+            self.ability, self.alternatives
+        )
+
+
 class SavingThrowAdvantage(CharacterImprovement):
     """Grants advantage on saving throws for one or more abilities."""
 
@@ -185,7 +206,10 @@ class AbilityScoreBonus(CharacterImprovement):
         +1/+1/+1"). None means unchecked.
     max_score: "to a maximum of N" - an increase never raises a score above
         this, but also never lowers a score something else already pushed
-        past it. None means uncapped (e.g. magic items with their own rules).
+        past it. Resolved on read, lowest cap first, so it doesn't matter
+        which increase applied first (see AbilitiesStatBlock). None means an
+        uncapped equipment bonus (a magic item): it applies on top of the
+        character's own score and doesn't count toward requirements.
     """
 
     def __init__(
@@ -213,21 +237,18 @@ class AbilityScoreBonus(CharacterImprovement):
 
     def apply(self, character_stat_block: CharacterStatBlock):
         for ability, bonus in self.bonuses:
-            if self.max_score is not None:
-                score = character_stat_block.abilities.get_score(ability)
-                bonus = min(bonus, max(0, self.max_score - score))
-            if bonus:
-                character_stat_block.abilities.add_bonus(ability, bonus)
+            character_stat_block.abilities.add_bonus(
+                ability, bonus, max_score=self.max_score
+            )
 
 
 class SetArmorClass(CharacterImprovement):
-    """Sets base AC and replaces the ability modifier with a single ability (None = no modifier).
+    """Worn body armor's AC: `base` + the modifier of `ability` (None = no
+    modifier), capped at `ability_modifier_cap`.
 
-    Ordering: overwrite - the last SetArmorClass/MultiAbilityArmorClass to
-    apply wins the base and ability set. Additive ArmorClassBonus values live
-    in a separate accumulator and survive regardless of order. Armors apply
-    after all features, so worn armor deliberately overrides feature-provided
-    AC formulas such as Unarmored Defense."""
+    Adds an armor formula (StatBlocks.CombatStatBlock.ArmorClassFormula) that,
+    while worn, replaces every unarmored formula such as Unarmored Defense -
+    whether the armor applies before or after the feature."""
 
     def __init__(
         self,
@@ -242,38 +263,54 @@ class SetArmorClass(CharacterImprovement):
         self.ability_modifier_cap = ability_modifier_cap
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(self.base)
-        character_stat_block.combat.change_armor_class_ability(self.ability)
-        character_stat_block.combat.update_armor_class_ability_modifier_cap(
-            self.ability_modifier_cap
+        character_stat_block.combat.add_armor_class_formula(
+            ArmorClassFormula(
+                base=self.base,
+                abilities=frozenset([self.ability] if self.ability else []),
+                ability_modifier_cap=self.ability_modifier_cap,
+                is_armor=True,
+            )
         )
 
 
 class MultiAbilityArmorClass(CharacterImprovement):
-    """Sets base AC and adds multiple ability modifiers (e.g. unarmored defense formulas).
+    """An unarmored AC formula: `base` + the summed modifiers of `abilities`
+    (e.g. Unarmored Defense: 10 + DEX + CON).
 
-    Ordering: overwrite of the base, but the listed abilities are ADDED to the
-    existing ability set (which starts as {DEX}) rather than replacing it - so
-    it must not run after a SetArmorClass that cleared or changed the set."""
+    Adds a formula instead of overwriting AC: the character uses the best
+    applicable one, so two such features (a Barbarian/Monk multiclass) never
+    stack, and worn armor replaces them. allows_shield=False for formulas that
+    stop working while a Shield is wielded."""
 
-    def __init__(self, base: int, abilities: list[Ability]):
+    def __init__(
+        self, base: int, abilities: list[Ability], allows_shield: bool = True
+    ):
         self.base = base
         self.abilities = abilities
+        self.allows_shield = allows_shield
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.update_armor_class_base(self.base)
-        for ability in self.abilities:
-            character_stat_block.combat.add_armor_class_ability(ability)
+        character_stat_block.combat.add_armor_class_formula(
+            ArmorClassFormula(
+                base=self.base,
+                abilities=frozenset(self.abilities),
+                allows_shield=self.allows_shield,
+            )
+        )
 
 
 class ArmorClassBonus(CharacterImprovement):
-    """Adds a flat bonus to AC."""
+    """Adds a bonus to AC - flat, or a formula evaluated at read time (e.g.
+    "+1 while wearing Heavy armor")."""
 
-    def __init__(self, bonus: int):
+    def __init__(self, bonus: Value):
         self.bonus = bonus
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.increase_armor_class(self.bonus)
+        if callable(self.bonus):
+            character_stat_block.add_derived_armor_class_bonus(self.bonus)
+        else:
+            character_stat_block.combat.increase_armor_class(self.bonus)
 
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────
@@ -407,13 +444,18 @@ class JackOfAllTradesBonus(CharacterImprovement):
 
 
 class SpeedBonus(CharacterImprovement):
-    """Increases the character's movement speed by a flat amount."""
+    """Increases the character's movement speed - by a flat amount, or a
+    formula evaluated at read time (e.g. "+10 feet while you aren't wearing
+    Heavy armor")."""
 
-    def __init__(self, bonus: int):
+    def __init__(self, bonus: Value):
         self.bonus = bonus
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.speed += self.bonus
+        if callable(self.bonus):
+            character_stat_block.add_derived_speed_bonus(self.bonus)
+        else:
+            character_stat_block.combat.speed += self.bonus
 
 
 class CarryingCapacityBonus(CharacterImprovement):
@@ -442,18 +484,22 @@ class SpellSaveDCBonus(CharacterImprovement):
 
 
 class StrengthRequirement(CharacterImprovement):
-    """Raises ValueError if the character's Strength score is below the minimum.
+    """Requires a minimum Strength score (house rule: the build is rejected;
+    PHB: speed -10 ft instead).
 
-    Ordering: eager reader - validated when armors apply, i.e. after all
-    features (so feat/background ability bonuses count) but BEFORE items, so
-    a Strength bonus granted by an item cannot satisfy an armor requirement."""
+    Recorded, then checked by CharacterStatBlock.validate() once everything
+    has applied - so every feat/background/ASI increase counts wherever it
+    lands in the order. It checks the character's own score: a Strength bonus
+    from an item cannot satisfy an armor requirement."""
 
-    def __init__(self, min_score: int):
+    def __init__(self, min_score: int, reason: str = "armor requirement"):
         self.min_score = min_score
+        self.reason = reason
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        if character_stat_block.get_ability_score(Ability.STRENGTH) < self.min_score:
-            raise ValueError(f"Strength score must be at least {self.min_score}.")
+        character_stat_block.add_ability_requirement(
+            Ability.STRENGTH, self.min_score, self.reason
+        )
 
 
 # ── Resistances, immunities, senses, and languages ────────────────────────────

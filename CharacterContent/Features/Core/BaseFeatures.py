@@ -485,12 +485,10 @@ class Feature:
         self.extensions.append(feature)
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        pass
-
-    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
-        """Second pass, run for every feature after worn armor has applied -
-        for effects conditioned on armor ("while you aren't wearing Heavy
-        armor"), which apply() can't check because it runs before armor."""
+        """Record this feature's effects on the stat block. Features, armor
+        and items apply in no particular order, so only record facts - never
+        read a stat here. Anything that depends on other stats or on worn
+        armor is a formula evaluated on read (see Core.Improvements)."""
         pass
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:

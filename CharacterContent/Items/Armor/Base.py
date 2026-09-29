@@ -122,7 +122,9 @@ class AbstractArmor(Item, ABC):
     def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
         """Apply this armor's AC and ability-based effects to the character."""
         if self.strength_requirement is not None:
-            StrengthRequirement(self.strength_requirement).apply(character_stat_block)
+            StrengthRequirement(self.strength_requirement, self.name).apply(
+                character_stat_block
+            )
         if self.stealth_disadvantage:
             StealthDisadvantage(reason=self.name).apply(character_stat_block)
         if self.is_shield:

@@ -7,8 +7,8 @@ SourceTexts/SubclassTexts2024/<subclass>.txt (quoted in comments next to each
 assertion) or computed by hand from those texts - never read off the engine's
 own output or re-derived with the engine's own formula.
 
-apply_features() mirrors setup_character_stat_block's order: feature.apply,
-then worn armor, then feature.apply_after_armor.
+apply_features() mirrors setup_character_stat_block: every effect (feature or
+armor) applies, in no particular order, then requirements are validated.
 """
 
 import pytest
@@ -52,12 +52,10 @@ from CharacterContent.Classes.SubClasses2024 import DruidLand
 
 
 def apply_features(character, features, armors=()):
-    for feature in features:
-        feature.apply(character)
-    for armor in armors:
-        armor.apply(character)
-    for feature in features:
-        feature.apply_after_armor(character)
+    # Armor first on purpose: effects may apply in any order.
+    for effect in [*armors, *features]:
+        effect.apply(character)
+    character.validate()
     return character
 
 

@@ -734,11 +734,12 @@ class SkillExpert(_AbilityScoreFeat):
         self.skippable_in_concise = True
 
     def apply(self, character_stat_block: CharacterStatBlock):
+        # Both grants are idempotent flags, and expertise's proficiency
+        # requirement is validated once everything has applied - so there's
+        # nothing to check against what was granted before this feat.
         super().apply(character_stat_block)
-        if not character_stat_block.skills.is_proficient(self._proficiency.skills[0]):
-            self._proficiency.apply(character_stat_block)
-        if not character_stat_block.skills.has_expertise(self._expertise.skills[0]):
-            self._expertise.apply(character_stat_block)
+        self._proficiency.apply(character_stat_block)
+        self._expertise.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (

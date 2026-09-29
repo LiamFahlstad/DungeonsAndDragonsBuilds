@@ -168,10 +168,12 @@ class Roving(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply_after_armor(self, character_stat_block: CharacterStatBlock):
-        # "...while you aren't wearing Heavy Armor."
-        if character_stat_block.worn_armor_type != Definitions.ArmorType.HEAVY:
-            SpeedBonus(10).apply(character_stat_block)
+    def apply(self, character_stat_block: CharacterStatBlock):
+        # "...while you aren't wearing Heavy Armor." A formula, so the armor
+        # is checked once everything (armor included) has applied.
+        SpeedBonus(
+            lambda cs: 0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10
+        ).apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."

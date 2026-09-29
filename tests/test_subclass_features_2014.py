@@ -269,11 +269,9 @@ class TestLimitedUseResourcesNotWired:
 class TestPromisedPassiveBonusNeverApplied:
     def test_soul_of_the_forge_ac_bonus_while_wearing_heavy_armor(self, make_character):
         character = make_character(strength=15, levels={CharacterClass.CLERIC: 6})
-        feature = ClericForgeFeatures.SoulOfTheForge()
-        feature.apply(character)
-        armor = Armor.PlateArmor()
-        armor.apply(character)
-        feature.apply_after_armor(character)
+        # Armor first: the bonus must not depend on which applies first.
+        Armor.PlateArmor().apply(character)
+        ClericForgeFeatures.SoulOfTheForge().apply(character)
         assert character.calculate_armor_class() == 19  # Plate 18 + 1
 
     def test_soul_of_the_forge_fire_resistance_is_applied(self, make_character):
@@ -287,7 +285,7 @@ class TestPromisedPassiveBonusNeverApplied:
         character = make_character(levels={CharacterClass.ROGUE: 9})
         feature = RogueScoutFeatures.SuperiorMobility()
         feature.apply(character)
-        assert character.combat.speed == 40
+        assert character.speed == 40
 
     def test_survivalist_proficiency_and_expertise_are_applied(self, make_character):
         # Control: the earlier Scout feature correctly wires both grants.
