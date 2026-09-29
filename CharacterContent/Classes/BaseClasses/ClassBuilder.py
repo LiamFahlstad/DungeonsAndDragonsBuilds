@@ -11,6 +11,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.ClassLevels import ClassLevels
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
 
@@ -367,7 +368,7 @@ class ClassBuilder(ABC):
                 starting_character_level + offset, self.base_class
             )
 
-        previous_subclass = character_sheet_data.character_subclass
+        previous_subclass = character_sheet_data.class_levels.character_subclass
         character_sheet_data.merge_with(base_sheet_data)
         self._update_subclass_name(character_sheet_data, previous_subclass)
         character_sheet_data = self.base_class_level_features.add_features(
@@ -384,12 +385,15 @@ class ClassBuilder(ABC):
         haven't reached their subclass level are left out; if none has, the
         first declared subclass is kept."""
         subclass = getattr(self, "subclass", None)
+        class_levels = data.class_levels
         if subclass and _subclass_reached(self):
-            data._active_subclasses[self.base_class] = subclass
-        if data._active_subclasses:
-            data.character_subclass = " / ".join(data._active_subclasses.values())
+            class_levels.active_subclasses[self.base_class] = subclass
+        if class_levels.active_subclasses:
+            class_levels.character_subclass = " / ".join(
+                class_levels.active_subclasses.values()
+            )
         elif previous_subclass is not None:
-            data.character_subclass = previous_subclass
+            class_levels.character_subclass = previous_subclass
 
 
 def _subclass_reached(builder: "ClassBuilder") -> bool:
@@ -499,10 +503,12 @@ class StarterClassBuilder(ClassBuilder):
 
     def _create_base_sheet_data(self) -> CharacterSheetData:
         data = CharacterSheetData(
-            character_subclass=self.subclass,
-            level_per_class={self.base_class: self.base_class_level},
+            class_levels=ClassLevels(
+                character_subclass=self.subclass,
+                level_per_class={self.base_class: self.base_class_level},
+                base_class=self.base_class,
+            ),
             abilities=self.abilities,
-            base_class=self.base_class,
             spell_casting_ability=self.spell_casting_ability,
         )
 
@@ -556,8 +562,10 @@ class MulticlassBuilder(ClassBuilder):
 
     def _create_base_sheet_data(self) -> CharacterSheetData:
         data = CharacterSheetData(
-            character_subclass=self.subclass,
-            level_per_class={self.base_class: self.base_class_level},
+            class_levels=ClassLevels(
+                character_subclass=self.subclass,
+                level_per_class={self.base_class: self.base_class_level},
+            ),
             spell_casting_ability=self.spell_casting_ability,
         )
         if self.caster_type is not None:

@@ -25,6 +25,7 @@ from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Featur
 from Core.Definitions import Ability, CharacterClass, CreatureSize, Skill
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
@@ -1189,17 +1190,19 @@ def make_dummy_stat_block(
     character_class: CharacterClass, spell_ability: Ability, level: int = 20
 ) -> CharacterStatBlock:
     return CharacterStatBlock(
-        name="Preview Character",
-        character_subclass="",
-        base_class=character_class,
-        level_per_class={character_class: level},
+        class_levels=ClassLevels(
+            base_class=character_class,
+            level_per_class={character_class: level},
+            class_by_character_level={
+                lvl: character_class for lvl in range(1, level + 1)
+            },
+        ),
         abilities=AbilitiesStatBlock(16, 14, 14, 14, 14, 12),
         skills=SkillsStatBlock(),
         combat=CombatStatBlock(speed=30, size=CreatureSize.MEDIUM),
         saving_throws=SavingThrowsStatBlock(),
         spell_casting_ability=spell_ability,
         spell_slots={1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1},
-        class_by_character_level={lvl: character_class for lvl in range(1, level + 1)},
     )
 
 

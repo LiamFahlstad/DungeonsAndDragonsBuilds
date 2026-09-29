@@ -18,6 +18,7 @@ from CharacterContent.Items.Weapons import AbstractWeapon
 from Core.Definitions import Ability, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
@@ -35,16 +36,13 @@ MAX_ATTUNED_ITEMS = 3
 @attr.dataclass
 class CharacterSheetData:
     character_name: Optional[str] = None
-    character_subclass: Optional[str] = None
-    base_class: Optional[CharacterClass] = None
     is_example: bool = False
-    level_per_class: dict[CharacterClass, int] = attr.Factory(dict)
-    # Which class a given total character level was taken in, e.g. {1: FIGHTER,
-    # 2: FIGHTER, 3: WIZARD}. Populated by ClassBuilder.create() as builders are
-    # applied in order, so it reflects the actual level-by-level pick history
-    # (including dips and resumed classes), not just the final per-class totals
-    # in level_per_class.
-    class_by_character_level: dict[int, CharacterClass] = attr.Factory(dict)
+    # Levels, level-by-level history, base class and subclasses - shared
+    # (not copied) with the CharacterStatBlock built from this sheet, see
+    # StatBlocks/ClassLevels.py. character_subclass/base_class/
+    # level_per_class/class_by_character_level below are thin delegating
+    # properties kept for the many existing readers of those names.
+    class_levels: ClassLevels = attr.Factory(ClassLevels)
     abilities: Optional[AbilitiesStatBlock] = None
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
@@ -101,14 +99,42 @@ class CharacterSheetData:
     # per-level class flow (species spells, origin feat spells via
     # add_origin_feat, etc).
     _current_grant_level: int = 1
-    # {class: subclass} for every class that has reached its subclass level,
-    # in the order gained - character_subclass shows them joined with " / ".
-    # Maintained by ClassBuilder.create (private, so merge_with skips it).
-    _active_subclasses: dict[CharacterClass, str] = attr.Factory(dict)
+
+    @property
+    def character_subclass(self) -> Optional[str]:
+        return self.class_levels.character_subclass
+
+    @character_subclass.setter
+    def character_subclass(self, value: Optional[str]) -> None:
+        self.class_levels.character_subclass = value
+
+    @property
+    def base_class(self) -> Optional[CharacterClass]:
+        return self.class_levels.base_class
+
+    @base_class.setter
+    def base_class(self, value: Optional[CharacterClass]) -> None:
+        self.class_levels.base_class = value
+
+    @property
+    def level_per_class(self) -> dict[CharacterClass, int]:
+        return self.class_levels.level_per_class
+
+    @level_per_class.setter
+    def level_per_class(self, value: dict[CharacterClass, int]) -> None:
+        self.class_levels.level_per_class = value
+
+    @property
+    def class_by_character_level(self) -> dict[int, CharacterClass]:
+        return self.class_levels.class_by_character_level
+
+    @class_by_character_level.setter
+    def class_by_character_level(self, value: dict[int, CharacterClass]) -> None:
+        self.class_levels.class_by_character_level = value
 
     @property
     def character_level(self) -> int:
-        return sum(self.level_per_class.values())
+        return self.class_levels.character_level
 
     def _invalidate_cache(self):
         """Drop the cached CharacterStatBlock; any mutation after
@@ -147,11 +173,11 @@ class CharacterSheetData:
         ]
 
     def get_level_for_class(self, character_class: CharacterClass) -> int:
-        return self.level_per_class.get(character_class, 0)
+        return self.class_levels.get_class_level(character_class)
 
     def record_class_level(self, character_level: int, character_class: CharacterClass):
         self._invalidate_cache()
-        self.class_by_character_level[character_level] = character_class
+        self.class_levels.record_class_level(character_level, character_class)
 
     def set_current_grant_level(self, level: int) -> None:
         """Set the class-relative level that subsequent add_spell/add_cantrip
@@ -343,19 +369,16 @@ class CharacterSheetData:
         # same builder instance (which hands the same AbilitiesStatBlock to
         # each CharacterSheetData).
         character = CharacterStatBlock(
-            name=self.character_name,
-            character_subclass=self.character_subclass,
-            base_class=self.base_class,
-            level_per_class=self.level_per_class,
-            class_by_character_level=self.class_by_character_level,
+            # Shared, not copied - see StatBlocks/ClassLevels.py. Name and
+            # gold stay on this CharacterSheetData only; readers that need
+            # them (the sheet writer) already have it.
+            class_levels=self.class_levels,
             abilities=copy.deepcopy(self.abilities),
             skills=SkillsStatBlock(),
             combat=combat,
             saving_throws=SavingThrowsStatBlock(),
             spell_casting_ability=self.spell_casting_ability,
             spell_slots=self.spell_slots,
-            starting_gold=self.starting_gold,
-            current_gold=self.current_gold,
         )
 
         # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
@@ -415,23 +438,27 @@ class CharacterSheetData:
         """Merge another CharacterSheetData into this one.
 
         Merge rules, by field kind:
+        - class_levels merges via ClassLevels.merge, which applies the same
+          dict/scalar rules below field-by-field (see its docstring) - it
+          can't go through the generic scalar rule, since a ClassLevels
+          instance is never "empty" and a MulticlassBuilder's partial
+          ClassLevels would wholesale overwrite self's, losing the starting
+          class;
         - lists (features, spells, weapons, ...) are
           concatenated, preserving each side's internal order with `other`'s
           entries after `self`'s;
-        - dicts (level_per_class, spell_slots) are combined with `other`'s
-          entries winning on key collisions. For level_per_class this means a
-          later builder redeclaring an existing class states that class's
-          final total level (e.g. a starter Paladin 1 resumed by a Paladin 19
-          builder ends at 19, not 20);
+        - dicts (spell_slots) are combined with `other`'s entries winning on
+          key collisions;
         - sets are combined with set union;
         - scalars are overwritten only when `other`'s value is actually set
           (see _MERGE_EMPTY_VALUES), so an untouched default never erases an
           earlier builder's value.
         """
         self._invalidate_cache()
+        self.class_levels = self.class_levels.merge(other.class_levels)
 
         for field_name in vars(self):
-            if field_name.startswith("_"):
+            if field_name.startswith("_") or field_name == "class_levels":
                 continue
             other_value = getattr(other, field_name)
             my_value = getattr(self, field_name)

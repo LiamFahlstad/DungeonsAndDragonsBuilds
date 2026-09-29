@@ -100,7 +100,9 @@ def _write_features_page(
             ]
             if not text_features:
                 continue
-            file.write(f"<div class='build-group-owner'>{stat_block.name}</div>\n")
+            file.write(
+                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+            )
             sorted_features = sorted(text_features, key=writer._sort_features_key)
             for feature in sorted_features:
                 # max_level caps nested extension cards to the requested
@@ -134,8 +136,14 @@ def _write_spells_page(
             ]
             if not level_filtered_spells:
                 continue
-            file.write(f"<div class='build-group-owner'>{stat_block.name}</div>\n")
-            writer._write_spell_cards(stat_block, file, level_filtered_spells)
+            file.write(
+                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+            )
+            base_class = character_sheet_data.base_class
+            assert base_class is not None
+            writer._write_spell_cards(
+                stat_block, file, level_filtered_spells, base_class
+            )
 
 
 def _write_weapons_page(
@@ -151,7 +159,9 @@ def _write_weapons_page(
         for character_sheet_data, stat_block in prepared:
             if not character_sheet_data.weapons:
                 continue
-            file.write(f"<div class='build-group-owner'>{stat_block.name}</div>\n")
+            file.write(
+                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+            )
             writer._write_weapons(
                 stat_block,
                 file,
@@ -190,5 +200,7 @@ def _write_items_page(
                     combined_rows.extend(rows)
             if not combined_rows:
                 continue
-            file.write(f"<div class='build-group-owner'>{stat_block.name}</div>\n")
+            file.write(
+                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+            )
             Html.write_item_cards(file, None, combined_rows)

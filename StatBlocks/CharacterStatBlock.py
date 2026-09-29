@@ -5,6 +5,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
 from Core.SpellcastingRules import CasterType, calculate_spell_slots
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.CombatStatBlock import ArmorClassFormula, CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
@@ -20,25 +21,20 @@ DerivedBonus = Callable[["CharacterStatBlock"], int]
 class CharacterStatBlock:
     def __init__(
         self,
-        name: str,
-        character_subclass: str,
-        base_class: CharacterClass,
-        level_per_class: dict[CharacterClass, int],
+        class_levels: ClassLevels,
         abilities: AbilitiesStatBlock,
         skills: SkillsStatBlock,
         combat: CombatStatBlock,
         saving_throws: SavingThrowsStatBlock,
         spell_casting_ability: Optional[Ability] = None,
         spell_slots: Optional[dict[int, int]] = None,
-        class_by_character_level: Optional[dict[int, CharacterClass]] = None,
-        starting_gold: Optional[float] = None,
-        current_gold: Optional[float] = None,
     ):
-        self.name = name
-        self.character_subclass = character_subclass
-        self.base_class = base_class
-        self.level_per_class = level_per_class
-        self.class_by_character_level = class_by_character_level or {}
+        # Shared with the CharacterSheetData this character was built from -
+        # not a copy - so levels, history and subclass are one source of
+        # truth (see StatBlocks/ClassLevels.py). Name, gold and the subclass
+        # display string stay on CharacterSheetData only; readers that need
+        # them (the sheet writer) already have that object.
+        self.class_levels = class_levels
         self.abilities = abilities
         self.skills = skills
         self.combat = combat
@@ -48,8 +44,6 @@ class CharacterStatBlock:
         # otherwise worked out from the registered casters - see spell_slots.
         self._fixed_spell_slots = spell_slots
         self._casters: dict[CharacterClass, CasterType] = {}
-        self.starting_gold = starting_gold
-        self.current_gold = current_gold
         # Set by worn armor as it applies. Armor-conditional effects (Defense
         # fighting style, Unarmored Movement, Fast Movement, ...) read these
         # inside a formula, i.e. once everything has applied.
@@ -101,7 +95,19 @@ class CharacterStatBlock:
 
     @property
     def character_level(self) -> int:
-        return sum(self.level_per_class.values())
+        return self.class_levels.character_level
+
+    @property
+    def level_per_class(self) -> dict[CharacterClass, int]:
+        return self.class_levels.level_per_class
+
+    @property
+    def base_class(self) -> CharacterClass:
+        # Guaranteed set by the time a CharacterStatBlock exists - the
+        # CharacterSheetData it was built from validates this before it
+        # builds anything (CharacterSheetData.validate()).
+        assert self.class_levels.base_class is not None
+        return self.class_levels.base_class
 
     @property
     def speed(self) -> int:
@@ -270,7 +276,7 @@ class CharacterStatBlock:
         self.spell_save_dc_bonus += bonus
 
     def get_class_level(self, character_class: CharacterClass) -> int:
-        return self.level_per_class.get(character_class, 0)
+        return self.class_levels.get_class_level(character_class)
 
     def get_class_level_segments(self) -> list[tuple[int, int, CharacterClass]]:
         """Contiguous (start_level, end_level, class) ranges describing which
@@ -278,21 +284,7 @@ class CharacterStatBlock:
         chronological order. A class taken again after a dip into another
         class (e.g. Artificer 1-7, Wizard 8, Artificer 9-15) appears as two
         separate segments rather than being merged into one."""
-        segments: list[tuple[int, int, CharacterClass]] = []
-        current_class = None
-        start = None
-        for level in range(1, self.character_level + 1):
-            character_class = self.class_by_character_level.get(level)
-            if character_class != current_class:
-                if current_class is not None:
-                    assert start is not None
-                    segments.append((start, level - 1, current_class))
-                current_class = character_class
-                start = level
-        if current_class is not None:
-            assert start is not None
-            segments.append((start, self.character_level, current_class))
-        return segments
+        return self.class_levels.get_class_level_segments()
 
     def get_proficiency_bonus(self) -> int:
         return 2 + (self.character_level - 1) // 4

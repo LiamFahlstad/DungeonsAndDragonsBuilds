@@ -52,6 +52,7 @@ def make_character():
     from Core.Definitions import CharacterClass
     from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
     from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from StatBlocks.ClassLevels import ClassLevels
 
     def _make(
         strength=10,
@@ -65,10 +66,9 @@ def make_character():
     ):
         levels = levels or {CharacterClass.FIGHTER: 1}
         character = CharacterStatBlock(
-            name="Test",
-            character_subclass="Test",
-            base_class=next(iter(levels)),
-            level_per_class=levels,
+            class_levels=ClassLevels(
+                base_class=next(iter(levels)), level_per_class=levels
+            ),
             abilities=AbilitiesStatBlock(
                 strength, dexterity, constitution, intelligence, wisdom, charisma
             ),

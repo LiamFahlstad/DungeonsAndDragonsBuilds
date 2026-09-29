@@ -14,6 +14,7 @@ armor) applies, in no particular order, then requirements are validated.
 import pytest
 
 from Builds.CharacterSheetAccumulator import CharacterSheetData
+from StatBlocks.ClassLevels import ClassLevels
 from Core.Definitions import (
     Ability,
     ArmorType,
@@ -730,7 +731,7 @@ class TestPromisedPassiveBenefits:
         # battle_smith.txt: "Weapon Knowledge. You gain proficiency with
         # Martial weapons."
         data = CharacterSheetData(
-            level_per_class={CharacterClass.ARTIFICER: 3},
+            class_levels=ClassLevels(level_per_class={CharacterClass.ARTIFICER: 3}),
             spell_casting_ability=Ability.INTELLIGENCE,
         )
         ArtificerBattleSmith.ArtificerBattleSmithLevel3().add_features(data)

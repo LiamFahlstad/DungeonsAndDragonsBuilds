@@ -20,6 +20,7 @@ import pytest
 from RunCharacterCreator import ExampleSelector
 
 from Builds.CharacterSheetAccumulator import CharacterSheetData
+from StatBlocks.ClassLevels import ClassLevels
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.SubClasses2014.ClericDeath import ClericDeathLevel3
 from CharacterContent.Classes.SubClasses2014.ClericForge import (
@@ -113,7 +114,9 @@ def features_at(
     whose only fact is that `character_class` is at `class_level`, mirroring
     what BaseClassLevelFeatures.add_features does for a single level entry
     without needing a full StarterClassBuilder."""
-    data = CharacterSheetData(level_per_class={character_class: class_level})
+    data = CharacterSheetData(
+        class_levels=ClassLevels(level_per_class={character_class: class_level})
+    )
     blf = ClassBuilder.BaseClassLevelFeatures(
         base_class_features_by_level={},
         subclass_features_by_level={
@@ -185,29 +188,41 @@ class TestClericDomainBonusProficiencies:
     grants it (Feature.apply), so it reaches the stat block's proficiencies."""
 
     def test_forge_domain_heavy_armor(self, make_character):
-        character = granted(features_at(ClericForgeLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericForgeLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert ArmorType.HEAVY in character.armor_training
 
     def test_tempest_domain_heavy_armor_and_martial_weapons(self, make_character):
-        character = granted(features_at(ClericTempestLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericTempestLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert ArmorType.HEAVY in character.armor_training
         assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
     def test_nature_domain_heavy_armor(self, make_character):
-        character = granted(features_at(ClericNatureLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericNatureLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert ArmorType.HEAVY in character.armor_training
 
     def test_order_domain_heavy_armor(self, make_character):
-        character = granted(features_at(ClericOrderLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericOrderLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert ArmorType.HEAVY in character.armor_training
 
     def test_twilight_domain_heavy_armor_and_martial_weapons(self, make_character):
-        character = granted(features_at(ClericTwilightLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericTwilightLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert ArmorType.HEAVY in character.armor_training
         assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
     def test_death_domain_martial_weapons(self, make_character):
-        character = granted(features_at(ClericDeathLevel3, CharacterClass.CLERIC, 3), make_character)
+        character = granted(
+            features_at(ClericDeathLevel3, CharacterClass.CLERIC, 3), make_character
+        )
         assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
 
 
@@ -381,7 +396,9 @@ class TestExtendFeatureWiring:
 
     def _build_up_to(self, fighter_level: int) -> CharacterSheetData:
         data = CharacterSheetData(
-            level_per_class={CharacterClass.FIGHTER: fighter_level}
+            class_levels=ClassLevels(
+                level_per_class={CharacterClass.FIGHTER: fighter_level}
+            )
         )
         blf = ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={},
@@ -487,7 +504,9 @@ class TestPromisedProficienciesGranted:
 
     def test_college_of_swords_bonus_proficiencies(self, make_character):
         # "...you gain proficiency with medium armor and the scimitar."
-        data = CharacterSheetData(level_per_class={CharacterClass.BARD: 3})
+        data = CharacterSheetData(
+            class_levels=ClassLevels(level_per_class={CharacterClass.BARD: 3})
+        )
         BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)
         character = granted(data, make_character)
         assert ArmorType.MEDIUM in character.armor_training

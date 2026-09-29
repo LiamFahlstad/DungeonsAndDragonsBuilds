@@ -15,6 +15,7 @@ from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, Spell
 from Core.Definitions import CharacterClass, CreatureSize
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
@@ -132,10 +133,9 @@ def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
     class's SpellSlots feature in order, as CharacterSheetData does."""
     level_per_class = {cls: level for cls, level, _ in classes}
     character = CharacterStatBlock(
-        name="Test",
-        character_subclass="Test",
-        base_class=classes[0][0],
-        level_per_class=level_per_class,
+        class_levels=ClassLevels(
+            base_class=classes[0][0], level_per_class=level_per_class
+        ),
         abilities=AbilitiesStatBlock(10, 10, 10, 10, 10, 10),
         skills=SkillsStatBlock(),
         combat=CombatStatBlock(speed=30, size=CreatureSize.MEDIUM),

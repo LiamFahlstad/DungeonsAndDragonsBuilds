@@ -231,6 +231,7 @@ class HtmlCharacterSheetWriter:
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
+        character_subclass: Optional[str],
     ):
         """Character overview: large tiles for the stats checked constantly
         in play (HP above all, then AC/Initiative/Speed/Prof. Bonus), with
@@ -315,7 +316,7 @@ class HtmlCharacterSheetWriter:
 
         details = [
             ("Class", self._format_class_level_history(character)),
-            ("Subclass", character.character_subclass),
+            ("Subclass", character_subclass),
             ("Size", character.combat.size.value),
             ("Armor Prof.", ", ".join(sorted(a.value for a in armor_proficiencies))),
             (
@@ -766,7 +767,7 @@ class HtmlCharacterSheetWriter:
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
-    def _spell_prep_checkbox_class(character: CharacterStatBlock) -> bool:
+    def _spell_prep_checkbox_class(base_class: Definitions.CharacterClass) -> bool:
         """Whether spell cards for this character should show a
         preparation checkbox (true for classes that prepare spells daily
         from a known list, rather than simply knowing a fixed set)."""
@@ -777,13 +778,14 @@ class HtmlCharacterSheetWriter:
             Definitions.CharacterClass.PALADIN,
             Definitions.CharacterClass.ARTIFICER,
         }
-        return character.base_class in prepared_caster_classes
+        return base_class in prepared_caster_classes
 
     def _write_spell_cards(
         self,
         character: CharacterStatBlock,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
+        base_class: Definitions.CharacterClass,
     ):
         """Write the '<div class='spells'>' block of individual spell cards
         (grouped by spell level with a header per group) for the given
@@ -800,7 +802,7 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
-        show_prep_checkbox = self._spell_prep_checkbox_class(character)
+        show_prep_checkbox = self._spell_prep_checkbox_class(base_class)
 
         # Group by level and emit a level header before each group
         from itertools import groupby
@@ -818,6 +820,7 @@ class HtmlCharacterSheetWriter:
         character: CharacterStatBlock,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
+        base_class: Definitions.CharacterClass,
         include_probability_tables: bool = False,
     ):
         if not spells:
@@ -831,7 +834,7 @@ class HtmlCharacterSheetWriter:
         self._write_spellcasting_headline(
             character, file, casting_abilities, include_probability_tables
         )
-        self._write_spell_cards(character, file, spells)
+        self._write_spell_cards(character, file, spells, base_class)
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
@@ -945,6 +948,7 @@ class HtmlCharacterSheetWriter:
         starting_equipment_entry: Optional[EquipmentEntry],
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
+        current_gold: Optional[float],
         include_probability_tables: bool = False,
     ):
         non_empty_entries = [
@@ -976,10 +980,10 @@ class HtmlCharacterSheetWriter:
         carrying_capacity = character.get_carrying_capacity()
         file.write("<div class='wallet-carry-row'>\n")
         file.write("<div class='wallet-block'>\n")
-        if character.current_gold is not None:
+        if current_gold is not None:
             file.write(
                 f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
-                f"{self._format_gold(character.current_gold)}</span>\n"
+                f"{self._format_gold(current_gold)}</span>\n"
             )
         file.write(
             "<span class='overview-detail'><span class='od-label'>Current Gold</span>"
@@ -1101,6 +1105,13 @@ class HtmlCharacterSheetWriter:
         equipment_entries = data.equipment_entries
         starting_equipment_entry = data.starting_equipment_entry
         tool_proficiencies = character.tool_proficiencies
+        # Identity and gold live on the sheet data, not the stat block - see
+        # StatBlocks/ClassLevels.py.
+        character_name = data.character_name
+        character_subclass = data.character_subclass
+        base_class = data.base_class
+        current_gold = data.current_gold
+        assert character_name is not None and base_class is not None
 
         output_folder_obj = pathlib.Path(output_folder)
         output_folder_obj.mkdir(parents=True, exist_ok=True)
@@ -1178,6 +1189,9 @@ class HtmlCharacterSheetWriter:
             "character.html",
             pages,
             character,
+            character_name,
+            base_class,
+            character_subclass,
             armors,
             armor_proficiencies,
             weapon_proficiencies,
@@ -1192,6 +1206,10 @@ class HtmlCharacterSheetWriter:
             "full_character_sheet.html",
             pages,
             character,
+            character_name,
+            base_class,
+            character_subclass,
+            current_gold,
             armors,
             armor_proficiencies,
             weapon_proficiencies,
@@ -1225,6 +1243,8 @@ class HtmlCharacterSheetWriter:
                 page_path,
                 pages,
                 character,
+                character_name,
+                base_class,
                 level,
                 sorted_level_features,
                 description_mode,
@@ -1238,6 +1258,7 @@ class HtmlCharacterSheetWriter:
                 "fighting_styles.html",
                 pages,
                 character,
+                character_name,
                 fighting_styles,
             )
 
@@ -1247,6 +1268,8 @@ class HtmlCharacterSheetWriter:
                 "items.html",
                 pages,
                 character,
+                character_name,
+                current_gold,
                 equipment_entries,
                 starting_equipment_entry,
                 tool_proficiencies,
@@ -1261,6 +1284,9 @@ class HtmlCharacterSheetWriter:
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
+        character_name: str,
+        base_class: Definitions.CharacterClass,
+        character_subclass: Optional[str],
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
@@ -1273,12 +1299,17 @@ class HtmlCharacterSheetWriter:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(
-                f"<h1>{character.name} - Level {character.character_level} "
-                f"{character.base_class.value}</h1>\n"
+                f"<h1>{character_name} - Level {character.character_level} "
+                f"{base_class.value}</h1>\n"
             )
             self._write_status_section(file)
             self._write_overview(
-                character, file, armors, armor_proficiencies, weapon_proficiencies
+                character,
+                file,
+                armors,
+                armor_proficiencies,
+                weapon_proficiencies,
+                character_subclass,
             )
             file.write("<h2>Abilities and Skills</h2>\n")
             file.write("<div class='section-row'>\n")
@@ -1448,6 +1479,10 @@ class HtmlCharacterSheetWriter:
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
+        character_name: str,
+        base_class: Definitions.CharacterClass,
+        character_subclass: Optional[str],
+        current_gold: Optional[float],
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
@@ -1473,12 +1508,17 @@ class HtmlCharacterSheetWriter:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(
-                f"<h1>{character.name} - Level {character.character_level} "
-                f"{character.base_class.value}</h1>\n"
+                f"<h1>{character_name} - Level {character.character_level} "
+                f"{base_class.value}</h1>\n"
             )
             self._write_status_section(file)
             self._write_overview(
-                character, file, armors, armor_proficiencies, weapon_proficiencies
+                character,
+                file,
+                armors,
+                armor_proficiencies,
+                weapon_proficiencies,
+                character_subclass,
             )
             file.write("<h2>Abilities and Skills</h2>\n")
             file.write("<div class='section-row'>\n")
@@ -1503,7 +1543,9 @@ class HtmlCharacterSheetWriter:
             self._write_invocations(character, file, invocations)
             self._write_pact_magic_slots(character, file)
             self._write_spell_slots(character, file)
-            self._write_spells(character, file, spells, include_probability_tables)
+            self._write_spells(
+                character, file, spells, base_class, include_probability_tables
+            )
             self._write_items(
                 character,
                 file,
@@ -1511,6 +1553,7 @@ class HtmlCharacterSheetWriter:
                 starting_equipment_entry,
                 weapons,
                 weapon_masteries,
+                current_gold,
                 include_probability_tables,
             )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
@@ -1521,6 +1564,8 @@ class HtmlCharacterSheetWriter:
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
+        character_name: str,
+        base_class: Definitions.CharacterClass,
         level: int,
         level_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
@@ -1533,7 +1578,7 @@ class HtmlCharacterSheetWriter:
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
-            file.write(f"<h1>{character.name} - Level {level} Features</h1>\n")
+            file.write(f"<h1>{character_name} - Level {level} Features</h1>\n")
             file.write("<div class='features'>\n")
             for feature in level_features:
                 feature.write_to_file(
@@ -1554,7 +1599,7 @@ class HtmlCharacterSheetWriter:
 
             if level_spells:
                 file.write("<h2>Spells Gained</h2>\n")
-                self._write_spell_cards(character, file, level_spells)
+                self._write_spell_cards(character, file, level_spells, base_class)
                 file.write("<br class='section-gap'>\n")
 
     def _write_fighting_styles_page(
@@ -1563,12 +1608,13 @@ class HtmlCharacterSheetWriter:
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
+        character_name: str,
         fighting_styles: list[FightingStyle],
     ):
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
-            file.write(f"<h1>{character.name} - Fighting Styles</h1>\n")
+            file.write(f"<h1>{character_name} - Fighting Styles</h1>\n")
             self._write_fighting_styles(character, file, fighting_styles)
 
     def _write_items_page(
@@ -1577,6 +1623,8 @@ class HtmlCharacterSheetWriter:
         page_path: str,
         pages: list[tuple[str, str]],
         character: CharacterStatBlock,
+        character_name: str,
+        current_gold: Optional[float],
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
@@ -1587,7 +1635,7 @@ class HtmlCharacterSheetWriter:
         with open(path, "w", encoding="utf-8") as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
-            file.write(f"<h1>{character.name} - Items</h1>\n")
+            file.write(f"<h1>{character_name} - Items</h1>\n")
             self._write_items(
                 character,
                 file,
@@ -1595,6 +1643,7 @@ class HtmlCharacterSheetWriter:
                 starting_equipment_entry,
                 weapons,
                 weapon_masteries,
+                current_gold,
                 include_probability_tables,
             )
             self._write_tool_proficiencies(character, file, tool_proficiencies)
