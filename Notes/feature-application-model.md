@@ -15,7 +15,8 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
 2. **The stat block works every value out when it's read**, from everything recorded. So nothing
    can depend on what happened to apply first.
 3. **Requirements are checked once, at the end** (`CharacterStatBlock.validate()`): expertise
-   needs proficiency, and an armor needs a minimum Strength.
+   needs proficiency, an armor needs a minimum Strength, and a multiclass character needs the
+   ability minimums for every class it has.
 4. **There are no exceptions.** A test shuffles every build's effects (features, extensions,
    armor, weapons, items and fighting styles together) and requires identical sheets. Two guard
    tests fail on any effect that reads a stat during setup.
@@ -26,13 +27,15 @@ its getters are the evaluation.
 
 ## The pipeline
 
-`CharacterSheetData.setup_character_stat_block()` builds a fresh `CharacterStatBlock` from copies
-of the base ability, skill and saving-throw blocks, then:
+`CharacterSheetData.setup_character_stat_block()` first calls `CharacterSheetData.validate()`
+(every field it needs to build a stat block is set, at most one worn body armor, and the
+attunement limit), then builds a fresh `CharacterStatBlock` from copies of the base ability, skill and
+saving-throw blocks, then:
 
 | # | Stage | What runs |
 |---|---|---|
 | 1 | **Record** | `apply()` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and stat fighting styles (Defense). **Any order.** |
-| 2 | **Validate** | `character.validate()` (expertise needs proficiency, ability requirements such as an armor's Strength), then multiclass ability minimums |
+| 2 | **Validate** | `character.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 | 3 | **Weapons** | Weapon fighting styles (Archery, Dueling, …) and `item.apply_to_weapons()` (Bracers of Archery). These write into the per-build weapon copies and read nothing from the stat block |
 
 The result is cached. The cache is dropped by any `add_*` call, and also whenever the set of

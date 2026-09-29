@@ -237,6 +237,24 @@ class CharacterStatBlock:
                 raise ValueError(
                     f"{ability.value} score must be at least {min_score} ({reason})."
                 )
+        self._validate_multiclass_prerequisites()
+
+    def _validate_multiclass_prerequisites(self) -> None:
+        """A multiclass character needs 13+ in the prerequisite abilities of
+        every class it has. Checked on the character's own final scores
+        (equipment bonuses don't count) - the engine has no per-level score
+        history, so this is the end-of-build approximation of "at the time
+        you multiclass"."""
+        if len(self.level_per_class) < 2:
+            return
+        for character_class in self.level_per_class:
+            for group in character_class.multiclass_prerequisites:
+                if not any(self.abilities.get_own_score(a) >= 13 for a in group):
+                    needed = " or ".join(a.value for a in group)
+                    raise ValueError(
+                        f"Multiclassing into or out of {character_class.value} "
+                        f"requires {needed} 13+."
+                    )
 
     def add_derived_saving_throw_bonus(
         self, ability: Ability, bonus: DerivedBonus

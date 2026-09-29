@@ -1,6 +1,6 @@
 import html
 import pathlib
-from typing import Literal, Optional, TextIO
+from typing import TYPE_CHECKING, Literal, Optional, TextIO
 
 import Core.Definitions as Definitions
 from Builds.EquipmentHandler import EquipmentEntry
@@ -29,6 +29,38 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
+
+if TYPE_CHECKING:
+    # Only needed for the type hint below; importing it at runtime would
+    # create a cycle (Builds.CharacterSheetAccumulator imports this module).
+    from Builds.CharacterSheetAccumulator import CharacterSheetData
+
+
+def get_output_folder(
+    data: "CharacterSheetData",
+    description_mode: Literal["table", "concise"] | None = None,
+) -> str:
+    if data.character_name is None:
+        raise ValueError("Character name must be set to generate file path.")
+    if data.character_subclass is None:
+        raise ValueError("Character subclass must be set to generate file path.")
+    if data.base_class is None:
+        raise ValueError("Base class must be set to generate file path.")
+    example_prefix = "example_" if data.is_example else ""
+    mode_suffix = f"_{description_mode}" if description_mode else ""
+    return (
+        f"Output/{example_prefix}{data.base_class.lower()}_"
+        f"{data.character_subclass.lower().replace(' / ', '_')}_"
+        f"{_slugify_name(data.character_name)}{mode_suffix}"
+    )
+
+
+def _slugify_name(name: str) -> str:
+    """Convert a character name into the filename format used for output sheets."""
+    name = name.lower().strip()
+    allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
+    cleaned = "".join(ch for ch in name if ch in allowed_chars)
+    return cleaned.replace(" ", "_")
 
 
 class HtmlCharacterSheetWriter:
@@ -1037,27 +1069,39 @@ class HtmlCharacterSheetWriter:
             FEATURE_CARD_CSS,
         )
 
-    def write_character_sheet_pages(
+    def write_character_sheet(
         self,
-        skill_config: Definitions.SkillConfig,
-        character: CharacterStatBlock,
-        output_folder: str,
-        armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
-        weapon_proficiencies: set[WeaponProficiency],
-        features: list[Feature],
-        weapons: list[AbstractWeapon],
-        weapon_masteries: list[AbstractWeapon],
-        fighting_styles: list[FightingStyle],
-        invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str], int]],
-        equipment_entries: list[EquipmentEntry],
-        starting_equipment_entry: Optional[EquipmentEntry],
-        tool_proficiencies: list[ToolProficiency],
-        experience_points: int = 0,
+        data: "CharacterSheetData",
+        skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
         description_mode: Literal["table", "concise"] | None = None,
         include_probability_tables: bool = False,
-    ):
+        output_folder: Optional[str] = None,
+    ) -> None:
+        """Render every page of `data`'s character sheet. `output_folder`
+        overrides the default `get_output_folder(data, description_mode)`
+        path - tests use this to render into a tmp directory instead of
+        `Output/`."""
+        # `setup_character_stat_block()` is the single validation entry
+        # point: it runs `data.validate()` (required fields, e.g. "Character
+        # name must be set.") before building anything, then
+        # `character.validate()` (skill/save requirements, multiclass
+        # ability prerequisites) once every effect has applied.
+        character = data.setup_character_stat_block()
+        if output_folder is None:
+            output_folder = get_output_folder(data, description_mode)
+        armors = data.armors
+        armor_proficiencies = character.armor_training
+        weapon_proficiencies = character.weapon_proficiencies
+        features = data.features
+        weapons = data.weapons
+        weapon_masteries = data.weapon_masteries
+        fighting_styles = data.fighting_styles
+        invocations = data.invocations
+        spells = data.spells
+        equipment_entries = data.equipment_entries
+        starting_equipment_entry = data.starting_equipment_entry
+        tool_proficiencies = character.tool_proficiencies
+
         output_folder_obj = pathlib.Path(output_folder)
         output_folder_obj.mkdir(parents=True, exist_ok=True)
         (output_folder_obj / "features").mkdir(parents=True, exist_ok=True)

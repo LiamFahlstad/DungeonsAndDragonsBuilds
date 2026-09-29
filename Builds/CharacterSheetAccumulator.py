@@ -266,14 +266,29 @@ class CharacterSheetData:
                 return
         self.items.append((item, quantity))
 
-    def setup_character_stat_block(self) -> CharacterStatBlock:
-        features = list(self.iter_features_with_extensions())
-        feature_ids = tuple(id(feature) for feature in features)
-        if (
-            self._character_cached is not None
-            and self._cached_feature_ids == feature_ids
-        ):
-            return self._character_cached
+    def validate(self) -> None:
+        """Checks that need no evaluation, run by `setup_character_stat_block()`
+        before it builds anything: every field a stat block needs is set
+        (builders fill them in piecemeal, so most are `Optional` while a
+        build is in progress), at most one worn body armor, and the
+        attunement limit. Rules that need evaluated stats are checked by
+        `CharacterStatBlock.validate()` once every effect has applied."""
+        if self.character_name is None:
+            raise ValueError("Character name must be set.")
+        if self.character_subclass is None:
+            raise ValueError("Character subclass must be set.")
+        if self.abilities is None:
+            raise ValueError("Character abilities must be set.")
+        if self.skills is None:
+            raise ValueError("Character skills must be set.")
+        if self.speed is None:
+            raise ValueError("Character speed must be set.")
+        if self.size is None:
+            raise ValueError("Character size must be set.")
+        if self.base_class is None:
+            raise ValueError("Character base class must be set.")
+        if self.saving_throws is None:
+            raise ValueError("Character saving throws must be set.")
 
         # Validate one-armor rule: at most one worn non-shield armor
         worn_body_armors = [
@@ -300,23 +315,26 @@ class CharacterSheetData:
                 f"but is attuned to {len(attuned)}: {', '.join(attuned)}."
             )
 
-        # Validate each attribute
-        if self.character_name is None:
-            raise ValueError("Character name must be set.")
-        if self.character_subclass is None:
-            raise ValueError("Character subclass must be set.")
-        if self.abilities is None:
-            raise ValueError("Character abilities must be set.")
-        if self.skills is None:
-            raise ValueError("Character skills must be set.")
-        if self.speed is None:
-            raise ValueError("Character speed must be set.")
-        if self.size is None:
-            raise ValueError("Character size must be set.")
-        if self.base_class is None:
-            raise ValueError("Character base class must be set.")
-        if self.saving_throws is None:
-            raise ValueError("Character saving throws must be set.")
+    def setup_character_stat_block(self) -> CharacterStatBlock:
+        features = list(self.iter_features_with_extensions())
+        feature_ids = tuple(id(feature) for feature in features)
+        if (
+            self._character_cached is not None
+            and self._cached_feature_ids == feature_ids
+        ):
+            return self._character_cached
+
+        self.validate()
+        # validate() raises if any of these are None; the asserts below just
+        # tell the type checker that too.
+        assert self.character_name is not None
+        assert self.character_subclass is not None
+        assert self.abilities is not None
+        assert self.skills is not None
+        assert self.speed is not None
+        assert self.size is not None
+        assert self.base_class is not None
+        assert self.saving_throws is not None
 
         combat = CombatStatBlock(
             speed=self.speed,
@@ -351,9 +369,9 @@ class CharacterSheetData:
         for effect in self.iter_stat_effects(features):
             effect.apply(character)
 
-        # Requirements are checked against the complete set of effects.
+        # Requirements are checked against the complete set of effects,
+        # including multiclass ability prerequisites.
         character.validate()
-        self._validate_multiclass_prerequisites(character)
 
         # These write into the weapon objects, not the stat block, and read
         # nothing from it - their order doesn't matter either.
@@ -387,23 +405,6 @@ class CharacterSheetData:
                 if isinstance(style, FightStyleModifier)
             ),
         ]
-
-    def _validate_multiclass_prerequisites(self, character: CharacterStatBlock):
-        """A multiclass character needs 13+ in the prerequisite abilities of
-        every class it has. Checked on the character's own final scores
-        (equipment bonuses don't count) - the engine has no per-level score
-        history, so this is the end-of-build approximation of "at the time
-        you multiclass"."""
-        if len(self.level_per_class) < 2:
-            return
-        for character_class in self.level_per_class:
-            for group in character_class.multiclass_prerequisites:
-                if not any(character.abilities.get_own_score(a) >= 13 for a in group):
-                    needed = " or ".join(a.value for a in group)
-                    raise ValueError(
-                        f"Multiclassing into or out of {character_class.value} "
-                        f"requires {needed} 13+."
-                    )
 
     def get_ability_modifier(self, ability: Ability) -> int:
         character = self.setup_character_stat_block()
