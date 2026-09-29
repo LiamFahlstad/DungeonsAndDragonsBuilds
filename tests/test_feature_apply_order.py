@@ -34,7 +34,10 @@ from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, Spell
 from CharacterContent.Features.CombatFeatures.FightingStyles import Defense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
+    GrantArmorTraining,
     GrantSense,
+    GrantToolProficiency,
+    GrantWeaponProficiency,
     InitiativeRollCondition,
     SavingThrowProficiency,
     SkillExpertise,
@@ -51,10 +54,12 @@ from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericForgeFea
 from CharacterContent.Features.SubClassFeatures2014.Rogue import (
     RogueSwashbucklerFeatures,
 )
-from CharacterContent.Items import Armor
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items.Weapons import WeaponProficiency
 from CharacterContent.Items.Items.Wondrous import BracersOfArchery, GauntletsOfStrength
 from Core.Definitions import (
     Ability,
+    ArmorType,
     CharacterClass,
     DamageType,
     DiceRollCondition,
@@ -208,6 +213,10 @@ def _stats(data):
         "condition_immunities": sorted(map(str, cs.condition_immunities)),
         "senses": sorted((str(k), v) for k, v in cs.senses.items()),
         "spell_save_dc_bonus": cs.spell_save_dc_bonus,
+        "weapons_proficient": [w.is_proficient(cs) for w in data.weapons],
+        "armor_training": sorted(map(str, cs.armor_training)),
+        "weapon_proficiencies": sorted(map(str, cs.weapon_proficiencies)),
+        "tool_proficiencies": sorted(t.name for t in cs.tool_proficiencies),
     }
 
 
@@ -653,3 +662,74 @@ def test_apply_methods_do_not_snapshot_derived_stats():
         "(e.g. SkillBonus(skill, lambda cs: cs.get_wisdom_modifier())):\n"
         + "\n".join(offenders)
     )
+
+
+# ── Weapon, armor and tool proficiencies are recorded, not snapshotted ───────
+
+
+class _GrantMartialWeapons(Feature):
+    def __init__(self):
+        super().__init__(name="Test Martial Weapon Training")
+
+    def apply(self, character_stat_block):
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+
+
+class TestProficienciesResolveOnRead:
+    def test_a_feature_can_grant_weapon_proficiency(self, make_character):
+        # Features used to have no way to grant this: proficiency lived on the
+        # sheet data and was stamped onto each weapon when it was added.
+        longsword = Weapons.Longsword()
+        for character in _in_every_order(
+            make_character, [longsword, _GrantMartialWeapons()], strength=16
+        ):
+            assert longsword.is_proficient(character)
+            # STR +3 plus the proficiency bonus (+2 at level 1).
+            assert longsword.calculate_total_attack_roll_bonus_int(character) == 5
+
+    def test_grant_added_after_the_weapon_reaches_the_sheet(self):
+        # A Bladesinger: trained with some martial melee weapons, not bows.
+        data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
+        longbow = Weapons.Longbow()
+        data.add_weapon(longbow)
+        assert not longbow.is_proficient(data.setup_character_stat_block())
+        # Granted after the weapon was added - no longer too late.
+        data.add_feature(_GrantMartialWeapons())
+        character = data.setup_character_stat_block()
+        assert longbow.is_proficient(character)
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+
+    def test_builder_proficiencies_reach_the_stat_block(self):
+        data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
+        character = data.setup_character_stat_block()
+        assert character.weapon_proficiencies == data.weapon_proficiencies
+        assert character.armor_training == data.armor_proficiencies
+        assert {type(t) for t in character.tool_proficiencies} == {
+            type(t) for t in data.tool_proficiencies
+        }
+
+    def test_bracers_of_archery_grant_bow_proficiency_while_worn(
+        self, make_character
+    ):
+        longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
+        worn = make_character()
+        BracersOfArchery().apply(worn)
+        assert longbow.is_proficient(worn)
+        assert not longsword.is_proficient(worn)
+        unworn = make_character()
+        BracersOfArchery(is_wearing=False).apply(unworn)
+        assert not longbow.is_proficient(unworn)
+
+    def test_armor_training_and_tools_from_features(self, make_character):
+        from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
+
+        effects = [
+            GrantArmorTraining([ArmorType.HEAVY]),
+            GrantToolProficiency([SmithsTools()]),
+            GrantToolProficiency([SmithsTools()]),  # same tool, second source
+        ]
+        for character in _in_every_order(make_character, effects):
+            assert character.armor_training == {ArmorType.HEAVY}
+            assert [t.name for t in character.tool_proficiencies] == [
+                SmithsTools().name
+            ]

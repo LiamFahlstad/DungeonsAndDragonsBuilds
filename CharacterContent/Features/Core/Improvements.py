@@ -36,10 +36,12 @@ while the sheet is being set up.
 """
 
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import Callable, Optional
 
 from Core.Definitions import (
     Ability,
+    ArmorType,
     Condition,
     DamageType,
     DiceRollCondition,
@@ -169,6 +171,42 @@ class SavingThrowProficiencyOrAlternative(CharacterImprovement):
         character_stat_block.saving_throws.add_proficiency_or_alternative(
             self.ability, self.alternatives
         )
+
+
+class GrantWeaponProficiency(CharacterImprovement):
+    """Grants proficiency with weapons, by WeaponProficiency value (a category
+    such as Martial weapons, or a single kind such as the Scimitar). Every
+    weapon works out whether it's covered when it's read, so the grant may
+    apply before or after the weapon is added."""
+
+    def __init__(self, weapon_proficiencies: list[Enum]):
+        self.weapon_proficiencies = weapon_proficiencies
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for weapon_proficiency in self.weapon_proficiencies:
+            character_stat_block.add_weapon_proficiency(weapon_proficiency)
+
+
+class GrantArmorTraining(CharacterImprovement):
+    """Grants training with armor types (Light, Medium, Heavy, Shield)."""
+
+    def __init__(self, armor_types: list[ArmorType]):
+        self.armor_types = armor_types
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for armor_type in self.armor_types:
+            character_stat_block.add_armor_training(armor_type)
+
+
+class GrantToolProficiency(CharacterImprovement):
+    """Grants proficiency with tools (ToolProficiency instances)."""
+
+    def __init__(self, tool_proficiencies: list):
+        self.tool_proficiencies = tool_proficiencies
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        for tool_proficiency in self.tool_proficiencies:
+            character_stat_block.add_tool_proficiency(tool_proficiency)
 
 
 class SavingThrowAdvantage(CharacterImprovement):

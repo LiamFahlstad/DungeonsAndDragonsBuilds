@@ -121,10 +121,9 @@ class CharacterBuilder:
             "Builds.Examples"
         )
 
-        # Equipment (starting gear plus everything since added/dropped via
-        # self.equipment_handler) is folded in last, once the sheet's other
-        # data - weapon proficiencies in particular, which add_weapon below
-        # depends on - is fully assembled.
+        # Equipment: starting gear plus everything since added/dropped via
+        # self.equipment_handler. (Weapon proficiency is worked out on read,
+        # so the order this happens in doesn't matter.)
         character_sheet_data.equipment_entries = (
             self.equipment_handler.equipment_entries
         )

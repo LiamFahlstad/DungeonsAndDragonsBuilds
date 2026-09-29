@@ -1,9 +1,11 @@
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.Improvements import (
+    GrantWeaponProficiency,
     AbilityScoreBonus,
     ArmorClassBonus,
     SpeedBonus,
 )
+from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from .Base import Item, ItemCategory, ItemRarity
 
 
@@ -260,6 +262,11 @@ class BracersOfArchery(Item):
             ),
             is_wearing=is_wearing,
             is_homebrew=False,
+            improvements=[
+                GrantWeaponProficiency(
+                    [WeaponProficiency.LONGBOW, WeaponProficiency.SHORTBOW]
+                )
+            ],
         )
 
     def apply_to_weapons(self, weapons: list) -> None:
@@ -267,7 +274,6 @@ class BracersOfArchery(Item):
             # Match by class name (magic bows subclass these) - importing the
             # Weapons package here would be circular.
             if any(cls.__name__ in self._BOWS for cls in type(weapon).__mro__):
-                weapon.player_is_proficient = True
                 if self._BONUS not in weapon.damage_roll_bonuses:
                     weapon.damage_roll_bonuses.append(self._BONUS)
 

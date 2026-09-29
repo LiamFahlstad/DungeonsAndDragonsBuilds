@@ -560,7 +560,7 @@ class DialogsMixin:
 
                     prof_str = (
                         "Proficient"
-                        if weapon.player_is_proficient
+                        if weapon.is_proficient(sb)
                         else "Not proficient"
                     )
                     type_line = "  ·  ".join(

@@ -51,6 +51,8 @@ without that second check a late extension would be missed.
 | AC | Every `ArmorClassFormula` (unarmored default, Unarmored Defense, worn armor), flat and formula bonuses | `calculate_armor_class`: the best applicable formula + bonuses |
 | Speed | Base + flat and formula bonuses | `CharacterStatBlock.speed` |
 | Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses`: best plain grant + every extension |
+| Weapon proficiency | `weapon_proficiencies` on the stat block (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
+| Armor training, tools | `armor_training`, `tool_proficiencies` on the stat block | Read directly (the same tool from two sources is listed once) |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `initiative`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
@@ -125,6 +127,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
 | "Your Strength must be at least N" | `StrengthRequirement(N, reason)` (checked in validation) |
+| "You gain proficiency with Martial weapons / Heavy armor / Smith's Tools" | `GrantWeaponProficiency([...])`, `GrantArmorTraining([...])`, `GrantToolProficiency([...])` |
 | An upgrade to an earlier feature | `parent.extend_feature(Upgrade())`. Its `apply()` runs too, so don't also `add_feature()` it |
 
 **Never read the stat block inside `apply()`.** That includes ability scores and modifiers,
@@ -176,10 +179,12 @@ These are rules or content decisions rather than ordering problems:
    in `CharacterBuilder.build()`, before background, ASI and feat increases.
 3. **Finesse weapon damage label.** When Strength and Dexterity modifiers are equal, the label
    depends on set ordering. The number is the same either way.
-4. **Weapon and armor proficiency live on `CharacterSheetData`, not the stat block**, and a
-   weapon's proficiency is decided when it's added (`CharacterSheetData.add_weapon`). Subclass
-   builders grant them directly; a feature's `apply()` can't, so a *feat* such as Martial Weapon
-   Training has no way to grant its proficiency.
+4. **Class and subclass builders still grant weapon/armor/tool proficiencies on the sheet data**
+   (`data.add_weapon_proficiency` etc.). `iter_stat_effects()` turns those sets into grant effects,
+   so they end up on the stat block like any feature's grants. Moving the builder grants into
+   features (a class/multiclass proficiency bundle, subclass features granting their own), and
+   giving multiclass builders their bundle, is the planned next step. Until then Martial Weapon
+   Training can be fixed with `GrantWeaponProficiency`, but multiclassing still grants nothing.
 5. **Choices with no parameter yet.** Otherworldly Glamour, Genie's Splendor, Knightly Envoy and
    Dragonscarred describe a skill or resistance choice the builders don't take, so only their
    choice-independent parts apply.

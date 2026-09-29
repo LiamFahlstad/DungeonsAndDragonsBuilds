@@ -14,11 +14,12 @@ from CharacterContent.Features.CombatFeatures.FightingStyles import (
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Items import Items
 from CharacterContent.Items.Armor import AbstractArmor
-from CharacterContent.Items.Weapons import (
-    AbstractWeapon,
-    WeaponProficiency,
-    is_proficient_with,
+from CharacterContent.Features.Core.Improvements import (
+    GrantArmorTraining,
+    GrantToolProficiency,
+    GrantWeaponProficiency,
 )
+from CharacterContent.Items.Weapons import AbstractWeapon, WeaponProficiency
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, CharacterClass
 from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
@@ -175,11 +176,9 @@ class CharacterSheetData:
         self.armors.append(armor)
 
     def add_weapon(self, weapon: AbstractWeapon):
+        # Proficiency isn't decided here: the weapon works it out on read
+        # against every proficiency on the stat block (AbstractWeapon.is_proficient).
         self._invalidate_cache()
-        if not weapon.player_is_proficient and is_proficient_with(
-            weapon, self.weapon_proficiencies
-        ):
-            weapon.player_is_proficient = True
         self.weapons.append(weapon)
 
     def add_weapon_mastery(self, weapon: AbstractWeapon):
@@ -315,13 +314,14 @@ class CharacterSheetData:
                 "All fields except weapon_masteries and fighting_styles must be set."
             )
 
+        character = self.setup_character_stat_block()
         CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet_pages(
             skill_config=skill_config,
-            character=self.setup_character_stat_block(),
+            character=character,
             output_folder=self.get_output_folder(description_mode),
             armors=self.armors,
-            armor_proficiencies=self.armor_proficiencies,
-            weapon_proficiencies=self.weapon_proficiencies,
+            armor_proficiencies=character.armor_training,
+            weapon_proficiencies=character.weapon_proficiencies,
             features=self.features,
             weapons=self.weapons,
             weapon_masteries=self.weapon_masteries,
@@ -330,7 +330,7 @@ class CharacterSheetData:
             spells=self.spells,
             equipment_entries=self.equipment_entries,
             starting_equipment_entry=self.starting_equipment_entry,
-            tool_proficiencies=self.tool_proficiencies,
+            tool_proficiencies=character.tool_proficiencies,
             experience_points=self.experience_points,
             description_mode=description_mode,
             include_probability_tables=include_probability_tables,
@@ -439,13 +439,17 @@ class CharacterSheetData:
         return character
 
     def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
-        """Everything that records effects on the stat block: features and
-        their extensions, armor, weapons, items and stat fighting styles
-        (Defense). Each has apply(character_stat_block); the order is
+        """Everything that records effects on the stat block: the builders'
+        armor/weapon/tool proficiencies, features and their extensions, armor,
+        weapons, items and stat fighting styles (Defense). Each has apply(character_stat_block); the order is
         irrelevant."""
         if features is None:
             features = list(self.iter_features_with_extensions())
         return [
+            # Proficiencies granted directly by the class/subclass builders.
+            GrantArmorTraining(sorted(self.armor_proficiencies, key=str)),
+            GrantWeaponProficiency(sorted(self.weapon_proficiencies, key=str)),
+            GrantToolProficiency(list(self.tool_proficiencies)),
             *features,
             *self.armors,
             *self.weapons,

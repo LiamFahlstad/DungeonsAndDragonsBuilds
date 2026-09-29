@@ -1,4 +1,5 @@
-from typing import Callable, Optional
+from enum import Enum
+from typing import Any, Callable, Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
@@ -81,6 +82,14 @@ class CharacterStatBlock:
         # (ability, minimum score, reason) - checked by validate() once
         # everything has applied, against the character's own score.
         self._ability_requirements: list[tuple[Ability, int, str]] = []
+        # Weapon, armor and tool proficiencies from any source (class,
+        # subclass, feat, item). A weapon works out whether its wielder is
+        # proficient on read, against these (AbstractWeapon.is_proficient).
+        # Typed loosely: the WeaponProficiency enum and ToolProficiency live in
+        # CharacterContent, which imports this module.
+        self.weapon_proficiencies: set[Enum] = set()
+        self.armor_training: set[Definitions.ArmorType] = set()
+        self.tool_proficiencies: list[Any] = []
 
     @property
     def is_wearing_armor(self) -> bool:
@@ -453,6 +462,18 @@ class CharacterStatBlock:
             (range_feet, f"{source} (+{range_feet} ft. if already had)")
             for range_feet, source in self._sense_extensions.get(sense, [])
         ]
+
+    def add_weapon_proficiency(self, weapon_proficiency: Enum) -> None:
+        self.weapon_proficiencies.add(weapon_proficiency)
+
+    def add_armor_training(self, armor_type: Definitions.ArmorType) -> None:
+        self.armor_training.add(armor_type)
+
+    def add_tool_proficiency(self, tool_proficiency: Any) -> None:
+        """Proficiency with a tool (a ToolProficiency). The same tool from
+        several sources is listed once."""
+        if not any(type(t) is type(tool_proficiency) for t in self.tool_proficiencies):
+            self.tool_proficiencies.append(tool_proficiency)
 
     def add_language(self, language: Definitions.Language, source: str) -> None:
         self.languages.setdefault(language, []).append(source)

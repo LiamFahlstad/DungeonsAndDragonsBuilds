@@ -12,18 +12,23 @@ class TestBracersOfArchery:
     def test_bows_get_proficiency_and_damage(self, make_character):
         character = make_character(dexterity=16)
         longbow, shortbow = Weapons.Longbow(), Weapons.Shortbow()
-        Items.BracersOfArchery().apply_to_weapons([longbow, shortbow])
+        assert not longbow.is_proficient(character)
+        bracers = Items.BracersOfArchery()
+        bracers.apply(character)  # proficiency: recorded on the stat block
+        bracers.apply_to_weapons([longbow, shortbow])  # +2 damage
         for bow in (longbow, shortbow):
-            assert bow.player_is_proficient
+            assert bow.is_proficient(character)
             assert bow.calculate_damage_bonus_int(character) == 3 + 2
 
     def test_other_weapons_unaffected(self, make_character):
         character = make_character(dexterity=16, strength=16)
         crossbow, sword = Weapons.LightCrossbow(), Weapons.Longsword()
-        Items.BracersOfArchery().apply_to_weapons([crossbow, sword])
+        bracers = Items.BracersOfArchery()
+        bracers.apply(character)
+        bracers.apply_to_weapons([crossbow, sword])
         assert crossbow.calculate_damage_bonus_int(character) == 3
         assert sword.calculate_damage_bonus_int(character) == 3
-        assert not crossbow.player_is_proficient
+        assert not crossbow.is_proficient(character)
 
     def test_does_not_change_dexterity(self, make_character):
         character = make_character(dexterity=16)

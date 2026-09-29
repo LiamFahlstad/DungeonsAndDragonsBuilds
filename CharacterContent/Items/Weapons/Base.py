@@ -158,10 +158,19 @@ class AbstractWeapon(Item, ABC):
         )
         return f"{ability_modifier} (ability mod: {ability})"
 
+    def is_proficient(self, character_stat_block: CharacterStatBlock) -> bool:
+        """Whether the wielder is proficient with this weapon: an explicit
+        player_is_proficient override (e.g. Unarmed Strike), or any weapon
+        proficiency recorded on the stat block - worked out on read, so it
+        doesn't matter when the proficiency or the weapon was added."""
+        return self.player_is_proficient or is_proficient_with(
+            self, character_stat_block.weapon_proficiencies
+        )
+
     def _calculate_proficiency_damage_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> int:
-        if self.player_is_proficient:
+        if self.is_proficient(character_stat_block):
             proficiency_bonus = character_stat_block.get_proficiency_bonus()
             return proficiency_bonus
         return 0
@@ -299,11 +308,19 @@ def weapon_matches_proficiency(
             and WeaponProperty.HEAVY not in weapon.properties
             and WeaponProperty.TWO_HANDED not in weapon.properties
         )
-    if proficiency == WeaponProficiency.SCIMITAR:
-        # By class name, so magic scimitars (subclasses) match too - importing
-        # the weapon module here would be circular.
-        return any(cls.__name__ == "Scimitar" for cls in type(weapon).__mro__)
+    if proficiency in _SINGLE_WEAPON_PROFICIENCIES:
+        # By class name, so magic versions (subclasses) match too - importing
+        # the weapon modules here would be circular.
+        kind = _SINGLE_WEAPON_PROFICIENCIES[proficiency]
+        return any(cls.__name__ == kind for cls in type(weapon).__mro__)
     raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
+
+
+_SINGLE_WEAPON_PROFICIENCIES = {
+    WeaponProficiency.SCIMITAR: "Scimitar",
+    WeaponProficiency.LONGBOW: "Longbow",
+    WeaponProficiency.SHORTBOW: "Shortbow",
+}
 
 
 def is_proficient_with(

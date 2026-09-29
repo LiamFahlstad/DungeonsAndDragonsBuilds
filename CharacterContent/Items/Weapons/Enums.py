@@ -86,8 +86,10 @@ class WeaponProficiency(Enum):
     MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED = (
         "Melee Martial weapons without the Two-Handed or Heavy property"
     )
-    # Single weapon kinds, granted by some subclasses (College of Swords).
+    # Single weapon kinds (College of Swords, Bracers of Archery).
     SCIMITAR = "Scimitar"
+    LONGBOW = "Longbow"
+    SHORTBOW = "Shortbow"
 
 
 class WeaponDamageTypes(Enum):

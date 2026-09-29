@@ -348,7 +348,9 @@ def _write_single_weapon(
         extra_damages = " + ".join(ed.format_damage() for ed in weapon.extra_damage)
         damage_roll_str += f" + {extra_damages}"
 
-    proficient_label = "Proficient" if weapon.player_is_proficient else "Not proficient"
+    proficient_label = (
+        "Proficient" if weapon.is_proficient(character_stat_block) else "Not proficient"
+    )
 
     mastery_label = ""
     if weapon.mastery:
