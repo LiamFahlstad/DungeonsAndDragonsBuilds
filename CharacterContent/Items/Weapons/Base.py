@@ -130,16 +130,20 @@ class AbstractWeapon(Item, ABC):
             ability = self._ability_override
             return character_stat_block.get_ability_modifier(ability), ability.value
 
-        abilities_to_consider = set()
-        abilities_to_consider.add(self.ability)
+        abilities_to_consider = {self.ability}
 
         if WeaponProperty.FINESSE in self.properties:
             abilities_to_consider.add(Ability.STRENGTH)
             abilities_to_consider.add(Ability.DEXTERITY)
 
+        # Ties (e.g. equal Strength/Dexterity on a Finesse weapon) keep the
+        # first ability in Ability declaration order - iterating a set of
+        # Ability members directly would pick arbitrarily, since Ability
+        # inherits str and str hashing is randomized per process.
+        order = list(Ability)
         best_ability_modifier = -9999
         best_ability = None
-        for ability in abilities_to_consider:
+        for ability in sorted(abilities_to_consider, key=order.index):
             ability_modifier = character_stat_block.get_ability_modifier(ability)
             if ability_modifier > best_ability_modifier:
                 best_ability_modifier = ability_modifier
