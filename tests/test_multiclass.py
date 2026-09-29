@@ -14,6 +14,7 @@ from Builds.Tests.SpellSlotTestWizard3Warlock3 import (
 )
 from Builds.Tests.SpellSlotTestWizard5 import SpellSlotTestWizard5CharacterBuilder
 from Core.Definitions import Ability, CharacterClass
+from Utils.CharacterSheetWriters import get_output_folder
 
 A = Ability
 
@@ -77,4 +78,4 @@ class TestSubclassName:
 
     def test_output_folder_has_no_slash(self):
         data = SpellSlotTestPaladin4Wizard3CharacterBuilder().build()
-        assert "/" not in data.get_output_folder().removeprefix("Output/")
+        assert "/" not in get_output_folder(data).removeprefix("Output/")

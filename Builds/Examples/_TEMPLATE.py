@@ -286,7 +286,9 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 #   Run: python -c "
 #   import Core.Definitions as Definitions
 #   from Builds.Examples._TEMPLATE import YourCharacterNameCharacterBuilder
-#   YourCharacterNameCharacterBuilder().build().create_character_sheet(
+#   from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
+#   HtmlCharacterSheetWriter().write_character_sheet(
+#       YourCharacterNameCharacterBuilder().build(),
 #       skill_config=Definitions.SkillConfig.DEFAULT
 #   )
 #   "

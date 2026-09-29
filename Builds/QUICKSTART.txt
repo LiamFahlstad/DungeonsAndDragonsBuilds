@@ -35,7 +35,9 @@ Step-by-step instructions to create your first build:
    python -c "
    import Definitions
    from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
-   MyNewCharacterBuilder().build().create_character_sheet(
+   from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
+   HtmlCharacterSheetWriter().write_character_sheet(
+       MyNewCharacterBuilder().build(),
        skill_config=Definitions.SkillConfig.DEFAULT
    )
    "

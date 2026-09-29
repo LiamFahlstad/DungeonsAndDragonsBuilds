@@ -42,6 +42,7 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
+from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
 
 ALL_BUILDS = {**BuildSelector.builds(), **ExampleSelector.builds()}
 
@@ -259,13 +260,12 @@ class TestArmorTraining:
         assert character.calculate_armor_class() == 10 + 2 + 2
         assert character.calculate_armor_class(ignore_shield=True) == 10 + 2 + 3
 
-    def test_sheet_shows_the_warning(self, tmp_path, monkeypatch):
+    def test_sheet_shows_the_warning(self, tmp_path):
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()  # no armor training
         data.add_armor(Armor.LeatherArmor())
-        monkeypatch.setattr(
-            type(data), "get_output_folder", lambda self, mode=None: str(tmp_path)
+        HtmlCharacterSheetWriter().write_character_sheet(
+            data, output_folder=str(tmp_path)
         )
-        data.create_character_sheet()
         page = (tmp_path / "character.html").read_text(encoding="utf-8")
         assert "class='sheet-warning'" in page
         assert "without Light armor training" in page

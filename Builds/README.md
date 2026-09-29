@@ -341,7 +341,9 @@ This generates HTML character sheets in the `Output/` directory for all register
 python -c "
 import Definitions
 from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
-MyCustomBarbarianCharacterBuilder().build().create_character_sheet(
+from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
+HtmlCharacterSheetWriter().write_character_sheet(
+    MyCustomBarbarianCharacterBuilder().build(),
     skill_config=Definitions.SkillConfig.DEFAULT
 )
 "

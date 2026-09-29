@@ -143,12 +143,14 @@ if __name__ == "__main__":
 
     skill_config = Definitions.SkillConfig.DEFAULT
     builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
+    writer = HtmlCharacterSheetWriter()
     for build_class in builds.values():
         character_sheet_data = build_class.build()
-        character_sheet_data.create_character_sheet(
+        writer.write_character_sheet(
+            character_sheet_data,
             skill_config=skill_config,
             description_mode=args.concise,
             include_probability_tables=args.probability_tables,
         )
 
-    HtmlCharacterSheetWriter().write_blank_character_template("Output/_blank_template")
+    writer.write_blank_character_template("Output/_blank_template")

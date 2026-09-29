@@ -1,5 +1,5 @@
 import copy
-from typing import Any, Iterator, Literal, Optional
+from typing import Any, Iterator, Optional
 
 import attr
 
@@ -21,7 +21,6 @@ from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.CombatStatBlock import CombatStatBlock
 from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
 from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from Utils import CharacterSheetWriters
 
 # Scalar values merge_with treats as "not set": an incoming value equal to one
 # of these never overwrites an existing value. 0 is included so that e.g. a
@@ -267,51 +266,6 @@ class CharacterSheetData:
                 return
         self.items.append((item, quantity))
 
-    def create_character_sheet(
-        self,
-        skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
-        description_mode: Literal["table", "concise"] | None = None,
-        include_probability_tables: bool = False,
-    ):
-        if any(
-            field is None
-            for field in [
-                self.character_name,
-                self.character_subclass,
-                self.abilities,
-                self.skills,
-                self.speed,
-                self.size,
-                self.base_class,
-                self.saving_throws,
-            ]
-        ):
-            raise ValueError(
-                "All fields except weapon_masteries and fighting_styles must be set."
-            )
-
-        character = self.setup_character_stat_block()
-        CharacterSheetWriters.HtmlCharacterSheetWriter().write_character_sheet_pages(
-            skill_config=skill_config,
-            character=character,
-            output_folder=self.get_output_folder(description_mode),
-            armors=self.armors,
-            armor_proficiencies=character.armor_training,
-            weapon_proficiencies=character.weapon_proficiencies,
-            features=self.features,
-            weapons=self.weapons,
-            weapon_masteries=self.weapon_masteries,
-            fighting_styles=self.fighting_styles,
-            invocations=self.invocations,
-            spells=self.spells,
-            equipment_entries=self.equipment_entries,
-            starting_equipment_entry=self.starting_equipment_entry,
-            tool_proficiencies=character.tool_proficiencies,
-            experience_points=self.experience_points,
-            description_mode=description_mode,
-            include_probability_tables=include_probability_tables,
-        )
-
     def setup_character_stat_block(self) -> CharacterStatBlock:
         features = list(self.iter_features_with_extensions())
         feature_ids = tuple(id(feature) for feature in features)
@@ -459,23 +413,6 @@ class CharacterSheetData:
         character = self.setup_character_stat_block()
         return character.calculate_attack_bonus_for_ability(ability)
 
-    def get_output_folder(
-        self, description_mode: Literal["table", "concise"] | None = None
-    ) -> str:
-        if self.character_name is None:
-            raise ValueError("Character name must be set to generate file path.")
-        if self.character_subclass is None:
-            raise ValueError("Character subclass must be set to generate file path.")
-        if self.base_class is None:
-            raise ValueError("Base class must be set to generate file path.")
-        example_prefix = "example_" if self.is_example else ""
-        mode_suffix = f"_{description_mode}" if description_mode else ""
-        return (
-            f"Output/{example_prefix}{self.base_class.lower()}_"
-            f"{self.character_subclass.lower().replace(' / ', '_')}_"
-            f"{self._slugify_name(self.character_name)}{mode_suffix}"
-        )
-
     def merge_with(self, other: "CharacterSheetData"):
         """Merge another CharacterSheetData into this one.
 
@@ -528,11 +465,3 @@ class CharacterSheetData:
                 "Spell casting ability must be provided if not already set."
             )
         return self.spell_casting_ability
-
-    @staticmethod
-    def _slugify_name(name: str) -> str:
-        """Convert a character name into the filename format used for output sheets."""
-        name = name.lower().strip()
-        allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
-        cleaned = "".join(ch for ch in name if ch in allowed_chars)
-        return cleaned.replace(" ", "_")
