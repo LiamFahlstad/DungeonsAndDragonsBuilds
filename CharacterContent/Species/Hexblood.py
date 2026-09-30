@@ -22,9 +22,7 @@ class HexbloodSpeciesBuilder(SpeciesBuilder):
         ], "Hex Magic uses Intelligence, Wisdom, or Charisma."
         self.spell_casting_ability = spell_casting_ability
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = HexbloodFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
@@ -33,5 +31,3 @@ class HexbloodSpeciesBuilder(SpeciesBuilder):
         data.add_feature(HexbloodFeatures.HexMagic())
         data.add_spell(BardLevel1Spells.DISGUISE_SELF, self.spell_casting_ability)
         data.add_spell(WarlockLevel1Spells.HEX, self.spell_casting_ability)
-
-        return data

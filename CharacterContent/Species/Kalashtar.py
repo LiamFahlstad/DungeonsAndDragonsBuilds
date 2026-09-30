@@ -10,9 +10,7 @@ class KalashtarSpeciesBuilder(SpeciesBuilder):
             name="Kalashtar",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = KalashtarFeatures.SPEED  # Given by your species
         data.size = CreatureSize.MEDIUM  # Given by your species
 
@@ -20,5 +18,3 @@ class KalashtarSpeciesBuilder(SpeciesBuilder):
         data.add_feature(KalashtarFeatures.MentalDiscipline())
         data.add_feature(KalashtarFeatures.MindLink())
         data.add_feature(KalashtarFeatures.SeveredFromDreams())
-
-        return data

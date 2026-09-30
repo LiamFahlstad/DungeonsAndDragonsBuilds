@@ -16,9 +16,7 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
             name="Forest Gnome",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species
 
@@ -33,8 +31,6 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
             additional_ruling="You also always have the Speak with Animals spell prepared. You can cast it without a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell.",
         )
 
-        return data
-
 
 class RockGnomeSpeciesBuilder(SpeciesBuilder):
     def __init__(
@@ -44,9 +40,7 @@ class RockGnomeSpeciesBuilder(SpeciesBuilder):
             name="Rock Gnome",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species
 
@@ -56,5 +50,3 @@ class RockGnomeSpeciesBuilder(SpeciesBuilder):
 
         data.add_spell(BardLevel0Spells.MENDING, Ability.INTELLIGENCE)
         data.add_spell(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
-
-        return data

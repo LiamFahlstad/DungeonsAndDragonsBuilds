@@ -12,9 +12,7 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
             name="Aasimar",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = AasimarFeatures.SPEED  # Given by your species
         data.size = AasimarFeatures.SIZE  # Given by your species
 
@@ -25,5 +23,3 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
         data.add_feature(AasimarFeatures.HealingHands())
         if self.character_level >= 3:
             data.add_feature(AasimarFeatures.CelestialRevelation())
-
-        return data

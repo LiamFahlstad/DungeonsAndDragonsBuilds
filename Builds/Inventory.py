@@ -1,15 +1,14 @@
-"""Consolidated equipment/item handling for a character build.
+"""A character's inventory: starting equipment, starting gold, adventuring
+gear picked up over time, and dropping items.
 
-Owns starting equipment, starting gold, adventuring gear picked up over
-time, and dropping items - wired into CharacterBuilder, which seeds a
-handler from its StarterClassBuilder and delegates add_adventuring_gear/
-drop_item/get_starting_item to it. Also owns the EquipmentEntry/Bought
-types: they live here (a leaf module with no dependency on
-CharacterSheetAccumulator.py or the character sheet writer) rather than on
-CharacterSheetData, specifically so CharacterSheetAccumulator.py,
-CharacterSheetWriters.py, and CharacterStatBlock.py can all import them as
-plain top-level imports instead of needing a TYPE_CHECKING-guarded one to
-dodge a circular import.
+CharacterBuilder seeds an Inventory from its StarterClassBuilder and
+delegates add_adventuring_gear/drop_item/get_starting_item to it; build()
+hands each CharacterSheetData its own copy (CharacterSheetData.inventory),
+whose armors/weapons/items are what AC, attacks and carrying capacity read.
+Also owns the EquipmentEntry/Bought types: they live here (a leaf module
+with no dependency on CharacterSheetAccumulator.py or the character sheet
+writer) so CharacterSheetAccumulator.py and CharacterSheetWriters.py can
+import them as plain top-level imports without a circular import.
 """
 
 from typing import Optional
@@ -99,16 +98,63 @@ def _unwrap_bought(
     return maybe_bought, None
 
 
-class EquipmentHandler:
-    """Owns everything item-related for a single character build: starting
-    equipment, starting gold, adventuring gear picked up over time, and
-    dropping items."""
+class Inventory:
+    """Everything item-related for a single character: starting equipment,
+    starting gold, adventuring gear picked up over time, and dropping
+    items. The gear is grouped into labeled EquipmentEntry batches, so the
+    sheet can show where each item came from; armors/weapons/items are the
+    flat views everything else reads."""
+
+    # Entry for gear added straight to a sheet (CharacterSheetData.add_armor
+    # and friends) rather than through starting equipment or
+    # add_adventuring_gear.
+    OTHER_EQUIPMENT_LABEL = "Other Equipment"
 
     def __init__(self):
         self._entries: list[EquipmentEntry] = []
         self._starting_entry: Optional[EquipmentEntry] = None
         self._starting_gold: Optional[float] = None
         self._unarmed_strike: Optional[Weapons.UnarmedStrike] = None
+        self._other_entry: Optional[EquipmentEntry] = None
+
+    def copy(self) -> "Inventory":
+        """An independent Inventory holding the same gear: adding, dropping
+        or consuming on either one never changes the other. The item objects
+        themselves are shared - nothing changes an item once it's made
+        (weapon bonuses are recorded on the stat block, see
+        StatBlocks/WeaponBonuses.py)."""
+        copied = Inventory()
+        for entry in self._entries:
+            entry_copy = attr.evolve(
+                entry,
+                armors=list(entry.armors),
+                weapons=list(entry.weapons),
+                items=list(entry.items),
+                purchases=list(entry.purchases),
+            )
+            copied._entries.append(entry_copy)
+            if entry is self._starting_entry:
+                copied._starting_entry = entry_copy
+            if entry is self._other_entry:
+                copied._other_entry = entry_copy
+        copied._starting_gold = self._starting_gold
+        copied._unarmed_strike = self._unarmed_strike
+        return copied
+
+    def _get_other_entry(self) -> EquipmentEntry:
+        if self._other_entry is None:
+            self._other_entry = EquipmentEntry(label=self.OTHER_EQUIPMENT_LABEL)
+            self._entries.append(self._other_entry)
+        return self._other_entry
+
+    def add_armor(self, armor: Armor.AbstractArmor) -> None:
+        self._get_other_entry().armors.append(armor)
+
+    def add_weapon(self, weapon: Weapons.AbstractWeapon) -> None:
+        self._get_other_entry().weapons.append(weapon)
+
+    def add_item(self, item: Items.Item, quantity: int = 1) -> None:
+        self._get_other_entry().items.append((item, quantity))
 
     def set_starting_equipment(
         self,
@@ -162,11 +208,6 @@ class EquipmentHandler:
         self._starting_entry = entry
         self._entries.append(entry)
         # Never clamp this toward zero here - that's a display-time concern.
-        # (merge_with's scalar-merge rule treats a literal 0 as "unset" and
-        # drops it, which matters once this gets threaded through
-        # CharacterSheetData - not relevant to this standalone file today,
-        # but easy to reintroduce by "fixing" a negative value in the wrong
-        # place later.)
         self._starting_gold = _BASELINE_STARTING_GOLD[base_class] - _entry_value(entry)
         return entry
 
@@ -327,10 +368,9 @@ class EquipmentHandler:
 
     @property
     def items(self) -> list[tuple[Items.Item, int]]:
-        """Same-type item stacks are merged across entries (matching
-        CharacterSheetData.add_item), since that's what carrying-capacity
-        math expects: the first-seen instance of a type absorbs later
-        same-type quantities."""
+        """Same-type item stacks are merged across entries, since that's what
+        carrying-capacity math expects: the first-seen instance of a type
+        absorbs later same-type quantities."""
         merged: list[tuple[Items.Item, int]] = []
         for entry in self._entries:
             for item, quantity in entry.items:

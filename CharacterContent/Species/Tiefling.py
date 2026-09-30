@@ -31,9 +31,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
             name="Tiefling",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = TieflingFeatures.SPEED  # Given by your species
         data.size = TieflingFeatures.SIZE  # Given by your species
 
@@ -81,4 +79,3 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
                 cantrip=cantrip, spell_1=spell_1, spell_2=spell_2
             )
         )
-        return data

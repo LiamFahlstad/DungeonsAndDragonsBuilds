@@ -16,9 +16,7 @@ class LupinSpeciesBuilder(SpeciesBuilder):
         self.size = size
         self.werewolf_instincts_skill = werewolf_instincts_skill
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = LupinFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
@@ -26,5 +24,3 @@ class LupinSpeciesBuilder(SpeciesBuilder):
         data.add_feature(LupinFeatures.FeralPounce())
         data.add_feature(LupinFeatures.Howl())
         data.add_feature(LupinFeatures.WerewolfInstincts(self.werewolf_instincts_skill))
-
-        return data

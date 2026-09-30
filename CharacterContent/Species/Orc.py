@@ -11,14 +11,10 @@ class OrcSpeciesBuilder(SpeciesBuilder):
             name="Orc",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = OrcFeatures.SPEED  # Given by your species
         data.size = OrcFeatures.SIZE  # Given by your species
 
         data.add_feature(OrcFeatures.Darkvision())
         data.add_feature(OrcFeatures.AdrenalineRush())
         data.add_feature(OrcFeatures.RelentlessEndurance())
-
-        return data

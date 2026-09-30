@@ -6,7 +6,7 @@ from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     StarterClassBuilder,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Builds.EquipmentHandler import Bought, EquipmentHandler
+from Builds.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -23,8 +23,8 @@ class CharacterBuilder:
         self.starter_class_builder = starter_class_builder
         self.species_builder = species_builder
         self.multiclass_builders = multiclass_builders or []
-        self.equipment_handler = EquipmentHandler()
-        self.equipment_handler.set_starting_equipment(
+        self.inventory = Inventory()
+        self.inventory.set_starting_equipment(
             base_class=starter_class_builder.base_class,
             default_equipment=starter_class_builder.default_equipment,
             add_default_equipment=starter_class_builder.add_default_equipment,
@@ -50,7 +50,7 @@ class CharacterBuilder:
         purchased instead. Pass gold=X for a net GP change from this entry
         that isn't tied to a specific item (loot found, a cost paid) -
         positive gains, negative spends."""
-        self.equipment_handler.add_adventuring_gear(
+        self.inventory.add_adventuring_gear(
             label, armor=armor, weapons=weapons, items=items, gold=gold
         )
         return self
@@ -67,14 +67,14 @@ class CharacterBuilder:
         class was added anywhere; get_starting_item() gives you an
         unambiguous reference to something from Starting Equipment
         specifically, or otherwise pass the specific instance instead."""
-        self.equipment_handler.drop_item(item)
+        self.inventory.drop_item(item)
         return self
 
     def consume_item(self, item_type: type, quantity: int = 1) -> "CharacterBuilder":
         """Reduce a stackable item's quantity (use 1 of 5 potions, fire 3 of
         20 arrows) instead of dropping the whole stack. See
-        EquipmentHandler.consume_item()."""
-        self.equipment_handler.consume_item(item_type, quantity)
+        Inventory.consume_item()."""
+        self.inventory.consume_item(item_type, quantity)
         return self
 
     def get_starting_item(
@@ -84,9 +84,11 @@ class CharacterBuilder:
         drop_item() it later even after adventuring gear adds more of the
         same type. Stays unambiguous no matter what's added afterward, since
         it only ever looks at Starting Equipment."""
-        return self.equipment_handler.get_starting_item(item_type)
+        return self.inventory.get_starting_item(item_type)
 
     def build(self) -> CharacterSheetData:
+        # Every builder (starting class, multiclasses, species) grants
+        # straight into this one sheet.
         character_sheet_data = CharacterSheetData()
         applied_level_features = AppliedLevelFeatures()
 
@@ -113,7 +115,7 @@ class CharacterBuilder:
 
         self.species_builder.set_character_level(character_sheet_data.character_level)
         self.species_builder.set_spell_casting_ability(ability_with_highest_modifier)
-        character_sheet_data.merge_with(self.species_builder.build())
+        self.species_builder.build(character_sheet_data)
 
         character_sheet_data.character_name = self.name
         character_sheet_data.is_example = type(self).__module__.startswith(
@@ -121,24 +123,9 @@ class CharacterBuilder:
         )
 
         # Equipment: starting gear plus everything since added/dropped via
-        # self.equipment_handler. (Weapon proficiency is worked out on read,
-        # so the order this happens in doesn't matter.)
-        character_sheet_data.equipment_entries = (
-            self.equipment_handler.equipment_entries
-        )
-        character_sheet_data.starting_equipment_entry = (
-            self.equipment_handler.starting_equipment_entry
-        )
-        character_sheet_data.starting_gold = self.equipment_handler.starting_gold
-        character_sheet_data.current_gold = self.equipment_handler.current_gold
-        for armor in self.equipment_handler.armors:
-            character_sheet_data.add_armor(armor)
-        # Weapons are shared, not copied: evaluating a character never
-        # changes them (fighting styles and items record their weapon bonuses
-        # on the stat block - see StatBlocks/WeaponBonuses.py).
-        for weapon in self.equipment_handler.weapons:
-            character_sheet_data.add_weapon(weapon)
-        for item, quantity in self.equipment_handler.items:
-            character_sheet_data.add_item(item, quantity)
+        # self.inventory. A copy, so gear added to or dropped from either one
+        # later never changes the other. (Weapon proficiency is worked out on
+        # read, so the order this happens in doesn't matter.)
+        character_sheet_data.inventory = self.inventory.copy()
 
         return character_sheet_data

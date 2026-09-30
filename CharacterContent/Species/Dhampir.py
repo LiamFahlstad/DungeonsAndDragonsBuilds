@@ -16,9 +16,7 @@ class DhampirSpeciesBuilder(SpeciesBuilder):
         self.character_level = character_level
         self.size = size
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = DhampirFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
@@ -26,5 +24,3 @@ class DhampirSpeciesBuilder(SpeciesBuilder):
         data.add_feature(DhampirFeatures.SpiderClimb(self.character_level))
         data.add_feature(DhampirFeatures.TraceOfUndeath())
         data.add_feature(DhampirFeatures.VampiricBite())
-
-        return data

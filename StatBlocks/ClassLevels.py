@@ -13,11 +13,10 @@ class ClassLevels:
     ClassProficiencies) and the subclass chosen for each class that has
     reached its subclass level.
 
-    Built up by ClassBuilder.create() as each class builder's partial
-    CharacterSheetData merges into the character's one CharacterSheetData
-    (see merge), and shared - not copied - with the CharacterStatBlock built
-    from that sheet, so both read the same levels, history and subclasses no
-    matter which changed first.
+    Built up by ClassBuilder.create() as each class builder grants straight
+    into the character's one CharacterSheetData, and shared - not copied -
+    with the CharacterStatBlock built from that sheet, so both read the same
+    levels, history and subclasses no matter which changed first.
     """
 
     base_class: Optional[CharacterClass] = None
@@ -68,27 +67,3 @@ class ClassLevels:
             assert start is not None
             segments.append((start, self.character_level, current_class))
         return segments
-
-    def merge(self, other: "ClassLevels") -> "ClassLevels":
-        """A new ClassLevels combining `other` (a later class builder's
-        partial ClassLevels) on top of self, matching
-        CharacterSheetData.merge_with's per-field-kind rules: dicts combine
-        with `other`'s entries winning on key collisions (so a later builder
-        redeclaring an existing class states that class's final total level,
-        e.g. a starter Paladin 1 resumed by a Paladin 19 builder ends at 19,
-        not 20) and scalars are overwritten only when `other`'s value is
-        actually set, so an untouched default never erases an earlier
-        builder's value (e.g. a MulticlassBuilder, which never sets
-        base_class, can't clear the character's starting class)."""
-        return ClassLevels(
-            base_class=(
-                other.base_class if other.base_class is not None else self.base_class
-            ),
-            level_per_class={**self.level_per_class, **other.level_per_class},
-            class_by_character_level={
-                **self.class_by_character_level,
-                **other.class_by_character_level,
-            },
-            character_subclass=other.character_subclass or self.character_subclass,
-            active_subclasses={**self.active_subclasses, **other.active_subclasses},
-        )

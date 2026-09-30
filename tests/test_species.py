@@ -554,6 +554,22 @@ class TestGrantedSpellsAndCantrips:
         assert "Mending" in spell_names(data)
         assert "Prestidigitation" in spell_names(data)
 
+    def test_species_writes_into_an_existing_sheet(self):
+        # Species grant straight into the character's sheet - and a species
+        # spell the class already granted (Rock Gnome Prestidigitation on a
+        # Wizard) is listed from both sources rather than failing the build.
+        from Builds.CharacterSheetAccumulator import CharacterSheetData
+        from CharacterContent.Spells.SpellLists import BardLevel0Spells
+
+        data = CharacterSheetData()
+        data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
+        assert RockGnomeSpeciesBuilder().build(data) is data
+        assert spell_names(data).count("Prestidigitation") == 2
+        assert data.speed == GnomeFeatures.SPEED
+        # Only the species' own grants skip the duplicate check.
+        with pytest.raises(ValueError, match="already added"):
+            data.add_spell(BardLevel0Spells.MENDING, Ability.INTELLIGENCE)
+
     def test_aasimar_light_cantrip(self):
         builder = AasimarSpeciesBuilder(character_level=1)
         builder.set_character_level(1)

@@ -28,9 +28,7 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
         ], "Fey Gift uses Intelligence, Wisdom, or Charisma."
         self.spell_casting_ability = spell_casting_ability
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = KhoravarFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
@@ -40,5 +38,3 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
         data.add_cantrip(BardLevel0Spells.FRIENDS, self.spell_casting_ability)
         data.add_feature(KhoravarFeatures.LethargyResilience())
         data.add_feature(KhoravarFeatures.SkillVersatility(self.skill_versatility))
-
-        return data

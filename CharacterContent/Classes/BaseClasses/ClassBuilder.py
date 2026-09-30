@@ -11,7 +11,6 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
 from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.ClassLevels import ClassLevels
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
 
@@ -306,11 +305,13 @@ class ClassBuilder(ABC):
         self.replace_spells = replace_spells
 
     @abstractmethod
-    def _create_base_sheet_data(self) -> CharacterSheetData:
-        """Build a fresh CharacterSheetData holding only this builder's
-        class-level contribution (class registration, stat blocks, equipment,
-        spell slots, ...) - everything except per-level features, which
-        create() applies afterwards onto the merged sheet."""
+    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+        """Grant this builder's class-level contribution (class registration,
+        spell slots, proficiencies, ...) straight into `data` - everything
+        except per-level features, which create() applies afterwards.
+        `is_resuming` means an earlier builder already introduced this class
+        (a class resumed after a dip into another), so the grants that come
+        once per class (SpellSlots, proficiencies) must not be repeated."""
         pass
 
     def create(
@@ -318,14 +319,14 @@ class ClassBuilder(ABC):
         character_sheet_data: Optional[CharacterSheetData] = None,
         applied_level_features: Optional["AppliedLevelFeatures"] = None,
     ) -> CharacterSheetData:
-        """Merge this class builder's contribution into `character_sheet_data`
-        (a fresh one is created if not provided) and return it. Feature
-        application happens directly on that (possibly shared/cumulative)
-        object so that a base class split across multiple builders - e.g. a
-        starter class resumed later via a multiclass builder after a dip
-        into another class - sees features from earlier levels (added by an
-        earlier builder) already present, and never has a given class level's
-        features applied more than once. A builder resuming a class declares
+        """Grant this class builder's contribution straight into
+        `character_sheet_data` (a fresh one is created if not provided) and
+        return it. Every builder writes into the same object, so a base class
+        split across multiple builders - e.g. a starter class resumed later
+        via a multiclass builder after a dip into another class - sees
+        features from earlier levels (added by an earlier builder) already
+        present, and never has a given class level's features applied more
+        than once. A builder resuming a class declares
         the class's final total level. `replace_spells` operates on the
         cumulative sheet, so it may also replace a spell added by an earlier
         builder."""
@@ -333,8 +334,6 @@ class ClassBuilder(ABC):
             character_sheet_data = CharacterSheetData()
         if applied_level_features is None:
             applied_level_features = AppliedLevelFeatures()
-
-        base_sheet_data = self._create_base_sheet_data()
 
         previously_declared_level = character_sheet_data.get_level_for_class(
             self.base_class
@@ -348,19 +347,10 @@ class ClassBuilder(ABC):
                     f"resuming a class must declare the class's final total "
                     f"level."
                 )
-            # The builder that introduced the class already registered its
-            # SpellSlots feature and granted its proficiencies; don't add
-            # duplicates for the same class.
-            base_sheet_data.remove_features(
-                lambda f: isinstance(
-                    f, (SpellSlots.SpellSlots, ClassProficiencies.ClassProficiencies)
-                )
-                and f.character_class == self.base_class
-            )
 
         # Record which total character level each newly-gained class level
-        # corresponds to, before merge_with folds this builder's level count
-        # into character_sheet_data.character_level.
+        # corresponds to, before this builder's level count is added to
+        # character_sheet_data.character_level.
         starting_character_level = character_sheet_data.character_level + 1
         new_class_level_count = self.base_class_level - previously_declared_level
         for offset in range(new_class_level_count):
@@ -368,18 +358,19 @@ class ClassBuilder(ABC):
                 starting_character_level + offset, self.base_class
             )
 
-        previous_subclass = character_sheet_data.class_levels.character_subclass
-        character_sheet_data.merge_with(base_sheet_data)
-        self._update_subclass_name(character_sheet_data, previous_subclass)
+        # A builder resuming a class states the class's final total level.
+        character_sheet_data.set_class_level(self.base_class, self.base_class_level)
+        self._grant_class(
+            character_sheet_data, is_resuming=previously_declared_level > 0
+        )
+        self._update_subclass_name(character_sheet_data)
         character_sheet_data = self.base_class_level_features.add_features(
             character_sheet_data, self.base_class, applied_level_features
         )
         character_sheet_data.replace_spells(self.replace_spells or {})
         return character_sheet_data
 
-    def _update_subclass_name(
-        self, data: CharacterSheetData, previous_subclass: Optional[str]
-    ) -> None:
+    def _update_subclass_name(self, data: CharacterSheetData) -> None:
         """Show every class's subclass on a multiclass sheet ("Oath of Glory /
         Bladesinger") instead of only the last builder's. Classes that
         haven't reached their subclass level are left out; if none has, the
@@ -392,8 +383,8 @@ class ClassBuilder(ABC):
             class_levels.character_subclass = " / ".join(
                 class_levels.active_subclasses.values()
             )
-        elif previous_subclass is not None:
-            class_levels.character_subclass = previous_subclass
+        elif class_levels.character_subclass is None:
+            class_levels.character_subclass = subclass or None
 
 
 def _subclass_reached(builder: "ClassBuilder") -> bool:
@@ -501,16 +492,12 @@ class StarterClassBuilder(ClassBuilder):
     def weapon_proficiencies(self) -> Optional[list[Weapons.WeaponProficiency]]:
         return self.non_generic_arguments.weapon_proficiencies
 
-    def _create_base_sheet_data(self) -> CharacterSheetData:
-        data = CharacterSheetData(
-            class_levels=ClassLevels(
-                character_subclass=self.subclass,
-                level_per_class={self.base_class: self.base_class_level},
-                base_class=self.base_class,
-            ),
-            abilities=self.abilities,
-            spell_casting_ability=self.spell_casting_ability,
-        )
+    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+        # The starting class is always the first builder, so never resumed.
+        data.class_levels.base_class = self.base_class
+        data.abilities = self.abilities
+        if self.spell_casting_ability is not None:
+            data.spell_casting_ability = self.spell_casting_ability
 
         data.add_feature(self.background_ability_bonuses)
         data.add_feature(self.background_skill_proficiencies)
@@ -531,11 +518,10 @@ class StarterClassBuilder(ClassBuilder):
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by
-        # CharacterBuilder via an EquipmentHandler (see Builds/
-        # EquipmentHandler.py), not here - this builder only stores those
-        # values (see properties above and __init__) for CharacterBuilder to
-        # read when it constructs the handler.
-        return data
+        # CharacterBuilder via an Inventory (see Builds/Inventory.py), not
+        # here - this builder only stores those values (see properties above
+        # and __init__) for CharacterBuilder to read when it constructs the
+        # inventory.
 
 
 class MulticlassBuilder(ClassBuilder):
@@ -560,17 +546,14 @@ class MulticlassBuilder(ClassBuilder):
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
 
-    def _create_base_sheet_data(self) -> CharacterSheetData:
-        data = CharacterSheetData(
-            class_levels=ClassLevels(
-                character_subclass=self.subclass,
-                level_per_class={self.base_class: self.base_class_level},
-            ),
-            spell_casting_ability=self.spell_casting_ability,
-        )
+    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+        if self.spell_casting_ability is not None:
+            data.spell_casting_ability = self.spell_casting_ability
+        if is_resuming:
+            # The builder that introduced the class already registered its
+            # SpellSlots feature and granted its proficiencies.
+            return
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
-        # Only part of the class's proficiencies (removed again by create()
-        # when this builder resumes a class the character already has).
+        # Only part of the class's proficiencies.
         data.add_feature(ClassProficiencies.MulticlassProficiencies(self.base_class))
-        return data

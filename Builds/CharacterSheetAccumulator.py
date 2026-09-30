@@ -1,10 +1,11 @@
 import copy
+from contextlib import contextmanager
 from typing import Any, Iterator, Optional
 
 import attr
 
 import Core.Definitions as Definitions
-from Builds.EquipmentHandler import EquipmentEntry
+from Builds.Inventory import Inventory
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightingStyle,
@@ -19,13 +20,6 @@ from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.Spellcasting import Spellcasting
-
-# Scalar values merge_with treats as "not set": an incoming value equal to one
-# of these never overwrites an existing value. 0 is included so that e.g. a
-# builder that never touched experience_points (int, default 0) cannot reset
-# XP accumulated by an earlier builder. All enums used in sheet fields are str
-# enums with non-empty values, so none of them compare equal to "" or 0.
-_MERGE_EMPTY_VALUES = (None, [], {}, "", 0)
 
 MAX_ATTUNED_ITEMS = 3
 
@@ -54,34 +48,15 @@ class CharacterSheetData:
 
     spell_slots: dict[int, int] = attr.Factory(dict)
 
-    armors: list[AbstractArmor] = attr.Factory(list)
-    weapons: list[AbstractWeapon] = attr.Factory(list)
     weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
     fighting_styles: list[FightingStyle] = attr.Factory(list)
-    items: list[tuple[Items.Item, int]] = attr.Factory(list)  # (item_name, quantity)
-    # Same gear as armors/weapons/items above, grouped into labeled batches
-    # (Starting Equipment, then whatever adventuring gear was added later via
-    # an EquipmentHandler - see Builds/EquipmentHandler.py) so the sheet can
-    # show where each item came from. armors/weapons/items stay the flat
-    # lists everything else (AC, attacks, carrying capacity) reads.
-    equipment_entries: list[EquipmentEntry] = attr.Factory(list)
+    # Armor, weapons and items, grouped into labeled entries (Starting
+    # Equipment, then adventuring gear added later), plus starting and
+    # current gold - see Builds/Inventory.py. CharacterBuilder.build() gives
+    # each sheet its own copy of the builder's inventory. armors/weapons/items
+    # below are its flat views, which AC, attacks and carrying capacity read.
+    inventory: Inventory = attr.Factory(Inventory)
     experience_points: int = 0
-    # GP left over after "buying" the base class's granted starting gear at
-    # listed prices, from that class's flat Starting Equipment gold option.
-    # Set once, by CharacterBuilder.build() from its EquipmentHandler - a
-    # multiclass dip never grants starting gold again.
-    starting_gold: Optional[float] = None
-    # Running GP total after starting gold plus every gold=/Bought(...)
-    # delta recorded via add_adventuring_gear since. Set once by
-    # CharacterBuilder.build() from its EquipmentHandler.current_gold - see
-    # Builds/EquipmentHandler.py.
-    current_gold: Optional[float] = None
-    # The entry in equipment_entries representing Starting Equipment
-    # specifically, passed to the writer alongside equipment_entries (not put
-    # on CharacterStatBlock - that's a StatBlocks-layer class that shouldn't
-    # need to import an EquipmentEntry type from the Builds layer) so it can
-    # check `entry is starting_equipment_entry` instead of matching on label.
-    starting_equipment_entry: Optional[EquipmentEntry] = None
     _character_cached: Optional[CharacterStatBlock] = None
     # Identity of every feature + extension the cached stat block was built
     # from. Extensions apply too, but parent.extend_feature() can't reach
@@ -96,6 +71,9 @@ class CharacterSheetData:
     # per-level class flow (species spells, origin feat spells via
     # add_origin_feat, etc).
     _current_grant_level: int = 1
+    # Index into spells where the duplicate check starts - see
+    # separate_spell_source.
+    _duplicate_spell_check_start: int = 0
 
     @property
     def character_subclass(self) -> Optional[str]:
@@ -132,6 +110,19 @@ class CharacterSheetData:
     @property
     def character_level(self) -> int:
         return self.class_levels.character_level
+
+    @property
+    def armors(self) -> list[AbstractArmor]:
+        return self.inventory.armors
+
+    @property
+    def weapons(self) -> list[AbstractWeapon]:
+        return self.inventory.weapons
+
+    @property
+    def items(self) -> list[tuple[Items.Item, int]]:
+        """(item, quantity), with same-type stacks merged."""
+        return self.inventory.items
 
     def _invalidate_cache(self):
         """Drop the cached CharacterStatBlock; any mutation after
@@ -176,6 +167,12 @@ class CharacterSheetData:
         self._invalidate_cache()
         self.class_levels.record_class_level(character_level, character_class)
 
+    def set_class_level(self, character_class: CharacterClass, level: int) -> None:
+        """Set the character's total level in `character_class` (a builder
+        resuming a class states the class's final total level)."""
+        self._invalidate_cache()
+        self.class_levels.level_per_class[character_class] = level
+
     def set_current_grant_level(self, level: int) -> None:
         """Set the class-relative level that subsequent add_spell/add_cantrip
         calls will be tagged with. Called by BaseClassLevelFeatures.add_features
@@ -183,14 +180,16 @@ class CharacterSheetData:
         self._current_grant_level = level
 
     def add_armor(self, armor: AbstractArmor):
+        """Add armor outside starting equipment and adventuring gear (see
+        Inventory.add_armor)."""
         self._invalidate_cache()
-        self.armors.append(armor)
+        self.inventory.add_armor(armor)
 
     def add_weapon(self, weapon: AbstractWeapon):
         # Proficiency isn't decided here: the weapon works it out on read
         # against every proficiency on the stat block (AbstractWeapon.is_proficient).
         self._invalidate_cache()
-        self.weapons.append(weapon)
+        self.inventory.add_weapon(weapon)
 
     def add_weapon_mastery(self, weapon: AbstractWeapon):
         self._invalidate_cache()
@@ -210,7 +209,7 @@ class CharacterSheetData:
             spell_casting_ability
         )
 
-        if spell in [s[0] for s in self.spells]:
+        if spell in self._spell_names_checked_for_duplicates():
             raise ValueError(f"Spell {spell} already added.")
         self._invalidate_cache()
         self.spells.append(
@@ -226,7 +225,7 @@ class CharacterSheetData:
         spell_casting_ability = self._resolve_spell_casting_ability(
             spell_casting_ability
         )
-        if cantrip in [s[0] for s in self.spells]:
+        if cantrip in self._spell_names_checked_for_duplicates():
             raise ValueError(f"Cantrip {cantrip} already added.")
         self._invalidate_cache()
         self.spells.append(
@@ -237,6 +236,22 @@ class CharacterSheetData:
                 self._current_grant_level,
             )
         )
+
+    def _spell_names_checked_for_duplicates(self) -> list[str]:
+        return [s[0] for s in self.spells[self._duplicate_spell_check_start :]]
+
+    @contextmanager
+    def separate_spell_source(self) -> Iterator[None]:
+        """Spells and cantrips added inside this block are only checked for
+        duplicates against each other, not against spells granted before
+        it. Species spells use this: a species granting a spell the
+        character's class also grants (Rock Gnome Prestidigitation on a
+        Wizard) lists it from both sources rather than failing the build."""
+        self._duplicate_spell_check_start = len(self.spells)
+        try:
+            yield
+        finally:
+            self._duplicate_spell_check_start = 0
 
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
@@ -281,11 +296,7 @@ class CharacterSheetData:
 
     def add_item(self, item: Items.Item, quantity: int = 1):
         self._invalidate_cache()
-        for i, (existing_item, existing_quantity) in enumerate(self.items):
-            if type(existing_item) is type(item):
-                self.items[i] = (existing_item, existing_quantity + quantity)
-                return
-        self.items.append((item, quantity))
+        self.inventory.add_item(item, quantity)
 
     def validate(self) -> None:
         """Checks that need no evaluation, run by `setup_character_stat_block()`
@@ -420,52 +431,6 @@ class CharacterSheetData:
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
         character = self.setup_character_stat_block()
         return character.calculate_attack_bonus_for_ability(ability)
-
-    def merge_with(self, other: "CharacterSheetData"):
-        """Merge another CharacterSheetData into this one.
-
-        Merge rules, by field kind:
-        - class_levels merges via ClassLevels.merge, which applies the same
-          dict/scalar rules below field-by-field (see its docstring) - it
-          can't go through the generic scalar rule, since a ClassLevels
-          instance is never "empty" and a MulticlassBuilder's partial
-          ClassLevels would wholesale overwrite self's, losing the starting
-          class;
-        - lists (features, spells, weapons, ...) are
-          concatenated, preserving each side's internal order with `other`'s
-          entries after `self`'s;
-        - dicts (spell_slots) are combined with `other`'s entries winning on
-          key collisions;
-        - sets are combined with set union;
-        - scalars are overwritten only when `other`'s value is actually set
-          (see _MERGE_EMPTY_VALUES), so an untouched default never erases an
-          earlier builder's value.
-        """
-        self._invalidate_cache()
-        self.class_levels = self.class_levels.merge(other.class_levels)
-
-        for field_name in vars(self):
-            if field_name.startswith("_") or field_name == "class_levels":
-                continue
-            other_value = getattr(other, field_name)
-            my_value = getattr(self, field_name)
-
-            if isinstance(my_value, list) and isinstance(other_value, list):
-                setattr(self, field_name, my_value + other_value)
-                continue
-
-            if isinstance(my_value, dict) and isinstance(other_value, dict):
-                combined_dict = my_value.copy()
-                combined_dict.update(other_value)
-                setattr(self, field_name, combined_dict)
-                continue
-
-            if isinstance(my_value, set) and isinstance(other_value, set):
-                setattr(self, field_name, my_value.union(other_value))
-                continue
-
-            if other_value not in _MERGE_EMPTY_VALUES:
-                setattr(self, field_name, other_value)
 
     def _resolve_spell_casting_ability(
         self, spell_casting_ability: Optional[Ability]

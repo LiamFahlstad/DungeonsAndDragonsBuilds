@@ -13,14 +13,10 @@ class GoliathSpeciesBuilder(SpeciesBuilder):
             name="Goliath",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = GoliathFeatures.SPEED  # Given by your species
         data.size = GoliathFeatures.SIZE  # Given by your species
 
         data.add_feature(GoliathFeatures.GiantAncestry(self.giant_ancestry_type))
         data.add_feature(GoliathFeatures.LargeForm())
         data.add_feature(GoliathFeatures.PowerfulBuild())
-
-        return data

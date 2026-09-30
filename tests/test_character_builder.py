@@ -208,6 +208,20 @@ class TestRebuildIsIdempotent:
         after = data.setup_character_stat_block().get_ability_score(Ability.STRENGTH)
         assert after == before
 
+    def test_built_sheet_has_its_own_inventory(self):
+        # Gear dropped from the builder after a build, or added to a built
+        # sheet, never reaches the other.
+        builder = SpellSlotTestPaladin5CharacterBuilder()
+        torch = Items.Torch()
+        builder.add_adventuring_gear("Loot", items=[(torch, 1)])
+        first = builder.build()
+        builder.drop_item(torch)
+        first.add_weapon(Weapons.Longbow())
+        second = builder.build()
+        assert any(item is torch for item, _ in first.items)
+        assert not any(item is torch for item, _ in second.items)
+        assert not any(isinstance(w, Weapons.Longbow) for w in second.weapons)
+
     def test_archery_does_not_stack_on_rebuild(self):
         data = SpellSlotTestWizard5CharacterBuilder().build()
         bow = Weapons.Longbow()

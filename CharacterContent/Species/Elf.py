@@ -41,7 +41,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             name="Elf",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         if self.character_level is None:
             raise ValueError(
                 "Character level must be set before building species data."
@@ -51,8 +51,6 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             raise ValueError(
                 "Spell casting ability must be set before building species data."
             )
-
-        data = CharacterSheetAccumulator.CharacterSheetData()
 
         data.speed = ElfFeatures.SPEED  # Given by your species
         data.size = ElfFeatures.SIZE  # Given by your species
@@ -148,4 +146,3 @@ class ElfSpeciesBuilder(SpeciesBuilder):
                     self.spell_casting_ability,
                     additional_ruling,
                 )
-        return data

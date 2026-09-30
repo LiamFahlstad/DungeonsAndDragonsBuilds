@@ -11,9 +11,7 @@ class DwarfSpeciesBuilder(SpeciesBuilder):
             name="Dwarf",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = DwarfFeatures.SPEED  # Given by your species
         data.size = DwarfFeatures.SIZE  # Given by your species
 
@@ -21,5 +19,3 @@ class DwarfSpeciesBuilder(SpeciesBuilder):
         data.add_feature(DwarfFeatures.DwarvenResilience())
         data.add_feature(DwarfFeatures.DwarvenToughness())
         data.add_feature(DwarfFeatures.Stonecunning())
-
-        return data

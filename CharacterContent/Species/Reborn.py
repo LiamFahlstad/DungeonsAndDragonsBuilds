@@ -18,9 +18,7 @@ class RebornSpeciesBuilder(SpeciesBuilder):
         self.knowledge_skill = knowledge_skill
         self.strange_endurance = strange_endurance
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = RebornFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
@@ -29,5 +27,3 @@ class RebornSpeciesBuilder(SpeciesBuilder):
         data.add_feature(RebornFeatures.RebornKnowledge())
         data.add_feature(RebornFeatures.RebornKnowledgeSkill(self.knowledge_skill))
         data.add_feature(RebornFeatures.StrangeEndurance(self.strange_endurance))
-
-        return data

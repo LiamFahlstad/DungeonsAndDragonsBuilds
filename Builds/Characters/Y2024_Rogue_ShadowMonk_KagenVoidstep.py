@@ -53,8 +53,8 @@ def get_starter_class_builder():
             # Monk for the rest of its career, so the Rogue subclass (chosen
             # at Rogue level 3) is never actually reached. The value below is
             # therefore a placeholder - it's immediately overwritten by the
-            # Monk multiclass builder's "Warrior of Shadow" subclass once the
-            # sheets are merged (see CharacterBuilder.build()/merge_with()).
+            # Monk multiclass builder's "Warrior of Shadow" subclass once it's
+            # granted (see ClassBuilder._update_subclass_name).
             subclass=RogueSubclass.THIEF.value,
             skills=[
                 Skill.ACROBATICS,

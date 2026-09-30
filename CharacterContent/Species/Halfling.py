@@ -11,9 +11,7 @@ class HalflingSpeciesBuilder(SpeciesBuilder):
             name="Halfling",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = HalflingFeatures.SPEED  # Given by your species
         data.size = HalflingFeatures.SIZE  # Given by your species
 
@@ -21,5 +19,3 @@ class HalflingSpeciesBuilder(SpeciesBuilder):
         data.add_feature(HalflingFeatures.Luck())
         data.add_feature(HalflingFeatures.HalflingNimbleness())
         data.add_feature(HalflingFeatures.NaturallyStealthy())
-
-        return data

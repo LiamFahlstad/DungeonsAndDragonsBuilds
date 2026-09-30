@@ -17,9 +17,7 @@ class HumanSpeciesBuilder(SpeciesBuilder):
             name="Human",
         )
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = HumanFeatures.SPEED  # Given by your species
         data.size = HumanFeatures.SIZE  # Given by your species
 
@@ -28,5 +26,3 @@ class HumanSpeciesBuilder(SpeciesBuilder):
         data.add_feature(HumanFeatures.Versatile())
 
         data.add_origin_feat(self.origin_feat)
-
-        return data

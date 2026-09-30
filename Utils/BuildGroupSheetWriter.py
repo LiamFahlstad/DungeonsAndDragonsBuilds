@@ -183,7 +183,7 @@ def _write_items_page(
         for character_sheet_data, stat_block in prepared:
             non_empty_entries = [
                 entry
-                for entry in character_sheet_data.equipment_entries
+                for entry in character_sheet_data.inventory.equipment_entries
                 if entry.armors or entry.weapons or entry.items or entry.gold
             ]
             if not non_empty_entries:
@@ -191,7 +191,7 @@ def _write_items_page(
             combined_rows = []
             for entry in non_empty_entries:
                 is_starting_equipment = (
-                    entry is character_sheet_data.starting_equipment_entry
+                    entry is character_sheet_data.inventory.starting_equipment_entry
                 )
                 sections = writer._build_item_sections(entry, is_starting_equipment)
                 for title, rows in sections:

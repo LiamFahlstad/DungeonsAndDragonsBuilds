@@ -14,9 +14,7 @@ class WarforgedSpeciesBuilder(SpeciesBuilder):
         )
         self.skill = skill
 
-    def build(self) -> CharacterSheetAccumulator.CharacterSheetData:
-        data = CharacterSheetAccumulator.CharacterSheetData()
-
+    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
         data.speed = WarForgedFeatures.SPEED  # Given by your species
         data.size = WarForgedFeatures.SIZE  # Given by your species
 
@@ -25,5 +23,3 @@ class WarforgedSpeciesBuilder(SpeciesBuilder):
         data.add_feature(WarForgedFeatures.Tireless())
         data.add_feature(WarForgedFeatures.IntegratedProtection())
         data.add_feature(WarForgedFeatures.SpecializedDesign(self.skill))
-
-        return data
