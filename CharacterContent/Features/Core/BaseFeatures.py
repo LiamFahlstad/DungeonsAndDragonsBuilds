@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, TextIO
 
+from StatBlocks.Character import note_feature_extended
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from Utils import Html
 
@@ -483,6 +484,10 @@ class Feature:
 
     def extend_feature(self, feature: "Feature"):
         self.extensions.append(feature)
+        # Extensions apply too, and this feature can't reach the Character
+        # it was granted to - so every Character re-evaluates on its next
+        # query.
+        note_feature_extended()
 
     def apply(self, character_stat_block: CharacterStatBlock):
         """Record this feature's effects on the stat block. Features, armor

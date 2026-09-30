@@ -17,7 +17,7 @@ class ChangelingSpeciesBuilder(SpeciesBuilder):
         self.instinct_skills = instinct_skills
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = ChangelingFeatures.SPEED  # Given by your species
+        data.base_speed = ChangelingFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(ChangelingFeatures.ChangelingInstincts(self.instinct_skills))

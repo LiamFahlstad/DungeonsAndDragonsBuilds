@@ -14,7 +14,7 @@ class DragonbornSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = DragonbornFeatures.SPEED  # Given by your species
+        data.base_speed = DragonbornFeatures.SPEED  # Given by your species
         data.size = DragonbornFeatures.SIZE  # Given by your species
 
         data.add_feature(DragonbornFeatures.BreathWeapon(self.dragon_ancestry_color))

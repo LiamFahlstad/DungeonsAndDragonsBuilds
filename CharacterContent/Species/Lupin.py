@@ -17,7 +17,7 @@ class LupinSpeciesBuilder(SpeciesBuilder):
         self.werewolf_instincts_skill = werewolf_instincts_skill
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = LupinFeatures.SPEED  # Given by your species
+        data.base_speed = LupinFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(LupinFeatures.Darkvision())

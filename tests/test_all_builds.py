@@ -74,7 +74,7 @@ def test_rebuild_is_idempotent(name):
     # Same builder instance again, then a forced re-setup of the same sheet.
     second = builder.build()
     assert _stats(second, second.setup_character_stat_block()) == first_stats
-    second._invalidate_cache()
+    second._changed()
     assert _stats(second, second.setup_character_stat_block()) == first_stats
 
 

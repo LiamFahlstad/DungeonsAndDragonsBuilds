@@ -1,11 +1,12 @@
 """
-Builds/Inventory.py: starting gear, starting/current gold, adventuring
-gear, dropping and consuming items.
+StatBlocks/Inventory.py and Builds/StartingEquipment.py: starting gear,
+starting/current gold, adventuring gear, dropping and consuming items.
 """
 
 import pytest
 
-from Builds.Inventory import Bought, Inventory
+from Builds.StartingEquipment import set_starting_equipment
+from StatBlocks.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Packs, Weapons
 from Core.Definitions import CharacterClass
 
@@ -18,7 +19,7 @@ def fighter_inventory(**kwargs):
         add_default_equipment=False,
     )
     defaults.update(kwargs)
-    inventory.set_starting_equipment(**defaults)
+    set_starting_equipment(inventory, **defaults)
     return inventory
 
 
@@ -64,7 +65,7 @@ class TestStartingEquipment:
     def test_second_call_rejected(self):
         inventory = fighter_inventory()
         with pytest.raises(ValueError):
-            inventory.set_starting_equipment(CharacterClass.FIGHTER, [], False)
+            set_starting_equipment(inventory, CharacterClass.FIGHTER, [], False)
 
 
 class TestGold:

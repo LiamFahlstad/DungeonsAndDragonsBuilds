@@ -23,7 +23,7 @@ class HexbloodSpeciesBuilder(SpeciesBuilder):
         self.spell_casting_ability = spell_casting_ability
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = HexbloodFeatures.SPEED  # Given by your species
+        data.base_speed = HexbloodFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(HexbloodFeatures.Darkvision())

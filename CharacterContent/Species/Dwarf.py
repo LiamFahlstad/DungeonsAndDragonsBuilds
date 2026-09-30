@@ -12,7 +12,7 @@ class DwarfSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = DwarfFeatures.SPEED  # Given by your species
+        data.base_speed = DwarfFeatures.SPEED  # Given by your species
         data.size = DwarfFeatures.SIZE  # Given by your species
 
         data.add_feature(DwarfFeatures.Darkvision())

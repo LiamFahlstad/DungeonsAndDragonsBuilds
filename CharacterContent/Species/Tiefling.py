@@ -32,7 +32,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = TieflingFeatures.SPEED  # Given by your species
+        data.base_speed = TieflingFeatures.SPEED  # Given by your species
         data.size = TieflingFeatures.SIZE  # Given by your species
 
         data.add_feature(TieflingFeatures.Darkvision(60))

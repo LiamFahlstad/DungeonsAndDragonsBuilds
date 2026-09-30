@@ -14,7 +14,7 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
    Heavy armor", "+2 STR to a maximum of 20". It never reads the stat block.
 2. **The stat block works every value out when it's read**, from everything recorded. So nothing
    can depend on what happened to apply first.
-3. **Requirements are checked once, at the end** (`CharacterStatBlock.validate()`): expertise
+3. **Requirements are checked once, at the end** (`Character.validate()`): expertise
    needs proficiency, an armor needs a minimum Strength, and a multiclass character needs the
    ability minimums for every class it has.
 4. **There are no exceptions.** A test shuffles every build's effects (features, extensions,
@@ -22,20 +22,24 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
    tests fail on any effect that reads a stat during setup.
 
 This follows the design of `~/Scripts/DungeonsAndDragons`: effects are recorded on a ledger,
-then evaluated once in the rules' own dependency order. Here the stat block is the ledger, and
-its getters are the evaluation.
+then evaluated once in the rules' own dependency order. Here `Effects` is the ledger, and
+`Character`'s getters are the evaluation.
 
 ## The pipeline
 
-`CharacterSheetData.setup_character_stat_block()` first calls `CharacterSheetData.validate()`
-(every field it needs to build a stat block is set, at most one worn body armor, and the
-attunement limit), then builds a fresh `CharacterStatBlock` from copies of the base ability, skill and
-saving-throw blocks, then:
+There is one object, `Character` (`StatBlocks/Character.py`). It holds the player's decisions and
+the sources they grant (features, spells, fighting styles, `inventory`, base ability scores and
+speed), and answers every query (`calculate_armor_class()`, `get_skill_modifier()`, ...).
+`CharacterStatBlock` and `CharacterSheetData` are aliases of it, kept so existing imports work.
+
+Evaluation is internal and lazy. The first query after a change builds a fresh `Effects` record
+(`StatBlocks/Effects.py`: one part per concern, see below), starting from a copy of the base
+ability scores, the base speed and the class spellcasting ability, then:
 
 | # | Stage | What runs |
 |---|---|---|
 | 1 | **Record** | `apply()` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** |
-| 2 | **Validate** | `character.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
+| 2 | **Validate** | Only in `validate()` (which `setup_character_stat_block()` calls): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
 weapons (Archery's +2 to attack rolls with Ranged weapons, Bracers of Archery's +2 damage with
@@ -43,9 +47,13 @@ bows) is recorded as a `WeaponAttackBonus` / `WeaponDamageBonus` improvement wit
 weapons it covers, and each weapon combines it with its own bonuses on read. So a builder's weapon
 objects are shared by every sheet it builds, with no copies and no idempotence guards.
 
-The result is cached. The cache is dropped by any `add_*` call, and also whenever the set of
-features and extensions changes. `extend_feature()` has no reference back to the sheet data, so
-without that second check a late extension would be missed.
+The evaluation is cached under a version key: the character's own version (bumped by every
+`add_*`/`set_*` call and, through an attrs `on_setattr` hook, by assigning any public field), the
+inventory's version (bumped by every gear change), and a global count of feature extensions.
+`extend_feature()` can't reach the character a feature was granted to, so it bumps that count
+(`note_feature_extended()`) and every character re-evaluates on its next query.
+`setup_character_stat_block()` is kept for existing callers: it validates and returns the
+character itself.
 
 ## How each value is worked out on read
 
@@ -53,18 +61,18 @@ without that second check a late extension would be missed.
 |---|---|---|
 | Ability score | Base score + `(ability, bonus, max_score)` increases | `AbilityScores.get_score`: capped increases lowest cap first, then uncapped (equipment) bonuses on top |
 | Ability modifier | | From the score |
-| Skill modifier | Proficiency/expertise flags, flat and formula bonuses, ability overrides | `CharacterStatBlock.get_skill_modifier`. With several overrides for one skill, the best ability is used |
+| Skill modifier | Proficiency/expertise flags, flat and formula bonuses, ability overrides | `Character.get_skill_modifier`. With several overrides for one skill, the best ability is used |
 | Skill roll condition | Every Advantage/Disadvantage source, with reasons | `Skills.get_roll_condition`: both cancel out |
 | Saving throw | Proficiency flags, conditional grants, flat and formula bonuses | `get_saving_throw_modifier`, `SavingThrows.is_proficient` |
 | AC | Every `ArmorClassFormula` (unarmored default, Unarmored Defense, worn armor), flat and formula bonuses | `calculate_armor_class`: the best applicable formula + bonuses |
-| Speed | Base + flat and formula bonuses | `CharacterStatBlock.calculate_speed()` |
-| Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses.ranges`: best plain grant + every extension |
-| Weapon proficiency | `weapon_proficiencies` on `CharacterStatBlock.equipment_training` (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
-| Armor training, tools | `armor_training`, `tool_proficiencies` on `CharacterStatBlock.equipment_training` | Read directly (the same tool from two sources is listed once) |
-| Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield (`CharacterStatBlock.worn_armor`), `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
+| Speed | Base + flat and formula bonuses | `Character.calculate_speed()` |
+| Senses | Plain grants and "or extend" grants | `Character.senses.ranges`: best plain grant + every extension |
+| Weapon proficiency | `weapon_proficiencies` on `Character.equipment_training` (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
+| Armor training, tools | `armor_training`, `tool_proficiencies` on `Character.equipment_training` | Read directly (the same tool from two sources is listed once) |
+| Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield (`Character.worn_armor`), `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `calculate_initiative()`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
-| Weapon attack and damage bonuses | The weapon's own bonuses (a +1 weapon, set at construction), plus `WeaponBonus(applies_to, value, source)` records on `CharacterStatBlock.weapon_bonuses` | `AbstractWeapon.get_attack_roll_bonuses(cs)` / `get_damage_roll_bonuses(cs)`: the weapon's own, then every recorded bonus whose filter accepts it |
+| Weapon attack and damage bonuses | The weapon's own bonuses (a +1 weapon, set at construction), plus `WeaponBonus(applies_to, value, source)` records on `Character.weapon_bonuses` | `AbstractWeapon.get_attack_roll_bonuses(cs)` / `get_damage_roll_bonuses(cs)`: the weapon's own, then every recorded bonus whose filter accepts it |
 | Weapon mastery | `player_has_mastery` on the weapon, or a chosen Weapon Mastery on the sheet data | `AbstractWeapon.has_mastery(weapon_masteries)`, at render time |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
 
@@ -96,7 +104,7 @@ and the expertise-needs-proficiency check runs in validation.
 
 ### AC is a set of formulas, not an overwritten field
 
-`CharacterStatBlock.armor_class.armor_class_formulas` starts with 10 + DEX. `MultiAbilityArmorClass` (Unarmored
+`Character.armor_class.armor_class_formulas` starts with 10 + DEX. `MultiAbilityArmorClass` (Unarmored
 Defense, Draconic Resilience) adds an unarmored formula, and worn armor adds an armor formula via
 `SetArmorClass`. On read:
 
@@ -152,9 +160,9 @@ applies and no effect changes them.
 
 ## The parts
 
-`CharacterStatBlock` is a composition root: a thin object holding one part per concern
-(`StatBlocks/*.py`), plus a few queries that combine several of them (untrained-armor disadvantage,
-the final AC, `warnings`, `validate()`). Each part owns its own state *and* the queries on that
+`Effects` (`StatBlocks/Effects.py`) holds one part per concern (`StatBlocks/*.py`), and
+`Character` exposes each part under its own name, plus a few queries that combine several of them
+(untrained-armor disadvantage, the final AC, `warnings`, `validate()`). Each part owns its own state *and* the queries on that
 state; a part never reaches back into the character, so a value from another part (or the finished
 character, for formula evaluation) is always passed in as an argument, e.g.
 `HitPoints.calculate(class_levels, constitution_modifier, character)` and
@@ -166,7 +174,7 @@ sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `Saving
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
 flat-list/formula-list/source-list shape themselves.
 
-| Part (`character_stat_block.<attr>`) | Owns |
+| Part (`character.<attr>`) | Owns |
 |---|---|
 | `equipment_training` (`EquipmentTraining`) | `weapon_proficiencies`, `armor_training`, `tool_proficiencies`, `has_shield_training` |
 | `languages` (`Languages`) | Known languages, each with sources (`knows`, `sources`, `add`) |
@@ -183,14 +191,16 @@ flat-list/formula-list/source-list shape themselves.
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
-Every part is exposed directly under its own name. `CharacterStatBlock`'s own methods
+Every part is exposed directly under its own name. `Character`'s own methods
 (`add_damage_resistance`, `calculate_armor_class`, `get_sense_range`, …) are kept as one-line
-delegations to the parts, so existing feature call sites don't need to change; `spell_casting_ability`
-is a read-only delegating property for the same reason (too many callers to rewrite safely).
-`character_stat_block.initiative` and `.speed` are the parts themselves - the *int* versions are
+delegations to the parts, so existing feature call sites don't need to change.
+`character.abilities` is the evaluated `AbilityScores` (every increase applied); the player's
+scores before any increase are `base_abilities`. Likewise `character.speed` is the `Speed` part,
+and the species' walking speed is `base_speed`.
+`character.initiative` and `.speed` are the parts themselves - the *int* versions are
 the `calculate_initiative()` / `calculate_speed()` methods, named after the existing
 `calculate_armor_class()` / `calculate_hit_points()` convention so the name doesn't collide with
-the part. `character_stat_block.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
+the part. `character.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
 is the `Senses` part).
 
 ## Extensions

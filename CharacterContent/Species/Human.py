@@ -18,7 +18,7 @@ class HumanSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = HumanFeatures.SPEED  # Given by your species
+        data.base_speed = HumanFeatures.SPEED  # Given by your species
         data.size = HumanFeatures.SIZE  # Given by your species
 
         data.add_feature(HumanFeatures.Resourceful())

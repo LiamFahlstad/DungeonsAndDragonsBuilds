@@ -17,7 +17,7 @@ class DhampirSpeciesBuilder(SpeciesBuilder):
         self.size = size
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = DhampirFeatures.SPEED  # Given by your species
+        data.base_speed = DhampirFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(DhampirFeatures.Darkvision())

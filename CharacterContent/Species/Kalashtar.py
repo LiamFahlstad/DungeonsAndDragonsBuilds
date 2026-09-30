@@ -11,7 +11,7 @@ class KalashtarSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = KalashtarFeatures.SPEED  # Given by your species
+        data.base_speed = KalashtarFeatures.SPEED  # Given by your species
         data.size = CreatureSize.MEDIUM  # Given by your species
 
         data.add_feature(KalashtarFeatures.DualMind())

@@ -6,7 +6,8 @@ from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     StarterClassBuilder,
 )
 from Builds.CharacterSheetAccumulator import CharacterSheetData
-from Builds.Inventory import Bought, Inventory
+from Builds.StartingEquipment import set_starting_equipment
+from StatBlocks.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -24,7 +25,8 @@ class CharacterBuilder:
         self.species_builder = species_builder
         self.multiclass_builders = multiclass_builders or []
         self.inventory = Inventory()
-        self.inventory.set_starting_equipment(
+        set_starting_equipment(
+            self.inventory,
             base_class=starter_class_builder.base_class,
             default_equipment=starter_class_builder.default_equipment,
             add_default_equipment=starter_class_builder.add_default_equipment,
@@ -101,7 +103,7 @@ class CharacterBuilder:
                 character_sheet_data, applied_level_features
             )
 
-        abilities = character_sheet_data.abilities
+        abilities = character_sheet_data.base_abilities
         if abilities is None:
             raise ValueError("AbilityScores is None.")
         ability_with_highest_modifier = (

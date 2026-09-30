@@ -128,7 +128,7 @@ class TestFixedSpeedAndSize:
     @pytest.mark.parametrize("build, expected_speed, expected_size", FIXED_SIZE_SPECIES)
     def test_speed_and_size(self, build, expected_speed, expected_size):
         data = build()
-        assert data.speed == expected_speed
+        assert data.base_speed == expected_speed
         assert data.size == expected_size
 
 
@@ -143,7 +143,7 @@ class TestChoosableSizeSpecies:
             size=size, instinct_skills=[Skill.DECEPTION, Skill.INSIGHT]
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_khoravar_size_choice(self, size):
@@ -153,7 +153,7 @@ class TestChoosableSizeSpecies:
             spell_casting_ability=Ability.CHARISMA,
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_shifter_size_choice(self, size):
@@ -163,7 +163,7 @@ class TestChoosableSizeSpecies:
             shifter_form=ShifterFeatures.ShiftForm.SWIFTSTRIDE,
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_lupin_size_choice(self, size):
@@ -171,7 +171,7 @@ class TestChoosableSizeSpecies:
             size=size, werewolf_instincts_skill=Skill.PERCEPTION
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_dhampir_size_choice_does_not_affect_speed(self, size):
@@ -180,7 +180,7 @@ class TestChoosableSizeSpecies:
         # with the size choice either.
         data = DhampirSpeciesBuilder(character_level=1, size=size).build()
         assert data.size == size
-        assert data.speed == 35
+        assert data.base_speed == 35
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_hexblood_size_choice(self, size):
@@ -188,7 +188,7 @@ class TestChoosableSizeSpecies:
             size=size, spell_casting_ability=Ability.WISDOM
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_reborn_size_choice(self, size):
@@ -198,7 +198,7 @@ class TestChoosableSizeSpecies:
             strange_endurance=DamageType.COLD,
         ).build()
         assert data.size == size
-        assert data.speed == 30
+        assert data.base_speed == 30
 
 
 # ── Darkvision ranges ────────────────────────────────────────────────────────
@@ -309,7 +309,7 @@ class TestElfLineages:
     ):
         data = _build_elf(lineage, 1).build()
 
-        assert data.speed == (35 if lineage == ElvenLineage.WOOD_ELF else 30)
+        assert data.base_speed == (35 if lineage == ElvenLineage.WOOD_ELF else 30)
         assert cantrip in spell_names(data)
         assert level3_spell not in spell_names(data)
         assert level5_spell not in spell_names(data)
@@ -565,7 +565,7 @@ class TestGrantedSpellsAndCantrips:
         data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
         assert RockGnomeSpeciesBuilder().build(data) is data
         assert spell_names(data).count("Prestidigitation") == 2
-        assert data.speed == GnomeFeatures.SPEED
+        assert data.base_speed == GnomeFeatures.SPEED
         # Only the species' own grants skip the duplicate check.
         with pytest.raises(ValueError, match="already added"):
             data.add_spell(BardLevel0Spells.MENDING, Ability.INTELLIGENCE)

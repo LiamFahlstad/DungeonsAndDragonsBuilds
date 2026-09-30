@@ -50,16 +50,17 @@ def basic_carrying_capacity():
 
 @pytest.fixture
 def make_character():
-    """Factory for a bare CharacterStatBlock (no features applied).
+    """Factory for a bare Character (no features applied). Effects applied
+    to it directly (`SomeFeature().apply(character)`) are recorded on its
+    current evaluation, which stays cached until one of its sources changes.
 
     make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
     make_character(armor_training=[ArmorType.SHIELD])
     """
-    from Core.Definitions import CharacterClass
+    from Core.Definitions import CharacterClass, CreatureSize
     from StatBlocks.AbilityScores import AbilityScores
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from StatBlocks.Character import Character
     from StatBlocks.ClassLevels import ClassLevels
-    from StatBlocks.Spellcasting import Spellcasting
 
     def _make(
         strength=10,
@@ -72,15 +73,18 @@ def make_character():
         armor_training=(),
     ):
         levels = levels or {CharacterClass.FIGHTER: 1}
-        character = CharacterStatBlock(
+        character = Character(
+            character_name="Test Character",
             class_levels=ClassLevels(
-                base_class=next(iter(levels)), level_per_class=levels
+                base_class=next(iter(levels)),
+                level_per_class=levels,
+                character_subclass="Test Subclass",
             ),
-            abilities=AbilityScores(
+            base_abilities=AbilityScores(
                 strength, dexterity, constitution, intelligence, wisdom, charisma
             ),
-            speed=30,
-            spellcasting=Spellcasting(fixed_slots={}),
+            base_speed=30,
+            size=CreatureSize.MEDIUM,
         )
         # Armor training (ArmorType values) - untrained armor has penalties.
         character.equipment_training.armor_training.update(armor_training)

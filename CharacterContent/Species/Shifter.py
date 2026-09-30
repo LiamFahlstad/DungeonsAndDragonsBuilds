@@ -20,7 +20,7 @@ class ShifterSpeciesBuilder(SpeciesBuilder):
         self.size = size
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = ShifterFeatures.SPEED  # Given by your species
+        data.base_speed = ShifterFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(ShifterFeatures.Darkvision(60))

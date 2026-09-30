@@ -19,7 +19,7 @@ class RebornSpeciesBuilder(SpeciesBuilder):
         self.strange_endurance = strange_endurance
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = RebornFeatures.SPEED  # Given by your species
+        data.base_speed = RebornFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 
         data.add_feature(RebornFeatures.EscapedDeath())

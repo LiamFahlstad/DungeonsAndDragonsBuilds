@@ -17,7 +17,7 @@ class ForestGnomeSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = GnomeFeatures.SPEED  # Given by your species
+        data.base_speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species
 
         data.add_feature(GnomeFeatures.Darkvision())
@@ -41,7 +41,7 @@ class RockGnomeSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = GnomeFeatures.SPEED  # Given by your species
+        data.base_speed = GnomeFeatures.SPEED  # Given by your species
         data.size = GnomeFeatures.SIZE  # Given by your species
 
         data.add_feature(GnomeFeatures.Darkvision())

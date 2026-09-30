@@ -14,7 +14,7 @@ class GoliathSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = GoliathFeatures.SPEED  # Given by your species
+        data.base_speed = GoliathFeatures.SPEED  # Given by your species
         data.size = GoliathFeatures.SIZE  # Given by your species
 
         data.add_feature(GoliathFeatures.GiantAncestry(self.giant_ancestry_type))

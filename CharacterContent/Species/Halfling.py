@@ -12,7 +12,7 @@ class HalflingSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = HalflingFeatures.SPEED  # Given by your species
+        data.base_speed = HalflingFeatures.SPEED  # Given by your species
         data.size = HalflingFeatures.SIZE  # Given by your species
 
         data.add_feature(HalflingFeatures.Brave())

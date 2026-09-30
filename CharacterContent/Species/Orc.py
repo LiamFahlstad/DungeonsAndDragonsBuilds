@@ -12,7 +12,7 @@ class OrcSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = OrcFeatures.SPEED  # Given by your species
+        data.base_speed = OrcFeatures.SPEED  # Given by your species
         data.size = OrcFeatures.SIZE  # Given by your species
 
         data.add_feature(OrcFeatures.Darkvision())

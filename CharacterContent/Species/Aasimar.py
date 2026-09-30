@@ -13,7 +13,7 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
         )
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = AasimarFeatures.SPEED  # Given by your species
+        data.base_speed = AasimarFeatures.SPEED  # Given by your species
         data.size = AasimarFeatures.SIZE  # Given by your species
 
         data.add_feature(AasimarFeatures.Darkvision())

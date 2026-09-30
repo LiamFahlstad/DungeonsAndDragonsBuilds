@@ -494,8 +494,8 @@ class StarterClassBuilder(ClassBuilder):
 
     def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
         # The starting class is always the first builder, so never resumed.
-        data.class_levels.base_class = self.base_class
-        data.abilities = self.abilities
+        data.base_class = self.base_class
+        data.base_abilities = self.abilities
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
 
@@ -518,7 +518,7 @@ class StarterClassBuilder(ClassBuilder):
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by
-        # CharacterBuilder via an Inventory (see Builds/Inventory.py), not
+        # CharacterBuilder via an Inventory (see Builds/StartingEquipment.py), not
         # here - this builder only stores those values (see properties above
         # and __init__) for CharacterBuilder to read when it constructs the
         # inventory.

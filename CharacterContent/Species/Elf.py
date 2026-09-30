@@ -52,7 +52,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
                 "Spell casting ability must be set before building species data."
             )
 
-        data.speed = ElfFeatures.SPEED  # Given by your species
+        data.base_speed = ElfFeatures.SPEED  # Given by your species
         data.size = ElfFeatures.SIZE  # Given by your species
 
         data.add_feature(ElfFeatures.FeyAncestry())
@@ -101,7 +101,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
         elif self.elven_lineage == ElvenLineage.WOOD_ELF:
             data.add_feature(ElfFeatures.Darkvision(60))
             data.add_cantrip(DruidLevel0Spells.DRUIDCRAFT, self.spell_casting_ability)
-            data.speed = 35
+            data.base_speed = 35
             if self.character_level >= 3:
                 data.add_spell(
                     WizardLevel1Spells.LONGSTRIDER,

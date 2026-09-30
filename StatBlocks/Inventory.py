@@ -1,22 +1,23 @@
 """A character's inventory: starting equipment, starting gold, adventuring
 gear picked up over time, and dropping items.
 
-CharacterBuilder seeds an Inventory from its StarterClassBuilder and
-delegates add_adventuring_gear/drop_item/get_starting_item to it; build()
-hands each CharacterSheetData its own copy (CharacterSheetData.inventory),
-whose armors/weapons/items are what AC, attacks and carrying capacity read.
-Also owns the EquipmentEntry/Bought types: they live here (a leaf module
-with no dependency on CharacterSheetAccumulator.py or the character sheet
-writer) so CharacterSheetAccumulator.py and CharacterSheetWriters.py can
-import them as plain top-level imports without a circular import.
+Part of the Character model (StatBlocks/Character.py), so it imports nothing
+from CharacterContent at runtime - item types appear in annotations only.
+CharacterBuilder seeds an Inventory (Builds/StartingEquipment.py builds the
+Starting Equipment entry) and delegates add_adventuring_gear/drop_item/
+get_starting_item to it; build() hands each Character its own copy
+(Character.inventory), whose armors/weapons/items are what AC, attacks and
+carrying capacity read.
 """
 
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Optional
 
 import attr
 
-from CharacterContent.Items import Armor, Items, Packs, Weapons
-from Core.Definitions import CharacterClass
+if TYPE_CHECKING:
+    from CharacterContent.Items import Armor, Items, Weapons
 
 
 class Bought:
@@ -57,34 +58,6 @@ class EquipmentEntry:
     gold: float = 0
 
 
-# Each class's flat starting gold - the last "Choose A/B/..." alternative in
-# its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.
-# Fighter's "... or (C) 155 GP"), which is always gold with no items.
-_BASELINE_STARTING_GOLD: dict[CharacterClass, float] = {
-    CharacterClass.ARTIFICER: 150,
-    CharacterClass.BARBARIAN: 75,
-    CharacterClass.BARD: 90,
-    CharacterClass.CLERIC: 110,
-    CharacterClass.DRUID: 50,
-    CharacterClass.FIGHTER: 155,
-    CharacterClass.MONK: 50,
-    CharacterClass.PALADIN: 150,
-    CharacterClass.RANGER: 150,
-    CharacterClass.ROGUE: 100,
-    CharacterClass.SORCERER: 50,
-    CharacterClass.WARLOCK: 100,
-    CharacterClass.WIZARD: 55,
-}
-
-
-def _entry_value(entry: EquipmentEntry) -> float:
-    """Total GP value of everything in an entry."""
-    total = sum(armor.value or 0 for armor in entry.armors)
-    total += sum(weapon.value or 0 for weapon in entry.weapons)
-    total += sum((item.value or 0) * quantity for item, quantity in entry.items)
-    return total
-
-
 def _unwrap_bought(
     maybe_bought: Armor.AbstractArmor | Weapons.AbstractWeapon | Items.Item | Bought,
 ) -> tuple[Armor.AbstractArmor | Weapons.AbstractWeapon | Items.Item, Optional[float]]:
@@ -111,6 +84,9 @@ class Inventory:
     OTHER_EQUIPMENT_LABEL = "Other Equipment"
 
     def __init__(self):
+        # Goes up on every change, so a Character knows when its cached
+        # evaluation is out of date (see Character._get_effects).
+        self.version = 0
         self._entries: list[EquipmentEntry] = []
         self._starting_entry: Optional[EquipmentEntry] = None
         self._starting_gold: Optional[float] = None
@@ -139,6 +115,7 @@ class Inventory:
                 copied._other_entry = entry_copy
         copied._starting_gold = self._starting_gold
         copied._unarmed_strike = self._unarmed_strike
+        copied.version = self.version
         return copied
 
     def _get_other_entry(self) -> EquipmentEntry:
@@ -148,68 +125,35 @@ class Inventory:
         return self._other_entry
 
     def add_armor(self, armor: Armor.AbstractArmor) -> None:
+        self.version += 1
         self._get_other_entry().armors.append(armor)
 
     def add_weapon(self, weapon: Weapons.AbstractWeapon) -> None:
+        self.version += 1
         self._get_other_entry().weapons.append(weapon)
 
     def add_item(self, item: Items.Item, quantity: int = 1) -> None:
+        self.version += 1
         self._get_other_entry().items.append((item, quantity))
 
     def set_starting_equipment(
         self,
-        base_class: CharacterClass,
-        default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
-        add_default_equipment: bool,
-        default_pack: Optional[Packs.Pack] = None,
-        armor: Optional[list[Armor.AbstractArmor]] = None,
-        weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-        items: Optional[list[tuple[Items.Item, int]]] = None,
-    ) -> EquipmentEntry:
-        """Set the character's starting gear and compute starting gold from
-        it. Call once - a second call would silently overwrite starting_gold
-        and risk double-adding the unarmed strike."""
+        entry: EquipmentEntry,
+        starting_gold: float,
+        unarmed_strike: Optional[Weapons.UnarmedStrike],
+    ) -> None:
+        """Set the Starting Equipment entry, the gold left over after buying
+        it, and the Unarmed Strike every character has unless its starting
+        gear already holds one (see Builds/StartingEquipment.py, which works
+        all three out). Call once."""
         if self._starting_entry is not None:
             raise ValueError("set_starting_equipment() was already called.")
-
-        if not any(isinstance(w, Weapons.UnarmedStrike) for w in default_equipment):
-            self._unarmed_strike = Weapons.UnarmedStrike(player_is_proficient=True)
-
-        starting_armor: list[Armor.AbstractArmor] = []
-        starting_weapons: list[Weapons.AbstractWeapon] = []
-        starting_items: list[tuple[Items.Item, int]] = []
-
-        # Explicit body armor replaces the default one (a character can only
-        # wear one armor at a time); default shields still apply.
-        has_explicit_body_armor = any(not a.is_shield for a in (armor or []))
-        if add_default_equipment:
-            for equipment_item in default_equipment:
-                if isinstance(equipment_item, Weapons.AbstractWeapon):
-                    starting_weapons.append(equipment_item)
-                elif isinstance(equipment_item, Armor.AbstractArmor):
-                    if equipment_item.is_shield or not has_explicit_body_armor:
-                        starting_armor.append(equipment_item)
-
-        # The starting pack (Dungeoneer's, Explorer's, ...) is part of default
-        # equipment and is only granted when add_default_equipment is True.
-        if add_default_equipment and default_pack is not None:
-            starting_items.extend(default_pack.get_items())
-
-        starting_armor.extend(armor or [])
-        starting_weapons.extend(weapons or [])
-        starting_items.extend(items or [])
-
-        entry = EquipmentEntry(
-            label="Starting Equipment",
-            armors=starting_armor,
-            weapons=starting_weapons,
-            items=starting_items,
-        )
+        self.version += 1
+        self._unarmed_strike = unarmed_strike
         self._starting_entry = entry
         self._entries.append(entry)
         # Never clamp this toward zero here - that's a display-time concern.
-        self._starting_gold = _BASELINE_STARTING_GOLD[base_class] - _entry_value(entry)
-        return entry
+        self._starting_gold = starting_gold
 
     def add_adventuring_gear(
         self,
@@ -226,6 +170,7 @@ class Inventory:
         amount paid - to mark it as purchased instead. Pass gold=X for a
         net GP change from this entry that isn't tied to a specific item
         (loot found, a cost paid) - positive gains, negative spends."""
+        self.version += 1
         entry = EquipmentEntry(label=label, gold=gold)
         for a in armor or []:
             unwrapped, price = _unwrap_bought(a)
@@ -241,7 +186,7 @@ class Inventory:
             unwrapped, price = _unwrap_bought(raw_item)
             entry.items.append((unwrapped, quantity))
             if price is not None:
-                # Catalog value is per unit (as in _entry_value); an explicit
+                # Catalog value is per unit; an explicit
                 # Bought(price=X) is the total actually paid for the stack.
                 if isinstance(raw_item, Bought) and raw_item.price is None:
                     price *= quantity
@@ -312,6 +257,7 @@ class Inventory:
                 f"Cannot drop {getattr(item, 'name', item)!r}: it isn't in this "
                 "character's equipment (already dropped, or never added?)."
             )
+        self.version += 1
         if self._unarmed_strike is item:
             self._unarmed_strike = None
         for entry in self._entries:
@@ -332,6 +278,7 @@ class Inventory:
             raise ValueError(
                 f"Only {total_owned} {item_type.__name__} owned, cannot consume {quantity}."
             )
+        self.version += 1
         remaining = quantity
         for entry in self._entries:
             if remaining <= 0:

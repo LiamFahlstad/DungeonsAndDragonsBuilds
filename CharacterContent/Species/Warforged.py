@@ -15,7 +15,7 @@ class WarforgedSpeciesBuilder(SpeciesBuilder):
         self.skill = skill
 
     def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
-        data.speed = WarForgedFeatures.SPEED  # Given by your species
+        data.base_speed = WarForgedFeatures.SPEED  # Given by your species
         data.size = WarForgedFeatures.SIZE  # Given by your species
 
         data.add_feature(WarForgedFeatures.ConstructResilience())

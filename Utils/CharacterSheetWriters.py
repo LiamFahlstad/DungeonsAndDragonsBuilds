@@ -3,7 +3,7 @@ import pathlib
 from typing import TYPE_CHECKING, Literal, Optional, TextIO
 
 import Core.Definitions as Definitions
-from Builds.Inventory import EquipmentEntry
+from StatBlocks.Inventory import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
 from CharacterContent.Features.Core.BaseFeatures import (
     FEATURE_CARD_CSS,

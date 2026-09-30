@@ -170,7 +170,7 @@ class CombatAppQt(
                 },
                 "subclass": character_sheet.character_subclass or "",
                 "proficiency_bonus": character.get_proficiency_bonus(),
-                "speed": character_sheet.speed or "",
+                "speed": character_sheet.base_speed or "",
                 "size": character_sheet.size.value if character_sheet.size else "",
                 "spells_with_level": spells_with_level,
                 "_spell_objects": spell_objects,
