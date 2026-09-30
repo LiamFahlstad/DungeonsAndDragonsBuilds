@@ -10,7 +10,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.ClassLevels import ClassLevels
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
@@ -440,7 +440,7 @@ class StarterClassBuilder(ClassBuilder):
         non_generic_arguments: CustomStarterClassArgs,
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
-        abilities: AbilitiesStatBlock,
+        abilities: AbilityScores,
         background_ability_bonuses: Backgrounds.FreeBackgroundAbilityBonus,
         background_skill_proficiencies: Backgrounds.FreeBackgroundSkillProficiency,
         add_default_equipment: bool,

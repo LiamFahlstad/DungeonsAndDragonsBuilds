@@ -53,7 +53,7 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel7Spells,
     DruidLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 
@@ -67,7 +67,7 @@ def get_starter_class_builder():
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=8,
             dexterity=14,
             constitution=13,

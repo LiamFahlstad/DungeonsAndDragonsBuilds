@@ -14,7 +14,7 @@ from CharacterContent.Classes.SubClasses2024.MonkShadow import (
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Elf
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import LeatherworkersTools
 
 
@@ -31,7 +31,7 @@ def get_starter_class_builder():
         ),
         base_class_level=monk_level,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=8,
             dexterity=15,
             constitution=13,

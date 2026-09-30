@@ -43,7 +43,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel3Spells,
     BardLevel4Spells,
 )
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import Bagpipes, Drum, Horn
 
 
@@ -58,7 +58,7 @@ def get_starter_class_builder():
         ),
         base_class_level=14,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=10,
             dexterity=15,
             constitution=14,

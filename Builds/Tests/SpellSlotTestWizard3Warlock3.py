@@ -28,7 +28,7 @@ from CharacterContent.Invocations.Definitions import (
 )
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 # Wizard 3 / Warlock 3 multiclass — two separate spell pools.
@@ -45,7 +45,7 @@ def get_starter_class_builder():
             ],
         ),
         base_class_level=3,
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=8,
             dexterity=14,
             constitution=13,

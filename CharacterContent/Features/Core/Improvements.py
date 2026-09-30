@@ -18,7 +18,7 @@ can apply in any order and give the same sheet
   Never compute it inside apply(): that freezes it at whatever the stat was
   when the feature ran.
 - Ability increases are recorded with their cap and resolved on read, lowest
-  cap first (AbilitiesStatBlock) - "to a maximum of 20" no longer depends on
+  cap first (AbilityScores) - "to a maximum of 20" no longer depends on
   what applied before.
 - Alternatives ("if you already have this proficiency, choose another") are
   recorded as conditional grants and resolved on read against every other
@@ -49,8 +49,8 @@ from Core.Definitions import (
     Sense,
     Skill,
 )
+from StatBlocks.ArmorClass import ArmorClassFormula
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.CombatStatBlock import ArmorClassFormula
 
 # A flat bonus, or a formula evaluated against the final stat block at read
 # time (see the ordering contract above).
@@ -106,7 +106,7 @@ class SkillExpertise(CharacterImprovement):
 
     Ordering: order-insensitive - the proficiency it requires may be granted
     before or after it; the stat block validates the pairing once every
-    feature has applied (SkillsStatBlock.validate)."""
+    feature has applied (Skills.validate)."""
 
     def __init__(self, skills: list[Skill]):
         self.skills = skills
@@ -161,7 +161,7 @@ class SavingThrowProficiencyOrAlternative(CharacterImprovement):
     lack ("If you already have this proficiency, you instead gain...").
 
     Resolved on read against every other grant, whether it applied before or
-    after this one (SavingThrowsStatBlock.add_proficiency_or_alternative)."""
+    after this one (SavingThrows.add_proficiency_or_alternative)."""
 
     def __init__(self, ability: Ability, alternatives: list[Ability]):
         self.ability = ability
@@ -245,7 +245,7 @@ class AbilityScoreBonus(CharacterImprovement):
     max_score: "to a maximum of N" - an increase never raises a score above
         this, but also never lowers a score something else already pushed
         past it. Resolved on read, lowest cap first, so it doesn't matter
-        which increase applied first (see AbilitiesStatBlock). None means an
+        which increase applied first (see AbilityScores). None means an
         uncapped equipment bonus (a magic item): it applies on top of the
         character's own score and doesn't count toward requirements.
     """
@@ -284,7 +284,7 @@ class SetArmorClass(CharacterImprovement):
     """Worn body armor's AC: `base` + the modifier of `ability` (None = no
     modifier), capped at `ability_modifier_cap`.
 
-    Adds an armor formula (StatBlocks.CombatStatBlock.ArmorClassFormula) that,
+    Adds an armor formula (StatBlocks.ArmorClass.ArmorClassFormula) that,
     while worn, replaces every unarmored formula such as Unarmored Defense -
     whether the armor applies before or after the feature."""
 
@@ -301,7 +301,7 @@ class SetArmorClass(CharacterImprovement):
         self.ability_modifier_cap = ability_modifier_cap
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.add_armor_class_formula(
+        character_stat_block.armor_class.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
                 abilities=frozenset([self.ability] if self.ability else []),
@@ -320,15 +320,13 @@ class MultiAbilityArmorClass(CharacterImprovement):
     stack, and worn armor replaces them. allows_shield=False for formulas that
     stop working while a Shield is wielded."""
 
-    def __init__(
-        self, base: int, abilities: list[Ability], allows_shield: bool = True
-    ):
+    def __init__(self, base: int, abilities: list[Ability], allows_shield: bool = True):
         self.base = base
         self.abilities = abilities
         self.allows_shield = allows_shield
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.add_armor_class_formula(
+        character_stat_block.armor_class.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
                 abilities=frozenset(self.abilities),
@@ -348,7 +346,7 @@ class ArmorClassBonus(CharacterImprovement):
         if callable(self.bonus):
             character_stat_block.add_derived_armor_class_bonus(self.bonus)
         else:
-            character_stat_block.combat.increase_armor_class(self.bonus)
+            character_stat_block.armor_class.add_bonus(self.bonus)
 
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────
@@ -418,7 +416,7 @@ class HitPointsPerLevelBonus(CharacterImprovement):
         self.multiplier = multiplier
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.combat.hit_points_bonus += (
+        character_stat_block.hit_points.add_bonus(
             self.multiplier * character_stat_block.character_level
         )
 
@@ -493,7 +491,7 @@ class SpeedBonus(CharacterImprovement):
         if callable(self.bonus):
             character_stat_block.add_derived_speed_bonus(self.bonus)
         else:
-            character_stat_block.combat.speed += self.bonus
+            character_stat_block.speed.add_bonus(self.bonus)
 
 
 class CarryingCapacityBonus(CharacterImprovement):
@@ -508,7 +506,7 @@ class CarryingCapacityBonus(CharacterImprovement):
         self.source = source
 
     def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.carrying_capacity_sources.append((self.source, self.bonus))
+        character_stat_block.carrying_capacity.add_bonus(self.source, self.bonus)
 
 
 class SpellSaveDCBonus(CharacterImprovement):
@@ -594,7 +592,7 @@ class GrantSense(CharacterImprovement):
 
 
 class GrantOrExtendSense(CharacterImprovement):
-    """"You gain Darkvision with a range of 60 feet. If you already have
+    """ "You gain Darkvision with a range of 60 feet. If you already have
     Darkvision, its range increases by 60 feet." Resolved on read: the range
     is the best other grant of the sense plus `range_feet`, whether those
     grants applied before or after this one."""

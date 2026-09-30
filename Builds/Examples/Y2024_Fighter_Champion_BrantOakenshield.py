@@ -24,7 +24,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
 from CharacterContent.Species import Dwarf
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():
@@ -37,7 +37,7 @@ def get_starter_class_builder():
         ),
         base_class_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=15,
             dexterity=14,
             constitution=13,

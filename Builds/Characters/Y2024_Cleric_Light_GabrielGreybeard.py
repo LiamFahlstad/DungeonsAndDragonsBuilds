@@ -32,7 +32,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import CooksUtensils
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
@@ -47,7 +47,7 @@ def get_starter_class_builder():
         # Point buy (27 pts): WIS 15 (9) + CON 14 (7) + CHA 13 (5) + DEX 12 (4)
         # + INT 10 (2) + STR 8 (0) = 27. These are the pre-background scores;
         # the Sage background bonuses below bring WIS/CON to 16/16.
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=8,
             dexterity=12,
             constitution=14,

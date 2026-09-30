@@ -52,7 +52,7 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import Flute, Lute, Viol
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():
@@ -66,7 +66,7 @@ def get_starter_class_builder():
         ),
         base_class_level=20,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=8,
             dexterity=14,
             constitution=13,

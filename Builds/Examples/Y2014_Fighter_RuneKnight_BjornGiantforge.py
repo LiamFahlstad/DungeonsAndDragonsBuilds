@@ -45,7 +45,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 
 
@@ -59,7 +59,7 @@ def get_starter_class_builder():
         ),
         base_class_level=18,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=15,
             dexterity=12,
             constitution=14,

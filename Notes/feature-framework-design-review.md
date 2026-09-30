@@ -28,7 +28,7 @@ The sections below describe the framework **as reviewed**. Since then:
 | M5 two lists | **Fixed.** There is a single `features` list in grant order. |
 | L1 rendering in `Feature` | **Partly.** The three duplicated card and tag renderers now share helpers. Rendering still lives on `Feature`. |
 | M2 partial-character choices | **Fixed.** "If already proficient, choose another" is a conditional grant resolved on read against every other grant (`SavingThrowProficiencyOrAlternative`); Skill Expert just records its grants. |
-| M3 incremental ability caps | **Fixed.** Increases are recorded with their cap and resolved on read, lowest cap first (`AbilitiesStatBlock`). |
+| M3 incremental ability caps | **Fixed.** Increases are recorded with their cap and resolved on read, lowest cap first (`AbilityScores`). |
 | L2, L3 | Open. String-typed levels and mixed metadata styles. |
 
 ---
@@ -127,7 +127,7 @@ Value = int | Callable[[CharacterStatBlock], int]
 class SkillBonus(CharacterImprovement):
     def __init__(self, skill: Skill, bonus: Value, source: str | None = None): ...
 
-# SkillsStatBlock stores (value_or_fn, source) and resolves at read time:
+# Skills stores (value_or_fn, source) and resolves at read time:
 def get_bonus(self, skill, character) -> int:
     return sum(v(character) if callable(v) else v for v, _ in self._bonuses[skill])
 

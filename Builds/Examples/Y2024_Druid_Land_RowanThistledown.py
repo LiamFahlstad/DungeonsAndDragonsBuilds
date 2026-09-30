@@ -74,7 +74,7 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel7Spells,
     TransmutationLevel9Spells,
 )
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 # Circle land type is chosen independently at each subclass level (3, 5, 7, 9, 10).
@@ -95,7 +95,7 @@ def get_starter_class_builder():
         base_class_level=20,
         # Custom array (not standard array, since it repeats 8 three times):
         # base 8/15/15/8/15/8, background bonus below pushes WIS to 17 and CON to 16.
-        abilities=AbilitiesStatBlock(
+        abilities=AbilityScores(
             strength=8,
             dexterity=15,
             constitution=15,

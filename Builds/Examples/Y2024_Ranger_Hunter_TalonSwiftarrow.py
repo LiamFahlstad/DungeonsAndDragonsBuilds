@@ -21,7 +21,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():
@@ -35,7 +35,7 @@ def get_starter_class_builder():
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=14,
             dexterity=15,
             constitution=13,

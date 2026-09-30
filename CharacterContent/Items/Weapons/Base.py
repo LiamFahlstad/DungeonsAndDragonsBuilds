@@ -168,7 +168,7 @@ class AbstractWeapon(Item, ABC):
         proficiency recorded on the stat block - worked out on read, so it
         doesn't matter when the proficiency or the weapon was added."""
         return self.player_is_proficient or is_proficient_with(
-            self, character_stat_block.weapon_proficiencies
+            self, character_stat_block.equipment_training.weapon_proficiencies
         )
 
     def attack_roll_condition(

@@ -16,12 +16,10 @@ from CharacterContent.Items import Items
 from CharacterContent.Items.Armor import AbstractArmor
 from CharacterContent.Items.Weapons import AbstractWeapon
 from Core.Definitions import Ability, CharacterClass
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.CombatStatBlock import CombatStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.Spellcasting import Spellcasting
 
 # Scalar values merge_with treats as "not set": an incoming value equal to one
 # of these never overwrites an existing value. 0 is included so that e.g. a
@@ -43,7 +41,7 @@ class CharacterSheetData:
     # level_per_class/class_by_character_level below are thin delegating
     # properties kept for the many existing readers of those names.
     class_levels: ClassLevels = attr.Factory(ClassLevels)
-    abilities: Optional[AbilitiesStatBlock] = None
+    abilities: Optional[AbilityScores] = None
     speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
 
@@ -354,31 +352,27 @@ class CharacterSheetData:
         assert self.size is not None
         assert self.base_class is not None
 
-        combat = CombatStatBlock(
-            speed=self.speed,
-            size=self.size,
-        )
-        # Skills and saving throws hold no state of their own here - every
-        # proficiency, expertise and bonus arrives as a feature effect (e.g.
-        # ClassProficiencies, ClassSkillChoice, FreeBackgroundSkillProficiency),
-        # so the stat block always starts them empty. Abilities are still an
+        # Skills, saving throws and every other part hold no state of their
+        # own here - every proficiency, expertise and bonus arrives as a
+        # feature effect (e.g. ClassProficiencies, ClassSkillChoice,
+        # FreeBackgroundSkillProficiency), so the stat block always starts
+        # them empty (CharacterStatBlock.__init__). Abilities are still an
         # accumulator field (base scores are a build choice, not a feature
         # grant), and get their own deep copy: features mutate it in place, and
         # sharing the accumulator's instance would re-apply every bonus on the
         # next rebuild after a cache invalidation, or on every build() of the
-        # same builder instance (which hands the same AbilitiesStatBlock to
+        # same builder instance (which hands the same AbilityScores to
         # each CharacterSheetData).
         character = CharacterStatBlock(
-            # Shared, not copied - see StatBlocks/ClassLevels.py. Name and
-            # gold stay on this CharacterSheetData only; readers that need
+            # Shared, not copied - see StatBlocks/ClassLevels.py. Name, gold
+            # and size stay on this CharacterSheetData only; readers that need
             # them (the sheet writer) already have it.
             class_levels=self.class_levels,
             abilities=copy.deepcopy(self.abilities),
-            skills=SkillsStatBlock(),
-            combat=combat,
-            saving_throws=SavingThrowsStatBlock(),
-            spell_casting_ability=self.spell_casting_ability,
-            spell_slots=self.spell_slots,
+            speed=self.speed,
+            spellcasting=Spellcasting(
+                ability=self.spell_casting_ability, fixed_slots=self.spell_slots
+            ),
         )
 
         # Ordering contract (see CharacterContent/Features/Core/Improvements.py):

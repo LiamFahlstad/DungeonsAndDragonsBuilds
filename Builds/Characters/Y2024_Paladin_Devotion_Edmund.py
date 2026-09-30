@@ -28,7 +28,7 @@ from CharacterContent.Species import Tiefling
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from CharacterContent.ToolProficiencies.Proficiencies import NavigatorsTools
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
@@ -40,7 +40,7 @@ def get_starter_class_builder():
             ],
         ),
         base_class_level=3,
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=15,
             dexterity=12,
             constitution=13,

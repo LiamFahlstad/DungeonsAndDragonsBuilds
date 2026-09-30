@@ -1,10 +1,13 @@
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability
-from StatBlocks.StatBlock import StatBlock
+from StatBlocks.Bonuses import Bonuses, DerivedBonus
+
+if TYPE_CHECKING:
+    from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class SavingThrowsStatBlock(StatBlock):
+class SavingThrows:
     def __init__(
         self,
         proficiencies: Optional[dict[Ability, bool]] = None,
@@ -12,7 +15,9 @@ class SavingThrowsStatBlock(StatBlock):
     ):
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.advantages = advantages if advantages is not None else {}
-        self.bonuses: dict[Ability, int] = {}
+        # Per-ability flat and formula-valued bonuses, each with a source
+        # (see StatBlocks/Bonuses.py).
+        self._bonuses: dict[Ability, Bonuses] = {}
         # "Proficiency in X; if you already have it, in Y instead" grants, as
         # (X, (Y, ...)) - resolved on read, see _resolved_proficiencies.
         self._conditional_proficiencies: list[tuple[Ability, tuple[Ability, ...]]] = []
@@ -52,8 +57,18 @@ class SavingThrowsStatBlock(StatBlock):
     def add_advantage(self, ability: Ability) -> None:
         self.advantages[ability] = True
 
-    def get_bonus(self, ability: Ability) -> int:
-        return self.bonuses.get(ability, 0)
+    def _bonuses_for(self, ability: Ability) -> Bonuses:
+        return self._bonuses.setdefault(ability, Bonuses())
 
     def add_bonus(self, ability: Ability, bonus: int) -> None:
-        self.bonuses[ability] = self.get_bonus(ability) + bonus
+        self._bonuses_for(ability).add(bonus)
+
+    def add_derived_bonus(self, ability: Ability, bonus: DerivedBonus) -> None:
+        self._bonuses_for(ability).add_formula(bonus)
+
+    def get_total_bonus(self, ability: Ability, character: "CharacterStatBlock") -> int:
+        """The flat bonus plus every formula-valued bonus, resolved against
+        `character` (not the ability modifier or proficiency bonus - see
+        CharacterStatBlock.get_saving_throw_modifier)."""
+        bonuses = self._bonuses.get(ability)
+        return bonuses.total(character) if bonuses is not None else 0

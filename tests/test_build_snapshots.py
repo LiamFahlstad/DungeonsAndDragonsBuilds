@@ -60,9 +60,9 @@ def _compute_stats(name: str) -> dict:
         "scores": [character.get_ability_score(a) for a in Ability],
         "ac": character.calculate_armor_class(),
         "hp": character.calculate_hit_points(),
-        "init": character.initiative,
+        "init": character.calculate_initiative(),
         "init_roll": str(character.initiative_roll_condition),
-        "speed": character.speed,
+        "speed": character.calculate_speed(),
         "skills": [character.get_skill_modifier(s) for s in Skill],
         "skill_abilities": [str(character.get_skill_ability(s)) for s in Skill],
         "skill_rolls": [
@@ -84,13 +84,15 @@ def _compute_stats(name: str) -> dict:
         "pact": sorted(character.pact_magic_slots.items()),
         "resist": sorted(
             (str(damage_type), sorted(sources))
-            for damage_type, sources in character.damage_resistances.items()
+            for damage_type, sources in character.defenses.damage_resistances.items()
         ),
         "immune": sorted(
             (str(damage_type), sorted(sources))
-            for damage_type, sources in character.damage_immunities.items()
+            for damage_type, sources in character.defenses.damage_immunities.items()
         ),
-        "senses": sorted((str(sense), rng) for sense, rng in character.senses.items()),
+        "senses": sorted(
+            (str(sense), rng) for sense, rng in character.senses.ranges.items()
+        ),
         "weapons": [
             (
                 weapon.name,

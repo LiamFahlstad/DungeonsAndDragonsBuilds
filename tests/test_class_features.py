@@ -70,26 +70,26 @@ class TestUnarmoredMovement:
     def test_bonus_by_level(self, make_character, level, bonus):
         character = make_character(levels={CharacterClass.MONK: level})
         apply_features(character, [MonkFeatures.UnarmoredMovement()])
-        assert character.speed == 30 + bonus
+        assert character.calculate_speed() == 30 + bonus
 
     def test_lost_in_armor(self, make_character):
         character = make_character(levels={CharacterClass.MONK: 10})
         apply_features(
             character, [MonkFeatures.UnarmoredMovement()], [Armor.LeatherArmor()]
         )
-        assert character.speed == 30
+        assert character.calculate_speed() == 30
 
     def test_lost_with_shield(self, make_character):
         character = make_character(levels={CharacterClass.MONK: 10})
         apply_features(
             character, [MonkFeatures.UnarmoredMovement()], [Armor.ShieldArmor()]
         )
-        assert character.speed == 30
+        assert character.calculate_speed() == 30
 
     def test_armored_monk_build_regression(self):
         # Kagen (Rogue 1 / Monk 19) wears Leather Armor: no Unarmored Movement.
         data = BuildSelector.get_build("Y2024_Rogue_ShadowMonk_KagenVoidstep").build()
-        assert data.setup_character_stat_block().speed == 30
+        assert data.setup_character_stat_block().calculate_speed() == 30
 
 
 class TestHeavyArmorSpeedFeatures:
@@ -109,7 +109,7 @@ class TestHeavyArmorSpeedFeatures:
         character = make_character(strength=15)
         armors = [armor()] if armor else []
         apply_features(character, [feature_class()], armors)
-        assert character.speed == expected
+        assert character.calculate_speed() == expected
 
 
 class TestPrimalKnowledge:

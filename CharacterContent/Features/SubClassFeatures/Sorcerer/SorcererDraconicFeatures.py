@@ -45,7 +45,7 @@ class DraconicResilience(Feature):
         sorcerer_level = character_stat_block.get_class_level(
             Definitions.CharacterClass.SORCERER
         )
-        character_stat_block.combat.hit_points_bonus += sorcerer_level
+        character_stat_block.hit_points.add_bonus(sorcerer_level)
         self._ac.apply(character_stat_block)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

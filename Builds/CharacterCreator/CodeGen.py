@@ -11,14 +11,14 @@ from Builds.CharacterCreator.Model import BuildSpec, builder_class_name
 INDENT = "    "
 
 _ABILITIES_CLASS_BY_MODE = {
-    "standard_array": "StandardArrayAbilitiesStatBlock",
-    "point_buy": "PointBuyAbilitiesStatBlock",
-    "manual": "AbilitiesStatBlock",
+    "standard_array": "StandardArrayAbilityScores",
+    "point_buy": "PointBuyAbilityScores",
+    "manual": "AbilityScores",
 }
 
 
 def _abilities_class_name(spec: BuildSpec) -> str:
-    return _ABILITIES_CLASS_BY_MODE.get(spec.ability_score_mode, "AbilitiesStatBlock")
+    return _ABILITIES_CLASS_BY_MODE.get(spec.ability_score_mode, "AbilityScores")
 
 
 def generate(spec: BuildSpec) -> str:
@@ -262,7 +262,7 @@ def _imports_source(spec, registry, class_info, subclass_info):
     from_imports[subclass_info.module.__name__] = subclass_names
 
     abilities_class = _abilities_class_name(spec)
-    add("StatBlocks.AbilitiesStatBlock", abilities_class)
+    add("StatBlocks.AbilityScores", abilities_class)
 
     species_info = registry.species()[spec.species_class]
     add("CharacterContent.Species", species_info.module_name)

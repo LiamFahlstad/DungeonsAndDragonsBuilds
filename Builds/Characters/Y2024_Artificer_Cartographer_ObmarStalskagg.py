@@ -23,7 +23,7 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
     TinkersTools,
 )
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
@@ -36,7 +36,7 @@ def get_starter_class_builder():
         ),
         base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=14,
             dexterity=12,
             constitution=13,

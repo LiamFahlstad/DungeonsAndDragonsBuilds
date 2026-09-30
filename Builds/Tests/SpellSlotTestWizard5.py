@@ -21,7 +21,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 # Wizard 5 (full caster).
@@ -35,7 +35,7 @@ def get_starter_class_builder():
             ],
         ),
         base_class_level=5,
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=8,
             dexterity=14,
             constitution=13,

@@ -125,11 +125,11 @@ class TestAlert:
         dex_modifier = 3  # DEX 16 -> +3
         expected_pb = PHB_PROFICIENCY_BONUS[level]
         OriginFeats.Alert().apply(character)
-        assert character.initiative == dex_modifier + expected_pb
+        assert character.calculate_initiative() == dex_modifier + expected_pb
 
     def test_no_initiative_bonus_without_the_feat(self, make_character):
         character = make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
-        assert character.initiative == 3
+        assert character.calculate_initiative() == 3
 
 
 class TestTough:
@@ -144,7 +144,7 @@ class TestTough:
         # "You gain 2 additional Hit Points for each level you have."
         character = make_character(levels={CharacterClass.FIGHTER: level})
         OriginFeats.Tough().apply(character)
-        assert character.combat.hit_points_bonus == expected_bonus
+        assert character.hit_points.bonuses.total(None) == expected_bonus
 
     def test_hit_point_bonus_uses_total_character_level_when_multiclassed(
         self, make_character
@@ -156,7 +156,7 @@ class TestTough:
             levels={CharacterClass.FIGHTER: 3, CharacterClass.WIZARD: 2}
         )
         OriginFeats.Tough().apply(character)
-        assert character.combat.hit_points_bonus == 10
+        assert character.hit_points.bonuses.total(None) == 10
 
     def test_full_hit_points_level_1_fighter(self, make_character):
         # Fighter d10 hit die, CON 10 (+0): 10 + 0, then Tough's +2*1.
@@ -516,5 +516,5 @@ class TestSpeedy:
         GeneralFeats.Speedy(character_level=4, ability=Ability.DEXTERITY).apply(
             character
         )
-        assert character.speed == 40
+        assert character.calculate_speed() == 40
         assert character.get_ability_score(Ability.DEXTERITY) == 15

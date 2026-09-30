@@ -31,7 +31,7 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 # Paladin 4 / Wizard 3 multiclass (the PHB example scenario).
@@ -46,7 +46,7 @@ def get_starter_class_builder():
             ],
         ),
         base_class_level=4,
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=13,
             dexterity=10,
             constitution=14,

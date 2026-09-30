@@ -392,7 +392,7 @@ class TestSorcererDraconicResilienceAndElementalAffinity:
         ):
             character = make_character(levels={CharacterClass.SORCERER: sorcerer_level})
             SorcererDraconicFeatures.DraconicResilience().apply(character)
-            assert character.combat.hit_points_bonus == expected_bonus
+            assert character.hit_points.bonuses.total(None) == expected_bonus
 
     def test_draconic_resilience_ac_unarmored_formula(self, make_character):
         # "While you aren't wearing armor, your base Armor Class equals 10
@@ -494,7 +494,9 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
         # Scimitar: Martial Melee, Finesse + Light (no Two-Handed/Heavy), so a
         # Bladesinger with Training in War and Song should be proficient.
         character = data.setup_character_stat_block()
-        assert is_proficient_with(Scimitar(), character.weapon_proficiencies)
+        assert is_proficient_with(
+            Scimitar(), character.equipment_training.weapon_proficiencies
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -566,7 +568,7 @@ class TestInitiativeAndSkillRollConditionGrants:
         # Wisdom modifier to the roll." WIS 16 -> +3, DEX 10 -> +0.
         character = make_character(wisdom=16)
         RangerGloomStalkerFeatures.DreadAmbusher().apply(character)
-        assert character.initiative == 0 + 3
+        assert character.calculate_initiative() == 0 + 3
 
     def test_champion_remarkable_athlete_initiative_and_athletics_advantage(
         self, make_character
@@ -675,7 +677,7 @@ class TestPromisedPassiveBenefits:
         character = apply_features(
             make_character(), [PaladinGloryFeatures.AuraOfAlacrity()]
         )
-        assert character.speed == 40
+        assert character.calculate_speed() == 40
 
     def test_assassinate_initiative_advantage(self, make_character):
         # assassin.txt: "Initiative. You have Advantage on Initiative rolls."
@@ -738,4 +740,7 @@ class TestPromisedPassiveBenefits:
         character = make_character(levels={CharacterClass.ARTIFICER: 3})
         for feature in data.iter_features_with_extensions():
             feature.apply(character)
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )

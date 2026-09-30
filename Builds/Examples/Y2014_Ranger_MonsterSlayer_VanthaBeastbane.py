@@ -49,7 +49,7 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel4Spells,
     RangerLevel5Spells,
 )
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():
@@ -63,7 +63,7 @@ def get_starter_class_builder():
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=13,
             dexterity=15,
             constitution=14,

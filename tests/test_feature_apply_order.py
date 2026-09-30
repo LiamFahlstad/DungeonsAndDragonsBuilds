@@ -67,10 +67,19 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from StatBlocks.AbilityScores import AbilityScores
+from StatBlocks.ArmorClass import ArmorClass
+from StatBlocks.Bonuses import Bonuses
+from StatBlocks.CarryingCapacity import CarryingCapacity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.HitPoints import HitPoints
+from StatBlocks.Initiative import Initiative
+from StatBlocks.SavingThrows import SavingThrows
+from StatBlocks.Skills import Skills
+from StatBlocks.Senses import Senses
+from StatBlocks.Speed import Speed
+from StatBlocks.Spellcasting import Spellcasting
+from StatBlocks.WornArmor import WornArmor
 
 
 def _source_bonus(character, skill, source):
@@ -134,13 +143,13 @@ class TestModifierBonusesTrackLaterScoreIncreases:
         character = make_character(wisdom=16)  # +3
         RangerGloomStalkerFeatures.DreadAmbusher().apply(character)
         character.abilities.add_bonus(Ability.WISDOM, 2)  # 18 -> +4
-        assert character.initiative == 4
+        assert character.calculate_initiative() == 4
 
     def test_rakish_audacity(self, make_character):
         character = make_character(charisma=16)  # +3
         RogueSwashbucklerFeatures.RakishAudacity().apply(character)
         character.abilities.add_bonus(Ability.CHARISMA, 4)  # 20 -> +5
-        assert character.initiative == 5
+        assert character.calculate_initiative() == 5
 
 
 class TestJackOfAllTrades:
@@ -193,9 +202,9 @@ def _stats(data):
         "scores": [cs.get_ability_score(a) for a in Ability],
         "ac": cs.calculate_armor_class(),
         "hp": cs.calculate_hit_points(),
-        "initiative": cs.initiative,
+        "initiative": cs.calculate_initiative(),
         "initiative_roll": cs.initiative_roll_condition,
-        "speed": cs.speed,
+        "speed": cs.calculate_speed(),
         "skills": [cs.get_skill_modifier(s) for s in Skill],
         "skill_proficiency": [
             (cs.is_proficient_in_skill(s), cs.has_expertise_in_skill(s)) for s in Skill
@@ -211,15 +220,19 @@ def _stats(data):
         "save_proficiency": [cs.is_proficient_in_saving_throw(a) for a in Ability],
         "spell_slots": cs.spell_slots,
         "pact_magic_slots": cs.pact_magic_slots,
-        "resistances": sorted(map(str, cs.damage_resistances)),
-        "immunities": sorted(map(str, cs.damage_immunities)),
-        "condition_immunities": sorted(map(str, cs.condition_immunities)),
-        "senses": sorted((str(k), v) for k, v in cs.senses.items()),
-        "spell_save_dc_bonus": cs.spell_save_dc_bonus,
+        "resistances": sorted(map(str, cs.defenses.damage_resistances)),
+        "immunities": sorted(map(str, cs.defenses.damage_immunities)),
+        "condition_immunities": sorted(map(str, cs.defenses.condition_immunities)),
+        "senses": sorted((str(k), v) for k, v in cs.senses.ranges.items()),
+        "spell_save_dc_bonus": cs.spellcasting.spell_save_dc_bonus,
         "weapons_proficient": [w.is_proficient(cs) for w in data.weapons],
-        "armor_training": sorted(map(str, cs.armor_training)),
-        "weapon_proficiencies": sorted(map(str, cs.weapon_proficiencies)),
-        "tool_proficiencies": sorted(t.name for t in cs.tool_proficiencies),
+        "armor_training": sorted(map(str, cs.equipment_training.armor_training)),
+        "weapon_proficiencies": sorted(
+            map(str, cs.equipment_training.weapon_proficiencies)
+        ),
+        "tool_proficiencies": sorted(
+            t.name for t in cs.equipment_training.tool_proficiencies
+        ),
     }
 
 
@@ -510,16 +523,40 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
 # records facts, and anything computed from other stats is a formula.
 
 _MUTABLE_STAT_READERS = {
-    AbilitiesStatBlock: ("get_score", "get_own_score", "get_modifier"),
-    SkillsStatBlock: (
+    AbilityScores: ("get_score", "get_own_score", "get_modifier"),
+    # Bonuses (StatBlocks/Bonuses.py) is the flat-plus-formula shape shared by
+    # Initiative, ArmorClass, HitPoints, Speed, Skills and SavingThrows - an
+    # effect reading a Bonuses instance directly must be caught the same as
+    # reading it through the owning part.
+    Bonuses: ("total", "sources"),
+    Skills: (
         "is_proficient",
         "has_expertise",
         "get_skill_ability",
         "get_skill_abilities",
-        "get_bonus_sources",
         "get_roll_condition",
+        "get_total_bonus",
+        "get_all_bonus_sources",
     ),
-    SavingThrowsStatBlock: ("is_proficient", "is_advantaged", "get_bonus"),
+    SavingThrows: (
+        "is_proficient",
+        "is_advantaged",
+        "get_total_bonus",
+    ),
+    # The stat block's parts (step 5): an effect calling a part's query
+    # directly must be caught just like one going through CharacterStatBlock.
+    ArmorClass: ("calculate", "get_applicable_armor_class_formulas"),
+    HitPoints: ("calculate",),
+    Speed: ("total",),
+    CarryingCapacity: ("sources", "total"),
+    Initiative: ("total", "roll_condition"),
+    Senses: ("get_sense_range",),
+    Spellcasting: (
+        "spell_slots",
+        "pact_magic_slots",
+        "difficulty_class",
+        "attack_bonus",
+    ),
     CharacterStatBlock: (
         "get_skill_modifier",
         "get_skill_bonus",
@@ -528,18 +565,20 @@ _MUTABLE_STAT_READERS = {
         "calculate_hit_points",
         "calculate_difficulty_class_for_ability",
         "calculate_attack_bonus_for_ability",
+        "calculate_initiative",
+        "calculate_speed",
         "get_carrying_capacity_sources",
+        "get_carrying_capacity",
         "get_sense_range",
     ),
 }
 _MUTABLE_STAT_PROPERTIES = (
-    "initiative",
-    "initiative_roll_condition",
-    "speed",
-    "spell_slots",
-    "pact_magic_slots",
-    "is_wearing_armor",
-    "senses",
+    (CharacterStatBlock, "initiative_roll_condition"),
+    (CharacterStatBlock, "spell_slots"),
+    (CharacterStatBlock, "pact_magic_slots"),
+    (CharacterStatBlock, "is_wearing_armor"),
+    (WornArmor, "is_wearing_armor"),
+    (Senses, "ranges"),
 )
 _EFFECT_METHODS = {"apply", "apply_to_weapons"}
 
@@ -574,20 +613,20 @@ def test_effects_do_not_read_mutable_stats_during_setup(name, monkeypatch):
 
         monkeypatch.setattr(cls, method_name, instrumented)
 
-    def instrument_property(name):
-        original = getattr(CharacterStatBlock, name)
+    def instrument_property(cls, name):
+        original = getattr(cls, name)
 
         def instrumented(self):
-            record(f"CharacterStatBlock.{name}")
+            record(f"{cls.__name__}.{name}")
             return original.fget(self)
 
-        monkeypatch.setattr(CharacterStatBlock, name, property(instrumented))
+        monkeypatch.setattr(cls, name, property(instrumented))
 
     for cls, method_names in _MUTABLE_STAT_READERS.items():
         for method_name in method_names:
             instrument(cls, method_name)
-    for name_ in _MUTABLE_STAT_PROPERTIES:
-        instrument_property(name_)
+    for cls, name_ in _MUTABLE_STAT_PROPERTIES:
+        instrument_property(cls, name_)
 
     type(ALL_BUILDS[name])().build().setup_character_stat_block()
     assert not offending_reads, (
@@ -617,9 +656,11 @@ _DERIVED_READERS = {
     "is_proficient_in_skill",
     "is_proficient_in_saving_throw",
     "calculate_armor_class",
+    "calculate_initiative",
+    "calculate_speed",
 }
 # Armor state is set by worn armor, which may apply after the feature.
-_ARMOR_STATE = {"worn_armor_type", "is_wearing_armor", "is_wielding_shield"}
+_ARMOR_STATE = {"body_armor_type", "is_wearing_armor", "shield_wielded"}
 
 
 def _apply_methods_reading_derived_stats():
@@ -707,18 +748,21 @@ class TestProficienciesResolveOnRead:
         data.add_feature(_GrantMartialWeapons())
         character = data.setup_character_stat_block()
         assert longbow.is_proficient(character)
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )
 
     def test_class_proficiencies_reach_the_stat_block(self):
         # Wizard's Core Traits: Simple weapons, no armor. Its Bladesinger
         # subclass adds Melee Martial weapons without Two-Handed or Heavy.
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
         character = data.setup_character_stat_block()
-        assert character.weapon_proficiencies == {
+        assert character.equipment_training.weapon_proficiencies == {
             WeaponProficiency.SIMPLE,
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         }
-        assert character.armor_training == set()
+        assert character.equipment_training.armor_training == set()
 
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_character):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
@@ -739,7 +783,7 @@ class TestProficienciesResolveOnRead:
             GrantToolProficiency([SmithsTools()]),  # same tool, second source
         ]
         for character in _in_every_order(make_character, effects):
-            assert character.armor_training == {ArmorType.HEAVY}
-            assert [t.name for t in character.tool_proficiencies] == [
-                SmithsTools().name
-            ]
+            assert character.equipment_training.armor_training == {ArmorType.HEAVY}
+            assert [
+                t.name for t in character.equipment_training.tool_proficiencies
+            ] == [SmithsTools().name]

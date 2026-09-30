@@ -628,7 +628,7 @@ class TestDwarvenToughness:
     ):
         character = make_character(levels={CharacterClass.FIGHTER: level})
         DwarfFeatures.DwarvenToughness().apply(character)
-        assert character.combat.hit_points_bonus == expected_bonus
+        assert character.hit_points.bonuses.total(None) == expected_bonus
 
 
 # ── Granted proficiencies (choice-validated) ────────────────────────────────

@@ -7,25 +7,22 @@ from Core.Definitions import (
     Ability,
     Skill,
     CharacterClass,
-    CreatureSize,
     DiceRollCondition,
 )
-from StatBlocks.AbilitiesStatBlock import (
-    AbilitiesStatBlock,
-    StandardArrayAbilitiesStatBlock,
-    PointBuyAbilitiesStatBlock,
+from StatBlocks.AbilityScores import (
+    AbilityScores,
+    StandardArrayAbilityScores,
+    PointBuyAbilityScores,
 )
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.CombatStatBlock import (
-    UNARMORED_ARMOR_CLASS,
-    ArmorClassFormula,
-    CombatStatBlock,
-)
+from StatBlocks.Skills import Skills
+from StatBlocks.SavingThrows import SavingThrows
+from StatBlocks.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
+from StatBlocks.ClassLevels import ClassLevels
+from StatBlocks.HitPoints import HitPoints
 
 
-class TestAbilitiesStatBlock:
-    """Test AbilitiesStatBlock for ability scores and modifiers."""
+class TestAbilityScores:
+    """Test AbilityScores for ability scores and modifiers."""
 
     def test_create_abilities_stat_block(self, standard_abilities):
         """Test creating an abilities stat block."""
@@ -91,7 +88,7 @@ class TestAbilitiesStatBlock:
 
     def test_extreme_ability_scores(self):
         """Test extreme ability score calculations (very low and very high)."""
-        extreme = AbilitiesStatBlock(
+        extreme = AbilityScores(
             strength=3,
             dexterity=20,
             constitution=8,
@@ -104,12 +101,12 @@ class TestAbilitiesStatBlock:
         assert extreme.get_modifier(Ability.INTELLIGENCE) == 4  # (18-10)//2 = 4
 
 
-class TestStandardArrayAbilitiesStatBlock:
-    """Test StandardArrayAbilitiesStatBlock validation."""
+class TestStandardArrayAbilityScores:
+    """Test StandardArrayAbilityScores validation."""
 
     def test_valid_standard_array(self):
         """Test that standard array (15,14,13,12,10,8) is valid."""
-        standard = StandardArrayAbilitiesStatBlock(
+        standard = StandardArrayAbilityScores(
             strength=15,
             dexterity=14,
             constitution=13,
@@ -121,7 +118,7 @@ class TestStandardArrayAbilitiesStatBlock:
 
     def test_valid_standard_array_different_order(self):
         """Test that standard array works in any order."""
-        standard = StandardArrayAbilitiesStatBlock(
+        standard = StandardArrayAbilityScores(
             strength=8,
             dexterity=10,
             constitution=12,
@@ -135,7 +132,7 @@ class TestStandardArrayAbilitiesStatBlock:
     def test_invalid_standard_array_wrong_values(self):
         """Test that non-standard values are rejected."""
         with pytest.raises(ValueError, match="standard array values"):
-            StandardArrayAbilitiesStatBlock(
+            StandardArrayAbilityScores(
                 strength=16,  # Not in standard array
                 dexterity=14,
                 constitution=13,
@@ -147,7 +144,7 @@ class TestStandardArrayAbilitiesStatBlock:
     def test_invalid_standard_array_duplicate(self):
         """Test that duplicates in standard array are rejected."""
         with pytest.raises(ValueError, match="standard array values"):
-            StandardArrayAbilitiesStatBlock(
+            StandardArrayAbilityScores(
                 strength=15,
                 dexterity=15,  # Duplicate
                 constitution=13,
@@ -157,14 +154,14 @@ class TestStandardArrayAbilitiesStatBlock:
             )
 
 
-class TestPointBuyAbilitiesStatBlock:
-    """Test PointBuyAbilitiesStatBlock with point buy validation."""
+class TestPointBuyAbilityScores:
+    """Test PointBuyAbilityScores with point buy validation."""
 
     def test_valid_point_buy(self):
         """Test a valid point buy configuration."""
         # Starting scores: 8,8,8,8,8,8 (free)
         # 8->10 (2), 8->12 (4), 8->13 (5), 8->14 (7), 8->15 (9) = 27 points
-        point_buy = PointBuyAbilitiesStatBlock(
+        point_buy = PointBuyAbilityScores(
             strength=15,
             dexterity=14,
             constitution=13,
@@ -177,7 +174,7 @@ class TestPointBuyAbilitiesStatBlock:
     def test_point_buy_score_too_low(self):
         """Test that point buy rejects scores below 8."""
         with pytest.raises(ValueError, match="must be between 8 and 15"):
-            PointBuyAbilitiesStatBlock(
+            PointBuyAbilityScores(
                 strength=7,  # Below 8
                 dexterity=10,
                 constitution=10,
@@ -189,7 +186,7 @@ class TestPointBuyAbilitiesStatBlock:
     def test_point_buy_score_too_high(self):
         """Test that point buy rejects scores above 15."""
         with pytest.raises(ValueError, match="must be between 8 and 15"):
-            PointBuyAbilitiesStatBlock(
+            PointBuyAbilityScores(
                 strength=16,  # Above 15
                 dexterity=10,
                 constitution=10,
@@ -201,7 +198,7 @@ class TestPointBuyAbilitiesStatBlock:
     def test_point_buy_wrong_total(self):
         """Test that point buy rejects configurations that don't spend exactly 27 points."""
         with pytest.raises(ValueError, match="spend exactly 27 points"):
-            PointBuyAbilitiesStatBlock(
+            PointBuyAbilityScores(
                 strength=15,
                 dexterity=15,
                 constitution=15,
@@ -211,8 +208,8 @@ class TestPointBuyAbilitiesStatBlock:
             )
 
 
-class TestSkillsStatBlock:
-    """Test SkillsStatBlock for skill proficiencies and bonuses."""
+class TestSkills:
+    """Test Skills for skill proficiencies and bonuses."""
 
     def test_create_empty_skills(self, basic_skills):
         """Test creating an empty skills stat block."""
@@ -247,19 +244,19 @@ class TestSkillsStatBlock:
     def test_add_skill_bonus(self, basic_skills):
         """Test adding skill bonuses."""
         basic_skills.add_skill_bonus(Skill.ARCANA, 2)
-        assert basic_skills.bonuses.get(Skill.ARCANA, 0) == 2
+        assert basic_skills.get_total_bonus(Skill.ARCANA, None) == 2
 
     def test_add_multiple_skill_bonuses(self, basic_skills):
         """Test that multiple bonuses to the same skill stack."""
         basic_skills.add_skill_bonus(Skill.ARCANA, 2, "Source 1")
         basic_skills.add_skill_bonus(Skill.ARCANA, 3, "Source 2")
-        assert basic_skills.bonuses[Skill.ARCANA] == 5
+        assert basic_skills.get_total_bonus(Skill.ARCANA, None) == 5
 
-    def test_get_bonus_sources(self, basic_skills):
+    def test_get_all_bonus_sources(self, basic_skills):
         """Test retrieving bonus sources."""
         basic_skills.add_skill_bonus(Skill.ARCANA, 2, "Magic Item")
         basic_skills.add_skill_bonus(Skill.ARCANA, 1, "Feat")
-        sources = basic_skills.get_bonus_sources(Skill.ARCANA)
+        sources = basic_skills.get_all_bonus_sources(Skill.ARCANA, None)
         assert len(sources) == 2
         assert (2, "Magic Item") in sources
         assert (1, "Feat") in sources
@@ -284,78 +281,100 @@ class TestSkillsStatBlock:
         assert basic_skills.get_skill_ability(Skill.ARCANA) == Ability.INTELLIGENCE
 
 
-class TestCombatStatBlock:
-    """Test CombatStatBlock for combat mechanics."""
+class TestArmorClass:
+    """Test ArmorClass for AC formulas."""
 
-    def test_create_combat_stat_block(self, basic_combat):
-        """Test creating a combat stat block."""
-        assert basic_combat.speed == 30
-        assert basic_combat.size == CreatureSize.MEDIUM
-
-    def test_default_armor_class_formula(self, basic_combat):
+    def test_default_armor_class_formula(self, basic_armor_class):
         """Without armor or features: 10 + Dexterity modifier."""
-        assert basic_combat.armor_class_formulas == [UNARMORED_ARMOR_CLASS]
+        assert basic_armor_class.armor_class_formulas == [UNARMORED_ARMOR_CLASS]
         assert UNARMORED_ARMOR_CLASS.base == 10
         assert UNARMORED_ARMOR_CLASS.abilities == {Ability.DEXTERITY}
 
-    def test_increase_armor_class(self, basic_combat):
-        """Test increasing armor class modifier."""
-        basic_combat.increase_armor_class(2)
-        assert basic_combat.armor_class_modifier == 2
+    def test_add_bonus(self, basic_armor_class):
+        """Test adding a flat AC bonus."""
+        basic_armor_class.add_bonus(2)
+        assert basic_armor_class.bonuses.total(None) == 2
 
-    def test_added_formulas_are_kept_not_overwritten(self, basic_combat):
+    def test_added_formulas_are_kept_not_overwritten(self, basic_armor_class):
         unarmored = ArmorClassFormula(10, frozenset({Ability.CONSTITUTION}))
-        basic_combat.add_armor_class_formula(unarmored)
-        assert basic_combat.get_applicable_armor_class_formulas(False) == [
+        basic_armor_class.add_armor_class_formula(unarmored)
+        assert basic_armor_class.get_applicable_armor_class_formulas(False) == [
             UNARMORED_ARMOR_CLASS,
             unarmored,
         ]
 
-    def test_worn_armor_replaces_unarmored_formulas(self, basic_combat):
+    def test_worn_armor_replaces_unarmored_formulas(self, basic_armor_class):
         armor = ArmorClassFormula(18, frozenset(), is_armor=True)
-        basic_combat.add_armor_class_formula(armor)
-        basic_combat.add_armor_class_formula(
+        basic_armor_class.add_armor_class_formula(armor)
+        basic_armor_class.add_armor_class_formula(
             ArmorClassFormula(10, frozenset({Ability.WISDOM}))
         )
-        assert basic_combat.get_applicable_armor_class_formulas(False) == [armor]
+        assert basic_armor_class.get_applicable_armor_class_formulas(False) == [armor]
 
-    def test_shield_disables_formulas_that_forbid_it(self, basic_combat):
+    def test_shield_disables_formulas_that_forbid_it(self, basic_armor_class):
         no_shield = ArmorClassFormula(
             10, frozenset({Ability.WISDOM}), allows_shield=False
         )
-        basic_combat.add_armor_class_formula(no_shield)
-        assert no_shield in basic_combat.get_applicable_armor_class_formulas(False)
-        assert no_shield not in basic_combat.get_applicable_armor_class_formulas(True)
+        basic_armor_class.add_armor_class_formula(no_shield)
+        assert no_shield in basic_armor_class.get_applicable_armor_class_formulas(False)
+        assert no_shield not in basic_armor_class.get_applicable_armor_class_formulas(
+            True
+        )
 
-    def test_calculate_hit_points_single_class(self, basic_combat, standard_abilities):
+
+class TestCarryingCapacity:
+    """Test CarryingCapacity sources and totals."""
+
+    def test_carrying_capacity_sources(self, basic_carrying_capacity):
+        basic_carrying_capacity.add_bonus("Backpack", 2)
+        assert basic_carrying_capacity.sources(strength_modifier=1) == [
+            ("Person", 4),
+            ("Backpack", 2),
+        ]
+        assert basic_carrying_capacity.total(strength_modifier=1) == 6
+
+
+class TestHitPoints:
+    """Test HitPoints.calculate for hit point rolls."""
+
+    def test_calculate_hit_points_single_class(self, standard_abilities):
         """Test hit point calculation for single-class character."""
         # Wizard level 1: 6 (d6) + CON mod (1) = 7
-        hit_points = basic_combat.calculate_hit_points(
+        class_levels = ClassLevels(
             base_class=CharacterClass.WIZARD,
             level_per_class={CharacterClass.WIZARD: 1},
-            constitution_modifier=standard_abilities.get_modifier(Ability.CONSTITUTION),
+        )
+        hit_points = HitPoints().calculate(
+            class_levels,
+            standard_abilities.get_modifier(Ability.CONSTITUTION),
+            None,
         )
         assert hit_points == 7  # 6 + 1
 
-    def test_calculate_hit_points_multi_level(self, basic_combat, standard_abilities):
+    def test_calculate_hit_points_multi_level(self, standard_abilities):
         """Test hit point calculation for multi-level character."""
         # Fighter level 5: 10 (d10) + 1 (CON) + (4 * (6 avg + 1 CON)) = 11 + 28 = 39
-        hit_points = basic_combat.calculate_hit_points(
+        class_levels = ClassLevels(
             base_class=CharacterClass.FIGHTER,
             level_per_class={CharacterClass.FIGHTER: 5},
-            constitution_modifier=standard_abilities.get_modifier(Ability.CONSTITUTION),
+        )
+        hit_points = HitPoints().calculate(
+            class_levels,
+            standard_abilities.get_modifier(Ability.CONSTITUTION),
+            None,
         )
         # 11 (level 1) + 4*(7 (average d10 + CON mod))
         assert hit_points == 11 + 4 * 7
 
-    def test_calculate_hit_points_with_bonus(self, basic_combat):
+    def test_calculate_hit_points_with_bonus(self):
         """Test that hit point bonuses are applied."""
-        basic_combat.hit_points_bonus = 5
-        hit_points = basic_combat.calculate_hit_points(
+        hit_points_part = HitPoints()
+        hit_points_part.add_bonus(5)
+        class_levels = ClassLevels(
             base_class=CharacterClass.WIZARD,
             level_per_class={CharacterClass.WIZARD: 1},
-            constitution_modifier=0,
         )
+        hit_points = hit_points_part.calculate(class_levels, 0, None)
         assert hit_points == 6 + 5  # d6 + bonus
 
 

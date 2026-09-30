@@ -22,13 +22,11 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
 from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
-from Core.Definitions import Ability, CharacterClass, CreatureSize, Skill
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from Core.Definitions import Ability, CharacterClass, Skill
+from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.CombatStatBlock import CombatStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.Spellcasting import Spellcasting
 from Utils import Html
 
 CLASS_TEXT_DIR = REPO / "SourceTexts" / "ClassTexts"
@@ -1197,12 +1195,12 @@ def make_dummy_stat_block(
                 lvl: character_class for lvl in range(1, level + 1)
             },
         ),
-        abilities=AbilitiesStatBlock(16, 14, 14, 14, 14, 12),
-        skills=SkillsStatBlock(),
-        combat=CombatStatBlock(speed=30, size=CreatureSize.MEDIUM),
-        saving_throws=SavingThrowsStatBlock(),
-        spell_casting_ability=spell_ability,
-        spell_slots={1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1},
+        abilities=AbilityScores(16, 14, 14, 14, 14, 12),
+        speed=30,
+        spellcasting=Spellcasting(
+            ability=spell_ability,
+            fixed_slots={1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1},
+        ),
     )
 
 

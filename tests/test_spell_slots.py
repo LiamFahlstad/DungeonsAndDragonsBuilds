@@ -12,13 +12,11 @@ once it is fixed.
 import pytest
 
 from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, SpellSlots
-from Core.Definitions import CharacterClass, CreatureSize
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from Core.Definitions import CharacterClass
+from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.CombatStatBlock import CombatStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.Spellcasting import Spellcasting
 
 FULL, HALF, THIRD, WARLOCK = (
     CasterType.FULL_CASTER,
@@ -136,11 +134,9 @@ def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
         class_levels=ClassLevels(
             base_class=classes[0][0], level_per_class=level_per_class
         ),
-        abilities=AbilitiesStatBlock(10, 10, 10, 10, 10, 10),
-        skills=SkillsStatBlock(),
-        combat=CombatStatBlock(speed=30, size=CreatureSize.MEDIUM),
-        saving_throws=SavingThrowsStatBlock(),
-        spell_slots={},
+        abilities=AbilityScores(10, 10, 10, 10, 10, 10),
+        speed=30,
+        spellcasting=Spellcasting(fixed_slots={}),
     )
     for cls, _, caster_type in classes:
         SpellSlots(caster_type, cls).apply(character)

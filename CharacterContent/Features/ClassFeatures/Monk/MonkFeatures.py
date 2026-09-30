@@ -264,7 +264,7 @@ class UnarmoredMovement(Feature):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
         def bonus(cs: CharacterStatBlock) -> int:
-            if cs.is_wearing_armor or cs.is_wielding_shield:
+            if cs.is_wearing_armor or cs.worn_armor.shield_wielded:
                 return 0
             monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
             return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)

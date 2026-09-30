@@ -73,9 +73,9 @@ def test_multiclass_proficiencies_match_class_text(character_class, make_charact
     armor, weapons, tools = MULTICLASS_TEXT[character_class]
     character = make_character()
     MulticlassProficiencies(character_class).apply(character)
-    assert character.armor_training == armor
-    assert character.weapon_proficiencies == weapons
-    assert {t.name for t in character.tool_proficiencies} == tools
+    assert character.equipment_training.armor_training == armor
+    assert character.equipment_training.weapon_proficiencies == weapons
+    assert {t.name for t in character.equipment_training.tool_proficiencies} == tools
 
 
 def _multiclass_builder(character_class, level):
@@ -94,7 +94,9 @@ class TestMulticlassing:
         # Regression: multiclass builders granted no proficiencies at all, so
         # a Wizard 3 / Warlock 3 never got the Warlock's Light armor training.
         data = type(ALL_BUILDS["SpellSlotTestWizard3Warlock3"])().build()
-        assert LIGHT in data.setup_character_stat_block().armor_training
+        assert (
+            LIGHT in data.setup_character_stat_block().equipment_training.armor_training
+        )
 
     def test_resuming_a_class_does_not_grant_its_proficiencies_again(self):
         applied = AppliedLevelFeatures()
@@ -108,8 +110,8 @@ class TestMulticlassing:
         # Core Traits, not the (Heavy-less) multiclass subset.
         data = type(ALL_BUILDS["Y2024_Warlock_Archfey_CaelumBladefey"])().build()
         character = data.setup_character_stat_block()
-        assert ArmorType.HEAVY in character.armor_training
-        assert MARTIAL in character.weapon_proficiencies
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
+        assert MARTIAL in character.equipment_training.weapon_proficiencies
 
 
 class TestFeaturesGrantProficiencies:
@@ -130,23 +132,23 @@ class TestFeaturesGrantProficiencies:
         # be granted)
         character = make_character()
         DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(character)
-        assert MARTIAL in character.weapon_proficiencies
-        assert MEDIUM in character.armor_training
+        assert MARTIAL in character.equipment_training.weapon_proficiencies
+        assert MEDIUM in character.equipment_training.armor_training
 
     def test_druid_magician_grants_no_proficiencies(self, make_character):
         character = make_character()
         DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN).apply(
             character
         )
-        assert not character.weapon_proficiencies
-        assert not character.armor_training
+        assert not character.equipment_training.weapon_proficiencies
+        assert not character.equipment_training.armor_training
 
     def test_forge_domain_smiths_tools(self, make_character):
         # "You gain proficiency with heavy armor and smith's tools."
         character = make_character()
         ClericForgeFeatures.BonusProficiencies().apply(character)
-        assert ArmorType.HEAVY in character.armor_training
-        assert [t.name for t in character.tool_proficiencies] == [
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
+        assert [t.name for t in character.equipment_training.tool_proficiencies] == [
             Tools.SmithsTools().name
         ]
 

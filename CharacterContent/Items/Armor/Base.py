@@ -131,8 +131,7 @@ class AbstractArmor(Item, ABC):
             # The AC bonus only counts with Shield training (worked out on read).
             character_stat_block.add_shield(self.ac_bonus or 0)
         else:
-            character_stat_block.worn_armor_type = self.armor_type
-            character_stat_block.worn_armor_name = self.name
+            character_stat_block.set_worn_armor(self.armor_type, self.name)
             # Medium armor: "add your Dexterity modifier, to a maximum of
             # +2" - Light armor is uncapped and Heavy armor has no ability
             # modifier at all, so the cap only ever applies here.

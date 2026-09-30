@@ -46,18 +46,18 @@ without that second check a late extension would be missed.
 
 | Value | Recorded as | Resolved by |
 |---|---|---|
-| Ability score | Base score + `(ability, bonus, max_score)` increases | `AbilitiesStatBlock.get_score`: capped increases lowest cap first, then uncapped (equipment) bonuses on top |
+| Ability score | Base score + `(ability, bonus, max_score)` increases | `AbilityScores.get_score`: capped increases lowest cap first, then uncapped (equipment) bonuses on top |
 | Ability modifier | | From the score |
 | Skill modifier | Proficiency/expertise flags, flat and formula bonuses, ability overrides | `CharacterStatBlock.get_skill_modifier`. With several overrides for one skill, the best ability is used |
-| Skill roll condition | Every Advantage/Disadvantage source, with reasons | `SkillsStatBlock.get_roll_condition`: both cancel out |
-| Saving throw | Proficiency flags, conditional grants, flat and formula bonuses | `get_saving_throw_modifier`, `SavingThrowsStatBlock.is_proficient` |
+| Skill roll condition | Every Advantage/Disadvantage source, with reasons | `Skills.get_roll_condition`: both cancel out |
+| Saving throw | Proficiency flags, conditional grants, flat and formula bonuses | `get_saving_throw_modifier`, `SavingThrows.is_proficient` |
 | AC | Every `ArmorClassFormula` (unarmored default, Unarmored Defense, worn armor), flat and formula bonuses | `calculate_armor_class`: the best applicable formula + bonuses |
-| Speed | Base + flat and formula bonuses | `CharacterStatBlock.speed` |
-| Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses`: best plain grant + every extension |
-| Weapon proficiency | `weapon_proficiencies` on the stat block (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
-| Armor training, tools | `armor_training`, `tool_proficiencies` on the stat block | Read directly (the same tool from two sources is listed once) |
-| Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield, `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
-| Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `initiative`, `initiative_roll_condition` |
+| Speed | Base + flat and formula bonuses | `CharacterStatBlock.calculate_speed()` |
+| Senses | Plain grants and "or extend" grants | `CharacterStatBlock.senses.ranges`: best plain grant + every extension |
+| Weapon proficiency | `weapon_proficiencies` on `CharacterStatBlock.equipment_training` (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
+| Armor training, tools | `armor_training`, `tool_proficiencies` on `CharacterStatBlock.equipment_training` | Read directly (the same tool from two sources is listed once) |
+| Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield (`CharacterStatBlock.worn_armor`), `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
+| Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `calculate_initiative()`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
 
@@ -79,7 +79,7 @@ applies. `get_score` resolves the recorded increases:
 ### "If you already have this proficiency, choose another"
 
 Iron Mind and Unfettered Mind use `SavingThrowProficiencyOrAlternative(ability, alternatives)`.
-It records a conditional grant. `SavingThrowsStatBlock` resolves it on read: fixed proficiencies
+It records a conditional grant. `SavingThrows` resolves it on read: fixed proficiencies
 first, then each conditional grant in a fixed (Ability-enum) order, each taking its ability or the
 first alternative still missing. "Already have" therefore means *from any source*, including a
 species or another class merged later, so the choice is never silently wasted.
@@ -89,7 +89,7 @@ and the expertise-needs-proficiency check runs in validation.
 
 ### AC is a set of formulas, not an overwritten field
 
-`CombatStatBlock.armor_class_formulas` starts with 10 + DEX. `MultiAbilityArmorClass` (Unarmored
+`CharacterStatBlock.armor_class.armor_class_formulas` starts with 10 + DEX. `MultiAbilityArmorClass` (Unarmored
 Defense, Draconic Resilience) adds an unarmored formula, and worn armor adds an armor formula via
 `SetArmorClass`. On read:
 
@@ -110,7 +110,7 @@ hook is gone. The effect is a formula reading the armor state on read:
 ```python
 # Roving / Fast Movement
 SpeedBonus(
-    lambda cs: 0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10
+    lambda cs: 0 if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY else 10
 ).apply(character_stat_block)
 
 # Defense fighting style, Soul of the Forge
@@ -126,7 +126,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
 | "a bonus equal to your *ability* modifier" / "half your proficiency bonus" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus` |
-| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor_type`, `cs.is_wearing_armor`, `cs.is_wielding_shield` |
+| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor.body_armor_type`, `cs.is_wearing_armor`, `cs.worn_armor.shield_wielded` |
 | "Your AC equals 10 + DEX + WIS" | `MultiAbilityArmorClass(10, [DEX, WIS])`, plus `allows_shield=False` if a Shield disables it |
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
@@ -135,10 +135,54 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | An upgrade to an earlier feature | `parent.extend_feature(Upgrade())`. Its `apply()` runs too, so don't also `add_feature()` it |
 
 **Never read the stat block inside `apply()`.** That includes ability scores and modifiers,
-proficiency flags, AC and armor state. If a value depends on anything, pass a formula. If a store
-doesn't accept formulas yet, add a derived-bonus list to `CharacterStatBlock`, following
-`_derived_speed_bonuses`. **Safe to read directly:** class levels, character level and proficiency
-bonus. They're fixed before any effect applies and no effect changes them.
+proficiency flags, AC and armor state. If a value depends on anything, pass a formula. Every part
+that takes bonuses (`Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills`, `SavingThrows`)
+accepts one via its own `Bonuses` instance (`StatBlocks/Bonuses.py`) - `add(value, source)` for a
+flat value, `add_formula(formula, source)` for one evaluated at read time. **Safe to read
+directly:** class levels, character level and proficiency bonus. They're fixed before any effect
+applies and no effect changes them.
+
+## The parts
+
+`CharacterStatBlock` is a composition root: a thin object holding one part per concern
+(`StatBlocks/*.py`), plus a few queries that combine several of them (untrained-armor disadvantage,
+the final AC, `warnings`, `validate()`). Each part owns its own state *and* the queries on that
+state; a part never reaches back into the character, so a value from another part (or the finished
+character, for formula evaluation) is always passed in as an argument, e.g.
+`HitPoints.calculate(class_levels, constitution_modifier, character)` and
+`Initiative.total(proficiency_bonus, character)`. No part imports `CharacterContent`.
+
+`Bonuses` (`StatBlocks/Bonuses.py`) is a small value object - flat values and formulas
+(`DerivedBonus`), each with a source label - shared by every part that is "a bonus total plus
+sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `SavingThrows` each hold
+one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
+flat-list/formula-list/source-list shape themselves.
+
+| Part (`character_stat_block.<attr>`) | Owns |
+|---|---|
+| `equipment_training` (`EquipmentTraining`) | `weapon_proficiencies`, `armor_training`, `tool_proficiencies`, `has_shield_training` |
+| `languages` (`Languages`) | Known languages, each with sources (`knows`, `sources`, `add`) |
+| `defenses` (`Defenses`) | Damage resistance/immunity, condition immunity, each with sources |
+| `senses` (`Senses`) | Sense ranges (`.ranges`) and "or extend" grants |
+| `ability_requirements` (`AbilityRequirements`) | Ability score minimums (e.g. an armor's Strength) plus the multiclass ability-score prerequisites, both checked by `validate(abilities, class_levels)` |
+| `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total (`character_stat_block.calculate_initiative()` / `.initiative_roll_condition` combine it with the Dexterity modifier and untrained-armor Disadvantage) |
+| `worn_armor` (`WornArmor`) | The worn body armor's type/name and whether a Shield is wielded - what untrained-armor Disadvantage, spellcasting warnings, Defense, Unarmored Movement and `ArmorClass.calculate` all read |
+| `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `calculate(abilities, character, is_wielding_shield, has_shield_training)` |
+| `hit_points` (`HitPoints`) | A `Bonuses` total; `calculate(class_levels, constitution_modifier, character)` |
+| `speed` (`Speed`) | Base walking speed and a `Bonuses` total (`character_stat_block.calculate_speed()`) |
+| `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(strength_modifier)` / `total(strength_modifier)` also compute the dynamic "Person" base |
+| `spellcasting` (`Spellcasting`) | Spell casting ability, registered casters, spell save DC bonus; `spell_slots()`/`pact_magic_slots()` also take `class_levels` |
+| `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
+
+Every part is exposed directly under its own name. `CharacterStatBlock`'s own methods
+(`add_damage_resistance`, `calculate_armor_class`, `get_sense_range`, …) are kept as one-line
+delegations to the parts, so existing feature call sites don't need to change; `spell_casting_ability`
+is a read-only delegating property for the same reason (too many callers to rewrite safely).
+`character_stat_block.initiative` and `.speed` are the parts themselves - the *int* versions are
+the `calculate_initiative()` / `calculate_speed()` methods, named after the existing
+`calculate_armor_class()` / `calculate_hit_points()` convention so the name doesn't collide with
+the part. `character_stat_block.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
+is the `Senses` part).
 
 ## Extensions
 

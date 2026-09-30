@@ -42,7 +42,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Halfling
 from Core.Definitions import Ability, RogueSubclass, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 
 
@@ -68,7 +68,7 @@ def get_starter_class_builder():
         # Dex/+1 Wis background bonus below and the four +2 Monk ASIs applied
         # in the multiclass builder (Dex, Wis, Dex, Wis), the final array is
         # Dex 21 / Wis 20 / Con 14 / Int 10 / Str 8 / Cha 8.
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=8,
             dexterity=15,
             constitution=14,

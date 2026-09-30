@@ -26,7 +26,7 @@ from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.Skills import Skills
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 
@@ -232,6 +232,7 @@ class HtmlCharacterSheetWriter:
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
         character_subclass: Optional[str],
+        size: Definitions.CreatureSize,
     ):
         """Character overview: large tiles for the stats checked constantly
         in play (HP above all, then AC/Initiative/Speed/Prof. Bonus), with
@@ -263,10 +264,12 @@ class HtmlCharacterSheetWriter:
         file.write(self._stat_tile("AC", ac, sub=ac_sub))
         file.write(
             self._stat_tile(
-                "Initiative", f"{character.initiative:+}", sub=initiative_sub
+                "Initiative",
+                f"{character.calculate_initiative():+}",
+                sub=initiative_sub,
             )
         )
-        file.write(self._stat_tile("Speed", f"{character.speed} ft"))
+        file.write(self._stat_tile("Speed", f"{character.calculate_speed()} ft"))
         file.write(
             self._stat_tile("Prof. Bonus", f"{character.get_proficiency_bonus():+}")
         )
@@ -274,41 +277,43 @@ class HtmlCharacterSheetWriter:
 
         languages = ", ".join(
             language.value
-            for language in sorted(character.languages, key=lambda lang: lang.value)
+            for language in sorted(
+                character.languages.known, key=lambda lang: lang.value
+            )
         )
         senses = ", ".join(
-            f"{sense.value} {character.senses[sense]} ft."
-            for sense in sorted(character.senses, key=lambda s: s.value)
+            f"{sense.value} {character.senses.ranges[sense]} ft."
+            for sense in sorted(character.senses.ranges, key=lambda s: s.value)
         )
 
         resistance_immunity_groups = []
-        if character.damage_resistances:
+        if character.defenses.damage_resistances:
             resistance_immunity_groups.append(
                 "Resistant: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.damage_resistances, key=lambda d: d.value
+                        character.defenses.damage_resistances, key=lambda d: d.value
                     )
                 )
             )
-        if character.damage_immunities:
+        if character.defenses.damage_immunities:
             resistance_immunity_groups.append(
                 "Immune: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.damage_immunities, key=lambda d: d.value
+                        character.defenses.damage_immunities, key=lambda d: d.value
                     )
                 )
             )
-        if character.condition_immunities:
+        if character.defenses.condition_immunities:
             resistance_immunity_groups.append(
                 "Condition Immune: "
                 + ", ".join(
                     condition.value
                     for condition in sorted(
-                        character.condition_immunities, key=lambda c: c.value
+                        character.defenses.condition_immunities, key=lambda c: c.value
                     )
                 )
             )
@@ -317,7 +322,7 @@ class HtmlCharacterSheetWriter:
         details = [
             ("Class", self._format_class_level_history(character)),
             ("Subclass", character_subclass),
-            ("Size", character.combat.size.value),
+            ("Size", size.value),
             ("Armor Prof.", ", ".join(sorted(a.value for a in armor_proficiencies))),
             (
                 "Weapon Prof.",
@@ -1094,8 +1099,8 @@ class HtmlCharacterSheetWriter:
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
         armors = data.armors
-        armor_proficiencies = character.armor_training
-        weapon_proficiencies = character.weapon_proficiencies
+        armor_proficiencies = character.equipment_training.armor_training
+        weapon_proficiencies = character.equipment_training.weapon_proficiencies
         features = data.features
         weapons = data.weapons
         weapon_masteries = data.weapon_masteries
@@ -1104,14 +1109,16 @@ class HtmlCharacterSheetWriter:
         spells = data.spells
         equipment_entries = data.equipment_entries
         starting_equipment_entry = data.starting_equipment_entry
-        tool_proficiencies = character.tool_proficiencies
-        # Identity and gold live on the sheet data, not the stat block - see
-        # StatBlocks/ClassLevels.py.
+        tool_proficiencies = character.equipment_training.tool_proficiencies
+        # Identity, gold and size live on the sheet data, not the stat block -
+        # see StatBlocks/ClassLevels.py.
         character_name = data.character_name
         character_subclass = data.character_subclass
         base_class = data.base_class
         current_gold = data.current_gold
+        size = data.size
         assert character_name is not None and base_class is not None
+        assert size is not None
 
         output_folder_obj = pathlib.Path(output_folder)
         output_folder_obj.mkdir(parents=True, exist_ok=True)
@@ -1192,6 +1199,7 @@ class HtmlCharacterSheetWriter:
             character_name,
             base_class,
             character_subclass,
+            size,
             armors,
             armor_proficiencies,
             weapon_proficiencies,
@@ -1209,6 +1217,7 @@ class HtmlCharacterSheetWriter:
             character_name,
             base_class,
             character_subclass,
+            size,
             current_gold,
             armors,
             armor_proficiencies,
@@ -1287,6 +1296,7 @@ class HtmlCharacterSheetWriter:
         character_name: str,
         base_class: Definitions.CharacterClass,
         character_subclass: Optional[str],
+        size: Definitions.CreatureSize,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
         weapon_proficiencies: set[WeaponProficiency],
@@ -1310,6 +1320,7 @@ class HtmlCharacterSheetWriter:
                 armor_proficiencies,
                 weapon_proficiencies,
                 character_subclass,
+                size,
             )
             file.write("<h2>Abilities and Skills</h2>\n")
             file.write("<div class='section-row'>\n")
@@ -1347,7 +1358,7 @@ class HtmlCharacterSheetWriter:
         output_folder_obj.mkdir(parents=True, exist_ok=True)
         path = output_folder_obj / "character.html"
 
-        blank_skills = SkillsStatBlock()
+        blank_skills = Skills()
         blank_sm = "<span class='blank-fill blank-fill-sm'></span>"
 
         with open(path, "w", encoding="utf-8") as file:
@@ -1482,6 +1493,7 @@ class HtmlCharacterSheetWriter:
         character_name: str,
         base_class: Definitions.CharacterClass,
         character_subclass: Optional[str],
+        size: Definitions.CreatureSize,
         current_gold: Optional[float],
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
@@ -1519,6 +1531,7 @@ class HtmlCharacterSheetWriter:
                 armor_proficiencies,
                 weapon_proficiencies,
                 character_subclass,
+                size,
             )
             file.write("<h2>Abilities and Skills</h2>\n")
             file.write("<div class='section-row'>\n")

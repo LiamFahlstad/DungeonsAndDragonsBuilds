@@ -191,39 +191,48 @@ class TestClericDomainBonusProficiencies:
         character = granted(
             features_at(ClericForgeLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert ArmorType.HEAVY in character.armor_training
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
 
     def test_tempest_domain_heavy_armor_and_martial_weapons(self, make_character):
         character = granted(
             features_at(ClericTempestLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert ArmorType.HEAVY in character.armor_training
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )
 
     def test_nature_domain_heavy_armor(self, make_character):
         character = granted(
             features_at(ClericNatureLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert ArmorType.HEAVY in character.armor_training
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
 
     def test_order_domain_heavy_armor(self, make_character):
         character = granted(
             features_at(ClericOrderLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert ArmorType.HEAVY in character.armor_training
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
 
     def test_twilight_domain_heavy_armor_and_martial_weapons(self, make_character):
         character = granted(
             features_at(ClericTwilightLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert ArmorType.HEAVY in character.armor_training
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert ArmorType.HEAVY in character.equipment_training.armor_training
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )
 
     def test_death_domain_martial_weapons(self, make_character):
         character = granted(
             features_at(ClericDeathLevel3, CharacterClass.CLERIC, 3), make_character
         )
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )
 
 
 # ── Blessed Strikes: the 2024 base feature replaces the 2014 domain version ───
@@ -324,7 +333,7 @@ class TestPromisedPassiveBonusNeverApplied:
         character = make_character(levels={CharacterClass.ROGUE: 9})
         feature = RogueScoutFeatures.SuperiorMobility()
         feature.apply(character)
-        assert character.speed == 40
+        assert character.calculate_speed() == 40
 
     def test_survivalist_proficiency_and_expertise_are_applied(self, make_character):
         # Control: the earlier Scout feature correctly wires both grants.
@@ -498,9 +507,12 @@ class TestPromisedProficienciesGranted:
             features_at(WarlockHexbladeLevel3, CharacterClass.WARLOCK, 3),
             make_character,
         )
-        assert ArmorType.MEDIUM in character.armor_training
-        assert ArmorType.SHIELD in character.armor_training
-        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies
+        assert ArmorType.MEDIUM in character.equipment_training.armor_training
+        assert ArmorType.SHIELD in character.equipment_training.armor_training
+        assert (
+            WeaponProficiency.MARTIAL
+            in character.equipment_training.weapon_proficiencies
+        )
 
     def test_college_of_swords_bonus_proficiencies(self, make_character):
         # "...you gain proficiency with medium armor and the scimitar."
@@ -509,7 +521,7 @@ class TestPromisedProficienciesGranted:
         )
         BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)
         character = granted(data, make_character)
-        assert ArmorType.MEDIUM in character.armor_training
+        assert ArmorType.MEDIUM in character.equipment_training.armor_training
         assert MartialMelee.Scimitar().is_proficient(character)
         assert not MartialMelee.Longsword().is_proficient(character)
 
@@ -563,7 +575,7 @@ class TestPromisedPassiveBenefits:
         # bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid)."
         character = make_character()
         WarlockTheGenieFeatures.ElementalGift(kind).apply(character)
-        assert list(character.damage_resistances) == [damage_type]
+        assert list(character.defenses.damage_resistances) == [damage_type]
 
     @pytest.mark.parametrize(
         "environment, damage_type",
@@ -580,4 +592,4 @@ class TestPromisedPassiveBenefits:
         # Tundra. ...cold"
         character = make_character()
         BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment).apply(character)
-        assert list(character.damage_resistances) == [damage_type]
+        assert list(character.defenses.damage_resistances) == [damage_type]

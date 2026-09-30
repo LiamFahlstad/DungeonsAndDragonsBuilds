@@ -1,97 +1,72 @@
 from enum import Enum
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
-from Core.SpellcastingRules import CasterType, calculate_spell_slots
-from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+from Core.SpellcastingRules import CasterType
+from StatBlocks.AbilityRequirements import AbilityRequirements
+from StatBlocks.AbilityScores import AbilityScores
+from StatBlocks.ArmorClass import ArmorClass
+from StatBlocks.Bonuses import DerivedBonus
+from StatBlocks.CarryingCapacity import CarryingCapacity
 from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.CombatStatBlock import ArmorClassFormula, CombatStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
+from StatBlocks.Defenses import Defenses
+from StatBlocks.EquipmentTraining import EquipmentTraining
+from StatBlocks.HitPoints import HitPoints
+from StatBlocks.Initiative import Initiative
+from StatBlocks.Languages import Languages
+from StatBlocks.SavingThrows import SavingThrows
+from StatBlocks.Senses import Senses
+from StatBlocks.Skills import Skills
+from StatBlocks.Speed import Speed
+from StatBlocks.Spellcasting import Spellcasting
+from StatBlocks.WornArmor import WornArmor
 
-# A bonus whose value depends on other stats (e.g. "equal to your Wisdom
-# modifier"). Stored as a formula and evaluated at read time, so it always
-# reflects the final stats no matter which feature, armor or item applied
-# first - snapshotting such a value inside apply() would freeze it at
-# whatever the stat was when that feature happened to run.
-DerivedBonus = Callable[["CharacterStatBlock"], int]
+# DerivedBonus is imported above from StatBlocks/Bonuses.py (not defined
+# here) so every part can use the type without importing this module, which
+# would be circular since this module imports the parts.
 
 
 class CharacterStatBlock:
     def __init__(
         self,
         class_levels: ClassLevels,
-        abilities: AbilitiesStatBlock,
-        skills: SkillsStatBlock,
-        combat: CombatStatBlock,
-        saving_throws: SavingThrowsStatBlock,
-        spell_casting_ability: Optional[Ability] = None,
-        spell_slots: Optional[dict[int, int]] = None,
+        abilities: AbilityScores,
+        speed: int,
+        spellcasting: Optional[Spellcasting] = None,
     ):
         # Shared with the CharacterSheetData this character was built from -
         # not a copy - so levels, history and subclass are one source of
-        # truth (see StatBlocks/ClassLevels.py). Name, gold and the subclass
-        # display string stay on CharacterSheetData only; readers that need
-        # them (the sheet writer) already have that object.
+        # truth (see StatBlocks/ClassLevels.py). Name, gold, size and the
+        # subclass display string stay on CharacterSheetData only; readers
+        # that need them (the sheet writer) already have that object.
         self.class_levels = class_levels
         self.abilities = abilities
-        self.skills = skills
-        self.combat = combat
-        self.saving_throws = saving_throws
-        self.spell_casting_ability = spell_casting_ability
-        # Slots for a character with no Spell Slots feature (e.g. companions);
-        # otherwise worked out from the registered casters - see spell_slots.
-        self._fixed_spell_slots = spell_slots
-        self._casters: dict[CharacterClass, CasterType] = {}
-        # Set by worn armor as it applies. Armor-conditional effects (Defense
-        # fighting style, Unarmored Movement, Fast Movement, ...) read these
-        # inside a formula, i.e. once everything has applied.
-        self.worn_armor_type: Optional[Definitions.ArmorType] = None
-        self.worn_armor_name: Optional[str] = None
-        self.is_wielding_shield = False
-        # A wielded Shield's AC bonus; only counts with Shield training.
-        self._shield_armor_class_bonuses: list[int] = []
-        self.initiative_proficiency = False
-        self._initiative_roll_conditions: set[Definitions.DiceRollCondition] = set()
-        self.initiative_bonus = 0
-        # Formula-valued bonuses (see DerivedBonus), resolved on every read.
-        self._derived_initiative_bonuses: list[DerivedBonus] = []
-        self._derived_armor_class_bonuses: list[DerivedBonus] = []
-        self._derived_speed_bonuses: list[DerivedBonus] = []
-        self._derived_saving_throw_bonuses: dict[Ability, list[DerivedBonus]] = {}
-        self._derived_skill_bonuses: dict[Skill, list[tuple[DerivedBonus, str]]] = {}
-        self.spell_save_dc_bonus = 0
-        # (source, slots) pairs; bonus sources only (Person is computed dynamically)
-        self.carrying_capacity_sources: list[tuple[str, int]] = []
-        # (damage_type -> [source, ...]) grants of resistance/immunity to damage
-        self.damage_resistances: dict[Definitions.DamageType, list[str]] = {}
-        self.damage_immunities: dict[Definitions.DamageType, list[str]] = {}
-        # (condition -> [source, ...]) grants of immunity to a condition
-        self.condition_immunities: dict[Definitions.Condition, list[str]] = {}
-        # Every (range, source) pair granted per sense; the range itself is
-        # worked out on read - see senses.
-        self.sense_sources: dict[Definitions.Sense, list[tuple[int, str]]] = {}
-        # "...or if you already have it, its range increases by N" grants.
-        self._sense_extensions: dict[Definitions.Sense, list[tuple[int, str]]] = {}
-        # (language -> [source, ...]) grants of a known language
-        self.languages: dict[Definitions.Language, list[str]] = {}
-        # (ability, minimum score, reason) - checked by validate() once
-        # everything has applied, against the character's own score.
-        self._ability_requirements: list[tuple[Ability, int, str]] = []
-        # Weapon, armor and tool proficiencies from any source (class,
-        # subclass, feat, item). A weapon works out whether its wielder is
-        # proficient on read, against these (AbstractWeapon.is_proficient).
-        # Typed loosely: the WeaponProficiency enum and ToolProficiency live in
-        # CharacterContent, which imports this module.
-        self.weapon_proficiencies: set[Enum] = set()
-        self.armor_training: set[Definitions.ArmorType] = set()
-        self.tool_proficiencies: list[Any] = []
+        self.speed = Speed(speed)
+        self.spellcasting = spellcasting if spellcasting is not None else Spellcasting()
+        # Parts (StatBlocks/*.py): each owns its own state and the queries on
+        # it (see Notes/feature-application-model.md). Always present, even
+        # when empty, so nothing here needs an "if part is not None" check.
+        # Skills and saving throws hold no state of their own here - every
+        # proficiency, expertise and bonus arrives as a feature effect (e.g.
+        # ClassProficiencies, ClassSkillChoice, FreeBackgroundSkillProficiency).
+        self.skills = Skills()
+        self.saving_throws = SavingThrows()
+        self.carrying_capacity = CarryingCapacity()
+        self.armor_class = ArmorClass()
+        self.worn_armor = WornArmor()
+        self.hit_points = HitPoints()
+        self.equipment_training = EquipmentTraining()
+        self.languages = Languages()
+        self.defenses = Defenses()
+        self.senses = Senses()
+        self.ability_requirements = AbilityRequirements()
+        self.initiative = Initiative()
 
     @property
     def is_wearing_armor(self) -> bool:
         """Wearing Light, Medium or Heavy armor (a shield alone doesn't count)."""
-        return self.worn_armor_type is not None
+        return self.worn_armor.is_wearing_armor
 
     @property
     def character_level(self) -> int:
@@ -110,33 +85,32 @@ class CharacterStatBlock:
         return self.class_levels.base_class
 
     @property
-    def speed(self) -> int:
-        derived = sum(bonus(self) for bonus in self._derived_speed_bonuses)
-        return self.combat.speed + derived
+    def spell_casting_ability(self) -> Optional[Ability]:
+        return self.spellcasting.ability
 
     @property
     def spell_slots(self) -> Optional[dict[int, int]]:
-        if not self._casters:
-            return self._fixed_spell_slots
-        return calculate_spell_slots(self._casters, self.level_per_class)[0]
+        return self.spellcasting.spell_slots(self.class_levels)
 
     @property
     def pact_magic_slots(self) -> dict[int, int]:
-        return calculate_spell_slots(self._casters, self.level_per_class)[1]
+        return self.spellcasting.pact_magic_slots(self.class_levels)
 
     def register_caster(
         self, character_class: CharacterClass, caster_type: CasterType
     ) -> None:
-        self._casters[character_class] = caster_type
+        self.spellcasting.register_caster(character_class, caster_type)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
         # Initiative is a Dexterity check, so untrained armor imposes
         # Disadvantage. Advantage and Disadvantage cancel out.
-        conditions = set(self._initiative_roll_conditions)
-        if self.has_untrained_armor_disadvantage(Ability.DEXTERITY):
-            conditions.add(Definitions.DiceRollCondition.DISADVANTAGE)
-        return Definitions.combine_roll_conditions(conditions)
+        extra = (
+            {Definitions.DiceRollCondition.DISADVANTAGE}
+            if self.has_untrained_armor_disadvantage(Ability.DEXTERITY)
+            else set()
+        )
+        return self.initiative.roll_condition(extra)
 
     # ── Armor training (2024 PHB) ────────────────────────────────────────────
     # "If you wear armor and lack training with it, you have Disadvantage on
@@ -150,13 +124,14 @@ class CharacterStatBlock:
     @property
     def is_wearing_untrained_armor(self) -> bool:
         return (
-            self.worn_armor_type is not None
-            and self.worn_armor_type not in self.armor_training
+            self.worn_armor.body_armor_type is not None
+            and self.worn_armor.body_armor_type
+            not in self.equipment_training.armor_training
         )
 
     @property
     def has_shield_training(self) -> bool:
-        return Definitions.ArmorType.SHIELD in self.armor_training
+        return self.equipment_training.has_shield_training
 
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
         """Disadvantage on D20 Tests with `ability` from untrained armor."""
@@ -167,113 +142,95 @@ class CharacterStatBlock:
 
     def add_shield(self, armor_class_bonus: int) -> None:
         """Wield a Shield granting `armor_class_bonus` (with training)."""
-        self.is_wielding_shield = True
-        self._shield_armor_class_bonuses.append(armor_class_bonus)
+        self.worn_armor.wield_shield()
+        self.armor_class.add_shield_bonus(armor_class_bonus)
+
+    def set_worn_armor(self, armor_type: Definitions.ArmorType, name: str) -> None:
+        """Records the worn body armor's type and display name."""
+        self.worn_armor.set_body_armor(armor_type, name)
 
     @property
     def warnings(self) -> list[str]:
         """Legal but bad choices the player should know about."""
         warnings = []
         if self.is_wearing_untrained_armor:
-            assert self.worn_armor_type is not None
+            assert self.worn_armor.body_armor_type is not None
             warnings.append(
-                f"Wearing {self.worn_armor_name or 'armor'} without "
-                f"{self.worn_armor_type.value} armor training: Disadvantage on "
-                "every D20 Test that involves Strength or Dexterity, and you "
-                "can't cast spells."
+                f"Wearing {self.worn_armor.body_armor_name or 'armor'} without "
+                f"{self.worn_armor.body_armor_type.value} armor training: "
+                "Disadvantage on every D20 Test that involves Strength or "
+                "Dexterity, and you can't cast spells."
             )
-        if self.is_wielding_shield and not self.has_shield_training:
+        if self.worn_armor.shield_wielded and not self.has_shield_training:
             warnings.append(
                 "Wielding a Shield without Shield training: it grants no AC bonus."
             )
         return warnings
 
-    @property
-    def initiative(self) -> int:
+    def calculate_initiative(self) -> int:
         modifier = self.abilities.get_modifier(Ability.DEXTERITY)
-        if self.initiative_proficiency:
-            modifier += self.get_proficiency_bonus()
-        derived = sum(bonus(self) for bonus in self._derived_initiative_bonuses)
-        return modifier + self.initiative_bonus + derived
+        return modifier + self.initiative.total(self.get_proficiency_bonus(), self)
+
+    def calculate_speed(self) -> int:
+        return self.speed.total(self)
 
     def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
-        person_slots = 3 + self.abilities.get_modifier(Ability.STRENGTH)
-        return [("Person", person_slots)] + self.carrying_capacity_sources
+        return self.carrying_capacity.sources(
+            self.abilities.get_modifier(Ability.STRENGTH)
+        )
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return sum(slots for _, slots in self.get_carrying_capacity_sources())
+        return self.carrying_capacity.total(
+            self.abilities.get_modifier(Ability.STRENGTH)
+        )
 
     def _require_spell_casting_ability(self) -> Ability:
-        if self.spell_casting_ability is None:
-            raise ValueError("Character does not have a spell casting ability.")
-        return self.spell_casting_ability
+        return self.spellcasting.require_ability()
 
     def add_initiative_proficiency(self):
-        self.initiative_proficiency = True
+        self.initiative.add_proficiency()
 
     def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
-        self._initiative_roll_conditions.add(condition)
+        self.initiative.add_roll_condition(condition)
 
     def add_initiative_bonus(self, bonus: int) -> None:
-        self.initiative_bonus += bonus
+        self.initiative.add_bonus(bonus)
 
     def add_derived_initiative_bonus(self, bonus: DerivedBonus) -> None:
-        self._derived_initiative_bonuses.append(bonus)
+        self.initiative.add_derived_bonus(bonus)
 
     def add_derived_armor_class_bonus(self, bonus: DerivedBonus) -> None:
-        self._derived_armor_class_bonuses.append(bonus)
+        self.armor_class.add_derived_bonus(bonus)
 
     def add_derived_speed_bonus(self, bonus: DerivedBonus) -> None:
-        self._derived_speed_bonuses.append(bonus)
+        self.speed.add_derived_bonus(bonus)
 
     def add_ability_requirement(
         self, ability: Ability, min_score: int, reason: str
     ) -> None:
-        self._ability_requirements.append((ability, min_score, reason))
+        self.ability_requirements.add_ability_requirement(ability, min_score, reason)
 
     def validate(self) -> None:
         """Check every requirement against the complete set of effects. Run
         once everything has applied - a requirement may be met by an effect
         granted before or after the one that imposes it."""
         self.skills.validate()
-        for ability, min_score, reason in self._ability_requirements:
-            if self.abilities.get_own_score(ability) < min_score:
-                raise ValueError(
-                    f"{ability.value} score must be at least {min_score} ({reason})."
-                )
-        self._validate_multiclass_prerequisites()
-
-    def _validate_multiclass_prerequisites(self) -> None:
-        """A multiclass character needs 13+ in the prerequisite abilities of
-        every class it has. Checked on the character's own final scores
-        (equipment bonuses don't count) - the engine has no per-level score
-        history, so this is the end-of-build approximation of "at the time
-        you multiclass"."""
-        if len(self.level_per_class) < 2:
-            return
-        for character_class in self.level_per_class:
-            for group in character_class.multiclass_prerequisites:
-                if not any(self.abilities.get_own_score(a) >= 13 for a in group):
-                    needed = " or ".join(a.value for a in group)
-                    raise ValueError(
-                        f"Multiclassing into or out of {character_class.value} "
-                        f"requires {needed} 13+."
-                    )
+        self.ability_requirements.validate(self.abilities, self.class_levels)
 
     def add_derived_saving_throw_bonus(
         self, ability: Ability, bonus: DerivedBonus
     ) -> None:
-        self._derived_saving_throw_bonuses.setdefault(ability, []).append(bonus)
+        self.saving_throws.add_derived_bonus(ability, bonus)
 
     def add_derived_skill_bonus(
         self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
     ) -> None:
-        self._derived_skill_bonuses.setdefault(skill, []).append((bonus, source))
+        self.skills.add_derived_bonus(skill, bonus, source)
 
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
-        self.spell_save_dc_bonus += bonus
+        self.spellcasting.add_spell_save_dc_bonus(bonus)
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.class_levels.get_class_level(character_class)
@@ -339,23 +296,10 @@ class CharacterStatBlock:
         return ability_modifier + proficiency_bonus + self.get_skill_bonus(skill)
 
     def get_skill_bonus(self, skill: Skill) -> int:
-        return self.skills.bonuses.get(skill, 0) + sum(
-            value for value, _source in self._derived_skill_bonus_sources(skill)
-        )
+        return self.skills.get_total_bonus(skill, self)
 
     def get_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
-        return self.skills.get_bonus_sources(skill) + self._derived_skill_bonus_sources(
-            skill
-        )
-
-    def _derived_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
-        # A derived bonus that currently evaluates to 0 (e.g. Jack of All
-        # Trades on a skill you're proficient in) isn't a source worth listing.
-        resolved = [
-            (bonus(self), source)
-            for bonus, source in self._derived_skill_bonuses.get(skill, [])
-        ]
-        return [(value, source) for value, source in resolved if value != 0]
+        return self.skills.get_all_bonus_sources(skill, self)
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
@@ -413,46 +357,25 @@ class CharacterStatBlock:
             if self.is_proficient_in_saving_throw(ability)
             else 0
         )
-        derived = sum(
-            bonus(self) for bonus in self._derived_saving_throw_bonuses.get(ability, [])
-        )
         return (
             base_modifier
             + proficiency_bonus
-            + self.saving_throws.get_bonus(ability)
-            + derived
+            + self.saving_throws.get_total_bonus(ability, self)
         )
 
     def calculate_hit_points(self) -> int:
-        constitution_modifier = self.get_constitution_modifier()
-        return self.combat.calculate_hit_points(
-            base_class=self.base_class,
-            level_per_class=self.level_per_class,
-            constitution_modifier=constitution_modifier,
+        return self.hit_points.calculate(
+            self.class_levels, self.get_constitution_modifier(), self
         )
 
     def calculate_armor_class(self, ignore_shield: bool = False) -> int:
         """The best applicable AC formula plus every AC bonus. ignore_shield:
         the AC with the Shield set aside (its bonus gone, and formulas it
         disables - Monk's Unarmored Defense - available again)."""
-        wielding_shield = self.is_wielding_shield and not ignore_shield
-        formulas = self.combat.get_applicable_armor_class_formulas(wielding_shield)
-        base = max(self._armor_class_from(formula) for formula in formulas)
-        derived = sum(bonus(self) for bonus in self._derived_armor_class_bonuses)
-        shield = (
-            sum(self._shield_armor_class_bonuses)
-            if wielding_shield and self.has_shield_training
-            else 0
+        is_wielding_shield = self.worn_armor.shield_wielded and not ignore_shield
+        return self.armor_class.calculate(
+            self.abilities, self, is_wielding_shield, self.has_shield_training
         )
-        return base + self.combat.armor_class_modifier + derived + shield
-
-    def _armor_class_from(self, formula: ArmorClassFormula) -> int:
-        ability_modifier = sum(
-            self.get_ability_modifier(ability) for ability in formula.abilities
-        )
-        if formula.ability_modifier_cap is not None:
-            ability_modifier = min(ability_modifier, formula.ability_modifier_cap)
-        return formula.base + ability_modifier
 
     def get_spell_casting_ability(self) -> Ability:
         return self._require_spell_casting_ability()
@@ -463,8 +386,9 @@ class CharacterStatBlock:
         )
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
-        modifier = self.get_ability_modifier(ability)
-        return 8 + self.get_proficiency_bonus() + modifier + self.spell_save_dc_bonus
+        return self.spellcasting.difficulty_class(
+            self.get_proficiency_bonus(), self.get_ability_modifier(ability)
+        )
 
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(
@@ -472,8 +396,9 @@ class CharacterStatBlock:
         )
 
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
-        ability_modifier = self.get_ability_modifier(ability)
-        return self.get_proficiency_bonus() + ability_modifier
+        return self.spellcasting.attack_bonus(
+            self.get_proficiency_bonus(), self.get_ability_modifier(ability)
+        )
 
     def get_spell_slots(self) -> dict[int, int]:
         spell_slots = self.spell_slots
@@ -484,91 +409,75 @@ class CharacterStatBlock:
     def add_damage_resistance(
         self, damage_type: Definitions.DamageType, source: str
     ) -> None:
-        self.damage_resistances.setdefault(damage_type, []).append(source)
+        self.defenses.add_damage_resistance(damage_type, source)
 
     def add_damage_immunity(
         self, damage_type: Definitions.DamageType, source: str
     ) -> None:
-        self.damage_immunities.setdefault(damage_type, []).append(source)
+        self.defenses.add_damage_immunity(damage_type, source)
 
     def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return damage_type in self.damage_resistances
+        return self.defenses.is_resistant_to_damage(damage_type)
 
     def is_immune_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return damage_type in self.damage_immunities
+        return self.defenses.is_immune_to_damage(damage_type)
 
     def get_damage_resistance_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.damage_resistances.get(damage_type, [])
+        return self.defenses.get_damage_resistance_sources(damage_type)
 
     def get_damage_immunity_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.damage_immunities.get(damage_type, [])
+        return self.defenses.get_damage_immunity_sources(damage_type)
 
     def add_condition_immunity(
         self, condition: Definitions.Condition, source: str
     ) -> None:
-        self.condition_immunities.setdefault(condition, []).append(source)
+        self.defenses.add_condition_immunity(condition, source)
 
     def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:
-        return condition in self.condition_immunities
+        return self.defenses.is_immune_to_condition(condition)
 
     def get_condition_immunity_sources(
         self, condition: Definitions.Condition
     ) -> list[str]:
-        return self.condition_immunities.get(condition, [])
+        return self.defenses.get_condition_immunity_sources(condition)
 
     def add_sense(self, sense: Definitions.Sense, range_feet: int, source: str) -> None:
         """Grant a sense. The same sense from several sources keeps the best range."""
-        self.sense_sources.setdefault(sense, []).append((range_feet, source))
+        self.senses.add_sense(sense, range_feet, source)
 
     def add_sense_or_extension(
         self, sense: Definitions.Sense, range_feet: int, source: str
     ) -> None:
         """Grant a sense out to `range_feet` - or, if the character already has
         it, increase its range by `range_feet` (e.g. Umbral Sight)."""
-        self._sense_extensions.setdefault(sense, []).append((range_feet, source))
-
-    @property
-    def senses(self) -> dict[Definitions.Sense, int]:
-        """Range per sense: the best plain grant plus every extension. "Gain it,
-        or +N if you already have it" is N on top of whatever else grants it,
-        so the result doesn't depend on which applied first."""
-        ranges = {}
-        for sense in [*self.sense_sources, *self._sense_extensions]:
-            best = max((r for r, _ in self.sense_sources.get(sense, [])), default=0)
-            extra = sum(r for r, _ in self._sense_extensions.get(sense, []))
-            ranges[sense] = best + extra
-        return ranges
+        self.senses.add_sense_or_extension(sense, range_feet, source)
 
     def get_sense_range(self, sense: Definitions.Sense) -> int:
-        return self.senses.get(sense, 0)
+        return self.senses.get_sense_range(sense)
 
     def get_sense_sources(self, sense: Definitions.Sense) -> list[tuple[int, str]]:
-        return self.sense_sources.get(sense, []) + [
-            (range_feet, f"{source} (+{range_feet} ft. if already had)")
-            for range_feet, source in self._sense_extensions.get(sense, [])
-        ]
+        return self.senses.get_sense_sources(sense)
 
     def add_weapon_proficiency(self, weapon_proficiency: Enum) -> None:
-        self.weapon_proficiencies.add(weapon_proficiency)
+        self.equipment_training.add_weapon_proficiency(weapon_proficiency)
 
     def add_armor_training(self, armor_type: Definitions.ArmorType) -> None:
-        self.armor_training.add(armor_type)
+        self.equipment_training.add_armor_training(armor_type)
 
     def add_tool_proficiency(self, tool_proficiency: Any) -> None:
         """Proficiency with a tool (a ToolProficiency). The same tool from
         several sources is listed once."""
-        if not any(type(t) is type(tool_proficiency) for t in self.tool_proficiencies):
-            self.tool_proficiencies.append(tool_proficiency)
+        self.equipment_training.add_tool_proficiency(tool_proficiency)
 
     def add_language(self, language: Definitions.Language, source: str) -> None:
-        self.languages.setdefault(language, []).append(source)
+        self.languages.add(language, source)
 
     def knows_language(self, language: Definitions.Language) -> bool:
-        return language in self.languages
+        return self.languages.knows(language)
 
     def get_language_sources(self, language: Definitions.Language) -> list[str]:
-        return self.languages.get(language, [])
+        return self.languages.sources(language)

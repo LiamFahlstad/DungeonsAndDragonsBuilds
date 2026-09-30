@@ -23,7 +23,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
@@ -38,7 +38,7 @@ def get_starter_class_builder():
         ),
         base_class_level=3,
         # Point buy: scores 8-15, total cost must equal 27.
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=11,
             dexterity=15,
             constitution=12,

@@ -37,7 +37,7 @@ def _stats(data, character):
         {a: character.get_saving_throw_modifier(a) for a in Ability},
         character.calculate_hit_points(),
         character.calculate_armor_class(),
-        character.initiative,
+        character.calculate_initiative(),
         dict(character.spell_slots or {}),
         dict(character.pact_magic_slots),
         [
@@ -135,9 +135,9 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
     import inspect
 
     from CharacterContent.Features.Core.BaseFeatures import Feature
-    from StatBlocks.SkillsStatBlock import SkillsStatBlock
+    from StatBlocks.Skills import Skills
 
-    original = SkillsStatBlock.add_skill_proficiency
+    original = Skills.add_skill_proficiency
     wasted = []
 
     def recording(self, skill):
@@ -154,7 +154,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
                 wasted.append((skill.name, source))
         return original(self, skill)
 
-    monkeypatch.setattr(SkillsStatBlock, "add_skill_proficiency", recording)
+    monkeypatch.setattr(Skills, "add_skill_proficiency", recording)
     type(ALL_BUILDS[name])().build().setup_character_stat_block()
     assert wasted == []
 

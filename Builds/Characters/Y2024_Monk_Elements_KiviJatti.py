@@ -27,7 +27,7 @@ from CharacterContent.Species import Goliath
 from CharacterContent.Spells import SpellLists
 from CharacterContent.ToolProficiencies.Proficiencies import Drum, NavigatorsTools
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilitiesStatBlock import PointBuyAbilitiesStatBlock
+from StatBlocks.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
@@ -47,7 +47,7 @@ def get_starter_class_builder():
         # Each score must be between 8 and 15. Costs per score:
         #   8 -> 0 pts   10 -> 2 pts   12 -> 4 pts   14 -> 7 pts
         #   9 -> 1 pt    11 -> 3 pts   13 -> 5 pts   15 -> 9 pts
-        abilities=PointBuyAbilitiesStatBlock(
+        abilities=PointBuyAbilityScores(
             strength=12,  # 4 pts
             dexterity=15,  # 9 pts
             constitution=13,  # 5 pts

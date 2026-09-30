@@ -115,7 +115,7 @@ D&D 5e uses the **Standard Array**: 15, 14, 13, 12, 10, 8
 Distribute these among your six abilities:
 
 ```python
-abilities=StandardArrayAbilitiesStatBlock(
+abilities=StandardArrayAbilityScores(
     strength=15,       # High for melee fighters
     dexterity=14,
     constitution=13,   # Keep decent for survivability

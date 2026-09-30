@@ -60,7 +60,7 @@ from CharacterContent.Items import Armor, Weapons
 #   Gnome, Orc, Aasimar, Changeling, Dhampir, Goliath, Hexblood, Kalashtar, Khoravar,
 #   Lupin, Reborn, Shifter, Warforged
 from CharacterContent.Species import Dwarf
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 # Your class's skill choices are a plain list of Skill members (see `skills=`
 # below) - CharacterContent/Features/ClassFeatures/ClassProficiencies.py's
@@ -122,7 +122,7 @@ def get_starter_class_builder():
         # TODO: Distribute these 6 values among your 6 abilities based on your build
         # Example strategy for Fighter: STR=15 (primary), CON=13+ (survivability),
         # DEX/WIS for AC/initiative, CHA/INT lower priority
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=15,  # TODO: Change to fit your character
             dexterity=14,
             constitution=13,

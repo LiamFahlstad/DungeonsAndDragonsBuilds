@@ -4,17 +4,17 @@ Shared pytest fixtures and configuration for D&D character sheet builder tests.
 
 import pytest
 from Core.Definitions import Ability
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
-from StatBlocks.SkillsStatBlock import SkillsStatBlock
-from StatBlocks.SavingThrowsStatBlock import SavingThrowsStatBlock
-from StatBlocks.CombatStatBlock import CombatStatBlock
-from Core.Definitions import CreatureSize
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from StatBlocks.ArmorClass import ArmorClass
+from StatBlocks.CarryingCapacity import CarryingCapacity
+from StatBlocks.Skills import Skills
+from StatBlocks.SavingThrows import SavingThrows
 
 
 @pytest.fixture
 def standard_abilities():
     """A standard array abilities stat block for testing."""
-    return StandardArrayAbilitiesStatBlock(
+    return StandardArrayAbilityScores(
         strength=15,
         dexterity=14,
         constitution=13,
@@ -27,19 +27,25 @@ def standard_abilities():
 @pytest.fixture
 def basic_skills():
     """A basic skills stat block for testing."""
-    return SkillsStatBlock()
+    return Skills()
 
 
 @pytest.fixture
 def basic_saving_throws():
     """A basic saving throws stat block for testing."""
-    return SavingThrowsStatBlock()
+    return SavingThrows()
 
 
 @pytest.fixture
-def basic_combat():
-    """A basic combat stat block for testing."""
-    return CombatStatBlock(speed=30, size=CreatureSize.MEDIUM)
+def basic_armor_class():
+    """A basic ArmorClass part for testing."""
+    return ArmorClass()
+
+
+@pytest.fixture
+def basic_carrying_capacity():
+    """A basic CarryingCapacity part for testing."""
+    return CarryingCapacity()
 
 
 @pytest.fixture
@@ -50,9 +56,10 @@ def make_character():
     make_character(armor_training=[ArmorType.SHIELD])
     """
     from Core.Definitions import CharacterClass
-    from StatBlocks.AbilitiesStatBlock import AbilitiesStatBlock
+    from StatBlocks.AbilityScores import AbilityScores
     from StatBlocks.CharacterStatBlock import CharacterStatBlock
     from StatBlocks.ClassLevels import ClassLevels
+    from StatBlocks.Spellcasting import Spellcasting
 
     def _make(
         strength=10,
@@ -69,16 +76,14 @@ def make_character():
             class_levels=ClassLevels(
                 base_class=next(iter(levels)), level_per_class=levels
             ),
-            abilities=AbilitiesStatBlock(
+            abilities=AbilityScores(
                 strength, dexterity, constitution, intelligence, wisdom, charisma
             ),
-            skills=SkillsStatBlock(),
-            combat=CombatStatBlock(speed=30, size=CreatureSize.MEDIUM),
-            saving_throws=SavingThrowsStatBlock(),
-            spell_slots={},
+            speed=30,
+            spellcasting=Spellcasting(fixed_slots={}),
         )
         # Armor training (ArmorType values) - untrained armor has penalties.
-        character.armor_training.update(armor_training)
+        character.equipment_training.armor_training.update(armor_training)
         return character
 
     return _make

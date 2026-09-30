@@ -23,7 +23,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells, PaladinLevel2Spells
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 
 
 # Paladin 5 (half caster, single class).
@@ -37,7 +37,7 @@ def get_starter_class_builder():
             ],
         ),
         base_class_level=5,
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=15,
             dexterity=10,
             constitution=13,

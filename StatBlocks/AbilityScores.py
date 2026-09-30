@@ -2,22 +2,21 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from StatBlocks.StatBlock import StatBlock
 
 
 def _score_property(ability: Ability) -> property:
     """`abilities.strength` etc.: reads the final score, writes the base score."""
 
-    def get(self: "AbilitiesStatBlock") -> int:
+    def get(self: "AbilityScores") -> int:
         return self.get_score(ability)
 
-    def set(self: "AbilitiesStatBlock", score: int) -> None:
+    def set(self: "AbilityScores", score: int) -> None:
         self._base_scores[ability] = score
 
     return property(get, set)
 
 
-class AbilitiesStatBlock(StatBlock):
+class AbilityScores:
     """Base scores plus every increase granted on top of them.
 
     Increases are recorded, never summed as they arrive, and resolved on every
@@ -118,7 +117,7 @@ class AbilitiesStatBlock(StatBlock):
         return max(abilities, key=self.get_modifier)
 
 
-class StandardArrayAbilitiesStatBlock(AbilitiesStatBlock):
+class StandardArrayAbilityScores(AbilityScores):
     def __init__(
         self,
         strength: int,
@@ -139,14 +138,14 @@ class StandardArrayAbilitiesStatBlock(AbilitiesStatBlock):
         }
         if values_needed != provided_values:
             raise ValueError(
-                "StandardArrayAbilitiesStatBlock must use the standard array values: 15, 14, 13, 12, 10, 8"
+                "StandardArrayAbilityScores must use the standard array values: 15, 14, 13, 12, 10, 8"
             )
         super().__init__(
             strength, dexterity, constitution, intelligence, wisdom, charisma
         )
 
 
-class PointBuyAbilitiesStatBlock(AbilitiesStatBlock):
+class PointBuyAbilityScores(AbilityScores):
     _BUDGET = 27
     _MIN_SCORE = 8
     _MAX_SCORE = 15

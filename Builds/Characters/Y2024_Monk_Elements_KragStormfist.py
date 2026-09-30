@@ -14,7 +14,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Species import Goliath
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import Drum
 
 
@@ -33,7 +33,7 @@ def get_starter_class_builder():
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         # Base array: STR 12, DEX 15, CON 14, INT 8, WIS 13, CHA 10
         # After background bonus (DEX +2, WIS +1): STR 12, DEX 17, CON 14, INT 8, WIS 14, CHA 10
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=12,
             dexterity=15,
             constitution=14,

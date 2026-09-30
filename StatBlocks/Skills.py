@@ -1,10 +1,13 @@
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
-from StatBlocks.StatBlock import StatBlock
+from StatBlocks.Bonuses import Bonuses, DerivedBonus
+
+if TYPE_CHECKING:
+    from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-class SkillsStatBlock(StatBlock):
+class Skills:
     def __init__(
         self,
         proficiencies: Optional[dict[Skill, bool]] = None,
@@ -14,9 +17,9 @@ class SkillsStatBlock(StatBlock):
     ):
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.expertise = expertise if expertise is not None else {}
-        self.bonuses = {}
-        # Per-skill list of (bonus, source) pairs, used to show where each bonus comes from
-        self.bonus_sources: dict[Skill, list[tuple[int, str]]] = {}
+        # Per-skill flat and formula-valued bonuses, each with a source (see
+        # StatBlocks/Bonuses.py).
+        self._bonuses: dict[Skill, Bonuses] = {}
         if bonuses:
             for skill, bonus in bonuses.items():
                 self.add_skill_bonus(skill, bonus)
@@ -35,13 +38,29 @@ class SkillsStatBlock(StatBlock):
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
 
-    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other"):
-        current_bonus = self.bonuses.get(skill, 0)
-        self.bonuses[skill] = current_bonus + bonus
-        self.bonus_sources.setdefault(skill, []).append((bonus, source))
+    def _bonuses_for(self, skill: Skill) -> Bonuses:
+        return self._bonuses.setdefault(skill, Bonuses())
 
-    def get_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
-        return self.bonus_sources.get(skill, [])
+    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other"):
+        self._bonuses_for(skill).add(bonus, source)
+
+    def add_derived_bonus(
+        self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
+    ) -> None:
+        self._bonuses_for(skill).add_formula(bonus, source)
+
+    def get_total_bonus(self, skill: Skill, character: "CharacterStatBlock") -> int:
+        """The flat bonus plus every formula-valued bonus, resolved against
+        `character` (not the ability modifier or proficiency bonus - see
+        CharacterStatBlock.get_skill_modifier)."""
+        bonuses = self._bonuses.get(skill)
+        return bonuses.total(character) if bonuses is not None else 0
+
+    def get_all_bonus_sources(
+        self, skill: Skill, character: "CharacterStatBlock"
+    ) -> list[tuple[int, str]]:
+        bonuses = self._bonuses.get(skill)
+        return bonuses.sources(character) if bonuses is not None else []
 
     def add_skill_expertise(self, skill: Skill):
         """Expertise requires proficiency, but that proficiency may come from

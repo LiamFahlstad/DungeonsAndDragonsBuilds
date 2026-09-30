@@ -19,7 +19,7 @@ from CharacterContent.Classes.SubClasses2014.MonkDrunkenMaster import (
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Species import Human
-from StatBlocks.AbilitiesStatBlock import StandardArrayAbilitiesStatBlock
+from StatBlocks.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import BrewersSupplies
 
 
@@ -36,7 +36,7 @@ def get_starter_class_builder():
         ),
         base_class_level=monk_level,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
-        abilities=StandardArrayAbilitiesStatBlock(
+        abilities=StandardArrayAbilityScores(
             strength=10,
             dexterity=15,
             constitution=13,
