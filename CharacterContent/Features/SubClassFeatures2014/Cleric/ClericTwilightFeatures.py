@@ -14,8 +14,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -30,7 +30,7 @@ class BonusProficiencies(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
         return description
 
@@ -41,7 +41,7 @@ class TwilightDomainSpells(Feature):
             name="Twilight Domain Spells", origin="Twilight Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Twilight Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Twilight Domain Spells\n"
@@ -72,22 +72,18 @@ class EyesOfNight(Feature):
     def apply(self, effects: Effects):
         self._darkvision.apply(effects)
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can see through the deepest gloom. You have darkvision out to a range of 300 feet. In that radius, you can see in dim light as if it were bright light and in darkness as if it were dim light.\n"
             "As an action, you can magically share the darkvision of this feature with willing creatures you can see within 10 feet of you, up to a number of creatures equal to your Wisdom modifier (minimum of one creature). The shared darkvision lasts for 1 hour. Once you share it, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to share it again."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        wis_mod = character_stat_block.get_wisdom_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        wis_mod = character.get_wisdom_modifier()
         creatures = max(1, wis_mod)
         return [
             ("Personal Darkvision", "300 feet"),
@@ -108,12 +104,10 @@ class VigilantBlessing(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The night has taught you to be vigilant. As an action, you give one creature you touch (including possibly yourself) advantage on the next initiative roll the creature makes. This benefit ends immediately after the roll or if you use this feature again."
         return description
 
@@ -131,12 +125,10 @@ class TwilightSanctuaryChannelDivinity(Feature):
             usage_tags=["heal", "buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use your Channel Divinity to refresh your allies with soothing twilight.\n"
             "As an action, you present your holy symbol, and a sphere of twilight emanates from you. The sphere is centered on you, has a 30-foot radius, and is filled with dim light. The sphere moves with you, and it lasts for 1 minute or until you are incapacitated or die. Whenever a creature (including you) ends its turn in the sphere, you can grant that creature one of these benefits:\n"
@@ -145,9 +137,7 @@ class TwilightSanctuaryChannelDivinity(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Area", "30-foot radius sphere centered on you"),
@@ -177,27 +167,21 @@ class StepsOfNight(Feature):
             ),
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You regain all expended uses when you finish a long rest."
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        proficiency_bonus = character.get_proficiency_bonus()
         return [
             ("Action", "Bonus action"),
             ("Condition", "In dim light or darkness"),
@@ -216,6 +200,6 @@ class TwilightShroud(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The twilight that you summon offers a protective embrace: you and your allies have half cover while in the sphere created by your Twilight Sanctuary."
         return description

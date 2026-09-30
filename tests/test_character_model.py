@@ -1,5 +1,5 @@
 """
-The Character model (StatBlocks/Character.py): one object holding the sources
+The Character model (Model/Character.py): one object holding the sources
 and answering every query, with evaluation cached under a version key.
 """
 
@@ -8,19 +8,16 @@ import sys
 
 import pytest
 
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass
-from StatBlocks.Character import Character
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
-def test_sheet_data_and_stat_block_are_the_character():
-    assert CharacterSheetData is Character
-    assert CharacterStatBlock is Character
+def test_a_build_is_one_character():
     data = SpellSlotTestPaladin5CharacterBuilder().build()
-    assert data.setup_character_stat_block() is data
+    assert type(data) is Character
+    assert data.validate() is data
 
 
 class TestReEvaluatesAfterEveryKindOfChange:
@@ -72,10 +69,12 @@ def test_requirements_are_checked_by_validate_not_by_queries(make_character):
 
 
 def test_model_package_imports_nothing_from_character_content():
-    # CharacterContent imports the model (as CharacterStatBlock), so the model
-    # importing CharacterContent at load time would be an import cycle.
+    # CharacterContent imports the model (for Character and Effects), so the
+    # model importing CharacterContent at load time would be an import cycle.
     code = (
-        "import sys, StatBlocks.Character, StatBlocks.CharacterStatBlock; "
+        "import sys, pathlib, importlib; "
+        "[importlib.import_module('Model.' + p.stem) "
+        "for p in pathlib.Path('Model').glob('*.py') if p.stem != '__init__']; "
         "loaded = [m for m in sys.modules if m.startswith('CharacterContent')]; "
         "assert not loaded, loaded"
     )

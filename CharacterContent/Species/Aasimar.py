@@ -1,4 +1,4 @@
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 from Core.Definitions import Ability
 from CharacterContent.Features.SpeciesFeatures import AasimarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -12,7 +12,7 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
             name="Aasimar",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         data.base_speed = AasimarFeatures.SPEED  # Given by your species
         data.size = AasimarFeatures.SIZE  # Given by your species
 

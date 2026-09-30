@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DamageType, RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerDrakewardenFeatures,
@@ -22,8 +22,8 @@ class RangerDrakewardenLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerDrakewardenFeatures.DraconicGift(language=self.language))
         data.add_feature(
             RangerDrakewardenFeatures.DrakeCompanion(damage_type=self.damage_type)
@@ -37,8 +37,8 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
             RangerDrakewardenFeatures.DrakeCompanion,
             data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
@@ -52,8 +52,8 @@ class RangerDrakewardenLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerDrakewardenFeatures.DrakesBreath())
         return data
 
@@ -63,8 +63,8 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
             RangerDrakewardenFeatures.DrakeCompanion,
             data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],

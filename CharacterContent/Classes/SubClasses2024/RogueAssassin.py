@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
@@ -18,8 +18,8 @@ class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueAssassinFeatures.Assassinate())
         data.add_feature(RogueAssassinFeatures.AssassinsTools())
         return data
@@ -30,8 +30,8 @@ class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueAssassinFeatures.InfiltrationExpertise())
         return data
 
@@ -41,8 +41,8 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
@@ -56,8 +56,8 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]

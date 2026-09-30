@@ -29,8 +29,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from CharacterContent.ToolProficiencies import Proficiencies as Tools
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 # Every class's two saving throw proficiencies, granted by ClassProficiencies
 # only for the starting class (multiclassing grants none - PHB "Multiclassing").

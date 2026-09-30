@@ -39,7 +39,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefinitions
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

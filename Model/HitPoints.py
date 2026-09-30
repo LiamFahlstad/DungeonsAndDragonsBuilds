@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
-from StatBlocks.ClassLevels import ClassLevels
+from Model.Bonuses import Bonuses, DerivedBonus
+from Model.ClassLevels import ClassLevels
 
 if TYPE_CHECKING:
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.Character import Character
 
 
 class HitPoints:
@@ -25,10 +25,10 @@ class HitPoints:
         self,
         class_levels: ClassLevels,
         constitution_modifier: int,
-        character: "CharacterStatBlock",
+        character: "Character",
     ) -> int:
         # Guaranteed set by the time hit points are calculated - see
-        # CharacterStatBlock.base_class.
+        # Character.base_class.
         base_class = class_levels.base_class
         assert base_class is not None
         # First level: max hit die + constitution modifier.

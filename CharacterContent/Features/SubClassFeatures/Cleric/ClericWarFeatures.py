@@ -8,8 +8,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -24,13 +24,11 @@ class GuidedStrike(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Add +10 to a missed attack roll"),
             ("Trigger", "Reaction (for others) or no action (for self)"),
@@ -39,9 +37,7 @@ class GuidedStrike(Feature):
             ("Effect", "Attack may hit after bonus applied"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -49,7 +45,7 @@ class WarDomainSpells(Feature):
     def __init__(self):
         super().__init__(name="War Domain Spells", origin="War Domain Cleric Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the War Domain Spells table, you thereafter always have the listed spells prepared."
         return description
 
@@ -68,14 +64,12 @@ class WarPriest(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You regain all expended uses when you finish a Short or Long Rest."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character_stat_block)
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        uses = self.number_of_uses(character)
         return [
             ("What", "Make one extra attack"),
             ("Trigger", "Bonus Action"),
@@ -84,18 +78,14 @@ class WarPriest(Feature):
             ("Recharge", "Short or Long Rest"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_wisdom_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_wisdom_modifier())
 
 
 class WarGodsBlessing(Feature):
@@ -107,13 +97,11 @@ class WarGodsBlessing(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can expend a use of your Channel Divinity to cast Shield of Faith or Spiritual Weapon rather than expending a spell slot. When you cast either spell in this way, the spell doesn't require Concentration. Instead the spell lasts for 1 minute, but it ends early if you cast that spell again, have the Incapacitated condition, or die."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Cast Shield of Faith or Spiritual Weapon"),
             ("Cost", "Channel Divinity (instead of spell slot)"),
@@ -141,13 +129,11 @@ class AvatarOfBattle(Feature):
         for resistance in self._resistances:
             resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain Resistance to Bludgeoning, Piercing, and Slashing damage."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

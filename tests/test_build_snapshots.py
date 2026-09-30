@@ -55,7 +55,7 @@ UPDATE_SNAPSHOTS = os.environ.get("UPDATE_SNAPSHOTS") == "1"
 
 def _compute_stats(name: str) -> dict:
     data = type(ALL_BUILDS[name])().build()
-    character = data.setup_character_stat_block()
+    character = data.validate()
     return {
         "scores": [character.get_ability_score(a) for a in Ability],
         "ac": character.calculate_armor_class(),

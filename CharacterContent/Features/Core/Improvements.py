@@ -6,7 +6,7 @@ subclasses - see CharacterContent.Items.Weapons/Armor).
 Ordering contract
 -----------------
 apply() only RECORDS a fact, on the write-only Effects record
-(StatBlocks/Effects.py); the Character works every value out when it's read.
+(Model/Effects.py); the Character works every value out when it's read.
 Effects has no way to read anything back, so features, extensions, armor,
 weapons, items and fighting styles can apply in any order and give the same
 character:
@@ -47,10 +47,10 @@ from Core.Definitions import (
     Sense,
     Skill,
 )
-from StatBlocks.ArmorClass import ArmorClassFormula
-from StatBlocks.Character import Character
-from StatBlocks.Effects import Effects
-from StatBlocks.WeaponBonuses import WeaponBonus, WeaponFilter
+from Model.ArmorClass import ArmorClassFormula
+from Model.Character import Character
+from Model.Effects import Effects
+from Model.WeaponBonuses import WeaponBonus, WeaponFilter
 
 # A flat bonus, or a formula evaluated against the finished Character at read
 # time (see the ordering contract above).
@@ -283,7 +283,7 @@ class SetArmorClass(CharacterImprovement):
     """Worn body armor's AC: `base` + the modifier of `ability` (None = no
     modifier), capped at `ability_modifier_cap`.
 
-    Adds an armor formula (StatBlocks.ArmorClass.ArmorClassFormula) that,
+    Adds an armor formula (Model.ArmorClass.ArmorClassFormula) that,
     while worn, replaces every unarmored formula such as Unarmored Defense -
     whether the armor applies before or after the feature."""
 

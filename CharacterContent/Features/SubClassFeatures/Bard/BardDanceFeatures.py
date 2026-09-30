@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class DazzlingFootwork(Feature):
@@ -27,7 +27,7 @@ class DazzlingFootwork(Feature):
     def apply(self, effects: Effects):
         self._ac.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "While you aren't wearing armor or wielding a Shield, you gain the following benefits.\n"
             "Dance Virtuoso. You have Advantage on any Charisma (Performance) check you make that involves you dancing.\n"
@@ -37,9 +37,7 @@ class DazzlingFootwork(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Dance Virtuoso",
@@ -68,16 +66,14 @@ class InspiringMovement(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When an enemy you can see ends its turn within 5 feet of you, you can take a Reaction and expend one use of your Bardic Inspiration to move up to half your Speed. Then one ally of your choice within 30 feet of you can also move up to half their Speed using their Reaction.\n"
             "None of this feature's movement provokes Opportunity Attacks."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Enemy you can see ends its turn within 5 feet of you"),
             ("Action", "Reaction"),
@@ -99,13 +95,11 @@ class TandemFootwork(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Roll Initiative"),
             ("Condition", "You cannot have the Incapacitated condition"),
@@ -116,9 +110,7 @@ class TandemFootwork(Feature):
             ),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -131,16 +123,14 @@ class LeadingEvasion(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail. If any creatures within 5 feet of you are making the same Dexterity saving throw, you can share this benefit with them for that save.\n"
             "You can't use this feature if you have the Incapacitated condition."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Dexterity save to take only half damage"),
             ("Benefit", "Success: take no damage; Failure: take only half damage"),

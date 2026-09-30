@@ -5,9 +5,9 @@ from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     MulticlassBuilder,
     StarterClassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Builds.StartingEquipment import set_starting_equipment
-from StatBlocks.Inventory import Bought, Inventory
+from Model.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -88,10 +88,10 @@ class CharacterBuilder:
         it only ever looks at Starting Equipment."""
         return self.inventory.get_starting_item(item_type)
 
-    def build(self) -> CharacterSheetData:
+    def build(self) -> Character:
         # Every builder (starting class, multiclasses, species) grants
         # straight into this one sheet.
-        character_sheet_data = CharacterSheetData()
+        character_sheet_data = Character()
         applied_level_features = AppliedLevelFeatures()
 
         character_sheet_data = self.starter_class_builder.create(

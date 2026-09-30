@@ -3,7 +3,7 @@ from typing import Optional, TypeAlias
 import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
@@ -51,8 +51,8 @@ class SorcererLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererFeatures.Spellcasting())
         data.add_feature(SorcererFeatures.InnateSorcery())
         data.add_cantrip(self.cantrip_1)
@@ -71,8 +71,8 @@ class SorcererLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererFeatures.FontOfMagic())
         data.add_feature(SorcererFeatures.Metamagic())
         data.add_spell(self.spell_1)
@@ -87,8 +87,8 @@ class SorcererLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -102,8 +102,8 @@ class SorcererLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Sorcerer Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
@@ -118,8 +118,8 @@ class SorcererLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         font_of_magic: SorcererFeatures.FontOfMagic = data.get_features_by_type(
             SorcererFeatures.FontOfMagic
         )[0]
@@ -135,8 +135,8 @@ class SorcererLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -147,8 +147,8 @@ class SorcererLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
             SorcererFeatures.InnateSorcery
         )[0]
@@ -164,8 +164,8 @@ class SorcererLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Sorcerer Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -179,8 +179,8 @@ class SorcererLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -193,8 +193,8 @@ class SorcererLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
@@ -206,8 +206,8 @@ class SorcererLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -218,8 +218,8 @@ class SorcererLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Sorcerer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -231,8 +231,8 @@ class SorcererLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -242,8 +242,8 @@ class SorcererLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -253,8 +253,8 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -263,7 +263,7 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
 class SorcererLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Sorcerer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -275,8 +275,8 @@ class SorcererLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -287,8 +287,8 @@ class SorcererLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -300,8 +300,8 @@ class SorcererLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.epic_boon.origin = f"Sorcerer Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -312,7 +312,7 @@ class SorcererLevel19(ClassBuilder.BaseClassLevel19):
 class SorcererLevel20(ClassBuilder.BaseClassLevel20):
     spell: SorcererSpellsUpTo9
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
             SorcererFeatures.InnateSorcery
         )[0]

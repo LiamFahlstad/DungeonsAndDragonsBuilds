@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
 )
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class WatchersSpells(Feature):
@@ -17,7 +17,7 @@ class WatchersSpells(Feature):
             origin="Oath of the Watchers Paladin Level 3",
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain oath spells at the Paladin levels listed. When you reach a Paladin level specified in the Oath of the Watchers Spells table, you thereafter always have the listed spells prepared.\n"
             "Oath of the Watchers Spells\n"
@@ -42,14 +42,12 @@ class WatchersWill(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        charisma_modifier = character.get_charisma_modifier()
         creature_count = max(1, charisma_modifier)
         return [
             ("Action", "Action"),
@@ -73,7 +71,7 @@ class AbjureTheExtraplanar(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use your Channel Divinity to castigate unworldly beings. As an action, you present your holy symbol and each aberration, celestial, elemental, fey, or fiend within 30 feet of you that can hear you must make a Wisdom saving throw. On a failed save, the creature is turned for 1 minute or until it takes damage.\n"
             "\n"
@@ -94,7 +92,7 @@ class AuraOfTheSentinel(Feature):
     def apply(self, effects: Effects):
         InitiativeProficiency().apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You emit an aura of alertness while you aren't incapacitated. When you and any creatures of your choice within 10 feet of you roll initiative, you all gain a bonus to initiative equal to your proficiency bonus.\n"
             "\n"
@@ -102,10 +100,8 @@ class AuraOfTheSentinel(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        proficiency_bonus = character.get_proficiency_bonus()
         return [
             ("Range", "10 feet (30 at 18th level)"),
             ("Trigger", "Roll initiative"),
@@ -121,7 +117,7 @@ class AuraOfTheSentinelExpansion(Feature):
             origin="Oath of the Watchers Paladin Level 18",
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The range of your Aura of the Sentinel increases to 30 feet."
         return description
 
@@ -137,14 +133,12 @@ class VigilantRebuke(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        charisma_modifier = character.get_charisma_modifier()
         return [
             ("Trigger", "You or ally within 30 feet succeeds on INT/WIS/CHA save"),
             ("Action", "Reaction"),
@@ -166,12 +160,10 @@ class MortalBulwark(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You manifest a spark of divine power in defense of the mortal realms. As a bonus action, you gain the following benefits for 1 minute:\n"
             "    * You gain truesight with a range of 120 feet.\n"

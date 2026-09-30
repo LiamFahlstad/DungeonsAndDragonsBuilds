@@ -3,7 +3,7 @@ from typing import Optional, TypeAlias
 import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
@@ -52,8 +52,8 @@ class WizardLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardFeatures.RitualAdept())
         data.add_feature(WizardFeatures.ArcaneRecovery())
         data.add_cantrip(self.cantrip_1)
@@ -73,8 +73,8 @@ class WizardLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardFeatures.Scholar(self.skill_expertise))
         data.add_spell(self.spell)
         return data
@@ -86,8 +86,8 @@ class WizardLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -100,8 +100,8 @@ class WizardLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
@@ -116,8 +116,8 @@ class WizardLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardFeatures.MemorizeSpell())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
@@ -130,8 +130,8 @@ class WizardLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -142,8 +142,8 @@ class WizardLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -155,8 +155,8 @@ class WizardLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -170,8 +170,8 @@ class WizardLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -184,8 +184,8 @@ class WizardLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
@@ -197,8 +197,8 @@ class WizardLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -209,8 +209,8 @@ class WizardLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -222,8 +222,8 @@ class WizardLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -234,8 +234,8 @@ class WizardLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -246,8 +246,8 @@ class WizardLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -258,7 +258,7 @@ class WizardLevel16(ClassBuilder.BaseClassLevel16):
     spell_1: WizardSpellsUpTo8
     spell_2: WizardSpellsUpTo8
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell_1)
@@ -272,8 +272,8 @@ class WizardLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -284,8 +284,8 @@ class WizardLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardFeatures.SpellMastery())
         data.add_spell(self.spell)
         return data
@@ -298,8 +298,8 @@ class WizardLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.epic_boon.origin = f"Wizard Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -310,7 +310,7 @@ class WizardLevel19(ClassBuilder.BaseClassLevel19):
 class WizardLevel20(ClassBuilder.BaseClassLevel20):
     spell: WizardSpellsUpTo9
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(WizardFeatures.SignatureSpells())
         data.add_spell(self.spell)
         return data

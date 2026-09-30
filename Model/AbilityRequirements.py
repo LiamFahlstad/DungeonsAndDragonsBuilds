@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.ClassLevels import ClassLevels
+from Model.AbilityScores import AbilityScores
+from Model.ClassLevels import ClassLevels
 
 
 class AbilityRequirements:

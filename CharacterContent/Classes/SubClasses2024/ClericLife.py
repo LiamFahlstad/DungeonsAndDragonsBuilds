@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericLifeFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
@@ -25,8 +25,8 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel1Spells.BLESS)
         data.add_spell(ClericLevel1Spells.CURE_WOUNDS)
         data.add_spell(ClericLevel2Spells.AID)
@@ -45,8 +45,8 @@ class ClericLifeLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel3Spells.MASS_HEALING_WORD)
         data.add_spell(ClericLevel3Spells.REVIVIFY)
         return data
@@ -57,8 +57,8 @@ class ClericLifeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericLifeFeatures.BlessedHealer())
         return data
 
@@ -68,8 +68,8 @@ class ClericLifeLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel4Spells.AURA_OF_LIFE)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
         return data
@@ -80,8 +80,8 @@ class ClericLifeLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel5Spells.GREATER_RESTORATION)
         data.add_spell(ClericLevel5Spells.MASS_CURE_WOUNDS)
         return data
@@ -92,8 +92,8 @@ class ClericLifeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericLifeFeatures.SupremeHealing())
         return data
 

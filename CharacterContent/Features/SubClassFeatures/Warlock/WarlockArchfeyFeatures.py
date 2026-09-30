@@ -9,8 +9,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -18,7 +18,7 @@ class ArchfeySpells(Feature):
     def __init__(self):
         super().__init__(name="Archfey Spells", origin="Archfey Patron Warlock Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Archfey Spells table, you thereafter always have the listed spells prepared."
         return description
 
@@ -36,23 +36,19 @@ class StepsOfTheFey(Feature):
             ),
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_charisma_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_charisma_modifier())
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast that spell, you can choose one of the following additional effects.\n"
@@ -71,10 +67,10 @@ class MistyEscape(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can cast Misty Step as a Reaction in response to taking damage.\n"
             "In addition, the following effects are now among your Steps of the Fey options.\n"
@@ -83,9 +79,7 @@ class MistyEscape(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -102,24 +96,20 @@ class BeguilingDefenses(Feature):
     def apply(self, effects: Effects):
         self._immunity.apply(effects)
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your patron teaches you how to guard your mind and body. You are immune to the Charmed condition.\n"
             "In addition, immediately after a creature you can see hits you with an attack roll, you can take a Reaction to reduce the damage you take by half (round down), and you can force the attacker to make a Wisdom saving throw against your spell save DC. On a failed save, the attacker takes Psychic damage equal to the damage you take. Once you use this Reaction, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Passive", "Immunity to Charmed condition"),
             ("Trigger", "Creature hits you with attack roll"),
@@ -138,11 +128,9 @@ class BewitchingMagic(Feature):
             name="Bewitching Magic", origin="Archfey Patron Warlock Level 14"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your patron grants you the ability to weave your magic with teleportation. Immediately after you cast an Enchantment or Illusion spell using an action and a spell slot, you can cast Misty Step as part of the same action and without expending a spell slot."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

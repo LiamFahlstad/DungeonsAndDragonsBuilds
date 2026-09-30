@@ -1,4 +1,4 @@
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 from Core.Definitions import CreatureSize
 from CharacterContent.Features.SpeciesFeatures import KalashtarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -10,7 +10,7 @@ class KalashtarSpeciesBuilder(SpeciesBuilder):
             name="Kalashtar",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         data.base_speed = KalashtarFeatures.SPEED  # Given by your species
         data.size = CreatureSize.MEDIUM  # Given by your species
 

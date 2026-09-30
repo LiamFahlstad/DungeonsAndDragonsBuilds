@@ -10,8 +10,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -69,12 +69,10 @@ class HandOfHarm(Feature):
             usage_tags=["damage"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier."
         return description
 
@@ -88,22 +86,18 @@ class HandOfHealing(Feature):
             usage_tags=["heal"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "As a Magic action, you can expend 1 Focus Point to touch a creature and restore a number of Hit Points equal to a roll of your Martial Arts die plus your Wisdom modifier.\n"
             "When you use your Flurry of Blows, you can replace one of the Unarmed Strikes with a use of this feature without expending a Focus Point for the healing."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        wisdom_modifier = character.get_wisdom_modifier()
         return [
             ("Action", "Magic action"),
             ("Cost", "1 Focus Point"),
@@ -129,7 +123,7 @@ class ImplementsOfMercy(Feature):
     def apply(self, effects: Effects):
         self._skill_proficiencies.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."
         return description
 
@@ -143,7 +137,7 @@ class PhysiciansTouch(Feature):
             usage_tags=["control", "heal"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your Hand of Harm and Hand of Healing improve, as detailed below.\n"
             "Hand of Harm. When you use Hand of Harm on a creature, you can also give that creature the Poisoned condition until the end of your next turn.\n"
@@ -164,7 +158,7 @@ class FlurryOfHealingAndHarm(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you use Flurry of Blows, you can replace each of the Unarmed Strikes with a use of Hand of Healing without expending Focus Points for the healing.\n"
             "In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.\n"
@@ -172,13 +166,11 @@ class FlurryOfHealingAndHarm(Feature):
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_wisdom_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_wisdom_modifier())
 
 
 class HandOfUltimateMercy(Feature):
@@ -190,22 +182,18 @@ class HandOfUltimateMercy(Feature):
             usage_tags=["heal"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your mastery of life energy opens the door to the ultimate mercy. As a Magic action, you can touch the corpse of a creature that died within the past 24 hours and expend 5 Focus Points. The creature then returns to life with a number of Hit Points equal to 4d10 plus your Wisdom modifier. If the creature died with any of the following conditions, the creature revives with the conditions removed: Blinded, Deafened, Paralyzed, Poisoned, and Stunned.\n"
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        wisdom_modifier = character.get_wisdom_modifier()
         return [
             ("Action", "Magic action"),
             ("Cost", "5 Focus Points"),

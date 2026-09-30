@@ -5,14 +5,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
     RegainedOn,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class Channeler(Feature):
     def __init__(self):
         super().__init__(name="Channeler", origin="College of Spirits Bard Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You learn how to contact spirits beyond the grave, letting their power and knowledge flow through you. You gain the following benefits.\n"
             "Guiding Whispers. You know the Guidance cantrip. It has a range of 60 feet when you cast it.\n"
@@ -30,15 +30,13 @@ class SpiritsFromBeyond(Feature):
             usage_tags=["damage", "heal", "buff", "control"],
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can call forth spirits of the dead to empower you and your allies. When you take a Bonus Action to give a creature a Bardic Inspiration die, you can call forth the powers of a random spirit. To determine the spirit you channel, roll the Bardic Inspiration die and refer to the Spirits from Beyond table. The spirit remains channeled until you unleash it or until you finish a Short or Long Rest.\n"
             "Controlled Channeling. As a Bonus Action, you can expend a use of your Bardic Inspiration and channel a specific spirit. When you do so, choose the spirit from the Spirits from Beyond table rather than rolling. The chosen spirit's corresponding number must be less than or equal to the highest number on your Bardic Inspiration die; for example, if your Bardic Inspiration die is a d8, you can choose to channel any spirit up to (and including) the Shade.\n"
@@ -69,7 +67,7 @@ class EmpoweredChanneling(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your ability to channel spirits improves. You gain the following benefits.\n"
             "Power from Beyond. Once per turn, when you cast a Bard spell with a spell slot that deals damage or restores Hit Points, roll 1d6. You gain a bonus equal to the number rolled to one of the spell's damage rolls or to the total Hit Points the spell restores.\n"
@@ -78,9 +76,7 @@ class EmpoweredChanneling(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Power from Beyond",
@@ -94,9 +90,7 @@ class EmpoweredChanneling(Feature):
             ),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -106,6 +100,6 @@ class MysticalConnection(Feature):
             name="Mystical Connection", origin="College of Spirits Bard Level 14"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain mastery over the spirits you call forth. Whenever you roll on the Spirits from Beyond table, you can roll the die twice and choose which of the two effects to bestow. If you roll the same number on both dice, you can instead choose any effect on the table."
         return description

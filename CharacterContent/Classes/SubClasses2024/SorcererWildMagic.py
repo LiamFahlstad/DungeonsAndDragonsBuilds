@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
     SorcererWildMagicFeatures,
@@ -18,8 +18,8 @@ from CharacterContent.Features.SubClassFeatures.Sorcerer import (
 class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererWildMagicFeatures.WildMagicSurge())
         wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = (
             data.get_features_by_type(SorcererWildMagicFeatures.WildMagicSurge)[0]
@@ -33,8 +33,8 @@ class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
 class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererWildMagicFeatures.BendLuck())
         return data
 
@@ -43,8 +43,8 @@ class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
 class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = (
             data.get_features_by_type(SorcererWildMagicFeatures.WildMagicSurge)[0]
         )
@@ -56,8 +56,8 @@ class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
 class SorcererWildMagicLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wild_magic_surge: SorcererWildMagicFeatures.WildMagicSurge = (
             data.get_features_by_type(SorcererWildMagicFeatures.WildMagicSurge)[0]
         )

@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class KnightlyEnvoy(Feature):
@@ -18,7 +18,7 @@ class KnightlyEnvoy(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You know how to conduct yourself with grace as a noble ambassador. You gain the following benefits.\n"
             "Comprehension. You can cast the Comprehend Languages spell but only as a Ritual. Charisma is your spellcasting ability for it.\n"
@@ -37,24 +37,20 @@ class GroupRecovery(Feature):
             usage_tags=["heal"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you use your Second Wind to regain Hit Points, you can choose a number of allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies regains Hit Points equal to 1d4 plus your Fighter level. Once you use this ability, you can’t use it again until you finish a Short or Long Rest."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "When you use Second Wind"),
             ("Range", "30-foot Emanation"),
             (
                 "Targets",
-                f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies",
+                f"Up to {max(1, character.get_charisma_modifier())} allies",
             ),
             ("Effect", "Each ally regains 1d4 + Fighter level HP"),
             ("Recharge", "Short or Long Rest"),
@@ -67,12 +63,10 @@ class TeamTactics(Feature):
             name="Team Tactics", origin="Banneret Fighter Level 7", usage_tags=["buff"]
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you use Group Recovery, each chosen ally has Advantage on D20 Tests until the start of your next turn."
         return description
 
@@ -85,12 +79,10 @@ class RallyingSurge(Feature):
             activation=FeatureActivation(range="30-Foot Emanation"),
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you use your Action Surge, you can choose allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies can immediately take a Reaction to use one of the following options.\n"
             "Attack. The ally makes one attack with a weapon or an Unarmed Strike.\n"
@@ -98,15 +90,13 @@ class RallyingSurge(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "When you use Action Surge"),
             ("Range", "30-foot Emanation"),
             (
                 "Targets",
-                f"Up to {max(1, character_stat_block.get_charisma_modifier())} allies",
+                f"Up to {max(1, character.get_charisma_modifier())} allies",
             ),
             ("Reaction Options", "One attack, or move up to half Speed without OAs"),
         ]
@@ -123,18 +113,14 @@ class SharedResilience(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Ally fails saving throw (within 60 feet)"),
             ("Reaction", "Expend Indomitable"),
@@ -159,7 +145,7 @@ class InspiringCommander(Feature):
         for immunity in self._immunities:
             immunity.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the following benefits.\n"
             "Bolstered Rally. The area of effect for both Group Recovery and Rallying Surge is now a 60-foot Emanation.\n"

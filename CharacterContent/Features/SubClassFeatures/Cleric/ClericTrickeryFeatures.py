@@ -5,7 +5,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class BlessingOfTheTrickster(Feature):
@@ -21,13 +21,11 @@ class BlessingOfTheTrickster(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "As a Magic action, you can choose yourself or a willing creature within 30 feet of yourself to have Advantage on Dexterity (Stealth) checks. This blessing lasts until you finish a Long Rest or you use this feature again."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Grant Advantage on Stealth checks"),
             ("Trigger", "Magic action"),
@@ -35,9 +33,7 @@ class BlessingOfTheTrickster(Feature):
             ("Duration", "Until Long Rest or use again"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -47,7 +43,7 @@ class TrickeryDomainSpells(Feature):
             name="Trickery Domain Spells", origin="Trickery Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Trickery Domain Spells table, you thereafter always have the listed spells prepared."
         return description
 
@@ -65,7 +61,7 @@ class InvokeDuplicity(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "As a Bonus Action, you can expend one use of your Channel Divinity to create a perfect visual illusion of yourself in an unoccupied space you can see within 30 feet of yourself. The illusion is intangible and doesn't occupy its space. It lasts for 1 minute, but it ends early if you dismiss it (no action required) or have the Incapacitated condition. The illusion is animated and mimics your expressions and gestures. While it persists, you gain the following benefits.\n"
             "Cast Spells. You can cast spells as though you were in the illusion's space, but you must use your own senses.\n"
@@ -74,9 +70,7 @@ class InvokeDuplicity(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Create visual illusion of yourself"),
             ("Trigger", "Bonus Action, Channel Divinity"),
@@ -95,7 +89,7 @@ class TrickstersTransposition(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Whenever you take the Bonus Action to create or move the illusion of your Invoke Duplicity, you can teleport, swapping places with the illusion."
         return description
 
@@ -109,7 +103,7 @@ class ImprovedDuplicity(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "The illusion of your Invoke Duplicity has grown more powerful in the following ways.\n"
             "Shared Distraction. When you and your allies make attack rolls against a creature within 5 feet of the illusion, the attack rolls have Advantage.\n"
@@ -117,9 +111,7 @@ class ImprovedDuplicity(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Shared Distraction",

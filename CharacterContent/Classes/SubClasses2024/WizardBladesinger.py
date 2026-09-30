@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Skill, WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
 
@@ -17,8 +17,8 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         if data.armors:
             raise ValueError("Bladesong cannot be used while wearing armor.")
         data.add_feature(WizardBladesingerFeatures.Bladesong())
@@ -33,8 +33,8 @@ class WizardBladesingerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardBladesingerFeatures.ExtraAttack())
         return data
 
@@ -44,8 +44,8 @@ class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         bladesong: WizardBladesingerFeatures.Bladesong = data.get_features_by_type(
             WizardBladesingerFeatures.Bladesong
         )[0]
@@ -58,8 +58,8 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardBladesingerFeatures.SongOfVictory())
         return data
 

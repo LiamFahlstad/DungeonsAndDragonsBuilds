@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from Core.Definitions import Skill
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class ArcaneInitiate(Feature):
@@ -18,7 +18,7 @@ class ArcaneInitiate(Feature):
     def apply(self, effects: Effects):
         self._proficiency.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips."
         return description
 
@@ -29,7 +29,7 @@ class ArcanaDomainSpells(Feature):
             name="Arcana Domain Spells", origin="Arcana Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Arcana Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Arcana Domain Spells\n"
@@ -56,12 +56,10 @@ class ArcaneAbjurationChannelDivinity(Feature):
             usage_tags=["control"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use your Channel Divinity to abjure otherworldly creatures.\n"
             "As an action, you present your holy symbol, and one celestial, elemental, fey, or fiend of your choice that is within 30 feet of you must make a Wisdom saving throw, provided that the creature can see or hear you. If the creature fails its saving throw, it is turned for 1 minute or until it takes any damage.\n"
@@ -82,12 +80,10 @@ class SpellBreaker(Feature):
     def __init__(self):
         super().__init__(name="Spell Breaker", origin="Arcana Domain Cleric Level 6")
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you restore hit points to an ally with a spell of 1st level or higher, you can also end one spell of your choice on that creature. The level of the spell you end must be equal to or lower than the level of the spell slot you use to cast the healing spell."
         return description
 
@@ -96,6 +92,6 @@ class ArcaneMastery(Feature):
     def __init__(self):
         super().__init__(name="Arcane Mastery", origin="Arcana Domain Cleric Level 17")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You choose four spells from the wizard spell list, one from each of the following levels: 6th, 7th, 8th, and 9th. You add them to your list of domain spells. Like your other domain spells, they are always prepared and count as cleric spells for you."
         return description

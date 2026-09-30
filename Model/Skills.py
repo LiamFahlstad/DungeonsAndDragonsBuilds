@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
+from Model.Bonuses import Bonuses, DerivedBonus
 
 if TYPE_CHECKING:
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.Character import Character
 
 
 class Skills:
@@ -18,7 +18,7 @@ class Skills:
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.expertise = expertise if expertise is not None else {}
         # Per-skill flat and formula-valued bonuses, each with a source (see
-        # StatBlocks/Bonuses.py).
+        # Model/Bonuses.py).
         self._bonuses: dict[Skill, Bonuses] = {}
         if bonuses:
             for skill, bonus in bonuses.items():
@@ -49,15 +49,15 @@ class Skills:
     ) -> None:
         self._bonuses_for(skill).add_formula(bonus, source)
 
-    def get_total_bonus(self, skill: Skill, character: "CharacterStatBlock") -> int:
+    def get_total_bonus(self, skill: Skill, character: "Character") -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
         `character` (not the ability modifier or proficiency bonus - see
-        CharacterStatBlock.get_skill_modifier)."""
+        Character.get_skill_modifier)."""
         bonuses = self._bonuses.get(skill)
         return bonuses.total(character) if bonuses is not None else 0
 
     def get_all_bonus_sources(
-        self, skill: Skill, character: "CharacterStatBlock"
+        self, skill: Skill, character: "Character"
     ) -> list[tuple[int, str]]:
         bonuses = self._bonuses.get(skill)
         return bonuses.sources(character) if bonuses is not None else []
@@ -115,7 +115,7 @@ class Skills:
     def get_skill_abilities(self, skill: Skill) -> list[Ability]:
         """The abilities a check with `skill` may use: the default one, or every
         override granted for it (the character uses the best -
-        CharacterStatBlock.get_skill_ability)."""
+        Character.get_skill_ability)."""
         return self._skill_ability_overrides.get(skill) or [
             self.get_default_skill_to_ability_mapping()[skill]
         ]
@@ -125,7 +125,7 @@ class Skills:
         if len(abilities) > 1:
             raise ValueError(
                 f"{skill} has several ability overrides; the best one depends on "
-                "ability scores - use CharacterStatBlock.get_skill_ability."
+                "ability scores - use Character.get_skill_ability."
             )
         return abilities[0]
 

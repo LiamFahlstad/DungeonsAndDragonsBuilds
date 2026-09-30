@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -27,7 +27,7 @@ class BalmOfTheSummerCourt(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 2nd level, you become imbued with the blessings of the Summer Court. You are a font of energy that offers respite from injuries. You have a pool of fey energy represented by a number of d6s equal to your druid level.\n"
             "\n"
@@ -37,25 +37,17 @@ class BalmOfTheSummerCourt(Feature):
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_class_level(Definitions.CharacterClass.DRUID)
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_class_level(Definitions.CharacterClass.DRUID)
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        druid_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.DRUID
-        )
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        druid_level = character.get_class_level(Definitions.CharacterClass.DRUID)
         half_druid_level = max(1, druid_level // 2)
         return [
             ("What", "Heal an ally within 120 feet"),
@@ -81,7 +73,7 @@ class HearthOfMoonlightAndShadow(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 6th level, home can be wherever you are. During a short or long rest, you can invoke the shadowy power of the Gloaming Court to help guard your respite. At the start of the rest, you touch a point in space, and an invisible, 30-foot-radius sphere of magic appears, centered on that point. Total cover blocks the sphere.\n"
             "\n"
@@ -101,10 +93,8 @@ class HiddenPaths(Feature):
             activation=FeatureActivation(action_type="bonus_action"),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        wisdom_mod = character_stat_block.get_ability_modifier(
-            Definitions.Ability.WISDOM
-        )
+    def get_description(self, character: Character) -> str:
+        wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
         uses = max(1, wisdom_mod)
         description = (
             "Starting at 10th level, you can use the hidden, magical pathways that some fey use to traverse space in a blink of an eye. As a bonus action on your turn, you can teleport up to 60 feet to an unoccupied space you can see. Alternatively, you can use your action to teleport one willing creature you touch up to 30 feet to an unoccupied space you can see.\n"
@@ -113,12 +103,8 @@ class HiddenPaths(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        wisdom_mod = character_stat_block.get_ability_modifier(
-            Definitions.Ability.WISDOM
-        )
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
         uses = max(1, wisdom_mod)
         return [
             ("Self", "Bonus action; teleport up to 60 feet"),
@@ -134,7 +120,7 @@ class WalkerInDreams(Feature):
             name="Walker in Dreams", origin="Circle of Dreams Druid Level 14"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 14th level, the magic of the Feywild grants you the ability to travel mentally or physically through dreamlands.\n"
             "\n"

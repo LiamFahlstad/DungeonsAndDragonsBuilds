@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterBanneretFeatures
@@ -19,8 +19,8 @@ class FighterBanneretLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterBanneretFeatures.KnightlyEnvoy())
         data.add_feature(FighterBanneretFeatures.GroupRecovery())
         data.add_spell(
@@ -36,8 +36,8 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         group_recovery: FighterBanneretFeatures.GroupRecovery = (
             data.get_features_by_type(FighterBanneretFeatures.GroupRecovery)[0]
         )
@@ -50,8 +50,8 @@ class FighterBanneretLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         action_surge: FighterFeatures.ActionSurge = data.get_features_by_type(
             FighterFeatures.ActionSurge
         )[0]
@@ -64,8 +64,8 @@ class FighterBanneretLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         indomitable: FighterFeatures.Indomitable = data.get_features_by_type(
             FighterFeatures.Indomitable
         )[0]
@@ -78,8 +78,8 @@ class FighterBanneretLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterBanneretFeatures.InspiringCommander())
         return data
 

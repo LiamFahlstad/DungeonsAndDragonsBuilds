@@ -17,7 +17,7 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species import Dragonborn
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

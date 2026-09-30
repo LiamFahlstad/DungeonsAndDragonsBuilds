@@ -4,7 +4,7 @@ import attr
 
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
@@ -23,8 +23,8 @@ class FighterLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
         data.add_weapon_mastery(self.weapon_mastery_3)
@@ -39,7 +39,7 @@ class FighterLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class FighterLevel2(ClassBuilder.BaseClassLevel2):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(FighterFeatures.ActionSurge())
         second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
             FighterFeatures.SecondWind
@@ -51,7 +51,7 @@ class FighterLevel2(ClassBuilder.BaseClassLevel2):
 @attr.dataclass
 class FighterLevel3(ClassBuilder.BaseClassLevel3):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
@@ -60,7 +60,7 @@ class FighterLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
     weapon_mastery: Weapons.AbstractWeapon
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_weapon_mastery(self.weapon_mastery)
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
@@ -70,7 +70,7 @@ class FighterLevel4(ClassBuilder.BaseClassLevel4):
 @attr.dataclass
 class FighterLevel5(ClassBuilder.BaseClassLevel5):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(FighterFeatures.ExtraAttack())
         second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
             FighterFeatures.SecondWind
@@ -83,7 +83,7 @@ class FighterLevel5(ClassBuilder.BaseClassLevel5):
 class FighterLevel6(ClassBuilder.BaseClassLevel6):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -92,7 +92,7 @@ class FighterLevel6(ClassBuilder.BaseClassLevel6):
 @attr.dataclass
 class FighterLevel7(ClassBuilder.BaseClassLevel7):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
@@ -100,7 +100,7 @@ class FighterLevel7(ClassBuilder.BaseClassLevel7):
 class FighterLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -111,8 +111,8 @@ class FighterLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterFeatures.Indomitable())
         weapon_mastery: FighterFeatures.WeaponMastery = data.get_features_by_type(
             FighterFeatures.WeaponMastery
@@ -127,8 +127,8 @@ class FighterLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_weapon_mastery(self.weapon_mastery)
         return data
 
@@ -138,8 +138,8 @@ class FighterLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
             FighterFeatures.ExtraAttack
         )[0]
@@ -151,7 +151,7 @@ class FighterLevel11(ClassBuilder.BaseClassLevel11):
 class FighterLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -160,7 +160,7 @@ class FighterLevel12(ClassBuilder.BaseClassLevel12):
 @attr.dataclass
 class FighterLevel13(ClassBuilder.BaseClassLevel13):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(FighterFeatures.StudiedAttacks())
         return data
 
@@ -171,8 +171,8 @@ class FighterLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -181,7 +181,7 @@ class FighterLevel14(ClassBuilder.BaseClassLevel14):
 @attr.dataclass
 class FighterLevel15(ClassBuilder.BaseClassLevel15):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
@@ -190,7 +190,7 @@ class FighterLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
     weapon_mastery: Weapons.AbstractWeapon
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_weapon_mastery(self.weapon_mastery)
         self.general_feat.origin = f"Fighter Level {self.level}"
         data.add_feature(self.general_feat)
@@ -200,7 +200,7 @@ class FighterLevel16(ClassBuilder.BaseClassLevel16):
 @attr.dataclass
 class FighterLevel17(ClassBuilder.BaseClassLevel17):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
@@ -209,8 +209,8 @@ class FighterLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -218,7 +218,7 @@ class FighterLevel18(ClassBuilder.BaseClassLevel18):
 class FighterLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.epic_boon.origin = f"Fighter Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
@@ -227,7 +227,7 @@ class FighterLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class FighterLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
             FighterFeatures.ExtraAttack
         )[0]

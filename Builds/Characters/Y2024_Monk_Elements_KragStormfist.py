@@ -14,7 +14,7 @@ from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Species import Goliath
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import Drum
 
 

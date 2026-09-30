@@ -1,4 +1,4 @@
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 import Core.Definitions as Definitions
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.SpeciesFeatures import HumanFeatures
@@ -17,7 +17,7 @@ class HumanSpeciesBuilder(SpeciesBuilder):
             name="Human",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         data.base_speed = HumanFeatures.SPEED  # Given by your species
         data.size = HumanFeatures.SIZE  # Given by your species
 

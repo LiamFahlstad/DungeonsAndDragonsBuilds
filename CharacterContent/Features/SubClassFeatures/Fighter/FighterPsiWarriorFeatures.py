@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class PsionicPower(Feature):
@@ -22,7 +22,7 @@ class PsionicPower(Feature):
             usage_tags=["damage", "buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You harbor a wellspring of psionic energy within yourself. It is represented by your Psionic Energy Dice, which fuel powers you have from this subclass. The Psi Warrior Energy Dice table shows the die size and number of these dice you have when you reach certain Fighter levels.\n"
             "Psi Warrior Energy Dice\n"
@@ -42,9 +42,7 @@ class PsionicPower(Feature):
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -61,12 +59,12 @@ class TelekineticAdept(Feature):
             usage_tags=["buff", "control"],
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        intelligence_modifier = character_stat_block.get_intelligence_modifier()
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def calculate_dc(self, character: Character) -> int:
+        intelligence_modifier = character.get_intelligence_modifier()
+        proficiency_bonus = character.get_proficiency_bonus()
         return 8 + intelligence_modifier + proficiency_bonus
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You have mastered new ways to use your telekinetic abilities, detailed below.\n"
             "Psi-Powered Leap. As a Bonus Action, you gain a Fly Speed equal to twice your Speed until the end of the current turn. Once you take this Bonus Action, you can’t do so again until you finish a Short or Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it.\n"
@@ -87,12 +85,10 @@ class GuardedMind(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You have Resistance to Psychic damage. Moreover, if you start your turn with the Charmed or Frightened condition, you can expend a Psionic Energy Die (no action required) and end every effect on yourself giving you those conditions."
         return description
 
@@ -110,27 +106,23 @@ class BulwarkOfForce(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can shield yourself and others with telekinetic force. As a Bonus Action, you can choose creatures, including yourself, within 30 feet of yourself, up to a number of creatures equal to your Intelligence modifier (minimum of one creature). Each of the chosen creatures has Half Cover for 1 minute or until you have the Incapacitated condition.\n"
             "Once you use this feature, you can’t do so again until you finish a Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus Action"),
             ("Range", "30 feet"),
             (
                 "Targets",
-                f"Up to {max(1, character_stat_block.get_intelligence_modifier())} creatures",
+                f"Up to {max(1, character.get_intelligence_modifier())} creatures",
             ),
             ("Effect", "Half Cover for 1 minute or until Incapacitated"),
             ("Recharge", "Long Rest, or expend Psionic Energy Die"),
@@ -145,7 +137,7 @@ class TelekineticMaster(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You always have the telekinesis spell prepared. With this feature, you can cast it without a spell slot or components, and your spellcasting ability for it is Intelligence. On each of your turns while you maintain Concentration on it, including the turn when you cast it, you can make one attack with a weapon as a Bonus Action.\n"
             "Once you cast the spell with this feature, you can’t do so in this way again until you finish a Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it."

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerMulticlassBuilder,
     ArtificerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerCartographerFeatures,
@@ -30,8 +30,8 @@ from CharacterContent.Spells.SpellLists import (
 class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ArtificerCartographerFeatures.CartographerToolsOfTheTrade())
         data.add_feature(ArtificerCartographerFeatures.CartographerSpells())
         data.add_feature(ArtificerCartographerFeatures.AdventurersAtlas())
@@ -46,8 +46,8 @@ class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
 class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         cartographer_spells: ArtificerCartographerFeatures.CartographerSpells = cast(
             ArtificerCartographerFeatures.CartographerSpells,
             data.get_features_by_type(ArtificerCartographerFeatures.CartographerSpells)[
@@ -66,8 +66,8 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
 class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         flash_of_genius: ArtificerFeatures.FlashofGenius = cast(
             ArtificerFeatures.FlashofGenius,
             data.get_features_by_type(ArtificerFeatures.FlashofGenius)[0],
@@ -84,8 +84,8 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
 class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel4Spells.BANISHMENT)
         data.add_spell(DivinationLevel4Spells.LOCATE_CREATURE)
         return data
@@ -95,8 +95,8 @@ class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
 class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         adventurers_atlas: ArtificerCartographerFeatures.AdventurersAtlas = cast(
             ArtificerCartographerFeatures.AdventurersAtlas,
             data.get_features_by_type(ArtificerCartographerFeatures.AdventurersAtlas)[
@@ -111,8 +111,8 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
 class ArtificerCartographerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DivinationLevel5Spells.SCRYING)
         data.add_spell(BardLevel5Spells.TELEPORTATION_CIRCLE)
         return data

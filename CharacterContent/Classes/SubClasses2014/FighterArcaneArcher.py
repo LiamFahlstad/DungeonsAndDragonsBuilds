@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterArcaneArcherFeatures,
@@ -21,8 +21,8 @@ class FighterArcaneArcherLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(
             FighterArcaneArcherFeatures.ArcaneArcherLore(self.skill, self.cantrip)
         )
@@ -35,8 +35,8 @@ class FighterArcaneArcherLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterArcaneArcherFeatures.MagicArrow())
         data.add_feature(FighterArcaneArcherFeatures.CurvingShot())
         return data
@@ -47,8 +47,8 @@ class FighterArcaneArcherLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         arcane_shot: FighterArcaneArcherFeatures.ArcaneShot = data.get_features_by_type(
             FighterArcaneArcherFeatures.ArcaneShot
         )[0]

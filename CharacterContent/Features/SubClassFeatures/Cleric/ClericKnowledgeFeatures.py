@@ -10,8 +10,8 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
 )
 from Core.Definitions import Ability, Skill
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class BlessingsOfKnowledge(Feature):
@@ -46,7 +46,7 @@ class BlessingsOfKnowledge(Feature):
         self._proficiency_choice.apply(effects)
         self._expertise_choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = f"You gain proficiency with one type of Artisan's Tools of your choice and in {self._skill_1.value} and {self._skill_2.value}. You have Expertise in those two skills."
         return description
 
@@ -57,7 +57,7 @@ class KnowledgeDomainSpells(Feature):
             name="Knowledge Domain Spells", origin="Knowledge Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you reach a Cleric level specified in the Knowledge Domain Spells table, you thereafter always have the listed spells prepared."
         return description
 
@@ -70,13 +70,11 @@ class MindMagic(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Cast Divination spell from Knowledge Domain table"),
             ("Trigger", "Magic action, Channel Divinity"),
@@ -109,16 +107,14 @@ class UnfetteredMind(Feature):
             ],
         ).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain telepathy out to 60 feet. When you use this telepathy, you can simultaneously contact a number of creatures equal to your Wisdom modifier (minimum of one).\n"
             "Additionally, you gain proficiency in Intelligence saving throws. If you already have this proficiency, you instead gain saving throw proficiency with one ability in which you lack it."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -133,13 +129,11 @@ class DivineForeknowledge(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "As a Bonus Action, you magically expand your mind to the future. For 1 hour, you have Advantage on D20 Tests. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of this feature by expending a level 6+ spell slot (no action required)."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Gain Advantage on all D20 Tests"),
             ("Trigger", "Bonus Action"),
@@ -148,7 +142,5 @@ class DivineForeknowledge(Feature):
             ("Alternative", "Expend level 6+ spell slot (no action)"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

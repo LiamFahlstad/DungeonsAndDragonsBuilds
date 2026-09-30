@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerWinterWalkerFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -29,8 +29,8 @@ class RangerWinterWalkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerWinterWalkerFeatures.FrigidExplorer())
         data.add_feature(RangerWinterWalkerFeatures.WinterWalkerSpells())
         data.add_feature(RangerWinterWalkerFeatures.HuntersRime())
@@ -43,8 +43,8 @@ class RangerWinterWalkerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(EnchantmentLevel2Spells.HOLD_PERSON)
         return data
 
@@ -54,8 +54,8 @@ class RangerWinterWalkerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerWinterWalkerFeatures.FortifyingSoul())
         return data
 
@@ -65,8 +65,8 @@ class RangerWinterWalkerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(AbjurationLevel3Spells.REMOVE_CURSE)
         return data
 
@@ -76,8 +76,8 @@ class RangerWinterWalkerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerWinterWalkerFeatures.ChillingRetribution())
         return data
 
@@ -87,8 +87,8 @@ class RangerWinterWalkerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(EvocationLevel4Spells.ICE_STORM)
         return data
 
@@ -98,8 +98,8 @@ class RangerWinterWalkerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerWinterWalkerFeatures.FrozenHaunt())
         return data
 
@@ -109,8 +109,8 @@ class RangerWinterWalkerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(EvocationLevel5Spells.CONE_OF_COLD)
         return data
 

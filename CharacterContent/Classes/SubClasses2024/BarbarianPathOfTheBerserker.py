@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheBerserkerFeatures,
@@ -20,8 +20,8 @@ class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -34,8 +34,8 @@ class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -48,8 +48,8 @@ class BarbarianBerserkerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BarbarianPathOfTheBerserkerFeatures.Retaliation())
         return data
 
@@ -59,8 +59,8 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]

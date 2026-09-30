@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerHollowWardenFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -24,8 +24,8 @@ class RangerHollowWardenLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerHollowWardenFeatures.HollowWardenSpells())
         data.add_feature(RangerHollowWardenFeatures.WrathOfTheWild())
         data.add_spell(NecromancyLevel1Spells.WRATHFUL_SMITE)
@@ -37,8 +37,8 @@ class RangerHollowWardenLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(TransmutationLevel2Spells.ALTER_SELF)
         return data
 
@@ -48,8 +48,8 @@ class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
             data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
@@ -62,8 +62,8 @@ class RangerHollowWardenLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(IllusionLevel3Spells.PHANTOM_STEED)
         return data
 
@@ -73,8 +73,8 @@ class RangerHollowWardenLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
             data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
@@ -87,8 +87,8 @@ class RangerHollowWardenLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(RangerLevel4Spells.DOMINATE_BEAST)
         return data
 
@@ -98,8 +98,8 @@ class RangerHollowWardenLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_wild: RangerHollowWardenFeatures.WrathOfTheWild = (
             data.get_features_by_type(RangerHollowWardenFeatures.WrathOfTheWild)[0]
         )
@@ -112,8 +112,8 @@ class RangerHollowWardenLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(RangerLevel5Spells.STEEL_WIND_STRIKE)
         return data
 

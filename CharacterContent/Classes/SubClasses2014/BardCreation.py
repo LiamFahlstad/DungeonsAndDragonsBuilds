@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardCreationFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -18,8 +18,8 @@ class BardCreationLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
@@ -33,8 +33,8 @@ class BardCreationLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardCreationFeatures.AnimatingPerformance())
         return data
 
@@ -44,8 +44,8 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         performance_of_creation: BardCreationFeatures.PerformanceOfCreation = (
             data.get_features_by_type(BardCreationFeatures.PerformanceOfCreation)[0]
         )

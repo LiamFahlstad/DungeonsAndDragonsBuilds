@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
     SorcererClockworkFeatures,
@@ -27,8 +27,8 @@ from CharacterContent.Spells.SpellLists import (
 class SorcererClockworkLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererClockworkFeatures.ClockworkSpells())
         data.add_spell(AbjurationLevel2Spells.AID)
         data.add_spell(AbjurationLevel1Spells.ALARM)
@@ -42,8 +42,8 @@ class SorcererClockworkLevel3(ClassBuilder.SubclassLevel3):
 class SorcererClockworkLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel3Spells.DISPEL_MAGIC)
         data.add_spell(SorcererLevel3Spells.PROTECTION_FROM_ENERGY)
         return data
@@ -53,8 +53,8 @@ class SorcererClockworkLevel5(ClassBuilder.SubclassLevel5):
 class SorcererClockworkLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererClockworkFeatures.BastionOfLaw())
         return data
 
@@ -63,8 +63,8 @@ class SorcererClockworkLevel6(ClassBuilder.SubclassLevel6):
 class SorcererClockworkLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(AbjurationLevel4Spells.FREEDOM_OF_MOVEMENT)
         data.add_spell(ConjurationLevel4Spells.SUMMON_CONSTRUCT)
         return data
@@ -74,8 +74,8 @@ class SorcererClockworkLevel7(ClassBuilder.SubclassLevel7):
 class SorcererClockworkLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(AbjurationLevel5Spells.GREATER_RESTORATION)
         data.add_spell(EvocationLevel5Spells.WALL_OF_FORCE)
         return data
@@ -85,8 +85,8 @@ class SorcererClockworkLevel9(ClassBuilder.SubclassLevel9):
 class SorcererClockworkLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererClockworkFeatures.TranceOfOrder())
         return data
 
@@ -95,8 +95,8 @@ class SorcererClockworkLevel14(ClassBuilder.SubclassLevel14):
 class SorcererClockworkLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererClockworkFeatures.ClockworkCavalcade())
         return data
 

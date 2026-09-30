@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Paladin import (
     PaladinWatchersFeatures,
@@ -29,8 +29,8 @@ class PaladinWatchersLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinWatchersFeatures.WatchersSpells())
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
@@ -49,8 +49,8 @@ class PaladinWatchersLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel2Spells.MOONBEAM)
         data.add_spell(WizardLevel2Spells.SEE_INVISIBILITY)
         return data
@@ -61,8 +61,8 @@ class PaladinWatchersLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinWatchersFeatures.AuraOfTheSentinel())
         return data
 
@@ -72,8 +72,8 @@ class PaladinWatchersLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel3Spells.COUNTERSPELL)
         data.add_spell(WizardLevel3Spells.NONDETECTION)
         return data
@@ -84,8 +84,8 @@ class PaladinWatchersLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel4Spells.AURA_OF_PURITY)
         data.add_spell(PaladinLevel4Spells.BANISHMENT)
         return data
@@ -96,8 +96,8 @@ class PaladinWatchersLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinWatchersFeatures.VigilantRebuke())
         return data
 
@@ -107,8 +107,8 @@ class PaladinWatchersLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
         data.add_spell(WizardLevel5Spells.SCRYING)
         return data
@@ -119,8 +119,8 @@ class PaladinWatchersLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_the_sentinel: PaladinWatchersFeatures.AuraOfTheSentinel = (
             data.get_features_by_type(PaladinWatchersFeatures.AuraOfTheSentinel)[0]
         )
@@ -135,8 +135,8 @@ class PaladinWatchersLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinWatchersFeatures.MortalBulwark())
         return data
 

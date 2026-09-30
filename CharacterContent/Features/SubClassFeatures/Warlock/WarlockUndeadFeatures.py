@@ -8,8 +8,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -29,23 +29,19 @@ class FormOfDread(Feature):
             ),
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_charisma_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_charisma_modifier())
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "As a Bonus Action, you transform into an avatar of your patron's dreadful power, gaining the benefits below for 1 minute, until you have the Incapacitated condition, or until you end the form (no action required). You can transform a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "Facsimile of Life. You gain Temporary Hit Points equal to 1d10 plus your Warlock level.\n"
@@ -59,7 +55,7 @@ class UndeadSpells(Feature):
     def __init__(self):
         super().__init__(name="Undead Spells", origin="Undead Patron Warlock Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Undead Spells table, you thereafter always have the listed spells prepared.\n"
             "Undead Spells\n"
@@ -80,7 +76,7 @@ class GraveTouched(Feature):
             usage_tags=["damage", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your patron's powers have a profound effect on your body and magic, granting you the following benefits.\n"
             "Arcane Necrosis. Necrotic damage from your attacks, Warlock spells, and Warlock features ignores Resistance to Necrotic damage. Once per turn when you cast a spell that deals damage, you can change that spell's damage type to Necrotic.\n"
@@ -106,10 +102,10 @@ class NecroticHusk(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your connection to undeath saturates your body. You gain the following benefits.\n"
             "Necrotic Resilience. You have Resistance to Necrotic damage. While using your Form of Dread, you have Immunity to Necrotic damage.\n"
@@ -118,15 +114,13 @@ class NecroticHusk(Feature):
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return (
             "Gain Resistance to Necrotic damage (Immunity while Form of Dread). "
             "When you drop to 0 HP and don't die, trigger area effect: creatures in 30-foot Emanation make CON save (DC your spell save), taking 2d10 + CHA Necrotic damage on fail (half on success); you regain HP to twice your Warlock level and gain 1 Exhaustion (recharge Short or Long Rest)."
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -138,7 +132,7 @@ class SuperiorDread(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your Form of Dread improves, granting you the following benefits while you are using it.\n"
             "Dread Resistance. You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"
@@ -147,10 +141,8 @@ class SuperiorDread(Feature):
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return "While Form of Dread active: gain Resistance to Bludgeoning/Piercing/Slashing, Fly Speed equal to your Speed with hover (moving through creatures and objects as difficult terrain but taking 1d10 Force if ending turn inside), and cast Conjuration or Necromancy Warlock spells without components (except costly or consumed Material)."
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

@@ -3,17 +3,14 @@ grant (features, spells, fighting styles, inventory), plus every stat worked
 out from them.
 
 Evaluation is internal and lazy. The first query after any change builds
-fresh Parts (StatBlocks/Effects.py) by applying every feature, armor, weapon,
+fresh Parts (Model/Effects.py) by applying every feature, armor, weapon,
 item and fighting style in iter_stat_effects() to a write-only Effects view of
-them, then answers queries from the Parts until the sources change again. A version counter decides when that
-is (see _get_parts).
+them, then answers queries from the Parts until the sources change again. A
+version counter decides when that is (see _get_parts).
 
-This module is the model: it imports nothing from CharacterContent at
-runtime (features, items and fighting styles appear in annotations only), so
-CharacterContent can import it without a cycle. CharacterStatBlock
-(StatBlocks/CharacterStatBlock.py) and CharacterSheetData
-(Builds/CharacterSheetAccumulator.py) are aliases of Character, kept so the
-existing imports keep working.
+The Model package imports nothing from CharacterContent at runtime (features,
+items and fighting styles appear in annotations only), so CharacterContent
+can import it without a cycle.
 """
 
 from __future__ import annotations
@@ -26,25 +23,25 @@ import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
-from StatBlocks.AbilityRequirements import AbilityRequirements
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.ArmorClass import ArmorClass
-from StatBlocks.CarryingCapacity import CarryingCapacity
-from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.Defenses import Defenses
-from StatBlocks.Effects import Effects, Parts
-from StatBlocks.EquipmentTraining import EquipmentTraining
-from StatBlocks.HitPoints import HitPoints
-from StatBlocks.Initiative import Initiative
-from StatBlocks.Inventory import Inventory
-from StatBlocks.Languages import Languages
-from StatBlocks.SavingThrows import SavingThrows
-from StatBlocks.Senses import Senses
-from StatBlocks.Skills import Skills
-from StatBlocks.Speed import Speed
-from StatBlocks.Spellcasting import Spellcasting
-from StatBlocks.WeaponBonuses import WeaponBonuses
-from StatBlocks.WornArmor import WornArmor
+from Model.AbilityRequirements import AbilityRequirements
+from Model.AbilityScores import AbilityScores
+from Model.ArmorClass import ArmorClass
+from Model.CarryingCapacity import CarryingCapacity
+from Model.ClassLevels import ClassLevels
+from Model.Defenses import Defenses
+from Model.Effects import Effects, Parts
+from Model.EquipmentTraining import EquipmentTraining
+from Model.HitPoints import HitPoints
+from Model.Initiative import Initiative
+from Model.Inventory import Inventory
+from Model.Languages import Languages
+from Model.SavingThrows import SavingThrows
+from Model.Senses import Senses
+from Model.Skills import Skills
+from Model.Speed import Speed
+from Model.Spellcasting import Spellcasting
+from Model.WeaponBonuses import WeaponBonuses
+from Model.WornArmor import WornArmor
 
 if TYPE_CHECKING:
     from CharacterContent.Features.CharacterFeats.OriginFeats import OriginFeat
@@ -83,7 +80,7 @@ class Character:
     character_name: Optional[str] = None
     is_example: bool = False
     # Levels, level-by-level history, base class and subclasses - see
-    # StatBlocks/ClassLevels.py. character_subclass/base_class/
+    # Model/ClassLevels.py. character_subclass/base_class/
     # level_per_class/class_by_character_level below are thin delegating
     # properties kept for the many existing readers of those names.
     class_levels: ClassLevels = attr.Factory(ClassLevels)
@@ -107,7 +104,7 @@ class Character:
     fighting_styles: list[FightingStyle] = attr.Factory(list)
     # Armor, weapons and items, grouped into labeled entries (Starting
     # Equipment, then adventuring gear added later), plus starting and
-    # current gold - see StatBlocks/Inventory.py. CharacterBuilder.build()
+    # current gold - see Model/Inventory.py. CharacterBuilder.build()
     # gives each character its own copy of the builder's inventory.
     # armors/weapons/items below are its flat views, which AC, attacks and
     # carrying capacity read.
@@ -375,7 +372,7 @@ class Character:
     def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
         """Everything that records effects: features and their extensions,
         armor, weapons, items and fighting styles with a computed effect
-        (Defense, Archery, Dueling, ...). Each has apply(character_stat_block);
+        (Defense, Archery, Dueling, ...). Each has apply(character);
         the order is irrelevant. (Proficiencies come from features too - e.g.
         ClassProficiencies.) Weapons are never changed: bonuses the wielder
         brings to them are recorded in weapon_bonuses."""
@@ -394,7 +391,7 @@ class Character:
     def _get_parts(self) -> Parts:
         """The evaluated parts: cached, and rebuilt from the sources on the
         first query after any change to them. Requirements aren't checked
-        here - validate() (and setup_character_stat_block()) does that,
+        here - validate() does that,
         against the complete set of effects."""
         key = (self._version, self.inventory.version, _feature_extensions)
         if self._parts is not None and self._parts_key == key:
@@ -487,22 +484,18 @@ class Character:
                 f"but is attuned to {len(attuned)}: {', '.join(attuned)}."
             )
 
-    def validate(self) -> None:
+    def validate(self) -> "Character":
         """The single validation entry point: the sources (required fields,
         one worn armor, attunement), then every requirement against the
         complete set of effects (expertise needs proficiency, an armor's
-        Strength, multiclass ability minimums)."""
+        Strength, multiclass ability minimums). Returns the character, so a
+        build can be checked inline: `builder.build().validate()`."""
         self._validate_sources()
         self._get_parts().validate(self.class_levels)
-
-    def setup_character_stat_block(self) -> "Character":
-        """Kept for existing callers: evaluation is internal and lazy now.
-        Validates the character and returns it."""
-        self.validate()
         return self
 
     # ── The evaluated parts ──────────────────────────────────────────────────
-    # Each reads one part of the evaluated Parts (StatBlocks/Effects.py).
+    # Each reads one part of the evaluated Parts (Model/Effects.py).
 
     @property
     def abilities(self) -> AbilityScores:

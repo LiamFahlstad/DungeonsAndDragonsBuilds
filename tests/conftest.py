@@ -4,11 +4,11 @@ Shared pytest fixtures and configuration for D&D character sheet builder tests.
 
 import pytest
 from Core.Definitions import Ability
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
-from StatBlocks.ArmorClass import ArmorClass
-from StatBlocks.CarryingCapacity import CarryingCapacity
-from StatBlocks.Skills import Skills
-from StatBlocks.SavingThrows import SavingThrows
+from Model.AbilityScores import StandardArrayAbilityScores
+from Model.ArmorClass import ArmorClass
+from Model.CarryingCapacity import CarryingCapacity
+from Model.Skills import Skills
+from Model.SavingThrows import SavingThrows
 
 
 @pytest.fixture
@@ -58,9 +58,9 @@ def make_character():
     make_character(armor_training=[ArmorType.SHIELD])
     """
     from Core.Definitions import CharacterClass, CreatureSize
-    from StatBlocks.AbilityScores import AbilityScores
-    from StatBlocks.Character import Character
-    from StatBlocks.ClassLevels import ClassLevels
+    from Model.AbilityScores import AbilityScores
+    from Model.Character import Character
+    from Model.ClassLevels import ClassLevels
 
     def _make(
         strength=10,

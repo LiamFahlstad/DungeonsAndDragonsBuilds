@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import (
     RogueSwashbucklerFeatures,
@@ -20,8 +20,8 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSwashbucklerFeatures.FancyFootwork())
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
@@ -35,8 +35,8 @@ class RogueSwashbucklerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSwashbucklerFeatures.Panache())
         return data
 
@@ -46,8 +46,8 @@ class RogueSwashbucklerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSwashbucklerFeatures.ElegantManeuver())
         return data
 
@@ -57,8 +57,8 @@ class RogueSwashbucklerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSwashbucklerFeatures.MasterDuelist())
         return data
 

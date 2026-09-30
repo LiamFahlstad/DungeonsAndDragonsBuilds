@@ -9,7 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -35,17 +35,13 @@ class LargeForm(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -55,7 +51,7 @@ class PowerfulBuild(Feature):
             name="Powerful Build", origin="Goliath Trait", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
 
 
@@ -72,7 +68,7 @@ class GiantAncestry(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         text = ""
         if self.giant_ancestry_type == GiantAncestryType.CLOUD_GIANT:
             text += "As a Bonus Action, you magically teleport up to 30 feet to an unoccupied space you can see.\n"
@@ -89,19 +85,15 @@ class GiantAncestry(Feature):
         text += "You can use the benefit, and you regain all expended uses when you finish a Long Rest"
         return text
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         if self.giant_ancestry_type == GiantAncestryType.CLOUD_GIANT:
             return FeatureTarget.SELF
         if self.giant_ancestry_type == GiantAncestryType.STONE_GIANT:
             return FeatureTarget.SELF
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()

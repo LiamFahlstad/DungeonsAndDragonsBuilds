@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerHorizonWalkerFeatures,
@@ -27,8 +27,8 @@ class RangerHorizonWalkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerHorizonWalkerFeatures.HorizonWalkerSpells())
         data.add_feature(RangerHorizonWalkerFeatures.DetectPortal())
         data.add_feature(RangerHorizonWalkerFeatures.PlanarWarrior())
@@ -41,8 +41,8 @@ class RangerHorizonWalkerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel2Spells.MISTY_STEP)
         return data
 
@@ -52,8 +52,8 @@ class RangerHorizonWalkerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerHorizonWalkerFeatures.EtherealStep())
         data.add_spell(
             WizardLevel7Spells.ETHEREALNESS,
@@ -67,8 +67,8 @@ class RangerHorizonWalkerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel3Spells.HASTE)
         return data
 
@@ -78,8 +78,8 @@ class RangerHorizonWalkerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerHorizonWalkerFeatures.DistantStrike())
         return data
 
@@ -89,8 +89,8 @@ class RangerHorizonWalkerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel4Spells.BANISHMENT)
         return data
 
@@ -100,8 +100,8 @@ class RangerHorizonWalkerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerHorizonWalkerFeatures.SpectralDefense())
         return data
 
@@ -111,8 +111,8 @@ class RangerHorizonWalkerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.TELEPORTATION_CIRCLE)
         return data
 

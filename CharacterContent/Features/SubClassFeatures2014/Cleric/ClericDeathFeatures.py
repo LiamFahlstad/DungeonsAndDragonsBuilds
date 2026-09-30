@@ -2,8 +2,8 @@ import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from CharacterContent.Features.Core.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class BonusProficiency(Feature):
@@ -14,7 +14,7 @@ class BonusProficiency(Feature):
         # "You gain proficiency with martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain proficiency with martial weapons."
         return description
 
@@ -23,7 +23,7 @@ class Reaper(Feature):
     def __init__(self):
         super().__init__(name="Reaper", origin="Death Domain Cleric Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You learn one necromancy cantrip of your choice from any spell list. When you cast a necromancy cantrip that normally targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other."
         return description
 
@@ -34,7 +34,7 @@ class DeathDomainSpells(Feature):
             name="Death Domain Spells", origin="Death Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Death Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Death Domain Spells\n"
@@ -56,21 +56,15 @@ class TouchOfDeathChannelDivinity(Feature):
             usage_tags=["damage"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can use Channel Divinity to destroy another creature's life force by touch. When you hit a creature with a melee attack, you can use Channel Divinity to deal extra necrotic damage to the target. The damage equals 5 + twice your cleric level."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        cleric_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.CLERIC
-        )
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        cleric_level = character.get_class_level(Definitions.CharacterClass.CLERIC)
         damage = 5 + 2 * cleric_level
         return [
             ("Trigger", "On melee attack hit"),
@@ -86,7 +80,7 @@ class InescapableDestruction(Feature):
             name="Inescapable Destruction", origin="Death Domain Cleric Level 6"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your ability to channel negative energy becomes more potent. Necrotic damage dealt by your cleric spells and Channel Divinity options ignores resistance to necrotic damage."
         return description
 
@@ -95,6 +89,6 @@ class ImprovedReaper(Feature):
     def __init__(self):
         super().__init__(name="Improved Reaper", origin="Death Domain Cleric Level 17")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you cast a necromancy spell of 1st through 5th level that targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other. If the spell consumes its material components, you must provide them for each target."
         return description

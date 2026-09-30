@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from Core.Definitions import MAX_PROFICIENCY_BONUS, DamageType, Sense
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 35  # Given by your species
 
@@ -20,7 +20,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -31,7 +31,7 @@ class SpiderClimb(Feature):
             name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff", "utility"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         if self.character_level >= 3:
             return (
                 "You have a Climb Speed equal to your Speed. "
@@ -53,7 +53,7 @@ class TraceOfUndeath(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Resistance to Necrotic damage."
 
 
@@ -69,7 +69,7 @@ class VampiricBite(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you use your Unarmed Strike and deal damage, you can choose to bite with your fangs. "
             "You deal Piercing damage equal to 1d4 plus your Constitution modifier instead of the normal damage of an Unarmed Strike.\n"
@@ -80,15 +80,11 @@ class VampiricBite(Feature):
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()

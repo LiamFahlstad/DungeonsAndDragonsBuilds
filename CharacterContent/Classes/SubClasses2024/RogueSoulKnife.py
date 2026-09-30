@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueSoulKnifeFeatures
 
@@ -17,8 +17,8 @@ class RogueSoulKnifeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSoulKnifeFeatures.PsionicPower())
         data.add_feature(RogueSoulKnifeFeatures.PsychicBlades())
         return data
@@ -29,8 +29,8 @@ class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         psychic_blades: RogueSoulKnifeFeatures.PsychicBlades = (
             data.get_features_by_type(RogueSoulKnifeFeatures.PsychicBlades)[0]
         )
@@ -43,8 +43,8 @@ class RogueSoulKnifeLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueSoulKnifeFeatures.PsychicVeil())
         return data
 
@@ -54,8 +54,8 @@ class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         psychic_blades: RogueSoulKnifeFeatures.PsychicBlades = (
             data.get_features_by_type(RogueSoulKnifeFeatures.PsychicBlades)[0]
         )

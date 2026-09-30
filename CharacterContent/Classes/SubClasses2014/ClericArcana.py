@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericArcanaFeatures
 
@@ -17,8 +17,8 @@ class ClericArcanaLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericArcanaFeatures.ArcaneInitiate())
         data.add_feature(ClericArcanaFeatures.ArcanaDomainSpells())
         data.add_feature(ClericArcanaFeatures.ArcaneAbjurationChannelDivinity())
@@ -30,8 +30,8 @@ class ClericArcanaLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericArcanaFeatures.SpellBreaker())
         return data
 
@@ -41,8 +41,8 @@ class ClericArcanaLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         arcana_domain_spells: ClericArcanaFeatures.ArcanaDomainSpells = (
             data.get_features_by_type(ClericArcanaFeatures.ArcanaDomainSpells)[0]
         )

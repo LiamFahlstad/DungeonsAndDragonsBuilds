@@ -31,7 +31,7 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 # Paladin 4 / Wizard 3 multiclass (the PHB example scenario).

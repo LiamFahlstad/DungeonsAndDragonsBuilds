@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -25,30 +25,24 @@ class WailsFromTheGrave(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Immediately after you deal Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack damage dice for your level (round up), and the second creature takes Necrotic damage equal to the roll's total as wails of the dead sound around it.\n"
             "You can use this feature a number of times based on your Dexterity modifier, and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_dexterity_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_dexterity_modifier())
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character_stat_block)
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        uses = self.number_of_uses(character)
         return [
             ("Trigger", "After you deal Sneak Attack damage on your turn"),
             ("Target", "Second creature within 30 feet of the first"),
@@ -62,7 +56,7 @@ class WhispersOfTheDead(Feature):
     def __init__(self):
         super().__init__(name="Whispers of the Dead", origin="Phantom Rogue Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Whenever you finish a Short or Long Rest, you can choose one skill or tool proficiency that you lack and gain it, as a ghostly presence shares its knowledge with you. You lose this proficiency when you use this benefit again to choose a different proficiency."
         return description
 
@@ -76,7 +70,7 @@ class TokensOfTheDeparted(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "The spirits of the dead are drawn to you, and echoes of their past lives magically manifest as strange curios with resonant power.\n"
             "You gain two soul trinkets. A soul trinket is a Tiny object (the DM determines the trinket's form or has you roll on the Trinkets table in the Player's Handbook to generate it). If you move more than 30 feet from a trinket, the trinket immediately teleports to you, appearing somewhere on your person.\n"
@@ -99,21 +93,17 @@ class VoiceOfDeath(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can cast Speak with Dead once without a spell slot, requiring no spell components and using Dexterity as the spellcasting modifier. You regain the ability to cast it this way when you finish a Short or Long Rest.\n"
             "When you cast the spell, you can target one of your soul trinkets from Tokens of the Departed instead of a corpse, allowing the spirit of the creature associated with the trinket to answer."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -128,7 +118,7 @@ class GhostWalk(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "As a Bonus Action, you assume a spectral form, gaining the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest unless you destroy one of your soul trinkets from Tokens of the Departed (no action required) to restore your use of it.\n"
             "Flight. You gain a Fly Speed of 10 feet and can hover.\n"
@@ -137,9 +127,7 @@ class GhostWalk(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -151,7 +139,7 @@ class DeathsFriend(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your association with death has become so close that you gain the following benefits.\n"
             "Death's Lament. When you use Wails from the Grave, you can deal the feature's Necrotic damage to both the first and the second creature.\n"
@@ -159,9 +147,7 @@ class DeathsFriend(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Death's Lament",

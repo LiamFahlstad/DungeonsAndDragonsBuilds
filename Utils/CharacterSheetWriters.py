@@ -1,9 +1,9 @@
 import html
 import pathlib
-from typing import TYPE_CHECKING, Literal, Optional, TextIO
+from typing import Literal, Optional, TextIO
 
 import Core.Definitions as Definitions
-from StatBlocks.Inventory import EquipmentEntry
+from Model.Inventory import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
 from CharacterContent.Features.Core.BaseFeatures import (
     FEATURE_CARD_CSS,
@@ -25,19 +25,14 @@ from CharacterContent.Spells.SpellFactory import SpellFactory
 from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Skills import Skills
+from Model.Character import Character
+from Model.Skills import Skills
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 
-if TYPE_CHECKING:
-    # Only needed for the type hint below; importing it at runtime would
-    # create a cycle (Builds.CharacterSheetAccumulator imports this module).
-    from Builds.CharacterSheetAccumulator import CharacterSheetData
-
 
 def get_output_folder(
-    data: "CharacterSheetData",
+    data: "Character",
     description_mode: Literal["table", "concise"] | None = None,
 ) -> str:
     if data.character_name is None:
@@ -94,7 +89,7 @@ class HtmlCharacterSheetWriter:
     @staticmethod
     def _spell_level(spell: tuple[str, Ability, Optional[str], int]) -> int:
         """Class-relative level a spell/cantrip was granted on, mirroring
-        _feature_level - see CharacterSheetData._current_grant_level."""
+        _feature_level - see Character._current_grant_level."""
         return spell[3]
 
     @staticmethod
@@ -142,7 +137,7 @@ class HtmlCharacterSheetWriter:
         return f" <span class='wtag wtag-not-worn'>{not_worn_label}</span>"
 
     @staticmethod
-    def _format_class_level_history(character: CharacterStatBlock) -> str:
+    def _format_class_level_history(character: Character) -> str:
         def format_segment(start: int, end: int, character_class) -> str:
             level_label = str(start) if start == end else f"{start}-{end}"
             return f"{level_label}: {character_class.value}"
@@ -214,7 +209,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_overview(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
@@ -337,7 +332,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("</div>\n<br class='section-gap'>\n")
 
-    def _write_abilities(self, character: CharacterStatBlock, file: TextIO):
+    def _write_abilities(self, character: Character, file: TextIO):
         """Ability tiles, not a table: the modifier is what gets added to
         rolls constantly, so it's the large number on each tile. The raw
         score is secondary (you rarely reference it directly), and Save —
@@ -376,7 +371,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_spellcasting_headline(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         casting_abilities: list[Ability],
         include_probability_tables: bool = False,
@@ -421,7 +416,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_save_dc_probabilities(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         spellcasting_abilities: list[Ability],
     ):
@@ -511,7 +506,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_skills(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         skill_config: Definitions.SkillConfig,
     ):
@@ -624,7 +619,7 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _skill_modifier_breakdown(
-        character: CharacterStatBlock,
+        character: Character,
         skill: Definitions.Skill,
         condition: Definitions.DiceRollCondition = Definitions.DiceRollCondition.NEUTRAL,
         condition_reasons: Optional[list[str]] = None,
@@ -657,7 +652,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_weapons(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
@@ -676,7 +671,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_fighting_styles(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         fighting_styles: list[FightingStyle],
     ):
@@ -704,7 +699,7 @@ class HtmlCharacterSheetWriter:
         file.write("<br class='section-gap'>\n")
 
     def _write_invocations(
-        self, character: CharacterStatBlock, file: TextIO, invocations: list[str]
+        self, character: Character, file: TextIO, invocations: list[str]
     ):
         if not invocations:
             return
@@ -745,7 +740,7 @@ class HtmlCharacterSheetWriter:
 
         file.write("<br class='section-gap'>\n")
 
-    def _write_pact_magic_slots(self, character: CharacterStatBlock, file: TextIO):
+    def _write_pact_magic_slots(self, character: Character, file: TextIO):
         if not character.pact_magic_slots:
             return
         file.write("<h2>Pact Magic Slots</h2>\n")
@@ -754,7 +749,7 @@ class HtmlCharacterSheetWriter:
         )
         file.write("<br class='section-gap'>\n")
 
-    def _write_spell_slots(self, character: CharacterStatBlock, file: TextIO):
+    def _write_spell_slots(self, character: Character, file: TextIO):
         if not character.spell_slots:
             return
 
@@ -780,7 +775,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_spell_cards(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
         base_class: Definitions.CharacterClass,
@@ -815,7 +810,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_spells(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
         base_class: Definitions.CharacterClass,
@@ -940,7 +935,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_items(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
@@ -1023,7 +1018,7 @@ class HtmlCharacterSheetWriter:
 
     def _write_tool_proficiencies(
         self,
-        character: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         tool_proficiencies: Optional[list[ToolProficiency]],
     ):
@@ -1073,7 +1068,7 @@ class HtmlCharacterSheetWriter:
 
     def write_character_sheet(
         self,
-        data: "CharacterSheetData",
+        data: "Character",
         skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
         description_mode: Literal["table", "concise"] | None = None,
         include_probability_tables: bool = False,
@@ -1083,12 +1078,11 @@ class HtmlCharacterSheetWriter:
         overrides the default `get_output_folder(data, description_mode)`
         path - tests use this to render into a tmp directory instead of
         `Output/`."""
-        # `setup_character_stat_block()` is the single validation entry
-        # point: it runs `data.validate()` (required fields, e.g. "Character
-        # name must be set.") before building anything, then
-        # `character.validate()` (skill/save requirements, multiclass
-        # ability prerequisites) once every effect has applied.
-        character = data.setup_character_stat_block()
+        # `validate()` is the single validation entry point: the required
+        # fields (e.g. "Character name must be set."), then skill/save
+        # requirements and multiclass ability prerequisites against every
+        # effect.
+        character = data.validate()
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
         armors = data.armors
@@ -1104,7 +1098,7 @@ class HtmlCharacterSheetWriter:
         starting_equipment_entry = data.inventory.starting_equipment_entry
         tool_proficiencies = character.equipment_training.tool_proficiencies
         # Identity, gold and size live on the sheet data, not the stat block -
-        # see StatBlocks/ClassLevels.py.
+        # see Model/ClassLevels.py.
         character_name = data.character_name
         character_subclass = data.character_subclass
         base_class = data.base_class
@@ -1285,7 +1279,7 @@ class HtmlCharacterSheetWriter:
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
+        character: Character,
         character_name: str,
         base_class: Definitions.CharacterClass,
         character_subclass: Optional[str],
@@ -1342,7 +1336,7 @@ class HtmlCharacterSheetWriter:
         """Write a class-agnostic, unfilled version of character.html - the
         Overview/Abilities/Skills page - for a player who wants to print a
         blank sheet and fill it in by hand rather than generate one from a
-        build. No CharacterStatBlock involved: every value is a blank
+        build. No Character involved: every value is a blank
         fill-in line (see .blank-fill in Html.py) instead of computed data,
         and build-specific content (features, spellcasting, equipment) is
         skipped entirely since none of it applies until a character exists.
@@ -1482,7 +1476,7 @@ class HtmlCharacterSheetWriter:
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
+        character: Character,
         character_name: str,
         base_class: Definitions.CharacterClass,
         character_subclass: Optional[str],
@@ -1569,7 +1563,7 @@ class HtmlCharacterSheetWriter:
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
+        character: Character,
         character_name: str,
         base_class: Definitions.CharacterClass,
         level: int,
@@ -1613,7 +1607,7 @@ class HtmlCharacterSheetWriter:
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
+        character: Character,
         character_name: str,
         fighting_styles: list[FightingStyle],
     ):
@@ -1628,7 +1622,7 @@ class HtmlCharacterSheetWriter:
         path: pathlib.Path,
         page_path: str,
         pages: list[tuple[str, str]],
-        character: CharacterStatBlock,
+        character: Character,
         character_name: str,
         current_gold: Optional[float],
         equipment_entries: list[EquipmentEntry],

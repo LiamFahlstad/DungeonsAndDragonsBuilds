@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererStormSorceryFeatures,
@@ -19,8 +19,8 @@ class SorcererStormSorceryLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererStormSorceryFeatures.WindSpeaker())
         data.add_feature(SorcererStormSorceryFeatures.TempestuousMagic())
         return data
@@ -31,8 +31,8 @@ class SorcererStormSorceryLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererStormSorceryFeatures.HeartOfTheStorm())
         data.add_feature(SorcererStormSorceryFeatures.StormGuide())
         return data
@@ -43,8 +43,8 @@ class SorcererStormSorceryLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererStormSorceryFeatures.StormsFury())
         return data
 
@@ -54,8 +54,8 @@ class SorcererStormSorceryLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererStormSorceryFeatures.WindSoul())
         return data
 

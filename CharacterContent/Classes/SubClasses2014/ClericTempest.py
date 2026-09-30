@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericTempestFeatures
 
@@ -17,8 +17,8 @@ class ClericTempestLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericTempestFeatures.BonusProficiencies())
         data.add_feature(ClericTempestFeatures.WrathOfTheStorm())
         data.add_feature(ClericTempestFeatures.TempestDomainSpells())
@@ -31,8 +31,8 @@ class ClericTempestLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericTempestFeatures.ThunderousStrike())
         return data
 
@@ -42,8 +42,8 @@ class ClericTempestLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericTempestFeatures.Stormborn())
         return data
 

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardChronurgyFeatures,
@@ -19,8 +19,8 @@ class WizardChronurgyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardChronurgyFeatures.ChronalShift())
         data.add_feature(WizardChronurgyFeatures.TemporalAwareness())
         return data
@@ -31,8 +31,8 @@ class WizardChronurgyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardChronurgyFeatures.MomentaryStasis())
         return data
 
@@ -42,8 +42,8 @@ class WizardChronurgyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardChronurgyFeatures.ArcaneAbeyance())
         return data
 
@@ -53,8 +53,8 @@ class WizardChronurgyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardChronurgyFeatures.ConvergentFuture())
         return data
 

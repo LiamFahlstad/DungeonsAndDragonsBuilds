@@ -112,7 +112,7 @@ class CombatAppQt(
     def _add_from_character_sheet(self, character_sheet):
         from CharacterContent.Spells.SpellFactory import SpellFactory
 
-        character = character_sheet.setup_character_stat_block()
+        character = character_sheet.validate()
         ac = character.calculate_armor_class()
         if Armor.ShieldArmor in [type(a) for a in character_sheet.armors]:
             ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"

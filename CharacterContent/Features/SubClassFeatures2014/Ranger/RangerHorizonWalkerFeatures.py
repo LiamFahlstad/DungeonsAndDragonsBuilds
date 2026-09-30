@@ -5,7 +5,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from Core.Definitions import CharacterClass
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class HorizonWalkerSpells(Feature):
@@ -14,7 +14,7 @@ class HorizonWalkerSpells(Feature):
             name="Horizon Walker Spells", origin="Horizon Walker Ranger Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You learn an additional spell when you reach certain levels in this class, as shown in the Horizon Walker Spells table. The spell counts as a ranger spell for you, but it doesn't count against the number of ranger spells you know.\n"
             "Horizon Walker Spells\n"
@@ -37,7 +37,7 @@ class DetectPortal(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to magically sense the presence of a planar portal. As an action, you detect the distance and direction to the closest planar portal within 1 mile of you.\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest.\n"
@@ -45,9 +45,7 @@ class DetectPortal(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Detect closest planar portal"),
             ("Action", "Action"),
@@ -69,17 +67,15 @@ class PlanarWarrior(Feature):
             usage_tags=["damage", "buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You learn to draw on the energy of the multiverse to augment your attacks.\n"
             "As a bonus action, choose one creature you can see within 30 feet of you. The next time you hit that creature on this turn with a weapon attack, all damage dealt by the attack becomes force damage, and the creature takes an extra 1d8 force damage from the attack. When you reach 11th level in this class, the extra damage increases to 2d8."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        ranger_level = character_stat_block.get_class_level(CharacterClass.RANGER)
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        ranger_level = character.get_class_level(CharacterClass.RANGER)
         extra_damage = "2d8" if ranger_level >= 11 else "1d8"
         return [
             ("What", "Convert next hit to force damage"),
@@ -92,9 +88,7 @@ class PlanarWarrior(Feature):
             ),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -110,16 +104,14 @@ class EtherealStep(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You learn to step through the Ethereal Plane. As a bonus action on your turn, you can cast the Etherealness spell with this feature, without expending a spell slot, but the spell ends at the end of the current turn.\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Cast Etherealness spell"),
             ("Action", "Bonus action"),
@@ -127,9 +119,7 @@ class EtherealStep(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -141,16 +131,14 @@ class DistantStrike(Feature):
             usage_tags=["damage", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to pass between the planes in a blink of an eye. When you use the Attack action, you can teleport up to 10 feet before each attack to an unoccupied space you can see.\n"
             "If you attack at least two different creatures with the action, you can make one additional attack with it against a third creature."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -165,11 +153,9 @@ class SpectralDefense(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

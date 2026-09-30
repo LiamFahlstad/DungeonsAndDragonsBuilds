@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
@@ -21,8 +21,8 @@ from CharacterContent.Spells.SpellLists import (
 class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -40,8 +40,8 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
 class MonkShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkShadowFeatures.ShadowStep())
         return data
 
@@ -51,8 +51,8 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         shadow_step: MonkShadowFeatures.ShadowStep = data.get_features_by_type(
             MonkShadowFeatures.ShadowStep
         )[0]
@@ -65,8 +65,8 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]

@@ -13,8 +13,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -22,7 +22,7 @@ class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Cleric Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Spellcasting:\n"
             "    * Replacing cantrips: Whenever you gain a Cleric level\n"
@@ -32,9 +32,7 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Replacing Cantrips", "Whenever you gain a Cleric level"),
             ("Replacing Prepared Spells", "Whenever you finish a Long Rest"),
@@ -42,9 +40,7 @@ class Spellcasting(Feature):
             ("Regaining Spell Slots", "All expended slots return on Long Rest"),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -57,7 +53,7 @@ class DivineOrderProtector(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
         return description
 
@@ -72,13 +68,13 @@ class DivineOrderThaumaturge(Feature):
         self.extra_cantrip = extra_cantrip
 
     def apply(self, effects: Effects):
-        def bonus(cs: CharacterStatBlock) -> int:
+        def bonus(cs: Character) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)
         SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (minimum bonus of +1)."
         return description
 
@@ -100,7 +96,7 @@ class ChannelDivinity(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can channel divine energy directly from the Outer Planes to fuel magical effects. You start with two such effects: Divine Spark and Turn Undead, each of which is described below. Each time you use this class's Channel Divinity, choose which Channel Divinity effect from this class to create. You gain additional effect options at higher Cleric levels.\n"
             "You can use this class's Channel Divinity. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain additional uses when you reach certain Cleric levels, as shown in the Channel Divinity column of the Cleric Features table.\n"
@@ -112,7 +108,7 @@ class ChannelDivinity(Feature):
         return description
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         uses_by_level = {}
         for level in range(2, 21):
@@ -130,13 +126,11 @@ class ChannelDivinity(Feature):
         ]
         return [("Channel Divinity Uses", steps)]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        cleric_level = character_stat_block.get_class_level(CharacterClass.CLERIC)
+    def number_of_uses(self, character: Character) -> int:
+        cleric_level = character.get_class_level(CharacterClass.CLERIC)
         if cleric_level >= 18:
             return 4
         elif cleric_level >= 6:
@@ -144,9 +138,7 @@ class ChannelDivinity(Feature):
         else:
             return 2
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -156,13 +148,11 @@ class SearUndead(Feature):
             name="Sear Undead", origin="Cleric Level 5", usage_tags=["damage"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -172,13 +162,11 @@ class DivineStrike(Feature):
             name="Divine Strike", origin="Cleric Level 7", usage_tags=["damage"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -188,7 +176,7 @@ class PotentSpellcasting(Feature):
             name="Potent Spellcasting", origin="Cleric Level 7", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Add your Wisdom modifier to the damage you deal with any Cleric cantrip."
         )
@@ -203,13 +191,11 @@ class DivineIntervention(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can call on your deity or pantheon to intervene on your behalf. As a Magic action, choose any Cleric spell of level 5 or lower that doesn't require a Reaction to cast. As part of the same action, you cast that spell without expending a spell slot or needing Material components. You can't use this feature again until you finish a Long Rest."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "What",
@@ -229,13 +215,11 @@ class ImprovedDivineStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The extra damage of your Divine Strike increases to 2d8."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -248,13 +232,11 @@ class ImprovedPotentSpellcasting(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -262,6 +244,6 @@ class GreaterDivineIntervention(Feature):
     def __init__(self):
         super().__init__(name="Greater Divine Intervention", origin="Cleric Level 20")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests."
         return description

@@ -4,7 +4,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     RegainedOn,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -14,7 +14,7 @@ class ReplacingEldritchInvocations(Feature):
             name="Replacing Eldritch Invocations", origin="Warlock Level 1"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Replacing and Gaining Invocations. Whenever you gain a Warlock level, you can replace one of your invocations with another one for which you qualify. You can't replace an invocation if it's a prerequisite for another invocation that you have.\n"
             "When you gain certain Warlock levels, you gain more invocations of your choice, as shown in the Invocations column of the Warlock Features table.\n"
@@ -22,11 +22,11 @@ class ReplacingEldritchInvocations(Feature):
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return "Whenever you gain a Warlock level, replace one invocation with another you qualify for (unless it's a prerequisite). Gain additional invocations at higher levels. Cannot pick the same invocation twice unless its description says otherwise."
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         invocations_known_by_level = {
             1: 1,
@@ -63,7 +63,7 @@ class ReplacingCantripsAndSpells(Feature):
     def __init__(self):
         super().__init__(name="Replacing Cantrips and Spells", origin="Warlock Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Whenever you gain a Warlock level, you can replace one of your cantrips from this feature with another Warlock cantrip of your choice.\n"
             "Whenever you gain a Warlock level, you can replace one spell on your list with another Warlock spell of an eligible level."
@@ -75,13 +75,11 @@ class RegainingSpellSlots(Feature):
     def __init__(self):
         super().__init__(name="Regaining Spell Slots", origin="Warlock Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -93,13 +91,11 @@ class MagicalCunning(Feature):
             activation=FeatureActivation(duration="1 Minute"),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Perform an esoteric rite"),
             ("Duration", "1 minute"),
@@ -110,9 +106,7 @@ class MagicalCunning(Feature):
             ("Recharge", "Once per Long Rest"),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -120,16 +114,14 @@ class ContactPatron(Feature):
     def __init__(self):
         super().__init__(name="Contact Patron", origin="Warlock Level 9")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "In the past, you usually contacted your patron through intermediaries. Now you can communicate directly; you always have the Contact Other Plane spell prepared. With this feature, you can cast the spell without expending a spell slot to contact your patron, and you automatically succeed on the spell's saving throw.\n"
             "Once you cast the spell with this feature, you can't do so in this way again until you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Spell", "Contact Other Plane (always prepared)"),
             ("Casting", "Cast without expending a spell slot"),
@@ -142,7 +134,7 @@ class MysticArcanum(Feature):
     def __init__(self):
         super().__init__(name="Mystic Arcanum", origin="Warlock Level 11")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your patron grants you a magical secret called an arcanum. Choose one level 6 Warlock spell as this arcanum.\n"
             "You can cast your arcanum spell once without expending a spell slot, and you must finish a Long Rest before you can cast it in this way again.\n"
@@ -151,16 +143,14 @@ class MysticArcanum(Feature):
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return (
             "Choose a level 6 Warlock spell as an arcanum; cast it once per Long Rest without expending a spell slot. "
             "Gain additional arcanum spells (level 7 at 13th, level 8 at 15th, level 9 at 17th). "
             "You can replace any arcanum spell when you gain a Warlock level."
         )
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -168,6 +158,6 @@ class EldritchMaster(Feature):
     def __init__(self):
         super().__init__(name="Eldritch Master", origin="Warlock Level 20")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you use your Magical Cunning feature, you regain all your expended Pact Magic spell slots."
         return description

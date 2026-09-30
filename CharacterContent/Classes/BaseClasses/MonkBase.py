@@ -3,7 +3,7 @@ from typing import Optional
 import attr
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Weapons
@@ -16,8 +16,8 @@ from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 class MonkLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.MartialArts())
         data.add_feature(MonkFeatures.UnarmoredDefense())
         return data
@@ -27,8 +27,8 @@ class MonkLevel1(ClassBuilder.BaseClassLevel1):
 class MonkLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus = MonkFeatures.MonksFocus()
         monks_focus.extend_feature(MonkFeatures.FlurryOfBlows())
         monks_focus.extend_feature(MonkFeatures.PatientDefense())
@@ -44,8 +44,8 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
 class MonkLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -59,8 +59,8 @@ class MonkLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_feature(MonkFeatures.SlowFall())
@@ -71,8 +71,8 @@ class MonkLevel4(ClassBuilder.BaseClassLevel4):
 class MonkLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -85,8 +85,8 @@ class MonkLevel5(ClassBuilder.BaseClassLevel5):
 class MonkLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.EmpoweredStrikes())
         return data
 
@@ -95,8 +95,8 @@ class MonkLevel6(ClassBuilder.BaseClassLevel6):
 class MonkLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.Evasion())
         return data
 
@@ -107,8 +107,8 @@ class MonkLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -118,8 +118,8 @@ class MonkLevel8(ClassBuilder.BaseClassLevel8):
 class MonkLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.AcrobaticMovement())
         return data
 
@@ -128,8 +128,8 @@ class MonkLevel9(ClassBuilder.BaseClassLevel9):
 class MonkLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -142,8 +142,8 @@ class MonkLevel10(ClassBuilder.BaseClassLevel10):
 class MonkLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -153,8 +153,8 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -164,8 +164,8 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
 class MonkLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -177,8 +177,8 @@ class MonkLevel13(ClassBuilder.BaseClassLevel13):
 class MonkLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.DisciplinedSurvivorSavingThrows())
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
@@ -192,8 +192,8 @@ class MonkLevel14(ClassBuilder.BaseClassLevel14):
 class MonkLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkFeatures.PerfectFocus())
         return data
 
@@ -202,7 +202,7 @@ class MonkLevel15(ClassBuilder.BaseClassLevel15):
 class MonkLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Monk Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -212,8 +212,8 @@ class MonkLevel16(ClassBuilder.BaseClassLevel16):
 class MonkLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -221,8 +221,8 @@ class MonkLevel17(ClassBuilder.BaseClassLevel17):
 class MonkLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -236,8 +236,8 @@ class MonkLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.epic_boon.origin = f"Monk Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
@@ -245,7 +245,7 @@ class MonkLevel19(ClassBuilder.BaseClassLevel19):
 
 @attr.dataclass
 class MonkLevel20(ClassBuilder.BaseClassLevel20):
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(MonkFeatures.BodyAndMind())
         return data
 

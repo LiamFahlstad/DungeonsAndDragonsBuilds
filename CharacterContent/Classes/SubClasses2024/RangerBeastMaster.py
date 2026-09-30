@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DamageType, RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerBeastMasterFeatures
 from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
@@ -22,8 +22,8 @@ class RangerBeastMasterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(
             RangerBeastMasterFeatures.PrimalCompanion(
                 companion_type=self.companion_type,
@@ -38,8 +38,8 @@ class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
             data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
         )
@@ -52,8 +52,8 @@ class RangerBeastMasterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
             data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
         )
@@ -66,8 +66,8 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
             data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
         )

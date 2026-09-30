@@ -1,5 +1,5 @@
 """
-Tests for StatBlocks - core data structures for character attributes.
+Tests for the Model package parts - core data structures for character attributes.
 """
 
 import pytest
@@ -9,16 +9,16 @@ from Core.Definitions import (
     CharacterClass,
     DiceRollCondition,
 )
-from StatBlocks.AbilityScores import (
+from Model.AbilityScores import (
     AbilityScores,
     StandardArrayAbilityScores,
     PointBuyAbilityScores,
 )
-from StatBlocks.Skills import Skills
-from StatBlocks.SavingThrows import SavingThrows
-from StatBlocks.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
-from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.HitPoints import HitPoints
+from Model.Skills import Skills
+from Model.SavingThrows import SavingThrows
+from Model.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
+from Model.ClassLevels import ClassLevels
+from Model.HitPoints import HitPoints
 
 
 class TestAbilityScores:

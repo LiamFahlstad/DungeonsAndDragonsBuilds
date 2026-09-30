@@ -23,7 +23,7 @@ from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells, PaladinLevel2Spells
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 # Paladin 5 (half caster, single class).

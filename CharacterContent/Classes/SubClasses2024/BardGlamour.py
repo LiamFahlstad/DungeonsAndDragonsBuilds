@@ -8,7 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardGlamourFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -18,8 +18,8 @@ from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SpellDefinitions.BardLevel1Spells.CHARM_PERSON)
         data.add_spell(SpellDefinitions.BardLevel2Spells.MIRROR_IMAGE)
         data.add_feature(BardGlamourFeatures.BeguilingMagic())
@@ -31,8 +31,8 @@ class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
 class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
@@ -46,8 +46,8 @@ class BardGlamourLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardGlamourFeatures.UnbreakableMajesty())
         return data
 

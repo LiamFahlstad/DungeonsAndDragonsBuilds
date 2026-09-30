@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericOrderFeatures
@@ -18,8 +18,8 @@ class ClericOrderLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericOrderFeatures.BonusProficiencies())
         data.add_feature(ClericOrderFeatures.VoiceOfAuthority())
         data.add_feature(ClericOrderFeatures.OrderDomainSpells())
@@ -32,8 +32,8 @@ class ClericOrderLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericOrderFeatures.EmbodimentOfTheLaw())
         return data
 
@@ -43,8 +43,8 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         # The 2024 base Cleric's Blessed Strikes replaces the 2014 domain's own
         # Divine Strike, so Order's Wrath rides on that when it was chosen.
         divine_strikes = data.get_features_by_type(ClericFeatures.DivineStrike)

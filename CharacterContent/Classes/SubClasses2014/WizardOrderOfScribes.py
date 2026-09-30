@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardOrderOfScribesFeatures,
@@ -19,8 +19,8 @@ class WizardOrderOfScribesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardOrderOfScribesFeatures.WizardlyQuill())
         data.add_feature(WizardOrderOfScribesFeatures.AwakenedSpellbook())
         return data
@@ -31,8 +31,8 @@ class WizardOrderOfScribesLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
             data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )
@@ -45,8 +45,8 @@ class WizardOrderOfScribesLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
             data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )
@@ -61,8 +61,8 @@ class WizardOrderOfScribesLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         awakened_spellbook: WizardOrderOfScribesFeatures.AwakenedSpellbook = (
             data.get_features_by_type(WizardOrderOfScribesFeatures.AwakenedSpellbook)[0]
         )

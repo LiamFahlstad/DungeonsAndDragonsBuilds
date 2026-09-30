@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterRuneKnightFeatures,
@@ -19,8 +19,8 @@ class FighterRuneKnightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterRuneKnightFeatures.BonusProficiencies())
         data.add_feature(FighterRuneKnightFeatures.RuneCarver())
         data.add_feature(FighterRuneKnightFeatures.GiantsMight())
@@ -32,8 +32,8 @@ class FighterRuneKnightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterRuneKnightFeatures.RunicShield())
         return data
 
@@ -43,8 +43,8 @@ class FighterRuneKnightLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         giants_might: FighterRuneKnightFeatures.GiantsMight = data.get_features_by_type(
             FighterRuneKnightFeatures.GiantsMight
         )[0]
@@ -57,8 +57,8 @@ class FighterRuneKnightLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rune_carver: FighterRuneKnightFeatures.RuneCarver = data.get_features_by_type(
             FighterRuneKnightFeatures.RuneCarver
         )[0]
@@ -71,8 +71,8 @@ class FighterRuneKnightLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         giants_might: FighterRuneKnightFeatures.GiantsMight = data.get_features_by_type(
             FighterRuneKnightFeatures.GiantsMight
         )[0]

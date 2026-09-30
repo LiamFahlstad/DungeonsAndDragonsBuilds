@@ -1,8 +1,8 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -19,7 +19,7 @@ class FiendishResistance(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return f"You have Resistance to {self.damage_type} damage."
 
 
@@ -32,7 +32,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
@@ -43,11 +43,11 @@ class FiendishLegacy(Feature):
         self.spell_2 = spell_2
         super().__init__(name="Fiendish Legacy", origin="Tiefling Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         text = f"You also know the '{self.cantrip}' cantrip.\n"
-        if self.spell_1 is not None and character_stat_block.character_level >= 3:
+        if self.spell_1 is not None and character.character_level >= 3:
             text += f"You can cast the '{self.spell_1}' without expending a spell slot once per Long Rest.\n"
-        if self.spell_2 is not None and character_stat_block.character_level >= 5:
+        if self.spell_2 is not None and character.character_level >= 5:
             text += f"You can cast the '{self.spell_2}' without expending a spell slot once per Long Rest.\n"
         return text
 
@@ -56,5 +56,5 @@ class OtherworldlyPresence(Feature):
     def __init__(self):
         super().__init__(name="Otherworldly Presence", origin="Tiefling Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You know the Thaumaturgy cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your Fiendish Legacy trait."

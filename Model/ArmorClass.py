@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
+from Model.Bonuses import Bonuses, DerivedBonus
 
 if TYPE_CHECKING:
-    from StatBlocks.AbilityScores import AbilityScores
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.AbilityScores import AbilityScores
+    from Model.Character import Character
 
 
 @dataclass(frozen=True)
@@ -36,10 +36,10 @@ UNARMORED_ARMOR_CLASS = ArmorClassFormula(
 
 
 class ArmorClass:
-    """Every AC formula and AC bonus. What's worn (StatBlocks.WornArmor) and
+    """Every AC formula and AC bonus. What's worn (Model.WornArmor) and
     the wielder's ability modifiers and Shield training aren't this part's
     concern, so calculate() takes them as arguments (see
-    CharacterStatBlock.calculate_armor_class)."""
+    Character.calculate_armor_class)."""
 
     def __init__(self):
         self.armor_class_formulas: list[ArmorClassFormula] = [UNARMORED_ARMOR_CLASS]
@@ -75,7 +75,7 @@ class ArmorClass:
     def calculate(
         self,
         abilities: "AbilityScores",
-        character: "CharacterStatBlock",
+        character: "Character",
         is_wielding_shield: bool,
         has_shield_training: bool,
     ) -> int:

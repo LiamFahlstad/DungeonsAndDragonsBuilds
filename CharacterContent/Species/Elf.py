@@ -1,6 +1,6 @@
 from enum import Enum
 
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 import Core.Definitions as Definitions
 from CharacterContent.Features.SpeciesFeatures import ElfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -41,7 +41,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             name="Elf",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         if self.character_level is None:
             raise ValueError(
                 "Character level must be set before building species data."

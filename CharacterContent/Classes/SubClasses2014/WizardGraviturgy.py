@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardGraviturgyFeatures,
@@ -19,8 +19,8 @@ class WizardGraviturgyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardGraviturgyFeatures.AdjustDensity())
         return data
 
@@ -30,8 +30,8 @@ class WizardGraviturgyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardGraviturgyFeatures.GravityWell())
         return data
 
@@ -41,8 +41,8 @@ class WizardGraviturgyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardGraviturgyFeatures.ViolentAttraction())
         return data
 
@@ -52,8 +52,8 @@ class WizardGraviturgyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardGraviturgyFeatures.EventHorizon())
         return data
 

@@ -1,4 +1,4 @@
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 from CharacterContent.Features.SpeciesFeatures import HalflingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -11,7 +11,7 @@ class HalflingSpeciesBuilder(SpeciesBuilder):
             name="Halfling",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         data.base_speed = HalflingFeatures.SPEED  # Given by your species
         data.size = HalflingFeatures.SIZE  # Given by your species
 

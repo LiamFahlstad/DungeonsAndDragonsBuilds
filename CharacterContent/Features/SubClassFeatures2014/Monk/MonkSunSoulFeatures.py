@@ -9,7 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class RadiantSunBolt(Feature):
@@ -23,7 +23,7 @@ class RadiantSunBolt(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can hurl searing bolts of magical radiance.\n"
             "\n"
@@ -35,9 +35,7 @@ class RadiantSunBolt(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -50,7 +48,7 @@ class SearingArcStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to channel your ki into searing waves of energy. Immediately after you take the Attack action on your turn, you can spend 2 ki points to cast the Burning Hands spell as a bonus action.\n"
             "\n"
@@ -58,17 +56,11 @@ class SearingArcStrike(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         max_ki_spent = monk_level // 2
         return [
             ("Trigger", "After you take the Attack action on your turn"),
@@ -91,7 +83,7 @@ class SearingSunburst(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to create an orb of light that erupts into a devastating explosion. As an action, you magically create an orb and hurl it at a point you choose within 150 feet, where it erupts into a sphere of radiant light for a brief but deadly instant.\n"
             "\n"
@@ -101,14 +93,10 @@ class SearingSunburst(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "150 feet (target point)"),
@@ -131,7 +119,7 @@ class SunShield(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You become wreathed in a luminous, magical aura. You shed bright light in a 30-foot radius and dim light for an additional 30 feet. You can extinguish or restore the light as a bonus action.\n"
             "\n"
@@ -139,7 +127,5 @@ class SunShield(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

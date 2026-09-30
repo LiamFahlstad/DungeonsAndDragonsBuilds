@@ -37,7 +37,7 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel2Spells,
     WarlockLevel3Spells,
 )
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

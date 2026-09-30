@@ -5,7 +5,7 @@ from Utils import Html
 from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
 
 if TYPE_CHECKING:
-    from Builds.CharacterSheetAccumulator import CharacterSheetData
+    from Model.Character import Character
 
 
 def _level_label(min_level: Optional[int], max_level: Optional[int]) -> str:
@@ -19,7 +19,7 @@ def _level_label(min_level: Optional[int], max_level: Optional[int]) -> str:
 def write_build_group_pages(
     group_name: str,
     output_folder: str,
-    characters: list["CharacterSheetData"],
+    characters: list["Character"],
     description_mode: Literal["table", "concise"] | None = None,
     include_probability_tables: bool = False,
     min_level: Optional[int] = None,
@@ -44,7 +44,7 @@ def write_build_group_pages(
 
     writer = HtmlCharacterSheetWriter()
     prepared = [
-        (character_sheet_data, character_sheet_data.setup_character_stat_block())
+        (character_sheet_data, character_sheet_data.validate())
         for character_sheet_data in characters
     ]
 

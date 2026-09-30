@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -16,7 +16,7 @@ class CrownSpells(Feature):
             name="Oath of the Crown Spells", origin="Oath of the Crown Paladin Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain oath spells at the Paladin levels listed. When you reach a Paladin level specified in the Oath of the Crown Spells table, you thereafter always have the listed spells prepared.\n"
             "Oath of the Crown Spells\n"
@@ -41,18 +41,14 @@ class ChampionChallenge(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can use your Channel Divinity to issue a challenge that compels other creatures to do battle with you. As a bonus action, each creature of your choice that you can see within 30 feet of you must make a Wisdom saving throw. On a failed save, a creature can't willingly move more than 30 feet away from you. This effect ends on the creature if you are incapacitated or die or if the creature is more than 30 feet away from you."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("What", "Issue challenging compulsion"),
             ("Action", "Bonus action"),
@@ -74,19 +70,15 @@ class TurnTheTide(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can use your Channel Divinity to bolster injured creatures. As a bonus action, each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1 hp) if it has no more than half of its hit points."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        charisma_modifier = character.get_charisma_modifier()
         healing = max(1, charisma_modifier)
         return [
             ("What", "Bolster injured creatures"),
@@ -107,18 +99,14 @@ class DivineAllegiance(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When a creature within 5 feet of you takes damage, you can use your reaction to magically substitute your own health for that of the target creature, causing that creature not to take the damage. Instead, you take the damage. This damage to you can't be reduced or prevented in any way."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Creature within 5 feet takes damage"),
             ("Action", "Reaction"),
@@ -135,7 +123,7 @@ class UnyieldingSaint(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You have advantage on saving throws to avoid becoming paralyzed or stunned."
         return description
 
@@ -152,12 +140,10 @@ class ExaltedChampion(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your presence on the field of battle is an inspiration to those dedicated to your cause. You can use your action to gain the following benefits for 1 hour:\n"
             "    * You have resistance to bludgeoning, piercing, and slashing damage from nonmagical weapons.\n"

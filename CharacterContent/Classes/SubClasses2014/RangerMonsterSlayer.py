@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerMonsterSlayerFeatures,
@@ -26,8 +26,8 @@ class RangerMonsterSlayerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerMonsterSlayerFeatures.MonsterSlayerMagic())
         data.add_feature(RangerMonsterSlayerFeatures.HuntersSense())
         data.add_feature(RangerMonsterSlayerFeatures.SlayersPrey())
@@ -40,8 +40,8 @@ class RangerMonsterSlayerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel2Spells.ZONE_OF_TRUTH)
         return data
 
@@ -51,8 +51,8 @@ class RangerMonsterSlayerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = (
             data.get_features_by_type(RangerMonsterSlayerFeatures.SlayersPrey)[0]
         )
@@ -65,8 +65,8 @@ class RangerMonsterSlayerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel3Spells.MAGIC_CIRCLE)
         return data
 
@@ -76,8 +76,8 @@ class RangerMonsterSlayerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerMonsterSlayerFeatures.MagicUsersNemesis())
         return data
 
@@ -87,8 +87,8 @@ class RangerMonsterSlayerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel4Spells.BANISHMENT)
         return data
 
@@ -98,8 +98,8 @@ class RangerMonsterSlayerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         slayers_prey: RangerMonsterSlayerFeatures.SlayersPrey = (
             data.get_features_by_type(RangerMonsterSlayerFeatures.SlayersPrey)[0]
         )
@@ -112,8 +112,8 @@ class RangerMonsterSlayerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
         return data
 

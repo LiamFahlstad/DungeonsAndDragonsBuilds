@@ -49,6 +49,6 @@ class TestBracersOfArchery:
             bow = Weapons.Longbow()
             data.add_weapon(bow)
             data.add_item(Items.BracersOfArchery(is_wearing=worn))
-            character = data.setup_character_stat_block()
+            character = data.validate()
             bonuses = bow.get_damage_roll_bonuses(character)
             assert sum(b for b, _ in bonuses) == expected

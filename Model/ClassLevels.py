@@ -14,8 +14,8 @@ class ClassLevels:
     reached its subclass level.
 
     Built up by ClassBuilder.create() as each class builder grants straight
-    into the character's one CharacterSheetData, and shared - not copied -
-    with the CharacterStatBlock built from that sheet, so both read the same
+    into the character's one Character, and shared - not copied -
+    with the Character built from that sheet, so both read the same
     levels, history and subclasses no matter which changed first.
     """
 

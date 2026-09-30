@@ -2,7 +2,7 @@ from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass
 from Core.SpellcastingRules import CasterType, calculate_spell_slots
-from StatBlocks.ClassLevels import ClassLevels
+from Model.ClassLevels import ClassLevels
 
 
 class Spellcasting:

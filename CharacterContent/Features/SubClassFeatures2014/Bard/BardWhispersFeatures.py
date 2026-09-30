@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -18,17 +18,15 @@ class PsychicBlades(Feature):
             usage_tags=["damage"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        if character_stat_block.get_class_level(CharacterClass.BARD) < 5:
+    def get_description(self, character: Character) -> str:
+        if character.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
-        elif character_stat_block.get_class_level(CharacterClass.BARD) < 10:
+        elif character.get_class_level(CharacterClass.BARD) < 10:
             psychic_damage = "3d6"
-        elif character_stat_block.get_class_level(CharacterClass.BARD) < 15:
+        elif character.get_class_level(CharacterClass.BARD) < 15:
             psychic_damage = "5d6"
         else:
             psychic_damage = "8d6"
@@ -42,14 +40,12 @@ class PsychicBlades(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        if character_stat_block.get_class_level(CharacterClass.BARD) < 5:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        if character.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
-        elif character_stat_block.get_class_level(CharacterClass.BARD) < 10:
+        elif character.get_class_level(CharacterClass.BARD) < 10:
             psychic_damage = "3d6"
-        elif character_stat_block.get_class_level(CharacterClass.BARD) < 15:
+        elif character.get_class_level(CharacterClass.BARD) < 15:
             psychic_damage = "5d6"
         else:
             psychic_damage = "8d6"
@@ -73,14 +69,10 @@ class WordsOfTerror(Feature):
             usage_tags=["control"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Requirement", "Speak to humanoid alone for 1+ minute"),
             ("Trigger", "End of conversation"),
@@ -93,7 +85,7 @@ class WordsOfTerror(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 3rd level, you learn to infuse innocent-seeming words with an insidious magic that can inspire terror.\n"
             "\n"
@@ -119,12 +111,10 @@ class MantleOfWhispers(Feature):
             usage_tags=["utility"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 6th level, you gain the ability to adopt a humanoid's persona. When a humanoid dies within 30 feet of you, you can magically capture its shadow using your reaction. You retain this shadow until you use it or you finish a long rest.\n"
             "\n"
@@ -152,12 +142,10 @@ class ShadowLore(Feature):
             usage_tags=["control"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At 14th level, you gain the ability to weave dark magic into your words and tap into a creature's deepest fears.\n"
             "\n"
@@ -173,9 +161,7 @@ class ShadowLore(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "30 feet"),

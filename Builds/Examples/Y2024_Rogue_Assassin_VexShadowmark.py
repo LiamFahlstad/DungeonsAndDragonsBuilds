@@ -30,7 +30,7 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
     PoisonersKit as PoisonersKitProficiency,
 )
 from CharacterContent.Species import Elf
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Paladin import (
     PaladinConquestFeatures,
@@ -27,8 +27,8 @@ class PaladinConquestLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinConquestFeatures.ConquestSpells())
         data.add_feature(PaladinConquestFeatures.ConqueringPresence())
         data.add_feature(PaladinConquestFeatures.GuidedStrike())
@@ -42,8 +42,8 @@ class PaladinConquestLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel2Spells.HOLD_PERSON)
         data.add_spell(ClericLevel2Spells.SPIRITUAL_WEAPON)
         return data
@@ -54,8 +54,8 @@ class PaladinConquestLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinConquestFeatures.AuraOfConquest())
         return data
 
@@ -65,8 +65,8 @@ class PaladinConquestLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel3Spells.BESTOW_CURSE)
         data.add_spell(WizardLevel3Spells.FEAR)
         return data
@@ -77,8 +77,8 @@ class PaladinConquestLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel4Spells.DOMINATE_BEAST)
         data.add_spell(DruidLevel4Spells.STONESKIN)
         return data
@@ -89,8 +89,8 @@ class PaladinConquestLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinConquestFeatures.ScornfulRebuke())
         return data
 
@@ -100,8 +100,8 @@ class PaladinConquestLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.CLOUDKILL)
         data.add_spell(WizardLevel5Spells.DOMINATE_PERSON)
         return data
@@ -112,8 +112,8 @@ class PaladinConquestLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_conquest: PaladinConquestFeatures.AuraOfConquest = (
             data.get_features_by_type(PaladinConquestFeatures.AuraOfConquest)[0]
         )
@@ -128,8 +128,8 @@ class PaladinConquestLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinConquestFeatures.InvincibleConqueror())
         return data
 

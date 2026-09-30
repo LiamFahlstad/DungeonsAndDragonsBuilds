@@ -489,11 +489,11 @@ class Registry:
             "Proficiencies",
         )
 
-        import StatBlocks.AbilityScores as abilities_module
+        import Model.AbilityScores as abilities_module
 
         for name, obj in vars(abilities_module).items():
             if inspect.isclass(obj) and obj.__module__ == abilities_module.__name__:
-                mapping[name] = ("StatBlocks.AbilityScores", name)
+                mapping[name] = ("Model.AbilityScores", name)
 
         for info in self.species().values():
             mapping[info.module_name] = ("CharacterContent.Species", info.module_name)

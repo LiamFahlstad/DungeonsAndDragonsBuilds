@@ -54,7 +54,7 @@ def _stats(data, character):
 @pytest.mark.parametrize("name", BUILD_PARAMS)
 def test_build_and_invariants(name):
     data = type(ALL_BUILDS[name])().build()
-    character = data.setup_character_stat_block()
+    character = data.validate()
 
     level = data.character_level
     assert 1 <= level <= 20
@@ -69,13 +69,13 @@ def test_build_and_invariants(name):
 def test_rebuild_is_idempotent(name):
     builder = type(ALL_BUILDS[name])()
     first = builder.build()
-    first_stats = _stats(first, first.setup_character_stat_block())
+    first_stats = _stats(first, first.validate())
 
     # Same builder instance again, then a forced re-setup of the same sheet.
     second = builder.build()
-    assert _stats(second, second.setup_character_stat_block()) == first_stats
+    assert _stats(second, second.validate()) == first_stats
     second._changed()
-    assert _stats(second, second.setup_character_stat_block()) == first_stats
+    assert _stats(second, second.validate()) == first_stats
 
 
 # PHB spellcasting ability per class.
@@ -115,7 +115,7 @@ def test_every_feature_renders(name):
     # Descriptions are only evaluated when a sheet is written, so a broken
     # get_description (missing import, deleted helper) otherwise goes unseen.
     data = type(ALL_BUILDS[name])().build()
-    character = data.setup_character_stat_block()
+    character = data.validate()
     for feature in _all_features(data.features):
         description = feature.get_description(character)
         assert description is None or isinstance(description, str), feature.name
@@ -135,7 +135,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
     import inspect
 
     from CharacterContent.Features.Core.BaseFeatures import Feature
-    from StatBlocks.Skills import Skills
+    from Model.Skills import Skills
 
     original = Skills.add_skill_proficiency
     wasted = []
@@ -155,7 +155,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
         return original(self, skill)
 
     monkeypatch.setattr(Skills, "add_skill_proficiency", recording)
-    type(ALL_BUILDS[name])().build().setup_character_stat_block()
+    type(ALL_BUILDS[name])().build().validate()
     assert wasted == []
 
 

@@ -30,9 +30,7 @@ with open("Features/FeatureGeneration/Output.py", "w", encoding="utf-8") as f:
         f.write(
             f'        super().__init__(name="{name}", origin="{ADDITIONAL} {level}")\n\n'
         )
-        f.write(
-            "    def get_description(self, character_stat_block: CharacterStatBlock) -> str:\n"
-        )
+        f.write("    def get_description(self, character: Character) -> str:\n")
         f.write("        description = (\n")
         for i, line in enumerate(local_content):
             if line == "\n":

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueMastermindFeatures
 
@@ -17,8 +17,8 @@ class RogueMastermindLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueMastermindFeatures.MasterOfIntrigue())
         data.add_feature(RogueMastermindFeatures.MasterOfTactics())
         return data
@@ -29,8 +29,8 @@ class RogueMastermindLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueMastermindFeatures.InsightfulManipulator())
         return data
 
@@ -40,8 +40,8 @@ class RogueMastermindLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueMastermindFeatures.Misdirection())
         return data
 
@@ -51,8 +51,8 @@ class RogueMastermindLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueMastermindFeatures.SoulOfDeceit())
         return data
 

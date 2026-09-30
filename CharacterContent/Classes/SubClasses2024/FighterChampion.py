@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterChampionFeatures
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
@@ -18,8 +18,8 @@ class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterChampionFeatures.ImprovedCritical())
         data.add_feature(FighterChampionFeatures.RemarkableAthlete())
         return data
@@ -30,8 +30,8 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         fighting_style: FighterFeatures.FightingStyle = data.get_features_by_type(
             FighterFeatures.FightingStyle
         )[0]
@@ -44,8 +44,8 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterChampionFeatures.HeroicWarrior())
         return data
 
@@ -55,8 +55,8 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         improved_critical: FighterChampionFeatures.ImprovedCritical = (
             data.get_features_by_type(FighterChampionFeatures.ImprovedCritical)[0]
         )
@@ -69,8 +69,8 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterChampionFeatures.Survivor())
         return data
 

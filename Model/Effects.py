@@ -13,29 +13,29 @@ from Core.Definitions import (
     Skill,
 )
 from Core.SpellcastingRules import CasterType
-from StatBlocks.AbilityRequirements import AbilityRequirements
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.ArmorClass import ArmorClass, ArmorClassFormula
-from StatBlocks.Bonuses import DerivedBonus
-from StatBlocks.CarryingCapacity import CarryingCapacity
-from StatBlocks.ClassLevels import ClassLevels
-from StatBlocks.Defenses import Defenses
-from StatBlocks.EquipmentTraining import EquipmentTraining
-from StatBlocks.HitPoints import HitPoints
-from StatBlocks.Initiative import Initiative
-from StatBlocks.Languages import Languages
-from StatBlocks.SavingThrows import SavingThrows
-from StatBlocks.Senses import Senses
-from StatBlocks.Skills import Skills
-from StatBlocks.Speed import Speed
-from StatBlocks.Spellcasting import Spellcasting
-from StatBlocks.WeaponBonuses import WeaponBonus, WeaponBonuses
-from StatBlocks.WornArmor import WornArmor
+from Model.AbilityRequirements import AbilityRequirements
+from Model.AbilityScores import AbilityScores
+from Model.ArmorClass import ArmorClass, ArmorClassFormula
+from Model.Bonuses import DerivedBonus
+from Model.CarryingCapacity import CarryingCapacity
+from Model.ClassLevels import ClassLevels
+from Model.Defenses import Defenses
+from Model.EquipmentTraining import EquipmentTraining
+from Model.HitPoints import HitPoints
+from Model.Initiative import Initiative
+from Model.Languages import Languages
+from Model.SavingThrows import SavingThrows
+from Model.Senses import Senses
+from Model.Skills import Skills
+from Model.Speed import Speed
+from Model.Spellcasting import Spellcasting
+from Model.WeaponBonuses import WeaponBonus, WeaponBonuses
+from Model.WornArmor import WornArmor
 
 
 class Parts:
     """Everything a Character's features, armor, weapons, items and fighting
-    styles record, one part per concern (StatBlocks/*.py). Internal to
+    styles record, one part per concern (Model/*.py). Internal to
     Character: it builds a fresh one from its sources whenever they change
     (Character._get_parts) and answers every query from it. Effects record
     into it through the write-only Effects view below.

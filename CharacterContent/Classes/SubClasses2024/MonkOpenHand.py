@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkOpenHandFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkOpenHandFeatures
 class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkOpenHandFeatures.OpenHandTechnique())
         return data
 
@@ -26,8 +26,8 @@ class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
 class MonkOpenHandLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkOpenHandFeatures.WholenessOfBody())
         return data
 
@@ -37,8 +37,8 @@ class MonkOpenHandLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkOpenHandFeatures.FleetStep())
         return data
 
@@ -48,8 +48,8 @@ class MonkOpenHandLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkOpenHandFeatures.QuiveringPalm())
         return data
 

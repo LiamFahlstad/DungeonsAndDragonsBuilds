@@ -10,8 +10,8 @@ from CharacterContent.Features.Core.Improvements import (
     GrantWeaponProficiency,
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class CombatInspiration(Feature):
@@ -22,7 +22,7 @@ class CombatInspiration(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use your wit to turn the tide of battle. A creature that has a Bardic Inspiration die from you can use it for one of the following effects.\n"
             "Defense. When the creature is hit by an attack roll, that creature can use its Reaction to roll the Bardic Inspiration die and add the number rolled to its AC against that attack, potentially causing the attack to miss.\n"
@@ -30,9 +30,7 @@ class CombatInspiration(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Defense",
@@ -44,9 +42,7 @@ class CombatInspiration(Feature):
             ),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -61,7 +57,7 @@ class MartialTraining(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain proficiency with Martial weapons and training with Medium armor and Shields.\n"
             "In addition, you can use a Simple or Martial weapon as a Spellcasting Focus to cast spells from your Bard spell list."
@@ -73,7 +69,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="College of Valor Bard Level 6")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can attack twice instead of once whenever you take the Attack action on your turn.\n"
             "In addition, you can cast one of your cantrips that has a casting time of an action in place of one of those attacks."
@@ -90,6 +86,6 @@ class BattleMagic(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."
         return description

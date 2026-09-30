@@ -62,7 +62,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import Lute
 from Core.Definitions import Ability, FighterSubclass, Skill
-from StatBlocks.AbilityScores import PointBuyAbilityScores
+from Model.AbilityScores import PointBuyAbilityScores
 
 # Tactics: same as the pure-Bard version (Y2024_Bard_Valor_Clover.py) -
 # control/support spells first, weapon attacks (now with Dueling's +2)

@@ -45,7 +45,7 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
     PlayingCards,
 )
 from CharacterContent.Species import Human
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

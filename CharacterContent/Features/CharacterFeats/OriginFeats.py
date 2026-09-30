@@ -20,8 +20,8 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel1Spells,
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, CharacterClass, Skill
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class OriginFeat(Feature):
@@ -46,7 +46,7 @@ class Skilled(OriginFeat):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)
         return (
             "You gain proficiency in any combination of three skills of your choice.\n"
@@ -62,15 +62,13 @@ class Alert(OriginFeat):
     def apply(self, effects: Effects):
         self._proficiency.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.\n"
             "Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally has the Incapacitated condition.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -101,7 +99,7 @@ class Crafter(OriginFeat):
 
         return "\n".join(f"    * {tool_map[t]}" for t in self.artisans_tools)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Tool Proficiency. You gain proficiency with three different Artisan's Tools of your choice from the Fast Crafting table.\n"
             "Discount. Whenever you buy a nonmagical item, you receive a 20 percent discount on it.\n"
@@ -117,7 +115,7 @@ class Healer(OriginFeat):
     def __init__(self):
         super().__init__(name="Healer", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Battle Medic:\n"
             "  If you have a Healer's Kit, you can expend one use of it and tend to a creature within 5 feet of yourself as a Utilize action.\n"
@@ -127,9 +125,7 @@ class Healer(OriginFeat):
             "  you can reroll the die if it rolls a 1, and you must use the new roll.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -145,7 +141,7 @@ class Lucky(OriginFeat):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
@@ -153,19 +149,17 @@ class Lucky(OriginFeat):
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         description = (
             "You have a number of Luck Points equal to your Proficiency Bonus and regain them when you finish a Long Rest. "
             "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
         )
         return description
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -225,7 +219,7 @@ class MagicInitiate(OriginFeat):
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         spells = (
             f"Cantrip 1: {self.cantrip_1}, Cantrip 2: {self.cantrip_2}, "
             f"Level 1 Spell: {self.spell} (Cast once per long rest without a spell slot)"
@@ -299,16 +293,14 @@ class Musician(OriginFeat):
     def __init__(self):
         super().__init__(name="Musician", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Instrument Training: You gain proficiency with three Musical Instruments of your choice.\n"
             "\n"
             "Encouraging Song: As you finish a Short or Long Rest, you can play a song on a Musical Instrument with which you have proficiency and give Heroic Inspiration to allies who hear the song. The number of allies you can affect in this way equals your Proficiency Bonus.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -316,15 +308,13 @@ class SavageAttacker(OriginFeat):
     def __init__(self):
         super().__init__(name="Savage Attacker", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You've trained to deal particularly damaging strikes.\n"
             "Once per turn when you hit a target with a weapon, you can roll the weapon's damage dice twice and use either roll against the target.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -332,7 +322,7 @@ class TavernBrawler(OriginFeat):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Enhanced Unarmed Strike. When you hit with your Unarmed Strike and deal damage, you can deal Bludgeoning damage equal to 1d4 plus your Strength modifier instead of the normal damage of an Unarmed Strike.\n"
             "\n"
@@ -343,9 +333,7 @@ class TavernBrawler(OriginFeat):
             "Push. When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can deal damage to the target and also push it 5 feet away from you. You can use this benefit only once per turn.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -357,7 +345,7 @@ class Tough(OriginFeat):
     def apply(self, effects: Effects):
         self._hp.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "Resilience. You gain 2 additional Hit Points for each level you have. "
             "Whenever you gain a new level, you gain 2 additional Hit Points."
@@ -368,7 +356,7 @@ class CultOfTheDragonInitiate(OriginFeat):
     def __init__(self):
         super().__init__(name="Cult of the Dragon Initiate", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Dragon’s Tongue. You know Draconic. If you already know Draconic when you select this feat, you instead learn one language of your choice from the language tables in the Player’s Handbook or chapter 2 of this book.\n"
@@ -376,14 +364,12 @@ class CultOfTheDragonInitiate(OriginFeat):
             "Inspired by Fear. When you cause a creature to have the Frightened condition and you are the source of its fear, you can gain Heroic Inspiration if you lack it. Once you use this benefit, you can’t use it again until you finish a Short or Long Rest.\n"
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def calculate_dc(self, character: Character) -> int:
+        wisdom_modifier = character.get_wisdom_modifier()
+        proficiency_bonus = character.get_proficiency_bonus()
         return 8 + wisdom_modifier + proficiency_bonus
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -406,7 +392,7 @@ class EmeraldEnclaveFledgling(OriginFeat):
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Speak with Animals. You always have the Speak with Animals spell prepared and can cast it with any spell slots you have. "
@@ -415,9 +401,7 @@ class EmeraldEnclaveFledgling(OriginFeat):
             "Tag Team. When you take the Help action, you can switch places with a willing ally within 5 feet of yourself as part of that same action. This movement doesn’t provoke Opportunity Attacks. You can’t use this benefit if the ally has the Incapacitated condition.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -448,7 +432,7 @@ class FamiliarFriend(OriginFeat):
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the following benefits.\n"
             "Faithful Companion. You always have the Find Familiar spell prepared. "
@@ -459,7 +443,7 @@ class FamiliarFriend(OriginFeat):
         )
         return description
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+    def number_of_uses(self, character: Character) -> int:
         return 1
 
 
@@ -467,7 +451,7 @@ class HarperAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Harper Agent", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Thieves’ Cant. You know Thieves’ Cant.\n"
@@ -475,9 +459,7 @@ class HarperAgent(OriginFeat):
             "Distracting Melody. When you take the Help action to assist an ally’s attack roll, the enemy you’re distracting can be within 30 feet of you, rather than within 5 feet of you, provided the enemy can see or hear you.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -485,7 +467,7 @@ class LordsAllianceAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Inspiring Strike. Once per turn when you score a Critical Hit against a creature, you can choose an ally within 30 feet of yourself who can see or hear you and who lacks Heroic Inspiration. That ally gains Heroic Inspiration.\n"
@@ -508,7 +490,7 @@ class PurpleDragonRook(OriginFeat):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"
         return (
             "You gain the following benefits.\n"
@@ -517,14 +499,10 @@ class PurpleDragonRook(OriginFeat):
             "Once you use this benefit, you can’t do so again until you finish a Long Rest.\n"
         )
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -540,7 +518,7 @@ class SpellfireSpark(OriginFeat):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the following benefits.\n"
             "Magic Absorption. Once per turn, when you take damage from a spell or magical effect, you reduce the total damage taken by 1d4. You can’t use this benefit if you have the Incapacitated condition.\n"
@@ -548,12 +526,10 @@ class SpellfireSpark(OriginFeat):
         )
         return description
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -561,7 +537,7 @@ class TyroOfTheGauntlet(OriginFeat):
     def __init__(self):
         super().__init__(name="Tyro of the Gauntlet", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Stand as One. When an ally within 5 feet of you is subjected to an effect that would push or pull it, you can take a Reaction to prevent that ally from being pushed or pulled. To receive this benefit, the ally can’t have the Incapacitated condition.\n"
@@ -573,7 +549,7 @@ class ZhentarimRuffian(OriginFeat):
     def __init__(self):
         super().__init__(name="Zhentarim Ruffian", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Exploit Opening. When you roll damage for an Opportunity Attack, you can roll the damage dice twice and use either roll against the target.\n"
@@ -593,16 +569,14 @@ class SharpEye(OriginFeat):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
         return description
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -610,7 +584,7 @@ class Survivor(OriginFeat):
     def __init__(self):
         super().__init__(name="Survivor", origin="Origin Feat")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You gain the following benefits.\n"
             "Hypervigilance. Whenever you roll Initiative, you can reroll the d20 if the number rolled is 9 or lower. You must use the new roll.\n"
@@ -618,7 +592,5 @@ class Survivor(OriginFeat):
             "Once you take this Reaction, you can't do so again until you finish a Long Rest.\n"
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

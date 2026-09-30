@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass2014, WarlockGenieKind, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockTheGenieFeatures,
@@ -20,8 +20,8 @@ class WarlockTheGenieLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(
             WarlockTheGenieFeatures.GenieExpandedSpells(kind=self.genie_kind)
         )
@@ -35,8 +35,8 @@ class WarlockTheGenieLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockTheGenieFeatures.ElementalGift(kind=self.genie_kind))
         return data
 
@@ -46,8 +46,8 @@ class WarlockTheGenieLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         genies_vessel: WarlockTheGenieFeatures.GeniesVessel = data.get_features_by_type(
             WarlockTheGenieFeatures.GeniesVessel
         )[0]
@@ -60,8 +60,8 @@ class WarlockTheGenieLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         genies_vessel: WarlockTheGenieFeatures.GeniesVessel = data.get_features_by_type(
             WarlockTheGenieFeatures.GeniesVessel
         )[0]

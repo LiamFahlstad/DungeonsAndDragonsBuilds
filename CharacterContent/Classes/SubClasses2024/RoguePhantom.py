@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from CharacterContent.Features.SubClassFeatures.Rogue import RoguePhantomFeatures
@@ -18,8 +18,8 @@ class RoguePhantomLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
@@ -33,8 +33,8 @@ class RoguePhantomLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RoguePhantomFeatures.TokensOfTheDeparted())
         data.add_feature(RoguePhantomFeatures.VoiceOfDeath())
         return data
@@ -45,8 +45,8 @@ class RoguePhantomLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RoguePhantomFeatures.GhostWalk())
         return data
 
@@ -56,8 +56,8 @@ class RoguePhantomLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RoguePhantomFeatures.DeathsFriend())
         return data
 

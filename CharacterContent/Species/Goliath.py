@@ -1,4 +1,4 @@
-from Builds import CharacterSheetAccumulator
+from Model.Character import Character
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -13,7 +13,7 @@ class GoliathSpeciesBuilder(SpeciesBuilder):
             name="Goliath",
         )
 
-    def _grant(self, data: CharacterSheetAccumulator.CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         data.base_speed = GoliathFeatures.SPEED  # Given by your species
         data.size = GoliathFeatures.SIZE  # Given by your species
 

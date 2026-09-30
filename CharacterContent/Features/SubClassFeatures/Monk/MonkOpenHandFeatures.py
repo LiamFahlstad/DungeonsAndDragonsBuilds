@@ -9,7 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -67,12 +67,10 @@ class OpenHandTechnique(Feature):
             usage_tags=["control"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Whenever you hit a creature with an attack granted by your Flurry of Blows, you can impose one of the following effects on that target.\n"
             "Addle. The target can't make Opportunity Attacks until the start of its next turn.\n"
@@ -81,9 +79,7 @@ class OpenHandTechnique(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Addle", "Target can't make Opportunity Attacks until start of next turn"),
             ("Push", "Strength save or pushed up to 15 feet away"),
@@ -105,23 +101,19 @@ class WholenessOfBody(Feature):
             ),
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        wisdom_modifier = character_stat_block.get_wisdom_modifier()
-        uses = self.number_of_uses(character_stat_block)
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        wisdom_modifier = character.get_wisdom_modifier()
+        uses = self.number_of_uses(character)
         return [
             ("Action", "Bonus Action"),
             (
@@ -131,13 +123,11 @@ class WholenessOfBody(Feature):
             ("Uses", f"{uses}/Long Rest"),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_wisdom_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_wisdom_modifier())
 
 
 class FleetStep(Feature):
@@ -146,7 +136,7 @@ class FleetStep(Feature):
             name="Fleet Step", origin="Warrior of the Open Hand Monk Level 11"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you take a Bonus Action other than Step of the Wind, you can also use Step of the Wind immediately after that Bonus Action."
         return description
 
@@ -160,24 +150,18 @@ class QuiveringPalm(Feature):
             usage_tags=["damage"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to set up lethal vibrations in someone's body. When you hit a creature with an Unarmed Strike, you can expend 4 Focus Points to start these imperceptible vibrations, which last for a number of days equal to your Monk level. The vibrations are harmless unless you take an action to end them. Alternatively, when you take the Attack action on your turn, you can forgo one of the attacks to end the vibrations. To end them, you and the target must be on the same plane of existence. When you end them, the target must make a Constitution saving throw, taking 10d12 Force damage on a failed save or half as much damage on a successful one.\n"
             "You can have only one creature under the effect of this feature at a time. You can end the vibrations harmlessly (no action required)."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         return [
             ("Trigger", "Hit with Unarmed Strike"),
             ("Cost", "4 Focus Points"),

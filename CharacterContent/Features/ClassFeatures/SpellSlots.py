@@ -1,8 +1,8 @@
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from Core.SpellcastingRules import CasterType
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class SpellSlots(Feature):
@@ -17,7 +17,7 @@ class SpellSlots(Feature):
             skippable_in_concise=True,
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         caster_map = {
             CasterType.FULL_CASTER: "You are a full spellcaster and gain spell slots according to the full caster table.",
             CasterType.HALF_CASTER: "You are a half-spellcaster and gain spell slots at half your class level (rounded up).",

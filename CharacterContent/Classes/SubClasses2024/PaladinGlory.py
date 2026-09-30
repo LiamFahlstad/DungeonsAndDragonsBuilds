@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinGloryFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
@@ -28,8 +28,8 @@ class PaladinGloryLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
@@ -45,8 +45,8 @@ class PaladinGloryLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel2Spells.ENHANCE_ABILITY)
         data.add_spell(PaladinLevel2Spells.MAGIC_WEAPON)
         return data
@@ -57,8 +57,8 @@ class PaladinGloryLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
@@ -71,8 +71,8 @@ class PaladinGloryLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel3Spells.HASTE)
         data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
         return data
@@ -83,8 +83,8 @@ class PaladinGloryLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(BardLevel4Spells.COMPULSION)
         data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
         return data
@@ -95,8 +95,8 @@ class PaladinGloryLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinGloryFeatures.GloriousDefense())
         return data
 
@@ -106,8 +106,8 @@ class PaladinGloryLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.LEGEND_LORE)
         data.add_spell(WizardLevel5Spells.YOLANDES_REGAL_PRESENCE)
         return data
@@ -118,8 +118,8 @@ class PaladinGloryLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinGloryFeatures.LivingLegend())
         return data
 

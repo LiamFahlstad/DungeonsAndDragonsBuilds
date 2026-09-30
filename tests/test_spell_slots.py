@@ -13,9 +13,9 @@ import pytest
 
 from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, SpellSlots
 from Core.Definitions import CharacterClass
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.ClassLevels import ClassLevels
+from Model.AbilityScores import AbilityScores
+from Model.Character import Character
+from Model.ClassLevels import ClassLevels
 
 FULL, HALF, THIRD, WARLOCK = (
     CasterType.FULL_CASTER,
@@ -127,9 +127,9 @@ def as_slot_dict(slot_list: list[int]) -> dict[int, int]:
 
 def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
     """Build a bare stat block with the given class levels and apply each
-    class's SpellSlots feature in order, as CharacterSheetData does."""
+    class's SpellSlots feature in order, as Character does."""
     level_per_class = {cls: level for cls, level, _ in classes}
-    character = CharacterStatBlock(
+    character = Character(
         class_levels=ClassLevels(
             base_class=classes[0][0], level_per_class=level_per_class
         ),

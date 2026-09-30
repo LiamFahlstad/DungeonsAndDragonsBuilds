@@ -1,9 +1,9 @@
 from typing import TYPE_CHECKING
 
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
+from Model.Bonuses import Bonuses, DerivedBonus
 
 if TYPE_CHECKING:
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.Character import Character
 
 
 class Speed:
@@ -20,5 +20,5 @@ class Speed:
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 
-    def total(self, character: "CharacterStatBlock") -> int:
+    def total(self, character: "Character") -> int:
         return self.base + self.bonuses.total(character)

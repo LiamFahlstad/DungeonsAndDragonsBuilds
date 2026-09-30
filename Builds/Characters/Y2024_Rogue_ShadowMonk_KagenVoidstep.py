@@ -42,7 +42,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Halfling
 from Core.Definitions import Ability, RogueSubclass, Skill
-from StatBlocks.AbilityScores import PointBuyAbilityScores
+from Model.AbilityScores import PointBuyAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 
 

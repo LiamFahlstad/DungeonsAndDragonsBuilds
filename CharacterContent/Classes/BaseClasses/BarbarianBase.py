@@ -4,7 +4,7 @@ import attr
 
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
@@ -19,8 +19,8 @@ class BarbarianLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
@@ -37,7 +37,7 @@ class BarbarianLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class BarbarianLevel2(ClassBuilder.BaseClassLevel2):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(BarbarianFeatures.DangerSenseText())
         data.add_feature(BarbarianFeatures.DangerSense())
         data.add_feature(BarbarianFeatures.RecklessAttack())
@@ -48,7 +48,7 @@ class BarbarianLevel2(ClassBuilder.BaseClassLevel2):
 class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
     skill_proficiency: Definitions.Skill
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(
             BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill_proficiency)
         )
@@ -60,7 +60,7 @@ class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
 class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -69,7 +69,7 @@ class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
 @attr.dataclass
 class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         unarmored_defense_text: BarbarianFeatures.UnarmoredDefenseText = (
             data.get_features_by_type(BarbarianFeatures.UnarmoredDefenseText)[0]
         )
@@ -82,14 +82,14 @@ class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
 @attr.dataclass
 class BarbarianLevel6(ClassBuilder.BaseClassLevel6):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
 @attr.dataclass
 class BarbarianLevel7(ClassBuilder.BaseClassLevel7):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(BarbarianFeatures.FeralInstinct())
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
@@ -102,7 +102,7 @@ class BarbarianLevel7(ClassBuilder.BaseClassLevel7):
 class BarbarianLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -113,8 +113,8 @@ class BarbarianLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
@@ -127,8 +127,8 @@ class BarbarianLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -137,8 +137,8 @@ class BarbarianLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -150,7 +150,7 @@ class BarbarianLevel11(ClassBuilder.BaseClassLevel11):
 class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -159,7 +159,7 @@ class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
 @attr.dataclass
 class BarbarianLevel13(ClassBuilder.BaseClassLevel13):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
@@ -172,15 +172,15 @@ class BarbarianLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
 @attr.dataclass
 class BarbarianLevel15(ClassBuilder.BaseClassLevel15):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -192,7 +192,7 @@ class BarbarianLevel15(ClassBuilder.BaseClassLevel15):
 class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -201,7 +201,7 @@ class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
 @attr.dataclass
 class BarbarianLevel17(ClassBuilder.BaseClassLevel17):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
@@ -214,8 +214,8 @@ class BarbarianLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BarbarianFeatures.IndomitableMight())
         return data
 
@@ -224,7 +224,7 @@ class BarbarianLevel18(ClassBuilder.BaseClassLevel18):
 class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.epic_boon.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
@@ -233,7 +233,7 @@ class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class BarbarianLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         data.add_feature(BarbarianFeatures.PrimalChampion())
         return data
 

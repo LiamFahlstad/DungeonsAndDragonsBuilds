@@ -262,7 +262,7 @@ def _imports_source(spec, registry, class_info, subclass_info):
     from_imports[subclass_info.module.__name__] = subclass_names
 
     abilities_class = _abilities_class_name(spec)
-    add("StatBlocks.AbilityScores", abilities_class)
+    add("Model.AbilityScores", abilities_class)
 
     species_info = registry.species()[spec.species_class]
     add("CharacterContent.Species", species_info.module_name)

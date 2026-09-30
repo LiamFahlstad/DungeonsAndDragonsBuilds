@@ -32,7 +32,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import CooksUtensils
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilityScores import PointBuyAbilityScores
+from Model.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():

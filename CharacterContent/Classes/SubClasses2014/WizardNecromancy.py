@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardNecromancyFeatures,
@@ -20,8 +20,8 @@ class WizardNecromancyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardNecromancyFeatures.NecromancySavant())
         data.add_feature(WizardNecromancyFeatures.GrimHarvest())
         return data
@@ -32,8 +32,8 @@ class WizardNecromancyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardNecromancyFeatures.UndeadThralls())
         data.add_spell(NecromancyLevel3Spells.ANIMATE_DEAD)
         return data
@@ -44,8 +44,8 @@ class WizardNecromancyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardNecromancyFeatures.InuredToUndeath())
         return data
 
@@ -55,8 +55,8 @@ class WizardNecromancyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardNecromancyFeatures.CommandUndead())
         return data
 

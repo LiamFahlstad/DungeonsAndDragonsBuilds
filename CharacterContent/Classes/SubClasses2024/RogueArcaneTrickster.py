@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
@@ -44,8 +44,8 @@ class RogueArcaneTricksterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueArcaneTricksterFeatures.Spellcasting())
         data.add_feature(RogueArcaneTricksterFeatures.MageHandLegerdemain())
         data.add_cantrip(WizardLevel0Spells.MAGE_HAND)
@@ -63,8 +63,8 @@ class RogueArcaneTricksterLevel4(ClassBuilder.SubclassLevel4):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -75,8 +75,8 @@ class RogueArcaneTricksterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -87,8 +87,8 @@ class RogueArcaneTricksterLevel8(ClassBuilder.SubclassLevel8):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -98,8 +98,8 @@ class RogueArcaneTricksterLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueArcaneTricksterFeatures.MagicalAmbush())
         return data
 
@@ -111,8 +111,8 @@ class RogueArcaneTricksterLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         return data
@@ -124,8 +124,8 @@ class RogueArcaneTricksterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -136,8 +136,8 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
@@ -154,8 +154,8 @@ class RogueArcaneTricksterLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -166,8 +166,8 @@ class RogueArcaneTricksterLevel16(ClassBuilder.SubclassLevel16):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -177,8 +177,8 @@ class RogueArcaneTricksterLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueArcaneTricksterFeatures.SpellThief())
         return data
 
@@ -189,8 +189,8 @@ class RogueArcaneTricksterLevel19(ClassBuilder.SubclassLevel19):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -201,8 +201,8 @@ class RogueArcaneTricksterLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 

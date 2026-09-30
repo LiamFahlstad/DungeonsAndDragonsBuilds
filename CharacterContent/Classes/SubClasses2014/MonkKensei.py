@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkKenseiFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures2014.Monk import MonkKenseiFeatur
 class MonkKenseiLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkKenseiFeatures.KenseiWeapons())
         data.add_feature(MonkKenseiFeatures.AgileParry())
         data.add_feature(MonkKenseiFeatures.KenseiShot())
@@ -29,8 +29,8 @@ class MonkKenseiLevel3(ClassBuilder.SubclassLevel3):
 class MonkKenseiLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         kensei_weapons: MonkKenseiFeatures.KenseiWeapons = data.get_features_by_type(
             MonkKenseiFeatures.KenseiWeapons
         )[0]
@@ -44,8 +44,8 @@ class MonkKenseiLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkKenseiFeatures.SharpenTheBlade())
         return data
 
@@ -55,8 +55,8 @@ class MonkKenseiLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkKenseiFeatures.UnearringAccuracy())
         return data
 

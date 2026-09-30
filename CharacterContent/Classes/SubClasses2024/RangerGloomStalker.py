@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerGloomStalkerFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -28,8 +28,8 @@ class RangerGloomStalkerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerGloomStalkerFeatures.DreadAmbusher())
         data.add_feature(RangerGloomStalkerFeatures.UmbralSight())
         data.add_feature(RangerGloomStalkerFeatures.GloomStalkerSpells())
@@ -42,8 +42,8 @@ class RangerGloomStalkerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(TransmutationLevel2Spells.ROPE_TRICK)
         return data
 
@@ -53,8 +53,8 @@ class RangerGloomStalkerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerGloomStalkerFeatures.IronMind())
         return data
 
@@ -64,8 +64,8 @@ class RangerGloomStalkerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(IllusionLevel3Spells.FEAR)
         return data
 
@@ -75,8 +75,8 @@ class RangerGloomStalkerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         dread_ambusher: RangerGloomStalkerFeatures.DreadAmbusher = (
             data.get_features_by_type(RangerGloomStalkerFeatures.DreadAmbusher)[0]
         )
@@ -89,8 +89,8 @@ class RangerGloomStalkerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(IllusionLevel4Spells.GREATER_INVISIBILITY)
         return data
 
@@ -100,8 +100,8 @@ class RangerGloomStalkerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RangerGloomStalkerFeatures.ShadowyDodge())
         return data
 
@@ -111,8 +111,8 @@ class RangerGloomStalkerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(IllusionLevel5Spells.SEEMING)
         return data
 

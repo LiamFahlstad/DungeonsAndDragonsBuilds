@@ -2,7 +2,7 @@ from typing import Optional
 
 import attr
 
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
@@ -18,8 +18,8 @@ from Core.Definitions import Ability, MonkSubclass, Skill
 class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -33,8 +33,8 @@ class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
 class MonkElementsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -47,8 +47,8 @@ class MonkElementsLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]
@@ -61,8 +61,8 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
             MonkFeatures.MonksFocus
         )[0]

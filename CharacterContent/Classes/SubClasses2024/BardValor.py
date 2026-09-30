@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardValorFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -17,8 +17,8 @@ from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 class BardValorLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
             BardFeatures.BardicInspiration
         )[0]
@@ -31,8 +31,8 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
 class BardValorLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardValorFeatures.ExtraAttack())
         return data
 
@@ -42,8 +42,8 @@ class BardValorLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardValorFeatures.BattleMagic())
         return data
 

@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
+from Model.Bonuses import Bonuses, DerivedBonus
 
 if TYPE_CHECKING:
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.Character import Character
 
 
 class SavingThrows:
@@ -16,7 +16,7 @@ class SavingThrows:
         self.proficiencies = proficiencies if proficiencies is not None else {}
         self.advantages = advantages if advantages is not None else {}
         # Per-ability flat and formula-valued bonuses, each with a source
-        # (see StatBlocks/Bonuses.py).
+        # (see Model/Bonuses.py).
         self._bonuses: dict[Ability, Bonuses] = {}
         # "Proficiency in X; if you already have it, in Y instead" grants, as
         # (X, (Y, ...)) - resolved on read, see _resolved_proficiencies.
@@ -66,9 +66,9 @@ class SavingThrows:
     def add_derived_bonus(self, ability: Ability, bonus: DerivedBonus) -> None:
         self._bonuses_for(ability).add_formula(bonus)
 
-    def get_total_bonus(self, ability: Ability, character: "CharacterStatBlock") -> int:
+    def get_total_bonus(self, ability: Ability, character: "Character") -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
         `character` (not the ability modifier or proficiency bonus - see
-        CharacterStatBlock.get_saving_throw_modifier)."""
+        Character.get_saving_throw_modifier)."""
         bonuses = self._bonuses.get(ability)
         return bonuses.total(character) if bonuses is not None else 0

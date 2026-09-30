@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import InitiativeBonus
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -21,7 +21,7 @@ class FancyFootwork(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You learn how to land a strike and then slip away without reprisal. During your turn, "
             "if you make a melee attack against a creature, that creature can't make opportunity attacks "
@@ -29,9 +29,7 @@ class FancyFootwork(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -47,7 +45,7 @@ class RakishAudacity(Feature):
     def apply(self, effects: Effects):
         InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your confidence propels you into battle. You gain a bonus to your initiative rolls equal to "
             "your Charisma modifier.\n"
@@ -58,9 +56,7 @@ class RakishAudacity(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -75,7 +71,7 @@ class Panache(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your charm becomes extraordinarily beguiling. As an action, you can make a Charisma "
             "(Persuasion) check contested by a creature's Wisdom (Insight) check. The creature must be "
@@ -91,9 +87,7 @@ class Panache(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Check", "Charisma (Persuasion) vs. target's Wisdom (Insight)"),
@@ -108,9 +102,7 @@ class Panache(Feature):
             ),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -125,16 +117,14 @@ class ElegantManeuver(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use a bonus action on your turn to gain advantage on the next Dexterity (Acrobatics) "
             "or Strength (Athletics) check you make during the same turn."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -146,7 +136,7 @@ class MasterDuelist(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your mastery of the blade lets you turn failure into success in combat. If you miss with an "
             "attack roll, you can roll it again with advantage. Once you do so, you can't use this feature "
@@ -154,7 +144,5 @@ class MasterDuelist(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

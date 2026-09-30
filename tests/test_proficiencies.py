@@ -94,9 +94,7 @@ class TestMulticlassing:
         # Regression: multiclass builders granted no proficiencies at all, so
         # a Wizard 3 / Warlock 3 never got the Warlock's Light armor training.
         data = type(ALL_BUILDS["SpellSlotTestWizard3Warlock3"])().build()
-        assert (
-            LIGHT in data.setup_character_stat_block().equipment_training.armor_training
-        )
+        assert LIGHT in data.validate().equipment_training.armor_training
 
     def test_resuming_a_class_does_not_grant_its_proficiencies_again(self):
         applied = AppliedLevelFeatures()
@@ -109,7 +107,7 @@ class TestMulticlassing:
         # Fighter 1 / Warlock 5: the Fighter's Heavy armor comes from its full
         # Core Traits, not the (Heavy-less) multiclass subset.
         data = type(ALL_BUILDS["Y2024_Warlock_Archfey_CaelumBladefey"])().build()
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert ArmorType.HEAVY in character.equipment_training.armor_training
         assert MARTIAL in character.equipment_training.weapon_proficiencies
 

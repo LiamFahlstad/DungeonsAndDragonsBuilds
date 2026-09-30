@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
     DruidMulticlassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidStarsFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells, EvocationLevel1Spells
@@ -18,8 +18,8 @@ class DruidStarsLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidStarsFeatures.StarMap())
         data.add_feature(DruidStarsFeatures.StarryForm())
         data.add_spell(DruidLevel0Spells.GUIDANCE)
@@ -32,8 +32,8 @@ class DruidStarsLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidStarsFeatures.CosmicOmen())
         return data
 
@@ -43,8 +43,8 @@ class DruidStarsLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         starry_form: DruidStarsFeatures.StarryForm = data.get_features_by_type(
             DruidStarsFeatures.StarryForm
         )[0]
@@ -57,8 +57,8 @@ class DruidStarsLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         starry_form: DruidStarsFeatures.StarryForm = data.get_features_by_type(
             DruidStarsFeatures.StarryForm
         )[0]

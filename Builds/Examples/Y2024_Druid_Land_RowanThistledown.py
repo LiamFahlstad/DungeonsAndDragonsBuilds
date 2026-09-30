@@ -74,7 +74,7 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel7Spells,
     TransmutationLevel9Spells,
 )
-from StatBlocks.AbilityScores import AbilityScores
+from Model.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 # Circle land type is chosen independently at each subclass level (3, 5, 7, 9, 10).

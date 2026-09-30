@@ -11,8 +11,8 @@ from CharacterContent.Features.Core.Improvements import (
     CharacterImprovement,
 )
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class AbstractArmor(Item, ABC):

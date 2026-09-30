@@ -23,9 +23,9 @@ sys.path.insert(0, str(REPO))
 
 from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
 from Core.Definitions import Ability, CharacterClass, Skill
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.ClassLevels import ClassLevels
+from Model.AbilityScores import AbilityScores
+from Model.Character import Character
+from Model.ClassLevels import ClassLevels
 from Utils import Html
 
 CLASS_TEXT_DIR = REPO / "SourceTexts" / "ClassTexts"
@@ -1185,8 +1185,8 @@ _GENERIC_SKILLS = [
 
 def make_dummy_stat_block(
     character_class: CharacterClass, spell_ability: Ability, level: int = 20
-) -> CharacterStatBlock:
-    return CharacterStatBlock(
+) -> Character:
+    return Character(
         class_levels=ClassLevels(
             base_class=character_class,
             level_per_class={character_class: level},
@@ -1287,9 +1287,7 @@ MANUAL_FEATURE_HTML: dict[tuple[str, str], str] = {
 }
 
 
-def collect_features(
-    module_path: str, stat_block: CharacterStatBlock
-) -> list[tuple[int, str]]:
+def collect_features(module_path: str, stat_block: Character) -> list[tuple[int, str]]:
     """Returns (sort_level, rendered_html) pairs for every Feature class defined
     directly in the given module."""
     module = importlib.import_module(module_path)
@@ -1321,7 +1319,7 @@ def collect_features(
     return entries
 
 
-def render_feature_card(feature: Feature, stat_block: CharacterStatBlock) -> str:
+def render_feature_card(feature: Feature, stat_block: Character) -> str:
     try:
         buf = io.StringIO()
         feature.write_to_file(stat_block, buf)

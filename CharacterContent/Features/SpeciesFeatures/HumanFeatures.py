@@ -1,8 +1,8 @@
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -12,7 +12,7 @@ class Resourceful(Feature):
     def __init__(self):
         super().__init__(name="Resourceful", origin="Human Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You gain Heroic Inspiration whenever you finish a Long Rest.\n"
 
 
@@ -29,7 +29,7 @@ class Skillful(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
 
 
@@ -37,5 +37,5 @@ class Versatile(Feature):
     def __init__(self):
         super().__init__(name="Versatile", origin="Human Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.\n"

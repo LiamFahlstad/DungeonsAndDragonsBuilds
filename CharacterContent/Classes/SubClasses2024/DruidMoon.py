@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
     DruidMulticlassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidMoonFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -25,8 +25,8 @@ class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidMoonFeatures.CircleForms())
         data.add_feature(DruidMoonFeatures.CircleOfTheMoonSpells())
         data.add_spell(DruidLevel0Spells.STARRY_WISP)
@@ -40,8 +40,8 @@ class DruidMoonLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel3Spells.CONJURE_ANIMALS)
         return data
 
@@ -51,8 +51,8 @@ class DruidMoonLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         circle_forms: DruidMoonFeatures.CircleForms = data.get_features_by_type(
             DruidMoonFeatures.CircleForms
         )[0]
@@ -65,8 +65,8 @@ class DruidMoonLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel4Spells.FOUNT_OF_MOONLIGHT)
         return data
 
@@ -76,8 +76,8 @@ class DruidMoonLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel5Spells.MASS_CURE_WOUNDS)
         return data
 
@@ -87,8 +87,8 @@ class DruidMoonLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidMoonFeatures.MoonlightStep())
         return data
 
@@ -98,8 +98,8 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         moonlight_step: DruidMoonFeatures.MoonlightStep = data.get_features_by_type(
             DruidMoonFeatures.MoonlightStep
         )[0]

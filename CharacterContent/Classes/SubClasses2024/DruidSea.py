@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
     DruidMulticlassBuilder,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidSeaFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -27,8 +27,8 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidSeaFeatures.CircleOfTheSeaSpells())
         data.add_feature(DruidSeaFeatures.WrathOfTheSea())
         data.add_spell(DruidLevel1Spells.FOG_CLOUD)
@@ -43,8 +43,8 @@ class DruidSeaLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
         data.add_spell(DruidLevel3Spells.WATER_BREATHING)
         return data
@@ -55,8 +55,8 @@ class DruidSeaLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
             DruidSeaFeatures.WrathOfTheSea
         )[0]
@@ -69,8 +69,8 @@ class DruidSeaLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel4Spells.CONTROL_WATER)
         data.add_spell(DruidLevel4Spells.ICE_STORM)
         return data
@@ -81,8 +81,8 @@ class DruidSeaLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel5Spells.CONJURE_ELEMENTAL)
         data.add_spell(BardLevel5Spells.HOLD_MONSTER)
         return data
@@ -93,8 +93,8 @@ class DruidSeaLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
             DruidSeaFeatures.WrathOfTheSea
         )[0]
@@ -107,8 +107,8 @@ class DruidSeaLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         wrath_of_the_sea: DruidSeaFeatures.WrathOfTheSea = data.get_features_by_type(
             DruidSeaFeatures.WrathOfTheSea
         )[0]

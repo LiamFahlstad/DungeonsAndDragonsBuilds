@@ -4,13 +4,13 @@ from typing import Optional
 import attr
 
 import Core.Definitions as Definitions
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlots
 from CharacterContent.Items import Items, Packs
-from StatBlocks.AbilityScores import AbilityScores
+from Model.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 
 
@@ -21,8 +21,8 @@ class LevelFeatures(ABC):
     @abstractmethod
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         pass
 
 
@@ -215,7 +215,7 @@ class BaseClassLevel19(LevelFeatures):
 class BaseClassLevel20(LevelFeatures):
     level: int = attr.field(init=False, default=20)
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         return data
 
 
@@ -242,10 +242,10 @@ class BaseClassLevelFeatures:
 
     def add_features(
         self,
-        data: CharacterSheetData,
+        data: Character,
         base_class: CharacterClass,
         applied_level_features: "AppliedLevelFeatures",
-    ) -> CharacterSheetData:
+    ) -> Character:
         """Apply this builder's per-level features to `data`, in ascending
         level order (all base-class levels first, then all subclass levels),
         skipping levels above the class's declared level and levels another
@@ -305,7 +305,7 @@ class ClassBuilder(ABC):
         self.replace_spells = replace_spells
 
     @abstractmethod
-    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+    def _grant_class(self, data: Character, is_resuming: bool) -> None:
         """Grant this builder's class-level contribution (class registration,
         spell slots, proficiencies, ...) straight into `data` - everything
         except per-level features, which create() applies afterwards.
@@ -316,9 +316,9 @@ class ClassBuilder(ABC):
 
     def create(
         self,
-        character_sheet_data: Optional[CharacterSheetData] = None,
+        character_sheet_data: Optional[Character] = None,
         applied_level_features: Optional["AppliedLevelFeatures"] = None,
-    ) -> CharacterSheetData:
+    ) -> Character:
         """Grant this class builder's contribution straight into
         `character_sheet_data` (a fresh one is created if not provided) and
         return it. Every builder writes into the same object, so a base class
@@ -331,7 +331,7 @@ class ClassBuilder(ABC):
         cumulative sheet, so it may also replace a spell added by an earlier
         builder."""
         if character_sheet_data is None:
-            character_sheet_data = CharacterSheetData()
+            character_sheet_data = Character()
         if applied_level_features is None:
             applied_level_features = AppliedLevelFeatures()
 
@@ -370,7 +370,7 @@ class ClassBuilder(ABC):
         character_sheet_data.replace_spells(self.replace_spells or {})
         return character_sheet_data
 
-    def _update_subclass_name(self, data: CharacterSheetData) -> None:
+    def _update_subclass_name(self, data: Character) -> None:
         """Show every class's subclass on a multiclass sheet ("Oath of Glory /
         Bladesinger") instead of only the last builder's. Classes that
         haven't reached their subclass level are left out; if none has, the
@@ -492,7 +492,7 @@ class StarterClassBuilder(ClassBuilder):
     def weapon_proficiencies(self) -> Optional[list[Weapons.WeaponProficiency]]:
         return self.non_generic_arguments.weapon_proficiencies
 
-    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+    def _grant_class(self, data: Character, is_resuming: bool) -> None:
         # The starting class is always the first builder, so never resumed.
         data.base_class = self.base_class
         data.base_abilities = self.abilities
@@ -546,7 +546,7 @@ class MulticlassBuilder(ClassBuilder):
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
 
-    def _grant_class(self, data: CharacterSheetData, is_resuming: bool) -> None:
+    def _grant_class(self, data: Character, is_resuming: bool) -> None:
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
         if is_resuming:

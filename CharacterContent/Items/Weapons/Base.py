@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.Improvements import (
     CharacterImprovement,
 )
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from .Enums import (
     WeaponMastery,
     WeaponProficiency,
@@ -124,11 +124,11 @@ class AbstractWeapon(Item, ABC):
         self.add_improvement(weapon_improvement)
 
     def _calculate_ability_modifier_bonus(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> tuple[int, str]:
         if self._ability_override is not None:
             ability = self._ability_override
-            return character_stat_block.get_ability_modifier(ability), ability.value
+            return character.get_ability_modifier(ability), ability.value
 
         abilities_to_consider = {self.ability}
 
@@ -144,7 +144,7 @@ class AbstractWeapon(Item, ABC):
         best_ability_modifier = -9999
         best_ability = None
         for ability in sorted(abilities_to_consider, key=order.index):
-            ability_modifier = character_stat_block.get_ability_modifier(ability)
+            ability_modifier = character.get_ability_modifier(ability)
             if ability_modifier > best_ability_modifier:
                 best_ability_modifier = ability_modifier
                 best_ability = ability.value
@@ -154,21 +154,17 @@ class AbstractWeapon(Item, ABC):
 
         return best_ability_modifier, best_ability
 
-    def calculate_ability_modifier_bonus(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        ability_modifier, ability = self._calculate_ability_modifier_bonus(
-            character_stat_block
-        )
+    def calculate_ability_modifier_bonus(self, character: Character) -> str:
+        ability_modifier, ability = self._calculate_ability_modifier_bonus(character)
         return f"{ability_modifier} (ability mod: {ability})"
 
-    def is_proficient(self, character_stat_block: CharacterStatBlock) -> bool:
+    def is_proficient(self, character: Character) -> bool:
         """Whether the wielder is proficient with this weapon: an explicit
         player_is_proficient override (e.g. Unarmed Strike), or any weapon
         proficiency recorded on the stat block - worked out on read, so it
         doesn't matter when the proficiency or the weapon was added."""
         return self.player_is_proficient or is_proficient_with(
-            self, character_stat_block.equipment_training.weapon_proficiencies
+            self, character.equipment_training.weapon_proficiencies
         )
 
     def has_mastery(self, weapon_masteries: "list[AbstractWeapon]") -> bool:
@@ -179,108 +175,74 @@ class AbstractWeapon(Item, ABC):
             type(self) is type(mastery) for mastery in weapon_masteries
         )
 
-    def attack_roll_condition(
-        self, character_stat_block: CharacterStatBlock
-    ) -> DiceRollCondition:
+    def attack_roll_condition(self, character: Character) -> DiceRollCondition:
         """Disadvantage when the attack uses Strength or Dexterity while
         wearing armor the wielder lacks training with (2024 PHB)."""
-        _, ability_name = self._calculate_ability_modifier_bonus(character_stat_block)
-        if character_stat_block.has_untrained_armor_disadvantage(Ability(ability_name)):
+        _, ability_name = self._calculate_ability_modifier_bonus(character)
+        if character.has_untrained_armor_disadvantage(Ability(ability_name)):
             return DiceRollCondition.DISADVANTAGE
         return DiceRollCondition.NEUTRAL
 
-    def _calculate_proficiency_damage_bonus(
-        self, character_stat_block: CharacterStatBlock
-    ) -> int:
-        if self.is_proficient(character_stat_block):
-            proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def _calculate_proficiency_damage_bonus(self, character: Character) -> int:
+        if self.is_proficient(character):
+            proficiency_bonus = character.get_proficiency_bonus()
             return proficiency_bonus
         return 0
 
-    def calculate_proficiency_damage_bonus(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
-        proficiency_bonus = self._calculate_proficiency_damage_bonus(
-            character_stat_block
-        )
+    def calculate_proficiency_damage_bonus(self, character: Character) -> str:
+        proficiency_bonus = self._calculate_proficiency_damage_bonus(character)
         if proficiency_bonus > 0:
             return f"{proficiency_bonus} (Proficient)"
         return "0 (Not Proficient)"
 
-    def get_attack_roll_bonuses(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[int, str]]:
+    def get_attack_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
         """This weapon's own attack roll bonuses (e.g. a +1 weapon), then the
         wielder's that apply to it (e.g. the Archery fighting style) - those
         are recorded on the stat block, never written into the weapon."""
-        return (
-            self.attack_roll_bonuses
-            + character_stat_block.weapon_bonuses.attack_bonuses(self)
-        )
+        return self.attack_roll_bonuses + character.weapon_bonuses.attack_bonuses(self)
 
-    def get_damage_roll_bonuses(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[int, str]]:
+    def get_damage_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
         """Damage roll counterpart of get_attack_roll_bonuses."""
-        return (
-            self.damage_roll_bonuses
-            + character_stat_block.weapon_bonuses.damage_bonuses(self)
-        )
+        return self.damage_roll_bonuses + character.weapon_bonuses.damage_bonuses(self)
 
-    def calculate_total_attack_roll_bonus(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str:
+    def calculate_total_attack_roll_bonus(self, character: Character) -> str:
         if self._attack_roll_override is not None:
             return f"{self._attack_roll_override:+} (fixed)"
-        attack_roll_bonus = self.calculate_ability_modifier_bonus(character_stat_block)
-        attack_roll_bonus += (
-            f" + {self.calculate_proficiency_damage_bonus(character_stat_block)}"
-        )
-        for _, bonus in self.get_attack_roll_bonuses(character_stat_block):
+        attack_roll_bonus = self.calculate_ability_modifier_bonus(character)
+        attack_roll_bonus += f" + {self.calculate_proficiency_damage_bonus(character)}"
+        for _, bonus in self.get_attack_roll_bonuses(character):
             attack_roll_bonus += f" + {bonus}"
         return attack_roll_bonus
 
-    def calculate_total_attack_roll_bonus_int(
-        self, character_stat_block: CharacterStatBlock
-    ) -> int:
+    def calculate_total_attack_roll_bonus_int(self, character: Character) -> int:
         if self._attack_roll_override is not None:
             return self._attack_roll_override
-        attack_roll_bonus, _ = self._calculate_ability_modifier_bonus(
-            character_stat_block
-        )
-        attack_roll_bonus += self._calculate_proficiency_damage_bonus(
-            character_stat_block
-        )
-        for bonus, _ in self.get_attack_roll_bonuses(character_stat_block):
+        attack_roll_bonus, _ = self._calculate_ability_modifier_bonus(character)
+        attack_roll_bonus += self._calculate_proficiency_damage_bonus(character)
+        for bonus, _ in self.get_attack_roll_bonuses(character):
             attack_roll_bonus += bonus
         return attack_roll_bonus
 
-    def calculate_damage_bonus_int(
-        self, character_stat_block: CharacterStatBlock
-    ) -> int:
+    def calculate_damage_bonus_int(self, character: Character) -> int:
         """Flat bonus added to the damage die (ability modifier by default,
         or a fixed override), plus any additive damage-roll bonuses."""
         if self._damage_bonus_override is not None:
             return self._damage_bonus_override
-        damage_bonus, _ = self._calculate_ability_modifier_bonus(character_stat_block)
-        for bonus, _ in self.get_damage_roll_bonuses(character_stat_block):
+        damage_bonus, _ = self._calculate_ability_modifier_bonus(character)
+        for bonus, _ in self.get_damage_roll_bonuses(character):
             damage_bonus += bonus
         return damage_bonus
 
-    def get_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> Optional[str]:
+    def get_description(self, character: Character) -> Optional[str]:
         return None
 
     def calculate_hit_probabilities(
         self,
-        character_stat_block: CharacterStatBlock,
+        character: Character,
         condition: DamageCalculator.DiceRollCondition = DamageCalculator.DiceRollCondition.NEUTRAL,
     ) -> list[tuple[int, float]]:
         """Return hit probability for each AC from 10 to 25 (inclusive)."""
-        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
-            character_stat_block
-        )
+        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(character)
         results = []
         for ac in range(10, 26):
             prob = DamageCalculator.probability_of_success(
@@ -292,23 +254,21 @@ class AbstractWeapon(Item, ABC):
             results.append((ac, prob))
         return results
 
-    def write_to_file(self, character_stat_block: CharacterStatBlock, file: TextIO):
+    def write_to_file(self, character: Character, file: TextIO):
         pass  # HTML rendering is handled by write_weapons_to_file
 
     def write_damage_report(
         self,
-        character_stat_block: CharacterStatBlock,
+        character: Character,
         file,
     ) -> None:
         attack_roll_die = DamageCalculator.Die.D20
         attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(
-            character_stat_block
-        )
+        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(character)
         damage_die = Die.die_from_value(self.damage_roll.die_size)
         number_of_damage_dice = self.damage_roll.number_of_dice
         damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        damage_bonus = self.calculate_damage_bonus_int(character_stat_block)
+        damage_bonus = self.calculate_damage_bonus_int(character)
 
         DamageCalculator.damage_report(
             file=file,

@@ -41,7 +41,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel3Spells,
     BardLevel4Spells,
 )
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import Flute, Horn, PanFlute
 
 

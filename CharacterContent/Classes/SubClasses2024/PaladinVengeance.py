@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinVengeanceFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -25,8 +25,8 @@ class PaladinVengeanceLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinVengeanceFeatures.VowOfEnmity())
         data.add_spell(ClericLevel1Spells.BANE)
         data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
@@ -38,8 +38,8 @@ class PaladinVengeanceLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WarlockLevel2Spells.HOLD_PERSON)
         data.add_spell(WarlockLevel2Spells.MISTY_STEP)
         return data
@@ -50,8 +50,8 @@ class PaladinVengeanceLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinVengeanceFeatures.RelentlessAvenger())
         return data
 
@@ -61,8 +61,8 @@ class PaladinVengeanceLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel3Spells.HASTE)
         data.add_spell(WizardLevel3Spells.PROTECTION_FROM_ENERGY)
         return data
@@ -73,8 +73,8 @@ class PaladinVengeanceLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel4Spells.BANISHMENT)
         data.add_spell(WizardLevel4Spells.DIMENSION_DOOR)
         return data
@@ -85,8 +85,8 @@ class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         vow_of_enmity: PaladinVengeanceFeatures.VowOfEnmity = data.get_features_by_type(
             PaladinVengeanceFeatures.VowOfEnmity
         )[0]
@@ -99,8 +99,8 @@ class PaladinVengeanceLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
         data.add_spell(WizardLevel5Spells.SCRYING)
         return data
@@ -111,8 +111,8 @@ class PaladinVengeanceLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinVengeanceFeatures.AvengingAngel())
         return data
 

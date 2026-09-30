@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardConjurationFeatures,
@@ -19,8 +19,8 @@ class WizardConjurationLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardConjurationFeatures.ConjurationSavant())
         data.add_feature(WizardConjurationFeatures.MinorConjuration())
         return data
@@ -31,8 +31,8 @@ class WizardConjurationLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardConjurationFeatures.BenignTransportation())
         return data
 
@@ -42,8 +42,8 @@ class WizardConjurationLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardConjurationFeatures.FocusedConjuration())
         return data
 
@@ -53,8 +53,8 @@ class WizardConjurationLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardConjurationFeatures.DurableSummons())
         return data
 

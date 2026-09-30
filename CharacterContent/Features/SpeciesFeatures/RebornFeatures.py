@@ -4,8 +4,8 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
     SkillProficiencyChoice,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 30  # Given by your species
 
@@ -16,7 +16,7 @@ class EscapedDeath(Feature):
             name="Escaped Death", origin="Reborn Trait", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Advantage on Death Saving Throws."
 
 
@@ -24,7 +24,7 @@ class Everlasting(Feature):
     def __init__(self):
         super().__init__(name="Everlasting", origin="Reborn Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation. You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in an inactive, motionless state, during which you retain consciousness."
         return description
 
@@ -35,19 +35,17 @@ class RebornKnowledge(Feature):
             name="Reborn Knowledge", origin="Reborn Trait", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain proficiency in one skill of your choice.\n"
             "In addition, you can temporarily peer into the past to aid you in the present. When you fail an ability check, you can roll 1d6 and add the number rolled to the d20, potentially turning the failure into a success. You can do this a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return "Gain proficiency in one skill of your choice. When you fail an ability check, add 1d6 to the roll to potentially turn it into a success (uses per Long Rest equal to your Proficiency Bonus)."
 
 
@@ -64,7 +62,7 @@ class RebornKnowledgeSkill(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
 
 
@@ -86,5 +84,5 @@ class StrangeEndurance(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return f"You have Resistance to {self.damage_type.value} damage."

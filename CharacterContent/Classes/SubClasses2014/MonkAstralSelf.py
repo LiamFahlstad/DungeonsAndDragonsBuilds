@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkAstralSelfFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures2014.Monk import MonkAstralSelfFe
 class MonkAstralSelfLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkAstralSelfFeatures.ArmsOfTheAstralSelf())
         return data
 
@@ -26,8 +26,8 @@ class MonkAstralSelfLevel3(ClassBuilder.SubclassLevel3):
 class MonkAstralSelfLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         arms_of_the_astral_self: MonkAstralSelfFeatures.ArmsOfTheAstralSelf = (
             data.get_features_by_type(MonkAstralSelfFeatures.ArmsOfTheAstralSelf)[0]
         )
@@ -42,8 +42,8 @@ class MonkAstralSelfLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkAstralSelfFeatures.BodyOfTheAstralSelf())
         return data
 
@@ -53,8 +53,8 @@ class MonkAstralSelfLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkAstralSelfFeatures.AwakenedAstralSelf())
         return data
 

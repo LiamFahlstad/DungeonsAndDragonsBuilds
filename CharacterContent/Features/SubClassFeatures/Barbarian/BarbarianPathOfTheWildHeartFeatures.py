@@ -4,7 +4,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class AnimalSpeaker(Feature):
@@ -15,7 +15,7 @@ class AnimalSpeaker(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can cast the Beast Sense and Speak with Animals spells but only as Rituals. Wisdom is your spellcasting ability for them."
         return description
 
@@ -29,7 +29,7 @@ class RageOfTheWilds(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your Rage taps into the primal power of animals. Whenever you activate your Rage, you gain one of the following options of your choice.\n"
             "Bear. While your Rage is active, you have Resistance to every damage type except Force, Necrotic, Psychic, and Radiant.\n"
@@ -47,7 +47,7 @@ class AspectOfTheWilds(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain one of the following options of your choice. Whenever you finish a Long Rest, you can change your choice.\n"
             "Owl. You have Darkvision with a range of 60 feet. If you already have Darkvision, its range increases by 60 feet.\n"
@@ -56,9 +56,7 @@ class AspectOfTheWilds(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -70,7 +68,7 @@ class NatureSpeaker(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can cast the Commune with Nature spell but only as a Ritual. Wisdom is your spellcasting ability for it."
         return description
 
@@ -84,7 +82,7 @@ class PowerOfTheWilds(Feature):
             usage_tags=["buff", "control", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Whenever you activate your Rage, you gain one of the following options of your choice.\n"
             "Falcon. While your Rage is active, you have a Fly Speed equal to your Speed if you aren’t wearing any armor.\n"

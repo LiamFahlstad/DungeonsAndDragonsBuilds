@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
     DruidCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidWildfireFeatures
 
@@ -20,8 +20,8 @@ class DruidWildfireLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidWildfireFeatures.CircleSpells())
         data.add_feature(DruidWildfireFeatures.SummonWildfireSpirit())
         return data
@@ -32,8 +32,8 @@ class DruidWildfireLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         summon_wildfire_spirit: DruidWildfireFeatures.SummonWildfireSpirit = (
             data.get_features_by_type(DruidWildfireFeatures.SummonWildfireSpirit)[0]
         )
@@ -46,8 +46,8 @@ class DruidWildfireLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidWildfireFeatures.CauterizingFlames())
         return data
 
@@ -57,8 +57,8 @@ class DruidWildfireLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         summon_wildfire_spirit: DruidWildfireFeatures.SummonWildfireSpirit = (
             data.get_features_by_type(DruidWildfireFeatures.SummonWildfireSpirit)[0]
         )

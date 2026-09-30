@@ -28,7 +28,7 @@ from CharacterContent.Species import Tiefling
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from CharacterContent.ToolProficiencies.Proficiencies import NavigatorsTools
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilityScores import PointBuyAbilityScores
+from Model.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():

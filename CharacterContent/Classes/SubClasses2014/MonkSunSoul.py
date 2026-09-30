@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkSunSoulFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures2014.Monk import MonkSunSoulFeatu
 class MonkSunSoulLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkSunSoulFeatures.RadiantSunBolt())
         return data
 
@@ -26,8 +26,8 @@ class MonkSunSoulLevel3(ClassBuilder.SubclassLevel3):
 class MonkSunSoulLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkSunSoulFeatures.SearingArcStrike())
         return data
 
@@ -37,8 +37,8 @@ class MonkSunSoulLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkSunSoulFeatures.SearingSunburst())
         return data
 
@@ -48,8 +48,8 @@ class MonkSunSoulLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkSunSoulFeatures.SunShield())
         return data
 

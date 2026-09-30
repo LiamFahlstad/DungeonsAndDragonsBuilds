@@ -1,7 +1,7 @@
 from typing import TextIO
 
 from Core.Definitions import DiceRollCondition
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import DamageCalculator, Html, ItemSheetSettings
 
 from .Base import AbstractWeapon, UnarmedStrike
@@ -325,23 +325,19 @@ WEAPON_CARD_CSS = """/* ── Weapon entries ───────────�
 
 def _write_single_weapon(
     weapon: AbstractWeapon,
-    character_stat_block: CharacterStatBlock,
+    character: Character,
     file: TextIO,
     include_probability_tables: bool = False,
     has_mastery: bool = False,
 ):
-    attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(
-        character_stat_block
-    )
+    attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(character)
     attack_bonus_str = f"{attack_bonus_int:+}"
 
-    damage_bonus_int = weapon.calculate_damage_bonus_int(character_stat_block)
+    damage_bonus_int = weapon.calculate_damage_bonus_int(character)
     if weapon._damage_bonus_override is not None:
         damage_bonus_label = "fixed"
     else:
-        _, damage_bonus_label = weapon._calculate_ability_modifier_bonus(
-            character_stat_block
-        )
+        _, damage_bonus_label = weapon._calculate_ability_modifier_bonus(character)
     damage_roll_str = (
         f"{weapon.damage_roll.value} {damage_bonus_int:+} ({damage_bonus_label})"
     )
@@ -351,7 +347,7 @@ def _write_single_weapon(
         damage_roll_str += f" + {extra_damages}"
 
     proficient_label = (
-        "Proficient" if weapon.is_proficient(character_stat_block) else "Not proficient"
+        "Proficient" if weapon.is_proficient(character) else "Not proficient"
     )
 
     mastery_label = ""
@@ -375,10 +371,7 @@ def _write_single_weapon(
         f"<span class='wsep'>·</span>"
         f"{proficient_label}"
     )
-    if (
-        weapon.attack_roll_condition(character_stat_block)
-        == DiceRollCondition.DISADVANTAGE
-    ):
+    if weapon.attack_roll_condition(character) == DiceRollCondition.DISADVANTAGE:
         type_cell += (
             "<span class='wsep'>·</span>Attacks with Disadvantage (untrained armor)"
         )
@@ -404,15 +397,13 @@ def _write_single_weapon(
             ("Adv.", DamageCalculator.DiceRollCondition.ADVANTAGE),
             ("Disadv.", DamageCalculator.DiceRollCondition.DISADVANTAGE),
         ]
-        hit_probs_normal = weapon.calculate_hit_probabilities(character_stat_block)
+        hit_probs_normal = weapon.calculate_hit_probabilities(character)
         inner_header = "".join(
             f"<th class='whit-ac'>{ac}</th>" for ac, _ in hit_probs_normal
         )
         inner_rows = ""
         for label, cond in conditions:
-            hit_probs = weapon.calculate_hit_probabilities(
-                character_stat_block, condition=cond
-            )
+            hit_probs = weapon.calculate_hit_probabilities(character, condition=cond)
             cells = "".join(
                 f"<td class='whit-pct' data-pct='{round(round(prob * 100) / 5) * 5}'>{prob * 100:.0f}%</td>"
                 for _, prob in hit_probs
@@ -483,7 +474,7 @@ def _write_single_weapon(
 
 def write_weapons_to_file(
     weapons: list[AbstractWeapon],
-    character_stat_block: CharacterStatBlock,
+    character: Character,
     file: TextIO,
     include_probability_tables: bool = False,
     weapon_masteries: "list[AbstractWeapon] | None" = None,
@@ -497,7 +488,7 @@ def write_weapons_to_file(
     for weapon in weapons:
         _write_single_weapon(
             weapon,
-            character_stat_block,
+            character,
             file,
             include_probability_tables,
             has_mastery=weapon.has_mastery(weapon_masteries or []),

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockHexbladeFeatures,
@@ -19,8 +19,8 @@ class WarlockHexbladeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockHexbladeFeatures.HexbladeExpandedSpells())
         data.add_feature(WarlockHexbladeFeatures.HexbladesCurse())
         data.add_feature(WarlockHexbladeFeatures.HexWarrior())
@@ -32,8 +32,8 @@ class WarlockHexbladeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockHexbladeFeatures.AccursedSpecter())
         return data
 
@@ -43,8 +43,8 @@ class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
             data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
         )
@@ -57,8 +57,8 @@ class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
             data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
         )

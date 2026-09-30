@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererDivineSoulFeatures,
@@ -20,8 +20,8 @@ class SorcererDivineSoulLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         spellcasting: SorcererFeatures.Spellcasting = data.get_features_by_type(
             SorcererFeatures.Spellcasting
         )[0]
@@ -35,8 +35,8 @@ class SorcererDivineSoulLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDivineSoulFeatures.EmpoweredHealing())
         return data
 
@@ -46,8 +46,8 @@ class SorcererDivineSoulLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDivineSoulFeatures.AngelicForm())
         return data
 
@@ -57,8 +57,8 @@ class SorcererDivineSoulLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDivineSoulFeatures.UnearthlyRecovery())
         return data
 

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardIllusionistFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -49,8 +49,8 @@ class IllusionistWizardLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardIllusionistFeatures.IllusionSavant())
         data.add_feature(WizardIllusionistFeatures.ImprovedIllusions())
         data.add_spell(self.spell_1)
@@ -65,8 +65,8 @@ class IllusionistWizardLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -76,8 +76,8 @@ class IllusionistWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardIllusionistFeatures.PhantasmalCreatures())
         data.add_spell(ConjurationLevel2Spells.SUMMON_BEAST)
         data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
@@ -90,8 +90,8 @@ class IllusionistWizardLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -102,8 +102,8 @@ class IllusionistWizardLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -113,8 +113,8 @@ class IllusionistWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardIllusionistFeatures.IllusorySelf())
         return data
 
@@ -125,8 +125,8 @@ class IllusionistWizardLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -137,8 +137,8 @@ class IllusionistWizardLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -148,8 +148,8 @@ class IllusionistWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardIllusionistFeatures.IllusoryReality())
         return data
 
@@ -160,8 +160,8 @@ class IllusionistWizardLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -172,8 +172,8 @@ class IllusionistWizardLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 

@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 30  # Given by your species
 
@@ -34,7 +34,7 @@ class ChangelingInstincts(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         if len(self._choice.skills) == 2:
             skill_text = (
                 f"{self._choice.skills[0].value} and {self._choice.skills[1].value}"
@@ -55,7 +55,7 @@ class ShapeShifter(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "As an action, you can shape-shift to change your appearance and your voice. "
             "You determine the specifics of the changes, including your coloration, hair length, and sex. "
@@ -67,13 +67,11 @@ class ShapeShifter(Feature):
             "You stay in the new form until you take an action to revert to your true form."
         )
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return (
             "As an action, change your appearance and voice to appear as a playable species (Medium or Small size, same limb arrangement). "
             "Gain Advantage on Charisma checks while shifted. Revert as an action; clothing and equipment don't change."
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF

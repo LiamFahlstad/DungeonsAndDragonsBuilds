@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericDeathFeatures
 
@@ -17,8 +17,8 @@ class ClericDeathLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericDeathFeatures.BonusProficiency())
         data.add_feature(ClericDeathFeatures.Reaper())
         data.add_feature(ClericDeathFeatures.DeathDomainSpells())
@@ -31,8 +31,8 @@ class ClericDeathLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         touch_of_death: ClericDeathFeatures.TouchOfDeathChannelDivinity = (
             data.get_features_by_type(ClericDeathFeatures.TouchOfDeathChannelDivinity)[
                 0
@@ -47,8 +47,8 @@ class ClericDeathLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         reaper: ClericDeathFeatures.Reaper = data.get_features_by_type(
             ClericDeathFeatures.Reaper
         )[0]

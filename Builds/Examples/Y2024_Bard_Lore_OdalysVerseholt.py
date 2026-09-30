@@ -52,7 +52,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel9Spells,
     WizardLevel3Spells,
 )
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import Dulcimer, Horn, Lute
 
 

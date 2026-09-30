@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -31,7 +31,7 @@ class CelestialResistance(Feature):
         for resistance in self._resistances:
             resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Resistance to Necrotic damage and Radiant damage."
 
 
@@ -45,7 +45,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -53,7 +53,7 @@ class LightBearer(Feature):
     def __init__(self):
         super().__init__(name="Light Bearer", origin="Aasimar Trait")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You know the Light cantrip. Charisma is your spellcasting ability for it."
         )
@@ -68,17 +68,13 @@ class HealingHands(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest."
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -93,7 +89,7 @@ class CelestialRevelation(Feature):
             usage_tags=["damage", "buff", "control", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         text = (
             "Celestial Revelation. When you reach character level 3, you can transform as a Bonus Action using one of the options below (choose the option each time you transform). The transformation lasts for 1 minute or until you end it (no action required). Once you transform, you can’t do so again until you finish a Long Rest.\n"
             "Once on each of your turns before the transformation ends, you can deal extra damage to one target when you deal damage to it with an attack or a spell. The extra damage equals your Proficiency Bonus, and the extra damage’s type is either Necrotic for Necrotic Shroud or Radiant for Heavenly Wings and Inner Radiance.\n"
@@ -104,7 +100,7 @@ class CelestialRevelation(Feature):
         )
         return text
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        charisma_modifier = character_stat_block.get_charisma_modifier()
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def calculate_dc(self, character: Character) -> int:
+        charisma_modifier = character.get_charisma_modifier()
+        proficiency_bonus = character.get_proficiency_bonus()
         return 8 + charisma_modifier + proficiency_bonus

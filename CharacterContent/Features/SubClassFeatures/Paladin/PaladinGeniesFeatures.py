@@ -8,8 +8,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class ElementalSmite(Feature):
@@ -21,10 +21,10 @@ class ElementalSmite(Feature):
             usage_tags=["damage", "control", "buff"],
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and invoke one of the following effects.\n"
             "Dao's Crush. Earth rises up around the target of your Divine Smite. The target has the Grappled condition (escape DC equal to your spell save DC). While Grappled, the target has the Restrained condition.\n"
@@ -34,9 +34,7 @@ class ElementalSmite(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Cast Divine Smite"),
             ("Cost", "1 Channel Divinity use"),
@@ -65,7 +63,7 @@ class GenieSpells(Feature):
             name="Genie Spells", origin="Oath of the Noble Genies Paladin Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you reach a Paladin level specified in the Genie Spells table, you thereafter always have the listed spells prepared\n"
             "Genie Spells\n"
@@ -93,12 +91,10 @@ class GeniesSplendor(Feature):
     def apply(self, effects: Effects):
         self._ac.apply(effects)
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers. You can use a Shield and still gain this benefit.\n"
             "You also gain proficiency in one of the following skills of your choice: Acrobatics, Intimidation, Performance, or Persuasion."
@@ -114,12 +110,10 @@ class AuraOfElementalShielding(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Choose one of the following damage types: Acid, Cold, Fire, Lightning, or Thunder. You and your allies have Resistance to that damage type while in your Aura of Protection.\n"
             "At the start of each of your turns, you can change the damage type affected by this feature to one of the other listed options (no action required)."
@@ -141,33 +135,27 @@ class ElementalRebuke(Feature):
             ),
         )
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.calculate_difficulty_class()
+    def calculate_dc(self, character: Character) -> int:
+        return character.calculate_difficulty_class()
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return max(1, character_stat_block.get_charisma_modifier())
+    def number_of_uses(self, character: Character) -> int:
+        return max(1, character.get_charisma_modifier())
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character_stat_block)
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        uses = self.number_of_uses(character)
         return [
             ("Trigger", "You are hit by an attack roll"),
             ("Action", "Reaction"),
@@ -194,12 +182,10 @@ class NobleScion(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "As a Bonus Action, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).\n"
             "Flight. You have a Fly Speed of 60 feet and can hover.\n"
@@ -207,9 +193,7 @@ class NobleScion(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus Action"),
             ("Duration", "10 minutes (or until ended)"),

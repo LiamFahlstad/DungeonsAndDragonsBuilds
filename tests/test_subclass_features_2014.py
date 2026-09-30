@@ -19,8 +19,8 @@ import pytest
 
 from RunCharacterCreator import ExampleSelector
 
-from Builds.CharacterSheetAccumulator import CharacterSheetData
-from StatBlocks.ClassLevels import ClassLevels
+from Model.Character import Character
+from Model.ClassLevels import ClassLevels
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.SubClasses2014.ClericDeath import ClericDeathLevel3
 from CharacterContent.Classes.SubClasses2014.ClericForge import (
@@ -114,7 +114,7 @@ def features_at(
     whose only fact is that `character_class` is at `class_level`, mirroring
     what BaseClassLevelFeatures.add_features does for a single level entry
     without needing a full StarterClassBuilder."""
-    data = CharacterSheetData(
+    data = Character(
         class_levels=ClassLevels(level_per_class={character_class: class_level})
     )
     blf = ClassBuilder.BaseClassLevelFeatures(
@@ -354,7 +354,7 @@ class TestPromisedPassiveBonusNeverApplied:
 # ── character_level vs get_class_level: multiclass scaling bugs ───────────────
 #
 # All four features below scale off "your <class> level" per their own prose,
-# but read character_stat_block.character_level (the *total* level across every
+# but read character.character_level (the *total* level across every
 # class) instead of get_class_level(<that class>). Multiclassing is required to
 # tell the two apart; each test picks a dip that keeps the class level low while
 # character_level is high, so a fix would change the result.
@@ -403,8 +403,8 @@ class TestExtendFeatureWiring:
     level-gating: a level-10 Rune Knight has Great Stature but not Runic
     Juggernaut yet."""
 
-    def _build_up_to(self, fighter_level: int) -> CharacterSheetData:
-        data = CharacterSheetData(
+    def _build_up_to(self, fighter_level: int) -> Character:
+        data = Character(
             class_levels=ClassLevels(
                 level_per_class={CharacterClass.FIGHTER: fighter_level}
             )
@@ -516,7 +516,7 @@ class TestPromisedProficienciesGranted:
 
     def test_college_of_swords_bonus_proficiencies(self, make_character):
         # "...you gain proficiency with medium armor and the scimitar."
-        data = CharacterSheetData(
+        data = Character(
             class_levels=ClassLevels(level_per_class={CharacterClass.BARD: 3})
         )
         BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)

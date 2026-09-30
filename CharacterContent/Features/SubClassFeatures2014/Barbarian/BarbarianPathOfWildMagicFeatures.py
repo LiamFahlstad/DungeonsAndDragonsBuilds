@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -28,7 +28,7 @@ class MagicAwareness(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you choose this path at 3rd level, as an action, you can open your awareness to the presence of concentrated magic. Until the end of your next turn, you know the location of any spell or magic item within 60 feet of you that isn't behind total cover. When you sense a spell, you learn which school of magic it belongs to.\n"
             "\n"
@@ -36,18 +36,14 @@ class MagicAwareness(Feature):
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        return character_stat_block.get_proficiency_bonus()
+    def number_of_uses(self, character: Character) -> int:
+        return character.get_proficiency_bonus()
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        proficiency_bonus = character.get_proficiency_bonus()
         return [
             ("Action", "Action"),
             ("Range", "60 feet (not through total cover)"),
@@ -66,11 +62,9 @@ class WildSurge(Feature):
             activation=FeatureActivation(duration="Until Your Rage Ends"),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
-        con_mod = character_stat_block.get_ability_modifier(
-            Definitions.Ability.CONSTITUTION
-        )
+    def get_description(self, character: Character) -> str:
+        proficiency_bonus = character.get_proficiency_bonus()
+        con_mod = character.get_ability_modifier(Definitions.Ability.CONSTITUTION)
         dc = 8 + proficiency_bonus + con_mod
         description = (
             "Also at 3rd level, the magical energy roiling inside you sometimes erupts from you. When you enter your rage, roll on the Wild Magic table to determine the magical effect produced.\n"
@@ -102,8 +96,8 @@ class BolsteringMagic(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        proficiency_bonus = character_stat_block.get_proficiency_bonus()
+    def get_description(self, character: Character) -> str:
+        proficiency_bonus = character.get_proficiency_bonus()
         description = (
             "Beginning at 6th level, you can harness your wild magic to bolster yourself or a companion. As an action, you can touch one creature (which can be yourself) and confer one of the following benefits of your choice to that creature:\n"
             "\n"
@@ -130,11 +124,11 @@ class UnstableBacklash(Feature):
             activation=FeatureActivation(action_type="reaction"),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "At 10th level, when you are imperiled during your rage, the magic within you can lash out; immediately after you take damage or fail a saving throw while raging, you can use your reaction to roll on the Wild Magic table and immediately produce the effect rolled. This effect replaces your current Wild Magic effect."
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return "When you take damage or fail a save while raging, use a Reaction to roll on the Wild Magic table and produce that effect (replaces your current effect)."
 
 
@@ -146,6 +140,6 @@ class ControlledSurge(Feature):
             usage_tags=["damage", "heal", "buff", "control", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "At 14th level, whenever you roll on the Wild Magic table, you can roll the die twice and choose which of the two effects to unleash. If you roll the same number on both dice, you can ignore the number and choose any effect on the table."
         return description

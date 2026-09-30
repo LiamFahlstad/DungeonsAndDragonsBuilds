@@ -16,8 +16,8 @@ from CharacterContent.Features.Core.Improvements import (
     SpeedBonus,
 )
 from Core.Definitions import Ability, Skill
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -39,7 +39,7 @@ class Rage(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
             "    * Casting Time: Bonus Action\n"
@@ -60,7 +60,7 @@ class Rage(Feature):
         return description
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         rage_uses_by_level = {}
         rage_damage_by_level = {}
@@ -94,13 +94,11 @@ class Rage(Feature):
             ("Rage Damage", damage_steps),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        barbarian_level = character_stat_block.get_class_level(
+    def number_of_uses(self, character: Character) -> int:
+        barbarian_level = character.get_class_level(
             Definitions.CharacterClass.BARBARIAN
         )
         if barbarian_level >= 17:
@@ -114,9 +112,7 @@ class Rage(Feature):
         else:
             return 2
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -126,7 +122,7 @@ class UnarmoredDefenseText(Feature):
             name="Unarmored Defense", origin="Barbarian Level 1", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit."
         return description
 
@@ -148,14 +144,14 @@ class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Barbarian Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your training with weapons allows you to use the mastery properties of two kinds of Simple or Martial Melee weapons of your choice, such as Greataxes and Handaxes. Whenever you finish a Long Rest, you can practice weapon drills and change one of those weapon choices.\n"
             "When you reach certain Barbarian levels, you gain the ability to use the mastery properties of more kinds of weapons, as shown in the Weapon Mastery column of the Barbarian Features table."
         )
         return description
 
-    def get_concise_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_concise_description(self, character: Character) -> str:
         return (
             "You master 2 kinds of Simple or Martial Melee weapons of your choice and can "
             "change one choice on long rest. At higher Barbarian levels, you gain the ability "
@@ -167,7 +163,7 @@ class DangerSenseText(Feature):
     def __init__(self):
         super().__init__(name="Danger Sense", origin="Barbarian Level 2")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain an uncanny sense of when things aren't as they should be, giving you an edge when you dodge perils. You have Advantage on Dexterity saving throws unless you have the Incapacitated condition."
         return description
 
@@ -190,13 +186,11 @@ class RecklessAttack(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "First attack roll of your turn"),
             ("Benefit", "Advantage on attack rolls using Strength"),
@@ -204,9 +198,7 @@ class RecklessAttack(Feature):
             ("Duration", "Until start of your next turn"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -245,7 +237,7 @@ class PrimalKnowledge(Feature):
     def __init__(self):
         super().__init__(name="Primal Knowledge", origin="Barbarian Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "In addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses."
         return description
 
@@ -254,7 +246,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Barbarian Level 5")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -265,15 +257,13 @@ class FastMovement(Feature):
             name="Fast Movement", origin="Barbarian Level 5", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your speed increases by 10 feet while you aren't wearing Heavy armor."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -309,15 +299,13 @@ class FeralInstinct(Feature):
     def apply(self, effects: Effects):
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your instincts are so honed that you have Advantage on Initiative rolls."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -327,13 +315,11 @@ class InstinctivePounce(Feature):
             name="Instinctive Pounce", origin="Barbarian Level 7", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -345,7 +331,7 @@ class BrutalStrike(Feature):
             usage_tags=["damage", "control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "If you use Reckless Attack, you can forgo any Advantage on one Strength-based attack roll of your choice on your turn. The chosen attack roll mustn't have Disadvantage. If the chosen attack roll hits, the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike, and you can cause one Brutal Strike effect of your choice.\n"
             "You have the following effect options.\n"
@@ -354,9 +340,7 @@ class BrutalStrike(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -366,17 +350,15 @@ class RelentlessRage(Feature):
             name="Relentless Rage", origin="Barbarian Level 11", usage_tags=["heal"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your Rage can keep you fighting despite grievous wounds. If you drop to 0 Hit Points while your Rage is active and don't die outright, you can make a DC 10 Constitution saving throw. If you succeed, your Hit Points instead change to a number equal to twice your Barbarian level.\n"
             "Each time you use this feature after the first, the DC increases by 5. When you finish a Short or Long Rest, the DC resets to 10."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        barbarian_level = character_stat_block.get_class_level(
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        barbarian_level = character.get_class_level(
             Definitions.CharacterClass.BARBARIAN
         )
         return [
@@ -389,9 +371,7 @@ class RelentlessRage(Feature):
             ("Scaling", "DC increases by 5 each use; resets on Short or Long Rest"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -403,7 +383,7 @@ class ImprovedBrutalStrikeLevel13(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You have honed new ways to attack furiously. The following effects are now among your Brutal Strike options.\n"
             "Staggering Blow. The target has Disadvantage on the next saving throw it makes, and it can’t make Opportunity Attacks until the start of your next turn.\n"
@@ -411,9 +391,7 @@ class ImprovedBrutalStrikeLevel13(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -421,21 +399,17 @@ class PersistentRage(Feature):
     def __init__(self):
         super().__init__(name="Persistent Rage", origin="Barbarian Level 15")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you roll Initiative, you can regain all expended uses of Rage. After you regain uses of Rage in this way, you can’t do so again until you finish a Long Rest.\n"
             "In addition, your Rage is so fierce that it now lasts for 10 minutes without you needing to do anything to extend it from round to round. Your Rage ends early if you have the Unconscious condition (not just the Incapacitated condition) or don Heavy armor."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -447,13 +421,11 @@ class ImprovedBrutalStrikeLevel17(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -463,7 +435,7 @@ class IndomitableMight(Feature):
             name="Indomitable Might", origin="Barbarian Level 18", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "If your total for a Strength check or Strength saving throw is less than your Strength score, you can use that score in place of the total."
         return description
 
@@ -488,7 +460,7 @@ class PrimalChampion(Feature):
     def apply(self, effects: Effects):
         self._bonuses.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You embody primal power. Your Strength and Constitution scores increase by 4, to a maximum of 25."
         return description
 

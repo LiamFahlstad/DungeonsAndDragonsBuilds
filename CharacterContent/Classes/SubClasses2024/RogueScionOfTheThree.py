@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import (
     RogueScionOfTheThreeFeatures,
@@ -20,8 +20,8 @@ class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueScionOfTheThreeFeatures.Bloodthirst())
         data.add_feature(RogueScionOfTheThreeFeatures.DreadAllegiance())
         return data
@@ -32,8 +32,8 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
             RogueFeatures.SneakAttack
         )[0]
@@ -46,8 +46,8 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         bloodthirst: RogueScionOfTheThreeFeatures.Bloodthirst = (
             data.get_features_by_type(RogueScionOfTheThreeFeatures.Bloodthirst)[0]
         )
@@ -60,8 +60,8 @@ class RogueScionOfTheThreeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(RogueScionOfTheThreeFeatures.DreadIncarnate())
         return data
 

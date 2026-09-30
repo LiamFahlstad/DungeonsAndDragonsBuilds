@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericTwilightFeatures
 
@@ -17,8 +17,8 @@ class ClericTwilightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericTwilightFeatures.BonusProficiencies())
         data.add_feature(ClericTwilightFeatures.TwilightDomainSpells())
         data.add_feature(ClericTwilightFeatures.EyesOfNight())
@@ -32,8 +32,8 @@ class ClericTwilightLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericTwilightFeatures.StepsOfNight())
         return data
 
@@ -43,8 +43,8 @@ class ClericTwilightLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         twilight_sanctuary: ClericTwilightFeatures.TwilightSanctuaryChannelDivinity = (
             data.get_features_by_type(
                 ClericTwilightFeatures.TwilightSanctuaryChannelDivinity

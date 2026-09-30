@@ -65,7 +65,7 @@ ABILITY_SCORE_MODES = (
 
 
 def _point_buy_cost(score: int) -> int:
-    """Mirrors StatBlocks.AbilityScores.PointBuyAbilityScores._point_cost."""
+    """Mirrors Model.AbilityScores.PointBuyAbilityScores._point_cost."""
     if score <= 13:
         return score - 8
     return 5 + 2 * (score - 13)

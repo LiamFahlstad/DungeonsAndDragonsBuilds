@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.SubClassFeatures.Fighter import (
@@ -20,8 +20,8 @@ class FighterEldritchKnightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterEldritchKnightFeatures.EldritchKnightSpellcasting())
         data.add_feature(FighterEldritchKnightFeatures.WarBond())
         return data
@@ -32,8 +32,8 @@ class FighterEldritchKnightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterEldritchKnightFeatures.WarMagic())
         return data
 
@@ -43,8 +43,8 @@ class FighterEldritchKnightLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterEldritchKnightFeatures.EldritchStrike())
         return data
 
@@ -54,8 +54,8 @@ class FighterEldritchKnightLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(FighterEldritchKnightFeatures.ArcaneCharge())
         return data
 
@@ -65,8 +65,8 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         war_magic: FighterEldritchKnightFeatures.WarMagic = data.get_features_by_type(
             FighterEldritchKnightFeatures.WarMagic
         )[0]

@@ -60,7 +60,7 @@ from CharacterContent.Items import Armor, Weapons
 #   Gnome, Orc, Aasimar, Changeling, Dhampir, Goliath, Hexblood, Kalashtar, Khoravar,
 #   Lupin, Reborn, Shifter, Warforged
 from CharacterContent.Species import Dwarf
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 # Your class's skill choices are a plain list of Skill members (see `skills=`
 # below) - CharacterContent/Features/ClassFeatures/ClassProficiencies.py's

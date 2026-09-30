@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockArchfeyFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -27,8 +27,8 @@ class WarlockArchfeyLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockArchfeyFeatures.ArchfeySpells())
         data.add_feature(WarlockArchfeyFeatures.StepsOfTheFey())
         data.add_spell(BardLevel1Spells.FAERIE_FIRE)
@@ -44,8 +44,8 @@ class WarlockArchfeyLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel3Spells.BLINK)
         data.add_spell(BardLevel3Spells.PLANT_GROWTH)
         return data
@@ -56,8 +56,8 @@ class WarlockArchfeyLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         steps_of_the_fey: WarlockArchfeyFeatures.StepsOfTheFey = (
             data.get_features_by_type(WarlockArchfeyFeatures.StepsOfTheFey)[0]
         )
@@ -70,8 +70,8 @@ class WarlockArchfeyLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel4Spells.DOMINATE_BEAST)
         data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         return data
@@ -82,8 +82,8 @@ class WarlockArchfeyLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel5Spells.DOMINATE_PERSON)
         data.add_spell(SorcererLevel5Spells.SEEMING)
         return data
@@ -94,8 +94,8 @@ class WarlockArchfeyLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockArchfeyFeatures.BeguilingDefenses())
         return data
 
@@ -105,8 +105,8 @@ class WarlockArchfeyLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockArchfeyFeatures.BewitchingMagic())
         return data
 

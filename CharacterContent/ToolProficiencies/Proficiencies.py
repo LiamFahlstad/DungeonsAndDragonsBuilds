@@ -4,7 +4,7 @@ from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class ToolProficiency(Feature):
@@ -26,7 +26,7 @@ class ToolProficiency(Feature):
         self.ability = ability
         self.craftables = craftables if craftables is not None else []
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
+    def get_description(self, character: Character) -> str | None:
         parts = [
             f"Add your proficiency bonus to {self.ability.value} checks made with {self.name}."
         ]

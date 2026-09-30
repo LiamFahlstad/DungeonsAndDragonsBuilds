@@ -12,8 +12,8 @@ from CharacterContent.Features.Core.Improvements import (
     WeaponAttackBonus,
     WeaponDamageBonus,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 class FightingStyle(ABC):
@@ -33,7 +33,7 @@ class FightingStyle(ABC):
 class FightStyleModifier(FightingStyle):
     """A fighting style with a computed effect. Like any other effect, apply()
     only records facts on the stat block - weapon bonuses included, which go
-    to character_stat_block.weapon_bonuses instead of into the weapons."""
+    to character.weapon_bonuses instead of into the weapons."""
 
     @abstractmethod
     def apply(self, effects: Effects):

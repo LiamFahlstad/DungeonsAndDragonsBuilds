@@ -11,7 +11,7 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
 ## The short version
 
 1. **`apply()` only records facts.** A proficiency, a +1, "add WIS to AC", "+10 speed unless in
-   Heavy armor", "+2 STR to a maximum of 20". It gets `Effects` (`StatBlocks/Effects.py`), a
+   Heavy armor", "+2 STR to a maximum of 20". It gets `Effects` (`Model/Effects.py`), a
    write-only record, so it *can't* read a stat: not a score, not a proficiency, not a level.
 2. **The stat block works every value out when it's read**, from everything recorded. So nothing
    can depend on what happened to apply first.
@@ -29,19 +29,18 @@ then evaluated once in the rules' own dependency order. Here `Effects` is the le
 
 ## The pipeline
 
-There is one object, `Character` (`StatBlocks/Character.py`). It holds the player's decisions and
+There is one object, `Character` (`Model/Character.py`). It holds the player's decisions and
 the sources they grant (features, spells, fighting styles, `inventory`, base ability scores and
 speed), and answers every query (`calculate_armor_class()`, `get_skill_modifier()`, ...).
-`CharacterStatBlock` and `CharacterSheetData` are aliases of it, kept so existing imports work.
 
 Evaluation is internal and lazy. The first query after a change builds a fresh `Effects` record
-(`StatBlocks/Effects.py`: one part per concern, see below), starting from a copy of the base
+(`Model/Effects.py`: one part per concern, see below), starting from a copy of the base
 ability scores, the base speed and the class spellcasting ability, then:
 
 | # | Stage | What runs |
 |---|---|---|
 | 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `Effects` view of fresh `Parts` |
-| 2 | **Validate** | Only in `validate()` (which `setup_character_stat_block()` calls): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
+| 2 | **Validate** | Only in `validate()`, the single entry point (the writers and the combat UI call it first): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
 weapons (Archery's +2 to attack rolls with Ranged weapons, Bracers of Archery's +2 damage with
@@ -54,8 +53,6 @@ The evaluation is cached under a version key: the character's own version (bumpe
 inventory's version (bumped by every gear change), and a global count of feature extensions.
 `extend_feature()` can't reach the character a feature was granted to, so it bumps that count
 (`note_feature_extended()`) and every character re-evaluates on its next query.
-`setup_character_stat_block()` is kept for existing callers: it validates and returns the
-character itself.
 
 ## How each value is worked out on read
 
@@ -162,7 +159,7 @@ other rendering methods still get the `Character`, and may read anything.
 
 ## The parts
 
-`Effects` (`StatBlocks/Effects.py`) holds one part per concern (`StatBlocks/*.py`), and
+`Effects` (`Model/Effects.py`) holds one part per concern (`Model/*.py`), and
 `Character` exposes each part under its own name, plus a few queries that combine several of them
 (untrained-armor disadvantage, the final AC, `warnings`, `validate()`). Each part owns its own state *and* the queries on that
 state; a part never reaches back into the character, so a value from another part (or the finished
@@ -170,7 +167,7 @@ character, for formula evaluation) is always passed in as an argument, e.g.
 `HitPoints.calculate(class_levels, constitution_modifier, character)` and
 `Initiative.total(proficiency_bonus, character)`. No part imports `CharacterContent`.
 
-`Bonuses` (`StatBlocks/Bonuses.py`) is a small value object - flat values and formulas
+`Bonuses` (`Model/Bonuses.py`) is a small value object - flat values and formulas
 (`DerivedBonus`), each with a source label - shared by every part that is "a bonus total plus
 sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `SavingThrows` each hold
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
@@ -183,11 +180,11 @@ flat-list/formula-list/source-list shape themselves.
 | `defenses` (`Defenses`) | Damage resistance/immunity, condition immunity, each with sources |
 | `senses` (`Senses`) | Sense ranges (`.ranges`) and "or extend" grants |
 | `ability_requirements` (`AbilityRequirements`) | Ability score minimums (e.g. an armor's Strength) plus the multiclass ability-score prerequisites, both checked by `validate(abilities, class_levels)` |
-| `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total (`character_stat_block.calculate_initiative()` / `.initiative_roll_condition` combine it with the Dexterity modifier and untrained-armor Disadvantage) |
+| `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total (`character.calculate_initiative()` / `.initiative_roll_condition` combine it with the Dexterity modifier and untrained-armor Disadvantage) |
 | `worn_armor` (`WornArmor`) | The worn body armor's type/name and whether a Shield is wielded - what untrained-armor Disadvantage, spellcasting warnings, Defense, Unarmored Movement and `ArmorClass.calculate` all read |
 | `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `calculate(abilities, character, is_wielding_shield, has_shield_training)` |
 | `hit_points` (`HitPoints`) | A `Bonuses` total; `calculate(class_levels, constitution_modifier, character)` |
-| `speed` (`Speed`) | Base walking speed and a `Bonuses` total (`character_stat_block.calculate_speed()`) |
+| `speed` (`Speed`) | Base walking speed and a `Bonuses` total (`character.calculate_speed()`) |
 | `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(strength_modifier)` / `total(strength_modifier)` also compute the dynamic "Person" base |
 | `spellcasting` (`Spellcasting`) | Spell casting ability, registered casters, spell save DC bonus; `spell_slots()`/`pact_magic_slots()` also take `class_levels` |
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |

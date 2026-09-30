@@ -1,6 +1,6 @@
 """
 End-to-end tests for CharacterBuilder.build() and the resulting
-CharacterSheetData / CharacterStatBlock.
+Character / Character.
 
 The builders under test are the hand-written scenario builds in Builds/Tests/
 (legacy scripts, not pytest files themselves). Each is built once per module.
@@ -9,7 +9,7 @@ The builders under test are the hand-written scenario builds in Builds/Tests/
 import pytest
 
 from Builds.CharacterBuilder import CharacterBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Builds.Tests.MulticlassTest import MulticlassTestCharacterBuilder
 from Builds.Tests.SpellSlotTestPaladin4Wizard3 import (
     SpellSlotTestPaladin4Wizard3CharacterBuilder,
@@ -38,7 +38,7 @@ def built():
     results = {}
     for builder_class in ALL_BUILDERS:
         data = builder_class().build()
-        results[builder_class] = (data, data.setup_character_stat_block())
+        results[builder_class] = (data, data.validate())
     return results
 
 
@@ -46,7 +46,7 @@ class TestBuildBasics:
     @pytest.mark.parametrize("builder_class", ALL_BUILDERS)
     def test_build_returns_complete_sheet(self, built, builder_class):
         data, character = built[builder_class]
-        assert isinstance(data, CharacterSheetData)
+        assert isinstance(data, Character)
         assert data.character_name
         assert data.character_subclass
         assert data.base_class is not None
@@ -60,7 +60,7 @@ class TestBuildBasics:
 
     def test_stat_block_is_cached(self, built):
         data, character = built[SpellSlotTestWizard5CharacterBuilder]
-        assert data.setup_character_stat_block() is character
+        assert data.validate() is character
 
     def test_builder_is_character_builder(self):
         for builder_class in ALL_BUILDERS:
@@ -196,16 +196,16 @@ class TestRebuildIsIdempotent:
 
     def test_same_builder_built_twice(self):
         builder = SpellSlotTestPaladin5CharacterBuilder()
-        first = builder.build().setup_character_stat_block()
+        first = builder.build().validate()
         first_scores = {a: first.get_ability_score(a) for a in Ability}
-        second = builder.build().setup_character_stat_block()
+        second = builder.build().validate()
         assert {a: second.get_ability_score(a) for a in Ability} == first_scores
 
     def test_setup_after_mutation(self):
         data = SpellSlotTestPaladin5CharacterBuilder().build()
-        before = data.setup_character_stat_block().get_ability_score(Ability.STRENGTH)
+        before = data.validate().get_ability_score(Ability.STRENGTH)
         data.add_item(Items.Torch(), 1)
-        after = data.setup_character_stat_block().get_ability_score(Ability.STRENGTH)
+        after = data.validate().get_ability_score(Ability.STRENGTH)
         assert after == before
 
     def test_built_sheet_has_its_own_inventory(self):
@@ -227,7 +227,7 @@ class TestRebuildIsIdempotent:
         bow = Weapons.Longbow()
         data.add_weapon(bow)
         data.add_fighting_style(FightingStyles.Archery())
-        data.setup_character_stat_block()
+        data.validate()
         data.add_item(Items.Torch(), 1)
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert sum(b for b, _ in bow.get_attack_roll_bonuses(character)) == 2

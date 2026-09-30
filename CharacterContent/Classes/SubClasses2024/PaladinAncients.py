@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinAncientsFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
@@ -27,8 +27,8 @@ class PaladinAncientsLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
@@ -43,8 +43,8 @@ class PaladinAncientsLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ConjurationLevel2Spells.MISTY_STEP)
         data.add_spell(DruidLevel2Spells.MOONBEAM)
         return data
@@ -55,8 +55,8 @@ class PaladinAncientsLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
@@ -69,8 +69,8 @@ class PaladinAncientsLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(RangerLevel3Spells.PLANT_GROWTH)
         data.add_spell(RangerLevel3Spells.PROTECTION_FROM_ENERGY)
         return data
@@ -81,8 +81,8 @@ class PaladinAncientsLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel4Spells.ICE_STORM)
         data.add_spell(WizardLevel4Spells.STONESKIN)
         return data
@@ -93,8 +93,8 @@ class PaladinAncientsLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinAncientsFeatures.UndyingSentinel())
         return data
 
@@ -104,8 +104,8 @@ class PaladinAncientsLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(RangerLevel5Spells.COMMUNE_WITH_NATURE)
         data.add_spell(RangerLevel5Spells.TREE_STRIDE)
         return data
@@ -116,8 +116,8 @@ class PaladinAncientsLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )

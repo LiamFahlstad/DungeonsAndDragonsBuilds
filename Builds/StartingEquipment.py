@@ -1,6 +1,6 @@
 """A character's Starting Equipment (and the gold left over after buying it),
 worked out from the starting class's default gear and the build's choices.
-Lives in the builder layer, not in StatBlocks/Inventory.py, because it has to
+Lives in the builder layer, not in Model/Inventory.py, because it has to
 tell weapons from armor and make an Unarmed Strike - the model package never
 imports CharacterContent at runtime."""
 
@@ -8,7 +8,7 @@ from typing import Optional
 
 from CharacterContent.Items import Armor, Items, Packs, Weapons
 from Core.Definitions import CharacterClass
-from StatBlocks.Inventory import EquipmentEntry, Inventory
+from Model.Inventory import EquipmentEntry, Inventory
 
 # Each class's flat starting gold - the last "Choose A/B/..." alternative in
 # its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.

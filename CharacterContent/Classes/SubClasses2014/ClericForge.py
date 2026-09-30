@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericForgeFeatures
 
@@ -17,8 +17,8 @@ class ClericForgeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericForgeFeatures.BonusProficiencies())
         data.add_feature(ClericForgeFeatures.BlessingOfTheForge())
         data.add_feature(ClericForgeFeatures.ForgeDomainSpells())
@@ -31,8 +31,8 @@ class ClericForgeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(ClericForgeFeatures.SoulOfTheForge())
         return data
 
@@ -42,8 +42,8 @@ class ClericForgeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         soul_of_the_forge: ClericForgeFeatures.SoulOfTheForge = (
             data.get_features_by_type(ClericForgeFeatures.SoulOfTheForge)[0]
         )

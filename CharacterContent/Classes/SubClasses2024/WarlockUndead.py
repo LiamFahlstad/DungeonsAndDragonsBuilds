@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockUndeadFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -28,8 +28,8 @@ class WarlockUndeadLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockUndeadFeatures.UndeadSpells())
         data.add_feature(WarlockUndeadFeatures.FormOfDread())
         data.add_spell(WarlockLevel1Spells.BANE)
@@ -44,8 +44,8 @@ class WarlockUndeadLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(BardLevel3Spells.SPEAK_WITH_DEAD)
         data.add_spell(WarlockLevel3Spells.SUMMON_UNDEAD)
         return data
@@ -56,8 +56,8 @@ class WarlockUndeadLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockUndeadFeatures.GraveTouched())
         return data
 
@@ -67,8 +67,8 @@ class WarlockUndeadLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         data.add_spell(BardLevel4Spells.PHANTASMAL_KILLER)
         return data
@@ -79,8 +79,8 @@ class WarlockUndeadLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(DruidLevel5Spells.ANTILIFE_SHELL)
         data.add_spell(SorcererLevel5Spells.CLOUDKILL)
         return data
@@ -91,8 +91,8 @@ class WarlockUndeadLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockUndeadFeatures.NecroticHusk())
         return data
 
@@ -102,8 +102,8 @@ class WarlockUndeadLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         form_of_dread: WarlockUndeadFeatures.FormOfDread = data.get_features_by_type(
             WarlockUndeadFeatures.FormOfDread
         )[0]

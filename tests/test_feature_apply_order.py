@@ -66,8 +66,8 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 
 
 def _source_bonus(character, skill, source):
@@ -173,7 +173,7 @@ def test_wisdom_skill_bonuses_use_final_wisdom(name):
     # Regression: four example Druids printed Primal Order's Arcana bonus
     # from their level-1 Wisdom (+3) instead of their final Wisdom (+5).
     data = type(ALL_BUILDS[name])().build()
-    character = data.setup_character_stat_block()
+    character = data.validate()
     expected = max(1, character.get_ability_modifier(Ability.WISDOM))
     for feature in data.features:
         skill = _WISDOM_SKILL_BONUS_FEATURES.get(feature.name)
@@ -187,7 +187,7 @@ def test_wisdom_skill_bonuses_use_final_wisdom(name):
 
 
 def _stats(data):
-    cs = data.setup_character_stat_block()
+    cs = data.validate()
     return {
         "scores": [cs.get_ability_score(a) for a in Ability],
         "ac": cs.calculate_armor_class(),
@@ -451,7 +451,7 @@ class TestExpertiseRequirement:
     def _data_and_unproficient_skill(self):
         data = type(ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"])()
         data = data.build()
-        character = data.setup_character_stat_block()
+        character = data.validate()
         skill = next(s for s in Skill if not character.is_proficient_in_skill(s))
         return data, skill
 
@@ -459,7 +459,7 @@ class TestExpertiseRequirement:
         data, skill = self._data_and_unproficient_skill()
         data.add_feature(_GrantExpertise(skill))
         with pytest.raises(ValueError, match="unproficient skill"):
-            data.setup_character_stat_block()
+            data.validate()
 
     def test_proficiency_granted_after_the_expertise_satisfies_it(self):
         # e.g. a class's Expertise pick relying on a species proficiency,
@@ -467,7 +467,7 @@ class TestExpertiseRequirement:
         data, skill = self._data_and_unproficient_skill()
         data.add_feature(_GrantExpertise(skill))
         data.add_feature(_GrantProficiency(skill))
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert character.has_expertise_in_skill(skill)
 
 
@@ -477,18 +477,16 @@ class TestExtensionsApply:
         # an extension of Soul of the Forge, and extensions were render-only,
         # so its fire immunity silently never applied.
         data = type(ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"])()
-        character = data.build().setup_character_stat_block()
+        character = data.build().validate()
         assert character.is_immune_to_damage(DamageType.FIRE)
 
     def test_extending_after_setup_refreshes_the_cached_stat_block(self):
         data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
         data = data.build()
-        assert not data.setup_character_stat_block().is_immune_to_damage(
-            DamageType.FIRE
-        )
+        assert not data.validate().is_immune_to_damage(DamageType.FIRE)
         # extend_feature() can't invalidate the cache itself.
         data.features[0].extend_feature(ClericForgeFeatures.SaintOfForgeAndFire())
-        assert data.setup_character_stat_block().is_immune_to_damage(DamageType.FIRE)
+        assert data.validate().is_immune_to_damage(DamageType.FIRE)
 
 
 def test_dropped_gear_does_not_leave_bonuses_on_weapons():
@@ -504,7 +502,7 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
 
     def longbow_damage_bonuses():
         data = builder.build()
-        character = data.setup_character_stat_block()
+        character = data.validate()
         bow = next(w for w in data.weapons if w.name == "Longbow")
         return bow.get_damage_roll_bonuses(character)
 
@@ -515,7 +513,7 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
 
 # ── Guard: apply() gets a write-only record ──────────────────────────────────
 # An effect can't read a stat that other effects may still change, because
-# apply() never sees one: it gets Effects (StatBlocks/Effects.py), which can
+# apply() never sees one: it gets Effects (Model/Effects.py), which can
 # only record. A read inside any apply() fails every build that uses it
 # (tests/test_all_builds.py builds them all), so there is nothing to allow-list
 # and nothing to instrument - only the shape of the record to pin down.
@@ -535,7 +533,7 @@ def test_effects_can_only_record():
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
 def test_evaluation_passes_apply_the_write_only_record(name, monkeypatch):
     received = []
-    real_iter = CharacterStatBlock.iter_stat_effects
+    real_iter = Character.iter_stat_effects
 
     class _Spy:
         def apply(self, effects):
@@ -544,8 +542,8 @@ def test_evaluation_passes_apply_the_write_only_record(name, monkeypatch):
     def iter_with_spy(self, features=None):
         return [*real_iter(self, features), _Spy()]
 
-    monkeypatch.setattr(CharacterStatBlock, "iter_stat_effects", iter_with_spy)
-    type(ALL_BUILDS[name])().build().setup_character_stat_block()
+    monkeypatch.setattr(Character, "iter_stat_effects", iter_with_spy)
+    type(ALL_BUILDS[name])().build().validate()
     assert received and all(type(r) is Effects for r in received)
 
 
@@ -590,10 +588,10 @@ class TestProficienciesResolveOnRead:
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
         longbow = Weapons.Longbow()
         data.add_weapon(longbow)
-        assert not longbow.is_proficient(data.setup_character_stat_block())
+        assert not longbow.is_proficient(data.validate())
         # Granted after the weapon was added - no longer too late.
         data.add_feature(_GrantMartialWeapons())
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert longbow.is_proficient(character)
         assert (
             WeaponProficiency.MARTIAL
@@ -604,7 +602,7 @@ class TestProficienciesResolveOnRead:
         # Wizard's Core Traits: Simple weapons, no armor. Its Bladesinger
         # subclass adds Melee Martial weapons without Two-Handed or Heavy.
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert character.equipment_training.weapon_proficiencies == {
             WeaponProficiency.SIMPLE,
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,

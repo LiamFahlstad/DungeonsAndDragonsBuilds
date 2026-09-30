@@ -1,7 +1,7 @@
 """A character's inventory: starting equipment, starting gold, adventuring
 gear picked up over time, and dropping items.
 
-Part of the Character model (StatBlocks/Character.py), so it imports nothing
+Part of the Character model (Model/Character.py), so it imports nothing
 from CharacterContent at runtime - item types appear in annotations only.
 CharacterBuilder seeds an Inventory (Builds/StartingEquipment.py builds the
 Starting Equipment entry) and delegates add_adventuring_gear/drop_item/
@@ -78,7 +78,7 @@ class Inventory:
     sheet can show where each item came from; armors/weapons/items are the
     flat views everything else reads."""
 
-    # Entry for gear added straight to a sheet (CharacterSheetData.add_armor
+    # Entry for gear added straight to a sheet (Character.add_armor
     # and friends) rather than through starting equipment or
     # add_adventuring_gear.
     OTHER_EQUIPMENT_LABEL = "Other Equipment"
@@ -98,7 +98,7 @@ class Inventory:
         or consuming on either one never changes the other. The item objects
         themselves are shared - nothing changes an item once it's made
         (weapon bonuses are recorded on the stat block, see
-        StatBlocks/WeaponBonuses.py)."""
+        Model/WeaponBonuses.py)."""
         copied = Inventory()
         for entry in self._entries:
             entry_copy = attr.evolve(

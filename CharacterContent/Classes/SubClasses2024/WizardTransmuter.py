@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardTransmuterFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -62,8 +62,8 @@ class WizardTransmuterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardTransmuterFeatures.TransmutationSavant())
         data.add_feature(WizardTransmuterFeatures.TransmutersStone())
         data.add_feature(WizardTransmuterFeatures.WondrousAlteration())
@@ -82,8 +82,8 @@ class WizardTransmuterLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -93,8 +93,8 @@ class WizardTransmuterLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WizardTransmuterFeatures.EmpoweredTransmutation())
         return data
 
@@ -105,8 +105,8 @@ class WizardTransmuterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -117,8 +117,8 @@ class WizardTransmuterLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -128,8 +128,8 @@ class WizardTransmuterLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         transmuters_stone: WizardTransmuterFeatures.TransmutersStone = (
             data.get_features_by_type(WizardTransmuterFeatures.TransmutersStone)[0]
         )
@@ -148,8 +148,8 @@ class WizardTransmuterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -160,8 +160,8 @@ class WizardTransmuterLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -171,8 +171,8 @@ class WizardTransmuterLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         transmuters_stone: WizardTransmuterFeatures.TransmutersStone = (
             data.get_features_by_type(WizardTransmuterFeatures.TransmutersStone)[0]
         )
@@ -186,8 +186,8 @@ class WizardTransmuterLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -198,8 +198,8 @@ class WizardTransmuterLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 

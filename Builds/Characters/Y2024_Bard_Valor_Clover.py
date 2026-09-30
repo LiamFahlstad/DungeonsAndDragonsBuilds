@@ -41,7 +41,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import Lute
 from Core.Definitions import Ability, Skill
-from StatBlocks.AbilityScores import PointBuyAbilityScores
+from Model.AbilityScores import PointBuyAbilityScores
 
 # Tactics:
 # - Prioritize control and support spells over weapon attacks when they can swing the encounter.

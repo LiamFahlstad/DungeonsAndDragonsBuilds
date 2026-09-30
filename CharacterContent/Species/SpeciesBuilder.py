@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Optional
 
 import Core.Definitions as Definitions
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 
 
 class SpeciesBuilder:
@@ -12,11 +12,11 @@ class SpeciesBuilder:
     ):
         self.name = name
 
-    def build(self, data: Optional[CharacterSheetData] = None) -> CharacterSheetData:
+    def build(self, data: Optional[Character] = None) -> Character:
         """Grant this species' traits (speed, size, features, spells) straight
         into `data` - a fresh sheet if none is given - and return it."""
         if data is None:
-            data = CharacterSheetData()
+            data = Character()
         # Species spells aren't granted at a class level; tag them level 1,
         # like every other grant outside the per-level class flow.
         data.set_current_grant_level(1)
@@ -25,7 +25,7 @@ class SpeciesBuilder:
         return data
 
     @abstractmethod
-    def _grant(self, data: CharacterSheetData) -> None:
+    def _grant(self, data: Character) -> None:
         pass
 
     def set_spell_casting_ability(self, ability: Definitions.Ability):

@@ -9,8 +9,8 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
     SavingThrowAdvantage,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 SPEED = 30  # Given by your species
@@ -29,7 +29,7 @@ class DualMind(Feature):
     def apply(self, effects: Effects):
         self._advantage.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Advantage on Wisdom and Charisma saving throws."
 
 
@@ -46,7 +46,7 @@ class MentalDiscipline(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "You have Resistance to Psychic damage."
 
 
@@ -63,8 +63,8 @@ class MindLink(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        character_level = character_stat_block.character_level
+    def get_description(self, character: Character) -> str:
+        character_level = character.character_level
         range_feet = 10 * character_level
         return (
             f"You have telepathy with a range in feet equal to 10 times your level ({range_feet} feet). "
@@ -73,9 +73,7 @@ class MindLink(Feature):
             "another Magic action to end this effect."
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -88,7 +86,7 @@ class SeveredFromDreams(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return (
             "You can't be the target of the Dream spell. "
             "In addition, when you finish a Long Rest, you gain proficiency in one skill of your choice. "

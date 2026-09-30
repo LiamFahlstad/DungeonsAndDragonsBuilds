@@ -15,8 +15,8 @@ from CharacterContent.Features.Core.Improvements import (
     GrantToolProficiency,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -31,7 +31,7 @@ class BonusProficiencies(Feature):
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
         GrantToolProficiency([SmithsTools()]).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You gain proficiency with heavy armor and smith's tools."
         return description
 
@@ -48,26 +48,20 @@ class BlessingOfTheForge(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You gain the ability to imbue magic into a weapon or armor. At the end of a long rest, you can touch one nonmagical object that is a suit of armor or a simple or martial weapon. Until the end of your next long rest or until you die, the object becomes a magic item, granting a +1 bonus to AC if it's armor or a +1 bonus to attack and damage rolls if it's a weapon.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Trigger", "At end of long rest"),
             ("Action", "Touch"),
@@ -85,7 +79,7 @@ class ForgeDomainSpells(Feature):
             name="Forge Domain Spells", origin="Forge Domain Cleric Level 3"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Forge Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Forge Domain Spells\n"
@@ -107,7 +101,7 @@ class ArtisansBlessingChannelDivinity(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can use your Channel Divinity to create simple items.\n"
             "You conduct an hour-long ritual that crafts a nonmagical item that must include some metal: a simple or martial weapon, a suit of armor, ten pieces of ammunition, a set of tools, or another metal object. The creation is completed at the end of the hour, coalescing in an unoccupied space of your choice on a surface within 5 feet of you.\n"
@@ -134,7 +128,7 @@ class SoulOfTheForge(Feature):
             lambda cs: 1 if cs.worn_armor.body_armor_type == ArmorType.HEAVY else 0
         ).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your mastery of the forge grants you special abilities.\n"
             "You gain resistance to fire damage.\n"
@@ -160,7 +154,7 @@ class SaintOfForgeAndFire(Feature):
     def apply(self, effects: Effects):
         self._immunity.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your blessed affinity with fire and metal becomes more powerful.\n"
             "You gain immunity to fire damage.\n"

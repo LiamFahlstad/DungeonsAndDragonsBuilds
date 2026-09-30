@@ -43,7 +43,7 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel3Spells,
     DruidLevel4Spells,
 )
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
 
 

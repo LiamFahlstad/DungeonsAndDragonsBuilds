@@ -7,14 +7,14 @@ SourceTexts/SubclassTexts2024/<subclass>.txt (quoted in comments next to each
 assertion) or computed by hand from those texts - never read off the engine's
 own output or re-derived with the engine's own formula.
 
-apply_features() mirrors setup_character_stat_block: every effect (feature or
+apply_features() mirrors Character evaluation: every effect (feature or
 armor) applies, in no particular order, then requirements are validated.
 """
 
 import pytest
 
-from Builds.CharacterSheetAccumulator import CharacterSheetData
-from StatBlocks.ClassLevels import ClassLevels
+from Model.Character import Character
+from Model.ClassLevels import ClassLevels
 from Core.Definitions import (
     Ability,
     ArmorType,
@@ -91,7 +91,7 @@ def _cleric_data_with_channel_divinity():
     # before subclass-level features.
     from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 
-    data = CharacterSheetData(spell_casting_ability=Ability.WISDOM)
+    data = Character(spell_casting_ability=Ability.WISDOM)
     data.add_feature(ClericFeatures.ChannelDivinity())
     return data
 
@@ -224,10 +224,10 @@ class TestSorcererAndWarlockSpellGrantLevels:
         # character is Sorcerer level 5 - see bug note in the test report.
         from CharacterContent.Classes.SubClasses2024 import SorcererDraconic
 
-        data = CharacterSheetData(spell_casting_ability=Ability.CHARISMA)
+        data = Character(spell_casting_ability=Ability.CHARISMA)
         # set_current_grant_level mirrors what ClassBuilder.create() does before
         # calling each level's add_features(), so add_spell() tags spells with
-        # the right level (see Builds/CharacterSheetAccumulator.py add_spell).
+        # the right level (see Model/Character.py add_spell).
         data.set_current_grant_level(3)
         SorcererDraconic.SorcererDraconicLevel3().add_features(data)
         data.set_current_grant_level(5)
@@ -311,7 +311,7 @@ class TestDruidCircleOfTheLandSpells:
     @pytest.mark.parametrize("land_type", list(DruidLandType))
     @pytest.mark.parametrize("level", [3, 5, 7, 9])
     def test_land_spells_by_type_and_level(self, land_type, level):
-        data = CharacterSheetData(spell_casting_ability=Ability.WISDOM)
+        data = Character(spell_casting_ability=Ability.WISDOM)
         builder_cls = self.LEVEL_BUILDERS[level]
         builder_cls(land_type=land_type).add_features(data)
         names = {spell.value for spell, _a, _r, _lvl in data.spells}
@@ -495,7 +495,7 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
 
         # Scimitar: Martial Melee, Finesse + Light (no Two-Handed/Heavy), so a
         # Bladesinger with Training in War and Song should be proficient.
-        character = data.setup_character_stat_block()
+        character = data.validate()
         assert is_proficient_with(
             Scimitar(), character.equipment_training.weapon_proficiencies
         )
@@ -734,7 +734,7 @@ class TestPromisedPassiveBenefits:
     def test_battle_smith_martial_weapons(self, make_character):
         # battle_smith.txt: "Weapon Knowledge. You gain proficiency with
         # Martial weapons."
-        data = CharacterSheetData(
+        data = Character(
             class_levels=ClassLevels(level_per_class={CharacterClass.ARTIFICER: 3}),
             spell_casting_ability=Ability.INTELLIGENCE,
         )

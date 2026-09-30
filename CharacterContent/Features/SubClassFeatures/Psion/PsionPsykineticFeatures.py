@@ -4,14 +4,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 
 class StrongerTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Stronger Telekinesis", origin="Psykinetic Psion Level 3")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you cast Mage Hand, its range increases by 30\n"
             "feet when you cast it, and the hand can carry up to\n"
@@ -28,7 +28,7 @@ class TelekineticTechniques(Feature):
             usage_tags=["buff", "control", "damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you use Telekinetic Propel, you can roll 1d4\n"
             "and use the number rolled instead of expending a\n"
@@ -46,9 +46,7 @@ class TelekineticTechniques(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -61,7 +59,7 @@ class DestructiveTrance(Feature):
             usage_tags=["buff", "damage", "utility"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "At the start of your turn, you can expend one Psionic\n"
             "Energy Die to enter a destructive state. For the next\n"
@@ -74,9 +72,7 @@ class DestructiveTrance(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Activation", "Start of turn"),
             ("Cost", "1 Psionic Energy Die"),
@@ -88,9 +84,7 @@ class DestructiveTrance(Feature):
             ),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -102,7 +96,7 @@ class ReboundingField(Feature):
             usage_tags=["damage", "buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you cast Shield in response to being hit by an\n"
             "attack roll and cause the triggering attack to miss,\n"
@@ -119,10 +113,8 @@ class ReboundingField(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        int_mod = character_stat_block.get_intelligence_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        int_mod = character.get_intelligence_modifier()
         return [
             ("Trigger", "Cast Shield as reaction to attack hit and cause it to miss"),
             ("Cost", "1 Psionic Energy Die"),
@@ -135,9 +127,7 @@ class ReboundingField(Feature):
             ("Temp HP", "You gain temp HP equal to damage dealt"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -149,7 +139,7 @@ class EnhancedTelekineticCrush(Feature):
             usage_tags=["damage", "control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you cast Telekinetic Crush, you can expend one\n"
             "Psionic Energy Die to modify the spell so that\n"
@@ -161,9 +151,7 @@ class EnhancedTelekineticCrush(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Spell", "Telekinetic Crush"),
             ("Cost", "1 Psionic Energy Die"),
@@ -174,9 +162,7 @@ class EnhancedTelekineticCrush(Feature):
             ("Damage Bonus", "Roll die and add to one damage roll of spell"),
         ]
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -186,7 +172,7 @@ class HeightenedTelekinesis(Feature):
             name="Heightened Telekinesis", origin="Psykinetic Psion Level 14"
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can cast Telekinesis without expending a spell\n"
             "slot by instead expending four Psionic Energy Dice.\n"
@@ -198,9 +184,7 @@ class HeightenedTelekinesis(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Spell", "Telekinesis"),
             ("Resource Cost", "4 Psionic Energy Dice (instead of spell slot)"),

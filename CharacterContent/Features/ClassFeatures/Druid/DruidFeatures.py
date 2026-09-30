@@ -21,8 +21,8 @@ from CharacterContent.Features.Core.Improvements import (
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 
@@ -35,7 +35,7 @@ class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Druid Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Spellcasting\n"
             "    * Replacing Cantrips: Change one when you gain a Druid level.\n"
@@ -45,9 +45,7 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             ("Replacing Cantrips", "Change one when you gain a Druid level"),
             ("Replacing Spells", "Change one when you finish a Long Rest"),
@@ -55,9 +53,7 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Wisdom"),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -69,7 +65,7 @@ class Druidic(Feature):
     def apply(self, effects: Effects):
         self._language.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You know Druidic, the secret language of Druids. While learning this ancient tongue, you also unlocked the magic of communicating with animals; you always have the Speak with Animals spell prepared.\n"
             "You can use Druidic to leave hidden messages. You and others who know Druidic automatically spot such a message. Others spot the message's presence with a successful DC 15 Intelligence (Investigation) check but can't decipher it without magic."
@@ -92,13 +88,13 @@ class PrimalOrder(Feature):
         if self.order != PrimalOrderType.MAGICIAN:
             return
 
-        def bonus(cs: CharacterStatBlock) -> int:
+        def bonus(cs: Character) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)
         SkillBonus(Skill.NATURE, bonus, source=self.name).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         if self.order == PrimalOrderType.WARDEN:
             return (
                 "Warden. Trained for battle, you gain proficiency with Martial weapons "
@@ -130,10 +126,9 @@ class WildShape(Feature):
         )
         self.known_forms = known_forms
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         known_forms_lines = "\n".join(
-            format_wild_shape_form(form, character_stat_block)
-            for form in self.known_forms
+            format_wild_shape_form(form, character) for form in self.known_forms
         )
         description = (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
@@ -152,7 +147,7 @@ class WildShape(Feature):
         return description
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         uses_by_level = {}
         for level in range(2, 21):
@@ -170,13 +165,11 @@ class WildShape(Feature):
         ]
         return [("Wild Shape Uses", steps)]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        druid_level = character_stat_block.get_class_level(CharacterClass.DRUID)
+    def number_of_uses(self, character: Character) -> int:
+        druid_level = character.get_class_level(CharacterClass.DRUID)
         if druid_level >= 17:
             return 4
         elif druid_level >= 6:
@@ -184,9 +177,7 @@ class WildShape(Feature):
         else:
             return 2
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -195,10 +186,9 @@ class AdditionalWildShapeForms(Feature):
         super().__init__(name="Additional Known Forms", origin=origin)
         self.known_forms = known_forms
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         return "\n".join(
-            format_wild_shape_form(form, character_stat_block)
-            for form in self.known_forms
+            format_wild_shape_form(form, character) for form in self.known_forms
         )
 
 
@@ -212,16 +202,14 @@ class WildCompanion(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of Wild Shape to cast the Find Familiar spell without Material components.\n"
             "When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "What",
@@ -238,16 +226,14 @@ class WildResurgence(Feature):
     def __init__(self):
         super().__init__(name="Wild Resurgence", origin="Druid Level 5")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Once on each of your turns, if you have no uses of Wild Shape left, you can give yourself one use by expending a spell slot (no action required).\n"
             "In addition, you can expend one use of Wild Shape (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest."
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Option 1",
@@ -266,7 +252,7 @@ class PotentSpellcasting(Feature):
             name="Potent Spellcasting", origin="Druid Level 7", usage_tags=["damage"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Add your Wisdom modifier to the damage you deal with any Druid cantrip."
         )
@@ -279,7 +265,7 @@ class PrimalStrike(Feature):
             name="Primal Strike", origin="Druid Level 7", usage_tags=["damage"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast "
             "form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, "
@@ -287,9 +273,7 @@ class PrimalStrike(Feature):
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -297,7 +281,7 @@ class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
         super().__init__(name="Improved Potent Spellcasting", origin="Druid Level 15")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet."
         return description
 
@@ -310,13 +294,11 @@ class ImprovedPrimalStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "The extra damage of your Primal Strike increases to 2d8."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -324,7 +306,7 @@ class BeastSpells(Feature):
     def __init__(self):
         super().__init__(name="Beast Spells", origin="Druid Level 18")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "While using Wild Shape, you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component."
         return description
 
@@ -333,7 +315,7 @@ class Archdruid(Feature):
     def __init__(self):
         super().__init__(name="Archdruid", origin="Druid Level 20")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "The vitality of nature constantly blooms within you, granting you the following benefits.\n"
             "Evergreen Wild Shape. Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.\n"
@@ -342,9 +324,7 @@ class Archdruid(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Evergreen Wild Shape",
@@ -357,7 +337,5 @@ class Archdruid(Feature):
             ("Longevity", "Age 1 year for every 10 years that pass"),
         ]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL

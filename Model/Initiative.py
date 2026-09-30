@@ -1,17 +1,17 @@
 from typing import TYPE_CHECKING, Iterable
 
 from Core.Definitions import DiceRollCondition, combine_roll_conditions
-from StatBlocks.Bonuses import Bonuses, DerivedBonus
+from Model.Bonuses import Bonuses, DerivedBonus
 
 if TYPE_CHECKING:
-    from StatBlocks.CharacterStatBlock import CharacterStatBlock
+    from Model.Character import Character
 
 
 class Initiative:
     """Every source of an initiative bonus or roll condition. The character
     combines the bonus total with the Dexterity modifier (for the initiative
     score) and the roll condition with untrained-armor Disadvantage (neither
-    is this part's concern - see CharacterStatBlock.calculate_initiative() /
+    is this part's concern - see Character.calculate_initiative() /
     .initiative_roll_condition)."""
 
     def __init__(self):
@@ -31,7 +31,7 @@ class Initiative:
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 
-    def total(self, proficiency_bonus: int, character: "CharacterStatBlock") -> int:
+    def total(self, proficiency_bonus: int, character: "Character") -> int:
         """The bonus total (not the ability modifier): the full proficiency
         bonus if proficient, plus every flat and formula-valued bonus."""
         proficiency = proficiency_bonus if self.proficiency else 0

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
     DruidCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidSporesFeatures
 
@@ -17,8 +17,8 @@ class DruidSporesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidSporesFeatures.CircleSporesSpells())
         data.add_feature(DruidSporesFeatures.HaloOfSpores())
         data.add_feature(DruidSporesFeatures.SymbioticEntity())
@@ -30,8 +30,8 @@ class DruidSporesLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidSporesFeatures.FungalInfestation())
         return data
 
@@ -41,8 +41,8 @@ class DruidSporesLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         symbiotic_entity: DruidSporesFeatures.SymbioticEntity = (
             data.get_features_by_type(DruidSporesFeatures.SymbioticEntity)[0]
         )
@@ -55,8 +55,8 @@ class DruidSporesLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(DruidSporesFeatures.FungalBody())
         return data
 

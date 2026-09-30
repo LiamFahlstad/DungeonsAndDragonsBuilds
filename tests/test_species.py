@@ -558,10 +558,10 @@ class TestGrantedSpellsAndCantrips:
         # Species grant straight into the character's sheet - and a species
         # spell the class already granted (Rock Gnome Prestidigitation on a
         # Wizard) is listed from both sources rather than failing the build.
-        from Builds.CharacterSheetAccumulator import CharacterSheetData
+        from Model.Character import Character
         from CharacterContent.Spells.SpellLists import BardLevel0Spells
 
-        data = CharacterSheetData()
+        data = Character()
         data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
         assert RockGnomeSpeciesBuilder().build(data) is data
         assert spell_names(data).count("Prestidigitation") == 2

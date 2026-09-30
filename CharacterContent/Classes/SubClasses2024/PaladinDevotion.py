@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinDevotionFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
@@ -26,8 +26,8 @@ class PaladinDevotionLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
             data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
         )
@@ -42,8 +42,8 @@ class PaladinDevotionLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.ZONE_OF_TRUTH)
         return data
@@ -54,8 +54,8 @@ class PaladinDevotionLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
@@ -68,8 +68,8 @@ class PaladinDevotionLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel3Spells.BEACON_OF_HOPE)
         data.add_spell(ClericLevel3Spells.DISPEL_MAGIC)
         return data
@@ -80,8 +80,8 @@ class PaladinDevotionLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
         return data
@@ -92,8 +92,8 @@ class PaladinDevotionLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )
@@ -106,8 +106,8 @@ class PaladinDevotionLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(ClericLevel5Spells.COMMUNE)
         data.add_spell(ClericLevel5Spells.FLAME_STRIKE)
         return data
@@ -118,8 +118,8 @@ class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         aura_of_protection: PaladinFeatures.AuraOfProtection = (
             data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
         )

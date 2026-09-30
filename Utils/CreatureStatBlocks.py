@@ -83,7 +83,7 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
         """
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import Ability, Skill
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 
 _ABILITY_BY_ABBR = {
     Ability.STRENGTH.short_name: Ability.STRENGTH,
@@ -182,7 +182,7 @@ def _speed_text(monster: ExtendedCombatantData) -> str:
 
 def format_creature_stat_block(
     monster: ExtendedCombatantData,
-    character_stat_block: Optional[CharacterStatBlock] = None,
+    character: Optional[Character] = None,
     retain_mental_abilities: bool = False,
 ) -> str:
     """Render an ExtendedCombatantData instance as an HTML stat-block table.
@@ -220,12 +220,12 @@ def format_creature_stat_block(
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
     rows.append(_row("Str / Dex / Con", ", ".join(physical_parts)))
 
-    if retain_mental_abilities and character_stat_block is not None:
+    if retain_mental_abilities and character is not None:
         mental_parts = []
         for abbr in _MENTAL_ABILITIES:
             ability = _ABILITY_BY_ABBR[abbr]
-            own_score = character_stat_block.get_ability_score(ability)
-            own_modifier = character_stat_block.get_ability_modifier(ability)
+            own_score = character.get_ability_score(ability)
+            own_modifier = character.get_ability_modifier(ability)
             mental_parts.append(f"{abbr} {own_score} ({_fmt_mod(own_modifier)})")
         rows.append(
             _row(
@@ -262,11 +262,9 @@ def format_creature_stat_block(
         for skill_name, beast_bonus in monster.skills.items():
             skill_label = _display(skill_name)
             own_bonus = None
-            if retain_mental_abilities and character_stat_block is not None:
+            if retain_mental_abilities and character is not None:
                 try:
-                    own_bonus = character_stat_block.get_skill_modifier(
-                        Skill(skill_name)
-                    )
+                    own_bonus = character.get_skill_modifier(Skill(skill_name))
                 except ValueError:
                     own_bonus = None
             if own_bonus is None:
@@ -285,9 +283,9 @@ def format_creature_stat_block(
             if (
                 ability is not None
                 and retain_mental_abilities
-                and character_stat_block is not None
+                and character is not None
             ):
-                own_bonus = character_stat_block.get_saving_throw_modifier(ability)
+                own_bonus = character.get_saving_throw_modifier(ability)
             if own_bonus is None:
                 save_parts.append(f"{abbr} {_fmt_mod(beast_bonus)}")
                 continue

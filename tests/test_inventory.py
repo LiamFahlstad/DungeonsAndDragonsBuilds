@@ -1,12 +1,12 @@
 """
-StatBlocks/Inventory.py and Builds/StartingEquipment.py: starting gear,
+Model/Inventory.py and Builds/StartingEquipment.py: starting gear,
 starting/current gold, adventuring gear, dropping and consuming items.
 """
 
 import pytest
 
 from Builds.StartingEquipment import set_starting_equipment
-from StatBlocks.Inventory import Bought, Inventory
+from Model.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Packs, Weapons
 from Core.Definitions import CharacterClass
 

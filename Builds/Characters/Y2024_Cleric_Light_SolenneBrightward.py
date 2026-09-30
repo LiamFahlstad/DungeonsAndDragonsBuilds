@@ -51,7 +51,7 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel7Spells,
     ClericLevel9Spells,
 )
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

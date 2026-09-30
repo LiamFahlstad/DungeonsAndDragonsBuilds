@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, TextIO
 
-from StatBlocks.Character import note_feature_extended
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import note_feature_extended
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import Html
 
 
@@ -497,35 +497,31 @@ class Feature:
         armor is a formula evaluated on read (see Core.Improvements)."""
         pass
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
+    def get_description(self, character: Character) -> str | None:
         return None
 
     def get_table_description(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, str]] | None:
         """Override to provide a concise label/value table version of the description
         (e.g. [("What", "..."), ("Casting Time", "...")]), used when table descriptions
         are requested. Return None to fall back to get_description()."""
         return None
 
-    def get_concise_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> str | None:
+    def get_concise_description(self, character: Character) -> str | None:
         """Override to provide a short prose summary of the description (a sentence
         or two, same formatting rules as get_description), used when concise
         descriptions are requested. Return None to fall back to get_description()."""
         return None
 
-    def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int | None:
+    def calculate_dc(self, character: Character) -> int | None:
         """Override to return this feature's saving throw DC (e.g. 8 plus an
         ability modifier plus proficiency bonus), so the value can be reused
         anywhere it's needed instead of being recomputed inline. Return None
         (default) for features with no DC."""
         return None
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit
         points, etc.) is regained (e.g. a short rest, long rest, or an
         initiative roll), so the value can be reused anywhere it's needed
@@ -533,9 +529,7 @@ class Feature:
         features with nothing to regain."""
         return None
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         """Override to return what this feature's effect can be aimed at
         (e.g. self, an ally, a creature, an object), so the value can be
         reused anywhere it's needed instead of being re-parsed from prose.
@@ -543,7 +537,7 @@ class Feature:
         passive features or ones that affect the caster only implicitly)."""
         return None
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
+    def number_of_uses(self, character: Character) -> int:
         """Override to return this feature's actual current number of uses,
         computed from the character's stats (e.g. equal to your proficiency
         bonus or level), for features whose real count is described only in
@@ -553,7 +547,7 @@ class Feature:
         return self.uses.max_uses if self.uses is not None else 0
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]] | None:
         """Override to surface this feature's core numbers as small stat
         tiles at the top of its own feature card (visually the same idea as
@@ -572,25 +566,25 @@ class Feature:
 
     def render_html_description(
         self,
-        character_stat_block: CharacterStatBlock,
+        character: Character,
         description_mode: Literal["table", "concise"] | None = None,
     ) -> str | None:
         if description_mode is not None and self.skippable_in_concise:
             return None
 
         if description_mode == "table":
-            table_rows = self.get_table_description(character_stat_block)
+            table_rows = self.get_table_description(character)
             if table_rows is not None:
                 return Html.highlight_damage_types(
                     Html.key_value_table_to_html(table_rows)
                 )
 
         if description_mode == "concise":
-            concise_description = self.get_concise_description(character_stat_block)
+            concise_description = self.get_concise_description(character)
             if concise_description is not None:
                 return self._description_to_html(concise_description)
 
-        description = self.get_description(character_stat_block)
+        description = self.get_description(character)
         if description is None:
             return None
         return self._description_to_html(description)
@@ -662,20 +656,18 @@ class Feature:
 
     def write_to_file(
         self,
-        character_stat_block: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         description_mode: Literal["table", "concise"] | None = None,
         max_level: int | None = None,
     ):
-        html_description = self.render_html_description(
-            character_stat_block, description_mode
-        )
+        html_description = self.render_html_description(character, description_mode)
         if html_description is None:
             return
 
         self._write_card_open(file, description_mode)
 
-        resource_tiles = self.get_resource_tiles(character_stat_block)
+        resource_tiles = self.get_resource_tiles(character)
         if resource_tiles:
             file.write("<div class='feature-resource-section'>\n")
             for group_label, steps in resource_tiles:
@@ -709,9 +701,7 @@ class Feature:
                 if ext_level > parent_level:
                     continue
 
-            ext_html = extension.render_html_description(
-                character_stat_block, description_mode
-            )
+            ext_html = extension.render_html_description(character, description_mode)
             if ext_html is None:
                 continue
             ext_tags = "".join(
@@ -729,7 +719,7 @@ class Feature:
 
     def write_extension_card_to_file(
         self,
-        character_stat_block: CharacterStatBlock,
+        character: Character,
         file: TextIO,
         parent_name: str,
         description_mode: Literal["table", "concise"] | None = None,
@@ -738,9 +728,7 @@ class Feature:
         standalone feature card on its own level page, visually flagged as extending
         the parent. Reuses the existing .feature-upgrade CSS classes for consistent
         blue-label styling."""
-        html_description = self.render_html_description(
-            character_stat_block, description_mode
-        )
+        html_description = self.render_html_description(character, description_mode)
         if html_description is None:
             return
 

@@ -4,7 +4,7 @@ import attr
 
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
@@ -69,8 +69,8 @@ class WarlockLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockFeatures.ReplacingEldritchInvocations())
         data.add_feature(WarlockFeatures.ReplacingCantripsAndSpells())
         data.add_feature(WarlockFeatures.RegainingSpellSlots())
@@ -90,8 +90,8 @@ class WarlockLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockFeatures.MagicalCunning())
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation_1)
@@ -105,8 +105,8 @@ class WarlockLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -119,8 +119,8 @@ class WarlockLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
@@ -136,8 +136,8 @@ class WarlockLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation_1)
         data.add_invocation(self.eldritch_invocation_2)
@@ -150,8 +150,8 @@ class WarlockLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         return data
 
@@ -163,8 +163,8 @@ class WarlockLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
         return data
@@ -177,8 +177,8 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -192,8 +192,8 @@ class WarlockLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockFeatures.ContactPatron())
         data.add_spell(WarlockLevel5Spells.CONTACT_OTHER_PLANE)
         data.add_spell(self.spell)
@@ -207,8 +207,8 @@ class WarlockLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_cantrip(self.cantrip)
         return data
 
@@ -219,8 +219,8 @@ class WarlockLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
         return data
@@ -233,8 +233,8 @@ class WarlockLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_invocation(self.eldritch_invocation)
@@ -247,8 +247,8 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
@@ -263,8 +263,8 @@ class WarlockLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         return data
 
 
@@ -275,8 +275,8 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
@@ -291,7 +291,7 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
 class WarlockLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         self.general_feat.origin = f"Warlock Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -303,8 +303,8 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         mystic_arcanum: WarlockFeatures.MysticArcanum = cast(
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
@@ -320,8 +320,8 @@ class WarlockLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_invocation(self.eldritch_invocation)
         return data
 
@@ -333,8 +333,8 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         self.epic_boon.origin = f"Warlock Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -344,7 +344,7 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class WarlockLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: CharacterSheetData) -> CharacterSheetData:
+    def add_features(self, data: Character) -> Character:
         magical_cunning: WarlockFeatures.MagicalCunning = cast(
             WarlockFeatures.MagicalCunning,
             data.get_features_by_type(WarlockFeatures.MagicalCunning)[0],

@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockTheUndyingFeatures,
@@ -19,8 +19,8 @@ class WarlockTheUndyingLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockTheUndyingFeatures.UndyingExpandedSpells())
         data.add_feature(WarlockTheUndyingFeatures.AmongTheDead())
         return data
@@ -31,8 +31,8 @@ class WarlockTheUndyingLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockTheUndyingFeatures.DefyDeath())
         return data
 
@@ -42,8 +42,8 @@ class WarlockTheUndyingLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockTheUndyingFeatures.UndyingNature())
         return data
 
@@ -53,8 +53,8 @@ class WarlockTheUndyingLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockTheUndyingFeatures.IndestructibleLife())
         return data
 

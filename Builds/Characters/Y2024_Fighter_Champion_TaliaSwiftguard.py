@@ -23,7 +23,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellsDefinitions
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 def get_starter_class_builder():

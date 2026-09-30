@@ -21,7 +21,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Items import Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 # Wizard 5 (full caster).

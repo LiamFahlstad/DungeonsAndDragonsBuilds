@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import PaladinSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Paladin import PaladinCrownFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -26,8 +26,8 @@ class PaladinCrownLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinCrownFeatures.CrownSpells())
         data.add_feature(PaladinCrownFeatures.ChampionChallenge())
         data.add_feature(PaladinCrownFeatures.TurnTheTide())
@@ -41,8 +41,8 @@ class PaladinCrownLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
         data.add_spell(PaladinLevel2Spells.ZONE_OF_TRUTH)
         return data
@@ -53,8 +53,8 @@ class PaladinCrownLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinCrownFeatures.DivineAllegiance())
         return data
 
@@ -64,8 +64,8 @@ class PaladinCrownLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(ClericLevel3Spells.SPIRIT_GUARDIANS)
         return data
@@ -76,8 +76,8 @@ class PaladinCrownLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel4Spells.BANISHMENT)
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
         return data
@@ -88,8 +88,8 @@ class PaladinCrownLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinCrownFeatures.UnyieldingSaint())
         return data
 
@@ -99,8 +99,8 @@ class PaladinCrownLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(PaladinLevel5Spells.CIRCLE_OF_POWER)
         data.add_spell(PaladinLevel5Spells.GEAS)
         return data
@@ -111,8 +111,8 @@ class PaladinCrownLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(PaladinCrownFeatures.ExaltedChampion())
         return data
 

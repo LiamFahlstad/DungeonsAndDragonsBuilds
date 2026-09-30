@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import DamageType, SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererDraconicFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -26,8 +26,8 @@ from CharacterContent.Spells.SpellLists import (
 class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDraconicFeatures.DraconicSpells())
         data.add_feature(SorcererDraconicFeatures.DraconicResilience())
         data.add_spell(SorcererLevel1Spells.CHROMATIC_ORB)
@@ -41,8 +41,8 @@ class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
 class SorcererDraconicLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel3Spells.FEAR)
         data.add_spell(SorcererLevel3Spells.FLY)
         return data
@@ -54,8 +54,8 @@ class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(
             SorcererDraconicFeatures.ElementalAffinity(self.elemental_affinity)
         )
@@ -66,8 +66,8 @@ class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
 class SorcererDraconicLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel4Spells.ARCANE_EYE)
         data.add_spell(SorcererLevel4Spells.CHARM_MONSTER)
         return data
@@ -77,8 +77,8 @@ class SorcererDraconicLevel7(ClassBuilder.SubclassLevel7):
 class SorcererDraconicLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(WizardLevel5Spells.LEGEND_LORE)
         data.add_spell(WizardLevel5Spells.SUMMON_DRAGON)
         return data
@@ -88,8 +88,8 @@ class SorcererDraconicLevel9(ClassBuilder.SubclassLevel9):
 class SorcererDraconicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDraconicFeatures.DragonWings())
         return data
 
@@ -98,8 +98,8 @@ class SorcererDraconicLevel14(ClassBuilder.SubclassLevel14):
 class SorcererDraconicLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(SorcererDraconicFeatures.DragonCompanion())
         return data
 

@@ -2,7 +2,7 @@
 
 Plain rules data with no dependency on features or stat blocks, so the stat
 block can work out slots on read from whichever casters have been registered
-(CharacterStatBlock.register_caster) - in any order.
+(Character.register_caster) - in any order.
 """
 
 from enum import Enum

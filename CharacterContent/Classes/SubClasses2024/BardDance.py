@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardDanceFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures.Bard import BardDanceFeatures
 class BardDanceLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardDanceFeatures.DazzlingFootwork())
         return data
 
@@ -26,8 +26,8 @@ class BardDanceLevel3(ClassBuilder.SubclassLevel3):
 class BardDanceLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardDanceFeatures.InspiringMovement())
         data.add_feature(BardDanceFeatures.TandemFootwork())
         return data
@@ -38,8 +38,8 @@ class BardDanceLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BardDanceFeatures.LeadingEvasion())
         return data
 

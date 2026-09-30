@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import (
     WarlockGreatOldOneFeatures,
@@ -30,8 +30,8 @@ class WarlockGreatOldOneLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockGreatOldOneFeatures.GreatOldOneSpells())
         data.add_feature(WarlockGreatOldOneFeatures.AwakenedMind())
         data.add_feature(WarlockGreatOldOneFeatures.PsychicSpells())
@@ -47,8 +47,8 @@ class WarlockGreatOldOneLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel3Spells.CLAIRVOYANCE)
         data.add_spell(WarlockLevel3Spells.HUNGER_OF_HADAR)
         return data
@@ -59,8 +59,8 @@ class WarlockGreatOldOneLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         awakened_mind: WarlockGreatOldOneFeatures.AwakenedMind = (
             data.get_features_by_type(WarlockGreatOldOneFeatures.AwakenedMind)[0]
         )
@@ -73,8 +73,8 @@ class WarlockGreatOldOneLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(SorcererLevel4Spells.CONFUSION)
         data.add_spell(WarlockLevel4Spells.SUMMON_ABERRATION)
         return data
@@ -85,8 +85,8 @@ class WarlockGreatOldOneLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_spell(BardLevel5Spells.MODIFY_MEMORY)
         data.add_spell(SorcererLevel5Spells.TELEKINESIS)
         return data
@@ -97,8 +97,8 @@ class WarlockGreatOldOneLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockGreatOldOneFeatures.EldritchHex())
         data.add_spell(WarlockLevel1Spells.HEX, additional_ruling="Always prepared")
         data.add_feature(WarlockGreatOldOneFeatures.ThoughtShield())
@@ -110,8 +110,8 @@ class WarlockGreatOldOneLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(WarlockGreatOldOneFeatures.CreateThrall())
         return data
 

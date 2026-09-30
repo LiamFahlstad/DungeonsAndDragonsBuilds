@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkMercyFeatures
 
@@ -16,8 +16,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkMercyFeatures
 class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkMercyFeatures.HandOfHarm())
         data.add_feature(MonkMercyFeatures.HandOfHealing())
         data.add_feature(MonkMercyFeatures.ImplementsOfMercy())
@@ -28,8 +28,8 @@ class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
 class MonkMercyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         hand_of_harm: MonkMercyFeatures.HandOfHarm = data.get_features_by_type(
             MonkMercyFeatures.HandOfHarm
         )[0]
@@ -42,8 +42,8 @@ class MonkMercyLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkMercyFeatures.FlurryOfHealingAndHarm())
         return data
 
@@ -53,8 +53,8 @@ class MonkMercyLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(MonkMercyFeatures.HandOfUltimateMercy())
         return data
 

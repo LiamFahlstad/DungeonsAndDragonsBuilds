@@ -2,7 +2,7 @@
 Class features with mechanical effects (CharacterContent/Features/ClassFeatures),
 checked against the 2024 PHB feature text.
 
-apply_features() mirrors setup_character_stat_block: every effect (feature or
+apply_features() mirrors Character evaluation: every effect (feature or
 armor) applies, in no particular order, then requirements are validated.
 """
 
@@ -89,7 +89,7 @@ class TestUnarmoredMovement:
     def test_armored_monk_build_regression(self):
         # Kagen (Rogue 1 / Monk 19) wears Leather Armor: no Unarmored Movement.
         data = BuildSelector.get_build("Y2024_Rogue_ShadowMonk_KagenVoidstep").build()
-        assert data.setup_character_stat_block().calculate_speed() == 30
+        assert data.validate().calculate_speed() == 30
 
 
 class TestHeavyArmorSpeedFeatures:

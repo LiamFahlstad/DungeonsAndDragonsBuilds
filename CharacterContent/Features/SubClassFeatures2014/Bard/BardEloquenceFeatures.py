@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from Model.Character import Character
 from Utils import StringUtils
 
 
@@ -18,12 +18,10 @@ class SilverTongue(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You are a master at saying the right thing at the right time. When you make a Charisma "
             "(Persuasion) or Charisma (Deception) check, you can treat a d20 roll of 9 or lower as a 10."
@@ -44,12 +42,10 @@ class UnsettlingWords(Feature):
             usage_tags=["control"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You can spin words laced with magic that unsettle a creature and cause it to doubt itself. "
             "As a bonus action, you can expend one use of your Bardic Inspiration and choose one creature "
@@ -67,12 +63,10 @@ class UnfailingInspiration(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your inspiring words are so persuasive that others feel driven to succeed. When a creature "
             "adds one of your Bardic Inspiration dice to its ability check, attack roll, or saving throw "
@@ -92,12 +86,10 @@ class UniversalSpeech(Feature):
             usage_tags=["utility"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "You have gained the ability to make your speech intelligible to any creature. As an action, "
             "choose one or more creatures within 60 feet of you, up to a number equal to your Charisma "
@@ -109,10 +101,8 @@ class UniversalSpeech(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        cha_mod = character_stat_block.get_charisma_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        cha_mod = character.get_charisma_modifier()
         creatures = max(1, cha_mod)
         return [
             ("Action", "Action"),
@@ -135,12 +125,10 @@ class InfectiousInspiration(Feature):
             usage_tags=["buff"],
         )
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you successfully inspire someone, the power of your eloquence can now spread to someone else. "
             "When a creature within 60 feet of you adds one of your Bardic Inspiration dice to its ability check, "

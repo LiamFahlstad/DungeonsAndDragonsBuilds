@@ -28,7 +28,7 @@ from CharacterContent.Invocations.Definitions import (
 )
 from CharacterContent.Species import Human
 from CharacterContent.Spells import SpellLists as SpellDefs
-from StatBlocks.AbilityScores import StandardArrayAbilityScores
+from Model.AbilityScores import StandardArrayAbilityScores
 
 
 # Wizard 3 / Warlock 3 multiclass — two separate spell pools.

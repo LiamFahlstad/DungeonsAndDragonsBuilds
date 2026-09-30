@@ -7,7 +7,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianCustomStarterClassArgs,
 )
-from Builds.CharacterSheetAccumulator import CharacterSheetData
+from Model.Character import Character
 from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
@@ -20,8 +20,8 @@ class BarbarianBattleragerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         data.add_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerArmor())
         return data
 
@@ -31,8 +31,8 @@ class BarbarianBattleragerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
             BarbarianFeatures.RecklessAttack
         )[0]
@@ -47,8 +47,8 @@ class BarbarianBattleragerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         rage: BarbarianFeatures.Rage = data.get_features_by_type(
             BarbarianFeatures.Rage
         )[0]
@@ -61,8 +61,8 @@ class BarbarianBattleragerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: CharacterSheetData,
-    ) -> CharacterSheetData:
+        data: Character,
+    ) -> Character:
         battlerager_armor: BarbarianPathOfTheBattleragerFeatures.BattleragerArmor = (
             data.get_features_by_type(
                 BarbarianPathOfTheBattleragerFeatures.BattleragerArmor

@@ -15,8 +15,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import Ability
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.Effects import Effects
+from Model.Character import Character
+from Model.Effects import Effects
 from Utils import StringUtils
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -70,7 +70,7 @@ class MartialArts(Feature):
     def __init__(self):
         super().__init__(name="Martial Arts", origin="Monk Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your practice of martial arts gives you mastery of combat styles that use your Unarmed Strike and Monk weapons, which are the following:\n"
             "    * Simple Melee weapons\n"
@@ -83,7 +83,7 @@ class MartialArts(Feature):
         return description
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         die_values = {
             level: die.value for level, die in LEVEL_TO_MARTIAL_ARTS_DIE.items()
@@ -99,7 +99,7 @@ class UnarmoredDefenseText(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Defense", origin="Monk Level 1")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Wisdom modifiers."
         return description
 
@@ -130,7 +130,7 @@ class MonksFocus(Feature):
             ),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Rules for Focus Points:\n"
             "    * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
@@ -140,7 +140,7 @@ class MonksFocus(Feature):
         return description
 
     def get_resource_tiles(
-        self, character_stat_block: CharacterStatBlock
+        self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         # Monk's Focus isn't granted until level 2, so level 1 (always 0) is
         # left out of the progression rather than shown as a misleading step.
@@ -155,15 +155,11 @@ class MonksFocus(Feature):
         ]
         return [("Focus Points", steps)]
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character_stat_block: CharacterStatBlock) -> int:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def number_of_uses(self, character: Character) -> int:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         return LEVEL_TO_FOCUS_POINTS.get(monk_level, 0)
 
 
@@ -176,10 +172,8 @@ class FlurryOfBlows(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_description(self, character: Character) -> str:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can expend 1 Focus Point to make two Unarmed Strikes as a Bonus Action."
         if monk_level <= 20:
@@ -196,19 +190,15 @@ class PatientDefense(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_description(self, character: Character) -> str:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action."
         if monk_level <= 20:
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action. When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die."
         raise ValueError(f"Invalid monk level: {monk_level}")
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -220,10 +210,8 @@ class StepOfTheWind(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_description(self, character: Character) -> str:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn."
         if monk_level <= 20:
@@ -264,7 +252,7 @@ class UnarmoredMovement(Feature):
     def apply(self, effects: Effects):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
-        def bonus(cs: CharacterStatBlock) -> int:
+        def bonus(cs: Character) -> int:
             if cs.is_wearing_armor or cs.worn_armor.shield_wielded:
                 return 0
             monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
@@ -272,13 +260,11 @@ class UnarmoredMovement(Feature):
 
         SpeedBonus(bonus).apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -288,21 +274,17 @@ class UncannyMetabolism(Feature):
             name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you roll Initiative, you can regain all expended Focus Points. When you do so, roll your Martial Arts die, and regain a number of Hit Points equal to your Monk level plus the number rolled.\n"
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -315,10 +297,8 @@ class DeflectAttacks(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
+    def get_description(self, character: Character) -> str:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 13:
             description = (
                 "When an attack roll hits you and its damage includes Bludgeoning, Piercing, or Slashing damage, you can take a Reaction to reduce the attack's total damage against you. The reduction equals 1d10 plus your Dexterity modifier and Monk level.\n"
@@ -333,13 +313,9 @@ class DeflectAttacks(Feature):
             )
             return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
-        monk_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.MONK
-        )
-        dex_modifier = character_stat_block.get_dexterity_modifier()
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        dex_modifier = character.get_dexterity_modifier()
         damage_types = (
             "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
         )
@@ -369,13 +345,11 @@ class SlowFall(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can take a Reaction when you fall to reduce any damage you take from the fall by an amount equal to five times your Monk level."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -383,7 +357,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Monk Level 5")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -397,13 +371,11 @@ class StunningStrike(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Once per turn when you hit a creature with a Monk weapon or an Unarmed Strike, you can expend 1 Focus Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target's Speed is halved until the start of your next turn, and the next attack roll made against the target before then has Advantage."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -411,7 +383,7 @@ class EmpoweredStrikes(Feature):
     def __init__(self):
         super().__init__(name="Empowered Strikes", origin="Monk Level 6")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Whenever you deal damage with your Unarmed Strike, it can deal your choice of Force damage or its normal damage type."
         return description
 
@@ -420,16 +392,14 @@ class Evasion(Feature):
     def __init__(self):
         super().__init__(name="Evasion", origin="Monk Level 7")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.\n"
             "You don't benefit from this feature if you have the Incapacitated condition."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -439,13 +409,11 @@ class AcrobaticMovement(Feature):
             name="Acrobatic Movement", origin="Monk Level 9", usage_tags=["utility"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "While you aren't wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -453,7 +421,7 @@ class HeightenedFocus(Feature):
     def __init__(self):
         super().__init__(name="Heightened Focus", origin="Monk Level 10")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits.\n"
             "Flurry of Blows. You can expend 1 Focus Point to use Flurry of Blows and make three Unarmed Strikes with it instead of two.\n"
@@ -462,9 +430,7 @@ class HeightenedFocus(Feature):
         )
         return description
 
-    def get_table_description(
-        self, character_stat_block: CharacterStatBlock
-    ) -> list[tuple[str, str]]:
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
         return [
             (
                 "Flurry of Blows",
@@ -487,16 +453,14 @@ class SelfRestoration(Feature):
             name="Self-Restoration", origin="Monk Level 10", usage_tags=["heal"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = (
             "Through sheer force of will, you can remove one of the following conditions from yourself at the end of each of your turns: Charmed, Frightened, or Poisoned.\n"
             "In addition, forgoing food and drink doesn't give you levels of Exhaustion."
         )
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -504,7 +468,7 @@ class DeflectEnergy(Feature):
     def __init__(self):
         super().__init__(name="Deflect Energy", origin="Monk Level 13")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing."
         return description
 
@@ -530,7 +494,7 @@ class DisciplinedSurvivorSavingThrows(Feature):
     def apply(self, effects: Effects):
         self._proficiencies.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
         return description
 
@@ -541,13 +505,11 @@ class DisciplinedSurvivorMartialFocus(Feature):
             name="Disciplined Survivor", origin="Monk Level 14", usage_tags=["buff"]
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "Whenever you make a saving throw and fail, you can expend 1 Focus Point to reroll it, and you must use the new roll."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -555,13 +517,11 @@ class PerfectFocus(Feature):
     def __init__(self):
         super().__init__(name="Perfect Focus", origin="Monk Level 15")
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "When you roll Initiative and don't use Uncanny Metabolism, you regain expended Focus Points until you have 4 if you have 3 or fewer."
         return description
 
-    def regained_on(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "RegainedOn | None":
+    def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
 
@@ -574,13 +534,11 @@ class SuperiorDefense(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "At the start of your turn, you can expend 3 Focus Points to bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have Resistance to all damage except Force damage."
         return description
 
-    def target(
-        self, character_stat_block: CharacterStatBlock
-    ) -> "FeatureTarget | None":
+    def target(self, character: Character) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -601,6 +559,6 @@ class BodyAndMind(Feature):
     def apply(self, effects: Effects):
         self._bonuses.apply(effects)
 
-    def get_description(self, character_stat_block: CharacterStatBlock) -> str:
+    def get_description(self, character: Character) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."
         return description
