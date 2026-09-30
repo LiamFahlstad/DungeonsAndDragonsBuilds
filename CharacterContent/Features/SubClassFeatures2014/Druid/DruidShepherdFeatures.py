@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import GrantLanguage
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -22,8 +23,8 @@ class SpeechOfTheWoods(Feature):
         )
         self._language = GrantLanguage(Language.SYLVAN, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._language.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._language.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -22,6 +22,7 @@ from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -65,8 +66,8 @@ class Druidic(Feature):
         super().__init__(name="Druidic", origin="Druid Level 1")
         self._language = GrantLanguage(Language.DRUIDIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._language.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._language.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -83,19 +84,19 @@ class PrimalOrder(Feature):
         )
         self.order = order
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # Warden: "...proficiency with Martial weapons and training with Medium armor."
         if self.order == PrimalOrderType.WARDEN:
-            GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
-            GrantArmorTraining([ArmorType.MEDIUM]).apply(character_stat_block)
+            GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+            GrantArmorTraining([ArmorType.MEDIUM]).apply(effects)
         if self.order != PrimalOrderType.MAGICIAN:
             return
 
         def bonus(cs: CharacterStatBlock) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
-        SkillBonus(Skill.NATURE, bonus, source=self.name).apply(character_stat_block)
+        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)
+        SkillBonus(Skill.NATURE, bonus, source=self.name).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if self.order == PrimalOrderType.WARDEN:

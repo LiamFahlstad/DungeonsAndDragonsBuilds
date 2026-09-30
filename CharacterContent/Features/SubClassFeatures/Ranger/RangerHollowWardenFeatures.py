@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.Improvements import (
     SavingThrowBonus,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class HollowWardenSpells(Feature):
@@ -71,11 +72,11 @@ class HungeringMight(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         def bonus(cs: CharacterStatBlock) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(character_stat_block)
+        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -116,8 +117,8 @@ class AncientMight(Feature):
         )
         self._immunity = ConditionImmunity(Condition.EXHAUSTION, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._immunity.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._immunity.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

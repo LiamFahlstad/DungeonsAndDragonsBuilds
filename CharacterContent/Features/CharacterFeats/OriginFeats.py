@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, CharacterClass, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class OriginFeat(Feature):
@@ -42,8 +43,8 @@ class Skilled(OriginFeat):
             name="Skilled", origin="Origin Feat", skippable_in_concise=True
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)
@@ -58,8 +59,8 @@ class Alert(OriginFeat):
         super().__init__(name="Alert", origin="Origin Feat")
         self._proficiency = InitiativeProficiency()
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -353,8 +354,8 @@ class Tough(OriginFeat):
         self._hp = HitPointsPerLevelBonus(2)
         super().__init__(name="Tough", origin="Origin Feat", skippable_in_concise=True)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._hp.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._hp.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -504,8 +505,8 @@ class PurpleDragonRook(OriginFeat):
         )
         super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"

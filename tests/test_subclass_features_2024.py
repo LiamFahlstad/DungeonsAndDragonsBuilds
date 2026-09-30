@@ -69,7 +69,7 @@ from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 def apply_features(character, features, armors=()):
     # Armor first on purpose: effects may apply in any order.
     for effect in [*armors, *features]:
-        effect.apply(character)
+        effect.apply(character.effects)
     character.validate()
     return character
 
@@ -333,7 +333,7 @@ class TestResistanceAndImmunityGrants:
         # SourceTexts/SubclassTexts2024/psi_warrior.txt, Fighter level 10:
         # "You have Resistance to Psychic damage."
         character = make_character()
-        FighterPsiWarriorFeatures.GuardedMind().apply(character)
+        FighterPsiWarriorFeatures.GuardedMind().apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.PSYCHIC)
 
     def test_celestial_patron_radiant_soul_grants_radiant_resistance(
@@ -342,14 +342,14 @@ class TestResistanceAndImmunityGrants:
         # SourceTexts/SubclassTexts2024/celestial_patron.txt, Warlock level 6:
         # "You have Resistance to Radiant damage."
         character = make_character()
-        WarlockCelestialFeatures.RadiantSoul().apply(character)
+        WarlockCelestialFeatures.RadiantSoul().apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.RADIANT)
 
     def test_winter_walker_frigid_explorer_grants_cold_resistance(self, make_character):
         # SourceTexts/SubclassTexts2024/winter_walker.txt, Ranger level 3:
         # "Frost Resistance. You have Resistance to Cold damage."
         character = make_character()
-        RangerWinterWalkerFeatures.FrigidExplorer().apply(character)
+        RangerWinterWalkerFeatures.FrigidExplorer().apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.COLD)
 
     def test_war_domain_avatar_of_battle_grants_physical_resistances(
@@ -358,7 +358,7 @@ class TestResistanceAndImmunityGrants:
         # SourceTexts/SubclassTexts2024/war_domain.txt, Cleric level 17:
         # "You gain Resistance to Bludgeoning, Piercing, and Slashing damage."
         character = make_character()
-        ClericWarFeatures.AvatarOfBattle().apply(character)
+        ClericWarFeatures.AvatarOfBattle().apply(character.effects)
         for damage_type in (
             DamageType.BLUDGEONING,
             DamageType.PIERCING,
@@ -372,7 +372,7 @@ class TestResistanceAndImmunityGrants:
         # SourceTexts/SubclassTexts2024/archfey_patron.txt, Warlock level 10:
         # "You are immune to the Charmed condition."
         character = make_character()
-        WarlockArchfeyFeatures.BeguilingDefenses().apply(character)
+        WarlockArchfeyFeatures.BeguilingDefenses().apply(character.effects)
         assert character.is_immune_to_condition(Condition.CHARMED)
         assert not character.is_immune_to_condition(Condition.FRIGHTENED)
 
@@ -391,8 +391,8 @@ class TestSorcererDraconicResilienceAndElementalAffinity:
             (12, 3 + (12 - 3)),
         ):
             character = make_character(levels={CharacterClass.SORCERER: sorcerer_level})
-            SorcererDraconicFeatures.DraconicResilience().apply(character)
-            assert character.hit_points.bonuses.total(None) == expected_bonus
+            SorcererDraconicFeatures.DraconicResilience().apply(character.effects)
+            assert character.hit_points.bonuses.total(character) == expected_bonus
 
     def test_draconic_resilience_ac_unarmored_formula(self, make_character):
         # "While you aren't wearing armor, your base Armor Class equals 10
@@ -400,12 +400,14 @@ class TestSorcererDraconicResilienceAndElementalAffinity:
         character = make_character(
             dexterity=14, charisma=16, levels={CharacterClass.SORCERER: 3}
         )
-        SorcererDraconicFeatures.DraconicResilience().apply(character)
+        SorcererDraconicFeatures.DraconicResilience().apply(character.effects)
         assert character.calculate_armor_class() == 10 + 2 + 3
 
     def test_elemental_affinity_grants_a_resistance(self, make_character):
         character = make_character(levels={CharacterClass.SORCERER: 6}, charisma=16)
-        SorcererDraconicFeatures.ElementalAffinity(DamageType.COLD).apply(character)
+        SorcererDraconicFeatures.ElementalAffinity(DamageType.COLD).apply(
+            character.effects
+        )
         assert character.is_resistant_to_damage(DamageType.COLD)
         assert not character.is_resistant_to_damage(DamageType.FIRE)
 
@@ -464,7 +466,7 @@ class TestFighterBattleMasterSuperiorityDice:
     ):
         character = make_character(levels={CharacterClass.FIGHTER: fighter_level})
         feature = FighterBattleMasterFeatures.SuperiorityDice()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert feature.number_of_uses(character) == expected_dice
 
     def test_die_size_uses_fighter_class_level_not_character_level(
@@ -513,7 +515,7 @@ class TestSkillAndSavingThrowGrants:
         character = make_character()
         BardLoreFeatures.BonusProficiencies(
             Skill.ARCANA, Skill.PERSUASION, Skill.SURVIVAL
-        ).apply(character)
+        ).apply(character.effects)
         assert character.is_proficient_in_skill(Skill.ARCANA)
         assert character.is_proficient_in_skill(Skill.PERSUASION)
         assert character.is_proficient_in_skill(Skill.SURVIVAL)
@@ -528,7 +530,7 @@ class TestSkillAndSavingThrowGrants:
         character = make_character()
         ClericKnowledgeFeatures.BlessingsOfKnowledge(
             Skill.ARCANA, Skill.RELIGION
-        ).apply(character)
+        ).apply(character.effects)
         assert character.is_proficient_in_skill(Skill.ARCANA)
         assert character.is_proficient_in_skill(Skill.RELIGION)
         assert character.has_expertise_in_skill(Skill.ARCANA)
@@ -544,7 +546,7 @@ class TestSkillAndSavingThrowGrants:
         # SourceTexts/SubclassTexts2024/knowledge_domain.txt, Cleric level 6:
         # "you gain proficiency in Intelligence saving throws."
         character = make_character()
-        ClericKnowledgeFeatures.UnfetteredMind().apply(character)
+        ClericKnowledgeFeatures.UnfetteredMind().apply(character.effects)
         assert character.is_proficient_in_saving_throw(Ability.INTELLIGENCE)
 
     def test_unfettered_mind_falls_back_when_int_already_proficient(
@@ -553,8 +555,8 @@ class TestSkillAndSavingThrowGrants:
         # "If you already have this proficiency, you instead gain saving
         # throw proficiency with one ability in which you lack it."
         character = make_character()
-        character.add_proficiency_in_saving_throw(Ability.INTELLIGENCE)
-        ClericKnowledgeFeatures.UnfetteredMind().apply(character)
+        character.effects.add_saving_throw_proficiency(Ability.INTELLIGENCE)
+        ClericKnowledgeFeatures.UnfetteredMind().apply(character.effects)
         # STRENGTH is first in the fallback list after INTELLIGENCE.
         assert character.is_proficient_in_saving_throw(Ability.STRENGTH)
 
@@ -567,7 +569,7 @@ class TestInitiativeAndSkillRollConditionGrants:
         # "Initiative Bonus. When you roll Initiative, you can add your
         # Wisdom modifier to the roll." WIS 16 -> +3, DEX 10 -> +0.
         character = make_character(wisdom=16)
-        RangerGloomStalkerFeatures.DreadAmbusher().apply(character)
+        RangerGloomStalkerFeatures.DreadAmbusher().apply(character.effects)
         assert character.calculate_initiative() == 0 + 3
 
     def test_champion_remarkable_athlete_initiative_and_athletics_advantage(
@@ -577,7 +579,7 @@ class TestInitiativeAndSkillRollConditionGrants:
         # "you have Advantage on Initiative rolls and Strength (Athletics)
         # checks."
         character = make_character()
-        FighterChampionFeatures.RemarkableAthlete().apply(character)
+        FighterChampionFeatures.RemarkableAthlete().apply(character.effects)
         assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
         assert character.get_skill_roll_condition(Skill.ATHLETICS) == (
             DiceRollCondition.ADVANTAGE
@@ -657,13 +659,13 @@ class TestPromisedPassiveBenefits:
         # "If you already have Darkvision when you gain this feature, its
         # range increases by 60 feet."
         character = make_character()
-        GrantSense(Sense.DARKVISION, 60, "Species").apply(character)
+        GrantSense(Sense.DARKVISION, 60, "Species").apply(character.effects)
         apply_features(character, [RangerGloomStalkerFeatures.UmbralSight()])
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
     def test_shadow_arts_extends_existing_darkvision(self, make_character):
         character = make_character()
-        GrantSense(Sense.DARKVISION, 60, "Species").apply(character)
+        GrantSense(Sense.DARKVISION, 60, "Species").apply(character.effects)
         apply_features(character, [MonkShadowFeatures.ShadowArts()])
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
@@ -739,7 +741,7 @@ class TestPromisedPassiveBenefits:
         ArtificerBattleSmith.ArtificerBattleSmithLevel3().add_features(data)
         character = make_character(levels={CharacterClass.ARTIFICER: 3})
         for feature in data.iter_features_with_extensions():
-            feature.apply(character)
+            feature.apply(character.effects)
         assert (
             WeaponProficiency.MARTIAL
             in character.equipment_training.weapon_proficiencies

@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -98,8 +99,8 @@ class BeguilingDefenses(Feature):
         )
         self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._immunity.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._immunity.apply(effects)
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()

@@ -6,10 +6,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantArmorTraining, GrantWeaponProficiency
+from CharacterContent.Features.Core.Improvements import (
+    GrantArmorTraining,
+    GrantWeaponProficiency,
+)
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class HexbladeExpandedSpells(Feature):
@@ -87,10 +91,10 @@ class HexWarrior(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
-        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

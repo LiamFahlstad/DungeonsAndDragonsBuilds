@@ -5,6 +5,7 @@ from typing import Literal, TextIO
 
 from StatBlocks.Character import note_feature_extended
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import Html
 
 
@@ -489,7 +490,7 @@ class Feature:
         # query.
         note_feature_extended()
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         """Record this feature's effects on the stat block. Features, armor
         and items apply in no particular order, so only record facts - never
         read a stat here. Anything that depends on other stats or on worn

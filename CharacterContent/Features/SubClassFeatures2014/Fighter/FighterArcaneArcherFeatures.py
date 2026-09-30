@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -28,8 +29,8 @@ class ArcaneArcherLore(Feature):
             error_prefix="Arcane Archer Lore",
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency_choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency_choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

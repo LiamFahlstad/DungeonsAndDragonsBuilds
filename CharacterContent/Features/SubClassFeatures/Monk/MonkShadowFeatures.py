@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -61,8 +62,8 @@ class ShadowArts(Feature):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
         self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._darkvision.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._darkvision.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

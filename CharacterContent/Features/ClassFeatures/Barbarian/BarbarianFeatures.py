@@ -17,6 +17,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -139,8 +140,8 @@ class UnarmoredDefense(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._ac.apply(effects)
 
 
 class WeaponMastery(Feature):
@@ -176,8 +177,8 @@ class DangerSense(Feature):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._advantage.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._advantage.apply(effects)
 
 
 class RecklessAttack(Feature):
@@ -232,12 +233,12 @@ class PrimalKnowledgeSkillProficiency(Feature):
             error_prefix="Invalid skill for Primal Knowledge",
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # Only the proficiency is permanent. Making Acrobatics, Intimidation,
         # Perception, Stealth or Survival checks with Strength is a
         # while-raging option (see PrimalKnowledge), so the sheet keeps each
         # skill's normal ability.
-        self._proficiency.apply(character_stat_block)
+        self._proficiency.apply(effects)
 
 
 class PrimalKnowledge(Feature):
@@ -284,7 +285,7 @@ class FastMovementBonus(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "...while you aren't wearing Heavy armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
@@ -293,7 +294,7 @@ class FastMovementBonus(Feature):
                 if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY
                 else 10
             )
-        ).apply(character_stat_block)
+        ).apply(effects)
 
 
 class FeralInstinct(Feature):
@@ -305,10 +306,8 @@ class FeralInstinct(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
-            character_stat_block
-        )
+    def apply(self, effects: Effects):
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -486,8 +485,8 @@ class PrimalChampion(Feature):
             max_score=25,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonuses.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonuses.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You embody primal power. Your Strength and Constitution scores increase by 4, to a maximum of 25."

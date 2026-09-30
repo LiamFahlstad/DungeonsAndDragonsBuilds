@@ -11,15 +11,17 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
 ## The short version
 
 1. **`apply()` only records facts.** A proficiency, a +1, "add WIS to AC", "+10 speed unless in
-   Heavy armor", "+2 STR to a maximum of 20". It never reads the stat block.
+   Heavy armor", "+2 STR to a maximum of 20". It gets `Effects` (`StatBlocks/Effects.py`), a
+   write-only record, so it *can't* read a stat: not a score, not a proficiency, not a level.
 2. **The stat block works every value out when it's read**, from everything recorded. So nothing
    can depend on what happened to apply first.
 3. **Requirements are checked once, at the end** (`Character.validate()`): expertise
    needs proficiency, an armor needs a minimum Strength, and a multiclass character needs the
    ability minimums for every class it has.
 4. **There are no exceptions.** A test shuffles every build's effects (features, extensions,
-   armor, weapons, items and fighting styles together) and requires identical sheets. Two guard
-   tests fail on any effect that reads a stat during setup.
+   armor, weapons, items and fighting styles together) and requires identical sheets. The
+   write-only record makes "an effect read a stat mid-evaluation" impossible rather than a rule
+   the tests police.
 
 This follows the design of `~/Scripts/DungeonsAndDragons`: effects are recorded on a ledger,
 then evaluated once in the rules' own dependency order. Here `Effects` is the ledger, and
@@ -38,7 +40,7 @@ ability scores, the base speed and the class spellcasting ability, then:
 
 | # | Stage | What runs |
 |---|---|---|
-| 1 | **Record** | `apply()` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** |
+| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `Effects` view of fresh `Parts` |
 | 2 | **Validate** | Only in `validate()` (which `setup_character_stat_block()` calls): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
@@ -126,10 +128,10 @@ hook is gone. The effect is a formula reading the armor state on read:
 # Roving / Fast Movement
 SpeedBonus(
     lambda cs: 0 if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY else 10
-).apply(character_stat_block)
+).apply(effects)
 
 # Defense fighting style, Soul of the Forge
-ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat_block)
+ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 ```
 
 ## Writing a new feature effect
@@ -140,7 +142,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | "…if you already have it, choose another" | `SavingThrowProficiencyOrAlternative(X, [alternatives])` |
 | "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
-| "a bonus equal to your *ability* modifier" / "half your proficiency bonus" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus` |
+| "a bonus equal to your *ability* modifier" / "half your proficiency bonus" / "+1 per Sorcerer level" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus`, `HitPointsBonus` |
 | "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor.body_armor_type`, `cs.is_wearing_armor`, `cs.worn_armor.shield_wielded` |
 | "Your AC equals 10 + DEX + WIS" | `MultiAbilityArmorClass(10, [DEX, WIS])`, plus `allows_shield=False` if a Shield disables it |
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
@@ -150,13 +152,13 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `weapon -> bool` filter. Never write into the weapon |
 | An upgrade to an earlier feature | `parent.extend_feature(Upgrade())`. Its `apply()` runs too, so don't also `add_feature()` it |
 
-**Never read the stat block inside `apply()`.** That includes ability scores and modifiers,
-proficiency flags, AC and armor state. If a value depends on anything, pass a formula. Every part
-that takes bonuses (`Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills`, `SavingThrows`)
-accepts one via its own `Bonuses` instance (`StatBlocks/Bonuses.py`) - `add(value, source)` for a
-flat value, `add_formula(formula, source)` for one evaluated at read time. **Safe to read
-directly:** class levels, character level and proficiency bonus. They're fixed before any effect
-applies and no effect changes them.
+**`apply(self, effects: Effects)` can only record.** `Effects` offers `add_*`/`set_*`/
+`register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
+no levels either. If a value depends on anything, pass a formula (`lambda character: ...`); it gets
+the finished `Character` when the value is read. Every bonus with a formula form has an
+`add_derived_*` method on `Effects` (skills, saving throws, AC, HP, speed, initiative), and the
+improvements above choose between the flat and formula forms for you. `get_description()` and the
+other rendering methods still get the `Character`, and may read anything.
 
 ## The parts
 
@@ -191,9 +193,11 @@ flat-list/formula-list/source-list shape themselves.
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
-Every part is exposed directly under its own name. `Character`'s own methods
-(`add_damage_resistance`, `calculate_armor_class`, `get_sense_range`, …) are kept as one-line
-delegations to the parts, so existing feature call sites don't need to change.
+Every part is exposed directly under its own name, for reading. Recording goes through
+`Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
+each write one part; `Character` has none of them, so nothing can record onto an evaluation that
+the next change would discard. A test or tool applying one feature to a bare character passes
+`character.effects`, a write-only view of the current evaluation.
 `character.abilities` is the evaluated `AbilityScores` (every increase applied); the player's
 scores before any increase are `base_abilities`. Likewise `character.speed` is the `Speed` part,
 and the species' walking speed is `base_speed`.
@@ -226,12 +230,14 @@ All in `tests/test_feature_apply_order.py`:
 | `test_effect_order_does_not_change_stats` | Shuffles all of every build's effects (features, extensions, armor, weapons, items, fighting styles), with no exceptions, and requires identical scores, AC, HP, initiative, speed, skills, proficiencies, roll conditions, saves, spell slots, resistances, immunities and senses |
 | `TestPreviouslyChronologicalEffects` | Ability caps, item bonuses, Strength requirements, Iron Mind / Unfettered Mind and Skill Expert give one answer in every permutation |
 | `TestCompetingEffectsNeverOverwrite` | Unarmored Defenses don't stack, armor and Shield interactions, Defense, roll-condition cancelling, skill-ability overrides and multiclass spell slots, in every permutation |
-| `test_effects_do_not_read_mutable_stats_during_setup` | **Runtime:** instruments every stat reader and property during setup and fails when any effect reads one, including through helpers, items, armor or extensions. The allow-list is empty |
-| `test_apply_methods_do_not_snapshot_derived_stats` | **Static:** the same rule, including armor-state reads, for code that no current build runs |
+| `test_effects_can_only_record` | `Effects` exposes only `add_*`/`set_*`/`register_*` methods and holds nothing but its private record |
+| `test_evaluation_passes_apply_the_write_only_record` | Every build's evaluation hands `apply()` an `Effects`, never the `Character` |
+| `test_content_never_reaches_into_the_record` | **Static:** no code in `CharacterContent` touches `Effects._parts` |
 | `TestModifierBonusesTrackLaterScoreIncreases`, `TestJackOfAllTrades`, `TestExpertiseRequirement`, `TestExtensionsApply`, `test_dropped_gear_does_not_leave_bonuses_on_weapons` | Formula features, validation, extensions and equipment isolation |
 
-Both the shuffle test and the guards were checked by mutation. Resolving capped increases in
-grant order, or making Defense read armor state inside `apply()`, fails many builds.
+The shuffle test was checked by mutation: resolving capped increases in grant order fails many
+builds. An `apply()` that tries to read a stat (Defense reading armor state, say) now fails with
+an `AttributeError` in every build that uses it.
 
 When the model changed, every one of the 136 builds produced identical ability scores, AC, HP,
 initiative, speed, skills, saves, proficiencies, roll conditions, spell and pact slots,

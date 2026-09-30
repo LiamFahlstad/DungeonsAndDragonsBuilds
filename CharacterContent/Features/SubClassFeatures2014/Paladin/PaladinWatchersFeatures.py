@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import InitiativeProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class WatchersSpells(Feature):
@@ -90,8 +91,8 @@ class AuraOfTheSentinel(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        InitiativeProficiency().apply(character_stat_block)
+    def apply(self, effects: Effects):
+        InitiativeProficiency().apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

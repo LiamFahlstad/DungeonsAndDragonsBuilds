@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillBonus
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class DreadfulStrikes(Feature):
@@ -63,13 +64,13 @@ class OtherworldlyGlamour(Feature):
             name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "Whenever you make a Charisma check, you gain a bonus to the check
         # equal to your Wisdom modifier (Minimum of +1)." A formula per skill,
         # so both the Wisdom modifier and the skill's ability are final.
         for skill in Skill:
             SkillBonus(skill, self._charisma_check_bonus(skill), self.name).apply(
-                character_stat_block
+                effects
             )
 
     @staticmethod

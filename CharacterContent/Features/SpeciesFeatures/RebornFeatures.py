@@ -5,6 +5,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 
@@ -60,8 +61,8 @@ class RebornKnowledgeSkill(Feature):
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
@@ -82,8 +83,8 @@ class StrangeEndurance(Feature):
         )
         self._resistance = DamageResistance(damage_type, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance to {self.damage_type.value} damage."

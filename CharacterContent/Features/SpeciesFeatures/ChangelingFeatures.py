@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 
@@ -30,8 +31,8 @@ class ChangelingInstincts(Feature):
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         if len(self._choice.skills) == 2:

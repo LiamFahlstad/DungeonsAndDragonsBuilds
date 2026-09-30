@@ -2,6 +2,7 @@ from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -25,8 +26,8 @@ class Skillful(Feature):
             [skill], list(Skill), count=1, error_prefix="Skillful"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

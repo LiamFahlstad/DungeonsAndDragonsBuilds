@@ -132,7 +132,7 @@ def granted(data, make_character):
     builder's features grant (proficiencies live on the stat block)."""
     character = make_character(levels=dict(data.level_per_class))
     for feature in data.iter_features_with_extensions():
-        feature.apply(character)
+        feature.apply(character.effects)
     return character
 
 
@@ -318,21 +318,21 @@ class TestPromisedPassiveBonusNeverApplied:
     def test_soul_of_the_forge_ac_bonus_while_wearing_heavy_armor(self, make_character):
         character = make_character(strength=15, levels={CharacterClass.CLERIC: 6})
         # Armor first: the bonus must not depend on which applies first.
-        Armor.PlateArmor().apply(character)
-        ClericForgeFeatures.SoulOfTheForge().apply(character)
+        Armor.PlateArmor().apply(character.effects)
+        ClericForgeFeatures.SoulOfTheForge().apply(character.effects)
         assert character.calculate_armor_class() == 19  # Plate 18 + 1
 
     def test_soul_of_the_forge_fire_resistance_is_applied(self, make_character):
         # Control: the other half of the same feature IS wired correctly.
         character = make_character(levels={CharacterClass.CLERIC: 6})
         feature = ClericForgeFeatures.SoulOfTheForge()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.FIRE)
 
     def test_superior_mobility_speed_increase(self, make_character):
         character = make_character(levels={CharacterClass.ROGUE: 9})
         feature = RogueScoutFeatures.SuperiorMobility()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.calculate_speed() == 40
 
     def test_survivalist_proficiency_and_expertise_are_applied(self, make_character):
@@ -343,7 +343,7 @@ class TestPromisedPassiveBonusNeverApplied:
             intelligence=10, wisdom=10, levels={CharacterClass.ROGUE: 3}
         )  # PB +2
         feature = RogueScoutFeatures.Survivalist()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.is_proficient_in_skill(Skill.NATURE)
         assert character.is_proficient_in_skill(Skill.SURVIVAL)
         # Expertise doubles proficiency bonus: 0 (WIS/INT mod) + 2*PB(2) = 4.
@@ -477,7 +477,7 @@ class TestOtherCorrectlyWiredEffects:
         # and thunder damage."
         character = make_character(levels={CharacterClass.SORCERER: 6})
         feature = SorcererStormSorceryFeatures.HeartOfTheStorm()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.LIGHTNING)
         assert character.is_resistant_to_damage(DamageType.THUNDER)
         assert not character.is_resistant_to_damage(DamageType.FIRE)
@@ -489,7 +489,7 @@ class TestOtherCorrectlyWiredEffects:
 
         character = make_character(levels={CharacterClass.DRUID: 14})
         feature = DruidSporesFeatures.FungalBody()
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.is_immune_to_condition(Condition.BLINDED)
         assert character.is_immune_to_condition(Condition.DEAFENED)
         assert character.is_immune_to_condition(Condition.FRIGHTENED)
@@ -528,7 +528,7 @@ class TestPromisedProficienciesGranted:
     def test_arcana_domain_arcane_initiate(self, make_character):
         # "You gain proficiency in the Arcana skill..."
         character = make_character()
-        ClericArcanaFeatures.ArcaneInitiate().apply(character)
+        ClericArcanaFeatures.ArcaneInitiate().apply(character.effects)
         assert character.is_proficient_in_skill(Skill.ARCANA)
 
 
@@ -538,25 +538,25 @@ class TestPromisedPassiveBenefits:
     def test_eyes_of_night_darkvision(self, make_character):
         # "You have darkvision out to a range of 300 feet."
         character = make_character()
-        ClericTwilightFeatures.EyesOfNight().apply(character)
+        ClericTwilightFeatures.EyesOfNight().apply(character.effects)
         assert character.get_sense_range(Sense.DARKVISION) == 300
 
     def test_ambush_master_initiative_advantage(self, make_character):
         # "You have advantage on initiative rolls."
         character = make_character()
-        RogueScoutFeatures.AmbushMaster().apply(character)
+        RogueScoutFeatures.AmbushMaster().apply(character.effects)
         assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
 
     def test_oceanic_soul_cold_resistance(self, make_character):
         # "You gain resistance to cold damage."
         character = make_character()
-        WarlockFathomlessFeatures.OceanicSoul().apply(character)
+        WarlockFathomlessFeatures.OceanicSoul().apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.COLD)
 
     def test_inured_to_undeath_necrotic_resistance(self, make_character):
         # "You have resistance to necrotic damage..."
         character = make_character()
-        WizardNecromancyFeatures.InuredToUndeath().apply(character)
+        WizardNecromancyFeatures.InuredToUndeath().apply(character.effects)
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
 
     @pytest.mark.parametrize(
@@ -574,7 +574,7 @@ class TestPromisedPassiveBenefits:
         # "...resistance to a damage type determined by your patron's kind:
         # bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid)."
         character = make_character()
-        WarlockTheGenieFeatures.ElementalGift(kind).apply(character)
+        WarlockTheGenieFeatures.ElementalGift(kind).apply(character.effects)
         assert list(character.defenses.damage_resistances) == [damage_type]
 
     @pytest.mark.parametrize(
@@ -591,5 +591,7 @@ class TestPromisedPassiveBenefits:
         # "Desert. You gain resistance to fire damage... Sea. ...lightning...
         # Tundra. ...cold"
         character = make_character()
-        BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment).apply(character)
+        BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment).apply(
+            character.effects
+        )
         assert list(character.defenses.damage_resistances) == [damage_type]

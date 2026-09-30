@@ -5,6 +5,7 @@ from CharacterContent.Features.Core.Improvements import (
     GrantSense,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -16,8 +17,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Khoravar Trait")
         self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
@@ -53,8 +54,8 @@ class SkillVersatility(Feature):
             [skill], list(Skill), count=1, error_prefix="SkillVersatility"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

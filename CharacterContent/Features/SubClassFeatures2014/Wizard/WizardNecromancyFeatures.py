@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class NecromancySavant(Feature):
@@ -69,12 +70,10 @@ class InuredToUndeath(Feature):
             usage_tags=["buff"],
         )
         # "You have resistance to necrotic damage..."
-        self._resistance = DamageResistance(
-            Definitions.DamageType.NECROTIC, self.name
-        )
+        self._resistance = DamageResistance(Definitions.DamageType.NECROTIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have resistance to necrotic damage, and your hit point maximum can't be reduced. You have spent so much time dealing with undead and the forces that animate them that you have become inured to some of their worst effects."

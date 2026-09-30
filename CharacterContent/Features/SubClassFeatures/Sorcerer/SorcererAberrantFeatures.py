@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class PsionicSpells(Feature):
@@ -86,8 +87,8 @@ class PsychicDefenses(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."

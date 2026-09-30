@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import GrantArmorTraining
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class BonusProficiencies(Feature):
@@ -18,9 +19,9 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Order Domain Cleric Level 3"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with heavy armor." (the skill choice isn't modelled)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."

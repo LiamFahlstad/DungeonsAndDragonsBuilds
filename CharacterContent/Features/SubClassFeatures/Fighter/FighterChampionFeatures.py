@@ -5,6 +5,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillRollCondition,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ImprovedCritical(Feature):
@@ -33,9 +34,9 @@ class RemarkableAthlete(Feature):
             Skill.ATHLETICS, DiceRollCondition.ADVANTAGE, reason="Remarkable Athlete"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock) -> None:
-        self._initiative.apply(character_stat_block)
-        self._athletics.apply(character_stat_block)
+    def apply(self, effects: Effects) -> None:
+        self._initiative.apply(effects)
+        self._athletics.apply(effects)
 
     def target(
         self, character_stat_block: CharacterStatBlock

@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 from Core.Definitions import CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -51,10 +52,10 @@ class DivineOrderProtector(Feature):
     def __init__(self):
         super().__init__(name="Divine Order: Protector", origin="Cleric Level 1")
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "...proficiency with Martial weapons and training with Heavy armor."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
@@ -70,12 +71,12 @@ class DivineOrderThaumaturge(Feature):
         )
         self.extra_cantrip = extra_cantrip
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         def bonus(cs: CharacterStatBlock) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(character_stat_block)
-        SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(character_stat_block)
+        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)
+        SkillBonus(Skill.RELIGION, bonus, source=self.name).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (minimum bonus of +1)."

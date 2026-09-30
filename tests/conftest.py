@@ -51,7 +51,7 @@ def basic_carrying_capacity():
 @pytest.fixture
 def make_character():
     """Factory for a bare Character (no features applied). Effects applied
-    to it directly (`SomeFeature().apply(character)`) are recorded on its
+    to it directly (`SomeFeature().apply(character.effects)`) are recorded on its
     current evaluation, which stays cached until one of its sources changes.
 
     make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})

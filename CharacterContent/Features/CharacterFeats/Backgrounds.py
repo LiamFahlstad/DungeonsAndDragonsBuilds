@@ -5,6 +5,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class FreeBackgroundAbilityBonus(Feature):
@@ -25,8 +26,8 @@ class FreeBackgroundAbilityBonus(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         choices = ", ".join(
@@ -55,8 +56,8 @@ class FreeBackgroundSkillProficiency(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)

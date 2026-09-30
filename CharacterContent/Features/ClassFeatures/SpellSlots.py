@@ -2,6 +2,7 @@ import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from Core.SpellcastingRules import CasterType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class SpellSlots(Feature):
@@ -28,8 +29,8 @@ class SpellSlots(Feature):
         )
         return f"{self.character_class.value} Spellcasting.\n{description}"
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # The slots themselves are worked out on read from every registered
         # caster (Core.SpellcastingRules.calculate_spell_slots), so it doesn't
         # matter which class's Spell Slots feature applies first.
-        character_stat_block.register_caster(self.character_class, self.caster_type)
+        effects.register_caster(self.character_class, self.caster_type)

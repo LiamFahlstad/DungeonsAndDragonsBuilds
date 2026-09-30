@@ -12,6 +12,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class Bladesong(Feature):
@@ -84,11 +85,13 @@ class TrainingInWarAndSong(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "...proficiency with all Melee Martial weapons that don't have the
         # Two-Handed or Heavy property."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED]).apply(character_stat_block)
-        self._choice.apply(character_stat_block)
+        GrantWeaponProficiency(
+            [WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED]
+        ).apply(effects)
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

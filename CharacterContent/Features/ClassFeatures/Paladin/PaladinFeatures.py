@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -224,11 +225,11 @@ class AuraOfProtection(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         def bonus(cs: CharacterStatBlock) -> int:
             return max(1, cs.get_charisma_modifier())
 
-        SavingThrowBonus(list(Ability), bonus).apply(character_stat_block)
+        SavingThrowBonus(list(Ability), bonus).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

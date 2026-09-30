@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -26,9 +27,9 @@ class CelestialResistance(Feature):
             DamageResistance(DamageType.RADIANT, self.name),
         ]
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for resistance in self._resistances:
-            resistance.apply(character_stat_block)
+            resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Necrotic damage and Radiant damage."
@@ -41,8 +42,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."

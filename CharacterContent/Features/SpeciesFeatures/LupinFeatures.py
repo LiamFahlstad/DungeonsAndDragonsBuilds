@@ -12,6 +12,7 @@ from CharacterContent.Features.Core.Improvements import (
     GrantSense,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 
@@ -21,8 +22,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Lupin Trait")
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -103,8 +104,8 @@ class WerewolfInstincts(Feature):
             [skill], self.VALID_SKILLS, count=1, error_prefix="Werewolf Instincts"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

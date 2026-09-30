@@ -16,6 +16,7 @@ from CharacterContent.Features.Core.Improvements import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -113,8 +114,8 @@ class UnarmoredDefense(Feature):
             allows_shield=False,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._ac.apply(effects)
 
 
 class MonksFocus(Feature):
@@ -260,7 +261,7 @@ class UnarmoredMovement(Feature):
             name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
         def bonus(cs: CharacterStatBlock) -> int:
@@ -269,7 +270,7 @@ class UnarmoredMovement(Feature):
             monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
             return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
 
-        SpeedBonus(bonus).apply(character_stat_block)
+        SpeedBonus(bonus).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
@@ -526,8 +527,8 @@ class DisciplinedSurvivorSavingThrows(Feature):
             ]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiencies.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiencies.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
@@ -597,8 +598,8 @@ class BodyAndMind(Feature):
             max_score=25,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonuses.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonuses.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."

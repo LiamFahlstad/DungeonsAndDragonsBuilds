@@ -28,7 +28,7 @@ from RunCharacterCreator import BuildSelector
 def apply_features(character, features, armors=()):
     # Armor first on purpose: effects may apply in any order.
     for effect in [*armors, *features]:
-        effect.apply(character)
+        effect.apply(character.effects)
     character.validate()
     return character
 

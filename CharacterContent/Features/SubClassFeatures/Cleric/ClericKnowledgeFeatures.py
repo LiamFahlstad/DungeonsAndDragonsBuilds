@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Ability, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class BlessingsOfKnowledge(Feature):
@@ -41,9 +42,9 @@ class BlessingsOfKnowledge(Feature):
             error_prefix="Blessings of Knowledge",
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency_choice.apply(character_stat_block)
-        self._expertise_choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency_choice.apply(effects)
+        self._expertise_choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = f"You gain proficiency with one type of Artisan's Tools of your choice and in {self._skill_1.value} and {self._skill_2.value}. You have Expertise in those two skills."
@@ -95,7 +96,7 @@ class UnfetteredMind(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # Intelligence, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.INTELLIGENCE,
@@ -106,7 +107,7 @@ class UnfetteredMind(Feature):
                 Ability.WISDOM,
                 Ability.CHARISMA,
             ],
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

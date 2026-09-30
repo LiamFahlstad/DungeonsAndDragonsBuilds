@@ -13,6 +13,7 @@ from CharacterContent.Features.Core.Improvements import (
     WeaponDamageBonus,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class FightingStyle(ABC):
@@ -35,7 +36,7 @@ class FightStyleModifier(FightingStyle):
     to character_stat_block.weapon_bonuses instead of into the weapons."""
 
     @abstractmethod
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         pass
 
 
@@ -44,10 +45,8 @@ def _is_ranged_weapon(weapon: AbstractWeapon) -> bool:
 
 
 class Archery(FightStyleModifier):
-    def apply(self, character_stat_block: CharacterStatBlock):
-        WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(
-            character_stat_block
-        )
+    def apply(self, effects: Effects):
+        WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(effects)
 
     def description(self):
         return "Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)"
@@ -59,11 +58,9 @@ class BlindFighting(FightingStyle):
 
 
 class Defense(FightStyleModifier):
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # A formula, so the armor is checked once everything has applied.
-        ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(
-            character_stat_block
-        )
+        ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 
     def description(self):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
@@ -79,12 +76,12 @@ def _is_one_handed_melee_weapon(weapon: AbstractWeapon) -> bool:
 
 
 class Dueling(FightStyleModifier):
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         WeaponDamageBonus(
             _is_one_handed_melee_weapon,
             2,
             "Dueling Fighting Style - Applied if one-handed weapon and no other weapons",
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def description(self):
         return "Dueling: When you're holding a Melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon. (calculated automatically)"
@@ -110,10 +107,10 @@ def _is_thrown_weapon(weapon: AbstractWeapon) -> bool:
 
 
 class ThrownWeaponFighting(FightStyleModifier):
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         WeaponDamageBonus(
             _is_thrown_weapon, 2, "Thrown Weapon Fighting Style - ranged attacks only"
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def description(self):
         return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (calculate manually)"

@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.Improvements import (
     SavingThrowAdvantage,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 SPEED = 30  # Given by your species
@@ -25,8 +26,8 @@ class DualMind(Feature):
         )
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._advantage.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._advantage.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on Wisdom and Charisma saving throws."
@@ -42,8 +43,8 @@ class MentalDiscipline(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Psychic damage."

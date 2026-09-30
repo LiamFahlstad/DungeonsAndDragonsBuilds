@@ -16,6 +16,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -25,10 +26,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with heavy armor and smith's tools."
-        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
-        GrantToolProficiency([SmithsTools()]).apply(character_stat_block)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
+        GrantToolProficiency([SmithsTools()]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with heavy armor and smith's tools."
@@ -126,12 +127,12 @@ class SoulOfTheForge(Feature):
         )
         self._resistance = DamageResistance(DamageType.FIRE, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
         # "While wearing heavy armor, you gain a +1 bonus to AC."
         ArmorClassBonus(
             lambda cs: 1 if cs.worn_armor.body_armor_type == ArmorType.HEAVY else 0
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -156,8 +157,8 @@ class SaintOfForgeAndFire(Feature):
         # exists on DamageResistance), so it stays prose-only.
         self._immunity = DamageImmunity(DamageType.FIRE, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._immunity.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._immunity.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

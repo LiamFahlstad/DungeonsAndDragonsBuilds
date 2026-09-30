@@ -2,11 +2,11 @@
 grant (features, spells, fighting styles, inventory), plus every stat worked
 out from them.
 
-Evaluation is internal and lazy. The first query after any change builds a
-fresh Effects record (StatBlocks/Effects.py) by applying every feature, armor,
-weapon, item and fighting style in iter_stat_effects(), then answers queries
-from it until the sources change again. A version counter decides when that
-is (see _get_effects).
+Evaluation is internal and lazy. The first query after any change builds
+fresh Parts (StatBlocks/Effects.py) by applying every feature, armor, weapon,
+item and fighting style in iter_stat_effects() to a write-only Effects view of
+them, then answers queries from the Parts until the sources change again. A version counter decides when that
+is (see _get_parts).
 
 This module is the model: it imports nothing from CharacterContent at
 runtime (features, items and fighting styles appear in annotations only), so
@@ -20,22 +20,19 @@ from __future__ import annotations
 
 import copy
 from contextlib import contextmanager
-from enum import Enum
 from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
-from Core.SpellcastingRules import CasterType
 from StatBlocks.AbilityRequirements import AbilityRequirements
 from StatBlocks.AbilityScores import AbilityScores
 from StatBlocks.ArmorClass import ArmorClass
-from StatBlocks.Bonuses import DerivedBonus
 from StatBlocks.CarryingCapacity import CarryingCapacity
 from StatBlocks.ClassLevels import ClassLevels
 from StatBlocks.Defenses import Defenses
-from StatBlocks.Effects import Effects
+from StatBlocks.Effects import Effects, Parts
 from StatBlocks.EquipmentTraining import EquipmentTraining
 from StatBlocks.HitPoints import HitPoints
 from StatBlocks.Initiative import Initiative
@@ -98,7 +95,7 @@ class Character:
     size: Optional[Definitions.CreatureSize] = None
 
     # Every feature in the order it was granted. The order only decides how
-    # the sheet lists them: no stat depends on it (see _get_effects).
+    # the sheet lists them: no stat depends on it (see _get_parts).
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
@@ -122,10 +119,8 @@ class Character:
     # inventory's own version and _feature_extensions it decides when the
     # cached evaluation is out of date.
     _version: int = attr.ib(default=0, init=False, eq=False, repr=False)
-    _effects: Optional[Effects] = attr.ib(
-        default=None, init=False, eq=False, repr=False
-    )
-    _effects_key: Optional[tuple[int, int, int]] = attr.ib(
+    _parts: Optional[Parts] = attr.ib(default=None, init=False, eq=False, repr=False)
+    _parts_key: Optional[tuple[int, int, int]] = attr.ib(
         default=None, init=False, eq=False, repr=False
     )
     # Class-relative level currently being applied by
@@ -396,14 +391,14 @@ class Character:
             *(style for style in self.fighting_styles if hasattr(style, "apply")),
         ]
 
-    def _get_effects(self) -> Effects:
-        """The evaluated effects: cached, and rebuilt from the sources on the
+    def _get_parts(self) -> Parts:
+        """The evaluated parts: cached, and rebuilt from the sources on the
         first query after any change to them. Requirements aren't checked
         here - validate() (and setup_character_stat_block()) does that,
         against the complete set of effects."""
         key = (self._version, self.inventory.version, _feature_extensions)
-        if self._effects is not None and self._effects_key == key:
-            return self._effects
+        if self._parts is not None and self._parts_key == key:
+            return self._parts
 
         if self.base_abilities is None:
             raise ValueError("Character abilities must be set.")
@@ -412,7 +407,7 @@ class Character:
         if self.base_class is None:
             raise ValueError("Character base class must be set.")
 
-        effects = Effects(
+        parts = Parts(
             # A copy: effects record their increases on it, and recording
             # them on the base scores would stack them on every rebuild.
             abilities=copy.deepcopy(self.base_abilities),
@@ -421,24 +416,33 @@ class Character:
                 ability=self.spell_casting_ability, fixed_slots=self.fixed_spell_slots
             ),
         )
-        # Cached before any effect applies: apply() records through this
-        # character's part attributes (skills, armor_class, ...), which must
-        # reach the record being built rather than start another build.
-        self._effects, self._effects_key = effects, key
+        effects = Effects(parts)
         try:
             # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
-            # every effect only records facts, and every value is worked out
-            # when it's read - so features, armor, weapons, items and fighting
-            # styles may apply in any order. tests/test_feature_apply_order.py
-            # shuffles iter_stat_effects() to prove it.
+            # every effect only records facts - Effects is write-only - and
+            # every value is worked out when it's read, so features, armor,
+            # weapons, items and fighting styles may apply in any order.
+            # tests/test_feature_apply_order.py shuffles iter_stat_effects()
+            # to prove it.
             for effect in self.iter_stat_effects(
                 list(self.iter_features_with_extensions())
             ):
-                effect.apply(self)
+                effect.apply(effects)
         except BaseException:
-            self._effects = None
+            self._parts = None
             raise
-        return effects
+        self._parts, self._parts_key = parts, key
+        return parts
+
+    @property
+    def effects(self) -> Effects:
+        """A write-only view of the current evaluation, for recording an
+        effect that isn't one of this character's sources - a test or tool
+        applying a single feature to a bare character
+        (`SomeFeature().apply(character.effects)`). Whatever is recorded this
+        way lasts only until the sources change and the character
+        re-evaluates; a real grant belongs in add_feature()/add_item()/..."""
+        return Effects(self._get_parts())
 
     def _validate_sources(self) -> None:
         """Checks that need no evaluation: every field a finished character
@@ -489,7 +493,7 @@ class Character:
         complete set of effects (expertise needs proficiency, an armor's
         Strength, multiclass ability minimums)."""
         self._validate_sources()
-        self._get_effects().validate(self.class_levels)
+        self._get_parts().validate(self.class_levels)
 
     def setup_character_stat_block(self) -> "Character":
         """Kept for existing callers: evaluation is internal and lazy now.
@@ -498,76 +502,76 @@ class Character:
         return self
 
     # ── The evaluated parts ──────────────────────────────────────────────────
-    # Each reads one part of the evaluated Effects (StatBlocks/Effects.py).
+    # Each reads one part of the evaluated Parts (StatBlocks/Effects.py).
 
     @property
     def abilities(self) -> AbilityScores:
         """Ability scores with every increase applied (base_abilities holds
         the scores before them)."""
-        return self._get_effects().abilities
+        return self._get_parts().abilities
 
     @property
     def speed(self) -> Speed:
         """Base walking speed plus every bonus (the int is calculate_speed())."""
-        return self._get_effects().speed
+        return self._get_parts().speed
 
     @property
     def spellcasting(self) -> Spellcasting:
-        return self._get_effects().spellcasting
+        return self._get_parts().spellcasting
 
     @property
     def skills(self) -> Skills:
-        return self._get_effects().skills
+        return self._get_parts().skills
 
     @property
     def saving_throws(self) -> SavingThrows:
-        return self._get_effects().saving_throws
+        return self._get_parts().saving_throws
 
     @property
     def carrying_capacity(self) -> CarryingCapacity:
-        return self._get_effects().carrying_capacity
+        return self._get_parts().carrying_capacity
 
     @property
     def armor_class(self) -> ArmorClass:
-        return self._get_effects().armor_class
+        return self._get_parts().armor_class
 
     @property
     def worn_armor(self) -> WornArmor:
-        return self._get_effects().worn_armor
+        return self._get_parts().worn_armor
 
     @property
     def hit_points(self) -> HitPoints:
-        return self._get_effects().hit_points
+        return self._get_parts().hit_points
 
     @property
     def equipment_training(self) -> EquipmentTraining:
-        return self._get_effects().equipment_training
+        return self._get_parts().equipment_training
 
     @property
     def languages(self) -> Languages:
-        return self._get_effects().languages
+        return self._get_parts().languages
 
     @property
     def defenses(self) -> Defenses:
-        return self._get_effects().defenses
+        return self._get_parts().defenses
 
     @property
     def senses(self) -> Senses:
-        return self._get_effects().senses
+        return self._get_parts().senses
 
     @property
     def ability_requirements(self) -> AbilityRequirements:
-        return self._get_effects().ability_requirements
+        return self._get_parts().ability_requirements
 
     @property
     def initiative(self) -> Initiative:
-        return self._get_effects().initiative
+        return self._get_parts().initiative
 
     @property
     def weapon_bonuses(self) -> WeaponBonuses:
-        return self._get_effects().weapon_bonuses
+        return self._get_parts().weapon_bonuses
 
-    # ── Queries (and the recording methods features call) ───────────────────
+    # ── Queries ──────────────────────────────────────────────────────────────
 
     @property
     def is_wearing_armor(self) -> bool:
@@ -581,11 +585,6 @@ class Character:
     @property
     def pact_magic_slots(self) -> dict[int, int]:
         return self.spellcasting.pact_magic_slots(self.class_levels)
-
-    def register_caster(
-        self, character_class: CharacterClass, caster_type: CasterType
-    ) -> None:
-        self.spellcasting.register_caster(character_class, caster_type)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
@@ -626,15 +625,6 @@ class Character:
             Ability.DEXTERITY,
         )
 
-    def add_shield(self, armor_class_bonus: int) -> None:
-        """Wield a Shield granting `armor_class_bonus` (with training)."""
-        self.worn_armor.wield_shield()
-        self.armor_class.add_shield_bonus(armor_class_bonus)
-
-    def set_worn_armor(self, armor_type: Definitions.ArmorType, name: str) -> None:
-        """Records the worn body armor's type and display name."""
-        self.worn_armor.set_body_armor(armor_type, name)
-
     @property
     def warnings(self) -> list[str]:
         """Legal but bad choices the player should know about."""
@@ -674,42 +664,6 @@ class Character:
 
     def _require_spell_casting_ability(self) -> Ability:
         return self.spellcasting.require_ability()
-
-    def add_initiative_proficiency(self):
-        self.initiative.add_proficiency()
-
-    def add_initiative_roll_condition(self, condition: Definitions.DiceRollCondition):
-        self.initiative.add_roll_condition(condition)
-
-    def add_initiative_bonus(self, bonus: int) -> None:
-        self.initiative.add_bonus(bonus)
-
-    def add_derived_initiative_bonus(self, bonus: DerivedBonus) -> None:
-        self.initiative.add_derived_bonus(bonus)
-
-    def add_derived_armor_class_bonus(self, bonus: DerivedBonus) -> None:
-        self.armor_class.add_derived_bonus(bonus)
-
-    def add_derived_speed_bonus(self, bonus: DerivedBonus) -> None:
-        self.speed.add_derived_bonus(bonus)
-
-    def add_ability_requirement(
-        self, ability: Ability, min_score: int, reason: str
-    ) -> None:
-        self.ability_requirements.add_ability_requirement(ability, min_score, reason)
-
-    def add_derived_saving_throw_bonus(
-        self, ability: Ability, bonus: DerivedBonus
-    ) -> None:
-        self.saving_throws.add_derived_bonus(ability, bonus)
-
-    def add_derived_skill_bonus(
-        self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
-    ) -> None:
-        self.skills.add_derived_bonus(skill, bonus, source)
-
-    def add_spell_save_dc_bonus(self, bonus: int) -> None:
-        self.spellcasting.add_spell_save_dc_bonus(bonus)
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.class_levels.get_class_level(character_class)
@@ -783,9 +737,6 @@ class Character:
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_proficient(ability)
 
-    def add_proficiency_in_saving_throw(self, ability: Ability) -> None:
-        self.saving_throws.add_proficiency(ability)
-
     def has_advantage_in_saving_throw(self, ability: Ability) -> bool:
         return self.saving_throws.is_advantaged(ability)
 
@@ -798,9 +749,6 @@ class Character:
         if self.has_untrained_armor_disadvantage(ability):
             conditions.add(Definitions.DiceRollCondition.DISADVANTAGE)
         return Definitions.combine_roll_conditions(conditions)
-
-    def add_advantage_in_saving_throw(self, ability: Ability) -> None:
-        self.saving_throws.add_advantage(ability)
 
     def _skill_roll_condition_sources(
         self, skill: Skill
@@ -816,14 +764,6 @@ class Character:
         return Definitions.combine_roll_conditions(
             self._skill_roll_condition_sources(skill)
         )
-
-    def set_skill_roll_condition(
-        self,
-        skill: Skill,
-        condition: Definitions.DiceRollCondition,
-        reason: Optional[str] = None,
-    ):
-        self.skills.set_roll_condition(skill, condition, reason)
 
     def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
         condition = self.get_skill_roll_condition(skill)
@@ -885,16 +825,6 @@ class Character:
             raise ValueError("Character does not have spell slots.")
         return spell_slots
 
-    def add_damage_resistance(
-        self, damage_type: Definitions.DamageType, source: str
-    ) -> None:
-        self.defenses.add_damage_resistance(damage_type, source)
-
-    def add_damage_immunity(
-        self, damage_type: Definitions.DamageType, source: str
-    ) -> None:
-        self.defenses.add_damage_immunity(damage_type, source)
-
     def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
         return self.defenses.is_resistant_to_damage(damage_type)
 
@@ -911,11 +841,6 @@ class Character:
     ) -> list[str]:
         return self.defenses.get_damage_immunity_sources(damage_type)
 
-    def add_condition_immunity(
-        self, condition: Definitions.Condition, source: str
-    ) -> None:
-        self.defenses.add_condition_immunity(condition, source)
-
     def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:
         return self.defenses.is_immune_to_condition(condition)
 
@@ -924,36 +849,11 @@ class Character:
     ) -> list[str]:
         return self.defenses.get_condition_immunity_sources(condition)
 
-    def add_sense(self, sense: Definitions.Sense, range_feet: int, source: str) -> None:
-        """Grant a sense. The same sense from several sources keeps the best range."""
-        self.senses.add_sense(sense, range_feet, source)
-
-    def add_sense_or_extension(
-        self, sense: Definitions.Sense, range_feet: int, source: str
-    ) -> None:
-        """Grant a sense out to `range_feet` - or, if the character already has
-        it, increase its range by `range_feet` (e.g. Umbral Sight)."""
-        self.senses.add_sense_or_extension(sense, range_feet, source)
-
     def get_sense_range(self, sense: Definitions.Sense) -> int:
         return self.senses.get_sense_range(sense)
 
     def get_sense_sources(self, sense: Definitions.Sense) -> list[tuple[int, str]]:
         return self.senses.get_sense_sources(sense)
-
-    def add_weapon_proficiency(self, weapon_proficiency: Enum) -> None:
-        self.equipment_training.add_weapon_proficiency(weapon_proficiency)
-
-    def add_armor_training(self, armor_type: Definitions.ArmorType) -> None:
-        self.equipment_training.add_armor_training(armor_type)
-
-    def add_tool_proficiency(self, tool_proficiency: Any) -> None:
-        """Proficiency with a tool (a ToolProficiency). The same tool from
-        several sources is listed once."""
-        self.equipment_training.add_tool_proficiency(tool_proficiency)
-
-    def add_language(self, language: Definitions.Language, source: str) -> None:
-        self.languages.add(language, source)
 
     def knows_language(self, language: Definitions.Language) -> bool:
         return self.languages.knows(language)

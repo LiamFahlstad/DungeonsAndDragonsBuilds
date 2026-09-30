@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class BonusProficiencies(Feature):
@@ -20,8 +21,8 @@ class BonusProficiencies(Feature):
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with three skills of your choice."

@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
     SavingThrowProficiencyChoice,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -35,9 +36,9 @@ class BonusProficiency(Feature):
                 error_prefix="Samurai Bonus Proficiency",
             )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         if self._proficiency_choice is not None:
-            self._proficiency_choice.apply(character_stat_block)
+            self._proficiency_choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in one of the following skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."
@@ -126,8 +127,8 @@ class ElegantCourtier(Feature):
             error_prefix="Elegant Courtier",
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency_choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency_choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

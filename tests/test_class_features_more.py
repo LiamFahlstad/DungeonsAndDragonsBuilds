@@ -43,7 +43,7 @@ from Core.Definitions import Ability, CharacterClass, Skill
 
 def apply_features(character, features):
     for feature in features:
-        feature.apply(character)
+        feature.apply(character.effects)
     character.validate()
     return character
 

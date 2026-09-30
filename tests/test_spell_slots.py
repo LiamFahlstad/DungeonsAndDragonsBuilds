@@ -137,7 +137,7 @@ def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
         base_speed=30,
     )
     for cls, _, caster_type in classes:
-        SpellSlots(caster_type, cls).apply(character)
+        SpellSlots(caster_type, cls).apply(character.effects)
     return character
 
 

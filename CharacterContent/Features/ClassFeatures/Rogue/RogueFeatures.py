@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Ability, Language, Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -23,8 +24,8 @@ class Expertise(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         skill_names = " and ".join(skill.value for skill in self._choice.skills)
@@ -75,8 +76,8 @@ class ThievesCant(Feature):
         # anywhere in this class.
         self._language = GrantLanguage(Language.THIEVES_CANT, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._language.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._language.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2."
@@ -298,8 +299,8 @@ class SlipperyMind(Feature):
             error_prefix="Slippery Mind",
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."

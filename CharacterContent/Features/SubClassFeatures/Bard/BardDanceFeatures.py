@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class DazzlingFootwork(Feature):
@@ -23,8 +24,8 @@ class DazzlingFootwork(Feature):
             10, [Ability.DEXTERITY, Ability.CHARISMA], allows_shield=False
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._ac.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

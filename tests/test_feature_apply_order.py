@@ -18,7 +18,6 @@ import ast
 import itertools
 import pathlib
 import random
-import sys
 
 import pytest
 
@@ -67,19 +66,8 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
-from StatBlocks.AbilityScores import AbilityScores
-from StatBlocks.ArmorClass import ArmorClass
-from StatBlocks.Bonuses import Bonuses
-from StatBlocks.CarryingCapacity import CarryingCapacity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
-from StatBlocks.HitPoints import HitPoints
-from StatBlocks.Initiative import Initiative
-from StatBlocks.SavingThrows import SavingThrows
-from StatBlocks.Skills import Skills
-from StatBlocks.Senses import Senses
-from StatBlocks.Speed import Speed
-from StatBlocks.Spellcasting import Spellcasting
-from StatBlocks.WornArmor import WornArmor
+from StatBlocks.Effects import Effects
 
 
 def _source_bonus(character, skill, source):
@@ -97,7 +85,7 @@ class TestModifierBonusesTrackLaterScoreIncreases:
     def test_primal_order_magician(self, make_character):
         character = make_character(wisdom=16)  # +3
         DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN).apply(
-            character
+            character.effects
         )
         character.abilities.add_bonus(Ability.WISDOM, 4)  # 20 -> +5
         for skill in (Skill.ARCANA, Skill.NATURE):
@@ -107,13 +95,15 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_primal_order_warden_grants_no_skill_bonus(self, make_character):
         character = make_character(wisdom=16)
-        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(character)
+        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(
+            character.effects
+        )
         assert character.get_skill_bonus(Skill.ARCANA) == 0
 
     def test_thaumaturge(self, make_character):
         character = make_character(wisdom=14)  # +2
         feature = ClericFeatures.DivineOrderThaumaturge(extra_cantrip="Guidance")
-        feature.apply(character)
+        feature.apply(character.effects)
         character.abilities.add_bonus(Ability.WISDOM, 4)  # 18 -> +4
         for skill in (Skill.ARCANA, Skill.RELIGION):
             assert _source_bonus(character, skill, feature.name) == [4]
@@ -121,12 +111,12 @@ class TestModifierBonusesTrackLaterScoreIncreases:
     def test_modifier_bonus_keeps_minimum_of_one(self, make_character):
         character = make_character(wisdom=8)  # -1
         feature = ClericFeatures.DivineOrderThaumaturge(extra_cantrip="Guidance")
-        feature.apply(character)
+        feature.apply(character.effects)
         assert character.get_skill_bonus(Skill.RELIGION) == 1
 
     def test_aura_of_protection(self, make_character):
         character = make_character(charisma=14)  # +2
-        PaladinFeatures.AuraOfProtection().apply(character)
+        PaladinFeatures.AuraOfProtection().apply(character.effects)
         character.abilities.add_bonus(Ability.CHARISMA, 4)  # 18 -> +4
         for ability in Ability:
             expected = character.get_ability_modifier(ability) + 4
@@ -134,20 +124,20 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_hungering_might(self, make_character):
         character = make_character(wisdom=12)  # +1
-        RangerHollowWardenFeatures.HungeringMight().apply(character)
+        RangerHollowWardenFeatures.HungeringMight().apply(character.effects)
         character.abilities.add_bonus(Ability.WISDOM, 6)  # 18 -> +4
         assert character.get_saving_throw_modifier(Ability.CONSTITUTION) == 4
         assert character.get_saving_throw_modifier(Ability.STRENGTH) == 0
 
     def test_dread_ambusher(self, make_character):
         character = make_character(wisdom=16)  # +3
-        RangerGloomStalkerFeatures.DreadAmbusher().apply(character)
+        RangerGloomStalkerFeatures.DreadAmbusher().apply(character.effects)
         character.abilities.add_bonus(Ability.WISDOM, 2)  # 18 -> +4
         assert character.calculate_initiative() == 4
 
     def test_rakish_audacity(self, make_character):
         character = make_character(charisma=16)  # +3
-        RogueSwashbucklerFeatures.RakishAudacity().apply(character)
+        RogueSwashbucklerFeatures.RakishAudacity().apply(character.effects)
         character.abilities.add_bonus(Ability.CHARISMA, 4)  # 20 -> +5
         assert character.calculate_initiative() == 5
 
@@ -156,7 +146,7 @@ class TestJackOfAllTrades:
     def test_proficiency_granted_later_switches_bonus_off(self, make_character):
         # Bard 5: proficiency bonus +3, Jack of All Trades adds 3 // 2 = 1.
         character = make_character(levels={CharacterClass.BARD: 5})
-        BardFeatures.JackOfAllTrades().apply(character)
+        BardFeatures.JackOfAllTrades().apply(character.effects)
         assert character.get_skill_modifier(Skill.STEALTH) == 1
 
         # A proficiency from anything that applies afterwards (species,
@@ -167,7 +157,7 @@ class TestJackOfAllTrades:
 
     def test_unproficient_skills_list_the_source(self, make_character):
         character = make_character(levels={CharacterClass.BARD: 5})
-        BardFeatures.JackOfAllTrades().apply(character)
+        BardFeatures.JackOfAllTrades().apply(character.effects)
         assert _source_bonus(character, Skill.ARCANA, "Jack of All Trades") == [1]
 
 
@@ -264,7 +254,7 @@ def _in_every_order(make_character, effects, **scores):
     for ordered in itertools.permutations(effects):
         character = make_character(**scores)
         for effect in ordered:
-            effect.apply(character)
+            effect.apply(character.effects)
         character.validate()
         characters.append(character)
     return characters
@@ -304,7 +294,7 @@ class TestPreviouslyChronologicalEffects:
         ):
             character = make_character(strength=13)
             for effect in ordered:
-                effect.apply(character)
+                effect.apply(character.effects)
             with pytest.raises(ValueError, match="Strength"):
                 character.validate()
 
@@ -434,7 +424,7 @@ class TestCompetingEffectsNeverOverwrite:
         for ordered in itertools.permutations(effects):
             character = make_character(levels=levels)
             for effect in ordered:
-                effect.apply(character)
+                effect.apply(character.effects)
             assert character.spell_slots == {1: 4, 2: 3, 3: 3, 4: 1}
             assert character.pact_magic_slots == {2: 2}
 
@@ -444,8 +434,8 @@ class _GrantExpertise(Feature):
         super().__init__(name="Test Expertise")
         self._expertise = SkillExpertise([skill])
 
-    def apply(self, character_stat_block):
-        self._expertise.apply(character_stat_block)
+    def apply(self, effects):
+        self._expertise.apply(effects)
 
 
 class _GrantProficiency(Feature):
@@ -453,8 +443,8 @@ class _GrantProficiency(Feature):
         super().__init__(name="Test Proficiency")
         self._proficiency = SkillProficiency([skill])
 
-    def apply(self, character_stat_block):
-        self._proficiency.apply(character_stat_block)
+    def apply(self, effects):
+        self._proficiency.apply(effects)
 
 
 class TestExpertiseRequirement:
@@ -523,203 +513,53 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
     assert (2, "2 (Bracers of Archery)") not in longbow_damage_bonuses()
 
 
-# ── Guard: no effect reads a mutable stat while the sheet is set up ───────────
-# Runtime counterpart of the AST guard below: it follows reads through helper
-# functions, items, armor, fighting styles and extensions, and sees every
-# effect a real build exercises. There are no exceptions: an effect only
-# records facts, and anything computed from other stats is a formula.
+# ── Guard: apply() gets a write-only record ──────────────────────────────────
+# An effect can't read a stat that other effects may still change, because
+# apply() never sees one: it gets Effects (StatBlocks/Effects.py), which can
+# only record. A read inside any apply() fails every build that uses it
+# (tests/test_all_builds.py builds them all), so there is nothing to allow-list
+# and nothing to instrument - only the shape of the record to pin down.
 
-_MUTABLE_STAT_READERS = {
-    AbilityScores: ("get_score", "get_own_score", "get_modifier"),
-    # Bonuses (StatBlocks/Bonuses.py) is the flat-plus-formula shape shared by
-    # Initiative, ArmorClass, HitPoints, Speed, Skills and SavingThrows - an
-    # effect reading a Bonuses instance directly must be caught the same as
-    # reading it through the owning part.
-    Bonuses: ("total", "sources"),
-    Skills: (
-        "is_proficient",
-        "has_expertise",
-        "get_skill_ability",
-        "get_skill_abilities",
-        "get_roll_condition",
-        "get_total_bonus",
-        "get_all_bonus_sources",
-    ),
-    SavingThrows: (
-        "is_proficient",
-        "is_advantaged",
-        "get_total_bonus",
-    ),
-    # The stat block's parts (step 5): an effect calling a part's query
-    # directly must be caught just like one going through CharacterStatBlock.
-    ArmorClass: ("calculate", "get_applicable_armor_class_formulas"),
-    HitPoints: ("calculate",),
-    Speed: ("total",),
-    CarryingCapacity: ("sources", "total"),
-    Initiative: ("total", "roll_condition"),
-    Senses: ("get_sense_range",),
-    Spellcasting: (
-        "spell_slots",
-        "pact_magic_slots",
-        "difficulty_class",
-        "attack_bonus",
-    ),
-    CharacterStatBlock: (
-        "get_skill_modifier",
-        "get_skill_bonus",
-        "get_saving_throw_modifier",
-        "calculate_armor_class",
-        "calculate_hit_points",
-        "calculate_difficulty_class_for_ability",
-        "calculate_attack_bonus_for_ability",
-        "calculate_initiative",
-        "calculate_speed",
-        "get_carrying_capacity_sources",
-        "get_carrying_capacity",
-        "get_sense_range",
-    ),
-}
-_MUTABLE_STAT_PROPERTIES = (
-    (CharacterStatBlock, "initiative_roll_condition"),
-    (CharacterStatBlock, "spell_slots"),
-    (CharacterStatBlock, "pact_magic_slots"),
-    (CharacterStatBlock, "is_wearing_armor"),
-    (WornArmor, "is_wearing_armor"),
-    (Senses, "ranges"),
-)
-_EFFECT_METHODS = {"apply"}
+_RECORDING_PREFIXES = ("add_", "set_", "register_")
 
 
-def _effect_chain() -> list[str]:
-    """Class names of the effects (feature/extension/improvement/armor/item)
-    whose apply is on the call stack, outermost first."""
-    chain = []
-    frame = sys._getframe(2)
-    while frame is not None:
-        if frame.f_code.co_name in _EFFECT_METHODS and "self" in frame.f_locals:
-            chain.append(type(frame.f_locals["self"]).__name__)
-        frame = frame.f_back
-    return chain[::-1]
+def test_effects_can_only_record():
+    public = [name for name in dir(Effects) if not name.startswith("_")]
+    assert public, "Effects has no recording methods"
+    readers = [name for name in public if not name.startswith(_RECORDING_PREFIXES)]
+    assert not readers, f"Effects must be write-only, but exposes {readers}"
+    # No instance attributes beyond the private record it writes into.
+    assert Effects.__slots__ == ("_parts",)
 
 
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
-def test_effects_do_not_read_mutable_stats_during_setup(name, monkeypatch):
-    offending_reads = set()
+def test_evaluation_passes_apply_the_write_only_record(name, monkeypatch):
+    received = []
+    real_iter = CharacterStatBlock.iter_stat_effects
 
-    def record(reader: str):
-        chain = _effect_chain()
-        if chain:
-            offending_reads.add(f"{' > '.join(chain)} reads {reader}")
+    class _Spy:
+        def apply(self, effects):
+            received.append(effects)
 
-    def instrument(cls, method_name):
-        original = getattr(cls, method_name)
+    def iter_with_spy(self, features=None):
+        return [*real_iter(self, features), _Spy()]
 
-        def instrumented(*args, **kwargs):
-            record(f"{cls.__name__}.{method_name}")
-            return original(*args, **kwargs)
-
-        monkeypatch.setattr(cls, method_name, instrumented)
-
-    def instrument_property(cls, name):
-        original = getattr(cls, name)
-
-        def instrumented(self):
-            record(f"{cls.__name__}.{name}")
-            return original.fget(self)
-
-        monkeypatch.setattr(cls, name, property(instrumented))
-
-    for cls, method_names in _MUTABLE_STAT_READERS.items():
-        for method_name in method_names:
-            instrument(cls, method_name)
-    for cls, name_ in _MUTABLE_STAT_PROPERTIES:
-        instrument_property(cls, name_)
-
+    monkeypatch.setattr(CharacterStatBlock, "iter_stat_effects", iter_with_spy)
     type(ALL_BUILDS[name])().build().setup_character_stat_block()
-    assert not offending_reads, (
-        "an effect reads a stat that other effects can still change - pass a "
-        "formula (Improvements.Value) instead:\n" + "\n".join(sorted(offending_reads))
-    )
+    assert received and all(type(r) is Effects for r in received)
 
 
-# ── Guard: apply() must not snapshot derived stats ────────────────────────────
-
-# Proficiency bonus and levels aren't listed: they depend only on class
-# levels, which are fixed before any feature applies.
-_DERIVED_READERS = {
-    "get_ability_modifier",
-    "get_ability_score",
-    "get_own_score",
-    "get_strength_modifier",
-    "get_dexterity_modifier",
-    "get_constitution_modifier",
-    "get_intelligence_modifier",
-    "get_wisdom_modifier",
-    "get_charisma_modifier",
-    "get_modifier",
-    "get_score",
-    "is_proficient",
-    "has_expertise",
-    "is_proficient_in_skill",
-    "is_proficient_in_saving_throw",
-    "calculate_armor_class",
-    "calculate_initiative",
-    "calculate_speed",
-}
-# Armor state is set by worn armor, which may apply after the feature.
-_ARMOR_STATE = {"body_armor_type", "is_wearing_armor", "shield_wielded"}
-
-
-def _apply_methods_reading_derived_stats():
+def test_content_never_reaches_into_the_record():
+    # Effects._parts is the evaluated record the Character reads; content that
+    # reached it could read stats mid-evaluation again.
     root = pathlib.Path(__file__).resolve().parent.parent / "CharacterContent"
-    for path in root.rglob("*.py"):
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        for cls in (n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)):
-            for method in cls.body:
-                if not isinstance(method, ast.FunctionDef) or method.name != "apply":
-                    continue
-                # Reads inside a nested def/lambda are formulas evaluated at
-                # read time, not snapshots - skip those subtrees.
-                nested = {
-                    id(node)
-                    for inner in ast.walk(method)
-                    if inner is not method
-                    and isinstance(inner, (ast.FunctionDef, ast.Lambda))
-                    for node in ast.walk(inner)
-                }
-                reads = set()
-                for node in ast.walk(method):
-                    if id(node) in nested:
-                        continue
-                    if (
-                        isinstance(node, ast.Call)
-                        and isinstance(node.func, ast.Attribute)
-                        and node.func.attr in _DERIVED_READERS
-                    ):
-                        reads.add(node.func.attr)
-                    elif (
-                        isinstance(node, ast.Attribute)
-                        and isinstance(node.ctx, ast.Load)
-                        and node.attr in _ARMOR_STATE
-                    ):
-                        reads.add(node.attr)
-                if reads:
-                    yield f"{cls.name}.{method.name}", path, method.lineno, sorted(
-                        reads
-                    )
-
-
-def test_apply_methods_do_not_snapshot_derived_stats():
     offenders = [
-        f"{path.name}:{line} {qualname} reads {', '.join(reads)}"
-        for qualname, path, line, reads in _apply_methods_reading_derived_stats()
+        f"{path.relative_to(root)}:{node.lineno}"
+        for path in root.rglob("*.py")
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
+        if isinstance(node, ast.Attribute) and node.attr == "_parts"
     ]
-    assert not offenders, (
-        "apply() computes a stat-dependent value up front, freezing it before "
-        "later features/armor/items apply - pass a formula instead "
-        "(e.g. SkillBonus(skill, lambda cs: cs.get_wisdom_modifier())):\n"
-        + "\n".join(offenders)
-    )
+    assert not offenders, offenders
 
 
 # ── Weapon, armor and tool proficiencies are recorded, not snapshotted ───────
@@ -729,8 +569,8 @@ class _GrantMartialWeapons(Feature):
     def __init__(self):
         super().__init__(name="Test Martial Weapon Training")
 
-    def apply(self, character_stat_block):
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+    def apply(self, effects):
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
 
 class TestProficienciesResolveOnRead:
@@ -774,11 +614,11 @@ class TestProficienciesResolveOnRead:
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_character):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
         worn = make_character()
-        BracersOfArchery().apply(worn)
+        BracersOfArchery().apply(worn.effects)
         assert longbow.is_proficient(worn)
         assert not longsword.is_proficient(worn)
         unworn = make_character()
-        BracersOfArchery(is_wearing=False).apply(unworn)
+        BracersOfArchery(is_wearing=False).apply(unworn.effects)
         assert not longbow.is_proficient(unworn)
 
     def test_armor_training_and_tools_from_features(self, make_character):

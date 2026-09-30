@@ -72,7 +72,7 @@ MULTICLASS_TEXT = {
 def test_multiclass_proficiencies_match_class_text(character_class, make_character):
     armor, weapons, tools = MULTICLASS_TEXT[character_class]
     character = make_character()
-    MulticlassProficiencies(character_class).apply(character)
+    MulticlassProficiencies(character_class).apply(character.effects)
     assert character.equipment_training.armor_training == armor
     assert character.equipment_training.weapon_proficiencies == weapons
     assert {t.name for t in character.equipment_training.tool_proficiencies} == tools
@@ -122,7 +122,7 @@ class TestFeaturesGrantProficiencies:
         assert not longsword.is_proficient(character)
         GeneralFeats.MartialWeaponTraining(
             character_level=4, ability=Ability.STRENGTH
-        ).apply(character)
+        ).apply(character.effects)
         assert longsword.is_proficient(character)
         assert character.get_ability_score(Ability.STRENGTH) == 15
 
@@ -131,14 +131,16 @@ class TestFeaturesGrantProficiencies:
         # weapons and training with Medium armor." (only Medium armor used to
         # be granted)
         character = make_character()
-        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(character)
+        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(
+            character.effects
+        )
         assert MARTIAL in character.equipment_training.weapon_proficiencies
         assert MEDIUM in character.equipment_training.armor_training
 
     def test_druid_magician_grants_no_proficiencies(self, make_character):
         character = make_character()
         DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN).apply(
-            character
+            character.effects
         )
         assert not character.equipment_training.weapon_proficiencies
         assert not character.equipment_training.armor_training
@@ -146,7 +148,7 @@ class TestFeaturesGrantProficiencies:
     def test_forge_domain_smiths_tools(self, make_character):
         # "You gain proficiency with heavy armor and smith's tools."
         character = make_character()
-        ClericForgeFeatures.BonusProficiencies().apply(character)
+        ClericForgeFeatures.BonusProficiencies().apply(character.effects)
         assert ArmorType.HEAVY in character.equipment_training.armor_training
         assert [t.name for t in character.equipment_training.tool_proficiencies] == [
             Tools.SmithsTools().name
@@ -183,13 +185,13 @@ DIS, ADV, NEUTRAL = (
 class TestArmorTraining:
     def test_untrained_shield_grants_no_ac(self, make_character):
         untrained = make_character(dexterity=14)
-        Armor.ShieldArmor().apply(untrained)
+        Armor.ShieldArmor().apply(untrained.effects)
         assert untrained.calculate_armor_class() == 12
         assert untrained.warnings == [
             "Wielding a Shield without Shield training: it grants no AC bonus."
         ]
         trained = make_character(dexterity=14, armor_training=[SHIELD])
-        Armor.ShieldArmor().apply(trained)
+        Armor.ShieldArmor().apply(trained.effects)
         assert trained.calculate_armor_class() == 14
         assert trained.warnings == []
 
@@ -197,7 +199,7 @@ class TestArmorTraining:
         self, make_character
     ):
         character = make_character(dexterity=14)
-        Armor.LeatherArmor().apply(character)
+        Armor.LeatherArmor().apply(character.effects)
         # AC itself is unaffected.
         assert character.calculate_armor_class() == 11 + 2
         for skill in (Skill.ATHLETICS, Skill.ACROBATICS, Skill.STEALTH):
@@ -227,14 +229,16 @@ class TestArmorTraining:
     def test_skill_uses_its_actual_ability(self, make_character):
         # Athletics rolled with Wisdom isn't a Strength test.
         character = make_character(wisdom=14)
-        SkillToAbilityOverride([Skill.ATHLETICS], Ability.WISDOM).apply(character)
-        Armor.LeatherArmor().apply(character)
+        SkillToAbilityOverride([Skill.ATHLETICS], Ability.WISDOM).apply(
+            character.effects
+        )
+        Armor.LeatherArmor().apply(character.effects)
         assert character.get_skill_roll_condition(Skill.ATHLETICS) == NEUTRAL
 
     def test_cancels_with_advantage(self, make_character):
         character = make_character()
-        Armor.LeatherArmor().apply(character)
-        InitiativeRollCondition(ADV).apply(character)
+        Armor.LeatherArmor().apply(character.effects)
+        InitiativeRollCondition(ADV).apply(character.effects)
         character.saving_throws.add_advantage(Ability.DEXTERITY)
         assert character.initiative_roll_condition == NEUTRAL
         assert character.get_saving_throw_roll_condition(Ability.DEXTERITY) == NEUTRAL
@@ -248,7 +252,7 @@ class TestArmorTraining:
         for ordered in itertools.permutations(effects):
             character = make_character(dexterity=14)
             for effect in ordered:
-                effect.apply(character)
+                effect.apply(character.effects)
             assert character.warnings == []
             assert character.get_skill_roll_condition(Skill.STEALTH) == NEUTRAL
             assert character.calculate_armor_class() == 11 + 2 + 2
@@ -257,8 +261,8 @@ class TestArmorTraining:
         # A Monk's Unarmored Defense stops working with a Shield; setting the
         # Shield aside brings it back (the sheet's "w/o Shield" figure).
         character = make_character(dexterity=14, wisdom=16, armor_training=[SHIELD])
-        MonkFeatures.UnarmoredDefense().apply(character)
-        Armor.ShieldArmor().apply(character)
+        MonkFeatures.UnarmoredDefense().apply(character.effects)
+        Armor.ShieldArmor().apply(character.effects)
         assert character.calculate_armor_class() == 10 + 2 + 2
         assert character.calculate_armor_class(ignore_shield=True) == 10 + 2 + 3
 

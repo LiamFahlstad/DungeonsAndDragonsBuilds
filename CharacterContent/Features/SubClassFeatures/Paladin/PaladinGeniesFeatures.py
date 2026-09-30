@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
 from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ElementalSmite(Feature):
@@ -89,8 +90,8 @@ class GeniesSplendor(Feature):
         # plus your Dexterity and Charisma modifiers. You can use a Shield..."
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._ac.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._ac.apply(effects)
 
     def target(
         self, character_stat_block: CharacterStatBlock

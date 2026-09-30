@@ -12,6 +12,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import MAX_ABILITY_MODIFIER, Condition, DamageType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ToolsOfTheTrade(Feature):
@@ -138,10 +139,10 @@ class ChemicalMastery(Feature):
         ]
         self._immunity = ConditionImmunity(Condition.POISONED, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for resistance in self._resistances:
-            resistance.apply(character_stat_block)
-        self._immunity.apply(character_stat_block)
+            resistance.apply(effects)
+        self._immunity.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

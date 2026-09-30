@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
     Definitions.DruidLandType.ARID: "Fire",
@@ -128,9 +129,9 @@ class NaturesWard(Feature):
             DamageType(_LAND_TYPE_RESISTANCE[self.land_type]), self.name
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._condition_immunity.apply(character_stat_block)
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._condition_immunity.apply(effects)
+        self._resistance.apply(effects)
 
     def target(
         self, character_stat_block: CharacterStatBlock

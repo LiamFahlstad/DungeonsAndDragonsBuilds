@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ShadowSpells(Feature):
@@ -38,9 +39,9 @@ class PowerOfShadow(Feature):
             GrantSense(Sense.BLINDSIGHT, 10, self.name),
         ]
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for sense in self._senses:
-            sense.apply(character_stat_block)
+            sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -102,8 +103,8 @@ class NecroticHusk(Feature):
         # prose-only.
         self._resistance = DamageResistance(DamageType.NECROTIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         return character_stat_block.calculate_difficulty_class()

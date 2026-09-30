@@ -2,6 +2,7 @@ from Core.Definitions import CreatureSize, DamageType, Sense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -15,8 +16,8 @@ class FiendishResistance(Feature):
         )
         self._resistance = DamageResistance(DamageType(damage_type), self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance to {self.damage_type} damage."
@@ -28,8 +29,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Tiefling Trait")
         self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."

@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class MoonsInspiration(Feature):
@@ -64,9 +65,9 @@ class PrimalLore(Feature):
         )
         self._language = GrantLanguage(Language.DRUIDIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency_choice.apply(character_stat_block)
-        self._language.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency_choice.apply(effects)
+        self._language.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

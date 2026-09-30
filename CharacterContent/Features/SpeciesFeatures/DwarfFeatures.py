@@ -13,6 +13,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, CreatureSize, DamageType, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -25,8 +26,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 120, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 120 feet."
@@ -39,8 +40,8 @@ class DwarvenResilience(Feature):
         )
         self._resistance = DamageResistance(DamageType.POISON, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
@@ -56,8 +57,8 @@ class DwarvenToughness(Feature):
         )
         self._hp = HitPointsPerLevelBonus(1)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._hp.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._hp.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You gain an additional Hit Point for each level you gain."

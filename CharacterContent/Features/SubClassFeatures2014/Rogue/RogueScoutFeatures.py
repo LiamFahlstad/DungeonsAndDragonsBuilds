@@ -12,6 +12,7 @@ from CharacterContent.Features.Core.Improvements import (
     SpeedBonus,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class Skirmisher(Feature):
@@ -43,9 +44,9 @@ class Survivalist(Feature):
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency.apply(character_stat_block)
-        self._expertise.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency.apply(effects)
+        self._expertise.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
@@ -61,8 +62,8 @@ class SuperiorMobility(Feature):
         )
         self._speed = SpeedBonus(10)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._speed.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._speed.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
@@ -83,9 +84,9 @@ class AmbushMaster(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You have advantage on initiative rolls."
-        InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(character_stat_block)
+        InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

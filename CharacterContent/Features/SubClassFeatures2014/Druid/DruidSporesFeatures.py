@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class CircleSporesSpells(Feature):
@@ -175,9 +176,9 @@ class FungalBody(Feature):
             ConditionImmunity(Condition.POISONED, self.name),
         ]
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for immunity in self._immunities:
-            immunity.apply(character_stat_block)
+            immunity.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The fungal spores in your body alter you: you can't be blinded, deafened, frightened, or poisoned, and any critical hit against you counts as a normal hit instead, unless you're incapacitated."

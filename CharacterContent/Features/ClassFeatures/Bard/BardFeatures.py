@@ -13,6 +13,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -132,8 +133,8 @@ class ExpertiseLevel1(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with two skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
@@ -149,8 +150,8 @@ class ExpertiseLevel9(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with two more skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
@@ -167,8 +168,8 @@ class JackOfAllTrades(Feature):
         )
         self._bonus = JackOfAllTradesBonus()
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You can add half your Proficiency Bonus (round up) to any ability check you make that doesn't already use your Proficiency Bonus. In addition, you can use this bonus when you use a weapon and add your Proficiency Bonus to the damage roll."

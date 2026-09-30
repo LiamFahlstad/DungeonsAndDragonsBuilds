@@ -12,6 +12,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class AbstractArmor(Item, ABC):
@@ -112,26 +113,22 @@ class AbstractArmor(Item, ABC):
         wearer instead."""
         self.add_improvement(armor_improvement)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(
-            character_stat_block
-        )  # CharacterImprovements (gated on is_wearing)
+    def apply(self, effects: Effects):
+        super().apply(effects)  # CharacterImprovements (gated on is_wearing)
         if self.is_wearing:
-            self.apply_worn_effects(character_stat_block)
+            self.apply_worn_effects(effects)
 
-    def apply_worn_effects(self, character_stat_block: CharacterStatBlock):
+    def apply_worn_effects(self, effects: Effects):
         """Apply this armor's AC and ability-based effects to the character."""
         if self.strength_requirement is not None:
-            StrengthRequirement(self.strength_requirement, self.name).apply(
-                character_stat_block
-            )
+            StrengthRequirement(self.strength_requirement, self.name).apply(effects)
         if self.stealth_disadvantage:
-            StealthDisadvantage(reason=self.name).apply(character_stat_block)
+            StealthDisadvantage(reason=self.name).apply(effects)
         if self.is_shield:
             # The AC bonus only counts with Shield training (worked out on read).
-            character_stat_block.add_shield(self.ac_bonus or 0)
+            effects.add_shield(self.ac_bonus or 0)
         else:
-            character_stat_block.set_worn_armor(self.armor_type, self.name)
+            effects.set_worn_armor(self.armor_type, self.name)
             # Medium armor: "add your Dexterity modifier, to a maximum of
             # +2" - Light armor is uncapped and Heavy armor has no ability
             # modifier at all, so the cap only ever applies here.
@@ -139,7 +136,7 @@ class AbstractArmor(Item, ABC):
                 2 if self.armor_type == Definitions.ArmorType.MEDIUM else None
             )
             SetArmorClass(self.base_ac, self.ac_ability, ability_modifier_cap).apply(
-                character_stat_block
+                effects
             )
             if self.ac_bonus:
-                ArmorClassBonus(self.ac_bonus).apply(character_stat_block)
+                ArmorClassBonus(self.ac_bonus).apply(effects)

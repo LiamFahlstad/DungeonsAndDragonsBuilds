@@ -3,15 +3,16 @@ from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from CharacterContent.Features.Core.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class BonusProficiency(Feature):
     def __init__(self):
         super().__init__(name="Bonus Proficiency", origin="Death Domain Cleric Level 3")
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons."

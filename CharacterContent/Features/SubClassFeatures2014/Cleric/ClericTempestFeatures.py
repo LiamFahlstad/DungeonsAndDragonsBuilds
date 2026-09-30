@@ -8,9 +8,13 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantArmorTraining, GrantWeaponProficiency
+from CharacterContent.Features.Core.Improvements import (
+    GrantArmorTraining,
+    GrantWeaponProficiency,
+)
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class BonusProficiencies(Feature):
@@ -19,10 +23,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Tempest Domain Cleric Level 3"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with martial weapons and heavy armor."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."

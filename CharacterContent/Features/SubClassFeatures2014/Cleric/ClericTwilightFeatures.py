@@ -15,6 +15,7 @@ from CharacterContent.Features.Core.Improvements import (
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -24,10 +25,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Twilight Domain Cleric Level 3"
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You gain proficiency with martial weapons and heavy armor."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
@@ -68,8 +69,8 @@ class EyesOfNight(Feature):
         # the activated part)
         self._darkvision = GrantSense(Definitions.Sense.DARKVISION, 300, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._darkvision.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._darkvision.apply(effects)
 
     def target(
         self, character_stat_block: CharacterStatBlock

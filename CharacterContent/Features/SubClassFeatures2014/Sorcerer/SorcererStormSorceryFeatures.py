@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import DamageType, Language
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class WindSpeaker(Feature):
@@ -25,8 +26,8 @@ class WindSpeaker(Feature):
         )
         self._language = GrantLanguage(Language.PRIMORDIAL, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._language.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._language.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran."
@@ -65,9 +66,9 @@ class HeartOfTheStorm(Feature):
             DamageResistance(DamageType.THUNDER, self.name),
         ]
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for resistance in self._resistances:
-            resistance.apply(character_stat_block)
+            resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
@@ -155,9 +156,9 @@ class WindSoul(Feature):
             DamageImmunity(DamageType.THUNDER, self.name),
         ]
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for immunity in self._immunities:
-            immunity.apply(character_stat_block)
+            immunity.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

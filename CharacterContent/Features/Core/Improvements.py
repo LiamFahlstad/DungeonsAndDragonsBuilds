@@ -1,22 +1,21 @@
-"""Improvements: reusable stat-block mutations composed into Features
+"""Improvements: the reusable effects Features are composed of
 (CharacterImprovement), plus composable modifiers applied directly to items
 at construction time (ItemImprovement and its weapon-/armor-specific
 subclasses - see CharacterContent.Items.Weapons/Armor).
 
 Ordering contract
 -----------------
-apply() only RECORDS a fact on the stat block; the stat block works every
-value out when it's read. Nothing reads the stat block while it's being
-filled, so features, extensions, armor, weapons, items and fighting styles
-can apply in any order and give the same sheet
-(CharacterSheetData.setup_character_stat_block):
+apply() only RECORDS a fact, on the write-only Effects record
+(StatBlocks/Effects.py); the Character works every value out when it's read.
+Effects has no way to read anything back, so features, extensions, armor,
+weapons, items and fighting styles can apply in any order and give the same
+character:
 
 - Flat facts (proficiencies, +N bonuses, resistances, senses) just add up.
 - A bonus whose size depends on other stats ("equal to your Wisdom
-  modifier", "while you aren't wearing Heavy armor") is a formula - the Value
-  type below, `lambda cs: ...` - evaluated against the finished stat block.
-  Never compute it inside apply(): that freezes it at whatever the stat was
-  when the feature ran.
+  modifier", "while you aren't wearing Heavy armor", "equal to your Sorcerer
+  level") is a formula - the Value type below, `lambda character: ...` -
+  evaluated against the finished Character when it's read.
 - Ability increases are recorded with their cap and resolved on read, lowest
   cap first (AbilityScores) - "to a maximum of 20" no longer depends on
   what applied before.
@@ -27,12 +26,11 @@ can apply in any order and give the same sheet
   the best applicable one is used (SetArmorClass, MultiAbilityArmorClass);
   roll conditions collect their sources and cancel out on read.
 - Requirements (expertise needs proficiency, an armor's Strength) are
-  recorded and checked by CharacterStatBlock.validate() once everything has
-  applied, so what meets them may be granted before or after.
+  recorded and checked by Character.validate() once everything has applied,
+  so what meets them may be granted before or after.
 
 tests/test_feature_apply_order.py enforces this: it applies every effect of
-every build in shuffled orders, and fails on any effect that reads a stat
-while the sheet is being set up.
+every build in shuffled orders and requires the same character.
 """
 
 from abc import ABC, abstractmethod
@@ -50,19 +48,21 @@ from Core.Definitions import (
     Skill,
 )
 from StatBlocks.ArmorClass import ArmorClassFormula
-from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Character import Character
+from StatBlocks.Effects import Effects
 from StatBlocks.WeaponBonuses import WeaponBonus, WeaponFilter
 
-# A flat bonus, or a formula evaluated against the final stat block at read
+# A flat bonus, or a formula evaluated against the finished Character at read
 # time (see the ordering contract above).
-Value = int | Callable[[CharacterStatBlock], int]
+Value = int | Callable[[Character], int]
 
 
 class CharacterImprovement(ABC):
-    """Base class for all CharacterImprovements. Override apply() to modify the stat block."""
+    """Base class for all CharacterImprovements. Override apply() to record
+    this improvement's effects."""
 
     @abstractmethod
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         pass
 
 
@@ -83,9 +83,9 @@ class SkillProficiency(CharacterImprovement):
     def __init__(self, skills: list[Skill]):
         self.skills = skills
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for skill in self.skills:
-            character_stat_block.skills.add_skill_proficiency(skill)
+            effects.add_skill_proficiency(skill)
 
 
 class SkillProficiencyChoice(SkillProficiency):
@@ -112,9 +112,9 @@ class SkillExpertise(CharacterImprovement):
     def __init__(self, skills: list[Skill]):
         self.skills = skills
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for skill in self.skills:
-            character_stat_block.skills.add_skill_expertise(skill)
+            effects.add_skill_expertise(skill)
 
 
 class SkillExpertiseChoice(SkillExpertise):
@@ -137,9 +137,9 @@ class SavingThrowProficiency(CharacterImprovement):
     def __init__(self, abilities: list[Ability]):
         self.abilities = abilities
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for ability in self.abilities:
-            character_stat_block.saving_throws.add_proficiency(ability)
+            effects.add_saving_throw_proficiency(ability)
 
 
 class SavingThrowProficiencyChoice(SavingThrowProficiency):
@@ -168,8 +168,8 @@ class SavingThrowProficiencyOrAlternative(CharacterImprovement):
         self.ability = ability
         self.alternatives = alternatives
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.saving_throws.add_proficiency_or_alternative(
+    def apply(self, effects: Effects):
+        effects.add_saving_throw_proficiency_or_alternative(
             self.ability, self.alternatives
         )
 
@@ -183,9 +183,9 @@ class GrantWeaponProficiency(CharacterImprovement):
     def __init__(self, weapon_proficiencies: list[Enum]):
         self.weapon_proficiencies = weapon_proficiencies
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for weapon_proficiency in self.weapon_proficiencies:
-            character_stat_block.add_weapon_proficiency(weapon_proficiency)
+            effects.add_weapon_proficiency(weapon_proficiency)
 
 
 class GrantArmorTraining(CharacterImprovement):
@@ -194,9 +194,9 @@ class GrantArmorTraining(CharacterImprovement):
     def __init__(self, armor_types: list[ArmorType]):
         self.armor_types = armor_types
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for armor_type in self.armor_types:
-            character_stat_block.add_armor_training(armor_type)
+            effects.add_armor_training(armor_type)
 
 
 class GrantToolProficiency(CharacterImprovement):
@@ -205,9 +205,9 @@ class GrantToolProficiency(CharacterImprovement):
     def __init__(self, tool_proficiencies: list):
         self.tool_proficiencies = tool_proficiencies
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for tool_proficiency in self.tool_proficiencies:
-            character_stat_block.add_tool_proficiency(tool_proficiency)
+            effects.add_tool_proficiency(tool_proficiency)
 
 
 class SavingThrowAdvantage(CharacterImprovement):
@@ -216,9 +216,9 @@ class SavingThrowAdvantage(CharacterImprovement):
     def __init__(self, abilities: list[Ability]):
         self.abilities = abilities
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for ability in self.abilities:
-            character_stat_block.saving_throws.add_advantage(ability)
+            effects.add_saving_throw_advantage(ability)
 
 
 class SavingThrowBonus(CharacterImprovement):
@@ -229,12 +229,12 @@ class SavingThrowBonus(CharacterImprovement):
         self.abilities = abilities
         self.bonus = bonus
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for ability in self.abilities:
             if callable(self.bonus):
-                character_stat_block.add_derived_saving_throw_bonus(ability, self.bonus)
+                effects.add_derived_saving_throw_bonus(ability, self.bonus)
             else:
-                character_stat_block.saving_throws.add_bonus(ability, self.bonus)
+                effects.add_saving_throw_bonus(ability, self.bonus)
 
 
 class AbilityScoreBonus(CharacterImprovement):
@@ -274,11 +274,9 @@ class AbilityScoreBonus(CharacterImprovement):
         self.bonuses = bonuses
         self.max_score = max_score
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for ability, bonus in self.bonuses:
-            character_stat_block.abilities.add_bonus(
-                ability, bonus, max_score=self.max_score
-            )
+            effects.add_ability_bonus(ability, bonus, max_score=self.max_score)
 
 
 class SetArmorClass(CharacterImprovement):
@@ -301,8 +299,8 @@ class SetArmorClass(CharacterImprovement):
         # +2". None means uncapped (Light armor, or no ability at all).
         self.ability_modifier_cap = ability_modifier_cap
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.armor_class.add_armor_class_formula(
+    def apply(self, effects: Effects):
+        effects.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
                 abilities=frozenset([self.ability] if self.ability else []),
@@ -326,8 +324,8 @@ class MultiAbilityArmorClass(CharacterImprovement):
         self.abilities = abilities
         self.allows_shield = allows_shield
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.armor_class.add_armor_class_formula(
+    def apply(self, effects: Effects):
+        effects.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
                 abilities=frozenset(self.abilities),
@@ -343,11 +341,11 @@ class ArmorClassBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         if callable(self.bonus):
-            character_stat_block.add_derived_armor_class_bonus(self.bonus)
+            effects.add_derived_armor_class_bonus(self.bonus)
         else:
-            character_stat_block.armor_class.add_bonus(self.bonus)
+            effects.add_armor_class_bonus(self.bonus)
 
 
 # ── Weapon attack and damage bonuses ──────────────────────────────────────────
@@ -361,8 +359,8 @@ class WeaponAttackBonus(CharacterImprovement):
     def __init__(self, applies_to: WeaponFilter, value: int, source: str):
         self.bonus = WeaponBonus(applies_to, value, source)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.weapon_bonuses.add_attack_bonus(self.bonus)
+    def apply(self, effects: Effects):
+        effects.add_weapon_attack_bonus(self.bonus)
 
 
 class WeaponDamageBonus(CharacterImprovement):
@@ -372,8 +370,8 @@ class WeaponDamageBonus(CharacterImprovement):
     def __init__(self, applies_to: WeaponFilter, value: int, source: str):
         self.bonus = WeaponBonus(applies_to, value, source)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.weapon_bonuses.add_damage_bonus(self.bonus)
+    def apply(self, effects: Effects):
+        effects.add_weapon_damage_bonus(self.bonus)
 
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────
@@ -391,10 +389,8 @@ class SkillRollCondition(CharacterImprovement):
         self.condition = condition
         self.reason = reason
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.set_skill_roll_condition(
-            self.skill, self.condition, self.reason
-        )
+    def apply(self, effects: Effects):
+        effects.set_skill_roll_condition(self.skill, self.condition, self.reason)
 
 
 class StealthDisadvantage(SkillRollCondition):
@@ -407,8 +403,8 @@ class StealthDisadvantage(SkillRollCondition):
 class InitiativeProficiency(CharacterImprovement):
     """Grants proficiency bonus to initiative rolls."""
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_initiative_proficiency()
+    def apply(self, effects: Effects):
+        effects.add_initiative_proficiency()
 
 
 class InitiativeRollCondition(CharacterImprovement):
@@ -417,8 +413,8 @@ class InitiativeRollCondition(CharacterImprovement):
     def __init__(self, condition: DiceRollCondition):
         self.condition = condition
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_initiative_roll_condition(self.condition)
+    def apply(self, effects: Effects):
+        effects.add_initiative_roll_condition(self.condition)
 
 
 class InitiativeBonus(CharacterImprovement):
@@ -429,23 +425,33 @@ class InitiativeBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         if callable(self.bonus):
-            character_stat_block.add_derived_initiative_bonus(self.bonus)
+            effects.add_derived_initiative_bonus(self.bonus)
         else:
-            character_stat_block.add_initiative_bonus(self.bonus)
+            effects.add_initiative_bonus(self.bonus)
 
 
-class HitPointsPerLevelBonus(CharacterImprovement):
-    """Adds `multiplier × character_level` to the hit points bonus."""
+class HitPointsBonus(CharacterImprovement):
+    """Adds to the hit point maximum - flat, or a formula evaluated at read
+    time (e.g. "+1 per Sorcerer level")."""
+
+    def __init__(self, bonus: Value):
+        self.bonus = bonus
+
+    def apply(self, effects: Effects):
+        if callable(self.bonus):
+            effects.add_derived_hit_points_bonus(self.bonus)
+        else:
+            effects.add_hit_points_bonus(self.bonus)
+
+
+class HitPointsPerLevelBonus(HitPointsBonus):
+    """Adds `multiplier × character level` to the hit point maximum."""
 
     def __init__(self, multiplier: int):
         self.multiplier = multiplier
-
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.hit_points.add_bonus(
-            self.multiplier * character_stat_block.character_level
-        )
+        super().__init__(lambda character: multiplier * character.character_level)
 
 
 class SkillBonus(CharacterImprovement):
@@ -458,17 +464,15 @@ class SkillBonus(CharacterImprovement):
         self.bonus = bonus
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         if callable(self.bonus):
-            character_stat_block.add_derived_skill_bonus(
+            effects.add_derived_skill_bonus(
                 self.skill, self.bonus, self.source or "Other"
             )
         elif self.source is not None:
-            character_stat_block.skills.add_skill_bonus(
-                self.skill, self.bonus, self.source
-            )
+            effects.add_skill_bonus(self.skill, self.bonus, self.source)
         else:
-            character_stat_block.skills.add_skill_bonus(self.skill, self.bonus)
+            effects.add_skill_bonus(self.skill, self.bonus)
 
 
 class SkillToAbilityOverride(CharacterImprovement):
@@ -478,9 +482,9 @@ class SkillToAbilityOverride(CharacterImprovement):
         self.skills = skills
         self.ability = ability
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for skill in self.skills:
-            character_stat_block.skills.update_skill_to_ability(skill, self.ability)
+            effects.add_skill_ability(skill, self.ability)
 
 
 class JackOfAllTradesBonus(CharacterImprovement):
@@ -490,18 +494,18 @@ class JackOfAllTradesBonus(CharacterImprovement):
     at read time, so a proficiency granted later (by any builder, the
     species, or an item) correctly switches the bonus off for that skill."""
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         for skill in Skill:
-            character_stat_block.add_derived_skill_bonus(
+            effects.add_derived_skill_bonus(
                 skill, self._bonus_for(skill), "Jack of All Trades"
             )
 
     @staticmethod
-    def _bonus_for(skill: Skill) -> Callable[[CharacterStatBlock], int]:
-        def bonus(character_stat_block: CharacterStatBlock) -> int:
-            if character_stat_block.skills.is_proficient(skill):
+    def _bonus_for(skill: Skill) -> Callable[[Character], int]:
+        def bonus(character: Character) -> int:
+            if character.skills.is_proficient(skill):
                 return 0
-            return character_stat_block.get_proficiency_bonus() // 2
+            return character.get_proficiency_bonus() // 2
 
         return bonus
 
@@ -514,11 +518,11 @@ class SpeedBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         if callable(self.bonus):
-            character_stat_block.add_derived_speed_bonus(self.bonus)
+            effects.add_derived_speed_bonus(self.bonus)
         else:
-            character_stat_block.speed.add_bonus(self.bonus)
+            effects.add_speed_bonus(self.bonus)
 
 
 class CarryingCapacityBonus(CharacterImprovement):
@@ -532,8 +536,8 @@ class CarryingCapacityBonus(CharacterImprovement):
         self.bonus = bonus
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.carrying_capacity.add_bonus(self.source, self.bonus)
+    def apply(self, effects: Effects):
+        effects.add_carrying_capacity_bonus(self.source, self.bonus)
 
 
 class SpellSaveDCBonus(CharacterImprovement):
@@ -542,15 +546,15 @@ class SpellSaveDCBonus(CharacterImprovement):
     def __init__(self, bonus: int):
         self.bonus = bonus
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_spell_save_dc_bonus(self.bonus)
+    def apply(self, effects: Effects):
+        effects.add_spell_save_dc_bonus(self.bonus)
 
 
 class StrengthRequirement(CharacterImprovement):
     """Requires a minimum Strength score (house rule: the build is rejected;
     PHB: speed -10 ft instead).
 
-    Recorded, then checked by CharacterStatBlock.validate() once everything
+    Recorded, then checked by Character.validate() once everything
     has applied - so every feat/background/ASI increase counts wherever it
     lands in the order. It checks the character's own score: a Strength bonus
     from an item cannot satisfy an armor requirement."""
@@ -559,10 +563,8 @@ class StrengthRequirement(CharacterImprovement):
         self.min_score = min_score
         self.reason = reason
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_ability_requirement(
-            Ability.STRENGTH, self.min_score, self.reason
-        )
+    def apply(self, effects: Effects):
+        effects.add_ability_requirement(Ability.STRENGTH, self.min_score, self.reason)
 
 
 # ── Resistances, immunities, senses, and languages ────────────────────────────
@@ -577,8 +579,8 @@ class DamageResistance(CharacterImprovement):
         self.damage_type = damage_type
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_damage_resistance(self.damage_type, self.source)
+    def apply(self, effects: Effects):
+        effects.add_damage_resistance(self.damage_type, self.source)
 
 
 class DamageImmunity(CharacterImprovement):
@@ -589,8 +591,8 @@ class DamageImmunity(CharacterImprovement):
         self.damage_type = damage_type
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_damage_immunity(self.damage_type, self.source)
+    def apply(self, effects: Effects):
+        effects.add_damage_immunity(self.damage_type, self.source)
 
 
 class ConditionImmunity(CharacterImprovement):
@@ -601,8 +603,8 @@ class ConditionImmunity(CharacterImprovement):
         self.condition = condition
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_condition_immunity(self.condition, self.source)
+    def apply(self, effects: Effects):
+        effects.add_condition_immunity(self.condition, self.source)
 
 
 class GrantSense(CharacterImprovement):
@@ -614,8 +616,8 @@ class GrantSense(CharacterImprovement):
         self.range_feet = range_feet
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_sense(self.sense, self.range_feet, self.source)
+    def apply(self, effects: Effects):
+        effects.add_sense(self.sense, self.range_feet, self.source)
 
 
 class GrantOrExtendSense(CharacterImprovement):
@@ -629,10 +631,8 @@ class GrantOrExtendSense(CharacterImprovement):
         self.range_feet = range_feet
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_sense_or_extension(
-            self.sense, self.range_feet, self.source
-        )
+    def apply(self, effects: Effects):
+        effects.add_sense_or_extension(self.sense, self.range_feet, self.source)
 
 
 class GrantLanguage(CharacterImprovement):
@@ -643,8 +643,8 @@ class GrantLanguage(CharacterImprovement):
         self.language = language
         self.source = source
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        character_stat_block.add_language(self.language, self.source)
+    def apply(self, effects: Effects):
+        effects.add_language(self.language, self.source)
 
 
 # ── Informational-only item improvements ─────────────────────────────────────
@@ -676,7 +676,7 @@ class InformationalImprovement(CharacterImprovement):
     """Base class for CharacterImprovements with no automated mechanical hook in this
     engine. apply() is intentionally a no-op; track the effect manually."""
 
-    def apply(self, character_stat_block: CharacterStatBlock) -> None:
+    def apply(self, effects: Effects) -> None:
         pass
 
 

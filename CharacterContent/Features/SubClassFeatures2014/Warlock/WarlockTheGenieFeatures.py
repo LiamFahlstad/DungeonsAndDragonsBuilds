@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DAO: "bludgeoning",
@@ -97,11 +98,11 @@ class ElementalGift(Feature):
         )
         self.kind = kind
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "You now have resistance to a damage type determined by your
         # patron's kind" (the flight is the activated part).
         DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind], self.name).apply(
-            character_stat_block
+            effects
         )
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:

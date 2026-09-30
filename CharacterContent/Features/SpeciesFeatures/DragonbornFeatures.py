@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import CreatureSize
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -44,8 +45,8 @@ class DamageResistance(Feature):
         )
         self._resistance = DamageResistanceImprovement(self.damage_type, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."

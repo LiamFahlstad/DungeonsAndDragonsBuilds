@@ -3,6 +3,7 @@ from Core.Definitions import Skill, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import Feature, RegainedOn
 from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class RitualAdept(Feature):
@@ -71,8 +72,8 @@ class Scholar(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"While studying magic, you specialized in {self._expertise.skills[0].value}. You have Expertise in it."
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._expertise.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._expertise.apply(effects)
 
 
 class MemorizeSpell(Feature):

@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
@@ -19,8 +20,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -38,8 +39,8 @@ class GnomishCunning(Feature):
             [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock) -> None:
-        self._advantage.apply(character_stat_block)
+    def apply(self, effects: Effects) -> None:
+        self._advantage.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Advantage on Intelligence, Wisdom, and Charisma saving throws."

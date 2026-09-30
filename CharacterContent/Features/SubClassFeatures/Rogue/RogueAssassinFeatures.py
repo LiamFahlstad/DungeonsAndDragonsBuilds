@@ -3,6 +3,7 @@ import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from CharacterContent.Features.Core.Improvements import InitiativeRollCondition
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class Assassinate(Feature):
@@ -13,11 +14,9 @@ class Assassinate(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "Initiative. You have Advantage on Initiative rolls."
-        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
-            character_stat_block
-        )
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

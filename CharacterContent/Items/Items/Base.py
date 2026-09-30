@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.Improvements import (
     ItemImprovement,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ItemRarity(str, Enum):
@@ -91,13 +92,13 @@ class Item(Feature):
         self.is_wearing = is_wearing
         self.is_consumable = is_consumable
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         """Apply all improvements to the character - unless this is a
         wearable item currently not being worn."""
         if self.is_wearing is False:
             return
         for improvement in self.improvements:
-            improvement.apply(character_stat_block)
+            improvement.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str | None:
         """Return the item description. Subclasses can override for a description

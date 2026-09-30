@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from Core.Definitions import MAX_PROFICIENCY_BONUS, DamageType, Sense
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 SPEED = 35  # Given by your species
 
@@ -16,8 +17,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Dhampir Trait")
         self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -49,8 +50,8 @@ class TraceOfUndeath(Feature):
         )
         self._resistance = DamageResistance(DamageType.NECROTIC, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return "You have Resistance to Necrotic damage."

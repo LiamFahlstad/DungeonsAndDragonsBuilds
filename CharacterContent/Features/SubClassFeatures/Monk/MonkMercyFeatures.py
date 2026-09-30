@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -125,8 +126,8 @@ class ImplementsOfMercy(Feature):
         )
         self._skill_proficiencies = SkillProficiency([Skill.INSIGHT, Skill.MEDICINE])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._skill_proficiencies.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._skill_proficiencies.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."

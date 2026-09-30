@@ -13,6 +13,7 @@ from CharacterContent.Features.Core.Improvements import (
     SavingThrowProficiencyOrAlternative,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class DreadAmbusher(Feature):
@@ -28,8 +29,8 @@ class DreadAmbusher(Feature):
             ),
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(character_stat_block)
+    def apply(self, effects: Effects):
+        InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -70,8 +71,8 @@ class UmbralSight(Feature):
         )
         self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._darkvision.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._darkvision.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -95,7 +96,7 @@ class IronMind(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # Wisdom, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.WISDOM,
@@ -106,7 +107,7 @@ class IronMind(Feature):
                 Ability.DEXTERITY,
                 Ability.CONSTITUTION,
             ],
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."

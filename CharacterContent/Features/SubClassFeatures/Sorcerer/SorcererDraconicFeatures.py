@@ -9,9 +9,11 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
+    HitPointsBonus,
     MultiAbilityArmorClass,
 )
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class DraconicSpells(Feature):
@@ -41,12 +43,14 @@ class DraconicResilience(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        sorcerer_level = character_stat_block.get_class_level(
-            Definitions.CharacterClass.SORCERER
-        )
-        character_stat_block.hit_points.add_bonus(sorcerer_level)
-        self._ac.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        # +1 HP per Sorcerer level: a formula, since effects can't read levels.
+        HitPointsBonus(
+            lambda character: character.get_class_level(
+                Definitions.CharacterClass.SORCERER
+            )
+        ).apply(effects)
+        self._ac.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
@@ -79,8 +83,8 @@ class ElementalAffinity(Feature):
         )
         self._resistance = DamageResistance(damage_type, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (

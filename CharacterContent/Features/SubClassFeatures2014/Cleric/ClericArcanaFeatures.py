@@ -7,6 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import SkillProficiency
 from Core.Definitions import Skill
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class ArcaneInitiate(Feature):
@@ -14,8 +15,8 @@ class ArcaneInitiate(Feature):
         super().__init__(name="Arcane Initiate", origin="Arcana Domain Cleric Level 3")
         self._proficiency = SkillProficiency([Skill.ARCANA])
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._proficiency.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._proficiency.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "You gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips."

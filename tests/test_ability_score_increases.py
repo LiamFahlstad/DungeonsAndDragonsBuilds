@@ -28,28 +28,30 @@ STR, DEX, CON, WIS, CHA = (
 class TestAbilityScoreImprovement:
     def test_plus_two_to_one(self, make_character):
         character = make_character(strength=16)
-        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character)
+        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character.effects)
         assert character.get_ability_score(STR) == 18
 
     def test_plus_one_to_two(self, make_character):
         character = make_character(strength=15, constitution=13)
-        GeneralFeats.AbilityScoreImprovement([(STR, 1), (CON, 1)]).apply(character)
+        GeneralFeats.AbilityScoreImprovement([(STR, 1), (CON, 1)]).apply(
+            character.effects
+        )
         assert character.get_ability_score(STR) == 16
         assert character.get_ability_score(CON) == 14
 
     def test_capped_at_20(self, make_character):
         character = make_character(strength=19)
-        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character)
+        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character.effects)
         assert character.get_ability_score(STR) == 20
 
     def test_no_effect_at_20(self, make_character):
         character = make_character(strength=20)
-        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character)
+        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character.effects)
         assert character.get_ability_score(STR) == 20
 
     def test_does_not_lower_score_already_above_20(self, make_character):
         character = make_character(strength=22)
-        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character)
+        GeneralFeats.AbilityScoreImprovement([(STR, 2)]).apply(character.effects)
         assert character.get_ability_score(STR) == 22
 
     @pytest.mark.parametrize(
@@ -70,12 +72,12 @@ class TestAbilityScoreImprovement:
 class TestHalfFeat:
     def test_plus_one(self, make_character):
         character = make_character(charisma=15)
-        GeneralFeats.Actor(character_level=4, ability=CHA).apply(character)
+        GeneralFeats.Actor(character_level=4, ability=CHA).apply(character.effects)
         assert character.get_ability_score(CHA) == 16
 
     def test_capped_at_20(self, make_character):
         character = make_character(charisma=20)
-        GeneralFeats.Actor(character_level=4, ability=CHA).apply(character)
+        GeneralFeats.Actor(character_level=4, ability=CHA).apply(character.effects)
         assert character.get_ability_score(CHA) == 20
 
     def test_level_prerequisite(self):
@@ -95,7 +97,7 @@ class TestBackgroundBonus:
     )
     def test_valid_splits(self, make_character, bonuses):
         character = make_character()
-        Backgrounds.FreeBackgroundAbilityBonus(bonuses).apply(character)
+        Backgrounds.FreeBackgroundAbilityBonus(bonuses).apply(character.effects)
         assert sum(character.get_ability_score(a) - 10 for a in Ability) == 3
 
     @pytest.mark.parametrize(
@@ -111,17 +113,17 @@ class TestBackgroundBonus:
 class TestCapstones:
     def test_primal_champion_plus_four(self, make_character):
         character = make_character(strength=20, constitution=18)
-        PrimalChampion().apply(character)
+        PrimalChampion().apply(character.effects)
         assert character.get_ability_score(STR) == 24
         assert character.get_ability_score(CON) == 22
 
     def test_primal_champion_max_25(self, make_character):
         character = make_character(strength=23)
-        PrimalChampion().apply(character)
+        PrimalChampion().apply(character.effects)
         assert character.get_ability_score(STR) == 25
 
     def test_body_and_mind_max_25(self, make_character):
         character = make_character(dexterity=22, wisdom=20)
-        BodyAndMind().apply(character)
+        BodyAndMind().apply(character.effects)
         assert character.get_ability_score(DEX) == 25
         assert character.get_ability_score(WIS) == 24

@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill, MAX_ABILITY_MODIFIER
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 from Utils import StringUtils
 
 
@@ -141,8 +142,8 @@ class DeftExplorerExpertise(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain Expertise with the {self.skill.value} skill."
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
 
 class DeftExplorerLanguages(Feature):
@@ -172,7 +173,7 @@ class Roving(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # "...while you aren't wearing Heavy Armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
@@ -181,7 +182,7 @@ class Roving(Feature):
                 if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY
                 else 10
             )
-        ).apply(character_stat_block)
+        ).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
@@ -207,8 +208,8 @@ class Expertise(Feature):
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return f"You gain Expertise with the {self.skill_1.value} and {self.skill_2.value} skills."
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._choice.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._choice.apply(effects)
 
 
 class Tireless(Feature):
@@ -343,8 +344,8 @@ class FeralSenses(Feature):
         )
         self._blindsight = GrantSense(Definitions.Sense.BLINDSIGHT, 30, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._blindsight.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._blindsight.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."

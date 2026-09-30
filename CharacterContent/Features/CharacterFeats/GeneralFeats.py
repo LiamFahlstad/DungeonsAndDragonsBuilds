@@ -11,12 +11,14 @@ from CharacterContent.Features.Core.Improvements import (
     GrantSense,
     SkillExpertiseChoice,
     SkillProficiencyChoice,
+    SavingThrowProficiency,
     SpeedBonus,
     GrantWeaponProficiency,
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.Effects import Effects
 
 
 class GeneralFeat(Feature):
@@ -69,8 +71,8 @@ class _AbilityScoreFeat(GeneralFeat):
         )
         super().__init__(name=self._NAME, origin=self._ORIGIN, uses=self._USES)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
 
 class AbilityScoreImprovement(GeneralFeat):
@@ -90,8 +92,8 @@ class AbilityScoreImprovement(GeneralFeat):
             skippable_in_concise=True,
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         choices = ", ".join(
@@ -143,8 +145,8 @@ class Athlete(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -448,10 +450,10 @@ class MartialWeaponTraining(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
+    def apply(self, effects: Effects):
+        super().apply(effects)
         # "Weapon Proficiency. You gain proficiency with Martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(character_stat_block)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -560,8 +562,8 @@ class Poisoner(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def calculate_dc(self, character_stat_block: CharacterStatBlock) -> int:
         modifier = character_stat_block.get_ability_modifier(self.ability)
@@ -610,9 +612,9 @@ class Resilient(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
-        character_stat_block.add_proficiency_in_saving_throw(self.ability)
+    def apply(self, effects: Effects):
+        super().apply(effects)
+        SavingThrowProficiency([self.ability]).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -643,8 +645,8 @@ class RitualCaster(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -741,13 +743,13 @@ class SkillExpert(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, character_stat_block: CharacterStatBlock):
+    def apply(self, effects: Effects):
         # Both grants are idempotent flags, and expertise's proficiency
         # requirement is validated once everything has applied - so there's
         # nothing to check against what was granted before this feat.
-        super().apply(character_stat_block)
-        self._proficiency.apply(character_stat_block)
-        self._expertise.apply(character_stat_block)
+        super().apply(effects)
+        self._proficiency.apply(effects)
+        self._expertise.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -767,9 +769,9 @@ class Skulker(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self._sense = GrantSense(Sense.BLINDSIGHT, 10, self._NAME)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        super().apply(effects)
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -810,10 +812,10 @@ class Speedy(_AbilityScoreFeat):
     _NAME = "Speedy"
     _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
+    def apply(self, effects: Effects):
+        super().apply(effects)
         # "Speed Increase. Your Speed increases by 10 feet."
-        SpeedBonus(10).apply(character_stat_block)
+        SpeedBonus(10).apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -890,8 +892,8 @@ class Telepathic(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._bonus.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._bonus.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1220,8 +1222,8 @@ class DarkGift(GeneralFeat):
         )
         self._sense = GrantSense(Sense.BLINDSIGHT, 15, self.name)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        self._sense.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        self._sense.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1552,9 +1554,9 @@ class ElementalFamiliar(_AbilityScoreFeat):
         self._resistance = ElementalResistance(damage_type)
         super().__init__(character_level, ability)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        super().apply(effects)
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         return (
@@ -1600,9 +1602,9 @@ class SpellResistant(_AbilityScoreFeat):
         self._resistance = DamageResistance(resistance_damage_type, self._NAME)
         super().__init__(character_level, ability)
 
-    def apply(self, character_stat_block: CharacterStatBlock):
-        super().apply(character_stat_block)
-        self._resistance.apply(character_stat_block)
+    def apply(self, effects: Effects):
+        super().apply(effects)
+        self._resistance.apply(effects)
 
     def get_description(self, character_stat_block: CharacterStatBlock) -> str:
         description = (
