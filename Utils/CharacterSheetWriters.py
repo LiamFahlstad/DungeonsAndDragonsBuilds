@@ -110,18 +110,6 @@ class HtmlCharacterSheetWriter:
         file.write("</div>\n")
 
     @staticmethod
-    def _apply_weapon_masteries(
-        weapons: list[AbstractWeapon], weapon_masteries: list[AbstractWeapon]
-    ):
-        if not weapon_masteries:
-            return
-
-        mastery_types = {type(mastery) for mastery in weapon_masteries}
-        for weapon in weapons:
-            if type(weapon) in mastery_types:
-                weapon.player_has_mastery = True
-
-    @staticmethod
     def _description_or_dash(description: str | None) -> str:
         return description if description else "-"
 
@@ -678,8 +666,13 @@ class HtmlCharacterSheetWriter:
         if not weapons:
             return
 
-        self._apply_weapon_masteries(weapons, weapon_masteries)
-        write_weapons_to_file(weapons, character, file, include_probability_tables)
+        write_weapons_to_file(
+            weapons,
+            character,
+            file,
+            include_probability_tables,
+            weapon_masteries=weapon_masteries,
+        )
 
     def _write_fighting_styles(
         self,

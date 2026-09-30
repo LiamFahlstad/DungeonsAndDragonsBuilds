@@ -51,6 +51,7 @@ from Core.Definitions import (
 )
 from StatBlocks.ArmorClass import ArmorClassFormula
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
+from StatBlocks.WeaponBonuses import WeaponBonus, WeaponFilter
 
 # A flat bonus, or a formula evaluated against the final stat block at read
 # time (see the ordering contract above).
@@ -347,6 +348,32 @@ class ArmorClassBonus(CharacterImprovement):
             character_stat_block.add_derived_armor_class_bonus(self.bonus)
         else:
             character_stat_block.armor_class.add_bonus(self.bonus)
+
+
+# ── Weapon attack and damage bonuses ──────────────────────────────────────────
+
+
+class WeaponAttackBonus(CharacterImprovement):
+    """+`value` to attack rolls with every weapon `applies_to` accepts (e.g.
+    Archery: Ranged weapons). Recorded on the stat block, never written into
+    the weapon, so which weapons it covers is checked on read."""
+
+    def __init__(self, applies_to: WeaponFilter, value: int, source: str):
+        self.bonus = WeaponBonus(applies_to, value, source)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.weapon_bonuses.add_attack_bonus(self.bonus)
+
+
+class WeaponDamageBonus(CharacterImprovement):
+    """+`value` to damage rolls with every weapon `applies_to` accepts (e.g.
+    Dueling: one-handed Melee weapons). See WeaponAttackBonus."""
+
+    def __init__(self, applies_to: WeaponFilter, value: int, source: str):
+        self.bonus = WeaponBonus(applies_to, value, source)
+
+    def apply(self, character_stat_block: CharacterStatBlock):
+        character_stat_block.weapon_bonuses.add_damage_bonus(self.bonus)
 
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────

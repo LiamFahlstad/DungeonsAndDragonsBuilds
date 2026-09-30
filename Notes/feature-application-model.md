@@ -34,9 +34,14 @@ saving-throw blocks, then:
 
 | # | Stage | What runs |
 |---|---|---|
-| 1 | **Record** | `apply()` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and stat fighting styles (Defense). **Any order.** |
+| 1 | **Record** | `apply()` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** |
 | 2 | **Validate** | `character.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
-| 3 | **Weapons** | Weapon fighting styles (Archery, Dueling, …) and `item.apply_to_weapons()` (Bracers of Archery). These write into the per-build weapon copies and read nothing from the stat block |
+
+Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
+weapons (Archery's +2 to attack rolls with Ranged weapons, Bracers of Archery's +2 damage with
+bows) is recorded as a `WeaponAttackBonus` / `WeaponDamageBonus` improvement with a filter for the
+weapons it covers, and each weapon combines it with its own bonuses on read. So a builder's weapon
+objects are shared by every sheet it builds, with no copies and no idempotence guards.
 
 The result is cached. The cache is dropped by any `add_*` call, and also whenever the set of
 features and extensions changes. `extend_feature()` has no reference back to the sheet data, so
@@ -59,6 +64,8 @@ without that second check a late extension would be missed.
 | Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield (`CharacterStatBlock.worn_armor`), `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `calculate_initiative()`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
+| Weapon attack and damage bonuses | The weapon's own bonuses (a +1 weapon, set at construction), plus `WeaponBonus(applies_to, value, source)` records on `CharacterStatBlock.weapon_bonuses` | `AbstractWeapon.get_attack_roll_bonuses(cs)` / `get_damage_roll_bonuses(cs)`: the weapon's own, then every recorded bonus whose filter accepts it |
+| Weapon mastery | `player_has_mastery` on the weapon, or a chosen Weapon Mastery on the sheet data | `AbstractWeapon.has_mastery(weapon_masteries)`, at render time |
 | HP, spell DC, weapon attacks, carrying capacity | | Computed from the final stats as before |
 
 ### Ability increases "to a maximum of N"
@@ -132,6 +139,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(character_stat
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
 | "Your Strength must be at least N" | `StrengthRequirement(N, reason)` (checked in validation) |
 | "You gain proficiency with Martial weapons / Heavy armor / Smith's Tools" | `GrantWeaponProficiency([...])`, `GrantArmorTraining([...])`, `GrantToolProficiency([...])` |
+| "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `weapon -> bool` filter. Never write into the weapon |
 | An upgrade to an earlier feature | `parent.extend_feature(Upgrade())`. Its `apply()` runs too, so don't also `add_feature()` it |
 
 **Never read the stat block inside `apply()`.** That includes ability scores and modifiers,
@@ -173,6 +181,7 @@ flat-list/formula-list/source-list shape themselves.
 | `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(strength_modifier)` / `total(strength_modifier)` also compute the dynamic "Person" base |
 | `spellcasting` (`Spellcasting`) | Spell casting ability, registered casters, spell save DC bonus; `spell_slots()`/`pact_magic_slots()` also take `class_levels` |
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
+| `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
 Every part is exposed directly under its own name. `CharacterStatBlock`'s own methods
 (`add_damage_resistance`, `calculate_armor_class`, `get_sense_range`, …) are kept as one-line
@@ -192,9 +201,11 @@ any other. Don't also `add_feature()` the same instance, or it will apply twice.
 
 ## Equipment isolation
 
-`CharacterBuilder.build()` gives each sheet its own **copies** of the builder's weapons. Fighting
-styles and items write into weapon objects. Without the copies, a bonus from gear that was later
-dropped stayed on the weapon for every subsequent build.
+`CharacterBuilder.build()` hands every sheet the builder's own weapon objects. That's safe
+because nothing writes into a weapon after it's constructed: fighting styles and items record
+their weapon bonuses on the stat block (`weapon_bonuses`), and mastery is worked out at render time
+(`AbstractWeapon.has_mastery`). So a bonus from gear that was later dropped can't stay on the weapon
+(`test_dropped_gear_does_not_leave_bonuses_on_weapons`).
 
 ## What enforces all this
 

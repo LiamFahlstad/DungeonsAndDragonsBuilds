@@ -215,5 +215,5 @@ class TestRebuildIsIdempotent:
         data.add_fighting_style(FightingStyles.Archery())
         data.setup_character_stat_block()
         data.add_item(Items.Torch(), 1)
-        data.setup_character_stat_block()
-        assert sum(b for b, _ in bow.attack_roll_bonuses) == 2
+        character = data.setup_character_stat_block()
+        assert sum(b for b, _ in bow.get_attack_roll_bonuses(character)) == 2

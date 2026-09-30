@@ -9,7 +9,6 @@ from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.CombatFeatures.FightingStyles import (
     FightingStyle,
     FightStyleModifier,
-    FightStyleWeaponFeature,
 )
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Items import Items
@@ -387,14 +386,6 @@ class CharacterSheetData:
         # including multiclass ability prerequisites.
         character.validate()
 
-        # These write into the weapon objects, not the stat block, and read
-        # nothing from it - their order doesn't matter either.
-        for fighting_style in self.fighting_styles:
-            if isinstance(fighting_style, FightStyleWeaponFeature):
-                fighting_style.apply(self.weapons)
-        for item, _quantity in self.items:
-            if item.is_wearing is not False:
-                item.apply_to_weapons(self.weapons)
         self._character_cached = character
         self._cached_feature_ids = feature_ids
 
@@ -402,10 +393,12 @@ class CharacterSheetData:
 
     def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
         """Everything that records effects on the stat block: features and
-        their extensions, armor, weapons, items and stat fighting styles
-        (Defense). Each has apply(character_stat_block); the order is
-        irrelevant. (Proficiencies come from features too - e.g.
-        ClassProficiencies.)"""
+        their extensions, armor, weapons, items and fighting styles with a
+        computed effect (Defense, Archery, Dueling, ...). Each has
+        apply(character_stat_block); the order is irrelevant. (Proficiencies
+        come from features too - e.g. ClassProficiencies.) Weapons are never
+        changed: bonuses the wielder brings to them are recorded in
+        character_stat_block.weapon_bonuses."""
         if features is None:
             features = list(self.iter_features_with_extensions())
         return [

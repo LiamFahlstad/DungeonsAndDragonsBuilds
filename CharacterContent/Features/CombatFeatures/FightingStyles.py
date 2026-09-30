@@ -7,7 +7,11 @@ from CharacterContent.Items.Weapons import (
     WeaponProperty,
     WeaponType,
 )
-from CharacterContent.Features.Core.Improvements import ArmorClassBonus
+from CharacterContent.Features.Core.Improvements import (
+    ArmorClassBonus,
+    WeaponAttackBonus,
+    WeaponDamageBonus,
+)
 from StatBlocks.CharacterStatBlock import CharacterStatBlock
 
 
@@ -26,36 +30,24 @@ class FightingStyle(ABC):
 
 
 class FightStyleModifier(FightingStyle):
+    """A fighting style with a computed effect. Like any other effect, apply()
+    only records facts on the stat block - weapon bonuses included, which go
+    to character_stat_block.weapon_bonuses instead of into the weapons."""
+
     @abstractmethod
     def apply(self, character_stat_block: CharacterStatBlock):
         pass
 
 
-class FightStyleWeaponFeature(FightingStyle):
-    @abstractmethod
-    def apply(self, weapons: list[AbstractWeapon]):
-        pass
+def _is_ranged_weapon(weapon: AbstractWeapon) -> bool:
+    return weapon.weapon_type in (WeaponType.MARTIAL_RANGED, WeaponType.SIMPLE_RANGED)
 
 
-def _add_bonus_once(bonuses: list[tuple[int, str]], bonus: tuple[int, str]) -> None:
-    """Weapon fighting styles write into the weapon objects themselves, which
-    outlive a single setup_character_stat_block() call - so applying one
-    again (a rebuild after a cache invalidation) must not stack the bonus."""
-    if bonus not in bonuses:
-        bonuses.append(bonus)
-
-
-# Archery
-class Archery(FightStyleWeaponFeature):
-    def apply(self, weapons: list[AbstractWeapon]):
-        for weapon in weapons:
-            if weapon.weapon_type in (
-                WeaponType.MARTIAL_RANGED,
-                WeaponType.SIMPLE_RANGED,
-            ):
-                _add_bonus_once(
-                    weapon.attack_roll_bonuses, (2, "2 (Archery Fighting Style)")
-                )
+class Archery(FightStyleModifier):
+    def apply(self, character_stat_block: CharacterStatBlock):
+        WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(
+            character_stat_block
+        )
 
     def description(self):
         return "Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)"
@@ -77,26 +69,22 @@ class Defense(FightStyleModifier):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
 
 
-class Dueling(FightStyleWeaponFeature):
-    def apply(self, weapons: list[AbstractWeapon]):
-        for weapon in weapons:
-            if (
-                weapon.weapon_type
-                in (
-                    WeaponType.MARTIAL_MELEE,
-                    WeaponType.SIMPLE_MELEE,
-                )
-                and WeaponProperty.TWO_HANDED not in weapon.properties
-                # An Unarmed Strike isn't a weapon you hold in one hand.
-                and not isinstance(weapon, UnarmedStrike)
-            ):
-                _add_bonus_once(
-                    weapon.damage_roll_bonuses,
-                    (
-                        2,
-                        "2 (Dueling Fighting Style - Applied if one-handed weapon and no other weapons)",
-                    ),
-                )
+def _is_one_handed_melee_weapon(weapon: AbstractWeapon) -> bool:
+    return (
+        weapon.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.SIMPLE_MELEE)
+        and WeaponProperty.TWO_HANDED not in weapon.properties
+        # An Unarmed Strike isn't a weapon you hold in one hand.
+        and not isinstance(weapon, UnarmedStrike)
+    )
+
+
+class Dueling(FightStyleModifier):
+    def apply(self, character_stat_block: CharacterStatBlock):
+        WeaponDamageBonus(
+            _is_one_handed_melee_weapon,
+            2,
+            "Dueling Fighting Style - Applied if one-handed weapon and no other weapons",
+        ).apply(character_stat_block)
 
     def description(self):
         return "Dueling: When you're holding a Melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon. (calculated automatically)"
@@ -117,14 +105,15 @@ class Protection(FightingStyle):
         return "Protection: When a creature you can see attacks a target other than you that is within 5 feet of you, you can take a Reaction to interpose your Shield if you're holding one. You impose Disadvantage on the triggering attack roll and all other attack rolls against the target until the start of your next turn if you remain within 5 feet of the target. (calculate manually)"
 
 
-class ThrownWeaponFighting(FightStyleWeaponFeature):
-    def apply(self, weapons: list[AbstractWeapon]):
-        for weapon in weapons:
-            if WeaponProperty.THROWN in weapon.properties:
-                _add_bonus_once(
-                    weapon.damage_roll_bonuses,
-                    (2, "2 (Thrown Weapon Fighting Style - ranged attacks only)"),
-                )
+def _is_thrown_weapon(weapon: AbstractWeapon) -> bool:
+    return WeaponProperty.THROWN in weapon.properties
+
+
+class ThrownWeaponFighting(FightStyleModifier):
+    def apply(self, character_stat_block: CharacterStatBlock):
+        WeaponDamageBonus(
+            _is_thrown_weapon, 2, "Thrown Weapon Fighting Style - ranged attacks only"
+        ).apply(character_stat_block)
 
     def description(self):
         return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (calculate manually)"

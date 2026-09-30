@@ -328,6 +328,7 @@ def _write_single_weapon(
     character_stat_block: CharacterStatBlock,
     file: TextIO,
     include_probability_tables: bool = False,
+    has_mastery: bool = False,
 ):
     attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(
         character_stat_block
@@ -356,7 +357,7 @@ def _write_single_weapon(
     mastery_label = ""
     if weapon.mastery:
         mastery_label = weapon.mastery.value
-        if weapon.player_has_mastery:
+        if has_mastery:
             mastery_label += " ✓"
 
     file.write("<div class='weapon-entry'>\n")
@@ -436,9 +437,7 @@ def _write_single_weapon(
             tags_html += f"<span class='wtag'>{prop.value}</span> "
         if mastery_label:
             mastery_cls = (
-                "wtag wtag-mastery"
-                if weapon.player_has_mastery
-                else "wtag wtag-mastery-inactive"
+                "wtag wtag-mastery" if has_mastery else "wtag wtag-mastery-inactive"
             )
             tags_html += f"<span class='{mastery_cls}'>Mastery: {mastery_label}</span>"
         file.write(
@@ -458,7 +457,7 @@ def _write_single_weapon(
             f"</div>\n"
         )
 
-    if weapon.mastery and weapon.player_has_mastery:
+    if weapon.mastery and has_mastery:
         mastery_desc_processed = Html.boxes_to_html(weapon.mastery.description)
         mastery_desc_html = mastery_desc_processed.replace("\n", "<br>")
         file.write(
@@ -487,6 +486,7 @@ def write_weapons_to_file(
     character_stat_block: CharacterStatBlock,
     file: TextIO,
     include_probability_tables: bool = False,
+    weapon_masteries: "list[AbstractWeapon] | None" = None,
 ):
     if not weapons:
         return
@@ -496,7 +496,11 @@ def write_weapons_to_file(
 
     for weapon in weapons:
         _write_single_weapon(
-            weapon, character_stat_block, file, include_probability_tables
+            weapon,
+            character_stat_block,
+            file,
+            include_probability_tables,
+            has_mastery=weapon.has_mastery(weapon_masteries or []),
         )
 
     file.write("</div>\n")

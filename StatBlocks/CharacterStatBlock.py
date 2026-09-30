@@ -20,6 +20,7 @@ from StatBlocks.Senses import Senses
 from StatBlocks.Skills import Skills
 from StatBlocks.Speed import Speed
 from StatBlocks.Spellcasting import Spellcasting
+from StatBlocks.WeaponBonuses import WeaponBonuses
 from StatBlocks.WornArmor import WornArmor
 
 # DerivedBonus is imported above from StatBlocks/Bonuses.py (not defined
@@ -62,6 +63,7 @@ class CharacterStatBlock:
         self.senses = Senses()
         self.ability_requirements = AbilityRequirements()
         self.initiative = Initiative()
+        self.weapon_bonuses = WeaponBonuses()
 
     @property
     def is_wearing_armor(self) -> bool:

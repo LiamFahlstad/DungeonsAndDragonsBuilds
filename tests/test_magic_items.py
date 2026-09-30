@@ -13,9 +13,8 @@ class TestBracersOfArchery:
         character = make_character(dexterity=16)
         longbow, shortbow = Weapons.Longbow(), Weapons.Shortbow()
         assert not longbow.is_proficient(character)
-        bracers = Items.BracersOfArchery()
-        bracers.apply(character)  # proficiency: recorded on the stat block
-        bracers.apply_to_weapons([longbow, shortbow])  # +2 damage
+        # Proficiency and the +2 damage are both recorded on the stat block.
+        Items.BracersOfArchery().apply(character)
         for bow in (longbow, shortbow):
             assert bow.is_proficient(character)
             assert bow.calculate_damage_bonus_int(character) == 3 + 2
@@ -23,9 +22,7 @@ class TestBracersOfArchery:
     def test_other_weapons_unaffected(self, make_character):
         character = make_character(dexterity=16, strength=16)
         crossbow, sword = Weapons.LightCrossbow(), Weapons.Longsword()
-        bracers = Items.BracersOfArchery()
-        bracers.apply(character)
-        bracers.apply_to_weapons([crossbow, sword])
+        Items.BracersOfArchery().apply(character)
         assert crossbow.calculate_damage_bonus_int(character) == 3
         assert sword.calculate_damage_bonus_int(character) == 3
         assert not crossbow.is_proficient(character)
@@ -35,12 +32,12 @@ class TestBracersOfArchery:
         Items.BracersOfArchery().apply(character)
         assert character.get_ability_score(Ability.DEXTERITY) == 16
 
-    def test_idempotent(self):
+    def test_does_not_change_the_weapon(self, make_character):
+        character = make_character(dexterity=16)
         bow = Weapons.Longbow()
-        bracers = Items.BracersOfArchery()
-        bracers.apply_to_weapons([bow])
-        bracers.apply_to_weapons([bow])
-        assert sum(b for b, _ in bow.damage_roll_bonuses) == 2
+        Items.BracersOfArchery().apply(character)
+        assert bow.damage_roll_bonuses == []
+        assert bow.calculate_damage_bonus_int(character) == 3 + 2
 
     def test_through_sheet_only_when_worn(self):
         from Builds.Tests.SpellSlotTestWizard5 import (
@@ -52,5 +49,6 @@ class TestBracersOfArchery:
             bow = Weapons.Longbow()
             data.add_weapon(bow)
             data.add_item(Items.BracersOfArchery(is_wearing=worn))
-            data.setup_character_stat_block()
-            assert sum(b for b, _ in bow.damage_roll_bonuses) == expected
+            character = data.setup_character_stat_block()
+            bonuses = bow.get_damage_roll_bonuses(character)
+            assert sum(b for b, _ in bonuses) == expected

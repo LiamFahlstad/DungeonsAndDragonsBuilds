@@ -1,4 +1,3 @@
-import copy
 from typing import Optional
 
 from CharacterContent.Classes.BaseClasses.ClassBuilder import (
@@ -134,12 +133,11 @@ class CharacterBuilder:
         character_sheet_data.current_gold = self.equipment_handler.current_gold
         for armor in self.equipment_handler.armors:
             character_sheet_data.add_armor(armor)
-        # Weapons are copied: proficiency, fighting styles and items write
-        # into the weapon objects themselves, and the handler's originals
-        # outlive this build - without a copy, a bonus from gear dropped
-        # before a later build() would stick to the weapon for good.
+        # Weapons are shared, not copied: evaluating a character never
+        # changes them (fighting styles and items record their weapon bonuses
+        # on the stat block - see StatBlocks/WeaponBonuses.py).
         for weapon in self.equipment_handler.weapons:
-            character_sheet_data.add_weapon(copy.deepcopy(weapon))
+            character_sheet_data.add_weapon(weapon)
         for item, quantity in self.equipment_handler.items:
             character_sheet_data.add_item(item, quantity)
 

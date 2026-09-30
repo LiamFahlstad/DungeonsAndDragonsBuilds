@@ -559,9 +559,7 @@ class DialogsMixin:
                     wwl.setSpacing(2)
 
                     prof_str = (
-                        "Proficient"
-                        if weapon.is_proficient(sb)
-                        else "Not proficient"
+                        "Proficient" if weapon.is_proficient(sb) else "Not proficient"
                     )
                     type_line = "  ·  ".join(
                         [weapon.weapon_type.value, weapon.damage_type.value, prof_str]
@@ -578,9 +576,10 @@ class DialogsMixin:
                         wwl.addWidget(desc_lbl)
 
                     if weapon.mastery:
-                        mark = (
-                            "✓" if getattr(weapon, "player_has_mastery", False) else "✗"
+                        has_mastery = weapon.has_mastery(
+                            char.get("_weapon_masteries", [])
                         )
+                        mark = "✓" if has_mastery else "✗"
                         mastery_lbl = QLabel(
                             f"<span style='color:#a0a0b0'>Mastery:</span> "
                             f"<span style='color:#c9a84c'>{weapon.mastery.value} {mark}</span> "

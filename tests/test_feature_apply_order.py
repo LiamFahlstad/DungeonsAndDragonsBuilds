@@ -226,6 +226,12 @@ def _stats(data):
         "senses": sorted((str(k), v) for k, v in cs.senses.ranges.items()),
         "spell_save_dc_bonus": cs.spellcasting.spell_save_dc_bonus,
         "weapons_proficient": [w.is_proficient(cs) for w in data.weapons],
+        "weapon_attack_bonuses": [
+            sorted(w.get_attack_roll_bonuses(cs)) for w in data.weapons
+        ],
+        "weapon_damage_bonuses": [
+            sorted(w.get_damage_roll_bonuses(cs)) for w in data.weapons
+        ],
         "armor_training": sorted(map(str, cs.equipment_training.armor_training)),
         "weapon_proficiencies": sorted(
             map(str, cs.equipment_training.weapon_proficiencies)
@@ -496,9 +502,10 @@ class TestExtensionsApply:
 
 
 def test_dropped_gear_does_not_leave_bonuses_on_weapons():
-    # Regression: weapons were shared between a builder and every sheet it
-    # built, so Bracers of Archery's +2 damage (and bow proficiency) stuck to
-    # the bow after the bracers were dropped and the character rebuilt.
+    # Regression: Bracers of Archery's +2 damage (and bow proficiency) stuck
+    # to the bow after the bracers were dropped and the character rebuilt.
+    # Weapons are now shared between a builder and every sheet it builds, so
+    # this also proves nothing writes into them.
     builder = type(
         ALL_BUILDS["Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder"]
     )()
@@ -507,9 +514,9 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
 
     def longbow_damage_bonuses():
         data = builder.build()
-        data.setup_character_stat_block()
+        character = data.setup_character_stat_block()
         bow = next(w for w in data.weapons if w.name == "Longbow")
-        return bow.damage_roll_bonuses
+        return bow.get_damage_roll_bonuses(character)
 
     assert (2, "2 (Bracers of Archery)") in longbow_damage_bonuses()
     builder.drop_item(bracers)
@@ -580,7 +587,7 @@ _MUTABLE_STAT_PROPERTIES = (
     (WornArmor, "is_wearing_armor"),
     (Senses, "ranges"),
 )
-_EFFECT_METHODS = {"apply", "apply_to_weapons"}
+_EFFECT_METHODS = {"apply"}
 
 
 def _effect_chain() -> list[str]:

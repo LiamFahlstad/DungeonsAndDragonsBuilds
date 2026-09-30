@@ -124,13 +124,7 @@ class CombatAppQt(
             spell_slots = {}
         hp = character.calculate_hit_points()
 
-        # Apply weapon masteries to live weapon objects
         weapons = list(character_sheet.weapons)
-        if character_sheet.weapon_masteries:
-            mastery_types = {type(m) for m in character_sheet.weapon_masteries}
-            for w in weapons:
-                if type(w) in mastery_types:
-                    w.player_has_mastery = True
 
         # Pre-compute spell levels (display_name, level, Ability enum)
         spells_with_level = []
@@ -169,6 +163,7 @@ class CombatAppQt(
                 "_is_player": True,
                 "_stat_block": character,
                 "_weapons_objects": weapons,
+                "_weapon_masteries": list(character_sheet.weapon_masteries),
                 "class_levels": {
                     cls.value: lvl
                     for cls, lvl in character_sheet.level_per_class.items()

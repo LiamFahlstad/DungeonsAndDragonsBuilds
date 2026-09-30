@@ -4,6 +4,7 @@ from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     ArmorClassBonus,
     SpeedBonus,
+    WeaponDamageBonus,
 )
 from CharacterContent.Items.Weapons.Enums import WeaponProficiency
 from .Base import Item, ItemCategory, ItemRarity
@@ -246,7 +247,12 @@ class BracersOfArchery(Item):
     attacks made with them."""
 
     _BOWS = ("Longbow", "Shortbow")
-    _BONUS = (2, "2 (Bracers of Archery)")
+
+    @classmethod
+    def _is_bow(cls, weapon) -> bool:
+        # Match by class name (magic bows subclass these) - importing the
+        # Weapons package here would be circular.
+        return any(kind.__name__ in cls._BOWS for kind in type(weapon).__mro__)
 
     def __init__(self, is_wearing: bool = True):
         super().__init__(
@@ -265,17 +271,10 @@ class BracersOfArchery(Item):
             improvements=[
                 GrantWeaponProficiency(
                     [WeaponProficiency.LONGBOW, WeaponProficiency.SHORTBOW]
-                )
+                ),
+                WeaponDamageBonus(self._is_bow, 2, "Bracers of Archery"),
             ],
         )
-
-    def apply_to_weapons(self, weapons: list) -> None:
-        for weapon in weapons:
-            # Match by class name (magic bows subclass these) - importing the
-            # Weapons package here would be circular.
-            if any(cls.__name__ in self._BOWS for cls in type(weapon).__mro__):
-                if self._BONUS not in weapon.damage_roll_bonuses:
-                    weapon.damage_roll_bonuses.append(self._BONUS)
 
 
 class GauntletsOfStrength(Item):

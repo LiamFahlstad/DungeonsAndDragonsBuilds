@@ -171,6 +171,14 @@ class AbstractWeapon(Item, ABC):
             self, character_stat_block.equipment_training.weapon_proficiencies
         )
 
+    def has_mastery(self, weapon_masteries: "list[AbstractWeapon]") -> bool:
+        """Whether the wielder can use this weapon's mastery property: an
+        explicit player_has_mastery, or a chosen Weapon Mastery of the same
+        kind of weapon. Worked out on read, so the weapon is never changed."""
+        return self.player_has_mastery or any(
+            type(self) is type(mastery) for mastery in weapon_masteries
+        )
+
     def attack_roll_condition(
         self, character_stat_block: CharacterStatBlock
     ) -> DiceRollCondition:
@@ -199,6 +207,26 @@ class AbstractWeapon(Item, ABC):
             return f"{proficiency_bonus} (Proficient)"
         return "0 (Not Proficient)"
 
+    def get_attack_roll_bonuses(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[int, str]]:
+        """This weapon's own attack roll bonuses (e.g. a +1 weapon), then the
+        wielder's that apply to it (e.g. the Archery fighting style) - those
+        are recorded on the stat block, never written into the weapon."""
+        return (
+            self.attack_roll_bonuses
+            + character_stat_block.weapon_bonuses.attack_bonuses(self)
+        )
+
+    def get_damage_roll_bonuses(
+        self, character_stat_block: CharacterStatBlock
+    ) -> list[tuple[int, str]]:
+        """Damage roll counterpart of get_attack_roll_bonuses."""
+        return (
+            self.damage_roll_bonuses
+            + character_stat_block.weapon_bonuses.damage_bonuses(self)
+        )
+
     def calculate_total_attack_roll_bonus(
         self, character_stat_block: CharacterStatBlock
     ) -> str:
@@ -208,7 +236,7 @@ class AbstractWeapon(Item, ABC):
         attack_roll_bonus += (
             f" + {self.calculate_proficiency_damage_bonus(character_stat_block)}"
         )
-        for _, bonus in self.attack_roll_bonuses:
+        for _, bonus in self.get_attack_roll_bonuses(character_stat_block):
             attack_roll_bonus += f" + {bonus}"
         return attack_roll_bonus
 
@@ -223,7 +251,7 @@ class AbstractWeapon(Item, ABC):
         attack_roll_bonus += self._calculate_proficiency_damage_bonus(
             character_stat_block
         )
-        for bonus, _ in self.attack_roll_bonuses:
+        for bonus, _ in self.get_attack_roll_bonuses(character_stat_block):
             attack_roll_bonus += bonus
         return attack_roll_bonus
 
@@ -235,7 +263,7 @@ class AbstractWeapon(Item, ABC):
         if self._damage_bonus_override is not None:
             return self._damage_bonus_override
         damage_bonus, _ = self._calculate_ability_modifier_bonus(character_stat_block)
-        for bonus, _ in self.damage_roll_bonuses:
+        for bonus, _ in self.get_damage_roll_bonuses(character_stat_block):
             damage_bonus += bonus
         return damage_bonus
 
