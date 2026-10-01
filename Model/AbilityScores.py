@@ -32,6 +32,9 @@ class AbilityScores(Recorder):
     - An uncapped increase is an equipment bonus (a magic item) and applies on
       top of the character's own score. Requirements such as an armor's
       Strength or a multiclass minimum read get_own_score(), which excludes it.
+
+    Merge rule: capped increases resolve lowest cap first (saturating at
+    each cap), uncapped increases sum.
     """
 
     strength = _score_property(Ability.STRENGTH)

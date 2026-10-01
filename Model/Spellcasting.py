@@ -11,7 +11,10 @@ class Spellcasting(Recorder):
     save DC bonus, and every registered caster class (used to work out spell
     slots and Pact Magic slots together - see spell_slots). A character with
     no Spell Slots feature (e.g. a companion) can still be given a fixed
-    table of slots directly."""
+    table of slots directly.
+
+    Merge rule: one CasterType per class; registering a class again with a
+    different CasterType raises. Spell save DC bonuses sum."""
 
     def __init__(
         self,
@@ -29,6 +32,12 @@ class Spellcasting(Recorder):
     def register_caster(
         self, character_class: CharacterClass, caster_type: CasterType
     ) -> None:
+        registered = self._casters.get(character_class)
+        if registered is not None and registered != caster_type:
+            raise ValueError(
+                f"{character_class.value} is registered as both {registered.name} "
+                f"and {caster_type.name} caster."
+            )
         self._casters[character_class] = caster_type
 
     @records

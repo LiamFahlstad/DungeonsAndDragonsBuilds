@@ -20,7 +20,10 @@ class Bonuses(Recorder):
     shape shared by Initiative, ArmorClass, HitPoints, Speed, Skills and
     SavingThrows. A value object: it has no character of its own, and every
     query that resolves formulas takes the finished Character as an
-    argument."""
+    argument.
+
+    Merge rule: sum. Reads list flat sources, then formula sources, each
+    sorted by (source, value)."""
 
     def __init__(self):
         self._flat: list[tuple[int, str]] = []
@@ -40,11 +43,16 @@ class Bonuses(Recorder):
         return flat + resolved
 
     def sources(self, character: "Character") -> list[tuple[int, str]]:
-        """Every source: flat sources in insertion order, then non-zero
-        resolved formula sources in insertion order. A formula that currently
+        """Every source: flat sources, then non-zero resolved formula
+        sources, each sorted by (source, value). A formula that currently
         evaluates to 0 (e.g. Jack of All Trades on a skill you're proficient
         in) isn't a source worth listing."""
+
+        def by_source(entry: tuple[int, str]) -> tuple[str, int]:
+            return entry[1], entry[0]
+
         resolved = [(formula(character), source) for formula, source in self._formulas]
-        return list(self._flat) + [
-            (value, source) for value, source in resolved if value != 0
-        ]
+        return sorted(self._flat, key=by_source) + sorted(
+            ((value, source) for value, source in resolved if value != 0),
+            key=by_source,
+        )

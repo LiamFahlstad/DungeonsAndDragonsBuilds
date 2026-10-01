@@ -274,12 +274,6 @@ class TestSkills:
         basic_skills.update_skill_to_ability(Skill.ARCANA, Ability.WISDOM)
         assert basic_skills.get_skill_ability(Skill.ARCANA) == Ability.WISDOM
 
-    def test_reset_skill_to_ability(self, basic_skills):
-        """Test resetting a skill's linked ability to default."""
-        basic_skills.update_skill_to_ability(Skill.ARCANA, Ability.WISDOM)
-        basic_skills.reset_skill_to_ability(Skill.ARCANA)
-        assert basic_skills.get_skill_ability(Skill.ARCANA) == Ability.INTELLIGENCE
-
 
 class TestArmorClass:
     """Test ArmorClass for AC formulas."""

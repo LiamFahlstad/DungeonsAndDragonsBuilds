@@ -40,7 +40,11 @@ class ArmorClass(Recorder):
     """Every AC formula and AC bonus. What's worn (Model.WornArmor) and
     the wielder's ability modifiers and Shield training aren't this part's
     concern, so calculate() takes them as arguments (see
-    Character.calculate_armor_class)."""
+    Character.calculate_armor_class).
+
+    Merge rule: the best applicable formula (only its value is used, so the
+    order formulas were granted in can't matter), plus the sum of bonuses
+    and Shield bonuses."""
 
     def __init__(self):
         self.armor_class_formulas: list[ArmorClassFormula] = [UNARMORED_ARMOR_CLASS]

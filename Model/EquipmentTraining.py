@@ -11,12 +11,20 @@ class EquipmentTraining(Recorder):
     out whether its wielder is proficient on read, against
     weapon_proficiencies (AbstractWeapon.is_proficient); typed loosely
     (Enum/Any) since the WeaponProficiency enum and ToolProficiency live in
-    CharacterContent, which imports this module."""
+    CharacterContent, which imports this module.
+
+    Merge rule: set union. Tools are keyed by tool type (tool types take no
+    parameters), so the same tool from two sources is listed once. Reads
+    list tools sorted by name."""
 
     def __init__(self):
         self.weapon_proficiencies: set[Enum] = set()
         self.armor_training: set[ArmorType] = set()
-        self.tool_proficiencies: list[Any] = []
+        self._tools: dict[type, Any] = {}
+
+    @property
+    def tool_proficiencies(self) -> list[Any]:
+        return sorted(self._tools.values(), key=lambda tool: tool.name)
 
     @property
     def has_shield_training(self) -> bool:
@@ -34,5 +42,4 @@ class EquipmentTraining(Recorder):
     def add_tool_proficiency(self, tool_proficiency: Any) -> None:
         """Proficiency with a tool (a ToolProficiency). The same tool from
         several sources is listed once."""
-        if not any(type(t) is type(tool_proficiency) for t in self.tool_proficiencies):
-            self.tool_proficiencies.append(tool_proficiency)
+        self._tools.setdefault(type(tool_proficiency), tool_proficiency)

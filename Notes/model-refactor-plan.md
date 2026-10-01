@@ -150,7 +150,12 @@ Rules of thumb:
 - **Tests:** a mutator raises after evaluation, and `add_effect` survives re-evaluation.
 - **Verify:** A, B, C. No snapshot change.
 
-### Step 2: Explicit, commutative merge rules in every part *(design-critical)*
+### Step 2: Explicit, commutative merge rules in every part *(design-critical)* — done
+
+- **Result:** every part has a "Merge rule:" line in its docstring, and every source read is canonical. Two items changed from the plan below:
+  - **No AC tie-break.** `ArmorClassFormula` has no name, and only the best formula's *value* is used, so order can't matter there.
+  - **The writer's sorts stay.** It sorts languages and damage types alphabetically, which is a presentation choice and differs from enum order, so dropping those sorts would change the output for no gain.
+- **Also changed:** `Skills`/`SavingThrows` lost their unused constructor parameters, and `reset_skill_to_ability`/`reset_all_skill_to_ability` were deleted: they are removals, which can't be order-free, and only one test used them. `tests/test_part_merge_rules.py` has 22 permutation tests, and 13 of them fail on the pre-Step-2 code. Snapshots didn't move at all, neither stats nor sheet hashes: no build had a tie the new reads reorder.
 
 - **Goal:** no part has first-wins or last-wins behavior, and no read that reaches the sheet uses insertion order.
 - **Files:** `EquipmentTraining.py`, `Spellcasting.py`, `WornArmor.py`, `Bonuses.py`, `Defenses.py`, `Languages.py`, `Senses.py`, `CarryingCapacity.py`, `WeaponBonuses.py`, `ArmorClass.py`, `Skills.py`, `SavingThrows.py`.

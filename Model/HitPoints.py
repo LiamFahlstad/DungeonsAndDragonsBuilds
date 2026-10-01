@@ -11,7 +11,9 @@ if TYPE_CHECKING:
 class HitPoints(Recorder):
     """The hit point bonus granted by features (e.g. Tough, Draconic
     Resilience) - flat or formula-valued (see Bonuses) - on top of the roll
-    worked out from class levels and Constitution. See calculate()."""
+    worked out from class levels and Constitution. See calculate().
+
+    Merge rule: sum."""
 
     def __init__(self):
         self.bonuses = Bonuses()

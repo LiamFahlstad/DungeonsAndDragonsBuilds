@@ -9,36 +9,32 @@ if TYPE_CHECKING:
 
 
 class Skills(Recorder):
-    def __init__(
-        self,
-        proficiencies: Optional[dict[Skill, bool]] = None,
-        expertise: Optional[dict[Skill, bool]] = None,
-        bonuses: Optional[dict[Skill, int]] = None,
-        dice_roll_conditions: Optional[dict[Skill, DiceRollCondition]] = None,
-    ):
-        self.proficiencies = proficiencies if proficiencies is not None else {}
-        self.expertise = expertise if expertise is not None else {}
+    """Skill proficiencies, expertise, bonuses, roll conditions and ability
+    overrides.
+
+    Merge rule: proficiency, expertise and ability overrides are set unions,
+    bonuses sum (see Bonuses), and Advantage and Disadvantage cancel. Reads
+    list reasons sorted and abilities in Ability order."""
+
+    def __init__(self):
+        self._proficiencies: set[Skill] = set()
+        self._expertise: set[Skill] = set()
         # Per-skill flat and formula-valued bonuses, each with a source (see
         # Model/Bonuses.py).
         self._bonuses: dict[Skill, Bonuses] = {}
-        if bonuses:
-            for skill, bonus in bonuses.items():
-                self.add_skill_bonus(skill, bonus)
         # Per-skill {condition: [reasons]} for every source of Advantage or
         # Disadvantage, so the effective condition can be worked out on read
         # (both cancel out) regardless of the order they were granted in.
         self._roll_condition_sources: dict[
             Skill, dict[DiceRollCondition, list[str]]
         ] = {}
-        for skill, condition in (dice_roll_conditions or {}).items():
-            self.set_roll_condition(skill, condition)
         # Per-skill abilities that replace the default one (e.g. "use Wisdom
         # for Arcana"). See get_skill_abilities.
-        self._skill_ability_overrides: dict[Skill, list[Ability]] = {}
+        self._skill_ability_overrides: dict[Skill, set[Ability]] = {}
 
     @records
     def add_skill_proficiency(self, skill: Skill):
-        self.proficiencies[skill] = True
+        self._proficiencies.add(skill)
 
     def _bonuses_for(self, skill: Skill) -> Bonuses:
         return self._bonuses.setdefault(skill, Bonuses())
@@ -72,18 +68,18 @@ class Skills(Recorder):
         a feature applied later (another class builder, the species), so the
         requirement is checked by validate() once every feature has applied
         rather than here - granting expertise is order-insensitive."""
-        self.expertise[skill] = True
+        self._expertise.add(skill)
 
     def validate(self) -> None:
-        for skill, has_expertise in self.expertise.items():
-            if has_expertise and not self.is_proficient(skill):
+        for skill in Skill:
+            if skill in self._expertise and not self.is_proficient(skill):
                 raise ValueError(f"Cannot add expertise to unproficient skill: {skill}")
 
     def is_proficient(self, skill: Skill) -> bool:
-        return self.proficiencies.get(skill, False)
+        return skill in self._proficiencies
 
     def has_expertise(self, skill: Skill) -> bool:
-        return self.expertise.get(skill, False)
+        return skill in self._expertise
 
     def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
         return combine_roll_conditions(self._roll_condition_sources.get(skill, {}))
@@ -91,12 +87,13 @@ class Skills(Recorder):
     def get_roll_condition_sources(
         self, skill: Skill
     ) -> dict[DiceRollCondition, list[str]]:
-        """{condition: [reasons]} for every recorded source (a copy)."""
+        """{condition: [reasons]} for every recorded source (a copy), with
+        conditions in DiceRollCondition order and reasons sorted."""
+        recorded = self._roll_condition_sources.get(skill, {})
         return {
-            condition: list(reasons)
-            for condition, reasons in self._roll_condition_sources.get(
-                skill, {}
-            ).items()
+            condition: sorted(recorded[condition])
+            for condition in DiceRollCondition
+            if condition in recorded
         }
 
     @records
@@ -116,15 +113,16 @@ class Skills(Recorder):
 
     def get_roll_condition_reasons(self, skill: Skill) -> list[str]:
         condition = self.get_roll_condition(skill)
-        return list(self._roll_condition_sources.get(skill, {}).get(condition, []))
+        return sorted(self._roll_condition_sources.get(skill, {}).get(condition, []))
 
     def get_skill_abilities(self, skill: Skill) -> list[Ability]:
         """The abilities a check with `skill` may use: the default one, or every
         override granted for it (the character uses the best -
-        Character.get_skill_ability)."""
-        return self._skill_ability_overrides.get(skill) or [
-            self.get_default_skill_to_ability_mapping()[skill]
-        ]
+        Character.get_skill_ability), in Ability order."""
+        overrides = self._skill_ability_overrides.get(skill)
+        if not overrides:
+            return [self.get_default_skill_to_ability_mapping()[skill]]
+        return [ability for ability in Ability if ability in overrides]
 
     def get_skill_ability(self, skill: Skill) -> Ability:
         abilities = self.get_skill_abilities(skill)
@@ -137,15 +135,7 @@ class Skills(Recorder):
 
     @records
     def update_skill_to_ability(self, skill: Skill, ability: Ability):
-        overrides = self._skill_ability_overrides.setdefault(skill, [])
-        if ability not in overrides:
-            overrides.append(ability)
-
-    def reset_skill_to_ability(self, skill: Skill):
-        self._skill_ability_overrides.pop(skill, None)
-
-    def reset_all_skill_to_ability(self):
-        self._skill_ability_overrides.clear()
+        self._skill_ability_overrides.setdefault(skill, set()).add(ability)
 
     def get_default_skill_to_ability_mapping(self) -> dict[Skill, Ability]:
         return {

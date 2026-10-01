@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 class Speed(Recorder):
     """Base walking speed plus every bonus to it (flat or formula-valued -
-    see Bonuses), e.g. "+10 feet while you aren't wearing Heavy armor"."""
+    see Bonuses), e.g. "+10 feet while you aren't wearing Heavy armor".
+
+    Merge rule: sum."""
 
     def __init__(self, base: int):
         self.base = base

@@ -13,7 +13,10 @@ class Initiative(Recorder):
     combines the bonus total with the Dexterity modifier (for the initiative
     score) and the roll condition with untrained-armor Disadvantage (neither
     is this part's concern - see Character.calculate_initiative() /
-    .initiative_roll_condition)."""
+    .initiative_roll_condition).
+
+    Merge rule: proficiency is a flag, roll conditions are a set (Advantage
+    and Disadvantage cancel), bonuses sum."""
 
     def __init__(self):
         self.proficiency = False

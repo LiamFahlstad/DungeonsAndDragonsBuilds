@@ -6,19 +6,22 @@ class Senses(Recorder):
     """Special senses (Darkvision, Blindsight, ...), each granted at a range
     by one or more sources. "Gain it, or +N if you already have it" grants
     (add_sense_or_extension) are kept separately and added on top of the best
-    plain grant, so the result doesn't depend on which applied first."""
+    plain grant, so the result doesn't depend on which applied first.
+
+    Merge rule: best plain grant + sum of extensions, per sense. Reads list
+    senses in enum order and sources sorted by (source, range)."""
 
     def __init__(self):
         # Every (range, source) pair granted per sense; the range itself is
         # worked out on read - see ranges.
-        self.sense_sources: dict[Sense, list[tuple[int, str]]] = {}
+        self._sense_sources: dict[Sense, list[tuple[int, str]]] = {}
         # "...or if you already have it, its range increases by N" grants.
         self._sense_extensions: dict[Sense, list[tuple[int, str]]] = {}
 
     @records
     def add_sense(self, sense: Sense, range_feet: int, source: str) -> None:
         """Grant a sense. The same sense from several sources keeps the best range."""
-        self.sense_sources.setdefault(sense, []).append((range_feet, source))
+        self._sense_sources.setdefault(sense, []).append((range_feet, source))
 
     @records
     def add_sense_or_extension(
@@ -34,8 +37,10 @@ class Senses(Recorder):
         or +N if you already have it" is N on top of whatever else grants it,
         so the result doesn't depend on which applied first."""
         ranges = {}
-        for sense in [*self.sense_sources, *self._sense_extensions]:
-            best = max((r for r, _ in self.sense_sources.get(sense, [])), default=0)
+        for sense in Sense:
+            if sense not in self._sense_sources and sense not in self._sense_extensions:
+                continue
+            best = max((r for r, _ in self._sense_sources.get(sense, [])), default=0)
             extra = sum(r for r, _ in self._sense_extensions.get(sense, []))
             ranges[sense] = best + extra
         return ranges
@@ -44,7 +49,14 @@ class Senses(Recorder):
         return self.ranges.get(sense, 0)
 
     def get_sense_sources(self, sense: Sense) -> list[tuple[int, str]]:
-        return self.sense_sources.get(sense, []) + [
+        """Plain grants, then extensions, each sorted by (source, range)."""
+
+        def by_source(grant: tuple[int, str]) -> tuple[str, int]:
+            return grant[1], grant[0]
+
+        return sorted(self._sense_sources.get(sense, []), key=by_source) + [
             (range_feet, f"{source} (+{range_feet} ft. if already had)")
-            for range_feet, source in self._sense_extensions.get(sense, [])
+            for range_feet, source in sorted(
+                self._sense_extensions.get(sense, []), key=by_source
+            )
         ]

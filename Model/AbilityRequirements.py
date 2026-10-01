@@ -10,7 +10,11 @@ class AbilityRequirements(Recorder):
     requirement may be granted before or after the one that imposes it. Also
     checks the multiclass ability-score prerequisites, which are minimums of
     the same shape (13+ in one of a class's prerequisite abilities) fixed by
-    the character's classes rather than recorded by a feature."""
+    the character's classes rather than recorded by a feature.
+
+    Merge rule: every minimum must hold (a set). They're checked in a fixed
+    order (Ability, minimum, reason), so the first failure reported doesn't
+    depend on the order they were recorded in."""
 
     def __init__(self):
         # (ability, minimum score, reason) - checked by validate() once
@@ -24,7 +28,10 @@ class AbilityRequirements(Recorder):
         self._minimums.append((ability, min_score, reason))
 
     def validate(self, abilities: AbilityScores, class_levels: ClassLevels) -> None:
-        for ability, min_score, reason in self._minimums:
+        order = list(Ability)
+        for ability, min_score, reason in sorted(
+            self._minimums, key=lambda m: (order.index(m[0]), m[1], m[2])
+        ):
             if abilities.get_own_score(ability) < min_score:
                 raise ValueError(
                     f"{ability.value} score must be at least {min_score} ({reason})."

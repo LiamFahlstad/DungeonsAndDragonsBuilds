@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from Core.Definitions import Ability
 from Model.Bonuses import Bonuses, DerivedBonus
@@ -9,13 +9,15 @@ if TYPE_CHECKING:
 
 
 class SavingThrows(Recorder):
-    def __init__(
-        self,
-        proficiencies: Optional[dict[Ability, bool]] = None,
-        advantages: Optional[dict[Ability, bool]] = None,
-    ):
-        self.proficiencies = proficiencies if proficiencies is not None else {}
-        self.advantages = advantages if advantages is not None else {}
+    """Saving throw proficiencies, Advantage and bonuses.
+
+    Merge rule: proficiency and Advantage are set unions ("or another one if
+    you already have it" grants resolve against all the others, in Ability
+    order), and bonuses sum (see Bonuses)."""
+
+    def __init__(self):
+        self._proficiencies: set[Ability] = set()
+        self._advantages: set[Ability] = set()
         # Per-ability flat and formula-valued bonuses, each with a source
         # (see Model/Bonuses.py).
         self._bonuses: dict[Ability, Bonuses] = {}
@@ -28,7 +30,7 @@ class SavingThrows(Recorder):
 
     @records
     def add_proficiency(self, ability: Ability) -> None:
-        self.proficiencies[ability] = True
+        self._proficiencies.add(ability)
 
     @records
     def add_proficiency_or_alternative(
@@ -42,7 +44,7 @@ class SavingThrows(Recorder):
         """Every proficient ability. Conditional grants resolve against all
         the other grants, not just those applied before them, and in a fixed
         order, so the result doesn't depend on grant order."""
-        proficient = {ability for ability, has in self.proficiencies.items() if has}
+        proficient = set(self._proficiencies)
         order = list(Ability)
         for ability, alternatives in sorted(
             self._conditional_proficiencies,
@@ -55,11 +57,11 @@ class SavingThrows(Recorder):
         return proficient
 
     def is_advantaged(self, ability: Ability) -> bool:
-        return self.advantages.get(ability, False)
+        return ability in self._advantages
 
     @records
     def add_advantage(self, ability: Ability) -> None:
-        self.advantages[ability] = True
+        self._advantages.add(ability)
 
     def _bonuses_for(self, ability: Ability) -> Bonuses:
         return self._bonuses.setdefault(ability, Bonuses())
