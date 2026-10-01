@@ -1328,6 +1328,19 @@ BASE_CHARACTER_SHEET_CSS = """
             margin-right: 0.25rem;
         }
 
+        /* The base div rule boxes every div to a centered 700px column;
+           inside the items section everything instead runs full width,
+           flush left. :where() keeps the nested rule at element
+           specificity, so card classes' own margins/padding still win. */
+        .items-section,
+        :where(.items-section) div {
+            max-width: none;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
         /* Wallet (left) / carrying capacity (right) header row above the
            item cards - a two-sided layout instead of one flat chip list. */
         .wallet-carry-row {

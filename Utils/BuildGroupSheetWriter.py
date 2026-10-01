@@ -162,6 +162,7 @@ def _write_weapons_page(
             file.write(
                 f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
             )
+            file.write("<div class='items-section'>\n")
             writer._write_weapons(
                 stat_block,
                 file,
@@ -169,6 +170,7 @@ def _write_weapons_page(
                 character_sheet_data.weapon_masteries,
                 include_probability_tables,
             )
+            file.write("</div>\n")
 
 
 def _write_items_page(
@@ -189,18 +191,19 @@ def _write_items_page(
             if not non_empty_entries:
                 continue
             combined_rows = []
-            for entry in non_empty_entries:
-                is_starting_equipment = (
-                    entry is character_sheet_data.inventory.starting_equipment_entry
-                )
-                sections = writer._build_item_sections(entry, is_starting_equipment)
-                for title, rows in sections:
-                    if title == "Weapons":
-                        continue  # weapon attack cards live on weapons.html instead
-                    combined_rows.extend(rows)
+            sections = writer._build_item_sections(
+                non_empty_entries,
+                character_sheet_data.inventory.starting_equipment_entry,
+            )
+            for title, rows in sections:
+                if title == "Weapons":
+                    continue  # weapon attack cards live on weapons.html instead
+                combined_rows.extend(rows)
             if not combined_rows:
                 continue
             file.write(
                 f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
             )
+            file.write("<div class='items-section'>\n")
             Html.write_item_cards(file, None, combined_rows)
+            file.write("</div>\n")

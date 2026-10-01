@@ -1,4 +1,4 @@
-from typing import TextIO
+from typing import Optional, TextIO
 
 import Core.Definitions as Definitions
 from Utils import Html
@@ -147,20 +147,21 @@ def _reference_ac_formula(armor: AbstractArmor) -> str:
     return formula
 
 
-def write_armor_reference_card(armor: AbstractArmor, file: TextIO) -> None:
+def write_armor_reference_card(
+    armor: AbstractArmor, file: TextIO, name_tags: str = ""
+) -> None:
     """Render a single armor/shield as a rules-reference card: its AC
     formula and any wear restrictions, with no character-specific bonuses
-    resolved - used by standalone item sheets, which have no character to
-    compute a Dexterity modifier or check a Strength score against."""
+    resolved - no character to compute a Dexterity modifier or check a
+    Strength score against. `name_tags` is extra chip HTML after the name
+    (worn state, where it came from) for the character-sheet equipment
+    ledger; standalone item sheets leave it empty."""
     file.write("<div class='armor-entry'>\n")
 
-    # No "Worn" tag here - every armor on a standalone reference sheet is
-    # implicitly worn/carried, unlike the character-sheet equipment ledger,
-    # where owned gear may or may not currently be worn.
     attunement_tag = Html.attunement_tag(armor)
     Html.write_gear_header(
         file,
-        f"<span class='armor-name'>{armor.name}{attunement_tag}</span>",
+        f"<span class='armor-name'>{armor.name}{attunement_tag}{name_tags}</span>",
         Html.carrying_checkbox_id(armor.name),
     )
 
@@ -208,17 +209,25 @@ def write_armor_reference_card(armor: AbstractArmor, file: TextIO) -> None:
     file.write("</div>\n")
 
 
-def write_armors_to_file(armors: list[AbstractArmor], file: TextIO) -> None:
-    """Character-independent armor section for standalone item sheets:
-    renders each armor's AC formula and restrictions in place of a
-    resolved AC number."""
+def write_armors_to_file(
+    armors: list[AbstractArmor],
+    file: TextIO,
+    name_tags: Optional[list[str]] = None,
+) -> None:
+    """Character-independent armor section: renders each armor's AC
+    formula and restrictions in place of a resolved AC number.
+    `name_tags`, when given, holds each armor's extra name chips, in the
+    same order as `armors`."""
     if not armors:
         return
+
+    if name_tags is None:
+        name_tags = [""] * len(armors)
 
     file.write("<div class='armors'>\n")
     file.write("<h3>Armor</h3>\n")
 
-    for armor in armors:
-        write_armor_reference_card(armor, file)
+    for armor, tags in zip(armors, name_tags):
+        write_armor_reference_card(armor, file, tags)
 
     file.write("</div>\n")

@@ -1,4 +1,4 @@
-from typing import TextIO
+from typing import Optional, TextIO
 
 from Core.Definitions import DiceRollCondition
 from Model.Character import Character
@@ -329,7 +329,10 @@ def _write_single_weapon(
     file: TextIO,
     include_probability_tables: bool = False,
     has_mastery: bool = False,
+    name_tags: str = "",
 ):
+    """Render one weapon as a character-resolved attack card. `name_tags`
+    is extra chip HTML after the name (where the weapon came from)."""
     attack_bonus_int = weapon.calculate_total_attack_roll_bonus_int(character)
     attack_bonus_str = f"{attack_bonus_int:+}"
 
@@ -358,13 +361,21 @@ def _write_single_weapon(
 
     file.write("<div class='weapon-entry'>\n")
 
-    wielded_tag = ""
-    if not isinstance(weapon, UnarmedStrike):
-        if weapon.is_wearing:
-            wielded_tag = " <span class='wtag wtag-worn'>Wielded</span>"
-        else:
-            wielded_tag = " <span class='wtag wtag-not-worn'>Not wielded</span>"
-    file.write(f"<span class='weapon-name'>{weapon.name}{wielded_tag}</span>\n")
+    # Unarmed Strike isn't an item - nothing to wield, carry, buy or sell -
+    # so it gets an "Innate" chip in place of the item header bookkeeping.
+    is_innate = isinstance(weapon, UnarmedStrike)
+    if is_innate:
+        file.write(
+            f"<span class='weapon-name'>{weapon.name}"
+            f" <span class='wtag'>Innate</span></span>\n"
+        )
+    else:
+        Html.write_gear_header(
+            file,
+            f"<span class='weapon-name'>{weapon.name}{Html.attunement_tag(weapon)}"
+            f"{name_tags}</span>",
+            Html.carrying_checkbox_id(weapon.name),
+        )
 
     type_cell = (
         f"{weapon.weapon_type.value}"
@@ -390,6 +401,10 @@ def _write_single_weapon(
         f"<span class='wqs-right'>{roll_cell}</span>"
         f"</div>\n"
     )
+
+    if not is_innate:
+        item_type, rarity, price = Html.item_type_rarity_price(weapon)
+        Html.write_gear_meta_line(file, item_type, rarity, price, weapon.slots)
 
     if include_probability_tables:
         conditions = [
@@ -478,20 +493,28 @@ def write_weapons_to_file(
     file: TextIO,
     include_probability_tables: bool = False,
     weapon_masteries: "list[AbstractWeapon] | None" = None,
+    name_tags: Optional[list[str]] = None,
 ):
+    """Weapons section of character-resolved attack cards. `name_tags`,
+    when given, holds each weapon's extra name chips, in the same order as
+    `weapons`."""
     if not weapons:
         return
 
-    file.write("<div class='weapons'>\n")
-    file.write("<h3>Weapon Attacks</h3>\n")
+    if name_tags is None:
+        name_tags = [""] * len(weapons)
 
-    for weapon in weapons:
+    file.write("<div class='weapons'>\n")
+    file.write("<h3>Weapons</h3>\n")
+
+    for weapon, tags in zip(weapons, name_tags):
         _write_single_weapon(
             weapon,
             character,
             file,
             include_probability_tables,
             has_mastery=weapon.has_mastery(weapon_masteries or []),
+            name_tags=tags,
         )
 
     file.write("</div>\n")
@@ -543,9 +566,6 @@ def write_weapon_reference_card(weapon: AbstractWeapon, file: TextIO) -> None:
     compute an attack bonus or a proficiency status against."""
     file.write("<div class='weapon-entry'>\n")
 
-    # No "Wielded" tag here - every weapon on a standalone reference sheet
-    # is implicitly wielded/carried, unlike the character-sheet weapon
-    # list, where multiple weapons can be owned but only some in hand.
     attunement_tag = Html.attunement_tag(weapon)
     Html.write_gear_header(
         file,

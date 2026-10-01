@@ -1,6 +1,6 @@
 import html
 import pathlib
-from typing import Literal, Optional, TextIO
+from typing import Literal, Optional, Sequence, TextIO
 
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
@@ -657,6 +657,7 @@ class HtmlCharacterSheetWriter:
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
         include_probability_tables: bool = False,
+        name_tags: Optional[list[str]] = None,
     ):
         if not weapons:
             return
@@ -667,6 +668,7 @@ class HtmlCharacterSheetWriter:
             file,
             include_probability_tables,
             weapon_masteries=weapon_masteries,
+            name_tags=name_tags,
         )
 
     def _write_fighting_styles(
@@ -853,82 +855,112 @@ class HtmlCharacterSheetWriter:
     def _format_gold(value: float) -> str:
         return f"{int(value)} GP" if value == int(value) else f"{value:g} GP"
 
-    def _acquisition_tag(
-        self, item: Items.Item, entry: EquipmentEntry, is_starting_equipment: bool
+    def _ownership_tags(
+        self,
+        item: Items.Item,
+        entry: EquipmentEntry,
+        starting_equipment_entry: Optional[EquipmentEntry],
     ) -> str:
-        """Chip marking an adventuring-gear item as bought (with the amount
-        paid) or found; omitted for Starting Equipment, where the concept
-        doesn't apply - that gear's cost is already reflected in Starting
+        """Chips attached to an owned item's name saying where it came from:
+        the label of the equipment entry it was added in, plus whether it
+        was bought (with the amount paid) or found. Starting Equipment gets
+        only its label - that gear's cost is already reflected in Starting
         Gold, not tracked per item."""
-        if is_starting_equipment:
-            return ""
+        tags = f" <span class='wtag'>{entry.label}</span>"
+        if entry is starting_equipment_entry:
+            return tags
         for purchased_item, price in entry.purchases:
             if purchased_item is item:
                 price_display = self._format_gold(price)
-                return f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
-        return " <span class='wtag wtag-not-worn'>Found</span>"
+                return tags + f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
+        return tags + " <span class='wtag wtag-not-worn'>Found</span>"
+
+    @staticmethod
+    def _collect_gear(entries: list[EquipmentEntry]) -> tuple[
+        list[tuple[Armor.AbstractArmor, EquipmentEntry]],
+        list[tuple[AbstractWeapon, EquipmentEntry]],
+        list[tuple[Items.Item, int, EquipmentEntry]],
+    ]:
+        """Every entry's armor, weapons and other items pooled into one list
+        per category, each paired with the entry it came from and sorted by
+        item type then name. Unarmed Strike and currency are left out."""
+        armors = sorted(
+            ((armor, entry) for entry in entries for armor in entry.armors),
+            key=lambda x: (x[0].category.value, x[0].name),
+        )
+        weapons = sorted(
+            (
+                (weapon, entry)
+                for entry in entries
+                for weapon in entry.weapons
+                if not isinstance(weapon, UnarmedStrike)
+            ),
+            key=lambda x: (x[0].category.value, x[0].name),
+        )
+        items = sorted(
+            (
+                (item, quantity, entry)
+                for entry in entries
+                for item, quantity in entry.items
+                if item.category != Items.ItemCategory.CURRENCY
+            ),
+            key=lambda x: (x[0].category.value, x[0].name),
+        )
+        return armors, weapons, items
 
     def _build_item_sections(
-        self, entry: EquipmentEntry, is_starting_equipment: bool
+        self,
+        entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
+        show_ownership: bool = True,
     ) -> list[tuple[str, list[tuple[str, str, int, str, str, str]]]]:
         """(title, [(label, description, slots, type, rarity, price), ...])
         per non-empty Armor/Weapons/Other items table, in the same
-        slot-table format. Rows are sorted by item type."""
+        slot-table format, pooling every entry's gear. With
+        `show_ownership`, each label carries where the item came from."""
+        armors, weapons, items = self._collect_gear(entries)
+
+        def ownership(item, entry) -> str:
+            if not show_ownership:
+                return ""
+            return self._ownership_tags(item, entry, starting_equipment_entry)
+
         sections = []
-        if entry.armors:
-            sorted_armors = sorted(
-                entry.armors, key=lambda a: (a.category.value, a.name)
+        armor_rows = [
+            (
+                f"{armor.name}{Html.attunement_tag(armor)}{ownership(armor, entry)}",
+                self._description_or_dash(armor.description_text),
+                armor.slots,
+                *self._item_type_rarity_value(armor),
             )
-            armor_rows = [
-                (
-                    f"{armor.name}{self._worn_tag(armor)}{Html.attunement_tag(armor)}"
-                    f"{self._acquisition_tag(armor, entry, is_starting_equipment)}",
-                    self._description_or_dash(armor.description_text),
-                    armor.slots,
-                    *self._item_type_rarity_value(armor),
-                )
-                for armor in sorted_armors
-            ]
+            for armor, entry in armors
+        ]
+        if armor_rows:
             sections.append(("Armor", armor_rows))
 
-        if entry.weapons:
-            sorted_weapons = sorted(
-                (w for w in entry.weapons if not isinstance(w, UnarmedStrike)),
-                key=lambda w: (w.category.value, w.name),
+        weapon_rows = [
+            (
+                f"{weapon.name}{Html.attunement_tag(weapon)}{ownership(weapon, entry)}",
+                self._description_or_dash(weapon.description_text),
+                weapon.slots,
+                *self._item_type_rarity_value(weapon),
             )
-            weapon_rows = [
-                (
-                    f"{weapon.name}{self._worn_tag(weapon, 'Wielded', 'Not wielded')}"
-                    f"{Html.attunement_tag(weapon)}"
-                    f"{self._acquisition_tag(weapon, entry, is_starting_equipment)}",
-                    self._description_or_dash(weapon.description_text),
-                    weapon.slots,
-                    *self._item_type_rarity_value(weapon),
-                )
-                for weapon in sorted_weapons
-            ]
-            if weapon_rows:
-                sections.append(("Weapons", weapon_rows))
+            for weapon, entry in weapons
+        ]
+        if weapon_rows:
+            sections.append(("Weapons", weapon_rows))
 
-        if entry.items:
-            sorted_items = sorted(
-                (
-                    (item, quantity)
-                    for item, quantity in entry.items
-                    if item.category != Items.ItemCategory.CURRENCY
-                ),
-                key=lambda x: (x[0].category.value, x[0].name),
+        item_rows = [
+            (
+                f"{item.name} ({quantity}){self._worn_tag(item)}{Html.attunement_tag(item)}"
+                f"{ownership(item, entry)}",
+                item.description_text,
+                item.slots,
+                *self._item_type_rarity_value(item, quantity),
             )
-            item_rows = [
-                (
-                    f"{item.name} ({quantity}){self._worn_tag(item)}{Html.attunement_tag(item)}"
-                    f"{self._acquisition_tag(item, entry, is_starting_equipment)}",
-                    item.description_text,
-                    item.slots,
-                    *self._item_type_rarity_value(item, quantity),
-                )
-                for item, quantity in sorted_items
-            ]
+            for item, quantity, entry in items
+        ]
+        if item_rows:
             sections.append(("Other items", item_rows))
 
         return sections
@@ -953,22 +985,36 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Items</h2>\n")
+        file.write("<div class='items-section'>\n")
 
-        # Attack-card weapons are the first subsection within Items, ahead
-        # of the wallet/carrying-capacity row and the equipment entries.
-        self._write_weapons(
-            character, file, weapons, weapon_masteries, include_probability_tables
+        if non_empty_entries:
+            self._write_wallet_and_carrying(
+                character, file, non_empty_entries, current_gold
+            )
+
+        self._write_item_sections(
+            file,
+            non_empty_entries,
+            starting_equipment_entry,
+            character=character,
+            character_weapons=weapons,
+            weapon_masteries=weapon_masteries,
+            include_probability_tables=include_probability_tables,
         )
 
-        if not non_empty_entries:
-            file.write("<br class='section-gap'>\n")
-            return
+        file.write("</div>\n")
+        file.write("<br class='section-gap'>\n")
 
+    def _write_wallet_and_carrying(
+        self,
+        character: Character,
+        file: TextIO,
+        entries: list[EquipmentEntry],
+        current_gold: Optional[float],
+    ):
         # Wallet pinned to the left, carrying capacity (total + a compact
         # per-source pip breakdown) pinned to the right - keeps the row
-        # tidy instead of one flat chip list wrapping unevenly. Given its
-        # own header so it reads as a distinct section rather than a
-        # continuation of the weapon attacks above it.
+        # tidy instead of one flat chip list wrapping unevenly.
         file.write("<h3>Wealth &amp; Carrying Capacity</h3>\n")
         carrying_capacity = character.get_carrying_capacity()
         file.write("<div class='wallet-carry-row'>\n")
@@ -978,6 +1024,15 @@ class HtmlCharacterSheetWriter:
                 f"<span class='overview-detail'><span class='od-label'>Starting Gold</span>"
                 f"{self._format_gold(current_gold)}</span>\n"
             )
+        # Gold gained or spent per equipment entry - the entries don't get
+        # their own headings, so their gold sits with the wallet.
+        for entry in entries:
+            if entry.gold:
+                sign = "+" if entry.gold > 0 else "-"
+                file.write(
+                    f"<span class='overview-detail'><span class='od-label'>{entry.label}</span>"
+                    f"{sign}{self._format_gold(abs(entry.gold))}</span>\n"
+                )
         file.write(
             "<span class='overview-detail'><span class='od-label'>Current Gold</span>"
             "<span class='xp-blank'></span></span>\n"
@@ -997,24 +1052,79 @@ class HtmlCharacterSheetWriter:
         file.write("</div>\n")
         file.write("</div>\n")
 
-        for entry in non_empty_entries:
-            is_starting_equipment = entry is starting_equipment_entry
-            file.write(f"<h3>{entry.label}</h3>\n")
-            if entry.gold:
-                sign = "+" if entry.gold > 0 else "-"
-                file.write(
-                    "<div class='overview-details'>\n"
-                    f"<span class='overview-detail'><span class='od-label'>Gold</span>"
-                    f"{sign}{self._format_gold(abs(entry.gold))}</span>\n"
-                    "</div>\n"
+    def _write_item_sections(
+        self,
+        file: TextIO,
+        entries: list[EquipmentEntry],
+        starting_equipment_entry: Optional[EquipmentEntry],
+        character: Optional[Character] = None,
+        character_weapons: Sequence[AbstractWeapon] = (),
+        weapon_masteries: Sequence[AbstractWeapon] = (),
+        include_probability_tables: bool = False,
+    ):
+        """One Armor and one Weapons section, then one Other items section
+        of gear cards, pooling every entry's gear, with a rule between
+        sections. Shared by item sheets and character sheets so both
+        present items identically.
+
+        Without a `character` (item sheets) armor and weapons render as
+        rules-reference cards. With one (character sheets), weapons render
+        as attack cards resolved against that character - including the
+        ones in `character_weapons` that aren't items, like Unarmed Strike
+        - and every card's name carries its worn/wielded state and where it
+        came from, instead of each entry getting its own sections."""
+        show_ownership = character is not None
+        armors, weapons, _ = self._collect_gear(entries)
+        wrote_section = False
+
+        if armors:
+            armor_tags = [
+                (
+                    self._ownership_tags(armor, entry, starting_equipment_entry)
+                    if show_ownership
+                    else ""
                 )
+                for armor, entry in armors
+            ]
+            write_armors_to_file([armor for armor, _ in armors], file, armor_tags)
+            wrote_section = True
 
-            sections = self._build_item_sections(entry, is_starting_equipment)
-            combined_rows = [row for _, rows in sections for row in rows]
-            if combined_rows:
-                Html.write_item_cards(file, None, combined_rows)
+        if character is not None:
+            # Weapons the character has that no entry holds (Unarmed
+            # Strike) lead the section, ahead of the owned ones.
+            owned_ids = {id(weapon) for weapon, _ in weapons}
+            innate_weapons = [w for w in character_weapons if id(w) not in owned_ids]
+            if innate_weapons or weapons:
+                if wrote_section:
+                    file.write("<hr>")
+                weapon_tags = [""] * len(innate_weapons) + [
+                    self._ownership_tags(weapon, entry, starting_equipment_entry)
+                    for weapon, entry in weapons
+                ]
+                self._write_weapons(
+                    character,
+                    file,
+                    innate_weapons + [weapon for weapon, _ in weapons],
+                    list(weapon_masteries),
+                    include_probability_tables,
+                    weapon_tags,
+                )
+                wrote_section = True
+        elif weapons:
+            if wrote_section:
+                file.write("<hr>")
+            write_weapons_reference_to_file([weapon for weapon, _ in weapons], file)
+            wrote_section = True
 
-        file.write("<br class='section-gap'>\n")
+        for section_title, rows in self._build_item_sections(
+            entries, starting_equipment_entry, show_ownership
+        ):
+            if section_title != "Other items":
+                continue  # armor/weapons are rendered as cards above
+            if wrote_section:
+                file.write("<hr>")
+            Html.write_item_cards(file, section_title, rows)
+            wrote_section = True
 
     def _write_tool_proficiencies(
         self,
@@ -1026,7 +1136,7 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write("<h2>Tool Proficiencies</h2>\n")
-        file.write("<div class='tool-list'>\n")
+        file.write("<div class='tool-list items-section'>\n")
 
         proficiency_bonus = character.get_proficiency_bonus()
         sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
@@ -1062,6 +1172,7 @@ class HtmlCharacterSheetWriter:
             Html.BASE_CHARACTER_SHEET_CSS,
             SPELL_CARD_CSS,
             WEAPON_CARD_CSS,
+            ARMOR_CARD_CSS,
             WILDSHAPE_CARD_CSS,
             FEATURE_CARD_CSS,
         )
@@ -1669,7 +1780,9 @@ class HtmlCharacterSheetWriter:
         if items is None:
             items = []
 
-        entry = EquipmentEntry(label=title, armors=[], weapons=[], items=items)
+        entry = EquipmentEntry(
+            label=title, armors=armors, weapons=weapons, items=items
+        )
 
         output_file = pathlib.Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -1682,25 +1795,6 @@ class HtmlCharacterSheetWriter:
             )
             file.write(f"<h1>{title}</h1>\n")
 
-            wrote_section = False
-
-            if armors:
-                write_armors_to_file(armors, file)
-                wrote_section = True
-
-            non_unarmed_weapons = sorted(
-                (w for w in weapons if not isinstance(w, UnarmedStrike)),
-                key=lambda w: w.name,
-            )
-            if non_unarmed_weapons:
-                if wrote_section:
-                    file.write("<hr>")
-                write_weapons_reference_to_file(non_unarmed_weapons, file)
-                wrote_section = True
-
-            sections = self._build_item_sections(entry, is_starting_equipment=True)
-            for section_title, rows in sections:
-                if wrote_section:
-                    file.write("<hr>")
-                Html.write_item_cards(file, section_title, rows)
-                wrote_section = True
+            file.write("<div class='items-section'>\n")
+            self._write_item_sections(file, [entry], starting_equipment_entry=entry)
+            file.write("</div>\n")
