@@ -10,8 +10,14 @@ import pytest
 
 from Model.Character import Character
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
+from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
+    SkillBonus,
+    SkillProficiency,
+)
 from CharacterContent.Items import Items
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass, Skill
+from Model.Recorder import SealedError
 
 
 def test_a_build_is_one_character():
@@ -79,3 +85,81 @@ def test_model_package_imports_nothing_from_character_content():
         "assert not loaded, loaded"
     )
     subprocess.run([sys.executable, "-c", code], check=True)
+
+
+class TestTheEvaluatedLedgerIsSealed:
+    """Everything the Character answers comes from a Ledger it rebuilds from
+    its sources, so a write into an evaluated part would be lost at the next
+    rebuild. It raises instead."""
+
+    def test_a_part_rejects_writes_after_evaluation(self, make_character):
+        character = make_character()
+        character.validate()
+        with pytest.raises(SealedError):
+            character.skills.add_skill_proficiency(Skill.STEALTH)
+        with pytest.raises(SealedError):
+            character.abilities.add_bonus(Ability.WISDOM, 2)
+
+    def test_a_part_inside_a_part_is_sealed_too(self, make_character):
+        character = make_character()
+        character.add_effect(SkillBonus(Skill.ARCANA, 1, source="Test"))
+        bonuses = character.skills._bonuses[Skill.ARCANA]
+        with pytest.raises(SealedError):
+            bonuses.add(1, "Test")
+
+    def test_writing_a_score_on_the_evaluated_copy_raises(self, make_character):
+        character = make_character(strength=10)
+        character.validate()
+        with pytest.raises(SealedError):
+            character.abilities.strength = 18
+
+    @pytest.mark.xfail(
+        strict=True,
+        reason="Step 5: base_abilities changed in place doesn't bump the "
+        "version, so the cached evaluation goes stale. Step 5 makes "
+        "base_abilities immutable.",
+    )
+    def test_changing_a_base_score_in_place_re_evaluates(self, make_character):
+        character = make_character(strength=10)
+        character.validate()
+        character.base_abilities.strength = 18
+        assert character.get_ability_score(Ability.STRENGTH) == 18
+
+
+class TestAddEffect:
+    def test_survives_re_evaluation(self, make_character):
+        character = make_character()
+        character.add_effect(SkillProficiency([Skill.STEALTH]))
+        assert character.is_proficient_in_skill(Skill.STEALTH)
+        # Any change to the sources rebuilds the Ledger; the effect is a
+        # source, so it's recorded again.
+        character.base_speed = 35
+        assert character.calculate_speed() == 35
+        assert character.is_proficient_in_skill(Skill.STEALTH)
+
+    def test_is_a_change_to_the_sources(self, make_character):
+        character = make_character(wisdom=10)
+        assert character.get_ability_score(Ability.WISDOM) == 10
+        character.add_effect(AbilityScoreBonus([(Ability.WISDOM, 2)], total=2))
+        assert character.get_ability_score(Ability.WISDOM) == 12
+
+
+def test_apply_order_change_re_evaluates(make_character):
+    applied = []
+
+    class _Recording:
+        def __init__(self, label):
+            self.label = label
+
+        def apply(self, effects):
+            applied.append(self.label)
+
+    character = make_character()
+    character.add_effect(_Recording("a"))
+    character.add_effect(_Recording("b"))
+    character.validate()
+    assert applied == ["a", "b"]
+    applied.clear()
+    character._apply_order = lambda effects: effects[::-1]
+    character.validate()
+    assert applied == ["b", "a"]

@@ -2,12 +2,13 @@ from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.Character import Character
 
 
-class SavingThrows:
+class SavingThrows(Recorder):
     def __init__(
         self,
         proficiencies: Optional[dict[Ability, bool]] = None,
@@ -25,9 +26,11 @@ class SavingThrows:
     def is_proficient(self, ability: Ability) -> bool:
         return ability in self._resolved_proficiencies()
 
+    @records
     def add_proficiency(self, ability: Ability) -> None:
         self.proficiencies[ability] = True
 
+    @records
     def add_proficiency_or_alternative(
         self, ability: Ability, alternatives: list[Ability]
     ) -> None:
@@ -54,15 +57,18 @@ class SavingThrows:
     def is_advantaged(self, ability: Ability) -> bool:
         return self.advantages.get(ability, False)
 
+    @records
     def add_advantage(self, ability: Ability) -> None:
         self.advantages[ability] = True
 
     def _bonuses_for(self, ability: Ability) -> Bonuses:
         return self._bonuses.setdefault(ability, Bonuses())
 
+    @records
     def add_bonus(self, ability: Ability, bonus: int) -> None:
         self._bonuses_for(ability).add(bonus)
 
+    @records
     def add_derived_bonus(self, ability: Ability, bonus: DerivedBonus) -> None:
         self._bonuses_for(ability).add_formula(bonus)
 

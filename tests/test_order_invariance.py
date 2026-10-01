@@ -153,10 +153,7 @@ def test_apply_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     reorder = _orders(name)[order]
 
     def reorder_effects(data: Character) -> None:
-        iter_stat_effects = data.iter_stat_effects
-        data.iter_stat_effects = lambda features=None: reorder(
-            iter_stat_effects(features)
-        )
+        data._apply_order = reorder
 
     sheets = render_and_hash(name, tmp_path, prepare=reorder_effects)
     _assert_sheet_unchanged(name, sheets, f"effect apply order ({order})")

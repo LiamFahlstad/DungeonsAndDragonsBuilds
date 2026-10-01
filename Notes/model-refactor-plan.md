@@ -138,7 +138,9 @@ Rules of thumb:
   6. Register the `slow` marker in `pytest.ini`.
 - **Verify:** A, B, C, plus snapshots under `PYTHONHASHSEED=1` and `=2`, plus `-m slow` once.
 
-### Step 1: Test seams and a sealed ledger *(small)*
+### Step 1: Test seams and a sealed ledger *(small)* — done
+
+- **Result:** the base class is `Model/Recorder.py` (`Recorder`, with a `@records` decorator on every part mutator, and `SealedError`). The cache key includes `_apply_order`, so changing it re-evaluates. All 159 `X.apply(<c>.effects)` test sites now use `add_effect`, and so do the 14 direct part writes and the `make_character` armor-training fixture. Snapshots are unchanged. Found a bug on the way: changing `base_abilities` in place doesn't bump the version, so the cache goes stale. It is recorded as a strict xfail for Step 5 (`test_changing_a_base_score_in_place_re_evaluates`).
 
 - **Goal:** the tests stop monkeypatching internals, and nothing can write into the evaluated record after evaluation.
 - **Changes:**
@@ -196,7 +198,7 @@ Rules of thumb:
 
 - **Goal:** `Ledger()` takes no arguments, and parts hold contributions only.
 - **Changes:**
-  - Split `AbilityScores` into `base_abilities`, the immutable source, and an `AbilityIncreases` part, which records the increases and caps. Its resolver is `AbilityIncreases.score(ability, view)`, which reads the base score through `view.base_abilities`. The cap rule is unchanged and tested.
+  - Split `AbilityScores` into `base_abilities`, the immutable source (frozen, so changing a score in place is impossible, which fixes the stale-cache xfail from Step 1), and an `AbilityIncreases` part, which records the increases and caps. Its resolver is `AbilityIncreases.score(ability, view)`, which reads the base score through `view.base_abilities`. The cap rule is unchanged and tested.
   - Delete `Character.abilities` and the `deepcopy`. Keeping a resolved `abilities` next to `base_abilities` would bring back the "same class, two meanings" pair that 1b complains about. The final values are the existing queries `get_ability_score`/`get_ability_modifier`. The 28 reads of `.abilities` in `CharacterContent`, `Utils`, `Combat`, `Builds` and `tests` move to those queries, or to `ledger.ability_increases` when they need the breakdown.
   - `Speed` holds bonuses only; `total(view)` reads `view.base_speed`.
   - `Spellcasting` drops `ability` and `fixed_slots`. They are sources, and `spell_slots(view)` reads them through the view.

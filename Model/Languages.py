@@ -1,12 +1,14 @@
 from Core.Definitions import Language
+from Model.Recorder import Recorder, records
 
 
-class Languages:
+class Languages(Recorder):
     """Known languages, each with the sources that granted it."""
 
     def __init__(self):
         self.known: dict[Language, list[str]] = {}
 
+    @records
     def add(self, language: Language, source: str) -> None:
         self.known.setdefault(language, []).append(source)
 

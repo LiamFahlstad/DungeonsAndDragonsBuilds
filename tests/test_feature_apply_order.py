@@ -33,6 +33,7 @@ from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, Spell
 from CharacterContent.Features.CombatFeatures.FightingStyles import Defense
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
+    AbilityScoreBonus,
     GrantArmorTraining,
     GrantSense,
     GrantToolProficiency,
@@ -66,7 +67,6 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
-from Model.Character import Character
 from Model.Effects import Effects
 
 
@@ -84,10 +84,12 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_primal_order_magician(self, make_character):
         character = make_character(wisdom=16)  # +3
-        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN).apply(
-            character.effects
+        character.add_effect(
+            DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN)
         )
-        character.abilities.add_bonus(Ability.WISDOM, 4)  # 20 -> +5
+        character.add_effect(
+            AbilityScoreBonus([(Ability.WISDOM, 4)], total=4)
+        )  # 20 -> +5
         for skill in (Skill.ARCANA, Skill.NATURE):
             assert _source_bonus(character, skill, "Primal Order") == [5]
             # INT 10 (+0), not proficient: the bonus is the whole modifier.
@@ -95,50 +97,60 @@ class TestModifierBonusesTrackLaterScoreIncreases:
 
     def test_primal_order_warden_grants_no_skill_bonus(self, make_character):
         character = make_character(wisdom=16)
-        DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN).apply(
-            character.effects
+        character.add_effect(
+            DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN)
         )
         assert character.get_skill_bonus(Skill.ARCANA) == 0
 
     def test_thaumaturge(self, make_character):
         character = make_character(wisdom=14)  # +2
         feature = ClericFeatures.DivineOrderThaumaturge(extra_cantrip="Guidance")
-        feature.apply(character.effects)
-        character.abilities.add_bonus(Ability.WISDOM, 4)  # 18 -> +4
+        character.add_effect(feature)
+        character.add_effect(
+            AbilityScoreBonus([(Ability.WISDOM, 4)], total=4)
+        )  # 18 -> +4
         for skill in (Skill.ARCANA, Skill.RELIGION):
             assert _source_bonus(character, skill, feature.name) == [4]
 
     def test_modifier_bonus_keeps_minimum_of_one(self, make_character):
         character = make_character(wisdom=8)  # -1
         feature = ClericFeatures.DivineOrderThaumaturge(extra_cantrip="Guidance")
-        feature.apply(character.effects)
+        character.add_effect(feature)
         assert character.get_skill_bonus(Skill.RELIGION) == 1
 
     def test_aura_of_protection(self, make_character):
         character = make_character(charisma=14)  # +2
-        PaladinFeatures.AuraOfProtection().apply(character.effects)
-        character.abilities.add_bonus(Ability.CHARISMA, 4)  # 18 -> +4
+        character.add_effect(PaladinFeatures.AuraOfProtection())
+        character.add_effect(
+            AbilityScoreBonus([(Ability.CHARISMA, 4)], total=4)
+        )  # 18 -> +4
         for ability in Ability:
             expected = character.get_ability_modifier(ability) + 4
             assert character.get_saving_throw_modifier(ability) == expected
 
     def test_hungering_might(self, make_character):
         character = make_character(wisdom=12)  # +1
-        RangerHollowWardenFeatures.HungeringMight().apply(character.effects)
-        character.abilities.add_bonus(Ability.WISDOM, 6)  # 18 -> +4
+        character.add_effect(RangerHollowWardenFeatures.HungeringMight())
+        character.add_effect(
+            AbilityScoreBonus([(Ability.WISDOM, 6)], total=6)
+        )  # 18 -> +4
         assert character.get_saving_throw_modifier(Ability.CONSTITUTION) == 4
         assert character.get_saving_throw_modifier(Ability.STRENGTH) == 0
 
     def test_dread_ambusher(self, make_character):
         character = make_character(wisdom=16)  # +3
-        RangerGloomStalkerFeatures.DreadAmbusher().apply(character.effects)
-        character.abilities.add_bonus(Ability.WISDOM, 2)  # 18 -> +4
+        character.add_effect(RangerGloomStalkerFeatures.DreadAmbusher())
+        character.add_effect(
+            AbilityScoreBonus([(Ability.WISDOM, 2)], total=2)
+        )  # 18 -> +4
         assert character.calculate_initiative() == 4
 
     def test_rakish_audacity(self, make_character):
         character = make_character(charisma=16)  # +3
-        RogueSwashbucklerFeatures.RakishAudacity().apply(character.effects)
-        character.abilities.add_bonus(Ability.CHARISMA, 4)  # 20 -> +5
+        character.add_effect(RogueSwashbucklerFeatures.RakishAudacity())
+        character.add_effect(
+            AbilityScoreBonus([(Ability.CHARISMA, 4)], total=4)
+        )  # 20 -> +5
         assert character.calculate_initiative() == 5
 
 
@@ -146,18 +158,18 @@ class TestJackOfAllTrades:
     def test_proficiency_granted_later_switches_bonus_off(self, make_character):
         # Bard 5: proficiency bonus +3, Jack of All Trades adds 3 // 2 = 1.
         character = make_character(levels={CharacterClass.BARD: 5})
-        BardFeatures.JackOfAllTrades().apply(character.effects)
+        character.add_effect(BardFeatures.JackOfAllTrades())
         assert character.get_skill_modifier(Skill.STEALTH) == 1
 
         # A proficiency from anything that applies afterwards (species,
         # another builder, an item) must replace the half bonus, not stack.
-        character.skills.add_skill_proficiency(Skill.STEALTH)
+        character.add_effect(SkillProficiency([Skill.STEALTH]))
         assert character.get_skill_modifier(Skill.STEALTH) == 3
         assert _source_bonus(character, Skill.STEALTH, "Jack of All Trades") == []
 
     def test_unproficient_skills_list_the_source(self, make_character):
         character = make_character(levels={CharacterClass.BARD: 5})
-        BardFeatures.JackOfAllTrades().apply(character.effects)
+        character.add_effect(BardFeatures.JackOfAllTrades())
         assert _source_bonus(character, Skill.ARCANA, "Jack of All Trades") == [1]
 
 
@@ -233,15 +245,15 @@ def _stats(data):
 
 
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
-def test_effect_order_does_not_change_stats(name, monkeypatch):
+def test_effect_order_does_not_change_stats(name):
     # Every effect - features, extensions, armor, weapons, items and fighting
     # styles - applied in shuffled orders, with no exceptions.
     expected = _stats(type(ALL_BUILDS[name])().build())
     for seed in range(3):
         data = type(ALL_BUILDS[name])().build()
-        effects = data.iter_stat_effects()
-        random.Random(seed).shuffle(effects)
-        monkeypatch.setattr(data, "iter_stat_effects", lambda features: effects)
+        data._apply_order = lambda effects, seed=seed: random.Random(seed).sample(
+            effects, len(effects)
+        )
         assert _stats(data) == expected, f"effect order changed stats (seed {seed})"
 
 
@@ -254,7 +266,7 @@ def _in_every_order(make_character, effects, **scores):
     for ordered in itertools.permutations(effects):
         character = make_character(**scores)
         for effect in ordered:
-            effect.apply(character.effects)
+            character.add_effect(effect)
         character.validate()
         characters.append(character)
     return characters
@@ -294,7 +306,7 @@ class TestPreviouslyChronologicalEffects:
         ):
             character = make_character(strength=13)
             for effect in ordered:
-                effect.apply(character.effects)
+                character.add_effect(effect)
             with pytest.raises(ValueError, match="Strength"):
                 character.validate()
 
@@ -424,7 +436,7 @@ class TestCompetingEffectsNeverOverwrite:
         for ordered in itertools.permutations(effects):
             character = make_character(levels=levels)
             for effect in ordered:
-                effect.apply(character.effects)
+                character.add_effect(effect)
             assert character.spell_slots == {1: 4, 2: 3, 3: 3, 4: 1}
             assert character.pact_magic_slots == {2: 2}
 
@@ -527,35 +539,32 @@ def test_effects_can_only_record():
     readers = [name for name in public if not name.startswith(_RECORDING_PREFIXES)]
     assert not readers, f"Effects must be write-only, but exposes {readers}"
     # No instance attributes beyond the private record it writes into.
-    assert Effects.__slots__ == ("_parts",)
+    assert Effects.__slots__ == ("_ledger",)
 
 
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
-def test_evaluation_passes_apply_the_write_only_record(name, monkeypatch):
+def test_evaluation_passes_apply_the_write_only_record(name):
     received = []
-    real_iter = Character.iter_stat_effects
 
     class _Spy:
         def apply(self, effects):
             received.append(effects)
 
-    def iter_with_spy(self, features=None):
-        return [*real_iter(self, features), _Spy()]
-
-    monkeypatch.setattr(Character, "iter_stat_effects", iter_with_spy)
-    type(ALL_BUILDS[name])().build().validate()
+    data = type(ALL_BUILDS[name])().build()
+    data.add_effect(_Spy())
+    data.validate()
     assert received and all(type(r) is Effects for r in received)
 
 
 def test_content_never_reaches_into_the_record():
-    # Effects._parts is the evaluated record the Character reads; content that
+    # Effects._ledger is the evaluated record the Character reads; content that
     # reached it could read stats mid-evaluation again.
     root = pathlib.Path(__file__).resolve().parent.parent / "CharacterContent"
     offenders = [
         f"{path.relative_to(root)}:{node.lineno}"
         for path in root.rglob("*.py")
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
-        if isinstance(node, ast.Attribute) and node.attr == "_parts"
+        if isinstance(node, ast.Attribute) and node.attr == "_ledger"
     ]
     assert not offenders, offenders
 
@@ -612,11 +621,11 @@ class TestProficienciesResolveOnRead:
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_character):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
         worn = make_character()
-        BracersOfArchery().apply(worn.effects)
+        worn.add_effect(BracersOfArchery())
         assert longbow.is_proficient(worn)
         assert not longsword.is_proficient(worn)
         unworn = make_character()
-        BracersOfArchery(is_wearing=False).apply(unworn.effects)
+        unworn.add_effect(BracersOfArchery(is_wearing=False))
         assert not longbow.is_proficient(unworn)
 
     def test_armor_training_and_tools_from_features(self, make_character):

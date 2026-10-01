@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Callable
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.Character import Character
@@ -13,7 +14,7 @@ if TYPE_CHECKING:
 DerivedBonus = Callable[["Character"], int]
 
 
-class Bonuses:
+class Bonuses(Recorder):
     """Flat values and formula values (see DerivedBonus), each with a source
     label - the "a flat bonus, plus formula bonuses, each with a source"
     shape shared by Initiative, ArmorClass, HitPoints, Speed, Skills and
@@ -25,9 +26,11 @@ class Bonuses:
         self._flat: list[tuple[int, str]] = []
         self._formulas: list[tuple[DerivedBonus, str]] = []
 
+    @records
     def add(self, value: int, source: str = "Other") -> None:
         self._flat.append((value, source))
 
+    @records
     def add_formula(self, formula: DerivedBonus, source: str = "Other") -> None:
         self._formulas.append((formula, source))
 

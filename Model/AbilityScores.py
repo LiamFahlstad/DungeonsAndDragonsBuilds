@@ -2,6 +2,7 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
+from Model.Recorder import Recorder, records
 
 
 def _score_property(ability: Ability) -> property:
@@ -10,13 +11,14 @@ def _score_property(ability: Ability) -> property:
     def get(self: "AbilityScores") -> int:
         return self.get_score(ability)
 
+    @records
     def set(self: "AbilityScores", score: int) -> None:
         self._base_scores[ability] = score
 
     return property(get, set)
 
 
-class AbilityScores:
+class AbilityScores(Recorder):
     """Base scores plus every increase granted on top of them.
 
     Increases are recorded, never summed as they arrive, and resolved on every
@@ -59,6 +61,7 @@ class AbilityScores:
         # (ability, bonus, max_score) in grant order; max_score None = uncapped.
         self._increases: list[tuple[Ability, int, Optional[int]]] = []
 
+    @records
     def add_bonus(self, ability: Ability, bonus: int, max_score: Optional[int] = None):
         if not isinstance(bonus, int):
             raise ValueError("Bonus must be an integer.")

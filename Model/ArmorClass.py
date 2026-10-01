@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.AbilityScores import AbilityScores
@@ -35,7 +36,7 @@ UNARMORED_ARMOR_CLASS = ArmorClassFormula(
 )
 
 
-class ArmorClass:
+class ArmorClass(Recorder):
     """Every AC formula and AC bonus. What's worn (Model.WornArmor) and
     the wielder's ability modifiers and Shield training aren't this part's
     concern, so calculate() takes them as arguments (see
@@ -47,15 +48,19 @@ class ArmorClass:
         # A wielded Shield's AC bonus; only counts with Shield training.
         self._shield_bonuses: list[int] = []
 
+    @records
     def add_armor_class_formula(self, formula: ArmorClassFormula) -> None:
         self.armor_class_formulas.append(formula)
 
+    @records
     def add_bonus(self, bonus: int) -> None:
         self.bonuses.add(bonus)
 
+    @records
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 
+    @records
     def add_shield_bonus(self, armor_class_bonus: int) -> None:
         """A wielded Shield's AC bonus (only counts with Shield training)."""
         self._shield_bonuses.append(armor_class_bonus)

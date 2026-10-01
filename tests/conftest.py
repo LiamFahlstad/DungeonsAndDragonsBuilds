@@ -50,13 +50,13 @@ def basic_carrying_capacity():
 
 @pytest.fixture
 def make_character():
-    """Factory for a bare Character (no features applied). Effects applied
-    to it directly (`SomeFeature().apply(character.effects)`) are recorded on its
-    current evaluation, which stays cached until one of its sources changes.
+    """Factory for a bare Character (no features applied). Grant it a single
+    feature or improvement with `character.add_effect(SomeFeature())`.
 
     make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
     make_character(armor_training=[ArmorType.SHIELD])
     """
+    from CharacterContent.Features.Core.Improvements import GrantArmorTraining
     from Core.Definitions import CharacterClass, CreatureSize
     from Model.AbilityScores import AbilityScores
     from Model.Character import Character
@@ -87,7 +87,8 @@ def make_character():
             size=CreatureSize.MEDIUM,
         )
         # Armor training (ArmorType values) - untrained armor has penalties.
-        character.equipment_training.armor_training.update(armor_training)
+        if armor_training:
+            character.add_effect(GrantArmorTraining(list(armor_training)))
         return character
 
     return _make

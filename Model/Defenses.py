@@ -1,7 +1,8 @@
 from Core.Definitions import Condition, DamageType
+from Model.Recorder import Recorder, records
 
 
-class Defenses:
+class Defenses(Recorder):
     """Resistance/immunity to damage types and immunity to conditions, each
     with the sources that granted it (several sources of the same resistance
     are listed, not deduplicated into a bool)."""
@@ -11,9 +12,11 @@ class Defenses:
         self.damage_immunities: dict[DamageType, list[str]] = {}
         self.condition_immunities: dict[Condition, list[str]] = {}
 
+    @records
     def add_damage_resistance(self, damage_type: DamageType, source: str) -> None:
         self.damage_resistances.setdefault(damage_type, []).append(source)
 
+    @records
     def add_damage_immunity(self, damage_type: DamageType, source: str) -> None:
         self.damage_immunities.setdefault(damage_type, []).append(source)
 
@@ -29,6 +32,7 @@ class Defenses:
     def get_damage_immunity_sources(self, damage_type: DamageType) -> list[str]:
         return self.damage_immunities.get(damage_type, [])
 
+    @records
     def add_condition_immunity(self, condition: Condition, source: str) -> None:
         self.condition_immunities.setdefault(condition, []).append(source)
 

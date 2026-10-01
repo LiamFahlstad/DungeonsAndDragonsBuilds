@@ -1,7 +1,8 @@
 from Core.Definitions import Sense
+from Model.Recorder import Recorder, records
 
 
-class Senses:
+class Senses(Recorder):
     """Special senses (Darkvision, Blindsight, ...), each granted at a range
     by one or more sources. "Gain it, or +N if you already have it" grants
     (add_sense_or_extension) are kept separately and added on top of the best
@@ -14,10 +15,12 @@ class Senses:
         # "...or if you already have it, its range increases by N" grants.
         self._sense_extensions: dict[Sense, list[tuple[int, str]]] = {}
 
+    @records
     def add_sense(self, sense: Sense, range_feet: int, source: str) -> None:
         """Grant a sense. The same sense from several sources keeps the best range."""
         self.sense_sources.setdefault(sense, []).append((range_feet, source))
 
+    @records
     def add_sense_or_extension(
         self, sense: Sense, range_feet: int, source: str
     ) -> None:

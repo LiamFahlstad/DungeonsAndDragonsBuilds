@@ -207,39 +207,39 @@ class TestChoosableSizeSpecies:
 class TestDarkvision:
     def test_dwarf_darkvision_120(self, make_character):
         character = make_character()
-        DwarfFeatures.Darkvision().apply(character.effects)
+        character.add_effect(DwarfFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
     def test_orc_darkvision_120(self, make_character):
         from CharacterContent.Features.SpeciesFeatures import OrcFeatures
 
         character = make_character()
-        OrcFeatures.Darkvision().apply(character.effects)
+        character.add_effect(OrcFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
     def test_gnome_darkvision_60(self, make_character):
         character = make_character()
-        GnomeFeatures.Darkvision().apply(character.effects)
+        character.add_effect(GnomeFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
     def test_aasimar_darkvision_60(self, make_character):
         character = make_character()
-        AasimarFeatures.Darkvision().apply(character.effects)
+        character.add_effect(AasimarFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
     def test_tiefling_darkvision_60(self, make_character):
         character = make_character()
-        TieflingFeatures.Darkvision(60).apply(character.effects)
+        character.add_effect(TieflingFeatures.Darkvision(60))
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
     def test_dhampir_darkvision_60(self, make_character):
         character = make_character()
-        DhampirFeatures.Darkvision().apply(character.effects)
+        character.add_effect(DhampirFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
     def test_hexblood_darkvision_60(self, make_character):
         character = make_character()
-        HexbloodFeatures.Darkvision().apply(character.effects)
+        character.add_effect(HexbloodFeatures.Darkvision())
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
 
@@ -397,7 +397,7 @@ class TestTieflingLegacies:
 
         character = make_character()
         for feature in data.features:
-            feature.apply(character.effects)
+            character.add_effect(feature)
         assert character.is_resistant_to_damage(resistance)
 
     @pytest.mark.parametrize(
@@ -438,7 +438,7 @@ class TestDragonbornAncestry:
         self, make_character, color, expected_damage_type
     ):
         character = make_character()
-        DragonbornFeatures.DamageResistance(color).apply(character.effects)
+        character.add_effect(DragonbornFeatures.DamageResistance(color))
         assert character.is_resistant_to_damage(expected_damage_type)
         for other_type in DamageType:
             if other_type != expected_damage_type:
@@ -472,19 +472,19 @@ class TestDragonbornAncestry:
 class TestDamageResistanceMechanics:
     def test_aasimar_celestial_resistance(self, make_character):
         character = make_character()
-        AasimarFeatures.CelestialResistance().apply(character.effects)
+        character.add_effect(AasimarFeatures.CelestialResistance())
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
         assert character.is_resistant_to_damage(DamageType.RADIANT)
 
     def test_kalashtar_mental_discipline(self, make_character):
         character = make_character()
-        KalashtarFeatures.MentalDiscipline().apply(character.effects)
+        character.add_effect(KalashtarFeatures.MentalDiscipline())
         assert character.is_resistant_to_damage(DamageType.PSYCHIC)
 
     def test_warforged_construct_resilience_and_armor_bonus(self, make_character):
         character = make_character(dexterity=14)  # +2 modifier
-        WarForgedFeatures.ConstructResilience().apply(character.effects)
-        WarForgedFeatures.IntegratedProtection().apply(character.effects)
+        character.add_effect(WarForgedFeatures.ConstructResilience())
+        character.add_effect(WarForgedFeatures.IntegratedProtection())
         assert character.is_resistant_to_damage(DamageType.POISON)
         # PHB base 10 + Dex 2 + Integrated Protection's flat +1.
         assert character.calculate_armor_class() == 13
@@ -501,17 +501,17 @@ class TestDamageResistanceMechanics:
         self, make_character, damage_type_text, expected
     ):
         character = make_character()
-        TieflingFeatures.FiendishResistance(damage_type_text).apply(character.effects)
+        character.add_effect(TieflingFeatures.FiendishResistance(damage_type_text))
         assert character.is_resistant_to_damage(expected)
 
     def test_dwarven_resilience_grants_poison_resistance(self, make_character):
         character = make_character()
-        DwarfFeatures.DwarvenResilience().apply(character.effects)
+        character.add_effect(DwarfFeatures.DwarvenResilience())
         assert character.is_resistant_to_damage(DamageType.POISON)
 
     def test_trace_of_undeath_grants_necrotic_resistance(self, make_character):
         character = make_character()
-        DhampirFeatures.TraceOfUndeath().apply(character.effects)
+        character.add_effect(DhampirFeatures.TraceOfUndeath())
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
 
 
@@ -523,7 +523,7 @@ class TestGnomishCunning:
         self, make_character
     ):
         character = make_character()
-        GnomeFeatures.GnomishCunning().apply(character.effects)
+        character.add_effect(GnomeFeatures.GnomishCunning())
         assert character.saving_throws.is_advantaged(Ability.INTELLIGENCE)
         assert character.saving_throws.is_advantaged(Ability.WISDOM)
         assert character.saving_throws.is_advantaged(Ability.CHARISMA)
@@ -606,7 +606,7 @@ class TestReborn:
         ).build()
         character = make_character()
         for feature in data.features:
-            feature.apply(character.effects)
+            character.add_effect(feature)
         assert character.skills.is_proficient(Skill.HISTORY)
 
     def test_reborn_grants_one_of_the_strange_endurance_resistances(
@@ -619,7 +619,7 @@ class TestReborn:
         ).build()
         character = make_character()
         for feature in data.features:
-            feature.apply(character.effects)
+            character.add_effect(feature)
         assert any(
             character.is_resistant_to_damage(dt)
             for dt in (DamageType.COLD, DamageType.NECROTIC, DamageType.POISON)
@@ -628,7 +628,7 @@ class TestReborn:
     def test_reborn_knowledge_skill_feature_works_in_isolation(self, make_character):
         # The helper class itself is correct; only the builder's wiring is missing.
         character = make_character()
-        RebornFeatures.RebornKnowledgeSkill(Skill.ARCANA).apply(character.effects)
+        character.add_effect(RebornFeatures.RebornKnowledgeSkill(Skill.ARCANA))
         assert character.skills.is_proficient(Skill.ARCANA)
 
 
@@ -643,7 +643,7 @@ class TestDwarvenToughness:
         self, make_character, level, expected_bonus
     ):
         character = make_character(levels={CharacterClass.FIGHTER: level})
-        DwarfFeatures.DwarvenToughness().apply(character.effects)
+        character.add_effect(DwarfFeatures.DwarvenToughness())
         assert character.hit_points.bonuses.total(character) == expected_bonus
 
 
@@ -653,12 +653,12 @@ class TestDwarvenToughness:
 class TestGrantedProficiencies:
     def test_human_skillful_grants_chosen_skill(self, make_character):
         character = make_character()
-        HumanFeatures.Skillful(Skill.STEALTH).apply(character.effects)
+        character.add_effect(HumanFeatures.Skillful(Skill.STEALTH))
         assert character.skills.is_proficient(Skill.STEALTH)
 
     def test_elf_keen_senses_restricted_to_pool(self, make_character):
         character = make_character()
-        ElfFeatures.KeenSenses(Skill.INSIGHT).apply(character.effects)
+        character.add_effect(ElfFeatures.KeenSenses(Skill.INSIGHT))
         assert character.skills.is_proficient(Skill.INSIGHT)
         with pytest.raises(ValueError):
             ElfFeatures.KeenSenses(Skill.ATHLETICS)
@@ -669,7 +669,7 @@ class TestGrantedProficiencies:
 
     def test_warforged_specialized_design_grants_chosen_skill(self, make_character):
         character = make_character()
-        WarForgedFeatures.SpecializedDesign(Skill.PERCEPTION).apply(character.effects)
+        character.add_effect(WarForgedFeatures.SpecializedDesign(Skill.PERCEPTION))
         assert character.skills.is_proficient(Skill.PERCEPTION)
 
 
@@ -720,7 +720,7 @@ class TestSpeciesNeverChangeAbilityScores:
         )
         features = getattr(self, features_factory_name)()
         for feature in features:
-            feature.apply(character.effects)
+            character.add_effect(feature)
         for ability in Ability:
             assert character.get_ability_score(ability) == 13
 
@@ -738,7 +738,7 @@ class TestSpeciesChoiceValidation:
         self, make_character, dt
     ):
         character = make_character()
-        RebornFeatures.StrangeEndurance(dt).apply(character.effects)
+        character.add_effect(RebornFeatures.StrangeEndurance(dt))
         options = {DamageType.COLD, DamageType.NECROTIC, DamageType.POISON}
         assert character.is_resistant_to_damage(dt)
         for other in options - {dt}:

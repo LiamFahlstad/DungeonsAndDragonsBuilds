@@ -2,12 +2,13 @@ from typing import TYPE_CHECKING, Iterable
 
 from Core.Definitions import DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.Character import Character
 
 
-class Initiative:
+class Initiative(Recorder):
     """Every source of an initiative bonus or roll condition. The character
     combines the bonus total with the Dexterity modifier (for the initiative
     score) and the roll condition with untrained-armor Disadvantage (neither
@@ -19,15 +20,19 @@ class Initiative:
         self.bonuses = Bonuses()
         self._roll_conditions: set[DiceRollCondition] = set()
 
+    @records
     def add_proficiency(self) -> None:
         self.proficiency = True
 
+    @records
     def add_roll_condition(self, condition: DiceRollCondition) -> None:
         self._roll_conditions.add(condition)
 
+    @records
     def add_bonus(self, bonus: int) -> None:
         self.bonuses.add(bonus)
 
+    @records
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 

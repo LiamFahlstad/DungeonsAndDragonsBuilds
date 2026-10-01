@@ -1,4 +1,7 @@
-class CarryingCapacity:
+from Model.Recorder import Recorder, records
+
+
+class CarryingCapacity(Recorder):
     """Carrying capacity sources, in item slots. The dynamic "Person" base (3
     + Strength modifier) isn't stored here - it depends on the character's
     final Strength score, so every query takes that modifier in."""
@@ -8,6 +11,7 @@ class CarryingCapacity:
         # dynamically in sources()).
         self._bonus_sources: list[tuple[str, int]] = []
 
+    @records
     def add_bonus(self, source: str, bonus: int) -> None:
         self._bonus_sources.append((source, bonus))
 

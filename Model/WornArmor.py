@@ -1,9 +1,10 @@
 from typing import Optional
 
 from Core.Definitions import ArmorType
+from Model.Recorder import Recorder, records
 
 
-class WornArmor:
+class WornArmor(Recorder):
     """What's worn: the body armor's type and display name, and whether a
     Shield is wielded. Untrained-armor Disadvantage, spellcasting warnings,
     the Defense fighting style, Unarmored Movement and Fast Movement, and
@@ -20,9 +21,11 @@ class WornArmor:
         """Wearing Light, Medium or Heavy armor (a Shield alone doesn't count)."""
         return self.body_armor_type is not None
 
+    @records
     def set_body_armor(self, armor_type: ArmorType, name: str) -> None:
         self.body_armor_type = armor_type
         self.body_armor_name = name
 
+    @records
     def wield_shield(self) -> None:
         self.shield_wielded = True

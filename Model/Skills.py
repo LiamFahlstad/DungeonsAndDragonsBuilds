@@ -2,12 +2,13 @@ from typing import TYPE_CHECKING, Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.Character import Character
 
 
-class Skills:
+class Skills(Recorder):
     def __init__(
         self,
         proficiencies: Optional[dict[Skill, bool]] = None,
@@ -35,15 +36,18 @@ class Skills:
         # for Arcana"). See get_skill_abilities.
         self._skill_ability_overrides: dict[Skill, list[Ability]] = {}
 
+    @records
     def add_skill_proficiency(self, skill: Skill):
         self.proficiencies[skill] = True
 
     def _bonuses_for(self, skill: Skill) -> Bonuses:
         return self._bonuses.setdefault(skill, Bonuses())
 
+    @records
     def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other"):
         self._bonuses_for(skill).add(bonus, source)
 
+    @records
     def add_derived_bonus(
         self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
     ) -> None:
@@ -62,6 +66,7 @@ class Skills:
         bonuses = self._bonuses.get(skill)
         return bonuses.sources(character) if bonuses is not None else []
 
+    @records
     def add_skill_expertise(self, skill: Skill):
         """Expertise requires proficiency, but that proficiency may come from
         a feature applied later (another class builder, the species), so the
@@ -94,6 +99,7 @@ class Skills:
             ).items()
         }
 
+    @records
     def set_roll_condition(
         self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
     ):
@@ -129,6 +135,7 @@ class Skills:
             )
         return abilities[0]
 
+    @records
     def update_skill_to_ability(self, skill: Skill, ability: Ability):
         overrides = self._skill_ability_overrides.setdefault(skill, [])
         if ability not in overrides:

@@ -1,4 +1,5 @@
 from typing import Any, Callable, NamedTuple
+from Model.Recorder import Recorder, records
 
 # Which weapons a bonus applies to (e.g. "Ranged weapons", "the Longbow and
 # Shortbow"). Checked against each weapon on read. Typed loosely (Any) since
@@ -22,7 +23,7 @@ class WeaponBonus(NamedTuple):
         return f"{self.value} ({self.source})"
 
 
-class WeaponBonuses:
+class WeaponBonuses(Recorder):
     """Attack and damage roll bonuses the wielder brings to their weapons
     (fighting styles, Bracers of Archery, ...). Recorded here instead of
     written into the weapon objects, so evaluating a character never changes
@@ -34,9 +35,11 @@ class WeaponBonuses:
         self._attack: list[WeaponBonus] = []
         self._damage: list[WeaponBonus] = []
 
+    @records
     def add_attack_bonus(self, bonus: WeaponBonus) -> None:
         self._attack.append(bonus)
 
+    @records
     def add_damage_bonus(self, bonus: WeaponBonus) -> None:
         self._damage.append(bonus)
 

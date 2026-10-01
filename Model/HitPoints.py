@@ -2,12 +2,13 @@ from typing import TYPE_CHECKING
 
 from Model.Bonuses import Bonuses, DerivedBonus
 from Model.ClassLevels import ClassLevels
+from Model.Recorder import Recorder, records
 
 if TYPE_CHECKING:
     from Model.Character import Character
 
 
-class HitPoints:
+class HitPoints(Recorder):
     """The hit point bonus granted by features (e.g. Tough, Draconic
     Resilience) - flat or formula-valued (see Bonuses) - on top of the roll
     worked out from class levels and Constitution. See calculate()."""
@@ -15,9 +16,11 @@ class HitPoints:
     def __init__(self):
         self.bonuses = Bonuses()
 
+    @records
     def add_bonus(self, amount: int) -> None:
         self.bonuses.add(amount)
 
+    @records
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 

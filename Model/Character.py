@@ -2,11 +2,11 @@
 grant (features, spells, fighting styles, inventory), plus every stat worked
 out from them.
 
-Evaluation is internal and lazy. The first query after any change builds
-fresh Parts (Model/Effects.py) by applying every feature, armor, weapon,
+Evaluation is internal and lazy. The first query after any change builds a
+fresh Ledger (Model/Effects.py) by applying every feature, armor, weapon,
 item and fighting style in iter_stat_effects() to a write-only Effects view of
-them, then answers queries from the Parts until the sources change again. A
-version counter decides when that is (see _get_parts).
+it, seals it, then answers queries from it until the sources change again. A
+version counter decides when that is (see _get_ledger).
 
 The Model package imports nothing from CharacterContent at runtime (features,
 items and fighting styles appear in annotations only), so CharacterContent
@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import copy
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional
 
 import attr
 
@@ -29,7 +29,7 @@ from Model.ArmorClass import ArmorClass
 from Model.CarryingCapacity import CarryingCapacity
 from Model.ClassLevels import ClassLevels
 from Model.Defenses import Defenses
-from Model.Effects import Effects, Parts
+from Model.Effects import Effects, Ledger
 from Model.EquipmentTraining import EquipmentTraining
 from Model.HitPoints import HitPoints
 from Model.Initiative import Initiative
@@ -67,6 +67,10 @@ def note_feature_extended() -> None:
     _feature_extensions += 1
 
 
+def _in_given_order(effects: list[Any]) -> list[Any]:
+    return effects
+
+
 def _count_change(character: "Character", attribute: Any, value: Any) -> Any:
     """attrs on_setattr hook: assigning any public field is a change to the
     character's sources."""
@@ -92,7 +96,7 @@ class Character:
     size: Optional[Definitions.CreatureSize] = None
 
     # Every feature in the order it was granted. The order only decides how
-    # the sheet lists them: no stat depends on it (see _get_parts).
+    # the sheet lists them: no stat depends on it (see _get_ledger).
     features: list[Feature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
@@ -110,15 +114,24 @@ class Character:
     # carrying capacity read.
     inventory: Inventory = attr.Factory(Inventory)
     experience_points: int = 0
+    # Effects granted on their own rather than by a feature or gear: a test
+    # or tool recording one improvement on a bare character (add_effect).
+    extra_effects: list[Any] = attr.Factory(list)
 
     # Goes up on every change to the sources above (every add_*/set_* call,
     # and any field assignment - see _count_change). Together with the
-    # inventory's own version and _feature_extensions it decides when the
-    # cached evaluation is out of date.
+    # inventory's own version, _feature_extensions and _apply_order it
+    # decides when the cached evaluation is out of date.
     _version: int = attr.ib(default=0, init=False, eq=False, repr=False)
-    _parts: Optional[Parts] = attr.ib(default=None, init=False, eq=False, repr=False)
-    _parts_key: Optional[tuple[int, int, int]] = attr.ib(
+    _ledger: Optional[Ledger] = attr.ib(default=None, init=False, eq=False, repr=False)
+    _ledger_key: Optional[tuple[Any, ...]] = attr.ib(
         default=None, init=False, eq=False, repr=False
+    )
+    # The order iter_stat_effects() applies in: as listed, unless a test
+    # reorders it to prove the order doesn't matter (tests/
+    # test_feature_apply_order.py, tests/test_order_invariance.py).
+    _apply_order: Callable[[list[Any]], list[Any]] = attr.ib(
+        default=_in_given_order, init=False, eq=False, repr=False
     )
     # Class-relative level currently being applied by
     # BaseClassLevelFeatures.add_features, used to tag each spell/cantrip
@@ -356,6 +369,12 @@ class Character:
     def add_item(self, item: Item, quantity: int = 1):
         self.inventory.add_item(item, quantity)
 
+    def add_effect(self, effect: Any) -> None:
+        """Grant an effect on its own (anything with apply(effects)), for a
+        test or tool recording one improvement on a bare character."""
+        self._changed()
+        self.extra_effects.append(effect)
+
     def _resolve_spell_casting_ability(
         self, spell_casting_ability: Optional[Ability]
     ) -> Ability:
@@ -386,16 +405,22 @@ class Character:
             # Only fighting styles with a computed effect (FightStyleModifier)
             # have apply(); the rest are descriptions.
             *(style for style in self.fighting_styles if hasattr(style, "apply")),
+            *self.extra_effects,
         ]
 
-    def _get_parts(self) -> Parts:
-        """The evaluated parts: cached, and rebuilt from the sources on the
-        first query after any change to them. Requirements aren't checked
-        here - validate() does that,
-        against the complete set of effects."""
-        key = (self._version, self.inventory.version, _feature_extensions)
-        if self._parts is not None and self._parts_key == key:
-            return self._parts
+    def _get_ledger(self) -> Ledger:
+        """The evaluated, sealed Ledger: cached, and rebuilt from the sources
+        on the first query after any change to them. Requirements aren't
+        checked here - validate() does that, against the complete set of
+        effects."""
+        key = (
+            self._version,
+            self.inventory.version,
+            _feature_extensions,
+            self._apply_order,
+        )
+        if self._ledger is not None and self._ledger_key == key:
+            return self._ledger
 
         if self.base_abilities is None:
             raise ValueError("Character abilities must be set.")
@@ -404,7 +429,7 @@ class Character:
         if self.base_class is None:
             raise ValueError("Character base class must be set.")
 
-        parts = Parts(
+        ledger = Ledger(
             # A copy: effects record their increases on it, and recording
             # them on the base scores would stack them on every rebuild.
             abilities=copy.deepcopy(self.base_abilities),
@@ -413,33 +438,22 @@ class Character:
                 ability=self.spell_casting_ability, fixed_slots=self.fixed_spell_slots
             ),
         )
-        effects = Effects(parts)
+        effects = Effects(ledger)
         try:
             # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
             # every effect only records facts - Effects is write-only - and
             # every value is worked out when it's read, so features, armor,
             # weapons, items and fighting styles may apply in any order.
-            # tests/test_feature_apply_order.py shuffles iter_stat_effects()
+            # tests/test_feature_apply_order.py reorders them (_apply_order)
             # to prove it.
-            for effect in self.iter_stat_effects(
-                list(self.iter_features_with_extensions())
-            ):
+            for effect in self._apply_order(self.iter_stat_effects()):
                 effect.apply(effects)
         except BaseException:
-            self._parts = None
+            self._ledger = None
             raise
-        self._parts, self._parts_key = parts, key
-        return parts
-
-    @property
-    def effects(self) -> Effects:
-        """A write-only view of the current evaluation, for recording an
-        effect that isn't one of this character's sources - a test or tool
-        applying a single feature to a bare character
-        (`SomeFeature().apply(character.effects)`). Whatever is recorded this
-        way lasts only until the sources change and the character
-        re-evaluates; a real grant belongs in add_feature()/add_item()/..."""
-        return Effects(self._get_parts())
+        ledger.seal()
+        self._ledger, self._ledger_key = ledger, key
+        return ledger
 
     def _validate_sources(self) -> None:
         """Checks that need no evaluation: every field a finished character
@@ -491,78 +505,78 @@ class Character:
         Strength, multiclass ability minimums). Returns the character, so a
         build can be checked inline: `builder.build().validate()`."""
         self._validate_sources()
-        self._get_parts().validate(self.class_levels)
+        self._get_ledger().validate(self.class_levels)
         return self
 
     # ── The evaluated parts ──────────────────────────────────────────────────
-    # Each reads one part of the evaluated Parts (Model/Effects.py).
+    # Each reads one part of the evaluated Ledger (Model/Effects.py).
 
     @property
     def abilities(self) -> AbilityScores:
         """Ability scores with every increase applied (base_abilities holds
         the scores before them)."""
-        return self._get_parts().abilities
+        return self._get_ledger().abilities
 
     @property
     def speed(self) -> Speed:
         """Base walking speed plus every bonus (the int is calculate_speed())."""
-        return self._get_parts().speed
+        return self._get_ledger().speed
 
     @property
     def spellcasting(self) -> Spellcasting:
-        return self._get_parts().spellcasting
+        return self._get_ledger().spellcasting
 
     @property
     def skills(self) -> Skills:
-        return self._get_parts().skills
+        return self._get_ledger().skills
 
     @property
     def saving_throws(self) -> SavingThrows:
-        return self._get_parts().saving_throws
+        return self._get_ledger().saving_throws
 
     @property
     def carrying_capacity(self) -> CarryingCapacity:
-        return self._get_parts().carrying_capacity
+        return self._get_ledger().carrying_capacity
 
     @property
     def armor_class(self) -> ArmorClass:
-        return self._get_parts().armor_class
+        return self._get_ledger().armor_class
 
     @property
     def worn_armor(self) -> WornArmor:
-        return self._get_parts().worn_armor
+        return self._get_ledger().worn_armor
 
     @property
     def hit_points(self) -> HitPoints:
-        return self._get_parts().hit_points
+        return self._get_ledger().hit_points
 
     @property
     def equipment_training(self) -> EquipmentTraining:
-        return self._get_parts().equipment_training
+        return self._get_ledger().equipment_training
 
     @property
     def languages(self) -> Languages:
-        return self._get_parts().languages
+        return self._get_ledger().languages
 
     @property
     def defenses(self) -> Defenses:
-        return self._get_parts().defenses
+        return self._get_ledger().defenses
 
     @property
     def senses(self) -> Senses:
-        return self._get_parts().senses
+        return self._get_ledger().senses
 
     @property
     def ability_requirements(self) -> AbilityRequirements:
-        return self._get_parts().ability_requirements
+        return self._get_ledger().ability_requirements
 
     @property
     def initiative(self) -> Initiative:
-        return self._get_parts().initiative
+        return self._get_ledger().initiative
 
     @property
     def weapon_bonuses(self) -> WeaponBonuses:
-        return self._get_parts().weapon_bonuses
+        return self._get_ledger().weapon_bonuses
 
     # ── Queries ──────────────────────────────────────────────────────────────
 

@@ -2,9 +2,10 @@ from enum import Enum
 from typing import Any
 
 from Core.Definitions import ArmorType
+from Model.Recorder import Recorder, records
 
 
-class EquipmentTraining:
+class EquipmentTraining(Recorder):
     """Weapon, armor and tool training (PHB 2024 "Equipment Training &
     Proficiencies"), each with the sources that granted it. A weapon works
     out whether its wielder is proficient on read, against
@@ -21,12 +22,15 @@ class EquipmentTraining:
     def has_shield_training(self) -> bool:
         return ArmorType.SHIELD in self.armor_training
 
+    @records
     def add_weapon_proficiency(self, weapon_proficiency: Enum) -> None:
         self.weapon_proficiencies.add(weapon_proficiency)
 
+    @records
     def add_armor_training(self, armor_type: ArmorType) -> None:
         self.armor_training.add(armor_type)
 
+    @records
     def add_tool_proficiency(self, tool_proficiency: Any) -> None:
         """Proficiency with a tool (a ToolProficiency). The same tool from
         several sources is listed once."""

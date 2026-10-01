@@ -39,7 +39,7 @@ ability scores, the base speed and the class spellcasting ability, then:
 
 | # | Stage | What runs |
 |---|---|---|
-| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `Effects` view of fresh `Parts` |
+| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `Effects` view of a fresh `Ledger`, which is sealed afterwards |
 | 2 | **Validate** | Only in `validate()`, the single entry point (the writers and the combat UI call it first): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
@@ -192,9 +192,10 @@ flat-list/formula-list/source-list shape themselves.
 
 Every part is exposed directly under its own name, for reading. Recording goes through
 `Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
-each write one part; `Character` has none of them, so nothing can record onto an evaluation that
-the next change would discard. A test or tool applying one feature to a bare character passes
-`character.effects`, a write-only view of the current evaluation.
+each write one part; `Character` has none of them, and once the `Ledger` is evaluated it is
+sealed (`Model/Recorder.py`): every part mutator raises `SealedError`, so nothing can record onto
+an evaluation that the next change would discard. A test or tool applying one feature to a bare
+character grants it with `character.add_effect(feature)`, a real source like any other.
 `character.abilities` is the evaluated `AbilityScores` (every increase applied); the player's
 scores before any increase are `base_abilities`. Likewise `character.speed` is the `Speed` part,
 and the species' walking speed is `base_speed`.

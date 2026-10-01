@@ -14,6 +14,7 @@ from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
+from CharacterContent.Features.Core.Improvements import SkillProficiency
 from CharacterContent.Items import Armor
 from Core.Definitions import (
     Ability,
@@ -28,7 +29,7 @@ from RunCharacterCreator import BuildSelector
 def apply_features(character, features, armors=()):
     # Armor first on purpose: effects may apply in any order.
     for effect in [*armors, *features]:
-        effect.apply(character.effects)
+        character.add_effect(effect)
     character.validate()
     return character
 
@@ -148,7 +149,7 @@ class TestPrimalKnowledge:
 class TestOtherFeatures:
     def test_jack_of_all_trades_half_pb_rounded_down(self, make_character):
         character = make_character(levels={CharacterClass.BARD: 5})  # PB 3
-        character.skills.add_skill_proficiency(Skill.PERFORMANCE)
+        character.add_effect(SkillProficiency([Skill.PERFORMANCE]))
         apply_features(character, [BardFeatures.JackOfAllTrades()])
         assert character.get_skill_modifier(Skill.ARCANA) == 1
         assert character.get_skill_modifier(Skill.PERFORMANCE) == 3

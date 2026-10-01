@@ -3,9 +3,10 @@ from typing import Optional
 from Core.Definitions import Ability, CharacterClass
 from Core.SpellcastingRules import CasterType, calculate_spell_slots
 from Model.ClassLevels import ClassLevels
+from Model.Recorder import Recorder, records
 
 
-class Spellcasting:
+class Spellcasting(Recorder):
     """The character's spellcasting ability (None for a non-caster), spell
     save DC bonus, and every registered caster class (used to work out spell
     slots and Pact Magic slots together - see spell_slots). A character with
@@ -24,11 +25,13 @@ class Spellcasting:
         self._casters: dict[CharacterClass, CasterType] = {}
         self.spell_save_dc_bonus = 0
 
+    @records
     def register_caster(
         self, character_class: CharacterClass, caster_type: CasterType
     ) -> None:
         self._casters[character_class] = caster_type
 
+    @records
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
         self.spell_save_dc_bonus += bonus
 

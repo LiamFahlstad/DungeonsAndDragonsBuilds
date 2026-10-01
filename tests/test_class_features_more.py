@@ -38,12 +38,13 @@ from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
 from CharacterContent.Features.ClassFeatures.Wizard import WizardFeatures
 from CharacterContent.Features.Core.BaseFeatures import RegainedOn
+from CharacterContent.Features.Core.Improvements import SkillProficiency
 from Core.Definitions import Ability, CharacterClass, Skill
 
 
 def apply_features(character, features):
     for feature in features:
-        feature.apply(character.effects)
+        character.add_effect(feature)
     character.validate()
     return character
 
@@ -188,8 +189,8 @@ class TestRogueExpertise:
         character = make_character(
             levels={CharacterClass.ROGUE: 5}
         )  # proficiency bonus +3
-        character.skills.add_skill_proficiency(Skill.STEALTH)
-        character.skills.add_skill_proficiency(Skill.PERCEPTION)
+        character.add_effect(SkillProficiency([Skill.STEALTH]))
+        character.add_effect(SkillProficiency([Skill.PERCEPTION]))
         apply_features(
             character, [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)]
         )
@@ -349,7 +350,7 @@ class TestArcaneRecovery:
 class TestWizardScholar:
     def test_grants_expertise_in_chosen_intelligence_skill(self, make_character):
         character = make_character(levels={CharacterClass.WIZARD: 2})
-        character.skills.add_skill_proficiency(Skill.ARCANA)
+        character.add_effect(SkillProficiency([Skill.ARCANA]))
         apply_features(character, [WizardFeatures.Scholar(Skill.ARCANA)])
         int_mod = character.get_ability_modifier(Ability.INTELLIGENCE)
         proficiency_bonus = character.get_proficiency_bonus()

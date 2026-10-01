@@ -1,9 +1,10 @@
 from Core.Definitions import Ability
 from Model.AbilityScores import AbilityScores
 from Model.ClassLevels import ClassLevels
+from Model.Recorder import Recorder, records
 
 
-class AbilityRequirements:
+class AbilityRequirements(Recorder):
     """Ability score minimums recorded by features (e.g. an armor's Strength
     requirement) and checked once everything has applied - so what meets a
     requirement may be granted before or after the one that imposes it. Also
@@ -16,6 +17,7 @@ class AbilityRequirements:
         # everything has applied, against the character's own score.
         self._minimums: list[tuple[Ability, int, str]] = []
 
+    @records
     def add_ability_requirement(
         self, ability: Ability, min_score: int, reason: str
     ) -> None:
