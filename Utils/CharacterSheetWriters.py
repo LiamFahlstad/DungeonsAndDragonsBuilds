@@ -1164,6 +1164,7 @@ class HtmlCharacterSheetWriter:
                     file,
                     f"<span class='gear-name'>{label}</span>",
                     Html.carrying_checkbox_id(label),
+                    item.slots,
                 )
                 write_body(file, item)
                 file.write("</div>\n")
@@ -1177,7 +1178,7 @@ class HtmlCharacterSheetWriter:
         if spell is None:
             # A generic Spell Scroll, with no one spell to lay out.
             Html.write_gear_meta_line(
-                file, *Html.item_type_rarity_price(scroll), scroll.slots
+                file, *Html.item_type_rarity_price(scroll)
             )
             if scroll.description_text:
                 file.write(f"<div class='gear-desc'>{scroll.description_text}</div>\n")
@@ -1188,7 +1189,7 @@ class HtmlCharacterSheetWriter:
         level = "Cantrip" if spell.level == 0 else f"Level {spell.level}"
         _, rarity, price = Html.item_type_rarity_price(scroll)
         Html.write_gear_meta_line(
-            file, f"{level} {spell.school}", rarity, price, scroll.slots
+            file, f"{level} {spell.school}", rarity, price
         )
         Html.write_gear_line(
             file,
@@ -1216,7 +1217,7 @@ class HtmlCharacterSheetWriter:
         # The meta line keeps the plain type ("Potion") - unlike a scroll's
         # spell, a potion has no kind worth leading with.
         Html.write_gear_meta_line(
-            file, *Html.item_type_rarity_price(potion), potion.slots
+            file, *Html.item_type_rarity_price(potion)
         )
         # A potion's description opens with what drinking it does; any
         # further lines are details (how long it lasts, what it looks like).
@@ -1274,10 +1275,15 @@ class HtmlCharacterSheetWriter:
                 name_html += " <span class='wtag wtag-not-worn'>Not owned</span></span>"
             # Carrying checkbox like every other item card - also on a tool
             # not owned yet, for when the character picks one up.
-            Html.write_gear_header(file, name_html, Html.carrying_checkbox_id(tool.name))
+            Html.write_gear_header(
+                file,
+                name_html,
+                Html.carrying_checkbox_id(tool.name),
+                item.slots if item is not None else 0,
+            )
             if item is not None:
                 Html.write_gear_meta_line(
-                    file, *Html.item_type_rarity_price(item), item.slots
+                    file, *Html.item_type_rarity_price(item)
                 )
 
             # How the check bonus is made up, worded like weapon attack rolls

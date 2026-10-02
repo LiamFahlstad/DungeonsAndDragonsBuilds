@@ -140,6 +140,7 @@ def write_armor_reference_card(
         file,
         f"<span class='armor-name'>{armor.name}{attunement_tag}{name_tags}</span>",
         Html.carrying_checkbox_id(armor.name),
+        armor.slots,
     )
 
     # Same layout as every other item card: name, one meta line (leading
@@ -148,7 +149,7 @@ def write_armor_reference_card(
     armor_type_label = armor.armor_type.value if armor.armor_type else "-"
     kind = armor_type_label if armor.is_shield else f"{armor_type_label} Armor"
     _, rarity, price = Html.item_type_rarity_price(armor)
-    Html.write_gear_meta_line(file, kind, rarity, price, armor.slots)
+    Html.write_gear_meta_line(file, kind, rarity, price)
     file.write(
         f"<div class='armor-ac-line'><span class='alabel-col'>AC</span>"
         f"{_reference_ac_formula(armor)}</div>\n"

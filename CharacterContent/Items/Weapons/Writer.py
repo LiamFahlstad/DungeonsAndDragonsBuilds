@@ -324,6 +324,7 @@ def _write_single_weapon(
             f"<span class='weapon-name'>{weapon.name}{Html.attunement_tag(weapon)}"
             f"{name_tags}</span>",
             Html.carrying_checkbox_id(weapon.name),
+            weapon.slots,
         )
 
     # Same layout as every other item card: name, then one meta line, then
@@ -334,10 +335,12 @@ def _write_single_weapon(
     if weapon.attack_roll_condition(character) == DiceRollCondition.DISADVANTAGE:
         kind += "<span class='gsep'>·</span>Attacks with Disadvantage (untrained armor)"
     if is_innate:
-        file.write(f"<div class='gear-meta'>{kind}</div>\n")
+        file.write(
+            f"<div class='gear-meta'><span class='glabel'>Type:</span> {kind}</div>\n"
+        )
     else:
         _, rarity, price = Html.item_type_rarity_price(weapon)
-        Html.write_gear_meta_line(file, kind, rarity, price, weapon.slots)
+        Html.write_gear_meta_line(file, kind, rarity, price)
 
     damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(weapon.damage_type, "")
     damage_type_tag = (
@@ -518,6 +521,7 @@ def write_weapon_reference_card(weapon: AbstractWeapon, file: TextIO) -> None:
         file,
         f"<span class='weapon-name'>{weapon.name}{attunement_tag}</span>",
         Html.carrying_checkbox_id(weapon.name),
+        weapon.slots,
     )
 
     # Same layout as the character-sheet weapon card: one meta line (kind
@@ -528,7 +532,7 @@ def write_weapon_reference_card(weapon: AbstractWeapon, file: TextIO) -> None:
         f"<span class='gsep'>·</span>{_reference_ability_label(weapon)}"
     )
     _, rarity, price = Html.item_type_rarity_price(weapon)
-    Html.write_gear_meta_line(file, kind, rarity, price, weapon.slots)
+    Html.write_gear_meta_line(file, kind, rarity, price)
 
     damage_type_class = _DAMAGE_TYPE_CSS_CLASS.get(weapon.damage_type, "")
     damage_type_tag = (

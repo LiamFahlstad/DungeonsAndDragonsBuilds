@@ -351,32 +351,31 @@ def carrying_checkbox_id(label: str) -> str:
     return plain_label.replace(" ", "_").replace("(", "").replace(")", "") + "_carrying"
 
 
-def write_gear_header(file: TextIO, name_html: str, carrying_id: str):
+def write_gear_header(file: TextIO, name_html: str, carrying_id: str, slots: int):
     """Title row shared by every item card (generic gear, weapon, armor):
-    the item's name alongside a 'Carrying' checkbox, always on one line."""
+    the item's name alongside "<slots> × [box]" and a "Number Carried" label
+    (the player hand-writes how many they carry), always on one line."""
     file.write("<div class='gear-header'>\n")
     file.write(f"{name_html}\n")
     file.write(
-        f"<label class='gear-carrying' for='{carrying_id}_check'>Carrying"
+        f"<label class='gear-carrying' for='{carrying_id}_check'>Number Carried "
+        f"<span class='gear-slots'>{slots}</span><span class='gear-times'>×</span>"
         f"<input type='checkbox' id='{carrying_id}_check' name='{carrying_id}_check'/></label>\n"
     )
     file.write("</div>\n")
 
 
-def write_gear_meta_line(
-    file: TextIO, item_type: str, rarity: str, price: str, slots: int
-):
-    """Type/rarity/cost/slots line shared by every item card
+def write_gear_meta_line(file: TextIO, item_type: str, rarity: str, price: str):
+    """Type/rarity/cost line shared by every item card
     (generic gear, weapon, armor) - the acquisition/carrying bookkeeping
     that applies regardless of category."""
     rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
     file.write(
-        f"<div class='gear-meta'>{item_type}"
-        f"<span class='gsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
+        f"<div class='gear-meta'><span class='glabel'>Type:</span> {item_type}"
+        f"<span class='gsep'>·</span><span class='glabel'>Rarity:</span> "
+        f"<span class='{rarity_class}'>{rarity}</span>"
         f"<span class='gsep'>·</span>"
-        f"<span class='glabel'>Cost</span> {price}"
-        f"<span class='gsep'>·</span>"
-        f"<span class='glabel'>Slots</span> {slots}</div>\n"
+        f"<span class='glabel'>Cost:</span> {price}</div>\n"
     )
 
 
@@ -407,9 +406,12 @@ def write_item_cards(
         # together on one line. Quick-stats flow as their own wrapping
         # line below, as a single unit instead of being split apart. ───
         write_gear_header(
-            file, f"<span class='gear-name'>{label}</span>", carrying_checkbox_id(label)
+            file,
+            f"<span class='gear-name'>{label}</span>",
+            carrying_checkbox_id(label),
+            slots,
         )
-        write_gear_meta_line(file, item_type, rarity, price, slots)
+        write_gear_meta_line(file, item_type, rarity, price)
 
         # ── Description ──────────────────────────────────────────────────
         if description and description != "-":
@@ -929,9 +931,30 @@ BASE_CHARACTER_SHEET_CSS = """
             white-space: nowrap;
         }
 
+        /* Hand-written count box: ~1.5x the default checkbox so a 1-2 digit
+           number fits. Drawn as an empty bordered box so it prints the same
+           everywhere. */
         .gear-carrying input[type='checkbox'] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin: 0 0 0 2px;
+            border: 1px solid #555;
+            border-radius: 2px;
+            background: #fff;
             vertical-align: middle;
-            margin-left: 3px;
+        }
+
+        .gear-slots {
+            font-weight: 700;
+            color: #3a6e4a;
+            font-size: 0.9rem;
+            margin-left: 4px;
+        }
+
+        .gear-times {
+            margin: 0 3px;
         }
 
         /* Inline label within quick-stats */
