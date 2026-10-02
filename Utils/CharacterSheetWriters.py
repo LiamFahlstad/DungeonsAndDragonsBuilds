@@ -59,6 +59,13 @@ def _slugify_name(name: str) -> str:
 
 
 class HtmlCharacterSheetWriter:
+    def _open_page(self, path: str | pathlib.Path) -> TextIO:
+        """Every page is written through this. The snapshot tests override it
+        to capture pages in memory (tests/_snapshot_helpers.py): reading a
+        freshly written file back costs ~13 ms on Windows, because the
+        antivirus scans it on first open."""
+        return open(path, "w", encoding="utf-8")
+
     @staticmethod
     def _has_shield_armor(armors: list[Armor.AbstractArmor]) -> bool:
         return any(type(armor) is Armor.ShieldArmor for armor in armors)
@@ -860,7 +867,9 @@ class HtmlCharacterSheetWriter:
         for purchased_item, price in entry.purchases:
             if purchased_item is item:
                 price_display = self._format_gold(price)
-                return tags + f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
+                return (
+                    tags + f" <span class='wtag wtag-worn'>Paid: {price_display}</span>"
+                )
         return tags + " <span class='wtag wtag-not-worn'>Found</span>"
 
     @staticmethod
@@ -1177,9 +1186,7 @@ class HtmlCharacterSheetWriter:
         spell = getattr(scroll, "spell", None)
         if spell is None:
             # A generic Spell Scroll, with no one spell to lay out.
-            Html.write_gear_meta_line(
-                file, *Html.item_type_rarity_price(scroll)
-            )
+            Html.write_gear_meta_line(file, *Html.item_type_rarity_price(scroll))
             if scroll.description_text:
                 file.write(f"<div class='gear-desc'>{scroll.description_text}</div>\n")
             return
@@ -1188,9 +1195,7 @@ class HtmlCharacterSheetWriter:
         # a "Scroll" type label the section heading already gives.
         level = "Cantrip" if spell.level == 0 else f"Level {spell.level}"
         _, rarity, price = Html.item_type_rarity_price(scroll)
-        Html.write_gear_meta_line(
-            file, f"{level} {spell.school}", rarity, price
-        )
+        Html.write_gear_meta_line(file, f"{level} {spell.school}", rarity, price)
         Html.write_gear_line(
             file,
             ("Cast", spell.casting_time),
@@ -1207,7 +1212,9 @@ class HtmlCharacterSheetWriter:
         paragraphs = [
             paragraph
             for paragraph in spell.description.split("\n")
-            if not paragraph.startswith(("Using a Higher-Level Spell Slot", "At Higher Levels"))
+            if not paragraph.startswith(
+                ("Using a Higher-Level Spell Slot", "At Higher Levels")
+            )
         ]
         description = Html.boxes_to_html("\n".join(paragraphs)).replace("\n", "<br>")
         file.write(f"<div class='gear-desc'>{description}</div>\n")
@@ -1216,9 +1223,7 @@ class HtmlCharacterSheetWriter:
     def _write_potion_body(file: TextIO, potion: Items.Item):
         # The meta line keeps the plain type ("Potion") - unlike a scroll's
         # spell, a potion has no kind worth leading with.
-        Html.write_gear_meta_line(
-            file, *Html.item_type_rarity_price(potion)
-        )
+        Html.write_gear_meta_line(file, *Html.item_type_rarity_price(potion))
         # A potion's description opens with what drinking it does; any
         # further lines are details (how long it lasts, what it looks like).
         effect, _, details = (potion.description_text or "").partition("\n")
@@ -1282,9 +1287,7 @@ class HtmlCharacterSheetWriter:
                 item.slots if item is not None else 0,
             )
             if item is not None:
-                Html.write_gear_meta_line(
-                    file, *Html.item_type_rarity_price(item)
-                )
+                Html.write_gear_meta_line(file, *Html.item_type_rarity_price(item))
 
             # How the check bonus is made up, worded like weapon attack rolls
             # ("1d20 + Dex Mod + Proficiency Bonus").
@@ -1538,7 +1541,7 @@ class HtmlCharacterSheetWriter:
         spells: list[tuple[str, Ability, Optional[str], int]],
         include_probability_tables: bool,
     ):
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(
@@ -1594,7 +1597,7 @@ class HtmlCharacterSheetWriter:
         blank_skills = Skills()
         blank_sm = "<span class='blank-fill blank-fill-sm'></span>"
 
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             file.write(
                 "<h1><span class='blank-fill blank-fill-xl'></span> - Level "
@@ -1749,7 +1752,7 @@ class HtmlCharacterSheetWriter:
         still print (or view) the whole character at once when they want to,
         while the split pages remain the ones that don't need reprinting on
         every level-up."""
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(
@@ -1823,7 +1826,7 @@ class HtmlCharacterSheetWriter:
         if level_extensions is None:
             level_extensions = []
 
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(f"<h1>{character_name} - Level {level} Features</h1>\n")
@@ -1859,7 +1862,7 @@ class HtmlCharacterSheetWriter:
         character_name: str,
         fighting_styles: list[FightingStyle],
     ):
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(f"<h1>{character_name} - Fighting Styles</h1>\n")
@@ -1880,7 +1883,7 @@ class HtmlCharacterSheetWriter:
         weapon_masteries: list[AbstractWeapon],
         include_probability_tables: bool,
     ):
-        with open(path, "w", encoding="utf-8") as file:
+        with self._open_page(path) as file:
             file.write(self._get_css_style())
             self._write_nav(file, page_path, pages)
             file.write(f"<h1>{character_name} - Items</h1>\n")
@@ -1918,14 +1921,12 @@ class HtmlCharacterSheetWriter:
         if items is None:
             items = []
 
-        entry = EquipmentEntry(
-            label=title, armors=armors, weapons=weapons, items=items
-        )
+        entry = EquipmentEntry(label=title, armors=armors, weapons=weapons, items=items)
 
         output_file = pathlib.Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_file, "w", encoding="utf-8") as file:
+        with self._open_page(output_file) as file:
             file.write(
                 Html.render_style_block(
                     Html.BASE_CHARACTER_SHEET_CSS, WEAPON_CARD_CSS, ARMOR_CARD_CSS

@@ -321,7 +321,7 @@ pyright Model/
 - **Consumers outside CharacterContent.** Before Steps 5–9, grep `Combat/`, `Utils/` and `Builds/CharacterCreator/` (codegen writes calls like `add_feature` into build files) for the names being changed.
 - **Codemods** must skip `.claude/worktrees`, and are followed by `black` (`format.sh`).
 - **Snapshot coverage** only proves the existing builds. The per-part permutation tests (Step 2) and the extension and spell order tests (Steps 8–9) cover content that no build exercises.
-- **Test runtime.** One render pass of every build takes about 90 s. The full order matrix is `slow`, and it runs at the steps that touch ordering (0, 2, 8, 10, 11), not at every step.
+- **Test runtime.** Pages are captured in memory (`HtmlCharacterSheetWriter._open_page`, overridden in `tests/_snapshot_helpers.py`): on Windows, reading a freshly written page back cost ~13 ms per file, because the antivirus scans it, and that was ~85% of the render time. The default suite takes ~45 s and the `slow` order matrix ~80 s.
 
 ## 6. Decisions for you
 

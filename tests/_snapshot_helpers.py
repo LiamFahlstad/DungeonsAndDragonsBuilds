@@ -2,6 +2,10 @@
 invariance tests (test_order_invariance.py): every build, the golden files,
 the stats a build is compared on, and rendering a build's sheets to hashes.
 
+Pages are captured in memory as they're written (CapturingSheetWriter) rather
+than read back from disk: on Windows the antivirus scans a freshly written file
+on its first open, which made reading pages back ~85% of the render time.
+
 Set SNAPSHOT_DUMP_DIR=<dir> to also keep every page the snapshot test renders,
 at <dir>/<build>/<mode>/<page>. Hashes only say *that* a page changed; a
 `diff -r` between two dumps (say, one from the refactor-baseline tag and one
@@ -9,11 +13,12 @@ from the working tree) says *what* changed. Dump outside the repo.
 """
 
 import hashlib
+import io
 import json
 import os
 import shutil
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Optional, TextIO
 
 from Core.Definitions import Ability, Skill
 from Model.Character import Character
@@ -89,14 +94,35 @@ def compute_stats(data: Character) -> dict:
     }
 
 
-def hash_tree(root: Path) -> dict[str, str]:
-    hashes = {}
-    for path in sorted(root.rglob("*")):
-        if path.is_file():
-            hashes[path.relative_to(root).as_posix()] = hashlib.sha256(
-                path.read_bytes()
-            ).hexdigest()
-    return hashes
+class _CapturedFile(io.BytesIO):
+    """A page's bytes, handed to `on_close` when the page is closed."""
+
+    def __init__(self, on_close: Callable[[bytes], None]):
+        super().__init__()
+        self._on_close = on_close
+
+    def close(self) -> None:
+        if not self.closed:
+            self._on_close(self.getvalue())
+        super().close()
+
+
+class CapturingSheetWriter(HtmlCharacterSheetWriter):
+    """Renders a sheet into `pages` ({path relative to the output folder:
+    bytes}) instead of onto disk. The bytes are exactly what the real writer
+    would write: same encoding, same newline translation."""
+
+    def __init__(self, output_folder: Path):
+        self._root = output_folder
+        self.pages: dict[str, bytes] = {}
+
+    def _open_page(self, path: str | Path) -> TextIO:
+        name = Path(path).relative_to(self._root).as_posix()
+
+        def keep(content: bytes) -> None:
+            self.pages[name] = content
+
+        return io.TextIOWrapper(_CapturedFile(keep), encoding="utf-8")
 
 
 def render_and_hash(
@@ -116,14 +142,21 @@ def render_and_hash(
             prepare(data)
         folder_name = os.path.basename(get_output_folder(data, description_mode))
         output_folder = tmp_path / folder_name
-        HtmlCharacterSheetWriter().write_character_sheet(
+        writer = CapturingSheetWriter(output_folder)
+        writer.write_character_sheet(
             data, description_mode=description_mode, output_folder=str(output_folder)
         )
-        result[mode_key] = hash_tree(output_folder)
+        result[mode_key] = {
+            page: hashlib.sha256(content).hexdigest()
+            for page, content in sorted(writer.pages.items())
+        }
         if dump and SNAPSHOT_DUMP_DIR:
-            target = Path(SNAPSHOT_DUMP_DIR) / name / mode_key
-            shutil.rmtree(target, ignore_errors=True)
-            shutil.copytree(output_folder, target)
+            target_folder = Path(SNAPSHOT_DUMP_DIR) / name / mode_key
+            shutil.rmtree(target_folder, ignore_errors=True)
+            for page, content in writer.pages.items():
+                target = target_folder / page
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
     return result
 
 

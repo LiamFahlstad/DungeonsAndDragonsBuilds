@@ -11,8 +11,7 @@ against the golden hashes in tests/snapshots/sheet_hashes.json:
   in a different order, as if the builder had granted them in another order.
 
 Each build gets one shuffle, seeded from its name. Reversed order and three
-more shuffles run under `-m slow`: one render pass of every build takes about
-90 s, so the full matrix is kept for the steps that touch ordering.
+more shuffles run under `-m slow` (about 80 s for the full matrix).
 """
 
 import copy
