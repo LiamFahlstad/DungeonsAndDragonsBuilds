@@ -2,6 +2,8 @@ from CharacterContent.Features.Core.Improvements import CarryingCapacityBonus
 
 from .Base import Item, ItemCategory, ItemRarity
 
+# Carrying gear is what holds the rest, so it takes up no item slots itself.
+
 
 class Pouch(Item):
     def __init__(self, is_wearing: bool = True):
@@ -9,7 +11,7 @@ class Pouch(Item):
             "Pouch",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CARRYING_GEAR,
-            slots=1,
+            slots=0,
             description_text="A small belt pouch holding up to 6 pounds within one-fifth of a cubic foot.",
             improvements=[CarryingCapacityBonus(2, source="Pouch")],
             is_wearing=is_wearing,
@@ -25,7 +27,7 @@ class Satchel(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CARRYING_GEAR,
             weight=3,
-            slots=1,
+            slots=0,
             description_text=(
                 "A shoulder-slung bag with a few compartments, holding up to 15 pounds of gear."
             ),
@@ -43,7 +45,7 @@ class SidePack(Item):
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CARRYING_GEAR,
             weight=4,
-            slots=1,
+            slots=0,
             description_text=(
                 "A reinforced pack that straps to your hip or thigh, holding up to 20 pounds of gear. "
                 "Smaller than a full Backpack, but quicker to reach into mid-combat."
@@ -61,7 +63,7 @@ class Backpack(Item):
             "Backpack",
             rarity=ItemRarity.COMMON,
             category=ItemCategory.CARRYING_GEAR,
-            slots=1,
+            slots=0,
             description_text=(
                 "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
                 "It can also be strapped to a mount as a saddlebag."

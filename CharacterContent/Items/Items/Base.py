@@ -107,9 +107,6 @@ class Item(Feature):
             return self.description_text
         return None
 
-    # Standard resale price for mundane goods (PHB "Selling Treasure").
-    SELL_VALUE_RATE = 0.65
-
     @staticmethod
     def _format_gp(amount: float) -> str:
         if amount == int(amount):
@@ -121,13 +118,6 @@ class Item(Feature):
         if self.value is None:
             return None
         return self._format_gp(self.value)
-
-    def get_sell_value_display(self) -> Optional[str]:
-        """Return what the item resells for (SELL_VALUE_RATE of value) as a
-        display string, or None if unpriced."""
-        if self.value is None:
-            return None
-        return self._format_gp(self.value * self.SELL_VALUE_RATE)
 
     def add_improvement(self, improvement: ItemImprovement) -> None:
         """Apply a single ItemImprovement to this item. This is the generic,

@@ -44,12 +44,30 @@ _SCROLL_LEVEL_VALUE = {
 }
 
 
+# Spell save DC and spell attack bonus a scroll casts with, by spell level
+# (the Spell Scroll table, the same in the 2014 and 2024 rules).
+_SCROLL_LEVEL_SAVE_DC_ATTACK = {
+    0: (13, 5),
+    1: (13, 5),
+    2: (13, 5),
+    3: (15, 7),
+    4: (15, 7),
+    5: (17, 9),
+    6: (17, 9),
+    7: (18, 10),
+    8: (18, 10),
+    9: (19, 11),
+}
+
+
 class Scroll(Item):
     """A spell scroll for one specific spell, e.g. Scroll("Fog Cloud") -> "Scroll of 'Fog Cloud'"."""
 
     def __init__(self, spell_name: str):
         spell = SpellFactory.create(spell_name)
+        self.spell = spell
         self.spell_name = spell.name
+        self.save_dc, self.attack_bonus = _SCROLL_LEVEL_SAVE_DC_ATTACK[spell.level]
         level_text = "cantrip" if spell.level == 0 else f"level {spell.level}"
         description_text = (
             f"A scroll inscribed with the {spell.school} {level_text} spell "

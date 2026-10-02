@@ -1,6 +1,6 @@
 import html
 import pathlib
-from typing import Literal, Optional, Sequence, TextIO
+from typing import Collection, Literal, Optional, Sequence, TextIO
 
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
@@ -124,17 +124,6 @@ class HtmlCharacterSheetWriter:
             write_fn(item, file)
             if i < len(items) - 1:
                 file.write("<hr>\n")
-
-    @staticmethod
-    def _worn_tag(
-        item: Items.Item, worn_label: str = "Worn", not_worn_label: str = "Not worn"
-    ) -> str:
-        """Chip showing worn state for wearable items; empty for everything else."""
-        if item.is_wearing is None:
-            return ""
-        if item.is_wearing:
-            return f" <span class='wtag wtag-worn'>{worn_label}</span>"
-        return f" <span class='wtag wtag-not-worn'>{not_worn_label}</span>"
 
     @staticmethod
     def _format_class_level_history(character: Character) -> str:
@@ -742,20 +731,28 @@ class HtmlCharacterSheetWriter:
 
         file.write("<br class='section-gap'>\n")
 
-    def _write_pact_magic_slots(self, character: Character, file: TextIO):
+    def _write_pact_magic_slots(
+        self, character: Character, file: TextIO, heading: str = "h2"
+    ):
+        """`heading` is the tag for the title - h2 as a section of its own,
+        h3 as a subsection at the top of the Spells section."""
         if not character.pact_magic_slots:
             return
-        file.write("<h2>Pact Magic Slots</h2>\n")
+        file.write(f"<{heading}>Pact Magic Slots</{heading}>\n")
         Html.write_slot_table(
             character.pact_magic_slots, file, "Regained on: Short Rest or Long Rest"
         )
         file.write("<br class='section-gap'>\n")
 
-    def _write_spell_slots(self, character: Character, file: TextIO):
+    def _write_spell_slots(
+        self, character: Character, file: TextIO, heading: str = "h2"
+    ):
+        """`heading` is the tag for the title - h2 as a section of its own,
+        h3 as a subsection at the top of the Spells section."""
         if not character.spell_slots:
             return
 
-        file.write("<h2>Spell Slots</h2>\n")
+        file.write(f"<{heading}>Spell Slots</{heading}>\n")
         Html.write_slot_table(
             character.get_spell_slots(), file, "Regained on: Long Rest"
         )
@@ -818,38 +815,29 @@ class HtmlCharacterSheetWriter:
         base_class: Definitions.CharacterClass,
         include_probability_tables: bool = False,
     ):
+        if not spells and not character.spell_slots and not character.pact_magic_slots:
+            return
+
+        file.write("<h2 class='print-page-break'>Spells</h2>\n")
+        # Slots lead the Spells section rather than standing as sections of
+        # their own.
+        self._write_pact_magic_slots(character, file, heading="h3")
+        self._write_spell_slots(character, file, heading="h3")
         if not spells:
             return
 
-        file.write("<h2>Spells</h2>\n")
         casting_abilities = sorted(
             {ability for _, ability, _, _ in spells},
             key=lambda a: a.value,
         )
+        # Own subheading, so the headline and spell cards don't read as a
+        # continuation of the slot tables above them.
+        file.write("<h3>Spellcasting</h3>\n")
         self._write_spellcasting_headline(
             character, file, casting_abilities, include_probability_tables
         )
         self._write_spell_cards(character, file, spells, base_class)
         file.write("<br class='section-gap'>\n")
-
-    @staticmethod
-    def _item_type_rarity_value(
-        item: Items.Item, quantity: int = 1
-    ) -> tuple[str, str, str]:
-        value = item.get_value_display()
-        sell_value = item.get_sell_value_display()
-        prefix = f"{quantity} x " if quantity != 1 else ""
-        if value and sell_value:
-            buy_amount = value.removesuffix(" GP")
-            sell_amount = sell_value.removesuffix(" GP")
-            price = f"{prefix}{buy_amount}/{sell_amount} GP"
-        else:
-            price = "-"
-        return (
-            item.category.value.title(),
-            item.rarity.value.title(),
-            price,
-        )
 
     @staticmethod
     def _format_gold(value: float) -> str:
@@ -913,12 +901,16 @@ class HtmlCharacterSheetWriter:
         entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         show_ownership: bool = True,
+        exclude_item_ids: Collection[int] = frozenset(),
     ) -> list[tuple[str, list[tuple[str, str, int, str, str, str]]]]:
         """(title, [(label, description, slots, type, rarity, price), ...])
         per non-empty Armor/Weapons/Other items table, in the same
         slot-table format, pooling every entry's gear. With
-        `show_ownership`, each label carries where the item came from."""
+        `show_ownership`, each label carries where the item came from.
+        Other items whose id is in `exclude_item_ids` (tools already shown
+        in the Tools section) are left out."""
         armors, weapons, items = self._collect_gear(entries)
+        items = [x for x in items if id(x[0]) not in exclude_item_ids]
 
         def ownership(item, entry) -> str:
             if not show_ownership:
@@ -931,7 +923,7 @@ class HtmlCharacterSheetWriter:
                 f"{armor.name}{Html.attunement_tag(armor)}{ownership(armor, entry)}",
                 self._description_or_dash(armor.description_text),
                 armor.slots,
-                *self._item_type_rarity_value(armor),
+                *Html.item_type_rarity_price(armor),
             )
             for armor, entry in armors
         ]
@@ -943,7 +935,7 @@ class HtmlCharacterSheetWriter:
                 f"{weapon.name}{Html.attunement_tag(weapon)}{ownership(weapon, entry)}",
                 self._description_or_dash(weapon.description_text),
                 weapon.slots,
-                *self._item_type_rarity_value(weapon),
+                *Html.item_type_rarity_price(weapon),
             )
             for weapon, entry in weapons
         ]
@@ -952,11 +944,11 @@ class HtmlCharacterSheetWriter:
 
         item_rows = [
             (
-                f"{item.name} ({quantity}){self._worn_tag(item)}{Html.attunement_tag(item)}"
+                f"{item.name} ({quantity}){Html.attunement_tag(item)}"
                 f"{ownership(item, entry)}",
                 item.description_text,
                 item.slots,
-                *self._item_type_rarity_value(item, quantity),
+                *Html.item_type_rarity_price(item),
             )
             for item, quantity, entry in items
         ]
@@ -974,17 +966,22 @@ class HtmlCharacterSheetWriter:
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
         current_gold: Optional[float],
+        tool_proficiencies: Sequence[ToolProficiency] = (),
         include_probability_tables: bool = False,
+        write_heading: bool = True,
     ):
+        """`write_heading` False leaves out the "Items" heading, for the
+        items page, whose own title already says Items."""
         non_empty_entries = [
             entry
             for entry in equipment_entries
             if entry.armors or entry.weapons or entry.items or entry.gold
         ]
-        if not non_empty_entries and not weapons:
+        if not non_empty_entries and not weapons and not tool_proficiencies:
             return
 
-        file.write("<h2>Items</h2>\n")
+        if write_heading:
+            file.write("<h2 class='print-page-break'>Items</h2>\n")
         file.write("<div class='items-section'>\n")
 
         if non_empty_entries:
@@ -1000,6 +997,7 @@ class HtmlCharacterSheetWriter:
             character_weapons=weapons,
             weapon_masteries=weapon_masteries,
             include_probability_tables=include_probability_tables,
+            tool_proficiencies=tool_proficiencies,
         )
 
         file.write("</div>\n")
@@ -1061,21 +1059,23 @@ class HtmlCharacterSheetWriter:
         character_weapons: Sequence[AbstractWeapon] = (),
         weapon_masteries: Sequence[AbstractWeapon] = (),
         include_probability_tables: bool = False,
+        tool_proficiencies: Sequence[ToolProficiency] = (),
     ):
-        """One Armor and one Weapons section, then one Other items section
-        of gear cards, pooling every entry's gear, with a rule between
-        sections. Shared by item sheets and character sheets so both
-        present items identically.
+        """One Armor, one Weapons and (character sheets) one Tools section,
+        then one Other items section of gear cards, pooling every entry's
+        gear. Each section opens with its own heading (styled in
+        Html.BASE_CHARACTER_SHEET_CSS), so no separator is drawn between
+        them. Shared by item sheets and character sheets so both present
+        items identically.
 
         Without a `character` (item sheets) armor and weapons render as
         rules-reference cards. With one (character sheets), weapons render
         as attack cards resolved against that character - including the
         ones in `character_weapons` that aren't items, like Unarmed Strike
-        - and every card's name carries its worn/wielded state and where it
-        came from, instead of each entry getting its own sections."""
+        - and every card's name carries where it came from, instead of each
+        entry getting its own sections."""
         show_ownership = character is not None
-        armors, weapons, _ = self._collect_gear(entries)
-        wrote_section = False
+        armors, weapons, items = self._collect_gear(entries)
 
         if armors:
             armor_tags = [
@@ -1087,7 +1087,6 @@ class HtmlCharacterSheetWriter:
                 for armor, entry in armors
             ]
             write_armors_to_file([armor for armor, _ in armors], file, armor_tags)
-            wrote_section = True
 
         if character is not None:
             # Weapons the character has that no entry holds (Unarmed
@@ -1095,8 +1094,6 @@ class HtmlCharacterSheetWriter:
             owned_ids = {id(weapon) for weapon, _ in weapons}
             innate_weapons = [w for w in character_weapons if id(w) not in owned_ids]
             if innate_weapons or weapons:
-                if wrote_section:
-                    file.write("<hr>")
                 weapon_tags = [""] * len(innate_weapons) + [
                     self._ownership_tags(weapon, entry, starting_equipment_entry)
                     for weapon, entry in weapons
@@ -1109,63 +1106,195 @@ class HtmlCharacterSheetWriter:
                     include_probability_tables,
                     weapon_tags,
                 )
-                wrote_section = True
         elif weapons:
-            if wrote_section:
-                file.write("<hr>")
             write_weapons_reference_to_file([weapon for weapon, _ in weapons], file)
-            wrote_section = True
+
+        tool_item_ids: set[int] = set()
+        if character is not None and tool_proficiencies:
+            tool_item_ids = self._write_tools(
+                character, file, tool_proficiencies, items, starting_equipment_entry
+            )
+
+        consumable_item_ids = self._write_scrolls_and_potions(
+            file,
+            [x for x in items if id(x[0]) not in tool_item_ids],
+            starting_equipment_entry,
+            show_ownership,
+        )
 
         for section_title, rows in self._build_item_sections(
-            entries, starting_equipment_entry, show_ownership
+            entries,
+            starting_equipment_entry,
+            show_ownership,
+            tool_item_ids | consumable_item_ids,
         ):
             if section_title != "Other items":
                 continue  # armor/weapons are rendered as cards above
-            if wrote_section:
-                file.write("<hr>")
             Html.write_item_cards(file, section_title, rows)
-            wrote_section = True
 
-    def _write_tool_proficiencies(
+    def _write_scrolls_and_potions(
+        self,
+        file: TextIO,
+        items: list[tuple[Items.Item, int, EquipmentEntry]],
+        starting_equipment_entry: Optional[EquipmentEntry],
+        show_ownership: bool,
+    ) -> set[int]:
+        """Scrolls and Potions sections of gear cards, laid out for what
+        each is used for: a scroll's spell (level, school, casting time,
+        range, duration, save DC/attack bonus, text), a potion's effect.
+        Returns the ids of the items written, so Other items can leave them
+        out."""
+        sections = [
+            ("Scrolls", Items.ItemCategory.SCROLL, self._write_scroll_body),
+            ("Potions", Items.ItemCategory.POTION, self._write_potion_body),
+        ]
+        written_ids: set[int] = set()
+        for title, category, write_body in sections:
+            group = [x for x in items if x[0].category == category]
+            if not group:
+                continue
+            file.write(f"<h3>{title}</h3>\n")
+            file.write("<div class='gear-list'>\n")
+            for item, quantity, entry in group:
+                label = f"{item.name} ({quantity}){Html.attunement_tag(item)}"
+                if show_ownership:
+                    label += self._ownership_tags(item, entry, starting_equipment_entry)
+                file.write("<div class='gear-entry'>\n")
+                Html.write_gear_header(
+                    file,
+                    f"<span class='gear-name'>{label}</span>",
+                    Html.carrying_checkbox_id(label),
+                )
+                write_body(file, item)
+                file.write("</div>\n")
+                written_ids.add(id(item))
+            file.write("</div>\n")
+        return written_ids
+
+    @staticmethod
+    def _write_scroll_body(file: TextIO, scroll: Items.Item):
+        spell = getattr(scroll, "spell", None)
+        if spell is None:
+            # A generic Spell Scroll, with no one spell to lay out.
+            Html.write_gear_meta_line(
+                file, *Html.item_type_rarity_price(scroll), scroll.slots
+            )
+            if scroll.description_text:
+                file.write(f"<div class='gear-desc'>{scroll.description_text}</div>\n")
+            return
+
+        # The meta line leads with the spell's level and school in place of
+        # a "Scroll" type label the section heading already gives.
+        level = "Cantrip" if spell.level == 0 else f"Level {spell.level}"
+        _, rarity, price = Html.item_type_rarity_price(scroll)
+        Html.write_gear_meta_line(
+            file, f"{level} {spell.school}", rarity, price, scroll.slots
+        )
+        Html.write_gear_line(
+            file,
+            ("Cast", spell.casting_time),
+            ("Range", spell.range),
+            ("Duration", spell.duration),
+        )
+        Html.write_gear_line(
+            file,
+            ("Save DC", str(scroll.save_dc)),
+            ("Attack", f"{scroll.attack_bonus:+}"),
+        )
+        # A scroll always casts at its own level, so the spell's upcasting
+        # paragraph doesn't apply and is left out.
+        paragraphs = [
+            paragraph
+            for paragraph in spell.description.split("\n")
+            if not paragraph.startswith(("Using a Higher-Level Spell Slot", "At Higher Levels"))
+        ]
+        description = Html.boxes_to_html("\n".join(paragraphs)).replace("\n", "<br>")
+        file.write(f"<div class='gear-desc'>{description}</div>\n")
+
+    @staticmethod
+    def _write_potion_body(file: TextIO, potion: Items.Item):
+        # The meta line keeps the plain type ("Potion") - unlike a scroll's
+        # spell, a potion has no kind worth leading with.
+        Html.write_gear_meta_line(
+            file, *Html.item_type_rarity_price(potion), potion.slots
+        )
+        # A potion's description opens with what drinking it does; any
+        # further lines are details (how long it lasts, what it looks like).
+        effect, _, details = (potion.description_text or "").partition("\n")
+        if effect:
+            Html.write_gear_line(file, ("Effect", effect))
+        if details:
+            details_html = details.replace("\n", "<br>")
+            file.write(f"<div class='gear-desc'>{details_html}</div>\n")
+
+    def _write_tools(
         self,
         character: Character,
         file: TextIO,
-        tool_proficiencies: Optional[list[ToolProficiency]],
-    ):
-        if not tool_proficiencies:
-            return
+        tool_proficiencies: Sequence[ToolProficiency],
+        owned_items: list[tuple[Items.Item, int, EquipmentEntry]],
+        starting_equipment_entry: Optional[EquipmentEntry],
+    ) -> set[int]:
+        """Tools section: one gear card per tool proficiency, with the
+        tool item's type, rarity, cost and slots alongside the check
+        formula and what the tool lets you Utilize and Craft. A tool
+        the character owns carries where it came from; one they don't is
+        marked "Not owned". Returns the ids of the owned tool items, so
+        Other items can leave them out."""
+        file.write("<h3>Tools</h3>\n")
+        file.write("<div class='gear-list'>\n")
 
-        file.write("<h2>Tool Proficiencies</h2>\n")
-        file.write("<div class='tool-list items-section'>\n")
-
-        proficiency_bonus = character.get_proficiency_bonus()
-        sorted_tool_proficiencies = sorted(tool_proficiencies, key=lambda x: x.name)
-        for tool_proficiency in sorted_tool_proficiencies:
-            ability_modifier = character.get_ability_modifier(tool_proficiency.ability)
-            total = ability_modifier + proficiency_bonus
-            breakdown = f"{ability_modifier} + {proficiency_bonus} (proficiency)"
-            craft = (
-                ", ".join(item.name for item in tool_proficiency.craftables)
-                if tool_proficiency.craftables
-                else None
+        used_item_ids: set[int] = set()
+        for tool in sorted(tool_proficiencies, key=lambda t: t.name):
+            item = tool.make_item()
+            owned = next(
+                (
+                    (owned_item, entry)
+                    for owned_item, _, entry in owned_items
+                    if item is not None
+                    and type(owned_item) is type(item)
+                    and id(owned_item) not in used_item_ids
+                ),
+                None,
             )
 
-            file.write("<div class='tool-entry st-proficient'>\n")
-            file.write("<div class='tool-entry-top'>\n")
-            file.write(
-                f"<span class='tool-name'>{tool_proficiency.name}"
-                f"<span class='skill-ability-tag'>{tool_proficiency.ability.short_name}</span></span>\n"
+            name_html = (
+                f"<span class='gear-name'>{tool.name}"
+                f"<span class='skill-ability-tag'>{tool.ability.short_name}</span>"
             )
-            file.write(f"<span class='tool-mod'>{total:+}</span>\n")
-            file.write("</div>\n")
-            file.write(f"<div class='skill-breakdown'>{breakdown}</div>\n")
-            if craft:
-                file.write(
-                    f"<div class='tool-craft'><span class='glabel'>Craft</span> {craft}</div>\n"
+            file.write("<div class='gear-entry'>\n")
+            if owned is not None:
+                item, entry = owned
+                used_item_ids.add(id(item))
+                name_html += (
+                    f"{Html.attunement_tag(item)}"
+                    f"{self._ownership_tags(item, entry, starting_equipment_entry)}</span>"
                 )
+            else:
+                name_html += " <span class='wtag wtag-not-worn'>Not owned</span></span>"
+            # Carrying checkbox like every other item card - also on a tool
+            # not owned yet, for when the character picks one up.
+            Html.write_gear_header(file, name_html, Html.carrying_checkbox_id(tool.name))
+            if item is not None:
+                Html.write_gear_meta_line(
+                    file, *Html.item_type_rarity_price(item), item.slots
+                )
+
+            # How the check bonus is made up, worded like weapon attack rolls
+            # ("1d20 + Dex Mod + Proficiency Bonus").
+            check_formula = (
+                f"1d20 + {tool.ability.short_name.title()} Mod + Proficiency Bonus"
+            )
+            Html.write_gear_line(file, ("Check", check_formula))
+            Html.write_gear_line(file, ("Utilize", tool.utilize_text()))
+            if tool.craftables:
+                Html.write_gear_line(file, ("Craft", tool.craft_text()))
+            # No item description: a tool item's is only "Ability: ...
+            # Utilize: ...", which the Check/Utilize lines already say.
             file.write("</div>\n")
 
-        file.write("</div>\n<br class='section-gap'>\n")
+        file.write("</div>\n")
+        return used_item_ids
 
     def _get_css_style(self) -> str:
         return Html.render_style_block(
@@ -1640,20 +1769,22 @@ class HtmlCharacterSheetWriter:
             self._write_skills(character, file, skill_config)
             file.write("</div>\n")
             file.write("</div>\n")
-            file.write("<div class='print-page-break'></div>\n")
 
+            # Features, Spells and Items each start on a new page (their
+            # headings carry the break); without Features, whatever follows
+            # Abilities and Skills still starts on a fresh page.
             if text_features:
-                file.write("<h2>Features</h2>\n")
+                file.write("<h2 class='print-page-break'>Features</h2>\n")
                 sorted_features = sorted(text_features, key=self._sort_features_key)
                 file.write("<div class='features'>\n")
                 for feature in sorted_features:
                     feature.write_to_file(character, file, description_mode)
                 file.write("</div>\n<br class='section-gap'>\n")
+            else:
+                file.write("<div class='print-page-break'></div>\n")
 
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
-            self._write_pact_magic_slots(character, file)
-            self._write_spell_slots(character, file)
             self._write_spells(
                 character, file, spells, base_class, include_probability_tables
             )
@@ -1665,9 +1796,9 @@ class HtmlCharacterSheetWriter:
                 weapons,
                 weapon_masteries,
                 current_gold,
+                tool_proficiencies,
                 include_probability_tables,
             )
-            self._write_tool_proficiencies(character, file, tool_proficiencies)
 
     def _write_features_page(
         self,
@@ -1755,9 +1886,10 @@ class HtmlCharacterSheetWriter:
                 weapons,
                 weapon_masteries,
                 current_gold,
+                tool_proficiencies,
                 include_probability_tables,
+                write_heading=False,
             )
-            self._write_tool_proficiencies(character, file, tool_proficiencies)
 
     def write_item_sheet(
         self,

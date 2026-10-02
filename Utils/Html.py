@@ -329,20 +329,12 @@ def attunement_tag(item) -> str:
     return " <span class='wtag wtag-attunement'>Requires Attunement</span>"
 
 
-def item_type_rarity_price(item, quantity: int = 1) -> tuple[str, str, str]:
-    """(type label, rarity label, 'buy/sell' price display) for an Item -
-    shared between the generic gear-card table and the weapon/armor
-    reference cards, which have direct Item access rather than
-    pre-resolved tuples."""
+def item_type_rarity_price(item) -> tuple[str, str, str]:
+    """(type label, rarity label, cost display) for an Item - shared
+    between the generic gear cards and the weapon/armor cards. The cost is
+    the buy price of a single item, even for a stack."""
     value = item.get_value_display()
-    sell_value = item.get_sell_value_display()
-    prefix = f"{quantity} x " if quantity != 1 else ""
-    if value and sell_value:
-        buy_amount = value.removesuffix(" GP")
-        sell_amount = sell_value.removesuffix(" GP")
-        price = f"{prefix}{buy_amount}/{sell_amount} GP"
-    else:
-        price = "-"
+    price = value if value else "-"
     return (
         item.category.value.title(),
         item.rarity.value.title(),
@@ -374,7 +366,7 @@ def write_gear_header(file: TextIO, name_html: str, carrying_id: str):
 def write_gear_meta_line(
     file: TextIO, item_type: str, rarity: str, price: str, slots: int
 ):
-    """Type/rarity/buy-sell-price/slots line shared by every item card
+    """Type/rarity/cost/slots line shared by every item card
     (generic gear, weapon, armor) - the acquisition/carrying bookkeeping
     that applies regardless of category."""
     rarity_class = f"rarity-{rarity.lower().replace(' ', '-')}"
@@ -382,10 +374,19 @@ def write_gear_meta_line(
         f"<div class='gear-meta'>{item_type}"
         f"<span class='gsep'>·</span><span class='{rarity_class}'>{rarity}</span>"
         f"<span class='gsep'>·</span>"
-        f"<span class='glabel'>Buy/Sell</span> {price}"
+        f"<span class='glabel'>Cost</span> {price}"
         f"<span class='gsep'>·</span>"
         f"<span class='glabel'>Slots</span> {slots}</div>\n"
     )
+
+
+def write_gear_line(file: TextIO, *pairs: tuple[str, str]):
+    """One labelled line under an item card's meta line - "CHECK 1d20 +
+    ...", or several label/value pairs on one line ("CAST Action · RANGE
+    60 feet") - shared by tool, scroll and potion cards."""
+    parts = [f"<span class='glabel'>{label}</span> {value}" for label, value in pairs]
+    separator = "<span class='gsep'>·</span>"
+    file.write(f"<div class='gear-line'>{separator.join(parts)}</div>\n")
 
 
 def write_item_cards(
@@ -809,48 +810,11 @@ BASE_CHARACTER_SHEET_CSS = """
             color: var(--muted-color);
         }
 
-        /* ── Tool proficiencies ──────────────────────────────────────────
-           Same flowing card language as .skill-entry, since a tool row is
-           the same shape (name + ability tag + modifier + breakdown), plus
-           an optional craft line. */
-        .tool-list {
-            column-count: 2;
-            column-gap: 0.9rem;
-        }
-
-        .tool-entry {
-            break-inside: avoid;
-            -webkit-column-break-inside: avoid;
-            padding: 0.15rem 0;
-            border-bottom: 1px solid #eee;
-            font-size: 0.8rem;
-        }
-
-        .tool-entry-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            gap: 0.4rem;
-        }
-
-        .tool-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tool-mod {
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .tool-entry.st-proficient .tool-mod,
-        .tool-entry.st-proficient .tool-name {
-            color: #2e6e3e;
-        }
-
-        .tool-craft {
-            font-size: 0.68rem;
+        /* Labelled lines under an item card's type/rarity/cost line (tool
+           Check/Utilize/Craft, scroll Cast/Range/Duration, potion Effect),
+           sized to match it. */
+        .gear-line {
+            font-size: 0.82rem;
             color: var(--muted-color);
             margin-top: 0.1rem;
         }
@@ -1339,6 +1303,23 @@ BASE_CHARACTER_SHEET_CSS = """
             margin-right: 0;
             padding-left: 0;
             padding-right: 0;
+        }
+
+        /* Items subsection headings (Wealth & Carrying Capacity, Armor,
+           Weapons, Tools, Other items): one style, a step below the h2,
+           with a thin rule under each so it separates the sections. */
+        .items-section h3 {
+            color: #3a2c1c;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            border-bottom: 1px solid #d8c8a8;
+            padding-bottom: 0.1em;
+            margin: 1.4rem 0 0.3rem 0;
+        }
+
+        .items-section > h3:first-child {
+            margin-top: 0.4rem;
         }
 
         /* Wallet (left) / carrying capacity (right) header row above the

@@ -21,7 +21,7 @@ ARMOR_CARD_CSS = """/* ── Armor entries ────────────
 
         /* Separator line between consecutive armor pieces */
         .armor-entry + .armor-entry {
-            border-top: 2px solid #6a8aa0;
+            border-top: 1px solid #c8d4e0;
         }
 
         /* Armor name */
@@ -34,37 +34,14 @@ ARMOR_CARD_CSS = """/* ── Armor entries ────────────
             margin: 0 0 0.2rem 0;
         }
 
-        /* Quick-stats — two flexible columns, wrapping if the page is narrow */
-        .armor-quickstats {
+        /* AC - one labelled line under the meta line, like a weapon's
+           Attack / Damage lines */
+        .armor-ac-line {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.15rem 1.2rem;
+            align-items: baseline;
+            gap: 0.4rem;
             font-size: 0.82rem;
-            margin: 0 0 0.2rem 0;
-        }
-
-        .aqs-left {
-            flex: 1 1 35%;
-        }
-
-        .aqs-right {
-            flex: 1 1 55%;
-        }
-
-        /* Inline label within quick-stats */
-        .alabel {
-            font-weight: 600;
-            color: var(--muted-color);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-right: 2px;
-        }
-
-        /* Bullet separator between quick-stat items */
-        .asep {
-            color: #aaa;
-            margin: 0 5px;
+            margin: 0.15rem 0 0 0;
         }
 
         /* Restrictions tag section (Strength requirement, Stealth) */
@@ -139,7 +116,7 @@ def _reference_ac_formula(armor: AbstractArmor) -> str:
     if armor.ac_ability is None:
         formula = f"{armor.base_ac} AC (fixed)"
     else:
-        formula = f"{armor.base_ac} + {armor.ac_ability.short_name} mod"
+        formula = f"{armor.base_ac} + {armor.ac_ability.short_name.title()} Mod"
         if armor.armor_type == Definitions.ArmorType.MEDIUM:
             formula += " (max +2)"
     if armor.ac_bonus:
@@ -165,18 +142,17 @@ def write_armor_reference_card(
         Html.carrying_checkbox_id(armor.name),
     )
 
+    # Same layout as every other item card: name, one meta line (leading
+    # with the kind of armor in place of an "Armor" type label the section
+    # heading already gives), then labelled lines.
     armor_type_label = armor.armor_type.value if armor.armor_type else "-"
-    type_cell = f"{armor_type_label} Armor"
-    roll_cell = f"<span class='alabel'>AC</span> {_reference_ac_formula(armor)}"
+    kind = armor_type_label if armor.is_shield else f"{armor_type_label} Armor"
+    _, rarity, price = Html.item_type_rarity_price(armor)
+    Html.write_gear_meta_line(file, kind, rarity, price, armor.slots)
     file.write(
-        f"<div class='armor-quickstats'>"
-        f"<span class='aqs-left'>{type_cell}</span>"
-        f"<span class='aqs-right'>{roll_cell}</span>"
-        f"</div>\n"
+        f"<div class='armor-ac-line'><span class='alabel-col'>AC</span>"
+        f"{_reference_ac_formula(armor)}</div>\n"
     )
-
-    item_type, rarity, price = Html.item_type_rarity_price(armor)
-    Html.write_gear_meta_line(file, item_type, rarity, price, armor.slots)
 
     if armor.strength_requirement is not None or armor.stealth_disadvantage:
         tags_html = ""

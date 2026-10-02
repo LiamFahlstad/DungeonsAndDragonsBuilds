@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TextIO
+from typing import NamedTuple, Optional, TextIO
 from Utils import DamageCalculator
 from Core.Definitions import Ability, DiceRollCondition, Die
 from CharacterContent.Features.Core.Improvements import (
@@ -17,6 +17,17 @@ from .Enums import (
     WeaponDamageTypes,
 )
 from .Improvements import ExtraDamage
+
+
+class BonusPart(NamedTuple):
+    """One part of a weapon's attack or damage roll bonus. A `from_stats`
+    part (ability modifier, proficiency bonus) comes from the wielder's
+    stats and is written by name ("Dex Mod"); any other part is a flat
+    bonus written as its value and source ("2 (Archery Fighting Style)")."""
+
+    value: int
+    label: str
+    from_stats: bool = False
 
 
 class AbstractWeapon(Item, ABC):
@@ -214,24 +225,59 @@ class AbstractWeapon(Item, ABC):
             attack_roll_bonus += f" + {bonus}"
         return attack_roll_bonus
 
-    def calculate_total_attack_roll_bonus_int(self, character: Character) -> int:
+    @staticmethod
+    def _bonus_source(value: int, label: str) -> str:
+        """The source named in a bonus label - "Archery Fighting Style" out
+        of "2 (Archery Fighting Style)" - or the whole label when it isn't
+        in that "<value> (<source>)" shape."""
+        prefix = f"{value} ("
+        if label.startswith(prefix) and label.endswith(")"):
+            return label[len(prefix) : -1]
+        return label
+
+    def _ability_modifier_part(self, character: Character) -> BonusPart:
+        modifier, ability_name = self._calculate_ability_modifier_bonus(character)
+        short_name = Ability(ability_name).short_name.title()
+        return BonusPart(modifier, f"{short_name} Mod", from_stats=True)
+
+    def get_attack_roll_breakdown(self, character: Character) -> list[BonusPart]:
+        """Each part of the attack roll bonus: ability modifier, proficiency
+        bonus (when proficient), then every flat bonus. A fixed override is
+        its single part. Sums to calculate_total_attack_roll_bonus_int."""
         if self._attack_roll_override is not None:
-            return self._attack_roll_override
-        attack_roll_bonus, _ = self._calculate_ability_modifier_bonus(character)
-        attack_roll_bonus += self._calculate_proficiency_damage_bonus(character)
-        for bonus, _ in self.get_attack_roll_bonuses(character):
-            attack_roll_bonus += bonus
-        return attack_roll_bonus
+            return [BonusPart(self._attack_roll_override, "fixed")]
+        parts = [self._ability_modifier_part(character)]
+        proficiency_bonus = self._calculate_proficiency_damage_bonus(character)
+        if proficiency_bonus:
+            parts.append(
+                BonusPart(proficiency_bonus, "Proficiency Bonus", from_stats=True)
+            )
+        parts += [
+            BonusPart(bonus, self._bonus_source(bonus, label))
+            for bonus, label in self.get_attack_roll_bonuses(character)
+        ]
+        return parts
+
+    def get_damage_roll_breakdown(self, character: Character) -> list[BonusPart]:
+        """Each part of the flat bonus added to the damage die: ability
+        modifier, then every flat bonus. A fixed override is its single
+        part. Sums to calculate_damage_bonus_int."""
+        if self._damage_bonus_override is not None:
+            return [BonusPart(self._damage_bonus_override, "fixed")]
+        parts = [self._ability_modifier_part(character)]
+        parts += [
+            BonusPart(bonus, self._bonus_source(bonus, label))
+            for bonus, label in self.get_damage_roll_bonuses(character)
+        ]
+        return parts
+
+    def calculate_total_attack_roll_bonus_int(self, character: Character) -> int:
+        return sum(part.value for part in self.get_attack_roll_breakdown(character))
 
     def calculate_damage_bonus_int(self, character: Character) -> int:
         """Flat bonus added to the damage die (ability modifier by default,
         or a fixed override), plus any additive damage-roll bonuses."""
-        if self._damage_bonus_override is not None:
-            return self._damage_bonus_override
-        damage_bonus, _ = self._calculate_ability_modifier_bonus(character)
-        for bonus, _ in self.get_damage_roll_bonuses(character):
-            damage_bonus += bonus
-        return damage_bonus
+        return sum(part.value for part in self.get_damage_roll_breakdown(character))
 
     def get_description(self, character: Character) -> Optional[str]:
         return None
