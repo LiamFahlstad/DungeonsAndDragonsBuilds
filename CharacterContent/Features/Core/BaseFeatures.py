@@ -732,15 +732,12 @@ class Feature:
         if html_description is None:
             return
 
+        # The card header already carries this feature's tags (Passive included),
+        # so the label only names the parent.
         self._write_card_open(file, description_mode)
-        passive_tag = (
-            " <span class='feature-passive-tag'>Passive</span>"
-            if self._shows_passive_tag(description_mode)
-            else ""
-        )
         file.write(
             self._upgrade_block_html(
-                f"{parent_name} Feature Extension{passive_tag}",
+                f"Extends {parent_name}",
                 html_description,
                 self.uses,
             )

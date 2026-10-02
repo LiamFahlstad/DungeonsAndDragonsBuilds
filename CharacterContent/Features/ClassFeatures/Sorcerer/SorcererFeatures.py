@@ -102,18 +102,6 @@ class FontOfMagic(Feature):
         )
         return description
 
-    def get_resource_tiles(
-        self, character: Character
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        points_by_level = {level: str(level) for level in range(2, 21)}
-        steps = [
-            (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(
-                points_by_level
-            )
-        ]
-        return [("Sorcery Points", steps)]
-
     def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 

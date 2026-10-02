@@ -130,30 +130,12 @@ class MonksFocus(Feature):
             ),
         )
 
+    # No resource tiles: the pool is simply your Monk level, so a per-level
+    # tile strip would be 19 tiles restating the boxes' current_formula.
+    # Regaining is covered by the boxes' reset label, and the Focus Point
+    # features themselves render below as extension blocks.
     def get_description(self, character: Character) -> str:
-        description = (
-            "Rules for Focus Points:\n"
-            "    * Regaining: You regain all expended Focus Points when you finish a Short or Long Rest.\n"
-            "    * DC: 8 plus your Wisdom modifier and Proficiency Bonus.\n"
-            "Known features:\n"
-        )
-        return description
-
-    def get_resource_tiles(
-        self, character: Character
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        # Monk's Focus isn't granted until level 2, so level 1 (always 0) is
-        # left out of the progression rather than shown as a misleading step.
-        focus_points_from_level_2 = {
-            level: value for level, value in LEVEL_TO_FOCUS_POINTS.items() if level >= 2
-        }
-        steps = [
-            (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(
-                focus_points_from_level_2
-            )
-        ]
-        return [("Focus Points", steps)]
+        return "Focus Point save DC: 8 plus your Wisdom modifier and Proficiency Bonus."
 
     def regained_on(self, character: Character) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
