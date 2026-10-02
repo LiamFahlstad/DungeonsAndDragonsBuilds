@@ -71,11 +71,12 @@ L2  Model/<Part>.py       parts: recorded data + a documented commutative merge 
                           + resolvers that take one StatView. Import only L0 and L1.
 L3  Model/Effects.py      Ledger (all parts, sealed after evaluation, plus the rules
                           that combine two parts) + Effects (write-only)
+    Model/Sources.py      Protocols for content: Effect, GrantedFeature, Gear, ArmorGear
 L4  Model/Character.py    sources + cached Ledger + query facade (satisfies StatView)
 L5  CharacterContent/, Builds/, Utils/, Combat/
 ```
 
-- `Model` never imports `CharacterContent`, not even for type hints. It names content only through `Effect`/`Gear` Protocols, which features and items satisfy structurally without importing them.
+- `Model` never imports `CharacterContent`, not even for type hints. It names content only through the `Model/Sources.py` Protocols, which features and items satisfy structurally without importing them.
 - Formulas are `Callable[[StatView], int]`, so parts never need `Character`.
 - `StatView` exposes answers (numbers, booleans, sources), never parts. A rule that needs two parts (untrained armor needs `WornArmor` and `EquipmentTraining`) lives on the `Ledger`, which owns both.
 - Nothing in the repo uses `if TYPE_CHECKING:`. A test enforces this.
@@ -188,7 +189,14 @@ Rules of thumb:
 - **Callers:** none. Content lambdas keep working because `Character` satisfies the Protocol structurally.
 - **Verify:** A, B, C, plus D.
 
-### Step 4: Content Protocols, so Model never names CharacterContent *(design-critical)*
+### Step 4: Content Protocols, so Model never names CharacterContent *(design-critical)* — done
+
+- **Result:** there is no `TYPE_CHECKING` anywhere in the repo, and both layering allowlists are empty. Four things changed from the plan below:
+  - **The content Protocols live in a new `Model/Sources.py` (L3½), not in `Contracts.py`.** They are `Effect`, `GrantedFeature`, `Gear` and `ArmorGear`. `Effect.apply` takes `Effects`, and `Contracts.py` (L1) can't import `Effects` (L3), because `Effects` imports the parts that import `Contracts`. `Character` and `Inventory` import `Sources`.
+  - **`add_origin_feat` became `OriginFeat.grant_to(data)`, not a `CharacterBuilder` method.** Its two callers are a class builder and a species builder, so it belongs to the feat itself.
+  - **The spell cycle was removed by deleting `Spell.write_to_file`.** It only forwarded to the writer. Its two callers now call `write_spell_to_file(spell, ...)`, so `Writer.py` imports `Spell` and not the other way round.
+  - **`FightingStyle` got a no-op `apply()`, like `Feature` has.** So every fighting style is an `Effect`, and `iter_stat_effects` lists them all, without `hasattr`.
+- **Also:** `ExtraDamage` moved to `Items/Weapons/ExtraDamage.py` and is re-exported from `Improvements.py`. `tests/test_contracts.py` checks that every build's features, armor, weapons, items and fighting styles have the members the Protocols name. Snapshots didn't move, the pages are byte-for-byte identical to the pre-Step-3 baseline dump, and the Creator UI starts.
 
 - **Goal:** `Character.py` and `Inventory.py` have no content imports, and the rest of the repo drops `TYPE_CHECKING`.
 - **Changes:**

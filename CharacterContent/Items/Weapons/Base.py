@@ -16,7 +16,7 @@ from .Enums import (
     WeaponDamageRolls,
     WeaponDamageTypes,
 )
-from .Improvements import ExtraDamage
+from .ExtraDamage import ExtraDamage
 
 
 class BonusPart(NamedTuple):

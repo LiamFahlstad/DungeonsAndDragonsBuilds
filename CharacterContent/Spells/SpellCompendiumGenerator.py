@@ -12,7 +12,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
+from CharacterContent.Spells.SpellFactory.Writer import (
+    SPELL_CARD_CSS,
+    write_spell_to_file,
+)
 from Utils import Html
 
 OUTPUT_HTML = "CharacterContent/Spells/AllSpells.html"
@@ -111,7 +114,7 @@ def write_spell_compendium(output_path: str = OUTPUT_HTML):
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                spell.write_to_file(file, show_classes=True)
+                write_spell_to_file(spell, file, show_classes=True)
 
         file.write("</div>\n</div>\n</body>\n</html>\n")
 

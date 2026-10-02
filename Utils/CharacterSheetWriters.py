@@ -22,7 +22,10 @@ from CharacterContent.Items.Weapons import (
 )
 from CharacterContent.Items.Weapons.Writer import WEAPON_CARD_CSS
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from CharacterContent.Spells.SpellFactory.Writer import SPELL_CARD_CSS
+from CharacterContent.Spells.SpellFactory.Writer import (
+    SPELL_CARD_CSS,
+    write_spell_to_file,
+)
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from Model.Character import Character
@@ -810,7 +813,9 @@ class HtmlCharacterSheetWriter:
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                spell.write_to_file(file, show_preparation_checkbox=show_prep_checkbox)
+                write_spell_to_file(
+                    spell, file, show_preparation_checkbox=show_prep_checkbox
+                )
 
         file.write("</div>\n")
 

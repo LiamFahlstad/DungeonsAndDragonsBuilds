@@ -1,6 +1,8 @@
-from typing import TYPE_CHECKING, TextIO
+from typing import TextIO
 
 from Utils import Html
+
+from .Spell import Spell
 
 SPELL_CARD_CSS = """/* ── Spell entries ────────────────────────────────────────────────── */
         .spells {
@@ -153,12 +155,9 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
 
         """
 
-if TYPE_CHECKING:
-    from .Spell import Spell
-
 
 def write_spell_to_file(
-    spell: "Spell",
+    spell: Spell,
     file: TextIO,
     show_preparation_checkbox: bool = False,
     show_classes: bool = False,

@@ -29,6 +29,11 @@ class FightingStyle(ABC):
     def description(self) -> str:
         pass
 
+    def apply(self, effects: Effects) -> None:
+        """Most fighting styles only describe what they do at the table and
+        record nothing; FightStyleModifier is the kind with a computed
+        effect."""
+
 
 class FightStyleModifier(FightingStyle):
     """A fighting style with a computed effect. Like any other effect, apply()

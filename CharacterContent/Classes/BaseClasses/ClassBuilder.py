@@ -501,7 +501,7 @@ class StarterClassBuilder(ClassBuilder):
 
         data.add_feature(self.background_ability_bonuses)
         data.add_feature(self.background_skill_proficiencies)
-        data.add_origin_feat(self.origin_feat)
+        self.origin_feat.grant_to(data)
         if self.caster_type is not None:
             data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
 

@@ -1,29 +1,11 @@
 from abc import abstractmethod
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
+
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.Improvements import ItemImprovement
+from .Base import AbstractWeapon
 from .Enums import WeaponProperty, WeaponDamageRolls, WeaponDamageTypes
-
-if TYPE_CHECKING:
-    # AbstractWeapon is only used as a quoted forward-ref annotation below;
-    # a real import would cycle with base.py (which needs ExtraDamage from
-    # this module).
-    from .Base import AbstractWeapon
-
-
-@dataclass
-class ExtraDamage:
-    """Represents bonus damage added to a weapon attack."""
-
-    damage_roll: "WeaponDamageRolls"
-    damage_type: WeaponDamageTypes
-    note: Optional[str] = None  # e.g. "chosen type, activate as bonus action"
-
-    def format_damage(self) -> str:
-        """Format as '1d6 Fire' or similar."""
-        return f"{self.damage_roll.value} {self.damage_type.value}"
-
+from .ExtraDamage import ExtraDamage  # re-exported: weapons are built with it
 
 # ──────────────────────────────────────────────────────────────────────────────
 # WeaponImprovement: composable modifiers applied to a weapon at construction
@@ -40,7 +22,7 @@ class WeaponImprovement(ItemImprovement):
 
     @abstractmethod
     def apply(
-        self, weapon: "AbstractWeapon"
+        self, weapon: AbstractWeapon
     ) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
         # Renaming ItemImprovement.apply's generic `item` param to `weapon`
         # here (and to `armor` in ArmorImprovement) is intentional - it's
@@ -57,7 +39,7 @@ class SetAttackRollBonus(WeaponImprovement):
     def __init__(self, value: int):
         self.value = value
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon._attack_roll_override = self.value
 
 
@@ -68,7 +50,7 @@ class AddAttackRollBonus(WeaponImprovement):
         self.value = value
         self.reason = reason
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon.attack_roll_bonuses.append((self.value, f"{self.value} ({self.reason})"))
 
 
@@ -79,7 +61,7 @@ class SetDamageRollBonus(WeaponImprovement):
     def __init__(self, value: int):
         self.value = value
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon._damage_bonus_override = self.value
 
 
@@ -90,7 +72,7 @@ class AddDamageRollBonus(WeaponImprovement):
         self.value = value
         self.reason = reason
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon.damage_roll_bonuses.append((self.value, f"{self.value} ({self.reason})"))
 
 
@@ -100,7 +82,7 @@ class SetDamageDie(WeaponImprovement):
     def __init__(self, damage_roll: WeaponDamageRolls):
         self.damage_roll = damage_roll
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon.damage_roll = self.damage_roll
 
 
@@ -110,7 +92,7 @@ class SetDamageType(WeaponImprovement):
     def __init__(self, damage_type: WeaponDamageTypes):
         self.damage_type = damage_type
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon.damage_type = self.damage_type
 
 
@@ -120,7 +102,7 @@ class AddWeaponProperty(WeaponImprovement):
     def __init__(self, property: WeaponProperty):
         self.property = property
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         if self.property not in weapon.properties:
             weapon.properties.append(self.property)
 
@@ -138,7 +120,7 @@ class AddExtraDamage(WeaponImprovement):
             damage_roll=damage_roll, damage_type=damage_type, note=note
         )
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon.extra_damage.append(self.extra_damage)
 
 
@@ -151,5 +133,5 @@ class SetWeaponAbility(WeaponImprovement):
     def __init__(self, ability: Ability):
         self.ability = ability
 
-    def apply(self, weapon: "AbstractWeapon") -> None:
+    def apply(self, weapon: AbstractWeapon) -> None:
         weapon._ability_override = self.ability

@@ -1,11 +1,9 @@
 import pathlib
-from typing import Literal, Optional, TYPE_CHECKING
+from typing import Literal, Optional
 
+from Model.Character import Character
 from Utils import Html
 from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
-
-if TYPE_CHECKING:
-    from Model.Character import Character
 
 
 def _level_label(min_level: Optional[int], max_level: Optional[int]) -> str:

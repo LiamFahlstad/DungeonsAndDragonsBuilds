@@ -31,6 +31,12 @@ class OriginFeat(Feature):
     def get_spells(self) -> list[str]:
         return []
 
+    def grant_to(self, data: Character) -> None:
+        """Grant this feat and the spells it comes with."""
+        data.add_feature(self)
+        for spell in self.get_spells():
+            data.add_spell(spell, self.get_spell_casting_ability())
+
 
 class Skilled(OriginFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""

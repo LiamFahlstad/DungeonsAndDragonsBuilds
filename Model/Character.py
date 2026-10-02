@@ -8,16 +8,17 @@ item and fighting style in iter_stat_effects() to a write-only Effects view of
 it, seals it, then answers queries from it until the sources change again. A
 version counter decides when that is (see _get_ledger).
 
-The Model package imports nothing from CharacterContent at runtime (features,
-items and fighting styles appear in annotations only), so CharacterContent
-can import it without a cycle.
+The Model package imports nothing from CharacterContent, not even for type
+hints: features, fighting styles, armor, weapons and items are named through
+the Protocols in Model/Sources.py, so CharacterContent can import the Model
+without a cycle.
 """
 
 from __future__ import annotations
 
 import copy
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Callable, Iterator, Optional
+from typing import Any, Callable, Iterator, Optional
 
 import attr
 
@@ -38,20 +39,11 @@ from Model.Languages import Languages
 from Model.SavingThrows import SavingThrows
 from Model.Senses import Senses
 from Model.Skills import Skills
+from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
 from Model.Speed import Speed
 from Model.Spellcasting import Spellcasting
 from Model.WeaponBonuses import WeaponBonuses
 from Model.WornArmor import WornArmor
-
-if TYPE_CHECKING:
-    from CharacterContent.Features.CharacterFeats.OriginFeats import OriginFeat
-    from CharacterContent.Features.CombatFeatures.FightingStyles import (
-        FightingStyle,
-    )
-    from CharacterContent.Features.Core.BaseFeatures import Feature
-    from CharacterContent.Items.Armor import AbstractArmor
-    from CharacterContent.Items.Items import Item
-    from CharacterContent.Items.Weapons import AbstractWeapon
 
 MAX_ATTUNED_ITEMS = 3
 
@@ -67,7 +59,7 @@ def note_feature_extended() -> None:
     _feature_extensions += 1
 
 
-def _in_given_order(effects: list[Any]) -> list[Any]:
+def _in_given_order(effects: list[Effect]) -> list[Effect]:
     return effects
 
 
@@ -97,15 +89,15 @@ class Character:
 
     # Every feature in the order it was granted. The order only decides how
     # the sheet lists them: no stat depends on it (see _get_ledger).
-    features: list[Feature] = attr.Factory(list)
+    features: list[GrantedFeature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
     # Spell slots set outright rather than worked out from caster levels.
     fixed_spell_slots: dict[int, int] = attr.Factory(dict)
 
-    weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
-    fighting_styles: list[FightingStyle] = attr.Factory(list)
+    weapon_masteries: list[Gear] = attr.Factory(list)
+    fighting_styles: list[Effect] = attr.Factory(list)
     # Armor, weapons and items, grouped into labeled entries (Starting
     # Equipment, then adventuring gear added later), plus starting and
     # current gold - see Model/Inventory.py. CharacterBuilder.build()
@@ -116,7 +108,7 @@ class Character:
     experience_points: int = 0
     # Effects granted on their own rather than by a feature or gear: a test
     # or tool recording one improvement on a bare character (add_effect).
-    extra_effects: list[Any] = attr.Factory(list)
+    extra_effects: list[Effect] = attr.Factory(list)
 
     # Goes up on every change to the sources above (every add_*/set_* call,
     # and any field assignment - see _count_change). Together with the
@@ -130,7 +122,7 @@ class Character:
     # The order iter_stat_effects() applies in: as listed, unless a test
     # reorders it to prove the order doesn't matter (tests/
     # test_feature_apply_order.py, tests/test_order_invariance.py).
-    _apply_order: Callable[[list[Any]], list[Any]] = attr.ib(
+    _apply_order: Callable[[list[Effect]], list[Effect]] = attr.ib(
         default=_in_given_order, init=False, eq=False, repr=False
     )
     # Class-relative level currently being applied by
@@ -139,7 +131,7 @@ class Character:
     # to 1, matching the convention _feature_level uses for features whose
     # origin can't be parsed - this covers spells granted outside the
     # per-level class flow (species spells, origin feat spells via
-    # add_origin_feat, etc).
+    # grant_origin_feat, etc).
     _current_grant_level: int = attr.ib(default=1, init=False, eq=False, repr=False)
     # Index into spells where the duplicate check starts - see
     # separate_spell_source.
@@ -194,19 +186,19 @@ class Character:
         return self.class_levels.character_level
 
     @property
-    def armors(self) -> list[AbstractArmor]:
+    def armors(self) -> list[ArmorGear]:
         return self.inventory.armors
 
     @property
-    def weapons(self) -> list[AbstractWeapon]:
+    def weapons(self) -> list[Gear]:
         return self.inventory.weapons
 
     @property
-    def items(self) -> list[tuple[Item, int]]:
+    def items(self) -> list[tuple[Gear, int]]:
         """(item, quantity), with same-type stacks merged."""
         return self.inventory.items
 
-    def add_feature(self, feature: Feature):
+    def add_feature(self, feature: GrantedFeature):
         self._changed()
         self.features.append(feature)
 
@@ -214,21 +206,16 @@ class Character:
         """Remove every feature for which `should_remove(feature)` is true."""
         self.features = [f for f in self.features if not should_remove(f)]
 
-    def iter_features_with_extensions(self) -> Iterator[Feature]:
+    def iter_features_with_extensions(self) -> Iterator[GrantedFeature]:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
 
-        def walk(features: list[Feature]) -> Iterator[Feature]:
+        def walk(features: list[GrantedFeature]) -> Iterator[GrantedFeature]:
             for feature in features:
                 yield feature
                 yield from walk(feature.extensions)
 
         return walk(self.features)
-
-    def add_origin_feat(self, origin_feat: OriginFeat):
-        self.add_feature(origin_feat)
-        for spell in origin_feat.get_spells():
-            self.add_spell(spell, origin_feat.get_spell_casting_ability())
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
@@ -254,21 +241,21 @@ class Character:
         right before invoking each per-level add_features method."""
         self._current_grant_level = level
 
-    def add_armor(self, armor: AbstractArmor):
+    def add_armor(self, armor: ArmorGear):
         """Add armor outside starting equipment and adventuring gear (see
         Inventory.add_armor)."""
         self.inventory.add_armor(armor)
 
-    def add_weapon(self, weapon: AbstractWeapon):
+    def add_weapon(self, weapon: Gear):
         # Proficiency isn't decided here: the weapon works it out on read
         # against every proficiency (AbstractWeapon.is_proficient).
         self.inventory.add_weapon(weapon)
 
-    def add_weapon_mastery(self, weapon: AbstractWeapon):
+    def add_weapon_mastery(self, weapon: Gear):
         self._changed()
         self.weapon_masteries.append(weapon)
 
-    def add_fighting_style(self, fighting_style: FightingStyle):
+    def add_fighting_style(self, fighting_style: Effect):
         self._changed()
         self.fighting_styles.append(fighting_style)
 
@@ -366,10 +353,10 @@ class Character:
         self._changed()
         self.invocations.append(invocation)
 
-    def add_item(self, item: Item, quantity: int = 1):
+    def add_item(self, item: Gear, quantity: int = 1):
         self.inventory.add_item(item, quantity)
 
-    def add_effect(self, effect: Any) -> None:
+    def add_effect(self, effect: Effect) -> None:
         """Grant an effect on its own (anything with apply(effects)), for a
         test or tool recording one improvement on a bare character."""
         self._changed()
@@ -388,10 +375,13 @@ class Character:
 
     # ── Evaluation ───────────────────────────────────────────────────────────
 
-    def iter_stat_effects(self, features: Optional[list[Feature]] = None) -> list[Any]:
+    def iter_stat_effects(
+        self, features: Optional[list[GrantedFeature]] = None
+    ) -> list[Effect]:
         """Everything that records effects: features and their extensions,
-        armor, weapons, items and fighting styles with a computed effect
-        (Defense, Archery, Dueling, ...). Each has apply(character);
+        armor, weapons, items, fighting styles (only those with a computed
+        effect - Defense, Archery, Dueling, ... - record anything) and extra
+        effects. Each has apply(effects);
         the order is irrelevant. (Proficiencies come from features too - e.g.
         ClassProficiencies.) Weapons are never changed: bonuses the wielder
         brings to them are recorded in weapon_bonuses."""
@@ -402,9 +392,7 @@ class Character:
             *self.armors,
             *self.weapons,
             *(item for item, _quantity in self.items),
-            # Only fighting styles with a computed effect (FightStyleModifier)
-            # have apply(); the rest are descriptions.
-            *(style for style in self.fighting_styles if hasattr(style, "apply")),
+            *self.fighting_styles,
             *self.extra_effects,
         ]
 

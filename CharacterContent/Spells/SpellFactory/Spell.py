@@ -1,11 +1,10 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Optional, TextIO
+from typing import Optional
 
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from .Enums import CastingTimeType, School
-from .Writer import write_spell_to_file
 
 
 class Spell(ABC):
@@ -248,19 +247,6 @@ class Spell(ABC):
         if self.target is not None:
             result["target"] = self.target.value
         return result
-
-    def write_to_file(
-        self,
-        file: TextIO,
-        show_preparation_checkbox: bool = False,
-        show_classes: bool = False,
-    ):
-        write_spell_to_file(
-            self,
-            file,
-            show_preparation_checkbox=show_preparation_checkbox,
-            show_classes=show_classes,
-        )
 
     def __repr__(self):
         return f"<Spell {self.name!r}, level {self.level}>"

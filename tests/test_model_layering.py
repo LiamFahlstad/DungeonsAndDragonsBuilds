@@ -15,20 +15,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 SKIPPED_DIRS = {".claude", ".git", ".venv", "venv", "Output", "SourceTexts"}
 
-# Removed as Step 4 of the plan cleans them.
-TYPE_CHECKING_ALLOWLIST = {
-    "CharacterContent/Items/Weapons/Improvements.py",
-    "CharacterContent/Spells/SpellFactory/Writer.py",
-    "Model/Character.py",
-    "Model/Inventory.py",
-    "Utils/BuildGroupSheetWriter.py",
-}
+TYPE_CHECKING_ALLOWLIST: set[str] = set()
 
-# Removed as Step 4 of the plan cleans them.
-MODEL_IMPORT_ALLOWLIST = {
-    "Model/Character.py",
-    "Model/Inventory.py",
-}
+MODEL_IMPORT_ALLOWLIST: set[str] = set()
 
 FORBIDDEN_IN_MODEL = {"CharacterContent", "Builds", "Utils"}
 
