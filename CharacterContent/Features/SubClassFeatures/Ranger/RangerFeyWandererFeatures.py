@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import SkillBonus
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 
 
@@ -73,7 +74,7 @@ class OtherworldlyGlamour(Feature):
 
     @staticmethod
     def _charisma_check_bonus(skill: Skill):
-        def bonus(cs: Character) -> int:
+        def bonus(cs: StatView) -> int:
             if cs.get_skill_ability(skill) != Ability.CHARISMA:
                 return 0
             return max(1, cs.get_wisdom_modifier())

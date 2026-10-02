@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.Improvements import (
     SavingThrowBonus,
 )
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 
 
@@ -71,7 +72,7 @@ class HungeringMight(Feature):
         )
 
     def apply(self, effects: Effects):
-        def bonus(cs: Character) -> int:
+        def bonus(cs: StatView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(effects)

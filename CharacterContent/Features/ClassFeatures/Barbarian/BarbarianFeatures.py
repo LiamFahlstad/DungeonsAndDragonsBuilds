@@ -279,11 +279,7 @@ class FastMovementBonus(Feature):
         # "...while you aren't wearing Heavy armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
-            lambda cs: (
-                0
-                if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY
-                else 10
-            )
+            lambda cs: (0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10)
         ).apply(effects)
 
 

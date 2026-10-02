@@ -172,7 +172,9 @@ Rules of thumb:
   - The stats goldens must not move.
   - If sheet hashes move, the only acceptable cause is canonical ordering of source lists. In that case regenerate them with `UPDATE_SNAPSHOTS=1`, `diff -r` a dump against the baseline dump, confirm that only order changed, and say so in the commit message.
 
-### Step 3: `StatView` and `Formula` break the Model cycle *(design-critical, small surface)*
+### Step 3: `StatView` and `Formula` break the Model cycle *(design-critical, small surface)* — done
+
+- **Result:** the members were measured rather than guessed. A recording proxy on every formula evaluation, run over all builds and the full test suite, showed formulas read `character_level`, `get_class_level`, `get_proficiency_bonus`, the ability modifiers, `get_skill_ability`, `is_wearing_armor`, and two whole parts (`skills`, `worn_armor`). The parts were replaced with answers: `is_proficient_in_skill` already existed, and the new `Character.worn_armor_type` and `Character.is_wielding_shield` were added. That meant changing six formula sites in content. `get_ability_score`, `is_wearing_untrained_armor` and `has_shield_training` are *not* in `StatView`, because no formula reads them. `Improvements.Value` is `int | Formula`, and the formula functions in content are typed `StatView`. `tests/test_contracts.py` calls every member on a real `Character`, checks that `Effects` has none of them, and checks that no member returns a part.
 
 - **Goal:** parts no longer know `Character` exists.
 - **Files:** new `Model/Contracts.py`; `Bonuses.py`, `ArmorClass.py`, `HitPoints.py`, `Initiative.py`, `SavingThrows.py`, `Skills.py`, `Speed.py`.
@@ -221,7 +223,7 @@ Rules of thumb:
     - skill and save modifiers go to `Skills` and `SavingThrows`;
     - skill ability choice and roll-condition sources go to `Skills`;
     - untrained armor, shield training and `warnings` go to methods on the `Ledger` (`is_wearing_untrained_armor()`, `has_shield_training()`, `armor_warnings()`), because they combine two parts, `WornArmor` and `EquipmentTraining`, and the `Ledger` owns both. They need no view.
-  - `StatView` exposes these as answers (`is_wearing_untrained_armor`, `has_shield_training`, already listed in Step 3), never as `worn_armor`/`equipment_training` parts. Step 7 deletes those flat properties from `Character`, so a `StatView` that needed them would break there.
+  - `StatView` exposes these as answers (add `is_wearing_untrained_armor` and `has_shield_training` if a resolver needs them; Step 3 left them out because no formula reads them), never as `worn_armor`/`equipment_training` parts. Step 7 deletes those flat properties from `Character`, so a `StatView` that needed them would break there.
 - **Callers:** none. The public `get_*`/`calculate_*` names stay.
 - **Tests:** each part's resolvers get unit tests against a tiny fake `StatView`, with no builder and no `Character`. That these tests are possible is the proof the design is clean.
 - **Verify:** A, B, C, D.

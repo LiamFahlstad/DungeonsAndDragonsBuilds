@@ -22,6 +22,7 @@ from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 from Utils import StringUtils
 
@@ -88,7 +89,7 @@ class PrimalOrder(Feature):
         if self.order != PrimalOrderType.MAGICIAN:
             return
 
-        def bonus(cs: Character) -> int:
+        def bonus(cs: StatView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)

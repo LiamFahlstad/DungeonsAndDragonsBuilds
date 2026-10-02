@@ -35,7 +35,7 @@ every build in shuffled orders and requires the same character.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Callable, Optional
+from typing import Optional
 
 from Core.Definitions import (
     Ability,
@@ -48,13 +48,13 @@ from Core.Definitions import (
     Skill,
 )
 from Model.ArmorClass import ArmorClassFormula
-from Model.Character import Character
+from Model.Contracts import Formula, StatView
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
 
-# A flat bonus, or a formula evaluated against the finished Character at read
+# A flat bonus, or a formula evaluated against the finished character at read
 # time (see the ordering contract above).
-Value = int | Callable[[Character], int]
+Value = int | Formula
 
 
 class CharacterImprovement(ABC):
@@ -501,9 +501,9 @@ class JackOfAllTradesBonus(CharacterImprovement):
             )
 
     @staticmethod
-    def _bonus_for(skill: Skill) -> Callable[[Character], int]:
-        def bonus(character: Character) -> int:
-            if character.skills.is_proficient(skill):
+    def _bonus_for(skill: Skill) -> Formula:
+        def bonus(character: StatView) -> int:
+            if character.is_proficient_in_skill(skill):
                 return 0
             return character.get_proficiency_bonus() // 2
 

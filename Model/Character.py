@@ -586,6 +586,15 @@ class Character:
         return self.worn_armor.is_wearing_armor
 
     @property
+    def worn_armor_type(self) -> Optional[Definitions.ArmorType]:
+        """The worn body armor's type (None without body armor)."""
+        return self.worn_armor.body_armor_type
+
+    @property
+    def is_wielding_shield(self) -> bool:
+        return self.worn_armor.shield_wielded
+
+    @property
     def spell_slots(self) -> Optional[dict[int, int]]:
         return self.spellcasting.spell_slots(self.class_levels)
 

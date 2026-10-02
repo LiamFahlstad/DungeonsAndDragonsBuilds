@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
-
 from Core.Definitions import Ability
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
-
-if TYPE_CHECKING:
-    from Model.Character import Character
 
 
 class SavingThrows(Recorder):
@@ -74,9 +70,9 @@ class SavingThrows(Recorder):
     def add_derived_bonus(self, ability: Ability, bonus: DerivedBonus) -> None:
         self._bonuses_for(ability).add_formula(bonus)
 
-    def get_total_bonus(self, ability: Ability, character: "Character") -> int:
+    def get_total_bonus(self, ability: Ability, view: StatView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
-        `character` (not the ability modifier or proficiency bonus - see
+        `view` (not the ability modifier or proficiency bonus - see
         Character.get_saving_throw_modifier)."""
         bonuses = self._bonuses.get(ability)
-        return bonuses.total(character) if bonuses is not None else 0
+        return bonuses.total(view) if bonuses is not None else 0

@@ -1,11 +1,9 @@
-from typing import TYPE_CHECKING, Iterable
+from typing import Iterable
 
 from Core.Definitions import DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
-
-if TYPE_CHECKING:
-    from Model.Character import Character
 
 
 class Initiative(Recorder):
@@ -39,11 +37,11 @@ class Initiative(Recorder):
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 
-    def total(self, proficiency_bonus: int, character: "Character") -> int:
+    def total(self, proficiency_bonus: int, view: StatView) -> int:
         """The bonus total (not the ability modifier): the full proficiency
         bonus if proficient, plus every flat and formula-valued bonus."""
         proficiency = proficiency_bonus if self.proficiency else 0
-        return proficiency + self.bonuses.total(character)
+        return proficiency + self.bonuses.total(view)
 
     def roll_condition(
         self, extra: Iterable[DiceRollCondition] = ()

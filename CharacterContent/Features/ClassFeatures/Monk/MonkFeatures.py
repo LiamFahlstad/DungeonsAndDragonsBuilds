@@ -16,6 +16,7 @@ from CharacterContent.Features.Core.Improvements import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import Ability
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 from Utils import StringUtils
 
@@ -234,8 +235,8 @@ class UnarmoredMovement(Feature):
     def apply(self, effects: Effects):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
-        def bonus(cs: Character) -> int:
-            if cs.is_wearing_armor or cs.worn_armor.shield_wielded:
+        def bonus(cs: StatView) -> int:
+            if cs.is_wearing_armor or cs.is_wielding_shield:
                 return 0
             monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
             return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)

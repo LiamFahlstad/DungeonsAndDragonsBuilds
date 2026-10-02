@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
-
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Contracts import StatView
 from Model.ClassLevels import ClassLevels
 from Model.Recorder import Recorder, records
-
-if TYPE_CHECKING:
-    from Model.Character import Character
 
 
 class HitPoints(Recorder):
@@ -30,7 +26,7 @@ class HitPoints(Recorder):
         self,
         class_levels: ClassLevels,
         constitution_modifier: int,
-        character: "Character",
+        view: StatView,
     ) -> int:
         # Guaranteed set by the time hit points are calculated - see
         # Character.base_class.
@@ -45,4 +41,4 @@ class HitPoints(Recorder):
             hit_points += levels_to_add * (
                 character_class.average_hit_die + constitution_modifier
             )
-        return hit_points + self.bonuses.total(character)
+        return hit_points + self.bonuses.total(view)

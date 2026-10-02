@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 from Utils import StringUtils
 
@@ -214,7 +215,7 @@ class AuraOfProtection(Feature):
         )
 
     def apply(self, effects: Effects):
-        def bonus(cs: Character) -> int:
+        def bonus(cs: StatView) -> int:
             return max(1, cs.get_charisma_modifier())
 
         SavingThrowBonus(list(Ability), bonus).apply(effects)

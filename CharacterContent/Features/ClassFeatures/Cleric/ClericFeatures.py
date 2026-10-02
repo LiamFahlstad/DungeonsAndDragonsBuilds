@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 from Core.Definitions import CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Character import Character
+from Model.Contracts import StatView
 from Model.Effects import Effects
 from Utils import StringUtils
 
@@ -68,7 +69,7 @@ class DivineOrderThaumaturge(Feature):
         self.extra_cantrip = extra_cantrip
 
     def apply(self, effects: Effects):
-        def bonus(cs: Character) -> int:
+        def bonus(cs: StatView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)

@@ -15,19 +15,12 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 SKIPPED_DIRS = {".claude", ".git", ".venv", "venv", "Output", "SourceTexts"}
 
-# Removed as Steps 3 and 4 of the plan clean them.
+# Removed as Step 4 of the plan cleans them.
 TYPE_CHECKING_ALLOWLIST = {
     "CharacterContent/Items/Weapons/Improvements.py",
     "CharacterContent/Spells/SpellFactory/Writer.py",
-    "Model/ArmorClass.py",
-    "Model/Bonuses.py",
     "Model/Character.py",
-    "Model/HitPoints.py",
-    "Model/Initiative.py",
     "Model/Inventory.py",
-    "Model/SavingThrows.py",
-    "Model/Skills.py",
-    "Model/Speed.py",
     "Utils/BuildGroupSheetWriter.py",
 }
 

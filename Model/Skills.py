@@ -1,11 +1,9 @@
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
 from Model.Bonuses import Bonuses, DerivedBonus
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
-
-if TYPE_CHECKING:
-    from Model.Character import Character
 
 
 class Skills(Recorder):
@@ -49,18 +47,18 @@ class Skills(Recorder):
     ) -> None:
         self._bonuses_for(skill).add_formula(bonus, source)
 
-    def get_total_bonus(self, skill: Skill, character: "Character") -> int:
+    def get_total_bonus(self, skill: Skill, view: StatView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
-        `character` (not the ability modifier or proficiency bonus - see
+        `view` (not the ability modifier or proficiency bonus - see
         Character.get_skill_modifier)."""
         bonuses = self._bonuses.get(skill)
-        return bonuses.total(character) if bonuses is not None else 0
+        return bonuses.total(view) if bonuses is not None else 0
 
     def get_all_bonus_sources(
-        self, skill: Skill, character: "Character"
+        self, skill: Skill, view: StatView
     ) -> list[tuple[int, str]]:
         bonuses = self._bonuses.get(skill)
-        return bonuses.sources(character) if bonuses is not None else []
+        return bonuses.sources(view) if bonuses is not None else []
 
     @records
     def add_skill_expertise(self, skill: Skill):

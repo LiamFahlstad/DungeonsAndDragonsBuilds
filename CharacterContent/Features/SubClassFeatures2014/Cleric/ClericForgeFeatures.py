@@ -125,7 +125,7 @@ class SoulOfTheForge(Feature):
         self._resistance.apply(effects)
         # "While wearing heavy armor, you gain a +1 bonus to AC."
         ArmorClassBonus(
-            lambda cs: 1 if cs.worn_armor.body_armor_type == ArmorType.HEAVY else 0
+            lambda cs: 1 if cs.worn_armor_type == ArmorType.HEAVY else 0
         ).apply(effects)
 
     def get_description(self, character: Character) -> str:
