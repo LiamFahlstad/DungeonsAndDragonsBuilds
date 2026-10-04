@@ -40,8 +40,8 @@ def get_starter_class_builder():
             dexterity=14,
             constitution=15,
             intelligence=10,
-            wisdom=15,
-            charisma=8,
+            wisdom=14,
+            charisma=10,
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
