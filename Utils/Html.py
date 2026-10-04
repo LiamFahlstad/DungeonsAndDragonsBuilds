@@ -438,6 +438,77 @@ def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
     file.write(f"<span class='slot-reset-label'>{reset_label}</span>\n")
 
 
+SLOT_GAINED_NOTE = "Number under each slot: the character level it's gained at"
+
+
+def _slot_boxes_with_levels(gained_at: list[int]) -> str:
+    """One slot box per entry of `gained_at`, each with the character level
+    it's gained at under it."""
+    boxes = "".join(
+        f"<span class='slot-gained'>"
+        f"<span class='slot-box'></span>"
+        f"<span class='slot-gained-level'>{level}</span></span>"
+        for level in gained_at
+    )
+    return f"<div class='slot-box-group'>{boxes}</div>"
+
+
+def write_slot_progression_table(
+    gained_at_by_spell_level: dict[int, list[int]],
+    file: TextIO,
+    reset_label: str,
+):
+    """Like write_slot_table, but with every slot the character gains up to
+    level 20, so one printed sheet serves them as they level up."""
+    file.write("<div class='slot-grid'>\n")
+    for spell_level, gained_at in gained_at_by_spell_level.items():
+        file.write("  <div class='slot-level'>\n")
+        file.write(f"    <div class='slot-level-label'>Level {spell_level}</div>\n")
+        file.write(f"    {_slot_boxes_with_levels(gained_at)}\n")
+        file.write("  </div>\n")
+    file.write("</div>\n")
+    file.write(
+        f"<span class='slot-reset-label'>{reset_label} · {SLOT_GAINED_NOTE}</span>\n"
+    )
+
+
+def write_pact_slot_progression(
+    gained_at: list[int],
+    slot_levels: list[tuple[int, int]],
+    current_level: int,
+    file: TextIO,
+    reset_label: str,
+):
+    """Pact Magic counterpart of write_slot_progression_table. Every Pact
+    Magic slot shares one slot level, which rises with character level, so
+    the boxes come as one row and the slot level as a line under them, e.g.
+    "Slot Level 1 (character levels 1-2) · 2 (3-4) · ...", the current one
+    in bold. `slot_levels` is (character level, slot level) at each rise."""
+    file.write("<div class='slot-grid'>\n")
+    file.write("  <div class='slot-level'>\n")
+    file.write("    <div class='slot-level-label'>Pact Slots</div>\n")
+    file.write(f"    {_slot_boxes_with_levels(gained_at)}\n")
+    file.write("  </div>\n")
+    file.write("</div>\n")
+
+    ranges = []
+    for i, (from_level, slot_level) in enumerate(slot_levels):
+        to_level = slot_levels[i + 1][0] - 1 if i + 1 < len(slot_levels) else 20
+        span = f"{from_level}" if from_level == to_level else f"{from_level}–{to_level}"
+        text = f"{slot_level} (character levels {span})" if i == 0 else f"{slot_level} ({span})"
+        if from_level <= current_level <= to_level:
+            text = f"<strong>{text}</strong>"
+        ranges.append(text)
+    separator = "<span class='gsep'>·</span>"
+    file.write(
+        f"<div class='pact-slot-levels'><span class='glabel'>Slot Level</span> "
+        f"{separator.join(ranges)}</div>\n"
+    )
+    file.write(
+        f"<span class='slot-reset-label'>{reset_label} · {SLOT_GAINED_NOTE}</span>\n"
+    )
+
+
 def render_style_block(*css_fragments: str) -> str:
     """Compose CSS fragments into a <style> block with proper formatting."""
     # Simply concatenate all fragments - they should already have proper internal formatting
@@ -846,6 +917,27 @@ BASE_CHARACTER_SHEET_CSS = """
             color: #666;
             margin-top: 0.1em;
             margin-bottom: 0.4em;
+        }
+
+        /* A slot box with the character level it's gained at under it */
+        .slot-gained {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.12em;
+        }
+
+        .slot-gained-level {
+            font-size: 0.62rem;
+            line-height: 1;
+            color: var(--muted-color);
+        }
+
+        /* Pact Magic slot level by character level, under the slot boxes */
+        .pact-slot-levels {
+            font-size: 0.82rem;
+            color: var(--muted-color);
+            margin: 0.1rem 0 0.2rem 0;
         }
 
         /* Item and tool proficiency tables */

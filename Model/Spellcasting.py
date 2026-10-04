@@ -1,7 +1,12 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass
-from Core.SpellcastingRules import CasterType, calculate_spell_slots
+from Core.SpellcastingRules import (
+    CasterType,
+    SlotProgression,
+    calculate_slot_progression,
+    calculate_spell_slots,
+)
 from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
 
@@ -47,6 +52,14 @@ class Spellcasting(Recorder):
     def pact_magic_slots(self, view: StatView) -> dict[int, int]:
         levels = view.class_levels.level_per_class
         return calculate_spell_slots(self._casters, levels)[1]
+
+    def slot_progression(
+        self, class_by_character_level: list[CharacterClass]
+    ) -> SlotProgression:
+        """When each slot is gained, as character levels, for a character
+        taking these classes level by level (see
+        Core.SpellcastingRules.calculate_slot_progression)."""
+        return calculate_slot_progression(self._casters, class_by_character_level)
 
     def difficulty_class(self, ability: Ability, view: StatView) -> int:
         """Spell save DC when casting with `ability`."""

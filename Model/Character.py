@@ -23,6 +23,7 @@ import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
+from Core.SpellcastingRules import SlotProgression
 from Model.AbilityScores import AbilityScores, ability_modifier
 from Model.ClassLevels import ClassLevels
 from Model.Effects import Effects, Ledger
@@ -506,6 +507,20 @@ class Character:
     @property
     def pact_magic_slots(self) -> dict[int, int]:
         return self.ledger.spellcasting.pact_magic_slots(self)
+
+    def get_slot_progression(self, max_level: int = 20) -> Optional[SlotProgression]:
+        """When each of this character's slots is gained, up to character
+        level `max_level`: the levels taken so far follow the classes
+        actually taken, and later levels carry on in the most recently taken
+        class. None when the class taken at some level isn't recorded."""
+        taken = [
+            self.class_by_character_level.get(level)
+            for level in range(1, self.character_level + 1)
+        ]
+        if not taken or None in taken:
+            return None
+        class_path = taken + [taken[-1]] * (max_level - len(taken))
+        return self.ledger.spellcasting.slot_progression(class_path)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:

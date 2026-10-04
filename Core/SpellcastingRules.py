@@ -6,6 +6,7 @@ block can work out slots on read from whichever casters have been registered
 """
 
 from enum import Enum
+from typing import NamedTuple
 
 import Core.Definitions as Definitions
 
@@ -161,3 +162,54 @@ def calculate_spell_slots(
     if effective_level < 1:
         return {}, pact_magic_slots
     return by_spell_level(_FULL_CASTER_SLOTS[effective_level - 1]), pact_magic_slots
+
+
+class SlotProgression(NamedTuple):
+    """When a character gains each of their slots, as character levels."""
+
+    # Spell level -> the character level each slot of that level is gained
+    # at, e.g. a full caster's {1: [1, 1, 2, 3], 2: [3, 3, 4], ...}.
+    spell_slots: dict[int, list[int]]
+    # The character level each Pact Magic slot is gained at, e.g. [1, 2, 11, 17].
+    pact_magic_slots: list[int]
+    # (character level, slot level) each time the Pact Magic slots' level
+    # rises, e.g. [(1, 1), (3, 2), (5, 3), (7, 4), (9, 5)].
+    pact_magic_slot_levels: list[tuple[int, int]]
+
+
+def calculate_slot_progression(
+    casters: dict[Definitions.CharacterClass, CasterType],
+    class_by_character_level: list[Definitions.CharacterClass],
+) -> SlotProgression:
+    """How the slots of a character with `casters` build up when they take
+    `class_by_character_level[0]` at character level 1, the next entry at
+    level 2, and so on."""
+    spell_slots: dict[int, list[int]] = {}
+    pact_magic_slots: list[int] = []
+    pact_magic_slot_levels: list[tuple[int, int]] = []
+    level_per_class: dict[Definitions.CharacterClass, int] = {}
+    for character_level, character_class in enumerate(class_by_character_level, 1):
+        level_per_class[character_class] = level_per_class.get(character_class, 0) + 1
+        # Only classes with at least one level yet - the slot tables are
+        # indexed by class level, which a 0 would wrap to the level-20 row.
+        active_casters = {
+            cls: caster_type
+            for cls, caster_type in casters.items()
+            if level_per_class.get(cls, 0) > 0
+        }
+        slots, pact_slots = calculate_spell_slots(active_casters, level_per_class)
+
+        for spell_level, count in slots.items():
+            gained = spell_slots.setdefault(spell_level, [])
+            gained += [character_level] * (count - len(gained))
+
+        pact_count = sum(pact_slots.values())
+        pact_magic_slots += [character_level] * (pact_count - len(pact_magic_slots))
+        if pact_slots:
+            pact_slot_level = max(pact_slots)
+            if not pact_magic_slot_levels or pact_magic_slot_levels[-1][1] != pact_slot_level:
+                pact_magic_slot_levels.append((character_level, pact_slot_level))
+
+    return SlotProgression(
+        dict(sorted(spell_slots.items())), pact_magic_slots, pact_magic_slot_levels
+    )

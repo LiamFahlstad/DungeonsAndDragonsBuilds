@@ -13,6 +13,7 @@ import pytest
 
 from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, SpellSlots
 from Core.Definitions import CharacterClass
+from Core.SpellcastingRules import calculate_slot_progression
 from Model.AbilityScores import AbilityScores
 from Model.Character import Character
 from Model.ClassLevels import ClassLevels
@@ -225,3 +226,84 @@ class TestMulticlass:
             [(CharacterClass.PALADIN, 1, HALF), (CharacterClass.RANGER, 1, HALF)]
         )
         assert character.spell_slots == as_slot_dict(PHB_FULL_CASTER[2])
+
+
+def gained_at(table: dict[int, list[int]]) -> dict[int, list[int]]:
+    """From a PHB slots-per-level table: spell level -> the character level
+    each slot of that level is gained at."""
+    result: dict[int, list[int]] = {}
+    for level in range(1, 21):
+        for spell_level, count in enumerate(table[level], start=1):
+            gained = result.setdefault(spell_level, [])
+            gained += [level] * (count - len(gained))
+    return result
+
+
+class TestSlotProgression:
+    def test_full_caster(self):
+        progression = calculate_slot_progression(
+            {CharacterClass.WIZARD: FULL}, [CharacterClass.WIZARD] * 20
+        )
+        assert progression.spell_slots == gained_at(PHB_FULL_CASTER)
+        # Spelled out from the PHB table, as the sheet prints it.
+        assert progression.spell_slots == {
+            1: [1, 1, 2, 3],
+            2: [3, 3, 4],
+            3: [5, 5, 6],
+            4: [7, 8, 9],
+            5: [9, 10, 18],
+            6: [11, 19],
+            7: [13, 20],
+            8: [15],
+            9: [17],
+        }
+        assert progression.pact_magic_slots == []
+
+    def test_half_caster(self):
+        progression = calculate_slot_progression(
+            {CharacterClass.PALADIN: HALF}, [CharacterClass.PALADIN] * 20
+        )
+        assert progression.spell_slots == gained_at(PHB_HALF_CASTER)
+
+    def test_third_caster(self):
+        progression = calculate_slot_progression(
+            {CharacterClass.FIGHTER: THIRD}, [CharacterClass.FIGHTER] * 20
+        )
+        assert progression.spell_slots == gained_at(PHB_THIRD_CASTER)
+
+    def test_warlock_pact_magic(self):
+        progression = calculate_slot_progression(
+            {CharacterClass.WARLOCK: WARLOCK}, [CharacterClass.WARLOCK] * 20
+        )
+        expected_gained = []
+        expected_slot_levels = []
+        for level, (count, slot_level) in PHB_PACT_MAGIC.items():
+            expected_gained += [level] * (count - len(expected_gained))
+            if not expected_slot_levels or expected_slot_levels[-1][1] != slot_level:
+                expected_slot_levels.append((level, slot_level))
+        assert progression.pact_magic_slots == expected_gained
+        assert progression.pact_magic_slot_levels == expected_slot_levels
+        assert progression.spell_slots == {}
+
+    def test_class_with_no_levels_yet_adds_no_slots(self):
+        """Wizard 1-3, then Warlock: Pact Magic starts at character level 4
+        (Warlock 1), and the Warlock levels add no shared slots."""
+        progression = calculate_slot_progression(
+            {CharacterClass.WIZARD: FULL, CharacterClass.WARLOCK: WARLOCK},
+            [CharacterClass.WIZARD] * 3 + [CharacterClass.WARLOCK] * 17,
+        )
+        assert progression.spell_slots == {1: [1, 1, 2, 3], 2: [3, 3]}
+        assert progression.pact_magic_slots == [4, 5, 14, 20]
+        assert progression.pact_magic_slot_levels[0] == (4, 1)
+
+    def test_character_carries_on_in_latest_class(self):
+        character = apply_casters([(CharacterClass.WIZARD, 3, FULL)])
+        for level in (1, 2, 3):
+            character.class_levels.record_class_level(level, CharacterClass.WIZARD)
+        progression = character.get_slot_progression()
+        assert progression is not None
+        assert progression.spell_slots == gained_at(PHB_FULL_CASTER)
+
+    def test_character_without_level_history_has_no_progression(self):
+        character = apply_casters([(CharacterClass.WIZARD, 3, FULL)])
+        assert character.get_slot_progression() is None

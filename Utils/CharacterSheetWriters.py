@@ -752,9 +752,20 @@ class HtmlCharacterSheetWriter:
         if not character.pact_magic_slots:
             return
         file.write(f"<{heading}>Pact Magic Slots</{heading}>\n")
-        Html.write_slot_table(
-            character.pact_magic_slots, file, "Regained on: Short Rest or Long Rest"
-        )
+        reset_label = "Regained on: Short Rest or Long Rest"
+        # Every slot up to level 20, each marked with the level it's gained
+        # at, so the sheet keeps working as the character levels up.
+        progression = character.get_slot_progression()
+        if progression is not None and progression.pact_magic_slots:
+            Html.write_pact_slot_progression(
+                progression.pact_magic_slots,
+                progression.pact_magic_slot_levels,
+                character.character_level,
+                file,
+                reset_label,
+            )
+        else:
+            Html.write_slot_table(character.pact_magic_slots, file, reset_label)
         file.write("<br class='section-gap'>\n")
 
     def _write_spell_slots(
@@ -766,9 +777,15 @@ class HtmlCharacterSheetWriter:
             return
 
         file.write(f"<{heading}>Spell Slots</{heading}>\n")
-        Html.write_slot_table(
-            character.get_spell_slots(), file, "Regained on: Long Rest"
-        )
+        reset_label = "Regained on: Long Rest"
+        # Every slot up to level 20, each marked with the level it's gained
+        # at, so the sheet keeps working as the character levels up. A fixed
+        # table of slots (e.g. a companion's) has no progression to show.
+        progression = character.get_slot_progression()
+        if progression is not None and progression.spell_slots:
+            Html.write_slot_progression_table(progression.spell_slots, file, reset_label)
+        else:
+            Html.write_slot_table(character.get_spell_slots(), file, reset_label)
         file.write("<br class='section-gap'>\n")
 
     def _write_spell_cards(
