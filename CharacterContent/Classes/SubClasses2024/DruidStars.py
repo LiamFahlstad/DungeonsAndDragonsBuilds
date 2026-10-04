@@ -22,8 +22,8 @@ class DruidStarsLevel3(ClassBuilder.SubclassLevel3):
     ) -> Character:
         data.add_feature(DruidStarsFeatures.StarMap())
         data.add_feature(DruidStarsFeatures.StarryForm())
-        data.add_spell(DruidLevel0Spells.GUIDANCE)
-        data.add_spell(EvocationLevel1Spells.GUIDING_BOLT)
+        data.add_spell(DruidLevel0Spells.GUIDANCE, source="Star Map")
+        data.add_spell(EvocationLevel1Spells.GUIDING_BOLT, source="Star Map")
         return data
 
 

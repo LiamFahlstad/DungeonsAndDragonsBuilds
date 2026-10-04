@@ -89,7 +89,7 @@ class DruidLandLevel3(ClassBuilder.SubclassLevel3):
         )
         data.add_feature(DruidLandFeatures.LandsAid())
         for spell in _LEVEL_3_CIRCLE_SPELLS[self.land_type]:
-            data.add_spell(spell)
+            data.add_spell(spell, source="Circle of the Land Spells table")
         return data
 
 
@@ -101,7 +101,10 @@ class DruidLandLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(_LEVEL_5_CIRCLE_SPELLS[self.land_type])
+        data.add_spell(
+            _LEVEL_5_CIRCLE_SPELLS[self.land_type],
+            source="Circle of the Land Spells table",
+        )
         return data
 
 
@@ -124,7 +127,10 @@ class DruidLandLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(_LEVEL_7_CIRCLE_SPELLS[self.land_type])
+        data.add_spell(
+            _LEVEL_7_CIRCLE_SPELLS[self.land_type],
+            source="Circle of the Land Spells table",
+        )
         return data
 
 
@@ -136,7 +142,10 @@ class DruidLandLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(_LEVEL_9_CIRCLE_SPELLS[self.land_type])
+        data.add_spell(
+            _LEVEL_9_CIRCLE_SPELLS[self.land_type],
+            source="Circle of the Land Spells table",
+        )
         return data
 
 

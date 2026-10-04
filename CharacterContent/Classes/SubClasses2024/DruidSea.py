@@ -31,10 +31,18 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
     ) -> Character:
         data.add_feature(DruidSeaFeatures.CircleOfTheSeaSpells())
         data.add_feature(DruidSeaFeatures.WrathOfTheSea())
-        data.add_spell(DruidLevel1Spells.FOG_CLOUD)
-        data.add_spell(DruidLevel2Spells.GUST_OF_WIND)
-        data.add_spell(ArtificerLevel0Spells.RAY_OF_FROST)
-        data.add_spell(DruidLevel1Spells.THUNDERWAVE)
+        data.add_spell(
+            DruidLevel1Spells.FOG_CLOUD, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            DruidLevel2Spells.GUST_OF_WIND, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            ArtificerLevel0Spells.RAY_OF_FROST, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            DruidLevel1Spells.THUNDERWAVE, source="Circle of the Sea Spells table"
+        )
         return data
 
 
@@ -45,8 +53,12 @@ class DruidSeaLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
-        data.add_spell(DruidLevel3Spells.WATER_BREATHING)
+        data.add_spell(
+            SorcererLevel3Spells.LIGHTNING_BOLT, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            DruidLevel3Spells.WATER_BREATHING, source="Circle of the Sea Spells table"
+        )
         return data
 
 
@@ -71,8 +83,12 @@ class DruidSeaLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(DruidLevel4Spells.CONTROL_WATER)
-        data.add_spell(DruidLevel4Spells.ICE_STORM)
+        data.add_spell(
+            DruidLevel4Spells.CONTROL_WATER, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            DruidLevel4Spells.ICE_STORM, source="Circle of the Sea Spells table"
+        )
         return data
 
 
@@ -83,8 +99,12 @@ class DruidSeaLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(DruidLevel5Spells.CONJURE_ELEMENTAL)
-        data.add_spell(BardLevel5Spells.HOLD_MONSTER)
+        data.add_spell(
+            DruidLevel5Spells.CONJURE_ELEMENTAL, source="Circle of the Sea Spells table"
+        )
+        data.add_spell(
+            BardLevel5Spells.HOLD_MONSTER, source="Circle of the Sea Spells table"
+        )
         return data
 
 
