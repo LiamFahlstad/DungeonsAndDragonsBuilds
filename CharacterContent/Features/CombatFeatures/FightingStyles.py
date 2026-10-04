@@ -38,7 +38,7 @@ class FightingStyle(ABC):
 class FightStyleModifier(FightingStyle):
     """A fighting style with a computed effect. Like any other effect, apply()
     only records facts on the stat block - weapon bonuses included, which go
-    to character.weapon_bonuses instead of into the weapons."""
+    to character.ledger.weapon_bonuses instead of into the weapons."""
 
     @abstractmethod
     def apply(self, effects: Effects):

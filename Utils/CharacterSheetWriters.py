@@ -260,42 +260,45 @@ class HtmlCharacterSheetWriter:
         languages = ", ".join(
             language.value
             for language in sorted(
-                character.languages.known, key=lambda lang: lang.value
+                character.ledger.languages.known, key=lambda lang: lang.value
             )
         )
         senses = ", ".join(
-            f"{sense.value} {character.senses.ranges[sense]} ft."
-            for sense in sorted(character.senses.ranges, key=lambda s: s.value)
+            f"{sense.value} {character.ledger.senses.ranges[sense]} ft."
+            for sense in sorted(character.ledger.senses.ranges, key=lambda s: s.value)
         )
 
         resistance_immunity_groups = []
-        if character.defenses.damage_resistances:
+        if character.ledger.defenses.damage_resistances:
             resistance_immunity_groups.append(
                 "Resistant: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.defenses.damage_resistances, key=lambda d: d.value
+                        character.ledger.defenses.damage_resistances,
+                        key=lambda d: d.value,
                     )
                 )
             )
-        if character.defenses.damage_immunities:
+        if character.ledger.defenses.damage_immunities:
             resistance_immunity_groups.append(
                 "Immune: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.defenses.damage_immunities, key=lambda d: d.value
+                        character.ledger.defenses.damage_immunities,
+                        key=lambda d: d.value,
                     )
                 )
             )
-        if character.defenses.condition_immunities:
+        if character.ledger.defenses.condition_immunities:
             resistance_immunity_groups.append(
                 "Condition Immune: "
                 + ", ".join(
                     condition.value
                     for condition in sorted(
-                        character.defenses.condition_immunities, key=lambda c: c.value
+                        character.ledger.defenses.condition_immunities,
+                        key=lambda c: c.value,
                     )
                 )
             )
@@ -1340,8 +1343,8 @@ class HtmlCharacterSheetWriter:
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
         armors = data.armors
-        armor_proficiencies = character.equipment_training.armor_training
-        weapon_proficiencies = character.equipment_training.weapon_proficiencies
+        armor_proficiencies = character.ledger.equipment_training.armor_training
+        weapon_proficiencies = character.ledger.equipment_training.weapon_proficiencies
         features = data.features
         weapons = data.weapons
         weapon_masteries = data.weapon_masteries
@@ -1350,7 +1353,7 @@ class HtmlCharacterSheetWriter:
         spells = data.spells
         equipment_entries = data.inventory.equipment_entries
         starting_equipment_entry = data.inventory.starting_equipment_entry
-        tool_proficiencies = character.equipment_training.tool_proficiencies
+        tool_proficiencies = character.ledger.equipment_training.tool_proficiencies
         # Identity, gold and size live on the sheet data, not the stat block -
         # see Model/ClassLevels.py.
         character_name = data.character_name

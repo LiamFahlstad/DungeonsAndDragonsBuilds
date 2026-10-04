@@ -124,7 +124,7 @@ hook is gone. The effect is a formula reading the armor state on read:
 ```python
 # Roving / Fast Movement
 SpeedBonus(
-    lambda cs: 0 if cs.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY else 10
+    lambda cs: 0 if cs.ledger.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY else 10
 ).apply(effects)
 
 # Defense fighting style, Soul of the Forge
@@ -140,7 +140,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 | "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
 | "a bonus equal to your *ability* modifier" / "half your proficiency bonus" / "+1 per Sorcerer level" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus`, `HitPointsBonus` |
-| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor.body_armor_type`, `cs.is_wearing_armor`, `cs.worn_armor.shield_wielded` |
+| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.ledger.worn_armor.body_armor_type`, `cs.is_wearing_armor`, `cs.ledger.worn_armor.shield_wielded` |
 | "Your AC equals 10 + DEX + WIS" | `MultiAbilityArmorClass(10, [DEX, WIS])`, plus `allows_shield=False` if a Shield disables it |
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
@@ -201,12 +201,12 @@ character grants it with `character.add_effect(feature)`, a real source like any
 No part holds a copy of a source. The player's scores before any increase are `base_abilities`,
 an immutable `AbilityScores` (change one by assigning `base_abilities.with_scores(...)`); the final
 scores are the `get_ability_score()` / `get_own_ability_score()` queries. Likewise
-`character.speed` is the `Speed` part (bonuses only), and the species' walking speed is
+`character.ledger.speed` is the `Speed` part (bonuses only), and the species' walking speed is
 `base_speed`.
-`character.initiative` and `.speed` are the parts themselves - the *int* versions are
+`character.ledger.initiative` and `.speed` are the parts themselves - the *int* versions are
 the `calculate_initiative()` / `calculate_speed()` methods, named after the existing
 `calculate_armor_class()` / `calculate_hit_points()` convention so the name doesn't collide with
-the part. `character.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
+the part. `character.ledger.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
 is the `Senses` part).
 
 ## Extensions

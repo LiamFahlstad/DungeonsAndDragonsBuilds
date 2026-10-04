@@ -73,14 +73,14 @@ def compute_stats(data: Character) -> dict:
         "pact": sorted(character.pact_magic_slots.items()),
         "resist": sorted(
             (str(damage_type), sorted(sources))
-            for damage_type, sources in character.defenses.damage_resistances.items()
+            for damage_type, sources in character.ledger.defenses.damage_resistances.items()
         ),
         "immune": sorted(
             (str(damage_type), sorted(sources))
-            for damage_type, sources in character.defenses.damage_immunities.items()
+            for damage_type, sources in character.ledger.defenses.damage_immunities.items()
         ),
         "senses": sorted(
-            (str(sense), rng) for sense, rng in character.senses.ranges.items()
+            (str(sense), rng) for sense, rng in character.ledger.senses.ranges.items()
         ),
         "weapons": [
             (

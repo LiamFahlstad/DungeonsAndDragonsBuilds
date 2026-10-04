@@ -145,7 +145,7 @@ class TestTough:
         # "You gain 2 additional Hit Points for each level you have."
         character = make_character(levels={CharacterClass.FIGHTER: level})
         character.add_effect(OriginFeats.Tough())
-        assert character.hit_points.bonuses.total(character) == expected_bonus
+        assert character.ledger.hit_points.bonuses.total(character) == expected_bonus
 
     def test_hit_point_bonus_uses_total_character_level_when_multiclassed(
         self, make_character
@@ -157,7 +157,7 @@ class TestTough:
             levels={CharacterClass.FIGHTER: 3, CharacterClass.WIZARD: 2}
         )
         character.add_effect(OriginFeats.Tough())
-        assert character.hit_points.bonuses.total(character) == 10
+        assert character.ledger.hit_points.bonuses.total(character) == 10
 
     def test_full_hit_points_level_1_fighter(self, make_character):
         # Fighter d10 hit die, CON 10 (+0): 10 + 0, then Tough's +2*1.

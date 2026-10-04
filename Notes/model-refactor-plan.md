@@ -254,7 +254,9 @@ Rules of thumb:
 - **Tests:** each part's resolvers get unit tests against a tiny fake `StatView`, with no builder and no `Character`. That these tests are possible is the proof the design is clean.
 - **Verify:** A, B, C, D.
 
-### Step 7: Access rule, `character.ledger.<part>` *(mechanical codemod)*
+### Step 7: Access rule, `character.ledger.<part>` *(mechanical codemod)* — done
+
+- **Result:** `Character.ledger` is the only way to reach a part, and the 17 flat part properties are gone. That's the plan's 16 plus `ability_increases` from Step 5. The codemod rewrote 86 reads, and only receivers known to be a `Character` were touched: `character`, `cs`, and `data.validate()`. Same-named attributes on other objects were left alone, such as `monster.skills`, `combatant.senses`, and `self.skills` on builders. The plan's verification grep was too broad as written, because it would also match those, so it was run with the non-`Character` receivers excluded. Only CSS class names remain. `Character`'s own 36 `self.<part>` reads go through `self.ledger`, and it no longer imports the part classes. Snapshots didn't move, the pages are byte-for-byte identical to the baseline, and `RunCharacterCreator.py`, `RunBuildGroups.py` and the Creator UI all run.
 
 - **Goal:** a part can't be confused with a source or with a final value.
 - **Changes:**

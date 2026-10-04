@@ -23,27 +23,11 @@ import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
-from Model.AbilityRequirements import AbilityRequirements
-from Model.AbilityIncreases import AbilityIncreases
 from Model.AbilityScores import AbilityScores, ability_modifier
-from Model.ArmorClass import ArmorClass
-from Model.CarryingCapacity import CarryingCapacity
 from Model.ClassLevels import ClassLevels
-from Model.Defenses import Defenses
 from Model.Effects import Effects, Ledger
-from Model.EquipmentTraining import EquipmentTraining
-from Model.HitPoints import HitPoints
-from Model.Initiative import Initiative
 from Model.Inventory import Inventory
-from Model.Languages import Languages
-from Model.SavingThrows import SavingThrows
-from Model.Senses import Senses
-from Model.Skills import Skills
 from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
-from Model.Speed import Speed
-from Model.Spellcasting import Spellcasting
-from Model.WeaponBonuses import WeaponBonuses
-from Model.WornArmor import WornArmor
 
 MAX_ATTUNED_ITEMS = 3
 
@@ -489,103 +473,43 @@ class Character:
         self._get_ledger().validate(self)
         return self
 
-    # ── The evaluated parts ──────────────────────────────────────────────────
-    # Each reads one part of the evaluated Ledger (Model/Effects.py).
+    # ── The evaluated record ─────────────────────────────────────────────────
 
     @property
-    def ability_increases(self) -> AbilityIncreases:
-        """Every increase recorded on top of base_abilities (the final scores
-        are get_ability_score())."""
-        return self._get_ledger().ability_increases
-
-    @property
-    def speed(self) -> Speed:
-        """Every bonus to walking speed (the int is calculate_speed())."""
-        return self._get_ledger().speed
-
-    @property
-    def spellcasting(self) -> Spellcasting:
-        return self._get_ledger().spellcasting
-
-    @property
-    def skills(self) -> Skills:
-        return self._get_ledger().skills
-
-    @property
-    def saving_throws(self) -> SavingThrows:
-        return self._get_ledger().saving_throws
-
-    @property
-    def carrying_capacity(self) -> CarryingCapacity:
-        return self._get_ledger().carrying_capacity
-
-    @property
-    def armor_class(self) -> ArmorClass:
-        return self._get_ledger().armor_class
-
-    @property
-    def worn_armor(self) -> WornArmor:
-        return self._get_ledger().worn_armor
-
-    @property
-    def hit_points(self) -> HitPoints:
-        return self._get_ledger().hit_points
-
-    @property
-    def equipment_training(self) -> EquipmentTraining:
-        return self._get_ledger().equipment_training
-
-    @property
-    def languages(self) -> Languages:
-        return self._get_ledger().languages
-
-    @property
-    def defenses(self) -> Defenses:
-        return self._get_ledger().defenses
-
-    @property
-    def senses(self) -> Senses:
-        return self._get_ledger().senses
-
-    @property
-    def ability_requirements(self) -> AbilityRequirements:
-        return self._get_ledger().ability_requirements
-
-    @property
-    def initiative(self) -> Initiative:
-        return self._get_ledger().initiative
-
-    @property
-    def weapon_bonuses(self) -> WeaponBonuses:
-        return self._get_ledger().weapon_bonuses
+    def ledger(self) -> Ledger:
+        """What every effect recorded, one part per concern (Model/Effects.py):
+        evaluated on demand and sealed, so it can be read but never written.
+        Final values are the queries below, which hand this character to the
+        parts' resolvers."""
+        return self._get_ledger()
 
     # ── Queries ──────────────────────────────────────────────────────────────
 
     @property
     def is_wearing_armor(self) -> bool:
         """Wearing Light, Medium or Heavy armor (a shield alone doesn't count)."""
-        return self.worn_armor.is_wearing_armor
+        return self.ledger.worn_armor.is_wearing_armor
 
     @property
     def worn_armor_type(self) -> Optional[Definitions.ArmorType]:
         """The worn body armor's type (None without body armor)."""
-        return self.worn_armor.body_armor_type
+        return self.ledger.worn_armor.body_armor_type
 
     @property
     def is_wielding_shield(self) -> bool:
-        return self.worn_armor.shield_wielded
+        return self.ledger.worn_armor.shield_wielded
 
     @property
     def spell_slots(self) -> Optional[dict[int, int]]:
-        return self.spellcasting.spell_slots(self)
+        return self.ledger.spellcasting.spell_slots(self)
 
     @property
     def pact_magic_slots(self) -> dict[int, int]:
-        return self.spellcasting.pact_magic_slots(self)
+        return self.ledger.spellcasting.pact_magic_slots(self)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
-        return self.initiative.roll_condition(self)
+        return self.ledger.initiative.roll_condition(self)
 
     # -- Armor training (2024 PHB) - see Ledger ---------------------------------
 
@@ -607,18 +531,18 @@ class Character:
         return self._get_ledger().armor_warnings()
 
     def calculate_initiative(self) -> int:
-        return self.initiative.total(self)
+        return self.ledger.initiative.total(self)
 
     def calculate_speed(self) -> int:
-        return self.speed.total(self)
+        return self.ledger.speed.total(self)
 
     def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
-        return self.carrying_capacity.sources(self)
+        return self.ledger.carrying_capacity.sources(self)
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return self.carrying_capacity.total(self)
+        return self.ledger.carrying_capacity.total(self)
 
     def _require_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:
@@ -683,51 +607,51 @@ class Character:
         return self.get_ability_modifier(Ability.CHARISMA)
 
     def is_proficient_in_skill(self, skill: Skill) -> bool:
-        return self.skills.is_proficient(skill)
+        return self.ledger.skills.is_proficient(skill)
 
     def has_expertise_in_skill(self, skill: Skill) -> bool:
-        return self.skills.has_expertise(skill)
+        return self.ledger.skills.has_expertise(skill)
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        return self.skills.ability(skill, self)
+        return self.ledger.skills.ability(skill, self)
 
     def get_skill_modifier(self, skill: Skill) -> int:
-        return self.skills.modifier(skill, self)
+        return self.ledger.skills.modifier(skill, self)
 
     def get_skill_bonus(self, skill: Skill) -> int:
-        return self.skills.get_total_bonus(skill, self)
+        return self.ledger.skills.get_total_bonus(skill, self)
 
     def get_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
-        return self.skills.get_all_bonus_sources(skill, self)
+        return self.ledger.skills.get_all_bonus_sources(skill, self)
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
-        return self.saving_throws.is_proficient(ability)
+        return self.ledger.saving_throws.is_proficient(ability)
 
     def has_advantage_in_saving_throw(self, ability: Ability) -> bool:
-        return self.saving_throws.is_advantaged(ability)
+        return self.ledger.saving_throws.is_advantaged(ability)
 
     def get_saving_throw_roll_condition(
         self, ability: Ability
     ) -> Definitions.DiceRollCondition:
-        return self.saving_throws.roll_condition(ability, self)
+        return self.ledger.saving_throws.roll_condition(ability, self)
 
     def get_skill_roll_condition(self, skill: Skill) -> Definitions.DiceRollCondition:
-        return self.skills.roll_condition(skill, self)
+        return self.ledger.skills.roll_condition(skill, self)
 
     def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        return self.skills.roll_condition_reasons(skill, self)
+        return self.ledger.skills.roll_condition_reasons(skill, self)
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
-        return self.saving_throws.modifier(ability, self)
+        return self.ledger.saving_throws.modifier(ability, self)
 
     def calculate_hit_points(self) -> int:
-        return self.hit_points.total(self)
+        return self.ledger.hit_points.total(self)
 
     def calculate_armor_class(self, ignore_shield: bool = False) -> int:
         """The best applicable AC formula plus every AC bonus. ignore_shield:
         the AC with the Shield set aside (its bonus gone, and formulas it
         disables - Monk's Unarmored Defense - available again)."""
-        return self.armor_class.total(self, ignore_shield)
+        return self.ledger.armor_class.total(self, ignore_shield)
 
     def get_spell_casting_ability(self) -> Ability:
         return self._require_spell_casting_ability()
@@ -738,7 +662,7 @@ class Character:
         )
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
-        return self.spellcasting.difficulty_class(ability, self)
+        return self.ledger.spellcasting.difficulty_class(ability, self)
 
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(
@@ -746,7 +670,7 @@ class Character:
         )
 
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
-        return self.spellcasting.attack_bonus(ability, self)
+        return self.ledger.spellcasting.attack_bonus(ability, self)
 
     def get_spell_slots(self) -> dict[int, int]:
         spell_slots = self.spell_slots
@@ -755,37 +679,37 @@ class Character:
         return spell_slots
 
     def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return self.defenses.is_resistant_to_damage(damage_type)
+        return self.ledger.defenses.is_resistant_to_damage(damage_type)
 
     def is_immune_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return self.defenses.is_immune_to_damage(damage_type)
+        return self.ledger.defenses.is_immune_to_damage(damage_type)
 
     def get_damage_resistance_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.defenses.get_damage_resistance_sources(damage_type)
+        return self.ledger.defenses.get_damage_resistance_sources(damage_type)
 
     def get_damage_immunity_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.defenses.get_damage_immunity_sources(damage_type)
+        return self.ledger.defenses.get_damage_immunity_sources(damage_type)
 
     def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:
-        return self.defenses.is_immune_to_condition(condition)
+        return self.ledger.defenses.is_immune_to_condition(condition)
 
     def get_condition_immunity_sources(
         self, condition: Definitions.Condition
     ) -> list[str]:
-        return self.defenses.get_condition_immunity_sources(condition)
+        return self.ledger.defenses.get_condition_immunity_sources(condition)
 
     def get_sense_range(self, sense: Definitions.Sense) -> int:
-        return self.senses.get_sense_range(sense)
+        return self.ledger.senses.get_sense_range(sense)
 
     def get_sense_sources(self, sense: Definitions.Sense) -> list[tuple[int, str]]:
-        return self.senses.get_sense_sources(sense)
+        return self.ledger.senses.get_sense_sources(sense)
 
     def knows_language(self, language: Definitions.Language) -> bool:
-        return self.languages.knows(language)
+        return self.ledger.languages.knows(language)
 
     def get_language_sources(self, language: Definitions.Language) -> list[str]:
-        return self.languages.sources(language)
+        return self.ledger.languages.sources(language)

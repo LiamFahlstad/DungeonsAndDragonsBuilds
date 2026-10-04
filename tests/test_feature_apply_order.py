@@ -222,11 +222,13 @@ def _stats(data):
         "save_proficiency": [cs.is_proficient_in_saving_throw(a) for a in Ability],
         "spell_slots": cs.spell_slots,
         "pact_magic_slots": cs.pact_magic_slots,
-        "resistances": sorted(map(str, cs.defenses.damage_resistances)),
-        "immunities": sorted(map(str, cs.defenses.damage_immunities)),
-        "condition_immunities": sorted(map(str, cs.defenses.condition_immunities)),
-        "senses": sorted((str(k), v) for k, v in cs.senses.ranges.items()),
-        "spell_save_dc_bonus": cs.spellcasting.spell_save_dc_bonus,
+        "resistances": sorted(map(str, cs.ledger.defenses.damage_resistances)),
+        "immunities": sorted(map(str, cs.ledger.defenses.damage_immunities)),
+        "condition_immunities": sorted(
+            map(str, cs.ledger.defenses.condition_immunities)
+        ),
+        "senses": sorted((str(k), v) for k, v in cs.ledger.senses.ranges.items()),
+        "spell_save_dc_bonus": cs.ledger.spellcasting.spell_save_dc_bonus,
         "weapons_proficient": [w.is_proficient(cs) for w in data.weapons],
         "weapon_attack_bonuses": [
             sorted(w.get_attack_roll_bonuses(cs)) for w in data.weapons
@@ -234,12 +236,12 @@ def _stats(data):
         "weapon_damage_bonuses": [
             sorted(w.get_damage_roll_bonuses(cs)) for w in data.weapons
         ],
-        "armor_training": sorted(map(str, cs.equipment_training.armor_training)),
+        "armor_training": sorted(map(str, cs.ledger.equipment_training.armor_training)),
         "weapon_proficiencies": sorted(
-            map(str, cs.equipment_training.weapon_proficiencies)
+            map(str, cs.ledger.equipment_training.weapon_proficiencies)
         ),
         "tool_proficiencies": sorted(
-            t.name for t in cs.equipment_training.tool_proficiencies
+            t.name for t in cs.ledger.equipment_training.tool_proficiencies
         ),
     }
 
@@ -604,7 +606,7 @@ class TestProficienciesResolveOnRead:
         assert longbow.is_proficient(character)
         assert (
             WeaponProficiency.MARTIAL
-            in character.equipment_training.weapon_proficiencies
+            in character.ledger.equipment_training.weapon_proficiencies
         )
 
     def test_class_proficiencies_reach_the_stat_block(self):
@@ -612,11 +614,11 @@ class TestProficienciesResolveOnRead:
         # subclass adds Melee Martial weapons without Two-Handed or Heavy.
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
         character = data.validate()
-        assert character.equipment_training.weapon_proficiencies == {
+        assert character.ledger.equipment_training.weapon_proficiencies == {
             WeaponProficiency.SIMPLE,
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         }
-        assert character.equipment_training.armor_training == set()
+        assert character.ledger.equipment_training.armor_training == set()
 
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_character):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
@@ -637,7 +639,9 @@ class TestProficienciesResolveOnRead:
             GrantToolProficiency([SmithsTools()]),  # same tool, second source
         ]
         for character in _in_every_order(make_character, effects):
-            assert character.equipment_training.armor_training == {ArmorType.HEAVY}
+            assert character.ledger.equipment_training.armor_training == {
+                ArmorType.HEAVY
+            }
             assert [
-                t.name for t in character.equipment_training.tool_proficiencies
+                t.name for t in character.ledger.equipment_training.tool_proficiencies
             ] == [SmithsTools().name]

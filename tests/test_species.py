@@ -524,12 +524,12 @@ class TestGnomishCunning:
     ):
         character = make_character()
         character.add_effect(GnomeFeatures.GnomishCunning())
-        assert character.saving_throws.is_advantaged(Ability.INTELLIGENCE)
-        assert character.saving_throws.is_advantaged(Ability.WISDOM)
-        assert character.saving_throws.is_advantaged(Ability.CHARISMA)
-        assert not character.saving_throws.is_advantaged(Ability.STRENGTH)
-        assert not character.saving_throws.is_advantaged(Ability.DEXTERITY)
-        assert not character.saving_throws.is_advantaged(Ability.CONSTITUTION)
+        assert character.ledger.saving_throws.is_advantaged(Ability.INTELLIGENCE)
+        assert character.ledger.saving_throws.is_advantaged(Ability.WISDOM)
+        assert character.ledger.saving_throws.is_advantaged(Ability.CHARISMA)
+        assert not character.ledger.saving_throws.is_advantaged(Ability.STRENGTH)
+        assert not character.ledger.saving_throws.is_advantaged(Ability.DEXTERITY)
+        assert not character.ledger.saving_throws.is_advantaged(Ability.CONSTITUTION)
 
     def test_forest_gnome_species_grants_gnomish_cunning(self):
         data = ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build()
@@ -607,7 +607,7 @@ class TestReborn:
         character = make_character()
         for feature in data.features:
             character.add_effect(feature)
-        assert character.skills.is_proficient(Skill.HISTORY)
+        assert character.ledger.skills.is_proficient(Skill.HISTORY)
 
     def test_reborn_grants_one_of_the_strange_endurance_resistances(
         self, make_character
@@ -629,7 +629,7 @@ class TestReborn:
         # The helper class itself is correct; only the builder's wiring is missing.
         character = make_character()
         character.add_effect(RebornFeatures.RebornKnowledgeSkill(Skill.ARCANA))
-        assert character.skills.is_proficient(Skill.ARCANA)
+        assert character.ledger.skills.is_proficient(Skill.ARCANA)
 
 
 # ── Dwarven Toughness: +1 max HP per character level ────────────────────────
@@ -644,7 +644,7 @@ class TestDwarvenToughness:
     ):
         character = make_character(levels={CharacterClass.FIGHTER: level})
         character.add_effect(DwarfFeatures.DwarvenToughness())
-        assert character.hit_points.bonuses.total(character) == expected_bonus
+        assert character.ledger.hit_points.bonuses.total(character) == expected_bonus
 
 
 # ── Granted proficiencies (choice-validated) ────────────────────────────────
@@ -654,12 +654,12 @@ class TestGrantedProficiencies:
     def test_human_skillful_grants_chosen_skill(self, make_character):
         character = make_character()
         character.add_effect(HumanFeatures.Skillful(Skill.STEALTH))
-        assert character.skills.is_proficient(Skill.STEALTH)
+        assert character.ledger.skills.is_proficient(Skill.STEALTH)
 
     def test_elf_keen_senses_restricted_to_pool(self, make_character):
         character = make_character()
         character.add_effect(ElfFeatures.KeenSenses(Skill.INSIGHT))
-        assert character.skills.is_proficient(Skill.INSIGHT)
+        assert character.ledger.skills.is_proficient(Skill.INSIGHT)
         with pytest.raises(ValueError):
             ElfFeatures.KeenSenses(Skill.ATHLETICS)
 
@@ -670,7 +670,7 @@ class TestGrantedProficiencies:
     def test_warforged_specialized_design_grants_chosen_skill(self, make_character):
         character = make_character()
         character.add_effect(WarForgedFeatures.SpecializedDesign(Skill.PERCEPTION))
-        assert character.skills.is_proficient(Skill.PERCEPTION)
+        assert character.ledger.skills.is_proficient(Skill.PERCEPTION)
 
 
 # ── PowerfulBuild is displayed under the wrong trait name ───────────────────

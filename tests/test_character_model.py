@@ -98,14 +98,14 @@ class TestTheEvaluatedLedgerIsSealed:
         character = make_character()
         character.validate()
         with pytest.raises(SealedError):
-            character.skills.add_skill_proficiency(Skill.STEALTH)
+            character.ledger.skills.add_skill_proficiency(Skill.STEALTH)
         with pytest.raises(SealedError):
-            character.ability_increases.add(Ability.WISDOM, 2)
+            character.ledger.ability_increases.add(Ability.WISDOM, 2)
 
     def test_a_part_inside_a_part_is_sealed_too(self, make_character):
         character = make_character()
         character.add_effect(SkillBonus(Skill.ARCANA, 1, source="Test"))
-        bonuses = character.skills._bonuses[Skill.ARCANA]
+        bonuses = character.ledger.skills._bonuses[Skill.ARCANA]
         with pytest.raises(SealedError):
             bonuses.add(1, "Test")
 

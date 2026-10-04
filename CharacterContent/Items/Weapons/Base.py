@@ -175,7 +175,7 @@ class AbstractWeapon(Item, ABC):
         proficiency recorded on the stat block - worked out on read, so it
         doesn't matter when the proficiency or the weapon was added."""
         return self.player_is_proficient or is_proficient_with(
-            self, character.equipment_training.weapon_proficiencies
+            self, character.ledger.equipment_training.weapon_proficiencies
         )
 
     def has_mastery(self, weapon_masteries: "list[AbstractWeapon]") -> bool:
@@ -210,11 +210,17 @@ class AbstractWeapon(Item, ABC):
         """This weapon's own attack roll bonuses (e.g. a +1 weapon), then the
         wielder's that apply to it (e.g. the Archery fighting style) - those
         are recorded on the stat block, never written into the weapon."""
-        return self.attack_roll_bonuses + character.weapon_bonuses.attack_bonuses(self)
+        return (
+            self.attack_roll_bonuses
+            + character.ledger.weapon_bonuses.attack_bonuses(self)
+        )
 
     def get_damage_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
         """Damage roll counterpart of get_attack_roll_bonuses."""
-        return self.damage_roll_bonuses + character.weapon_bonuses.damage_bonuses(self)
+        return (
+            self.damage_roll_bonuses
+            + character.ledger.weapon_bonuses.damage_bonuses(self)
+        )
 
     def calculate_total_attack_roll_bonus(self, character: Character) -> str:
         if self._attack_roll_override is not None:
