@@ -257,16 +257,33 @@ class TestSkills:
 
     def test_skill_to_ability_mapping(self, basic_skills):
         """Test that default skill-to-ability mapping is correct."""
-        assert basic_skills.get_skill_ability(Skill.ACROBATICS) == Ability.DEXTERITY
-        assert basic_skills.get_skill_ability(Skill.ARCANA) == Ability.INTELLIGENCE
-        assert basic_skills.get_skill_ability(Skill.ATHLETICS) == Ability.STRENGTH
-        assert basic_skills.get_skill_ability(Skill.INSIGHT) == Ability.WISDOM
-        assert basic_skills.get_skill_ability(Skill.DECEPTION) == Ability.CHARISMA
+        view = FakeView()
+        assert basic_skills.ability(Skill.ACROBATICS, view) == Ability.DEXTERITY
+        assert basic_skills.ability(Skill.ARCANA, view) == Ability.INTELLIGENCE
+        assert basic_skills.ability(Skill.ATHLETICS, view) == Ability.STRENGTH
+        assert basic_skills.ability(Skill.INSIGHT, view) == Ability.WISDOM
+        assert basic_skills.ability(Skill.DECEPTION, view) == Ability.CHARISMA
 
     def test_update_skill_to_ability(self, basic_skills):
         """Test changing a skill's linked ability."""
         basic_skills.update_skill_to_ability(Skill.ARCANA, Ability.WISDOM)
-        assert basic_skills.get_skill_ability(Skill.ARCANA) == Ability.WISDOM
+        assert basic_skills.ability(Skill.ARCANA, FakeView()) == Ability.WISDOM
+
+    def test_best_of_several_overrides(self, basic_skills):
+        basic_skills.update_skill_to_ability(Skill.ARCANA, Ability.WISDOM)
+        basic_skills.update_skill_to_ability(Skill.ARCANA, Ability.CHARISMA)
+        view = FakeView({Ability.WISDOM: 12, Ability.CHARISMA: 16})
+        assert basic_skills.ability(Skill.ARCANA, view) == Ability.CHARISMA
+        # A tie goes to the first in Ability order, not to the first granted.
+        tied = FakeView({Ability.WISDOM: 14, Ability.CHARISMA: 14})
+        assert basic_skills.ability(Skill.ARCANA, tied) == Ability.WISDOM
+
+    def test_modifier(self, basic_skills):
+        basic_skills.add_skill_proficiency(Skill.ARCANA)
+        basic_skills.add_skill_expertise(Skill.ARCANA)
+        basic_skills.add_skill_bonus(Skill.ARCANA, 1, "Item")
+        view = FakeView({Ability.INTELLIGENCE: 16}, proficiency_bonus=3)
+        assert basic_skills.modifier(Skill.ARCANA, view) == 3 + 2 * 3 + 1
 
 
 class TestArmorClass:
@@ -315,15 +332,16 @@ class TestCarryingCapacity:
 
     def test_carrying_capacity_sources(self, basic_carrying_capacity):
         basic_carrying_capacity.add_bonus("Backpack", 2)
-        assert basic_carrying_capacity.sources(strength_modifier=1) == [
+        view = FakeView({Ability.STRENGTH: 12})
+        assert basic_carrying_capacity.sources(view) == [
             ("Person", 4),
             ("Backpack", 2),
         ]
-        assert basic_carrying_capacity.total(strength_modifier=1) == 6
+        assert basic_carrying_capacity.total(view) == 6
 
 
 class TestHitPoints:
-    """Test HitPoints.calculate for hit point rolls."""
+    """Test HitPoints.total for hit point rolls."""
 
     def test_calculate_hit_points_single_class(self, standard_abilities):
         """Test hit point calculation for single-class character."""
@@ -332,12 +350,11 @@ class TestHitPoints:
             base_class=CharacterClass.WIZARD,
             level_per_class={CharacterClass.WIZARD: 1},
         )
-        hit_points = HitPoints().calculate(
-            class_levels,
-            standard_abilities.get_modifier(Ability.CONSTITUTION),
-            None,
+        view = FakeView(
+            {Ability.CONSTITUTION: standard_abilities.constitution},
+            class_levels=class_levels,
         )
-        assert hit_points == 7  # 6 + 1
+        assert HitPoints().total(view) == 7  # 6 + 1
 
     def test_calculate_hit_points_multi_level(self, standard_abilities):
         """Test hit point calculation for multi-level character."""
@@ -346,13 +363,12 @@ class TestHitPoints:
             base_class=CharacterClass.FIGHTER,
             level_per_class={CharacterClass.FIGHTER: 5},
         )
-        hit_points = HitPoints().calculate(
-            class_levels,
-            standard_abilities.get_modifier(Ability.CONSTITUTION),
-            None,
+        view = FakeView(
+            {Ability.CONSTITUTION: standard_abilities.constitution},
+            class_levels=class_levels,
         )
         # 11 (level 1) + 4*(7 (average d10 + CON mod))
-        assert hit_points == 11 + 4 * 7
+        assert HitPoints().total(view) == 11 + 4 * 7
 
     def test_calculate_hit_points_with_bonus(self):
         """Test that hit point bonuses are applied."""
@@ -362,8 +378,8 @@ class TestHitPoints:
             base_class=CharacterClass.WIZARD,
             level_per_class={CharacterClass.WIZARD: 1},
         )
-        hit_points = hit_points_part.calculate(class_levels, 0, None)
-        assert hit_points == 6 + 5  # d6 + bonus
+        view = FakeView(class_levels=class_levels)
+        assert hit_points_part.total(view) == 6 + 5  # d6 + bonus
 
 
 class TestRollConditions:
@@ -374,7 +390,19 @@ class TestRollConditions:
         basic_skills.set_roll_condition(
             Skill.STEALTH, DiceRollCondition.DISADVANTAGE, "Heavy armor"
         )
-        assert basic_skills.get_roll_condition(Skill.STEALTH) == (
+        assert basic_skills.roll_condition(Skill.STEALTH, FakeView()) == (
+            DiceRollCondition.NEUTRAL
+        )
+
+    def test_untrained_armor_adds_disadvantage_to_dexterity_checks(self, basic_skills):
+        view = FakeView(untrained_armor=True)
+        assert basic_skills.roll_condition(Skill.STEALTH, view) == (
+            DiceRollCondition.DISADVANTAGE
+        )
+        assert basic_skills.roll_condition_reasons(Skill.STEALTH, view) == [
+            "Untrained armor"
+        ]
+        assert basic_skills.roll_condition(Skill.ARCANA, view) == (
             DiceRollCondition.NEUTRAL
         )
 

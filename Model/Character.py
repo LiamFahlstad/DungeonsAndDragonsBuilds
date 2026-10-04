@@ -585,77 +585,40 @@ class Character:
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
-        # Initiative is a Dexterity check, so untrained armor imposes
-        # Disadvantage. Advantage and Disadvantage cancel out.
-        extra = (
-            {Definitions.DiceRollCondition.DISADVANTAGE}
-            if self.has_untrained_armor_disadvantage(Ability.DEXTERITY)
-            else set()
-        )
-        return self.initiative.roll_condition(extra)
+        return self.initiative.roll_condition(self)
 
-    # ── Armor training (2024 PHB) ────────────────────────────────────────────
-    # "If you wear armor and lack training with it, you have Disadvantage on
-    # any D20 Test that involves Strength or Dexterity, and you can't cast
-    # spells. If you use a Shield and lack training with it, you don't gain
-    # its AC bonus." Worked out on read from the worn armor and the training
-    # granted, so it doesn't matter which applied first.
-
-    UNTRAINED_ARMOR_REASON = "Untrained armor"
+    # -- Armor training (2024 PHB) - see Ledger ---------------------------------
 
     @property
     def is_wearing_untrained_armor(self) -> bool:
-        return (
-            self.worn_armor.body_armor_type is not None
-            and self.worn_armor.body_armor_type
-            not in self.equipment_training.armor_training
-        )
+        return self._get_ledger().is_wearing_untrained_armor()
 
     @property
     def has_shield_training(self) -> bool:
-        return self.equipment_training.has_shield_training
+        return self._get_ledger().has_shield_training()
 
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
         """Disadvantage on D20 Tests with `ability` from untrained armor."""
-        return self.is_wearing_untrained_armor and ability in (
-            Ability.STRENGTH,
-            Ability.DEXTERITY,
-        )
+        return self._get_ledger().has_untrained_armor_disadvantage(ability)
 
     @property
     def warnings(self) -> list[str]:
         """Legal but bad choices the player should know about."""
-        warnings = []
-        if self.is_wearing_untrained_armor:
-            assert self.worn_armor.body_armor_type is not None
-            warnings.append(
-                f"Wearing {self.worn_armor.body_armor_name or 'armor'} without "
-                f"{self.worn_armor.body_armor_type.value} armor training: "
-                "Disadvantage on every D20 Test that involves Strength or "
-                "Dexterity, and you can't cast spells."
-            )
-        if self.worn_armor.shield_wielded and not self.has_shield_training:
-            warnings.append(
-                "Wielding a Shield without Shield training: it grants no AC bonus."
-            )
-        return warnings
+        return self._get_ledger().armor_warnings()
 
     def calculate_initiative(self) -> int:
-        modifier = self.get_ability_modifier(Ability.DEXTERITY)
-        return modifier + self.initiative.total(self.get_proficiency_bonus(), self)
+        return self.initiative.total(self)
 
     def calculate_speed(self) -> int:
         return self.speed.total(self)
 
     def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
-        return self.carrying_capacity.sources(
-            self.get_ability_modifier(Ability.STRENGTH)
-        )
+        return self.carrying_capacity.sources(self)
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return self.carrying_capacity.total(self.get_ability_modifier(Ability.STRENGTH))
+        return self.carrying_capacity.total(self)
 
     def _require_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:
@@ -726,23 +689,10 @@ class Character:
         return self.skills.has_expertise(skill)
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        # Several overrides for one skill: use the best (ties keep the first
-        # in Ability order, so grant order never decides).
-        order = list(Ability)
-        return max(
-            sorted(self.skills.get_skill_abilities(skill), key=order.index),
-            key=self.get_ability_modifier,
-        )
+        return self.skills.ability(skill, self)
 
     def get_skill_modifier(self, skill: Skill) -> int:
-        ability_modifier = self.get_ability_modifier(self.get_skill_ability(skill))
-        if self.has_expertise_in_skill(skill):
-            proficiency_bonus = self.get_proficiency_bonus() * 2
-        elif self.is_proficient_in_skill(skill):
-            proficiency_bonus = self.get_proficiency_bonus()
-        else:
-            proficiency_bonus = 0
-        return ability_modifier + proficiency_bonus + self.get_skill_bonus(skill)
+        return self.skills.modifier(skill, self)
 
     def get_skill_bonus(self, skill: Skill) -> int:
         return self.skills.get_total_bonus(skill, self)
@@ -759,58 +709,25 @@ class Character:
     def get_saving_throw_roll_condition(
         self, ability: Ability
     ) -> Definitions.DiceRollCondition:
-        conditions = set()
-        if self.saving_throws.is_advantaged(ability):
-            conditions.add(Definitions.DiceRollCondition.ADVANTAGE)
-        if self.has_untrained_armor_disadvantage(ability):
-            conditions.add(Definitions.DiceRollCondition.DISADVANTAGE)
-        return Definitions.combine_roll_conditions(conditions)
-
-    def _skill_roll_condition_sources(
-        self, skill: Skill
-    ) -> dict[Definitions.DiceRollCondition, list[str]]:
-        sources = self.skills.get_roll_condition_sources(skill)
-        if self.has_untrained_armor_disadvantage(self.get_skill_ability(skill)):
-            sources.setdefault(Definitions.DiceRollCondition.DISADVANTAGE, []).append(
-                self.UNTRAINED_ARMOR_REASON
-            )
-        return sources
+        return self.saving_throws.roll_condition(ability, self)
 
     def get_skill_roll_condition(self, skill: Skill) -> Definitions.DiceRollCondition:
-        return Definitions.combine_roll_conditions(
-            self._skill_roll_condition_sources(skill)
-        )
+        return self.skills.roll_condition(skill, self)
 
     def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        condition = self.get_skill_roll_condition(skill)
-        return self._skill_roll_condition_sources(skill).get(condition, [])
+        return self.skills.roll_condition_reasons(skill, self)
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
-        base_modifier = self.get_ability_modifier(ability)
-        proficiency_bonus = (
-            self.get_proficiency_bonus()
-            if self.is_proficient_in_saving_throw(ability)
-            else 0
-        )
-        return (
-            base_modifier
-            + proficiency_bonus
-            + self.saving_throws.get_total_bonus(ability, self)
-        )
+        return self.saving_throws.modifier(ability, self)
 
     def calculate_hit_points(self) -> int:
-        return self.hit_points.calculate(
-            self.class_levels, self.get_constitution_modifier(), self
-        )
+        return self.hit_points.total(self)
 
     def calculate_armor_class(self, ignore_shield: bool = False) -> int:
         """The best applicable AC formula plus every AC bonus. ignore_shield:
         the AC with the Shield set aside (its bonus gone, and formulas it
         disables - Monk's Unarmored Defense - available again)."""
-        is_wielding_shield = self.worn_armor.shield_wielded and not ignore_shield
-        return self.armor_class.calculate(
-            self, is_wielding_shield, self.has_shield_training
-        )
+        return self.armor_class.total(self, ignore_shield)
 
     def get_spell_casting_ability(self) -> Ability:
         return self._require_spell_casting_ability()
@@ -821,9 +738,7 @@ class Character:
         )
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
-        return self.spellcasting.difficulty_class(
-            self.get_proficiency_bonus(), self.get_ability_modifier(ability)
-        )
+        return self.spellcasting.difficulty_class(ability, self)
 
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(
@@ -831,9 +746,7 @@ class Character:
         )
 
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
-        return self.spellcasting.attack_bonus(
-            self.get_proficiency_bonus(), self.get_ability_modifier(ability)
-        )
+        return self.spellcasting.attack_bonus(ability, self)
 
     def get_spell_slots(self) -> dict[int, int]:
         spell_slots = self.spell_slots

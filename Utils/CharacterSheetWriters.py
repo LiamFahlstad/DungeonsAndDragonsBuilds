@@ -1599,7 +1599,6 @@ class HtmlCharacterSheetWriter:
         output_folder_obj.mkdir(parents=True, exist_ok=True)
         path = output_folder_obj / "character.html"
 
-        blank_skills = Skills()
         blank_sm = "<span class='blank-fill blank-fill-sm'></span>"
 
         with self._open_page(path) as file:
@@ -1695,7 +1694,7 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='section-col section-col-skills'>\n")
             file.write("<div class='skills-columns'>\n")
             for skill in Definitions.Skill.list_sorted():
-                ability = blank_skills.get_skill_ability(skill)
+                ability = Skills.default_ability(skill)
                 file.write("<div class='skill-entry'>\n")
                 file.write("<div class='skill-entry-top'>\n")
                 file.write(

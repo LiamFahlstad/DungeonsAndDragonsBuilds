@@ -159,13 +159,14 @@ other rendering methods still get the `Character`, and may read anything.
 
 ## The parts
 
-`Effects` (`Model/Effects.py`) holds one part per concern (`Model/*.py`), and
-`Character` exposes each part under its own name, plus a few queries that combine several of them
-(untrained-armor disadvantage, the final AC, `warnings`, `validate()`). Each part owns its own state *and* the queries on that
-state; a part never reaches back into the character, so a value from another part (or the finished
-character, for formula evaluation) is always passed in as an argument, e.g.
-`HitPoints.calculate(class_levels, constitution_modifier, character)` and
-`Initiative.total(proficiency_bonus, character)`. No part imports `CharacterContent`.
+The `Ledger` (`Model/Effects.py`) holds one part per concern (`Model/*.py`), plus the rules that
+combine two parts (untrained armor, Shield training, `armor_warnings()`). Each part owns its own
+state *and* works out its own final values: every resolver takes one argument, a `StatView`
+(`Model/Contracts.py`) of the finished character, e.g. `HitPoints.total(view)`,
+`Initiative.total(view)`, `Skills.modifier(skill, view)`. A part never names `Character`, so it can
+be unit-tested against a fake view (`tests/_fake_view.py`, `tests/test_part_resolvers.py`). Every
+query on `Character` is one line that hands itself to a resolver. No part imports
+`CharacterContent`.
 
 `Bonuses` (`Model/Bonuses.py`) is a small value object - flat values and formulas
 (`DerivedBonus`), each with a source label - shared by every part that is "a bonus total plus
@@ -181,14 +182,14 @@ flat-list/formula-list/source-list shape themselves.
 | `senses` (`Senses`) | Sense ranges (`.ranges`) and "or extend" grants |
 | `ability_increases` (`AbilityIncreases`) | Every ability score increase and its cap, on top of `base_abilities`; `score(ability, view)` / `own_score(ability, view)` (own = without equipment bonuses) |
 | `ability_requirements` (`AbilityRequirements`) | Ability score minimums (e.g. an armor's Strength) plus the multiclass ability-score prerequisites, both checked by `validate(view)` against the own scores |
-| `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total (`character.calculate_initiative()` / `.initiative_roll_condition` combine it with the Dexterity modifier and untrained-armor Disadvantage) |
+| `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total; `total(view)` adds the Dexterity modifier, `roll_condition(view)` adds untrained-armor Disadvantage |
 | `worn_armor` (`WornArmor`) | The worn body armor's type/name and whether a Shield is wielded - what untrained-armor Disadvantage, spellcasting warnings, Defense, Unarmored Movement and `ArmorClass.calculate` all read |
-| `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `calculate(view, is_wielding_shield, has_shield_training)` |
-| `hit_points` (`HitPoints`) | A `Bonuses` total; `calculate(class_levels, constitution_modifier, character)` |
+| `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `total(view, ignore_shield=False)` (the Shield counts only with training) |
+| `hit_points` (`HitPoints`) | A `Bonuses` total; `total(view)` adds the roll worked out from class levels and Constitution |
 | `speed` (`Speed`) | A `Bonuses` total; `total(view)` adds the species' `base_speed` (`character.calculate_speed()`) |
-| `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(strength_modifier)` / `total(strength_modifier)` also compute the dynamic "Person" base |
+| `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(view)` / `total(view)` also compute the dynamic "Person" base |
 | `spellcasting` (`Spellcasting`) | Registered casters and the spell save DC bonus; `spell_slots(view)`/`pact_magic_slots(view)` read the class levels and the fixed slots (sources) through the view |
-| `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
+| `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags and a `Bonuses` per skill/ability; `modifier(_, view)`, `roll_condition(_, view)`, and for skills `ability(skill, view)` and `roll_condition_reasons(skill, view)` |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
 Every part is exposed directly under its own name, for reading. Recording goes through

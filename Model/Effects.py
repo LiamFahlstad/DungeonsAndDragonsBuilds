@@ -66,6 +66,48 @@ class Ledger(Recorder):
         self.initiative = Initiative()
         self.weapon_bonuses = WeaponBonuses()
 
+    # -- Rules that combine two parts ------------------------------------------
+    # Armor training (2024 PHB): "If you wear armor and lack training with it,
+    # you have Disadvantage on any D20 Test that involves Strength or
+    # Dexterity, and you can't cast spells. If you use a Shield and lack
+    # training with it, you don't gain its AC bonus." Worked out on read from
+    # the worn armor and the training granted, so it doesn't matter which
+    # applied first.
+
+    def is_wearing_untrained_armor(self) -> bool:
+        armor_type = self.worn_armor.body_armor_type
+        return (
+            armor_type is not None
+            and armor_type not in self.equipment_training.armor_training
+        )
+
+    def has_shield_training(self) -> bool:
+        return self.equipment_training.has_shield_training
+
+    def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
+        """Disadvantage on D20 Tests with `ability` from untrained armor."""
+        return self.is_wearing_untrained_armor() and ability in (
+            Ability.STRENGTH,
+            Ability.DEXTERITY,
+        )
+
+    def armor_warnings(self) -> list[str]:
+        """Legal but bad armor choices the player should know about."""
+        warnings = []
+        armor_type = self.worn_armor.body_armor_type
+        if self.is_wearing_untrained_armor() and armor_type is not None:
+            warnings.append(
+                f"Wearing {self.worn_armor.body_armor_name or 'armor'} without "
+                f"{armor_type.value} armor training: "
+                "Disadvantage on every D20 Test that involves Strength or "
+                "Dexterity, and you can't cast spells."
+            )
+        if self.worn_armor.shield_wielded and not self.has_shield_training():
+            warnings.append(
+                "Wielding a Shield without Shield training: it grants no AC bonus."
+            )
+        return warnings
+
     def validate(self, view: StatView) -> None:
         """Check every recorded requirement against the complete set of
         effects: expertise needs proficiency, ability minimums (an armor's

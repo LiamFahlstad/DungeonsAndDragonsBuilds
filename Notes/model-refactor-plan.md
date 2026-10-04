@@ -229,7 +229,18 @@ Rules of thumb:
 - **Tests:** a fresh `Ledger()` is empty, and evaluating twice gives the same answers without mutating `base_abilities`.
 - **Verify:** A, B, C, D.
 
-### Step 6: One resolver shape; Character is only a facade *(mostly mechanical after Step 3)*
+### Step 6: One resolver shape; Character is only a facade *(mostly mechanical after Step 3)* — done
+
+- **Result:** every part resolver takes only the view:
+  - `HitPoints.total(view)`, and `Initiative.total(view)`, which now includes the Dexterity modifier;
+  - `Initiative.roll_condition(view)`, `ArmorClass.total(view, ignore_shield)`, and `CarryingCapacity.total/sources(view)`;
+  - `Spellcasting.difficulty_class/attack_bonus(ability, view)`;
+  - `Skills.ability/modifier/roll_condition/roll_condition_sources/roll_condition_reasons(skill, view)`;
+  - `SavingThrows.modifier/roll_condition(ability, view)`.
+- **The armor-training rules live on the `Ledger`:** `is_wearing_untrained_armor()`, `has_shield_training()`, `has_untrained_armor_disadvantage(ability)` and `armor_warnings()`. `StatView` gained `has_shield_training` and `has_untrained_armor_disadvantage` as answers.
+- **Removed from `Skills`:** the part-only `get_roll_condition*`, which silently ignored untrained armor, and `get_skill_ability`. The default mapping is `DEFAULT_SKILL_ABILITIES` / `Skills.default_ability(skill)`, and the writer uses that.
+- **`Character`'s public queries are all one line.**
+- **Tests and output:** `tests/test_part_resolvers.py` tests the resolvers against `FakeView`. Snapshots didn't move, and the pages are byte-for-byte identical to the baseline.
 
 - **Goal:** each part resolves its own final values from a `StatView`, and every query on `Character` is one line.
 - **Changes:**

@@ -36,8 +36,7 @@ UNARMORED_ARMOR_CLASS = ArmorClassFormula(
 class ArmorClass(Recorder):
     """Every AC formula and AC bonus. What's worn (Model.WornArmor) and
     the wielder's ability modifiers and Shield training aren't this part's
-    concern, so calculate() takes them as arguments (see
-    Character.calculate_armor_class).
+    concern, so total() reads them through the view.
 
     Merge rule: the best applicable formula (only its value is used, so the
     order formulas were granted in can't matter), plus the sum of bonuses
@@ -78,17 +77,13 @@ class ArmorClass(Recorder):
             if formula.allows_shield or not is_wielding_shield
         ]
 
-    def calculate(
-        self,
-        view: StatView,
-        is_wielding_shield: bool,
-        has_shield_training: bool,
-    ) -> int:
-        """The best applicable AC formula plus every AC bonus. The caller
-        handles "AC without the Shield" by passing is_wielding_shield=False -
-        the Shield's bonus is left out, and formulas it disables (Monk's
-        Unarmored Defense) become available again. Formulas read the
-        wielder's ability modifiers, and formula-valued bonuses, from `view`."""
+    def total(self, view: StatView, ignore_shield: bool = False) -> int:
+        """The best applicable AC formula plus every AC bonus. ignore_shield:
+        the AC with the Shield set aside (its bonus gone, and formulas it
+        disables - Monk's Unarmored Defense - available again). A Shield's
+        bonus only counts with Shield training."""
+        is_wielding_shield = view.is_wielding_shield and not ignore_shield
+        has_shield_training = view.has_shield_training
         formulas = self.get_applicable_armor_class_formulas(is_wielding_shield)
         base = max(self._from_formula(formula, view) for formula in formulas)
         bonus = self.bonuses.total(view)

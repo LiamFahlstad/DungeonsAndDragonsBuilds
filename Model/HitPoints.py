@@ -1,13 +1,12 @@
 from Model.Bonuses import Bonuses, DerivedBonus
 from Model.Contracts import StatView
-from Model.ClassLevels import ClassLevels
 from Model.Recorder import Recorder, records
 
 
 class HitPoints(Recorder):
     """The hit point bonus granted by features (e.g. Tough, Draconic
     Resilience) - flat or formula-valued (see Bonuses) - on top of the roll
-    worked out from class levels and Constitution. See calculate().
+    worked out from class levels and Constitution. See total().
 
     Merge rule: sum."""
 
@@ -22,12 +21,9 @@ class HitPoints(Recorder):
     def add_derived_bonus(self, bonus: DerivedBonus) -> None:
         self.bonuses.add_formula(bonus)
 
-    def calculate(
-        self,
-        class_levels: ClassLevels,
-        constitution_modifier: int,
-        view: StatView,
-    ) -> int:
+    def total(self, view: StatView) -> int:
+        class_levels = view.class_levels
+        constitution_modifier = view.get_constitution_modifier()
         # Guaranteed set by the time hit points are calculated - see
         # Character.base_class.
         base_class = class_levels.base_class

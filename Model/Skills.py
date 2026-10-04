@@ -79,10 +79,7 @@ class Skills(Recorder):
     def has_expertise(self, skill: Skill) -> bool:
         return skill in self._expertise
 
-    def get_roll_condition(self, skill: Skill) -> DiceRollCondition:
-        return combine_roll_conditions(self._roll_condition_sources.get(skill, {}))
-
-    def get_roll_condition_sources(
+    def _recorded_roll_condition_sources(
         self, skill: Skill
     ) -> dict[DiceRollCondition, list[str]]:
         """{condition: [reasons]} for every recorded source (a copy), with
@@ -109,50 +106,83 @@ class Skills(Recorder):
         if reason is not None:
             reasons.append(reason)
 
-    def get_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        condition = self.get_roll_condition(skill)
-        return sorted(self._roll_condition_sources.get(skill, {}).get(condition, []))
-
     def get_skill_abilities(self, skill: Skill) -> list[Ability]:
         """The abilities a check with `skill` may use: the default one, or every
-        override granted for it (the character uses the best -
-        Character.get_skill_ability), in Ability order."""
+        override granted for it (see ability()), in Ability order."""
         overrides = self._skill_ability_overrides.get(skill)
         if not overrides:
-            return [self.get_default_skill_to_ability_mapping()[skill]]
+            return [self.default_ability(skill)]
         return [ability for ability in Ability if ability in overrides]
 
-    def get_skill_ability(self, skill: Skill) -> Ability:
-        abilities = self.get_skill_abilities(skill)
-        if len(abilities) > 1:
-            raise ValueError(
-                f"{skill} has several ability overrides; the best one depends on "
-                "ability scores - use Character.get_skill_ability."
+    # ── Resolvers: final values, worked out against the finished character ──
+
+    UNTRAINED_ARMOR_REASON = "Untrained armor"
+
+    def ability(self, skill: Skill, view: StatView) -> Ability:
+        """The ability a check with `skill` uses: the best of
+        get_skill_abilities(). Ties go to the first in Ability order, so
+        grant order never decides."""
+        return max(self.get_skill_abilities(skill), key=view.get_ability_modifier)
+
+    def modifier(self, skill: Skill, view: StatView) -> int:
+        """Ability modifier, plus the proficiency bonus (twice with
+        expertise), plus every bonus."""
+        if self.has_expertise(skill):
+            proficiency = 2 * view.get_proficiency_bonus()
+        elif self.is_proficient(skill):
+            proficiency = view.get_proficiency_bonus()
+        else:
+            proficiency = 0
+        ability_modifier = view.get_ability_modifier(self.ability(skill, view))
+        return ability_modifier + proficiency + self.get_total_bonus(skill, view)
+
+    def roll_condition_sources(
+        self, skill: Skill, view: StatView
+    ) -> dict[DiceRollCondition, list[str]]:
+        """Every recorded source of Advantage/Disadvantage, plus Disadvantage
+        from untrained armor when the check uses Strength or Dexterity."""
+        sources = self._recorded_roll_condition_sources(skill)
+        if view.has_untrained_armor_disadvantage(self.ability(skill, view)):
+            sources.setdefault(DiceRollCondition.DISADVANTAGE, []).append(
+                self.UNTRAINED_ARMOR_REASON
             )
-        return abilities[0]
+        return sources
+
+    def roll_condition(self, skill: Skill, view: StatView) -> DiceRollCondition:
+        return combine_roll_conditions(self.roll_condition_sources(skill, view))
+
+    def roll_condition_reasons(self, skill: Skill, view: StatView) -> list[str]:
+        """The reasons behind the effective roll condition."""
+        condition = self.roll_condition(skill, view)
+        return self.roll_condition_sources(skill, view).get(condition, [])
 
     @records
     def update_skill_to_ability(self, skill: Skill, ability: Ability):
         self._skill_ability_overrides.setdefault(skill, set()).add(ability)
 
-    def get_default_skill_to_ability_mapping(self) -> dict[Skill, Ability]:
-        return {
-            Skill.ACROBATICS: Ability.DEXTERITY,
-            Skill.ANIMAL_HANDLING: Ability.WISDOM,
-            Skill.ARCANA: Ability.INTELLIGENCE,
-            Skill.ATHLETICS: Ability.STRENGTH,
-            Skill.DECEPTION: Ability.CHARISMA,
-            Skill.HISTORY: Ability.INTELLIGENCE,
-            Skill.INSIGHT: Ability.WISDOM,
-            Skill.INTIMIDATION: Ability.CHARISMA,
-            Skill.INVESTIGATION: Ability.INTELLIGENCE,
-            Skill.MEDICINE: Ability.WISDOM,
-            Skill.NATURE: Ability.INTELLIGENCE,
-            Skill.PERCEPTION: Ability.WISDOM,
-            Skill.PERFORMANCE: Ability.CHARISMA,
-            Skill.PERSUASION: Ability.CHARISMA,
-            Skill.RELIGION: Ability.INTELLIGENCE,
-            Skill.SLEIGHT_OF_HAND: Ability.DEXTERITY,
-            Skill.STEALTH: Ability.DEXTERITY,
-            Skill.SURVIVAL: Ability.WISDOM,
-        }
+    @staticmethod
+    def default_ability(skill: Skill) -> Ability:
+        """The ability a check with `skill` uses without any override."""
+        return DEFAULT_SKILL_ABILITIES[skill]
+
+
+DEFAULT_SKILL_ABILITIES: dict[Skill, Ability] = {
+    Skill.ACROBATICS: Ability.DEXTERITY,
+    Skill.ANIMAL_HANDLING: Ability.WISDOM,
+    Skill.ARCANA: Ability.INTELLIGENCE,
+    Skill.ATHLETICS: Ability.STRENGTH,
+    Skill.DECEPTION: Ability.CHARISMA,
+    Skill.HISTORY: Ability.INTELLIGENCE,
+    Skill.INSIGHT: Ability.WISDOM,
+    Skill.INTIMIDATION: Ability.CHARISMA,
+    Skill.INVESTIGATION: Ability.INTELLIGENCE,
+    Skill.MEDICINE: Ability.WISDOM,
+    Skill.NATURE: Ability.INTELLIGENCE,
+    Skill.PERCEPTION: Ability.WISDOM,
+    Skill.PERFORMANCE: Ability.CHARISMA,
+    Skill.PERSUASION: Ability.CHARISMA,
+    Skill.RELIGION: Ability.INTELLIGENCE,
+    Skill.SLEIGHT_OF_HAND: Ability.DEXTERITY,
+    Skill.STEALTH: Ability.DEXTERITY,
+    Skill.SURVIVAL: Ability.WISDOM,
+}

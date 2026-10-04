@@ -71,6 +71,11 @@ class StatView(Protocol):
     @property
     def is_wielding_shield(self) -> bool: ...
 
+    @property
+    def has_shield_training(self) -> bool: ...
+
+    def has_untrained_armor_disadvantage(self, ability: Ability) -> bool: ...
+
 
 # A value that depends on other stats, worked out when it's read.
 Formula = Callable[[StatView], int]

@@ -130,9 +130,9 @@ class TestSkills:
             ],
             lambda s: [
                 (
-                    s.get_roll_condition(k),
-                    s.get_roll_condition_sources(k),
-                    s.get_roll_condition_reasons(k),
+                    s.roll_condition(k, FakeView()),
+                    s.roll_condition_sources(k, FakeView()),
+                    s.roll_condition_reasons(k, FakeView()),
                 )
                 for k in (Skill.STEALTH, Skill.PERCEPTION)
             ],
@@ -242,7 +242,10 @@ def test_carrying_capacity():
             lambda c: c.add_bonus("Bag of Holding", 5),
             lambda c: c.add_bonus("Backpack", 1),
         ],
-        lambda c: (c.sources(1), c.total(1)),
+        lambda c: (
+            c.sources(FakeView({Ability.STRENGTH: 12})),
+            c.total(FakeView({Ability.STRENGTH: 12})),
+        ),
     )
     assert result[0][0] == ("Person", 4)
     assert result[1] == 12
@@ -319,7 +322,7 @@ class TestSpellcasting:
             lambda s: (
                 s.spell_slots(FakeView(class_levels=self.LEVELS)),
                 s.pact_magic_slots(FakeView(class_levels=self.LEVELS)),
-                s.difficulty_class(3, 3),
+                s.difficulty_class(Ability.INTELLIGENCE, FakeView()),
             ),
         )
 
@@ -363,9 +366,7 @@ class TestWornArmor:
 
 
 def test_armor_class():
-    view = FakeView(
-        {Ability.DEXTERITY: 16, Ability.CONSTITUTION: 14, Ability.WISDOM: 14}
-    )
+    scores = {Ability.DEXTERITY: 16, Ability.CONSTITUTION: 14, Ability.WISDOM: 14}
     result = _same_in_every_order(
         ArmorClass,
         [
@@ -385,7 +386,13 @@ def test_armor_class():
             lambda a: a.add_shield_bonus(2),
         ],
         lambda a: [
-            a.calculate(view, wielding, trained)
+            a.total(
+                FakeView(
+                    scores,
+                    is_wielding_shield=wielding,
+                    has_shield_training=trained,
+                )
+            )
             for wielding in (False, True)
             for trained in (False, True)
         ],
@@ -442,7 +449,7 @@ def test_initiative():
             lambda i: i.add_bonus(2),
             lambda i: i.add_derived_bonus(lambda view: 3),
         ],
-        lambda i: (i.total(2, VIEW), i.roll_condition()),
+        lambda i: (i.total(FakeView()), i.roll_condition(FakeView())),
     )
 
 

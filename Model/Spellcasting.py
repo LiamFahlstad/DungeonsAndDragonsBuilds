@@ -1,6 +1,6 @@
 from typing import Optional
 
-from Core.Definitions import CharacterClass
+from Core.Definitions import Ability, CharacterClass
 from Core.SpellcastingRules import CasterType, calculate_spell_slots
 from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
@@ -48,8 +48,15 @@ class Spellcasting(Recorder):
         levels = view.class_levels.level_per_class
         return calculate_spell_slots(self._casters, levels)[1]
 
-    def difficulty_class(self, proficiency_bonus: int, ability_modifier: int) -> int:
-        return 8 + proficiency_bonus + ability_modifier + self.spell_save_dc_bonus
+    def difficulty_class(self, ability: Ability, view: StatView) -> int:
+        """Spell save DC when casting with `ability`."""
+        return (
+            8
+            + view.get_proficiency_bonus()
+            + view.get_ability_modifier(ability)
+            + self.spell_save_dc_bonus
+        )
 
-    def attack_bonus(self, proficiency_bonus: int, ability_modifier: int) -> int:
-        return proficiency_bonus + ability_modifier
+    def attack_bonus(self, ability: Ability, view: StatView) -> int:
+        """Spell attack bonus when casting with `ability`."""
+        return view.get_proficiency_bonus() + view.get_ability_modifier(ability)

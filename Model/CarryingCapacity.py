@@ -1,10 +1,12 @@
+from Core.Definitions import Ability
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
 
 
 class CarryingCapacity(Recorder):
     """Carrying capacity sources, in item slots. The dynamic "Person" base (3
     + Strength modifier) isn't stored here - it depends on the character's
-    final Strength score, so every query takes that modifier in.
+    final Strength score, read through the view.
 
     Merge rule: sum. Reads list Person first, then sources sorted by
     (source, slots)."""
@@ -18,11 +20,11 @@ class CarryingCapacity(Recorder):
     def add_bonus(self, source: str, bonus: int) -> None:
         self._bonus_sources.append((source, bonus))
 
-    def sources(self, strength_modifier: int) -> list[tuple[str, int]]:
+    def sources(self, view: StatView) -> list[tuple[str, int]]:
         """Every carrying capacity source, including the dynamic 'Person' base."""
-        person_slots = 3 + strength_modifier
+        person_slots = 3 + view.get_ability_modifier(Ability.STRENGTH)
         return [("Person", person_slots)] + sorted(self._bonus_sources)
 
-    def total(self, strength_modifier: int) -> int:
+    def total(self, view: StatView) -> int:
         """Total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return sum(slots for _, slots in self.sources(strength_modifier))
+        return sum(slots for _, slots in self.sources(view))
