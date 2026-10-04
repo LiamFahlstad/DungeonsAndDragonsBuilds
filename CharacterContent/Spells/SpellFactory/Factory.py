@@ -53,6 +53,7 @@ class SpellFactory:
         spell_name: str,
         spell_casting_ability: Optional[Definitions.Ability] = None,
         additional_ruling: Optional[str] = None,
+        grant_source: Optional[str] = None,
     ) -> Spell:
         """Create a Spell object from the name."""
         data = cls._load_json()
@@ -64,6 +65,7 @@ class SpellFactory:
             spell_data=data[spell_name],
             spell_casting_ability=spell_casting_ability,
             additional_ruling=additional_ruling,
+            grant_source=grant_source,
         )
 
     @classmethod

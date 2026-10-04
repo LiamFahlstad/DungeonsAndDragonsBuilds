@@ -46,9 +46,17 @@ class Spell(ABC):
         self,
         spell_casting_ability: Optional[Definitions.Ability] = None,
         additional_ruling: Optional[str] = None,
+        grant_source: Optional[str] = None,
     ):
         self.spell_casting_ability = spell_casting_ability
         self._additional_ruling = additional_ruling
+        self._grant_source = grant_source
+
+    @property
+    def grant_source(self) -> Optional[str]:
+        """Short free text saying where the character got this spell (e.g. "Chosen
+        spell", "Magic Initiate feat"), or None. Not the rulebook `source`."""
+        return self._grant_source
 
     @property
     def additional_ruling(self) -> Optional[str]:

@@ -56,6 +56,12 @@ def _count_change(character: "Character", attribute: Any, value: Any) -> Any:
     return value
 
 
+class SpellSource:
+    """Shared `source=` labels for add_spell/add_cantrip (any free text works)."""
+
+    CHOSEN = "Chosen spell"
+
+
 @attr.s(auto_attribs=True, on_setattr=_count_change)
 class Character:
     character_name: Optional[str] = None
@@ -78,6 +84,11 @@ class Character:
     features: list[GrantedFeature] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
+    # Optional free-text "where did I get this spell" (e.g. "Chosen spell"),
+    # keyed by the entry's index in `spells`; absent means untagged. Kept
+    # beside `spells` so that tuple's shape is unchanged - read it with
+    # get_spell_source().
+    spell_sources: dict[int, str] = attr.Factory(dict)
     spell_casting_ability: Optional[Ability] = None
     # Spell slots set outright rather than worked out from caster levels.
     fixed_spell_slots: dict[int, int] = attr.Factory(dict)
@@ -250,6 +261,7 @@ class Character:
         spell: str,
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
+        source: Optional[str] = None,
     ):
         spell_casting_ability = self._resolve_spell_casting_ability(
             spell_casting_ability
@@ -261,12 +273,15 @@ class Character:
         self.spells.append(
             (spell, spell_casting_ability, additional_ruling, self._current_grant_level)
         )
+        if source is not None:
+            self.spell_sources[len(self.spells) - 1] = source
 
     def add_cantrip(
         self,
         cantrip: str,
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
+        source: Optional[str] = None,
     ):
         spell_casting_ability = self._resolve_spell_casting_ability(
             spell_casting_ability
@@ -282,6 +297,19 @@ class Character:
                 self._current_grant_level,
             )
         )
+        if source is not None:
+            self.spell_sources[len(self.spells) - 1] = source
+
+    def get_spell_source(
+        self, spell_entry: tuple[str, Ability, Optional[str], int]
+    ) -> Optional[str]:
+        """Where the character got this entry of `spells`, or None. Matched by
+        identity, so the same spell granted twice (e.g. by class and species)
+        keeps each grant's own source."""
+        for index, entry in enumerate(self.spells):
+            if entry is spell_entry:
+                return self.spell_sources.get(index)
+        return None
 
     def _spell_names_checked_for_duplicates(self) -> list[str]:
         return [s[0] for s in self.spells[self._duplicate_spell_check_start :]]
@@ -333,6 +361,8 @@ class Character:
                 )
         if not success:
             raise ValueError(f"Spell {old_spell} not found to replace.")
+        # Positions are unchanged, so the replacement keeps the old spell's
+        # source (a swapped chosen spell is still a chosen spell).
         self.spells = new_spells
 
     def add_invocation(self, invocation: str):

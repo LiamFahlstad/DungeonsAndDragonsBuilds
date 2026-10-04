@@ -276,4 +276,10 @@ def write_spell_to_file(
             f"<div class='spell-higher'><strong>Ruling.</strong> {ruling_html}</div>\n"
         )
 
+    # Where the character got this spell (optional, subtle).
+    if spell.grant_source:
+        file.write(
+            f"<div class='spell-classes'><span class='slabel'>Source</span> {spell.grant_source}</div>\n"
+        )
+
     file.write("</div>\n")

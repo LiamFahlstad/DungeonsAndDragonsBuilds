@@ -809,10 +809,17 @@ class HtmlCharacterSheetWriter:
 
         file.write("<div class='spells'>\n")
 
-        created_spells = [
-            SpellFactory.create(spell_name, spell_casting_ability, additional_ruling)
-            for spell_name, spell_casting_ability, additional_ruling, _grant_level in spells
-        ]
+        created_spells = []
+        for entry in spells:
+            spell_name, spell_casting_ability, additional_ruling, _grant_level = entry
+            created_spells.append(
+                SpellFactory.create(
+                    spell_name,
+                    spell_casting_ability,
+                    additional_ruling,
+                    character.get_spell_source(entry),
+                )
+            )
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
         # Group by level and emit a level header before each group

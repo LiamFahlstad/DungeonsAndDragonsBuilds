@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from Combat.Definitions import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Model.Character import Character
+from Model.Character import Character, SpellSource
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
@@ -69,15 +69,17 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
         data.add_feature(DruidFeatures.Spellcasting())
         data.add_feature(DruidFeatures.Druidic())
         data.add_spell(
-            DruidLevel1Spells.SPEAK_WITH_ANIMALS, additional_ruling="Always prepared"
+            DruidLevel1Spells.SPEAK_WITH_ANIMALS,
+            additional_ruling="Always prepared",
+            source="Druidic",
         )
         data.add_feature(DruidFeatures.PrimalOrder(order=self.primal_order))
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_3, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_4, source=SpellSource.CHOSEN)
         return data
 
 
@@ -92,7 +94,7 @@ class DruidLevel2(ClassBuilder.BaseClassLevel2):
     ) -> Character:
         data.add_feature(DruidFeatures.WildShape(known_forms=self.known_forms))
         data.add_feature(DruidFeatures.WildCompanion())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -104,7 +106,7 @@ class DruidLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -120,8 +122,8 @@ class DruidLevel4(ClassBuilder.BaseClassLevel4):
     ) -> Character:
         self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -138,8 +140,8 @@ class DruidLevel5(ClassBuilder.BaseClassLevel5):
             DruidFeatures.WildShape
         )[0]
         wild_shape.extend_feature(DruidFeatures.WildResurgence())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         return data
 
 
@@ -151,7 +153,7 @@ class DruidLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -168,7 +170,7 @@ class DruidLevel7(ClassBuilder.BaseClassLevel7):
             data.add_feature(DruidFeatures.PrimalStrike())
         else:
             data.add_feature(DruidFeatures.PotentSpellcasting())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -183,7 +185,7 @@ class DruidLevel8(ClassBuilder.BaseClassLevel8):
     ) -> Character:
         self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -196,8 +198,8 @@ class DruidLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         return data
 
 
@@ -210,8 +212,8 @@ class DruidLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Character,
     ) -> Character:
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -223,7 +225,7 @@ class DruidLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -248,7 +250,7 @@ class DruidLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -280,7 +282,7 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
             )
         elif primal_strike:
             primal_strike[0].extend_feature(DruidFeatures.ImprovedPrimalStrike())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -302,7 +304,7 @@ class DruidLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -318,7 +320,7 @@ class DruidLevel18(ClassBuilder.BaseClassLevel18):
             DruidFeatures.WildShape
         )[0]
         wild_shape.extend_feature(DruidFeatures.BeastSpells())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -333,7 +335,7 @@ class DruidLevel19(ClassBuilder.BaseClassLevel19):
     ) -> Character:
         self.epic_boon.origin = f"Druid Level {self.level}"
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 
@@ -346,7 +348,7 @@ class DruidLevel20(ClassBuilder.BaseClassLevel20):
             DruidFeatures.WildShape
         )[0]
         wild_shape.extend_feature(DruidFeatures.Archdruid())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
 

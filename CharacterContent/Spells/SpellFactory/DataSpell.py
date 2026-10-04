@@ -26,8 +26,9 @@ class DataSpell(Spell):
         spell_data: dict[str, Any],
         spell_casting_ability: Optional[Definitions.Ability] = None,
         additional_ruling: Optional[str] = None,
+        grant_source: Optional[str] = None,
     ):
-        super().__init__(spell_casting_ability, additional_ruling)
+        super().__init__(spell_casting_ability, additional_ruling, grant_source)
         missing = [f for f in self._REQUIRED_FIELDS if f not in spell_data]
         if missing:
             raise ValueError(
