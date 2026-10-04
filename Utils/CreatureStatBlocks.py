@@ -82,17 +82,8 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
 
         """
 from Combat.Definitions import ExtendedCombatantData
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability
 from Model.Character import Character
-
-_ABILITY_BY_ABBR = {
-    Ability.STRENGTH.short_name: Ability.STRENGTH,
-    Ability.DEXTERITY.short_name: Ability.DEXTERITY,
-    Ability.CONSTITUTION.short_name: Ability.CONSTITUTION,
-    Ability.INTELLIGENCE.short_name: Ability.INTELLIGENCE,
-    Ability.WISDOM.short_name: Ability.WISDOM,
-    Ability.CHARISMA.short_name: Ability.CHARISMA,
-}
 
 _MENTAL_ABILITIES = (
     Ability.INTELLIGENCE.short_name,
@@ -103,6 +94,13 @@ _MENTAL_ABILITIES = (
 
 def _fmt_mod(modifier: int) -> str:
     return f"+{modifier}" if modifier >= 0 else str(modifier)
+
+
+def _bonus_text(beast_bonus: int, compare_with_yours: bool) -> str:
+    """Wild Shape uses the higher of the Beast's modifier and yours."""
+    if compare_with_yours:
+        return f"max({_fmt_mod(beast_bonus)}, yours)"
+    return _fmt_mod(beast_bonus)
 
 
 def _display(value) -> str:
@@ -184,13 +182,17 @@ def format_creature_stat_block(
     monster: ExtendedCombatantData,
     character: Optional[Character] = None,
     retain_mental_abilities: bool = False,
+    temp_hp_text: Optional[str] = None,
 ) -> str:
     """Render an ExtendedCombatantData instance as an HTML stat-block table.
 
     retain_mental_abilities: True for Wild Shape (the player retains their own
     creature type, HP/Hit Dice, Int/Wis/Cha, class features, languages, and feats
-    per the "Game Statistics" rule). False for standalone creatures (e.g. a Primal
-    Companion), which use their own full stat block with no player overrides.
+    per the "Game Statistics" rule). Retained values are written as rules
+    ("yours", "max(+4, yours)") rather than numbers so the card holds at any
+    level. False for standalone creatures (e.g. a Primal Companion), which use
+    their own full stat block with no player overrides.
+    temp_hp_text: optional "Temporary Hit Points" row (e.g. "+ Druid level").
     """
     rows = [
         f'<tr><th class="wsf-name" colspan="2">{monster.combatant_type}'
@@ -220,17 +222,11 @@ def format_creature_stat_block(
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
     rows.append(_row("Str / Dex / Con", ", ".join(physical_parts)))
 
-    if retain_mental_abilities and character is not None:
-        mental_parts = []
-        for abbr in _MENTAL_ABILITIES:
-            ability = _ABILITY_BY_ABBR[abbr]
-            own_score = character.get_ability_score(ability)
-            own_modifier = character.get_ability_modifier(ability)
-            mental_parts.append(f"{abbr} {own_score} ({_fmt_mod(own_modifier)})")
+    if retain_mental_abilities:
         rows.append(
             _row(
                 "Int / Wis / Cha",
-                ", ".join(mental_parts) + " &mdash; yours, not the Beast's",
+                "Yours, not the Beast's",
                 value_class="wsf-value-col wsf-retained",
             )
         )
@@ -241,6 +237,14 @@ def format_creature_stat_block(
                 value_class="wsf-value-col wsf-retained",
             )
         )
+        if temp_hp_text:
+            rows.append(
+                _row(
+                    "Temporary Hit Points",
+                    temp_hp_text,
+                    value_class="wsf-value-col wsf-retained",
+                )
+            )
     else:
         mental_parts = []
         for abbr in _MENTAL_ABILITIES:
@@ -260,38 +264,17 @@ def format_creature_stat_block(
     if monster.skills:
         skill_parts = []
         for skill_name, beast_bonus in monster.skills.items():
-            skill_label = _display(skill_name)
-            own_bonus = None
-            if retain_mental_abilities and character is not None:
-                try:
-                    own_bonus = character.get_skill_modifier(Skill(skill_name))
-                except ValueError:
-                    own_bonus = None
-            if own_bonus is None:
-                skill_parts.append(f"{skill_label} {_fmt_mod(beast_bonus)}")
-                continue
-            best = max(beast_bonus, own_bonus)
-            source = "Beast's" if beast_bonus >= own_bonus else "yours"
-            skill_parts.append(f"{skill_label} {_fmt_mod(best)} ({source})")
+            skill_parts.append(
+                f"{_display(skill_name)} {_bonus_text(beast_bonus, retain_mental_abilities)}"
+            )
         rows.append(_row("Skills", "; ".join(skill_parts)))
 
     if monster.saving_throws:
         save_parts = []
         for abbr, beast_bonus in monster.saving_throws.items():
-            ability = _ABILITY_BY_ABBR.get(abbr)
-            own_bonus = None
-            if (
-                ability is not None
-                and retain_mental_abilities
-                and character is not None
-            ):
-                own_bonus = character.get_saving_throw_modifier(ability)
-            if own_bonus is None:
-                save_parts.append(f"{abbr} {_fmt_mod(beast_bonus)}")
-                continue
-            best = max(beast_bonus, own_bonus)
-            source = "Beast's" if beast_bonus >= own_bonus else "yours"
-            save_parts.append(f"{abbr} {_fmt_mod(best)} ({source})")
+            save_parts.append(
+                f"{abbr} {_bonus_text(beast_bonus, retain_mental_abilities)}"
+            )
         rows.append(_row("Saving Throws", ", ".join(save_parts)))
 
     if monster.senses:

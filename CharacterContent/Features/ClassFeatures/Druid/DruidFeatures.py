@@ -3,6 +3,7 @@ from typing import Type
 
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
+    wild_shape_temp_hp_formula,
 )
 from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
@@ -127,11 +128,74 @@ class WildShape(Feature):
         )
         self.known_forms = known_forms
 
+    def _rules(self, character: Character) -> dict[str, str]:
+        """Wild Shape rules as formulas, so the sheet holds at every Druid level."""
+        from CharacterContent.Features.SubClassFeatures.Druid.DruidMoonFeatures import (
+            CircleForms,
+        )
+
+        if character.get_features_by_type(CircleForms):
+            max_cr = "Druid level ÷ 3, rounded down (Circle Forms)"
+        else:
+            max_cr = "1/4, rising to 1/2 at Druid level 4 and 1 at Druid level 8"
+        return {
+            "Action": "Bonus Action to transform; Bonus Action to leave the form early",
+            "Duration": (
+                "Hours equal to half your Druid level; ends early if you use "
+                "Wild Shape again, have the Incapacitated condition, or die"
+            ),
+            "Uses": (
+                "2 at Druid level 2, 3 at Druid level 6, 4 at Druid level 17; "
+                "regain one on a Short Rest and all on a Long Rest"
+            ),
+            "Known Forms": (
+                "4 Beasts, rising to 6 at Druid level 4 and 8 at Druid level 8; "
+                "replace one when you finish a Long Rest"
+            ),
+            "Max Challenge Rating": max_cr,
+            "Fly Speed": "Forms with a Fly Speed allowed from Druid level 8",
+            "Temporary Hit Points": (
+                f"{wild_shape_temp_hp_formula(character)}, gained when you assume a form"
+            ),
+            "You Keep": (
+                "Your personality, memories, and speech; creature type; Hit Points "
+                "and Hit Dice; Intelligence, Wisdom, and Charisma scores; class "
+                "features, languages, and feats"
+            ),
+            "Skills and Saves": (
+                "Keep your proficiencies (with your Proficiency Bonus) and gain the "
+                "Beast's; use whichever modifier is higher"
+            ),
+            "Spellcasting": (
+                "You can't cast spells, but transforming doesn't break Concentration "
+                "or end spells you've already cast"
+            ),
+            "Objects": (
+                "The form's limbs decide what you can handle; your equipment falls, "
+                "merges into the form (no effect), or is worn if the DM agrees it fits"
+            ),
+        }
+
     def get_description(self, character: Character) -> str:
         known_forms_lines = "\n".join(
             format_wild_shape_form(form, character) for form in self.known_forms
         )
-        description = (
+        rules = "\n".join(
+            f"{label}. {text}" for label, text in self._rules(character).items()
+        )
+        return rules + "\n\nKnown Forms:\n" + known_forms_lines
+
+    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+        rows = list(self._rules(character).items())
+        forms = [form_cls() for form_cls in self.known_forms]
+        names = ", ".join(f"{form.combatant_type} (CR {form.cr})" for form in forms)
+        if names:
+            rows.append(("Current Forms", names))
+        return rows
+
+    def get_original_description(self) -> str:
+        """Official 2024 rules text, kept for reference only (not rendered)."""
+        return (
             "The power of nature allows you to assume the form of an animal. As a Bonus Action, you shape-shift into a Beast form that you have learned for this feature (see “Known Forms” below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a Bonus Action.\n"
             "Number of Uses. You can use Wild Shape. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
             "You gain additional uses when you reach certain Druid levels, as shown in the Wild Shape column of the Druid Features table.\n"
@@ -143,9 +207,7 @@ class WildShape(Feature):
             "Game Statistics. Your game statistics are replaced by the Beast's stat block, but you retain your creature type; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats. You also retain your skill and saving throw proficiencies and use your Proficiency Bonus for them, in addition to gaining the proficiencies of the creature. If a skill or saving throw modifier in the Beast's stat block is higher than yours, use the one in the stat block.\n"
             "No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.\n"
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.\n"
-            "\nKnown Forms:\n" + known_forms_lines
         )
-        return description
 
     def get_resource_tiles(
         self, character: Character

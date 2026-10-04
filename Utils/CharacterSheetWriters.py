@@ -771,26 +771,11 @@ class HtmlCharacterSheetWriter:
         )
         file.write("<br class='section-gap'>\n")
 
-    @staticmethod
-    def _spell_prep_checkbox_class(base_class: Definitions.CharacterClass) -> bool:
-        """Whether spell cards for this character should show a
-        preparation checkbox (true for classes that prepare spells daily
-        from a known list, rather than simply knowing a fixed set)."""
-        prepared_caster_classes = {
-            Definitions.CharacterClass.CLERIC,
-            Definitions.CharacterClass.DRUID,
-            Definitions.CharacterClass.WIZARD,
-            Definitions.CharacterClass.PALADIN,
-            Definitions.CharacterClass.ARTIFICER,
-        }
-        return base_class in prepared_caster_classes
-
     def _write_spell_cards(
         self,
         character: Character,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
-        base_class: Definitions.CharacterClass,
     ):
         """Write the '<div class='spells'>' block of individual spell cards
         (grouped by spell level with a header per group) for the given
@@ -807,8 +792,6 @@ class HtmlCharacterSheetWriter:
         ]
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
 
-        show_prep_checkbox = self._spell_prep_checkbox_class(base_class)
-
         # Group by level and emit a level header before each group
         from itertools import groupby
 
@@ -816,9 +799,7 @@ class HtmlCharacterSheetWriter:
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                write_spell_to_file(
-                    spell, file, show_preparation_checkbox=show_prep_checkbox
-                )
+                write_spell_to_file(spell, file)
 
         file.write("</div>\n")
 
@@ -827,7 +808,6 @@ class HtmlCharacterSheetWriter:
         character: Character,
         file: TextIO,
         spells: list[tuple[str, Ability, Optional[str], int]],
-        base_class: Definitions.CharacterClass,
         include_probability_tables: bool = False,
     ):
         if not spells and not character.spell_slots and not character.pact_magic_slots:
@@ -851,7 +831,7 @@ class HtmlCharacterSheetWriter:
         self._write_spellcasting_headline(
             character, file, casting_abilities, include_probability_tables
         )
-        self._write_spell_cards(character, file, spells, base_class)
+        self._write_spell_cards(character, file, spells)
         file.write("<br class='section-gap'>\n")
 
     @staticmethod
@@ -1497,7 +1477,6 @@ class HtmlCharacterSheetWriter:
                 pages,
                 character,
                 character_name,
-                base_class,
                 level,
                 sorted_level_features,
                 description_mode,
@@ -1801,9 +1780,7 @@ class HtmlCharacterSheetWriter:
 
             self._write_fighting_styles(character, file, fighting_styles)
             self._write_invocations(character, file, invocations)
-            self._write_spells(
-                character, file, spells, base_class, include_probability_tables
-            )
+            self._write_spells(character, file, spells, include_probability_tables)
             self._write_items(
                 character,
                 file,
@@ -1823,7 +1800,6 @@ class HtmlCharacterSheetWriter:
         pages: list[tuple[str, str]],
         character: Character,
         character_name: str,
-        base_class: Definitions.CharacterClass,
         level: int,
         level_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
@@ -1857,7 +1833,7 @@ class HtmlCharacterSheetWriter:
 
             if level_spells:
                 file.write("<h2>Spells Gained</h2>\n")
-                self._write_spell_cards(character, file, level_spells, base_class)
+                self._write_spell_cards(character, file, level_spells)
                 file.write("<br class='section-gap'>\n")
 
     def _write_fighting_styles_page(

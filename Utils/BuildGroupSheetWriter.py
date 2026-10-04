@@ -137,11 +137,7 @@ def _write_spells_page(
             file.write(
                 f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
             )
-            base_class = character_sheet_data.base_class
-            assert base_class is not None
-            writer._write_spell_cards(
-                stat_block, file, level_filtered_spells, base_class
-            )
+            writer._write_spell_cards(stat_block, file, level_filtered_spells)
 
 
 def _write_weapons_page(

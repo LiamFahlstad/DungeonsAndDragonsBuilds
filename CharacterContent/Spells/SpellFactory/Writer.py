@@ -159,7 +159,6 @@ SPELL_CARD_CSS = """/* ── Spell entries ────────────
 def write_spell_to_file(
     spell: Spell,
     file: TextIO,
-    show_preparation_checkbox: bool = False,
     show_classes: bool = False,
 ):  # writes HTML
     # ── Detect special tags ──────────────────────────────────────────────
@@ -190,9 +189,9 @@ def write_spell_to_file(
     tags_html = ""
     if is_concentration:
         tags_html += "<span class='stag stag-concentration'>Concentration</span> "
-        # Add concentration checkbox for interactive tracking
+        # Checkbox to tick while concentrating on this spell
         concentration_id = f"spell_{spell.name.lower().replace(' ', '_').replace('-', '_').replace(chr(39), '')}_concentration_check"
-        tags_html += f"<span class='spell-concentration-checkbox'><input type='checkbox' id='{concentration_id}' name='{concentration_id}'/><label for='{concentration_id}' style='font-size: 0.75rem; margin: 0;'>Active</label></span> "
+        tags_html += f"<span class='spell-concentration-checkbox'><input type='checkbox' id='{concentration_id}' name='{concentration_id}'/><label for='{concentration_id}' style='font-size: 0.75rem; margin: 0;'>Concentrating</label></span> "
     if is_ritual:
         tags_html += "<span class='stag stag-ritual'>Ritual</span> "
     usage_labels = {
@@ -243,19 +242,12 @@ def write_spell_to_file(
         )
         classes_html = f"<span class='slabel'>Classes</span> {class_chips}"
 
-    # ── Spell name with optional checkbox ─────────────────────────────────
-    spell_name_display = spell.name
-    if (
-        show_preparation_checkbox and spell.level > 0
-    ):  # Don't show checkbox for cantrips
-        spell_name_display = f"<span class='spell-prep-checkbox'></span> {spell.name}"
-
     # ── Write entry ──────────────────────────────────────────────────────
     file.write("<div class='spell-entry'>\n")
 
     # Name
     file.write(
-        f"<span class='spell-name'>{spell_name_display}"
+        f"<span class='spell-name'>{spell.name}"
         f"{(' ' + tags_html.strip()) if tags_html else ''}"
         f"</span>\n"
     )

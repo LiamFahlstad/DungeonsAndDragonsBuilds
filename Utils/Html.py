@@ -1124,18 +1124,6 @@ BASE_CHARACTER_SHEET_CSS = """
             -webkit-print-color-adjust: exact;
         }
 
-        /* Spell preparation checkbox */
-        .spell-prep-checkbox {
-            display: inline-block;
-            width: 1.2em;
-            height: 1.2em;
-            border: 1.5px solid #3a5a7a;
-            box-sizing: border-box;
-            border-radius: 2px;
-            vertical-align: middle;
-            margin-right: 0.3em;
-        }
-
         /* ── Spellcasting headline: Ability / DC / Attack stat tiles ────── */
         .spell-headline {
             max-width: 100%;
