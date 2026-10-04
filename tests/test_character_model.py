@@ -17,7 +17,9 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass, Skill
+from Model.Effects import Ledger
 from Model.Recorder import SealedError
+from tests._fake_view import FakeView
 
 
 def test_a_build_is_one_character():
@@ -98,7 +100,7 @@ class TestTheEvaluatedLedgerIsSealed:
         with pytest.raises(SealedError):
             character.skills.add_skill_proficiency(Skill.STEALTH)
         with pytest.raises(SealedError):
-            character.abilities.add_bonus(Ability.WISDOM, 2)
+            character.ability_increases.add(Ability.WISDOM, 2)
 
     def test_a_part_inside_a_part_is_sealed_too(self, make_character):
         character = make_character()
@@ -107,23 +109,38 @@ class TestTheEvaluatedLedgerIsSealed:
         with pytest.raises(SealedError):
             bonuses.add(1, "Test")
 
-    def test_writing_a_score_on_the_evaluated_copy_raises(self, make_character):
-        character = make_character(strength=10)
-        character.validate()
-        with pytest.raises(SealedError):
-            character.abilities.strength = 18
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Step 5: base_abilities changed in place doesn't bump the "
-        "version, so the cached evaluation goes stale. Step 5 makes "
-        "base_abilities immutable.",
-    )
-    def test_changing_a_base_score_in_place_re_evaluates(self, make_character):
+class TestBaseAbilitiesAreASource:
+    """The base scores are immutable: changing one in place used to leave the
+    cached evaluation stale, because nothing told the Character."""
+
+    def test_a_base_score_cannot_be_changed_in_place(self, make_character):
         character = make_character(strength=10)
-        character.validate()
-        character.base_abilities.strength = 18
+        with pytest.raises(AttributeError):
+            character.base_abilities.strength = 18
+
+    def test_assigning_new_base_scores_re_evaluates(self, make_character):
+        character = make_character(strength=10)
+        assert character.get_ability_score(Ability.STRENGTH) == 10
+        character.base_abilities = character.base_abilities.with_scores(strength=18)
         assert character.get_ability_score(Ability.STRENGTH) == 18
+
+    def test_evaluating_never_changes_the_base_scores(self, make_character):
+        character = make_character(strength=10)
+        character.add_effect(
+            AbilityScoreBonus([(Ability.STRENGTH, 2)], total=2, max_score=20)
+        )
+        for _ in range(2):
+            character.base_speed = character.base_speed + 5  # re-evaluate
+            assert character.get_ability_score(Ability.STRENGTH) == 12
+        assert character.base_abilities.strength == 10
+
+    def test_a_fresh_ledger_is_empty(self):
+        ledger = Ledger()
+        view = FakeView()
+        assert ledger.ability_increases.score(Ability.STRENGTH, view) == 10
+        assert ledger.speed.total(view) == 30
+        assert ledger.spellcasting.spell_slots(view) == {}
 
 
 class TestAddEffect:

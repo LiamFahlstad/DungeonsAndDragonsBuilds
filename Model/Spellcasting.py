@@ -1,30 +1,22 @@
 from typing import Optional
 
-from Core.Definitions import Ability, CharacterClass
+from Core.Definitions import CharacterClass
 from Core.SpellcastingRules import CasterType, calculate_spell_slots
-from Model.ClassLevels import ClassLevels
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
 
 
 class Spellcasting(Recorder):
-    """The character's spellcasting ability (None for a non-caster), spell
-    save DC bonus, and every registered caster class (used to work out spell
-    slots and Pact Magic slots together - see spell_slots). A character with
-    no Spell Slots feature (e.g. a companion) can still be given a fixed
-    table of slots directly.
+    """The spell save DC bonus and every registered caster class (used to
+    work out spell slots and Pact Magic slots together - see spell_slots).
+    The spellcasting ability and a fixed table of slots (for a character with
+    no Spell Slots feature, e.g. a companion) are sources on the Character,
+    read through the view.
 
     Merge rule: one CasterType per class; registering a class again with a
     different CasterType raises. Spell save DC bonuses sum."""
 
-    def __init__(
-        self,
-        ability: Optional[Ability] = None,
-        fixed_slots: Optional[dict[int, int]] = None,
-    ):
-        self.ability = ability
-        # Slots for a character with no Spell Slots feature (e.g. companions);
-        # otherwise worked out from the registered casters - see spell_slots.
-        self._fixed_spell_slots = fixed_slots
+    def __init__(self):
         self._casters: dict[CharacterClass, CasterType] = {}
         self.spell_save_dc_bonus = 0
 
@@ -44,18 +36,17 @@ class Spellcasting(Recorder):
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
         self.spell_save_dc_bonus += bonus
 
-    def spell_slots(self, class_levels: ClassLevels) -> Optional[dict[int, int]]:
+    def spell_slots(self, view: StatView) -> Optional[dict[int, int]]:
+        """Worked out from the registered casters - or, with none, the
+        character's fixed table of slots (e.g. a companion's)."""
         if not self._casters:
-            return self._fixed_spell_slots
-        return calculate_spell_slots(self._casters, class_levels.level_per_class)[0]
+            return view.fixed_spell_slots
+        levels = view.class_levels.level_per_class
+        return calculate_spell_slots(self._casters, levels)[0]
 
-    def pact_magic_slots(self, class_levels: ClassLevels) -> dict[int, int]:
-        return calculate_spell_slots(self._casters, class_levels.level_per_class)[1]
-
-    def require_ability(self) -> Ability:
-        if self.ability is None:
-            raise ValueError("Character does not have a spell casting ability.")
-        return self.ability
+    def pact_magic_slots(self, view: StatView) -> dict[int, int]:
+        levels = view.class_levels.level_per_class
+        return calculate_spell_slots(self._casters, levels)[1]
 
     def difficulty_class(self, proficiency_bonus: int, ability_modifier: int) -> int:
         return 8 + proficiency_bonus + ability_modifier + self.spell_save_dc_bonus

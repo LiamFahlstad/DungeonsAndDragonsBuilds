@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import Optional
 
 from Core.Definitions import Ability
-from Model.AbilityScores import AbilityScores
 from Model.Bonuses import Bonuses, DerivedBonus
 from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
@@ -81,7 +80,6 @@ class ArmorClass(Recorder):
 
     def calculate(
         self,
-        abilities: AbilityScores,
         view: StatView,
         is_wielding_shield: bool,
         has_shield_training: bool,
@@ -89,10 +87,10 @@ class ArmorClass(Recorder):
         """The best applicable AC formula plus every AC bonus. The caller
         handles "AC without the Shield" by passing is_wielding_shield=False -
         the Shield's bonus is left out, and formulas it disables (Monk's
-        Unarmored Defense) become available again. `view` is only handed to
-        the formula-valued bonuses."""
+        Unarmored Defense) become available again. Formulas read the
+        wielder's ability modifiers, and formula-valued bonuses, from `view`."""
         formulas = self.get_applicable_armor_class_formulas(is_wielding_shield)
-        base = max(self._from_formula(formula, abilities) for formula in formulas)
+        base = max(self._from_formula(formula, view) for formula in formulas)
         bonus = self.bonuses.total(view)
         shield = (
             sum(self._shield_bonuses)
@@ -101,11 +99,9 @@ class ArmorClass(Recorder):
         )
         return base + bonus + shield
 
-    def _from_formula(
-        self, formula: ArmorClassFormula, abilities: AbilityScores
-    ) -> int:
+    def _from_formula(self, formula: ArmorClassFormula, view: StatView) -> int:
         ability_modifier = sum(
-            abilities.get_modifier(ability) for ability in formula.abilities
+            view.get_ability_modifier(ability) for ability in formula.abilities
         )
         if formula.ability_modifier_cap is not None:
             ability_modifier = min(ability_modifier, formula.ability_modifier_cap)

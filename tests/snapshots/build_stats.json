@@ -19752,8 +19752,8 @@
   ]
  },
  "Y2024_Cleric_Light_GabrielGreybeard": {
-  "ac": 17,
-  "carry": 10,
+  "ac": 19,
+  "carry": 13,
   "expertise": [
    false,
    false,
@@ -19774,9 +19774,9 @@
    false,
    false
   ],
-  "hp": 36,
+  "hp": 33,
   "immune": [],
-  "init": 1,
+  "init": 0,
   "init_roll": "DiceRollCondition.NEUTRAL",
   "pact": [],
   "resist": [
@@ -19796,20 +19796,20 @@
    true
   ],
   "saves": [
-   -1,
-   1,
-   3,
+   2,
    0,
+   2,
+   -1,
    5,
    3
   ],
   "scores": [
-   8,
-   12,
-   16,
+   15,
    10,
+   14,
+   8,
    16,
-   13
+   12
   ],
   "senses": [
    [
@@ -19854,15 +19854,12 @@
    "DiceRollCondition.NEUTRAL[]",
    "DiceRollCondition.NEUTRAL[]",
    "DiceRollCondition.NEUTRAL[]",
-   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.DISADVANTAGE['Splint Armor']",
    "DiceRollCondition.NEUTRAL[]"
   ],
   "skill_sources": [
    [],
    [],
-   [
-    "3:Divine Order: Thaumaturge"
-   ],
    [],
    [],
    [],
@@ -19874,31 +19871,30 @@
    [],
    [],
    [],
-   [
-    "3:Divine Order: Thaumaturge"
-   ],
+   [],
+   [],
    [],
    [],
    []
   ],
   "skills": [
-   1,
+   0,
    3,
-   5,
-   -1,
    1,
    2,
+   1,
+   1,
    5,
    1,
+   -1,
+   3,
+   -1,
+   3,
+   1,
+   3,
+   -1,
    0,
-   3,
    0,
-   3,
-   1,
-   3,
-   3,
-   1,
-   1,
    3
   ],
   "slots": [
@@ -19915,28 +19911,28 @@
   "weapons": [
    [
     "Unarmed Strike",
-    1,
-    -1
+    4,
+    2
    ],
    [
     "Mace",
-    1,
-    -1
+    4,
+    2
    ],
    [
-    "Quarterstaff",
-    1,
-    -1
+    "Battleaxe",
+    4,
+    2
    ],
    [
     "Light Crossbow",
-    3,
-    1
+    2,
+    0
    ],
    [
     "Moradin's Wrath",
-    2,
-    2
+    5,
+    3
    ]
   ]
  },
@@ -20098,6 +20094,173 @@
    ],
    [
     "Mace",
+    1,
+    -1
+   ]
+  ]
+ },
+ "Y2024_Druid_Moon_Maggie": {
+  "ac": 15,
+  "carry": 10,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 27,
+  "immune": [],
+  "init": 4,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   false,
+   false,
+   true,
+   true,
+   false
+  ],
+  "saves": [
+   -1,
+   2,
+   3,
+   2,
+   5,
+   0
+  ],
+  "scores": [
+   8,
+   14,
+   16,
+   10,
+   16,
+   10
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [
+    "3:Primal Order"
+   ],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [
+    "3:Primal Order"
+   ],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   2,
+   3,
+   5,
+   -1,
+   0,
+   0,
+   3,
+   0,
+   0,
+   3,
+   3,
+   5,
+   0,
+   0,
+   0,
+   2,
+   4,
+   5
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    1,
+    -1
+   ],
+   [
+    "Sickle",
+    1,
+    -1
+   ],
+   [
+    "Quarterstaff",
     1,
     -1
    ]

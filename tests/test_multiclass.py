@@ -49,20 +49,21 @@ class TestPrerequisiteEnforced:
 
     def test_low_charisma_warlock_rejected(self):
         data = SpellSlotTestWizard3Warlock3CharacterBuilder().build()
-        data.base_abilities.charisma = 10  # raw score; background +1 -> 11
+        # raw score; background +1 -> 11
+        data.base_abilities = data.base_abilities.with_scores(charisma=10)
         with pytest.raises(ValueError, match="Warlock requires Charisma 13"):
             data.validate()
 
     def test_starting_class_also_checked(self):
         # Paladin 4 / Wizard 3 needs Paladin's STR 13 too.
         data = SpellSlotTestPaladin4Wizard3CharacterBuilder().build()
-        data.base_abilities.strength = 8
+        data.base_abilities = data.base_abilities.with_scores(strength=8)
         with pytest.raises(ValueError, match="Paladin requires Strength 13"):
             data.validate()
 
     def test_single_class_not_checked(self):
         data = SpellSlotTestWizard5CharacterBuilder().build()
-        data.base_abilities.intelligence = 8
+        data.base_abilities = data.base_abilities.with_scores(intelligence=8)
         data.validate()
 
 

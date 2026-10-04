@@ -14,11 +14,11 @@ from Core.Definitions import (
 )
 from Core.SpellcastingRules import CasterType
 from Model.AbilityRequirements import AbilityRequirements
-from Model.AbilityScores import AbilityScores
+from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
 from Model.Bonuses import DerivedBonus
 from Model.CarryingCapacity import CarryingCapacity
-from Model.ClassLevels import ClassLevels
+from Model.Contracts import StatView
 from Model.Defenses import Defenses
 from Model.EquipmentTraining import EquipmentTraining
 from Model.HitPoints import HitPoints
@@ -43,19 +43,15 @@ class Ledger(Recorder):
     it's sealed, every part raises SealedError on a write (Model/Recorder.py).
 
     Each part owns its own state and the queries on it; see
-    Notes/feature-application-model.md. Every part is always present, even
-    when empty. Abilities, speed and spellcasting start from the character's
-    build choices (base scores, species speed, class spellcasting ability);
-    every other part starts empty, because every proficiency, expertise and
-    bonus arrives as an effect (e.g. ClassProficiencies, ClassSkillChoice,
-    FreeBackgroundSkillProficiency)."""
+    Notes/feature-application-model.md. Every part is always present, and
+    starts empty: parts hold only what effects record, never a copy of a
+    source (base scores, base speed and the spellcasting ability stay on the
+    Character, and resolvers read them through the view)."""
 
-    def __init__(
-        self, abilities: AbilityScores, base_speed: int, spellcasting: Spellcasting
-    ):
-        self.abilities = abilities
-        self.speed = Speed(base_speed)
-        self.spellcasting = spellcasting
+    def __init__(self):
+        self.ability_increases = AbilityIncreases()
+        self.speed = Speed()
+        self.spellcasting = Spellcasting()
         self.skills = Skills()
         self.saving_throws = SavingThrows()
         self.carrying_capacity = CarryingCapacity()
@@ -70,12 +66,12 @@ class Ledger(Recorder):
         self.initiative = Initiative()
         self.weapon_bonuses = WeaponBonuses()
 
-    def validate(self, class_levels: ClassLevels) -> None:
+    def validate(self, view: StatView) -> None:
         """Check every recorded requirement against the complete set of
         effects: expertise needs proficiency, ability minimums (an armor's
         Strength, multiclass prerequisites) need the scores."""
         self.skills.validate()
-        self.ability_requirements.validate(self.abilities, class_levels)
+        self.ability_requirements.validate(view)
 
 
 class Effects:
@@ -101,8 +97,8 @@ class Effects:
         self, ability: Ability, bonus: int, max_score: Optional[int] = None
     ) -> None:
         """+`bonus` to `ability`, to a maximum of `max_score` (None: an
-        uncapped equipment bonus). Caps resolve on read - see AbilityScores."""
-        self._ledger.abilities.add_bonus(ability, bonus, max_score=max_score)
+        uncapped equipment bonus). Caps resolve on read - see AbilityIncreases."""
+        self._ledger.ability_increases.add(ability, bonus, max_score=max_score)
 
     def add_ability_requirement(
         self, ability: Ability, min_score: int, reason: str

@@ -209,7 +209,14 @@ Rules of thumb:
 - **Tests:** the layering allowlist is now empty.
 - **Verify:** A, B, C, D, plus `python RunCharacterCreatorUI.py` starts (the Creator imports the most modules).
 
-### Step 5: Sources are never copied into parts *(design-critical)*
+### Step 5: Sources are never copied into parts *(design-critical)* — done
+
+- **Result:** `Ledger()` takes no arguments, and every part starts empty.
+  - **Ability scores.** `AbilityScores` is now only the immutable base scores: read-only properties, plus `with_scores(...)` for a changed copy. That fixed the stale-cache bug from Step 1, and its xfail became a passing test. The new `AbilityIncreases` part (`character.ability_increases`) records the increases and resolves `score(ability, view)` and `own_score(ability, view)`. `Character.abilities` and the `deepcopy` are gone, and the queries are `get_ability_score`, `get_own_ability_score` (new) and `get_ability_modifier`.
+  - **Speed and spellcasting.** `Speed` holds bonuses only, and `Spellcasting` holds casters and the DC bonus only.
+  - **`StatView` gained source reads.** They are methods that fail clearly when a source isn't set: `get_base_ability_score`, `get_base_speed`, `get_own_ability_score`, `class_levels` and `fixed_spell_slots`.
+  - **Parts of Step 6 happened early.** `ArmorClass.calculate(view, ...)` and `AbilityRequirements.validate(view)` already take the view, because the evaluated `AbilityScores` they read no longer exists.
+  - **Tests.** `tests/_fake_view.py` is a minimal `StatView` for unit-testing parts without a `Character`. Snapshots didn't move, and the pages are byte-for-byte identical to the baseline.
 
 - **Goal:** `Ledger()` takes no arguments, and parts hold contributions only.
 - **Changes:**

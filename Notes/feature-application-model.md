@@ -179,14 +179,15 @@ flat-list/formula-list/source-list shape themselves.
 | `languages` (`Languages`) | Known languages, each with sources (`knows`, `sources`, `add`) |
 | `defenses` (`Defenses`) | Damage resistance/immunity, condition immunity, each with sources |
 | `senses` (`Senses`) | Sense ranges (`.ranges`) and "or extend" grants |
-| `ability_requirements` (`AbilityRequirements`) | Ability score minimums (e.g. an armor's Strength) plus the multiclass ability-score prerequisites, both checked by `validate(abilities, class_levels)` |
+| `ability_increases` (`AbilityIncreases`) | Every ability score increase and its cap, on top of `base_abilities`; `score(ability, view)` / `own_score(ability, view)` (own = without equipment bonuses) |
+| `ability_requirements` (`AbilityRequirements`) | Ability score minimums (e.g. an armor's Strength) plus the multiclass ability-score prerequisites, both checked by `validate(view)` against the own scores |
 | `initiative` (`Initiative`) | Proficiency, roll conditions and a `Bonuses` total (`character.calculate_initiative()` / `.initiative_roll_condition` combine it with the Dexterity modifier and untrained-armor Disadvantage) |
 | `worn_armor` (`WornArmor`) | The worn body armor's type/name and whether a Shield is wielded - what untrained-armor Disadvantage, spellcasting warnings, Defense, Unarmored Movement and `ArmorClass.calculate` all read |
-| `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `calculate(abilities, character, is_wielding_shield, has_shield_training)` |
+| `armor_class` (`ArmorClass`) | AC formulas (`ArmorClassFormula`, `UNARMORED_ARMOR_CLASS`), a `Bonuses` total and the Shield's AC bonus; `calculate(view, is_wielding_shield, has_shield_training)` |
 | `hit_points` (`HitPoints`) | A `Bonuses` total; `calculate(class_levels, constitution_modifier, character)` |
-| `speed` (`Speed`) | Base walking speed and a `Bonuses` total (`character.calculate_speed()`) |
+| `speed` (`Speed`) | A `Bonuses` total; `total(view)` adds the species' `base_speed` (`character.calculate_speed()`) |
 | `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(strength_modifier)` / `total(strength_modifier)` also compute the dynamic "Person" base |
-| `spellcasting` (`Spellcasting`) | Spell casting ability, registered casters, spell save DC bonus; `spell_slots()`/`pact_magic_slots()` also take `class_levels` |
+| `spellcasting` (`Spellcasting`) | Registered casters and the spell save DC bonus; `spell_slots(view)`/`pact_magic_slots(view)` read the class levels and the fixed slots (sources) through the view |
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags, a `Bonuses` per skill/ability (`get_total_bonus(skill_or_ability, character)`) |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
@@ -196,9 +197,11 @@ each write one part; `Character` has none of them, and once the `Ledger` is eval
 sealed (`Model/Recorder.py`): every part mutator raises `SealedError`, so nothing can record onto
 an evaluation that the next change would discard. A test or tool applying one feature to a bare
 character grants it with `character.add_effect(feature)`, a real source like any other.
-`character.abilities` is the evaluated `AbilityScores` (every increase applied); the player's
-scores before any increase are `base_abilities`. Likewise `character.speed` is the `Speed` part,
-and the species' walking speed is `base_speed`.
+No part holds a copy of a source. The player's scores before any increase are `base_abilities`,
+an immutable `AbilityScores` (change one by assigning `base_abilities.with_scores(...)`); the final
+scores are the `get_ability_score()` / `get_own_ability_score()` queries. Likewise
+`character.speed` is the `Speed` part (bonuses only), and the species' walking speed is
+`base_speed`.
 `character.initiative` and `.speed` are the parts themselves - the *int* versions are
 the `calculate_initiative()` / `calculate_speed()` methods, named after the existing
 `calculate_armor_class()` / `calculate_hit_points()` convention so the name doesn't collide with

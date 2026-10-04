@@ -64,11 +64,14 @@ def test_character_satisfies_stat_view(character, name):
         arguments = [SAMPLE_ARGUMENTS[p.annotation] for p in parameters]
         value = getattr(character, name)(*arguments)
     expected = _return_annotation(name)
-    if isinstance(expected, type):
-        assert isinstance(value, expected), (name, value)
-    else:  # Optional[...]
-        allowed = tuple(t for t in typing.get_args(expected))
-        assert isinstance(value, allowed), (name, value)
+    origin = typing.get_origin(expected)
+    if origin is typing.Union:  # Optional[...]
+        allowed = typing.get_args(expected)
+    elif origin is not None:  # dict[int, int], ...
+        allowed = (origin,)
+    else:
+        allowed = (expected,)
+    assert isinstance(value, allowed), (name, value)
 
 
 def test_effects_cannot_read_anything_a_formula_reads():

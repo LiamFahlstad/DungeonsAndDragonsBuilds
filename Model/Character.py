@@ -16,7 +16,6 @@ without a cycle.
 
 from __future__ import annotations
 
-import copy
 from contextlib import contextmanager
 from typing import Any, Callable, Iterator, Optional
 
@@ -25,7 +24,8 @@ import attr
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.AbilityRequirements import AbilityRequirements
-from Model.AbilityScores import AbilityScores
+from Model.AbilityIncreases import AbilityIncreases
+from Model.AbilityScores import AbilityScores, ability_modifier
 from Model.ArmorClass import ArmorClass
 from Model.CarryingCapacity import CarryingCapacity
 from Model.ClassLevels import ClassLevels
@@ -80,10 +80,11 @@ class Character:
     # level_per_class/class_by_character_level below are thin delegating
     # properties kept for the many existing readers of those names.
     class_levels: ClassLevels = attr.Factory(ClassLevels)
-    # The player's ability scores before any increase. Effects work on a
-    # copy (see abilities).
+    # The player's ability scores before any increase - immutable; the final
+    # scores are get_ability_score() (see Model/AbilityIncreases.py).
     base_abilities: Optional[AbilityScores] = None
-    # Walking speed given by the species, before any bonus (see speed).
+    # Walking speed given by the species, before any bonus (see
+    # calculate_speed).
     base_speed: Optional[int] = None
     size: Optional[Definitions.CreatureSize] = None
 
@@ -417,15 +418,7 @@ class Character:
         if self.base_class is None:
             raise ValueError("Character base class must be set.")
 
-        ledger = Ledger(
-            # A copy: effects record their increases on it, and recording
-            # them on the base scores would stack them on every rebuild.
-            abilities=copy.deepcopy(self.base_abilities),
-            base_speed=self.base_speed,
-            spellcasting=Spellcasting(
-                ability=self.spell_casting_ability, fixed_slots=self.fixed_spell_slots
-            ),
-        )
+        ledger = Ledger()
         effects = Effects(ledger)
         try:
             # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
@@ -493,21 +486,21 @@ class Character:
         Strength, multiclass ability minimums). Returns the character, so a
         build can be checked inline: `builder.build().validate()`."""
         self._validate_sources()
-        self._get_ledger().validate(self.class_levels)
+        self._get_ledger().validate(self)
         return self
 
     # ── The evaluated parts ──────────────────────────────────────────────────
     # Each reads one part of the evaluated Ledger (Model/Effects.py).
 
     @property
-    def abilities(self) -> AbilityScores:
-        """Ability scores with every increase applied (base_abilities holds
-        the scores before them)."""
-        return self._get_ledger().abilities
+    def ability_increases(self) -> AbilityIncreases:
+        """Every increase recorded on top of base_abilities (the final scores
+        are get_ability_score())."""
+        return self._get_ledger().ability_increases
 
     @property
     def speed(self) -> Speed:
-        """Base walking speed plus every bonus (the int is calculate_speed())."""
+        """Every bonus to walking speed (the int is calculate_speed())."""
         return self._get_ledger().speed
 
     @property
@@ -584,11 +577,11 @@ class Character:
 
     @property
     def spell_slots(self) -> Optional[dict[int, int]]:
-        return self.spellcasting.spell_slots(self.class_levels)
+        return self.spellcasting.spell_slots(self)
 
     @property
     def pact_magic_slots(self) -> dict[int, int]:
-        return self.spellcasting.pact_magic_slots(self.class_levels)
+        return self.spellcasting.pact_magic_slots(self)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
@@ -648,7 +641,7 @@ class Character:
         return warnings
 
     def calculate_initiative(self) -> int:
-        modifier = self.abilities.get_modifier(Ability.DEXTERITY)
+        modifier = self.get_ability_modifier(Ability.DEXTERITY)
         return modifier + self.initiative.total(self.get_proficiency_bonus(), self)
 
     def calculate_speed(self) -> int:
@@ -657,17 +650,30 @@ class Character:
     def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
         return self.carrying_capacity.sources(
-            self.abilities.get_modifier(Ability.STRENGTH)
+            self.get_ability_modifier(Ability.STRENGTH)
         )
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return self.carrying_capacity.total(
-            self.abilities.get_modifier(Ability.STRENGTH)
-        )
+        return self.carrying_capacity.total(self.get_ability_modifier(Ability.STRENGTH))
 
     def _require_spell_casting_ability(self) -> Ability:
-        return self.spellcasting.require_ability()
+        if self.spell_casting_ability is None:
+            raise ValueError("Character does not have a spell casting ability.")
+        return self.spell_casting_ability
+
+    # ── Sources, read through StatView ───────────────────────────────────────
+
+    def get_base_ability_score(self, ability: Ability) -> int:
+        """The player's score before any increase."""
+        if self.base_abilities is None:
+            raise ValueError("Character abilities must be set.")
+        return self.base_abilities.get_score(ability)
+
+    def get_base_speed(self) -> int:
+        if self.base_speed is None:
+            raise ValueError("Character speed must be set.")
+        return self.base_speed
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.class_levels.get_class_level(character_class)
@@ -684,10 +690,16 @@ class Character:
         return 2 + (self.character_level - 1) // 4
 
     def get_ability_score(self, ability: Ability) -> int:
-        return self.abilities.get_score(ability)
+        """The final score: base, every capped increase and equipment bonuses."""
+        return self._get_ledger().ability_increases.score(ability, self)
+
+    def get_own_ability_score(self, ability: Ability) -> int:
+        """The score without equipment bonuses - what an armor's Strength
+        requirement or a multiclass minimum checks."""
+        return self._get_ledger().ability_increases.own_score(ability, self)
 
     def get_ability_modifier(self, ability: Ability) -> int:
-        return self.abilities.get_modifier(ability)
+        return ability_modifier(self.get_ability_score(ability))
 
     def get_strength_modifier(self) -> int:
         return self.get_ability_modifier(Ability.STRENGTH)
@@ -797,7 +809,7 @@ class Character:
         disables - Monk's Unarmored Defense - available again)."""
         is_wielding_shield = self.worn_armor.shield_wielded and not ignore_shield
         return self.armor_class.calculate(
-            self.abilities, self, is_wielding_shield, self.has_shield_training
+            self, is_wielding_shield, self.has_shield_training
         )
 
     def get_spell_casting_ability(self) -> Ability:

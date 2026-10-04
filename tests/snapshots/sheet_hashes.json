@@ -3836,20 +3836,20 @@
  },
  "Y2024_Cleric_Light_GabrielGreybeard": {
   "concise": {
-   "character.html": "f630ec1dcde8ff620fbff85fd637d51a1eb32f77014ad98b8997ee352895bda1",
-   "features/level_01.html": "984e56daea1d8c273bd795bbc21fcbc4f4f9722631518574b94c0684eb4e8404",
+   "character.html": "69f0c821e7f0a097652c751fab7716173bafc99178b092e6aae6d35d2c6121e4",
+   "features/level_01.html": "34fae597ba4f35a62ff350aaf8feeab9d8f29a8123251cbebf188014d8dd030a",
    "features/level_02.html": "27d876f79a17604cf292afc04f461ded935079e0964d428954bbca45f1f2f901",
    "features/level_03.html": "dcf458c7d6014ed95b271550d44ee7f9f9059132c8c4cbde7eacb930fe5d8f07",
-   "full_character_sheet.html": "ec03890904c4fc387da62b768ae1fa9055791409fe1eacc80a43fccca388c1d1",
-   "items.html": "571ef91958947d991600212031c13501102562864a560f3d00170dcb0dd93a42"
+   "full_character_sheet.html": "0d0e1642cff91f14c908b0a897e86310392bef96607bf96cf2baebaec5cc86be",
+   "items.html": "d30d5d6f578fa5f2013c212a152a2f0f68f1764d47fffb051e83773f8429b6ec"
   },
   "full": {
-   "character.html": "f630ec1dcde8ff620fbff85fd637d51a1eb32f77014ad98b8997ee352895bda1",
-   "features/level_01.html": "c930ac2058002ace5bd21a048a511492a18b04c293ff84cc5c0cadd9fc3d3a9d",
+   "character.html": "69f0c821e7f0a097652c751fab7716173bafc99178b092e6aae6d35d2c6121e4",
+   "features/level_01.html": "b7ac789e8a15ddc5e1d0984cf6fc086600217a0586ae328510b1ea930faceedb",
    "features/level_02.html": "27d876f79a17604cf292afc04f461ded935079e0964d428954bbca45f1f2f901",
    "features/level_03.html": "dcf458c7d6014ed95b271550d44ee7f9f9059132c8c4cbde7eacb930fe5d8f07",
-   "full_character_sheet.html": "1a837c88bb360865b28631981fe165ebdf55fdfb941885405f12c50f1219c51a",
-   "items.html": "571ef91958947d991600212031c13501102562864a560f3d00170dcb0dd93a42"
+   "full_character_sheet.html": "08a7f4ebb2c28f68a85dac4794fa111d75632c68e4da80606d0b5c5d24bc923b",
+   "items.html": "d30d5d6f578fa5f2013c212a152a2f0f68f1764d47fffb051e83773f8429b6ec"
   }
  },
  "Y2024_Cleric_Light_SolenneBrightward": {
@@ -3868,6 +3868,24 @@
    "features/level_03.html": "6d678cfeb56d4f4272439f3ad9c2ac6243b5bc8028bb0008f78d687d6e20175f",
    "full_character_sheet.html": "cbd9d9b97deaa37fda38cf4c8b9fa0b8e56ca12f5050790cd0b289facf2ae95c",
    "items.html": "e8826eedf10260b3c6df34093ed48ae1643c8d21a51be788538370e4442be5c5"
+  }
+ },
+ "Y2024_Druid_Moon_Maggie": {
+  "concise": {
+   "character.html": "f7b8a12d8dc896c126f325b0275fecb5a6808fb52f0f77a56fe97650b179d4cb",
+   "features/level_01.html": "1f1c4f3c06eafd05b5069d966adac894d3dd7516edf188cb2a596d2f43529367",
+   "features/level_02.html": "a948f6fdecf7acb38cb43a5291f4adae50b207c86ad3c3273fec0bf5d7494bb3",
+   "features/level_03.html": "dac0e242bc89cc7adbd3271ae19238542cda89987a5b4d2317565e34c8f8df71",
+   "full_character_sheet.html": "0bcd744d6c2ca19c72e52569b5d5928ae54b5c3d4bd7f27f5c28c425db4e4e7d",
+   "items.html": "1c9977e2f6e6778be565ae8ddca1c09571bd5d87c5e9654930861db8dad5b235"
+  },
+  "full": {
+   "character.html": "f7b8a12d8dc896c126f325b0275fecb5a6808fb52f0f77a56fe97650b179d4cb",
+   "features/level_01.html": "6e55b5797f1f2ce347acca7742713854cf169723a7a7c86958db0636427d7dfd",
+   "features/level_02.html": "a948f6fdecf7acb38cb43a5291f4adae50b207c86ad3c3273fec0bf5d7494bb3",
+   "features/level_03.html": "dac0e242bc89cc7adbd3271ae19238542cda89987a5b4d2317565e34c8f8df71",
+   "full_character_sheet.html": "ad69ee36a653000185c51ca5b9b96afd13406b59cb080178fdcf3d2fee6911bf",
+   "items.html": "1c9977e2f6e6778be565ae8ddca1c09571bd5d87c5e9654930861db8dad5b235"
   }
  },
  "Y2024_Druid_Moon_UrsalineNightpelt": {

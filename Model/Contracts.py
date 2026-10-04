@@ -8,22 +8,41 @@ read (see Model/Bonuses.py). Character satisfies it structurally; Effects -
 the write-only record apply() gets - deliberately does not, so a formula can
 never read a stat in the middle of evaluation.
 
-Keep StatView minimal: answers only (numbers, booleans), never a part. A new
-member is a new thing every formula may depend on.
+Keep StatView minimal: answers and sources only, never a part. A new member
+is a new thing every formula may depend on. The source reads (base scores,
+base speed, class levels, fixed spell slots) are what the parts' resolvers
+need, since no part holds a copy of a source.
 """
 
 from typing import Callable, Optional, Protocol
 
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
+from Model.ClassLevels import ClassLevels
 
 
 class StatView(Protocol):
+    # ── Sources ──────────────────────────────────────────────────────────
+
+    @property
+    def class_levels(self) -> ClassLevels: ...
+
+    @property
+    def fixed_spell_slots(self) -> dict[int, int]: ...
+
+    def get_base_ability_score(self, ability: Ability) -> int: ...
+
+    def get_base_speed(self) -> int: ...
+
+    # ── Answers ──────────────────────────────────────────────────────────
+
     @property
     def character_level(self) -> int: ...
 
     def get_class_level(self, character_class: CharacterClass) -> int: ...
 
     def get_proficiency_bonus(self) -> int: ...
+
+    def get_own_ability_score(self, ability: Ability) -> int: ...
 
     def get_ability_modifier(self, ability: Ability) -> int: ...
 

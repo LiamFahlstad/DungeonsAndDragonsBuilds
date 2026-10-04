@@ -4,13 +4,13 @@ from Model.Recorder import Recorder, records
 
 
 class Speed(Recorder):
-    """Base walking speed plus every bonus to it (flat or formula-valued -
-    see Bonuses), e.g. "+10 feet while you aren't wearing Heavy armor".
+    """Every bonus to walking speed (flat or formula-valued - see Bonuses),
+    e.g. "+10 feet while you aren't wearing Heavy armor". The base speed is
+    the species' (Character.base_speed, a source), read on total().
 
     Merge rule: sum."""
 
-    def __init__(self, base: int):
-        self.base = base
+    def __init__(self):
         self.bonuses = Bonuses()
 
     @records
@@ -22,4 +22,4 @@ class Speed(Recorder):
         self.bonuses.add_formula(bonus)
 
     def total(self, view: StatView) -> int:
-        return self.base + self.bonuses.total(view)
+        return view.get_base_speed() + self.bonuses.total(view)

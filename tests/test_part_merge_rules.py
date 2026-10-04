@@ -29,7 +29,7 @@ from Core.Definitions import (
 )
 from Core.SpellcastingRules import CasterType
 from Model.AbilityRequirements import AbilityRequirements
-from Model.AbilityScores import AbilityScores
+from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
 from Model.Bonuses import Bonuses
 from Model.CarryingCapacity import CarryingCapacity
@@ -45,6 +45,7 @@ from Model.Speed import Speed
 from Model.Spellcasting import Spellcasting
 from Model.WeaponBonuses import WeaponBonus, WeaponBonuses
 from Model.WornArmor import WornArmor
+from tests._fake_view import FakeView
 
 # Formulas are resolved against a character; these ignore it.
 VIEW: Any = object()
@@ -316,8 +317,8 @@ class TestSpellcasting:
                 lambda s: s.add_spell_save_dc_bonus(1),
             ],
             lambda s: (
-                s.spell_slots(self.LEVELS),
-                s.pact_magic_slots(self.LEVELS),
+                s.spell_slots(FakeView(class_levels=self.LEVELS)),
+                s.pact_magic_slots(FakeView(class_levels=self.LEVELS)),
                 s.difficulty_class(3, 3),
             ),
         )
@@ -362,7 +363,9 @@ class TestWornArmor:
 
 
 def test_armor_class():
-    abilities = AbilityScores(10, 16, 14, 10, 14, 10)
+    view = FakeView(
+        {Ability.DEXTERITY: 16, Ability.CONSTITUTION: 14, Ability.WISDOM: 14}
+    )
     result = _same_in_every_order(
         ArmorClass,
         [
@@ -382,7 +385,7 @@ def test_armor_class():
             lambda a: a.add_shield_bonus(2),
         ],
         lambda a: [
-            a.calculate(abilities, VIEW, wielding, trained)
+            a.calculate(view, wielding, trained)
             for wielding in (False, True)
             for trained in (False, True)
         ],
@@ -392,28 +395,26 @@ def test_armor_class():
 
 
 def test_ability_score_increases():
-    def scores():
-        return AbilityScores(15, 10, 10, 10, 10, 10)
-
+    view = FakeView({Ability.STRENGTH: 15})
     result = _same_in_every_order(
-        scores,
+        AbilityIncreases,
         [
-            lambda s: s.add_bonus(Ability.STRENGTH, 2, max_score=20),
-            lambda s: s.add_bonus(Ability.STRENGTH, 2, max_score=20),
-            lambda s: s.add_bonus(Ability.STRENGTH, 4, max_score=25),
-            lambda s: s.add_bonus(Ability.STRENGTH, 2),
+            lambda s: s.add(Ability.STRENGTH, 2, max_score=20),
+            lambda s: s.add(Ability.STRENGTH, 2, max_score=20),
+            lambda s: s.add(Ability.STRENGTH, 4, max_score=25),
+            lambda s: s.add(Ability.STRENGTH, 2),
         ],
-        lambda s: (s.get_own_score(Ability.STRENGTH), s.get_score(Ability.STRENGTH)),
+        lambda s: (
+            s.own_score(Ability.STRENGTH, view),
+            s.score(Ability.STRENGTH, view),
+        ),
     )
     # 15 +2 +2 (to 19, cap 20), then +4 to 23 (cap 25); +2 from an item on top.
     assert result == (23, 25)
 
 
 def test_ability_requirements_report_the_same_failure():
-    levels = ClassLevels(
-        base_class=CharacterClass.FIGHTER, level_per_class={CharacterClass.FIGHTER: 1}
-    )
-    abilities = AbilityScores(10, 10, 10, 10, 10, 10)
+    view = FakeView()
     messages = set()
     for ordered in itertools.permutations(
         [
@@ -426,7 +427,7 @@ def test_ability_requirements_report_the_same_failure():
         for ability, minimum, reason in ordered:
             requirements.add_ability_requirement(ability, minimum, reason)
         with pytest.raises(ValueError) as error:
-            requirements.validate(abilities, levels)
+            requirements.validate(view)
         messages.add(str(error.value))
     assert messages == {"Strength score must be at least 13 (Chain Mail)."}
 
@@ -447,11 +448,11 @@ def test_initiative():
 
 def test_speed():
     result = _same_in_every_order(
-        lambda: Speed(30),
+        Speed,
         [
             lambda s: s.add_bonus(10),
             lambda s: s.add_derived_bonus(lambda view: 5),
         ],
-        lambda s: s.total(VIEW),
+        lambda s: s.total(FakeView(base_speed=30)),
     )
     assert result == 45

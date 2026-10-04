@@ -3,12 +3,14 @@ Tests for the Model package parts - core data structures for character attribute
 """
 
 import pytest
+
 from Core.Definitions import (
     Ability,
     Skill,
     CharacterClass,
     DiceRollCondition,
 )
+from Model.AbilityIncreases import AbilityIncreases
 from Model.AbilityScores import (
     AbilityScores,
     StandardArrayAbilityScores,
@@ -19,6 +21,7 @@ from Model.SavingThrows import SavingThrows
 from Model.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
 from Model.ClassLevels import ClassLevels
 from Model.HitPoints import HitPoints
+from tests._fake_view import FakeView
 
 
 class TestAbilityScores:
@@ -52,24 +55,15 @@ class TestAbilityScores:
         assert standard_abilities.get_modifier(Ability.WISDOM) == 0  # (10-10)//2 = 0
         assert standard_abilities.get_modifier(Ability.CHARISMA) == -1  # (8-10)//2 = -1
 
-    def test_add_bonus(self, standard_abilities):
-        """Test adding bonuses to ability scores."""
-        original_strength = standard_abilities.strength
-        standard_abilities.add_bonus(Ability.STRENGTH, 2)
-        assert standard_abilities.strength == original_strength + 2
-        assert standard_abilities.get_modifier(Ability.STRENGTH) == 3
+    def test_scores_are_read_only(self, standard_abilities):
+        with pytest.raises(AttributeError):
+            standard_abilities.strength = 18
 
-    def test_add_negative_bonus(self, standard_abilities):
-        """Test subtracting from ability scores with negative bonuses."""
-        original_charisma = standard_abilities.charisma
-        standard_abilities.add_bonus(Ability.CHARISMA, -2)
-        assert standard_abilities.charisma == original_charisma - 2
-        assert standard_abilities.get_modifier(Ability.CHARISMA) == -2
-
-    def test_add_bonus_invalid_type(self, standard_abilities):
-        """Test that add_bonus rejects non-integer bonuses."""
-        with pytest.raises(ValueError, match="Bonus must be an integer"):
-            standard_abilities.add_bonus(Ability.STRENGTH, "2")
+    def test_with_scores_replaces_some(self, standard_abilities):
+        changed = standard_abilities.with_scores(strength=8, wisdom=16)
+        assert changed.strength == 8 and changed.wisdom == 16
+        assert changed.dexterity == standard_abilities.dexterity
+        assert standard_abilities.strength == 15
 
     def test_get_ability_with_highest_modifier(self, standard_abilities):
         """Test finding the ability with highest modifier."""
@@ -383,3 +377,32 @@ class TestRollConditions:
         assert basic_skills.get_roll_condition(Skill.STEALTH) == (
             DiceRollCondition.NEUTRAL
         )
+
+
+class TestAbilityIncreases:
+    """Increases are recorded in their own part, on top of the base scores
+    (read through the view)."""
+
+    def test_uncapped_increase(self, standard_abilities):
+        increases = AbilityIncreases()
+        increases.add(Ability.STRENGTH, 2)
+        view = FakeView({Ability.STRENGTH: standard_abilities.strength})
+        assert increases.score(Ability.STRENGTH, view) == 17
+        # An uncapped increase is an equipment bonus: not part of the own score.
+        assert increases.own_score(Ability.STRENGTH, view) == 15
+
+    def test_negative_increase(self, standard_abilities):
+        increases = AbilityIncreases()
+        increases.add(Ability.CHARISMA, -2)
+        view = FakeView({Ability.CHARISMA: standard_abilities.charisma})
+        assert increases.score(Ability.CHARISMA, view) == 6
+
+    def test_capped_increase_stops_at_the_cap(self):
+        increases = AbilityIncreases()
+        increases.add(Ability.STRENGTH, 2, max_score=20)
+        view = FakeView({Ability.STRENGTH: 19})
+        assert increases.own_score(Ability.STRENGTH, view) == 20
+
+    def test_rejects_non_integer_bonus(self):
+        with pytest.raises(ValueError, match="Bonus must be an integer"):
+            AbilityIncreases().add(Ability.STRENGTH, "2")

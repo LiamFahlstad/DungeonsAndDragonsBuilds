@@ -1,6 +1,5 @@
 from Core.Definitions import Ability
-from Model.AbilityScores import AbilityScores
-from Model.ClassLevels import ClassLevels
+from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
 
 
@@ -27,30 +26,29 @@ class AbilityRequirements(Recorder):
     ) -> None:
         self._minimums.append((ability, min_score, reason))
 
-    def validate(self, abilities: AbilityScores, class_levels: ClassLevels) -> None:
+    def validate(self, view: StatView) -> None:
         order = list(Ability)
         for ability, min_score, reason in sorted(
             self._minimums, key=lambda m: (order.index(m[0]), m[1], m[2])
         ):
-            if abilities.get_own_score(ability) < min_score:
+            if view.get_own_ability_score(ability) < min_score:
                 raise ValueError(
                     f"{ability.value} score must be at least {min_score} ({reason})."
                 )
-        self._validate_multiclass_prerequisites(abilities, class_levels)
+        self._validate_multiclass_prerequisites(view)
 
-    def _validate_multiclass_prerequisites(
-        self, abilities: AbilityScores, class_levels: ClassLevels
-    ) -> None:
+    def _validate_multiclass_prerequisites(self, view: StatView) -> None:
         """A multiclass character needs 13+ in the prerequisite abilities of
         every class it has. Checked on the character's own final scores
         (equipment bonuses don't count) - the engine has no per-level score
         history, so this is the end-of-build approximation of "at the time
         you multiclass"."""
+        class_levels = view.class_levels
         if len(class_levels.level_per_class) < 2:
             return
         for character_class in class_levels.level_per_class:
             for group in character_class.multiclass_prerequisites:
-                if not any(abilities.get_own_score(a) >= 13 for a in group):
+                if not any(view.get_own_ability_score(a) >= 13 for a in group):
                     needed = " or ".join(a.value for a in group)
                     raise ValueError(
                         f"Multiclassing into or out of {character_class.value} "
