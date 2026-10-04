@@ -1,4 +1,3 @@
-from Core.Definitions import Ability, DiceRollCondition, Skill
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     AddItemDescription,
@@ -10,13 +9,15 @@ from CharacterContent.Features.Core.Improvements import (
     SkillBonus,
 )
 from CharacterContent.Items.Items import ItemRarity
+from Core.Definitions import Ability, DiceRollCondition, Skill
+
 from .Base import AbstractWeapon
 from .Enums import (
+    WeaponDamageRolls,
+    WeaponDamageTypes,
     WeaponMastery,
     WeaponProperty,
     WeaponType,
-    WeaponDamageRolls,
-    WeaponDamageTypes,
 )
 from .Improvements import (
     AddAttackRollBonus,
@@ -485,13 +486,20 @@ class HalflingssTrick(Shortsword):
 
 
 class ModarinsWrath(Maul):
-    """A sacred maul from Moradin's altar, empowered by divine fury.
-    Has 3 Wrath stacks that degrade when the wielder rolls a 1-3 on attack rolls.
-    Deals radiant damage and grows weaker as it degrades, until finally destroyed.
+    """A sacred maul from Moradin's altar that grows stronger as it nears
+    breaking. Each Wrath stack grants +1 to attack and damage rolls; it starts
+    at 1 stack, gains one on each attack roll of 1-3, and shatters on a 1-3
+    rolled at the 3-stack maximum. `wrath_stacks` is the current count."""
 
-    Stack system: starts at +3 total bonus (distributed across stages).
-    Each attack roll of 1-3 destroys the weapon by one stage (loses one Wrath stack).
-    At 0 stacks, the weapon is destroyed completely."""
+    MAX_WRATH_STACKS = 3
+
+    def __init__(self, wrath_stacks: int = 1, **kwargs):
+        if not 1 <= wrath_stacks <= self.MAX_WRATH_STACKS:
+            raise ValueError(
+                f"wrath_stacks must be 1-{self.MAX_WRATH_STACKS}, got {wrath_stacks}"
+            )
+        self.wrath_stacks = wrath_stacks
+        super().__init__(**kwargs)
 
     def base_stats(self) -> None:
         super().base_stats()
@@ -499,16 +507,16 @@ class ModarinsWrath(Maul):
         self.requires_attunement = True
         self.description_text = (
             "A sacred symbol of Moradin, torn from its altar by an outsider cleric. "
-            "This maul has 3 Wrath stacks, each granting +1 to attack and damage rolls. "
-            "When you roll a 1-3 on an attack roll with this weapon, it is destroyed by one stage, "
-            "losing one Wrath stack. At 3 stacks: +3 bonus. At 2 stacks: +2 bonus. At 1 stack: +1 bonus. "
-            "At 0 stacks: weapon is destroyed completely. "
-            "Damage type: you may choose between Radiant or Bludgeoning damage."
+            "You can deal Radiant or Bludgeoning damage with it.\n"
+            "Wrath: The maul starts with 1 Wrath stack (max 3), and each stack grants "
+            "+1 to attack and damage rolls. When you roll a 1-3 on an attack roll with "
+            "it, it gains a stack; if it already has 3, it breaks instead."
         )
 
     def setup_improvements(self) -> None:
-        self.add_weapon_improvement(AddAttackRollBonus(3, "Wrath Stacks (3/3)"))
-        self.add_weapon_improvement(AddDamageRollBonus(3, "Wrath Stacks (3/3)"))
+        reason = f"Wrath Stacks ({self.wrath_stacks}/{self.MAX_WRATH_STACKS})"
+        self.add_weapon_improvement(AddAttackRollBonus(self.wrath_stacks, reason))
+        self.add_weapon_improvement(AddDamageRollBonus(self.wrath_stacks, reason))
         self.add_weapon_improvement(SetItemName("Moradin's Wrath"))
 
 

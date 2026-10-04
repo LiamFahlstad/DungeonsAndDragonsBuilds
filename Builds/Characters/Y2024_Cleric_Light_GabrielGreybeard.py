@@ -16,7 +16,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
-    DivineOrderThaumaturgeChoice,
+    DivineOrderProtectorChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
@@ -48,28 +48,19 @@ def get_starter_class_builder():
         # + INT 10 (2) + STR 8 (0) = 27. These are the pre-background scores;
         # the Sage background bonuses below bring WIS/CON to 16/16.
         abilities=PointBuyAbilityScores(
-            strength=8,
-            dexterity=12,
+            strength=13,
+            dexterity=10,
             constitution=14,
-            intelligence=10,
+            intelligence=8,
             wisdom=15,
-            charisma=13,
+            charisma=12,
         ),
-        # Sage background, as specified: +1 WIS, +2 CON.
-        # NOTE: the 2024 PHB Sage background actually draws its ability bonuses
-        # from {Intelligence, Wisdom, Charisma}, not Constitution - this is a
-        # deviation from RAW (a homebrew/table-house-ruled version of Sage).
-        # Keeping it as answered; flag with your DM if that wasn't intentional.
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.WISDOM, 1),
-                (Ability.CONSTITUTION, 2),
+                (Ability.STRENGTH, 2),
             ]
         ),
-        # NOTE: the answers named the background ("Sage") and its ability bonus
-        # + tool proficiency, but didn't say which 2 skills it grants. RAW Sage
-        # (2024 PHB) always grants Arcana + History, so that's what's filled in
-        # here - confirm with your friend/DM if a different pair was intended.
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
                 Skill.ARCANA,
@@ -86,15 +77,6 @@ def get_starter_class_builder():
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ClericLevel1(
-                    # The 3 cantrip slots are filled with the 3 named cantrips.
-                    # NOTE: Divine Order's Thaumaturge option (bonus cantrip -
-                    # here Spare the Dying) isn't modeled as an extra slot
-                    # anywhere in this codebase; ClericLevel1 only has 3 cantrip
-                    # slots, and the only other cantrip slot for Cleric shows up
-                    # at level 4 (a swap-a-cantrip slot, see e.g.
-                    # Y2024_Cleric_Light_SolenneBrightward.py). Since this build
-                    # stops at level 3, Spare the Dying had to be left out; add
-                    # it via that level-4 slot once the character advances.
                     cantrip_1=ClericLevel0Spells.GUIDANCE,
                     cantrip_2=ClericLevel0Spells.SACRED_FLAME,
                     cantrip_3=ClericLevel0Spells.THAUMATURGY,
@@ -102,9 +84,7 @@ def get_starter_class_builder():
                     spell_2=ClericLevel1Spells.CURE_WOUNDS,
                     spell_3=ClericLevel1Spells.GUIDING_BOLT,
                     spell_4=ClericLevel1Spells.SHIELD_OF_FAITH,
-                    divine_order=DivineOrderThaumaturgeChoice(
-                        extra_cantrip=ClericLevel0Spells.SPARE_THE_DYING
-                    ),
+                    divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
                     spell=ClericLevel2Spells.SILENCE,
@@ -127,25 +107,12 @@ class Y2024ClericLightGabrielGreybeardCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
         )
-        # Stonehill Armory upgrade (gifted, not purchased): Chain Shirt
-        # traded up to Breastplate (still medium, still proficient, AC 14
-        # instead of 13). His Mace stays - already the best one-handed
-        # option he's proficient with alongside a shield (Cleric
-        # proficiency is Simple weapons only, since he took the
-        # Thaumaturge Divine Order rather than Protector). Also given a
-        # Quarterstaff (Simple, versatile) so he can drop the shield and
-        # swing two-handed for a bigger die when he doesn't need the extra
-        # AC, and a Light Crossbow for a ranged option - the best die (d8)
-        # among the Simple-weapon ranged options he's actually proficient
-        # with.
         self.drop_item(Armor.ChainShirtArmor)
         self.add_adventuring_gear(
             "Stonehill Armory Upgrade",
-            armor=[Armor.BreastplateArmor()],
-            weapons=[Weapons.Quarterstaff(), Weapons.LightCrossbow()],
+            armor=[Armor.SplintArmor()],
+            weapons=[Weapons.Battleaxe(), Weapons.LightCrossbow()],
         )
-        # Adventure to Ashelm: Moradin's Wrath, a sacred maul torn from the
-        # god's altar - the religious symbol recovered on the trip.
         self.add_adventuring_gear(
             "Adventure to Ashelm",
             weapons=[Weapons.ModarinsWrath()],
