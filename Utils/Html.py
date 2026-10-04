@@ -1265,6 +1265,12 @@ BASE_CHARACTER_SHEET_CSS = """
             font-size: 1rem;
         }
 
+        /* DC / attack written as a formula - longer than a number, so smaller */
+        .spell-stat-value.spell-stat-formula {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
         /* Probability tables are reference material, not the headline stat */
         .spell-tables-secondary {
             max-width: 100%;

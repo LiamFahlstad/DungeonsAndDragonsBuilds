@@ -679,6 +679,12 @@ class Character:
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
         return self.ledger.spellcasting.difficulty_class(ability, self)
 
+    @property
+    def spell_save_dc_bonus(self) -> int:
+        """Flat bonus to the spell save DC on top of 8 + ability modifier +
+        proficiency bonus (e.g. from an item)."""
+        return self.ledger.spellcasting.spell_save_dc_bonus
+
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(
             self._require_spell_casting_ability()

@@ -378,14 +378,20 @@ class HtmlCharacterSheetWriter:
         casting_abilities: list[Ability],
         include_probability_tables: bool = False,
     ):
-        """Prominent Ability / Save DC / Attack modifier tiles, one row per
-        spellcasting ability. The probability breakdown tables that follow
-        are reference material, so they're rendered smaller and muted.
+        """Prominent Ability / Save DC / Attack roll tiles, one row per
+        spellcasting ability. DC and attack are written as formulas ("8 + Cha
+        Mod + Proficiency Bonus"), like weapon attacks, rather than resolved
+        numbers. The probability breakdown tables that follow are reference
+        material, so they're rendered smaller and muted.
         """
         file.write("<div class='spell-headline'>\n")
         for ability in casting_abilities:
-            dc = character.calculate_difficulty_class_for_ability(ability)
-            attack_bonus = character.calculate_attack_bonus_for_ability(ability)
+            stats = f"{ability.short_name.title()} Mod + Proficiency Bonus"
+            dc_formula = f"8 + {stats}"
+            if character.spell_save_dc_bonus:
+                sign = "-" if character.spell_save_dc_bonus < 0 else "+"
+                dc_formula += f" {sign} {abs(character.spell_save_dc_bonus)} (bonus)"
+            attack_formula = f"1d20 + {stats}"
             file.write("<div class='spell-headline-group'>\n")
             file.write(
                 "<div class='spell-stat-tile'>"
@@ -396,13 +402,13 @@ class HtmlCharacterSheetWriter:
             file.write(
                 "<div class='spell-stat-tile'>"
                 "<span class='spell-stat-label'>Spell Save DC</span>"
-                f"<span class='spell-stat-value'>{dc}</span>"
+                f"<span class='spell-stat-value spell-stat-formula'>{dc_formula}</span>"
                 "</div>\n"
             )
             file.write(
                 "<div class='spell-stat-tile'>"
-                "<span class='spell-stat-label'>Spell Attack Modifier</span>"
-                f"<span class='spell-stat-value'>{attack_bonus:+}</span>"
+                "<span class='spell-stat-label'>Spell Attack Roll</span>"
+                f"<span class='spell-stat-value spell-stat-formula'>{attack_formula}</span>"
                 "</div>\n"
             )
             file.write("</div>\n")
