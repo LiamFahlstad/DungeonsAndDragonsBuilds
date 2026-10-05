@@ -1,6 +1,7 @@
 import html
 import pathlib
-from typing import Collection, Literal, Optional, Sequence, TextIO
+from enum import Enum
+from typing import Collection, Literal, Optional, Sequence, TextIO, TypeVar
 
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
@@ -32,6 +33,18 @@ from Model.Character import Character
 from Model.Skills import Skills
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
+
+T = TypeVar("T")
+
+
+def _as(value: object, kind: type[T]) -> T:
+    """`value`, checked to be a `kind`. The Model holds features and gear
+    only through the Protocols in Model/Sources.py, but the sheet renders
+    the concrete classes, so this is where it gets them back. Anything else
+    is a bug, hence raising rather than skipping."""
+    if not isinstance(value, kind):
+        raise TypeError(f"Expected a {kind.__name__}, got {type(value).__name__}")
+    return value
 
 
 def get_output_folder(
@@ -212,7 +225,7 @@ class HtmlCharacterSheetWriter:
         file: TextIO,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
-        weapon_proficiencies: set[WeaponProficiency],
+        weapon_proficiencies: Collection[Enum],
         character_subclass: Optional[str],
         size: Definitions.CreatureSize,
     ):
@@ -900,12 +913,16 @@ class HtmlCharacterSheetWriter:
         per category, each paired with the entry it came from and sorted by
         item type then name. Unarmed Strike and currency are left out."""
         armors = sorted(
-            ((armor, entry) for entry in entries for armor in entry.armors),
+            (
+                (_as(armor, Armor.AbstractArmor), entry)
+                for entry in entries
+                for armor in entry.armors
+            ),
             key=lambda x: (x[0].category.value, x[0].name),
         )
         weapons = sorted(
             (
-                (weapon, entry)
+                (_as(weapon, AbstractWeapon), entry)
                 for entry in entries
                 for weapon in entry.weapons
                 if not isinstance(weapon, UnarmedStrike)
@@ -916,8 +933,9 @@ class HtmlCharacterSheetWriter:
             (
                 (item, quantity, entry)
                 for entry in entries
-                for item, quantity in entry.items
-                if item.category != Items.ItemCategory.CURRENCY
+                for gear, quantity in entry.items
+                if (item := _as(gear, Items.Item)).category
+                != Items.ItemCategory.CURRENCY
             ),
             key=lambda x: (x[0].category.value, x[0].name),
         )
@@ -1352,13 +1370,13 @@ class HtmlCharacterSheetWriter:
         character = data.validate()
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
-        armors = data.armors
+        armors = [_as(a, Armor.AbstractArmor) for a in data.armors]
         armor_proficiencies = character.ledger.equipment_training.armor_training
         weapon_proficiencies = character.ledger.equipment_training.weapon_proficiencies
-        features = data.features
-        weapons = data.weapons
-        weapon_masteries = data.weapon_masteries
-        fighting_styles = data.fighting_styles
+        features = [_as(f, Feature) for f in data.features]
+        weapons = [_as(w, AbstractWeapon) for w in data.weapons]
+        weapon_masteries = [_as(w, AbstractWeapon) for w in data.weapon_masteries]
+        fighting_styles = [_as(s, FightingStyle) for s in data.fighting_styles]
         invocations = data.invocations
         spells = data.spells
         equipment_entries = data.inventory.equipment_entries
@@ -1552,7 +1570,7 @@ class HtmlCharacterSheetWriter:
         size: Definitions.CreatureSize,
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
-        weapon_proficiencies: set[WeaponProficiency],
+        weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         invocations: list[str],
         spells: list[tuple[str, Ability, Optional[str], int]],
@@ -1749,7 +1767,7 @@ class HtmlCharacterSheetWriter:
         current_gold: Optional[float],
         armors: list[Armor.AbstractArmor],
         armor_proficiencies: set[Definitions.ArmorType],
-        weapon_proficiencies: set[WeaponProficiency],
+        weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         text_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
@@ -1934,7 +1952,9 @@ class HtmlCharacterSheetWriter:
         if items is None:
             items = []
 
-        entry = EquipmentEntry(label=title, armors=armors, weapons=weapons, items=items)
+        entry = EquipmentEntry(
+            label=title, armors=list(armors), weapons=list(weapons), items=list(items)
+        )
 
         output_file = pathlib.Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)

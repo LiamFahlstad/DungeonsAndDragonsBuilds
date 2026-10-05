@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from enum import Enum
-from typing import Literal, TextIO
+from typing import Literal, Sequence, TextIO
 
 from Model.Character import note_feature_extended
 from Model.Character import Character
@@ -775,7 +775,7 @@ class Feature:
         return f"<span class='feature-range-tag'>Range: {label}</span>"
 
     @staticmethod
-    def _usage_tags_html(usage_tags: list[str] | None) -> str:
+    def _usage_tags_html(usage_tags: Sequence[str] | None) -> str:
         if not usage_tags:
             return ""
         labels = {

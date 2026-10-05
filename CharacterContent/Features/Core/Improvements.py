@@ -35,7 +35,7 @@ every build in shuffled orders and requires the same character.
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional
+from typing import Optional, Sequence
 
 from Core.Definitions import (
     Ability,
@@ -180,8 +180,8 @@ class GrantWeaponProficiency(CharacterImprovement):
     weapon works out whether it's covered when it's read, so the grant may
     apply before or after the weapon is added."""
 
-    def __init__(self, weapon_proficiencies: list[Enum]):
-        self.weapon_proficiencies = weapon_proficiencies
+    def __init__(self, weapon_proficiencies: Sequence[Enum]):
+        self.weapon_proficiencies = list(weapon_proficiencies)
 
     def apply(self, effects: Effects):
         for weapon_proficiency in self.weapon_proficiencies:

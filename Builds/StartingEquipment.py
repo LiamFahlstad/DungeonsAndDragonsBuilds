@@ -4,11 +4,12 @@ Lives in the builder layer, not in Model/Inventory.py, because it has to
 tell weapons from armor and make an Unarmed Strike - the model package never
 imports CharacterContent at runtime."""
 
-from typing import Optional
+from typing import Optional, Sequence
 
 from CharacterContent.Items import Armor, Items, Packs, Weapons
 from Core.Definitions import CharacterClass
 from Model.Inventory import EquipmentEntry, Inventory
+from Model.Sources import ArmorGear, Gear
 
 # Each class's flat starting gold - the last "Choose A/B/..." alternative in
 # its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.
@@ -41,12 +42,12 @@ def _entry_value(entry: EquipmentEntry) -> float:
 def set_starting_equipment(
     inventory: Inventory,
     base_class: CharacterClass,
-    default_equipment: list[Weapons.AbstractWeapon | Armor.AbstractArmor],
+    default_equipment: Sequence[Weapons.AbstractWeapon | Armor.AbstractArmor],
     add_default_equipment: bool,
     default_pack: Optional[Packs.Pack] = None,
-    armor: Optional[list[Armor.AbstractArmor]] = None,
-    weapons: Optional[list[Weapons.AbstractWeapon]] = None,
-    items: Optional[list[tuple[Items.Item, int]]] = None,
+    armor: Optional[Sequence[Armor.AbstractArmor]] = None,
+    weapons: Optional[Sequence[Weapons.AbstractWeapon]] = None,
+    items: Optional[Sequence[tuple[Items.Item, int]]] = None,
 ) -> EquipmentEntry:
     """Give `inventory` its Starting Equipment and starting gold. Call once
     per inventory - a second call raises."""
@@ -54,9 +55,9 @@ def set_starting_equipment(
     if not any(isinstance(w, Weapons.UnarmedStrike) for w in default_equipment):
         unarmed_strike = Weapons.UnarmedStrike(player_is_proficient=True)
 
-    starting_armor: list[Armor.AbstractArmor] = []
-    starting_weapons: list[Weapons.AbstractWeapon] = []
-    starting_items: list[tuple[Items.Item, int]] = []
+    starting_armor: list[ArmorGear] = []
+    starting_weapons: list[Gear] = []
+    starting_items: list[tuple[Gear, int]] = []
 
     # Explicit body armor replaces the default one (a character can only
     # wear one armor at a time); default shields still apply.

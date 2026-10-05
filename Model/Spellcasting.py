@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from Core.Definitions import Ability, CharacterClass
 from Core.SpellcastingRules import (
@@ -54,12 +54,12 @@ class Spellcasting(Recorder):
         return calculate_spell_slots(self._casters, levels)[1]
 
     def slot_progression(
-        self, class_by_character_level: list[CharacterClass]
+        self, class_by_character_level: Sequence[CharacterClass]
     ) -> SlotProgression:
         """When each slot is gained, as character levels, for a character
         taking these classes level by level (see
         Core.SpellcastingRules.calculate_slot_progression)."""
-        return calculate_slot_progression(self._casters, class_by_character_level)
+        return calculate_slot_progression(self._casters, list(class_by_character_level))
 
     def difficulty_class(self, ability: Ability, view: StatView) -> int:
         """Spell save DC when casting with `ability`."""

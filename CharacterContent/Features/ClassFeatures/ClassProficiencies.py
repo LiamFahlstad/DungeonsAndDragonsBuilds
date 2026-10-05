@@ -18,6 +18,8 @@ and have no card of their own - the sheet lists proficiencies and saving
 throws in its own sections.
 """
 
+from typing import Sequence
+
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
@@ -209,7 +211,7 @@ class ClassProficiencies(Feature):
         self,
         character_class: CharacterClass,
         armor: list[ArmorType],
-        weapons: list[WeaponProficiency],
+        weapons: Sequence[WeaponProficiency],
         tools: list[Tools.ToolProficiency],
         name: str = "Proficiencies",
         grant_saving_throws: bool = True,

@@ -13,7 +13,7 @@ carrying capacity read.
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Sequence
 
 import attr
 
@@ -156,9 +156,9 @@ class Inventory:
     def add_adventuring_gear(
         self,
         label: str,
-        armor: Optional[list[ArmorGear | Bought]] = None,
-        weapons: Optional[list[Gear | Bought]] = None,
-        items: Optional[list[tuple[Gear | Bought, int]]] = None,
+        armor: Optional[Sequence[ArmorGear | Bought]] = None,
+        weapons: Optional[Sequence[Gear | Bought]] = None,
+        items: Optional[Sequence[tuple[Gear | Bought, int]]] = None,
         gold: float = 0,
     ) -> EquipmentEntry:
         """Record gear picked up after character creation as its own labeled

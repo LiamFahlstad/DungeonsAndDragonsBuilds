@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import NamedTuple, Optional, TextIO
+from enum import Enum
+from typing import Iterable, NamedTuple, Optional, TextIO
 from Utils import DamageCalculator
 from Core.Definitions import Ability, DiceRollCondition, Die
 from CharacterContent.Features.Core.Improvements import (
@@ -335,7 +336,7 @@ class AbstractWeapon(Item, ABC):
 
 
 def weapon_matches_proficiency(
-    weapon: AbstractWeapon, proficiency: WeaponProficiency
+    weapon: AbstractWeapon, proficiency: Enum
 ) -> bool:
     is_simple = weapon.weapon_type in (
         WeaponType.SIMPLE_MELEE,
@@ -370,7 +371,7 @@ def weapon_matches_proficiency(
     raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
 
 
-_SINGLE_WEAPON_PROFICIENCIES = {
+_SINGLE_WEAPON_PROFICIENCIES: dict[Enum, str] = {
     WeaponProficiency.SCIMITAR: "Scimitar",
     WeaponProficiency.LONGBOW: "Longbow",
     WeaponProficiency.SHORTBOW: "Shortbow",
@@ -379,7 +380,7 @@ _SINGLE_WEAPON_PROFICIENCIES = {
 
 def is_proficient_with(
     weapon: AbstractWeapon,
-    proficiencies: "set[WeaponProficiency] | list[WeaponProficiency]",
+    proficiencies: Iterable[Enum],
 ) -> bool:
     return any(weapon_matches_proficiency(weapon, p) for p in proficiencies)
 

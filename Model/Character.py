@@ -17,7 +17,7 @@ without a cycle.
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, Callable, Iterator, Optional
+from typing import Any, Callable, Iterator, Optional, Sequence
 
 import attr
 
@@ -207,7 +207,7 @@ class Character:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
 
-        def walk(features: list[GrantedFeature]) -> Iterator[GrantedFeature]:
+        def walk(features: Sequence[GrantedFeature]) -> Iterator[GrantedFeature]:
             for feature in features:
                 yield feature
                 yield from walk(feature.extensions)

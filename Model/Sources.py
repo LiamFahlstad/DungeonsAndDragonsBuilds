@@ -7,7 +7,7 @@ Each Protocol lists exactly what the Model reads. Widen one only when Model
 code starts reading something new.
 """
 
-from typing import Optional, Protocol
+from typing import Optional, Protocol, Sequence
 
 from Model.Effects import Effects
 
@@ -24,17 +24,26 @@ class GrantedFeature(Effect, Protocol):
     become declared grants on the Character."""
 
     name: str
-    extensions: list["GrantedFeature"]
+
+    @property
+    def extensions(self) -> Sequence["GrantedFeature"]: ...
 
 
 class Gear(Effect, Protocol):
     """Armor, a weapon or an item: carried, maybe worn, maybe attuned."""
 
     name: str
-    is_wearing: Optional[bool]
-    requires_attunement: bool
-    value: Optional[float]
+
+    @property
+    def is_wearing(self) -> Optional[bool]: ...
+
+    @property
+    def requires_attunement(self) -> bool: ...
+
+    @property
+    def value(self) -> Optional[float]: ...
 
 
 class ArmorGear(Gear, Protocol):
-    is_shield: bool
+    @property
+    def is_shield(self) -> bool: ...
