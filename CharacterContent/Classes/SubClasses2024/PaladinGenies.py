@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinGeniesFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
@@ -27,8 +28,8 @@ class PaladinGeniesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinGeniesFeatures.ElementalSmite(),
             extends=PaladinFeatures.ChannelDivinity,
@@ -45,8 +46,8 @@ class PaladinGeniesLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel2Spells.MIRROR_IMAGE)
         data.add_spell(WizardLevel2Spells.PHANTASMAL_FORCE)
         return data
@@ -57,8 +58,8 @@ class PaladinGeniesLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinGeniesFeatures.AuraOfElementalShielding(),
             extends=PaladinFeatures.AuraOfProtection,
@@ -71,8 +72,8 @@ class PaladinGeniesLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel3Spells.FLY)
         data.add_spell(WizardLevel3Spells.GASEOUS_FORM)
         return data
@@ -83,8 +84,8 @@ class PaladinGeniesLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel4Spells.CONJURE_MINOR_ELEMENTALS)
         data.add_spell(WizardLevel4Spells.SUMMON_ELEMENTAL)
         return data
@@ -95,8 +96,8 @@ class PaladinGeniesLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinGeniesFeatures.ElementalRebuke())
         return data
 
@@ -106,8 +107,8 @@ class PaladinGeniesLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
         data.add_spell(WizardLevel5Spells.CONTACT_OTHER_PLANE)
         return data
@@ -118,8 +119,8 @@ class PaladinGeniesLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinGeniesFeatures.NobleScion())
         return data
 

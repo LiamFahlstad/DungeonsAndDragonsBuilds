@@ -5,6 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons
@@ -52,8 +53,8 @@ class BardLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardFeatures.Spellcasting())
         data.add_feature(BardFeatures.BardicInspiration())
         data.add_cantrip(self.cantrip_1)
@@ -73,8 +74,8 @@ class BardLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardFeatures.JackOfAllTrades())
         data.add_spell(self.spell)
         data.add_feature(
@@ -91,8 +92,8 @@ class BardLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -105,8 +106,8 @@ class BardLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Bard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
@@ -121,8 +122,8 @@ class BardLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardFeatures.FontOfInspiration(), extends=BardFeatures.BardicInspiration
         )
@@ -137,8 +138,8 @@ class BardLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -149,8 +150,8 @@ class BardLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardFeatures.Countercharm())
         data.add_spell(self.spell)
         return data
@@ -163,8 +164,8 @@ class BardLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Bard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -180,8 +181,8 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(
@@ -199,8 +200,8 @@ class BardLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         data.add_feature(BardFeatures.MagicalSecrets())
@@ -213,8 +214,8 @@ class BardLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -225,8 +226,8 @@ class BardLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Bard Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -238,8 +239,8 @@ class BardLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -249,8 +250,8 @@ class BardLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         return data
 
 
@@ -260,8 +261,8 @@ class BardLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -270,7 +271,7 @@ class BardLevel15(ClassBuilder.BaseClassLevel15):
 class BardLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Bard Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -282,8 +283,8 @@ class BardLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -294,8 +295,8 @@ class BardLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardFeatures.SuperiorInspiration(), extends=BardFeatures.BardicInspiration
         )
@@ -311,8 +312,8 @@ class BardLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.epic_boon.origin = f"Bard Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -323,7 +324,7 @@ class BardLevel19(ClassBuilder.BaseClassLevel19):
 class BardLevel20(ClassBuilder.BaseClassLevel20):
     spell: BardSpellsUpTo9
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(BardFeatures.WordsOfCreation())
         data.add_spell(self.spell)
         data.add_spell(BardLevel9Spells.POWER_WORD_HEAL)

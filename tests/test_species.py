@@ -73,7 +73,7 @@ def bug(reason):
 
 
 def spell_names(data) -> list[str]:
-    return [s[0] for s in data.spells]
+    return [s.name for s in data.spells]
 
 
 # ── Speed & size (fixed-size species) ───────────────────────────────────────
@@ -566,9 +566,10 @@ class TestGrantedSpellsAndCantrips:
         assert RockGnomeSpeciesBuilder().build(data) is data
         assert spell_names(data).count("Prestidigitation") == 2
         assert data.base_speed == GnomeFeatures.SPEED
-        # Only the species' own grants skip the duplicate check.
+        # The same spell twice from one grant is an error, found on read.
+        data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
         with pytest.raises(ValueError, match="already added"):
-            data.add_spell(BardLevel0Spells.MENDING, Ability.INTELLIGENCE)
+            data.spells
 
     def test_aasimar_light_cantrip(self):
         builder = AasimarSpeciesBuilder(character_level=1)

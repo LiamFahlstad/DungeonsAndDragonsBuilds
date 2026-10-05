@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DamageType, RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerBeastMasterFeatures
 from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
@@ -22,8 +23,8 @@ class RangerBeastMasterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RangerBeastMasterFeatures.PrimalCompanion(
                 companion_type=self.companion_type,
@@ -38,8 +39,8 @@ class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RangerBeastMasterFeatures.ExceptionalTraining(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,
@@ -52,8 +53,8 @@ class RangerBeastMasterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RangerBeastMasterFeatures.BestialFury(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,
@@ -66,8 +67,8 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RangerBeastMasterFeatures.ShareSpells(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,

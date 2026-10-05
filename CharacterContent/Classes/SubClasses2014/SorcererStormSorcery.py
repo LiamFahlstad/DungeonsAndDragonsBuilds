@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererStormSorceryFeatures,
@@ -19,8 +20,8 @@ class SorcererStormSorceryLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererStormSorceryFeatures.WindSpeaker())
         data.add_feature(SorcererStormSorceryFeatures.TempestuousMagic())
         return data
@@ -31,8 +32,8 @@ class SorcererStormSorceryLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererStormSorceryFeatures.HeartOfTheStorm())
         data.add_feature(SorcererStormSorceryFeatures.StormGuide())
         return data
@@ -43,8 +44,8 @@ class SorcererStormSorceryLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererStormSorceryFeatures.StormsFury())
         return data
 
@@ -54,8 +55,8 @@ class SorcererStormSorceryLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererStormSorceryFeatures.WindSoul())
         return data
 

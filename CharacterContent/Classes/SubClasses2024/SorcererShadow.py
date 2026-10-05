@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import SorcererShadowFeatures
@@ -29,8 +30,8 @@ from CharacterContent.Spells.SpellLists import (
 class SorcererShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererShadowFeatures.ShadowSpells())
         data.add_spell(EnchantmentLevel1Spells.BANE)
         data.add_spell(SorcererLevel2Spells.DARKNESS)
@@ -44,8 +45,8 @@ class SorcererShadowLevel3(ClassBuilder.SubclassLevel3):
 class SorcererShadowLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel3Spells.HUNGER_OF_HADAR)
         data.add_spell(AbjurationLevel3Spells.NONDETECTION)
         return data
@@ -55,8 +56,8 @@ class SorcererShadowLevel5(ClassBuilder.SubclassLevel5):
 class SorcererShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererShadowFeatures.BeastsOfIllOmen())
         return data
 
@@ -65,8 +66,8 @@ class SorcererShadowLevel6(ClassBuilder.SubclassLevel6):
 class SorcererShadowLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         data.add_spell(IllusionLevel4Spells.PHANTASMAL_KILLER)
         return data
@@ -76,8 +77,8 @@ class SorcererShadowLevel7(ClassBuilder.SubclassLevel7):
 class SorcererShadowLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(NecromancyLevel5Spells.CONTAGION)
         data.add_spell(SorcererLevel5Spells.CREATION)
         return data
@@ -87,8 +88,8 @@ class SorcererShadowLevel9(ClassBuilder.SubclassLevel9):
 class SorcererShadowLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererShadowFeatures.ShadowWalk())
         return data
 
@@ -97,8 +98,8 @@ class SorcererShadowLevel14(ClassBuilder.SubclassLevel14):
 class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererShadowFeatures.UmbralForm(), extends=SorcererFeatures.InnateSorcery
         )

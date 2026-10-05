@@ -3,6 +3,7 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from Model.Character import Character
+from Model.Grants import Grants
 
 
 class SpeciesBuilder:
@@ -17,15 +18,15 @@ class SpeciesBuilder:
         into `data` - a fresh sheet if none is given - and return it."""
         if data is None:
             data = Character()
-        # Species spells aren't granted at a class level; tag them level 1,
-        # like every other grant outside the per-level class flow.
-        data.set_current_grant_level(1)
-        with data.separate_spell_source():
-            self._grant(data)
+        # Species spells aren't granted at a class level; they're stamped
+        # level 1, like every other grant outside the per-level class flow,
+        # and listed under the species - so a spell the class also grants
+        # (Rock Gnome Prestidigitation on a Wizard) appears for both.
+        self._grant(Grants(data, 1, self.name))
         return data
 
     @abstractmethod
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         pass
 
     def set_spell_casting_ability(self, ability: Definitions.Ability):

@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardLoreFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -22,8 +23,8 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardLoreFeatures.BonusProficiencies(
                 self.skill_proficiency_1,
@@ -64,8 +65,8 @@ class BardLoreLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(BardLoreFeatures.MagicalDiscoveries())
@@ -77,8 +78,8 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardLoreFeatures.PeerlessSkill(), extends=BardFeatures.BardicInspiration
         )

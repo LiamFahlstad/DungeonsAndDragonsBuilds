@@ -194,10 +194,6 @@ def get_starter_class_builder():
                 14: BardSpiritsLevel14(),
             },
         ),
-        replace_spells={
-            # Replace the default spell choices with better ones
-            BardLevel1Spells.BANE: BardLevel2Spells.ENHANCE_ABILITY,
-        },
     )
 
 

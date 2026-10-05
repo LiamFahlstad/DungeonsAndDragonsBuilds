@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import RogueScoutFeatures
 
@@ -17,8 +18,8 @@ class RogueScoutLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScoutFeatures.Skirmisher())
         data.add_feature(RogueScoutFeatures.Survivalist())
         return data
@@ -29,8 +30,8 @@ class RogueScoutLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScoutFeatures.SuperiorMobility())
         return data
 
@@ -40,8 +41,8 @@ class RogueScoutLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScoutFeatures.AmbushMaster())
         return data
 
@@ -51,8 +52,8 @@ class RogueScoutLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScoutFeatures.SuddenStrike())
         return data
 

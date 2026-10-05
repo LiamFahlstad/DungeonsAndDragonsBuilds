@@ -1,6 +1,7 @@
 from enum import Enum
 
 from Model.Character import Character
+from Model.Grants import Grants
 import Core.Definitions as Definitions
 from CharacterContent.Features.SpeciesFeatures import ElfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -41,7 +42,7 @@ class ElfSpeciesBuilder(SpeciesBuilder):
             name="Elf",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         if self.character_level is None:
             raise ValueError(
                 "Character level must be set before building species data."

@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, FighterSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterPsiWarriorFeatures
 from CharacterContent.Spells.SpellLists import WizardLevel5Spells
@@ -18,8 +19,8 @@ class FighterPsiWarriorLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterPsiWarriorFeatures.PsionicPower())
         return data
 
@@ -29,8 +30,8 @@ class FighterPsiWarriorLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterPsiWarriorFeatures.TelekineticAdept(),
             extends=FighterPsiWarriorFeatures.PsionicPower,
@@ -43,8 +44,8 @@ class FighterPsiWarriorLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterPsiWarriorFeatures.GuardedMind())
         return data
 
@@ -54,8 +55,8 @@ class FighterPsiWarriorLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterPsiWarriorFeatures.BulwarkOfForce())
         return data
 
@@ -65,8 +66,8 @@ class FighterPsiWarriorLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterPsiWarriorFeatures.TelekineticMaster())
         data.add_spell(
             WizardLevel5Spells.TELEKINESIS,

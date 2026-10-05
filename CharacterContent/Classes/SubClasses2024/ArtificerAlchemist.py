@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerAlchemistFeatures,
@@ -29,8 +30,8 @@ from CharacterContent.Spells.SpellLists import (
 class ArtificerAlchemistLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerAlchemistFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerAlchemistFeatures.Spells())
         data.add_feature(ArtificerAlchemistFeatures.ExperimentalElixir())
@@ -43,8 +44,8 @@ class ArtificerAlchemistLevel3(ClassBuilder.SubclassLevel3):
 class ArtificerAlchemistLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerAlchemistFeatures.AlchemicalSavant())
         data.add_spell(WizardLevel2Spells.FLAMING_SPHERE)
         data.add_spell(WizardLevel2Spells.MELFS_ACID_ARROW)
@@ -55,8 +56,8 @@ class ArtificerAlchemistLevel5(ClassBuilder.SubclassLevel5):
 class ArtificerAlchemistLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerAlchemistFeatures.RestorativeReagents())
         data.add_spell(SorcererLevel3Spells.GASEOUS_FORM)
         data.add_spell(ClericLevel3Spells.MASS_HEALING_WORD)
@@ -67,8 +68,8 @@ class ArtificerAlchemistLevel9(ClassBuilder.SubclassLevel9):
 class ArtificerAlchemistLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
         data.add_spell(WizardLevel4Spells.VITRIOLIC_SPHERE)
         return data
@@ -78,8 +79,8 @@ class ArtificerAlchemistLevel13(ClassBuilder.SubclassLevel13):
 class ArtificerAlchemistLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerAlchemistFeatures.ChemicalMastery())
         return data
 
@@ -88,8 +89,8 @@ class ArtificerAlchemistLevel15(ClassBuilder.SubclassLevel15):
 class ArtificerAlchemistLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel5Spells.CLOUDKILL)
         data.add_spell(ClericLevel5Spells.RAISE_DEAD)
         return data

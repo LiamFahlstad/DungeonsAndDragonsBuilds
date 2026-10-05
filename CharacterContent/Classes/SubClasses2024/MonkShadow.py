@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
@@ -21,8 +22,8 @@ from CharacterContent.Spells.SpellLists import (
 class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkShadowFeatures.ShadowArts(), extends=MonkFeatures.MonksFocus
         )
@@ -39,8 +40,8 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
 class MonkShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkShadowFeatures.ShadowStep())
         return data
 
@@ -50,8 +51,8 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkShadowFeatures.ImprovedShadowStep(),
             extends=MonkShadowFeatures.ShadowStep,
@@ -64,8 +65,8 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkShadowFeatures.CloakOfShadows(), extends=MonkFeatures.MonksFocus
         )

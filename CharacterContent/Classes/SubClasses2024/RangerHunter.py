@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerHunterFeatures
 
@@ -38,8 +39,8 @@ class RangerHunterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerHunterFeatures.HuntersLore())
         if isinstance(self.hunters_prey, HordeBreakerChoice):
             data.add_feature(RangerHunterFeatures.HordeBreaker())
@@ -54,8 +55,8 @@ class RangerHunterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         if isinstance(self.defensive_tactics, MultiattackDefenseChoice):
             data.add_feature(RangerHunterFeatures.MultiattackDefense())
         else:
@@ -68,8 +69,8 @@ class RangerHunterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerHunterFeatures.SuperiorHuntersPrey())
         return data
 
@@ -79,8 +80,8 @@ class RangerHunterLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerHunterFeatures.SuperiorHuntersDefense())
         return data
 

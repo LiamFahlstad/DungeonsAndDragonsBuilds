@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
@@ -33,8 +34,8 @@ class SorcererLunarSorceryLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererLunarSorceryFeatures.LunarEmbodiment())
         data.add_feature(SorcererLunarSorceryFeatures.MoonFire())
         data.add_cantrip(ClericLevel0Spells.SACRED_FLAME)
@@ -52,8 +53,8 @@ class SorcererLunarSorceryLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel3Spells.DISPEL_MAGIC)
         data.add_spell(SorcererLevel3Spells.VAMPIRIC_TOUCH)
         data.add_spell(WizardLevel3Spells.PHANTOM_STEED)
@@ -65,8 +66,8 @@ class SorcererLunarSorceryLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererLunarSorceryFeatures.LunarBoons(),
             extends=SorcererFeatures.Metamagic,
@@ -84,8 +85,8 @@ class SorcererLunarSorceryLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
         data.add_spell(SorcererLevel4Spells.CONFUSION)
         data.add_spell(WizardLevel4Spells.HALLUCINATORY_TERRAIN)
@@ -97,8 +98,8 @@ class SorcererLunarSorceryLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel5Spells.RARYS_TELEPATHIC_BOND)
         data.add_spell(SorcererLevel5Spells.HOLD_MONSTER)
         data.add_spell(WizardLevel5Spells.MISLEAD)
@@ -110,8 +111,8 @@ class SorcererLunarSorceryLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererLunarSorceryFeatures.LunarEmpowerment(),
             extends=SorcererLunarSorceryFeatures.LunarEmbodiment,
@@ -124,8 +125,8 @@ class SorcererLunarSorceryLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererLunarSorceryFeatures.LunarPhenomenon(),
             extends=SorcererLunarSorceryFeatures.LunarEmbodiment,

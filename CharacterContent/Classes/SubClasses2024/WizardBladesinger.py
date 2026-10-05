@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Skill, WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
 
@@ -17,10 +18,8 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        if data.armors:
-            raise ValueError("Bladesong cannot be used while wearing armor.")
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardBladesingerFeatures.Bladesong())
         data.add_feature(
             WizardBladesingerFeatures.TrainingInWarAndSong(Skill.ATHLETICS)
@@ -33,8 +32,8 @@ class WizardBladesingerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardBladesingerFeatures.ExtraAttack())
         return data
 
@@ -44,8 +43,8 @@ class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardBladesingerFeatures.SongOfDefense(),
             extends=WizardBladesingerFeatures.Bladesong,
@@ -58,8 +57,8 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardBladesingerFeatures.SongOfVictory())
         return data
 

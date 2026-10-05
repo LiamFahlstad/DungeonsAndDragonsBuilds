@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardSpiritsFeatures
 from CharacterContent.Spells.SpellLists import ClericLevel0Spells, ClericLevel3Spells
@@ -17,8 +18,8 @@ from CharacterContent.Spells.SpellLists import ClericLevel0Spells, ClericLevel3S
 class BardSpiritsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardSpiritsFeatures.Channeler())
         data.add_feature(BardSpiritsFeatures.SpiritsFromBeyond())
         data.add_cantrip(ClericLevel0Spells.GUIDANCE)
@@ -29,8 +30,8 @@ class BardSpiritsLevel3(ClassBuilder.SubclassLevel3):
 class BardSpiritsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardSpiritsFeatures.EmpoweredChanneling())
         data.add_spell(ClericLevel3Spells.SPIRIT_GUARDIANS)
         return data
@@ -41,8 +42,8 @@ class BardSpiritsLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardSpiritsFeatures.MysticalConnection(),
             extends=BardSpiritsFeatures.SpiritsFromBeyond,

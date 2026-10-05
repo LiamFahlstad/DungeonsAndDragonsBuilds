@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Skill
 from CharacterContent.Features.SpeciesFeatures import WarForgedFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -14,7 +15,7 @@ class WarforgedSpeciesBuilder(SpeciesBuilder):
         )
         self.skill = skill
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = WarForgedFeatures.SPEED  # Given by your species
         data.size = WarForgedFeatures.SIZE  # Given by your species
 

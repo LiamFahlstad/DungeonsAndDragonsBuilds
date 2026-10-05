@@ -193,10 +193,6 @@ def get_starter_class_builder():
                 14: BardGlamourLevel14(),
             },
         ),
-        replace_spells={
-            # Replace the default spell choices with better ones
-            BardLevel1Spells.SLEEP: BardLevel2Spells.ENHANCE_ABILITY,
-        },
     )
 
 

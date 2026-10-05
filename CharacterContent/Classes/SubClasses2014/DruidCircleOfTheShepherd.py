@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Optional
 
 import attr
 
@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidShepherdFeatures
 
@@ -20,8 +21,8 @@ class DruidShepherdLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidShepherdFeatures.SpeechOfTheWoods())
         data.add_feature(DruidShepherdFeatures.SpiritTotem())
         return data
@@ -32,8 +33,8 @@ class DruidShepherdLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidShepherdFeatures.MightySummoner())
         return data
 
@@ -43,13 +44,12 @@ class DruidShepherdLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        spirit_totem: DruidShepherdFeatures.SpiritTotem = cast(
-            DruidShepherdFeatures.SpiritTotem,
-            data.get_features_by_type(DruidShepherdFeatures.SpiritTotem)[0],
+        data: Grants,
+    ) -> Grants:
+        data.add_feature(
+            DruidShepherdFeatures.GuardianSpirit(),
+            extends=DruidShepherdFeatures.SpiritTotem,
         )
-        data.add_feature(DruidShepherdFeatures.GuardianSpirit(), extends=spirit_totem)
         return data
 
 
@@ -58,8 +58,8 @@ class DruidShepherdLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidShepherdFeatures.FaithfulSummons())
         return data
 

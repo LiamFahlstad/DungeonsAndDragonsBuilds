@@ -3,6 +3,7 @@ from typing import Optional
 import attr
 
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
@@ -28,8 +29,8 @@ from Core.Definitions import SorcererSubclass, Skill
 class SorcererAberrantLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererAberrantFeatures.PsionicSpells())
         data.add_spell(ConjurationLevel1Spells.ARMS_OF_HADAR)
         data.add_spell(EnchantmentLevel2Spells.CALM_EMOTIONS)
@@ -44,8 +45,8 @@ class SorcererAberrantLevel3(ClassBuilder.SubclassLevel3):
 class SorcererAberrantLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel3Spells.HUNGER_OF_HADAR)
         data.add_spell(DivinationLevel3Spells.SENDING)
         return data
@@ -55,8 +56,8 @@ class SorcererAberrantLevel5(ClassBuilder.SubclassLevel5):
 class SorcererAberrantLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererAberrantFeatures.PsionicSorcery(),
             extends=SorcererAberrantFeatures.PsionicSpells,
@@ -69,8 +70,8 @@ class SorcererAberrantLevel6(ClassBuilder.SubclassLevel6):
 class SorcererAberrantLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES)
         data.add_spell(ConjurationLevel4Spells.SUMMON_ABERRATION)
         return data
@@ -80,8 +81,8 @@ class SorcererAberrantLevel7(ClassBuilder.SubclassLevel7):
 class SorcererAberrantLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DivinationLevel5Spells.RARYS_TELEPATHIC_BOND)
         data.add_spell(TransmutationLevel5Spells.TELEKINESIS)
         return data
@@ -91,8 +92,8 @@ class SorcererAberrantLevel9(ClassBuilder.SubclassLevel9):
 class SorcererAberrantLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererAberrantFeatures.RevelationInFlesh())
         return data
 
@@ -101,8 +102,8 @@ class SorcererAberrantLevel14(ClassBuilder.SubclassLevel14):
 class SorcererAberrantLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererAberrantFeatures.WarpingImplosion())
         return data
 

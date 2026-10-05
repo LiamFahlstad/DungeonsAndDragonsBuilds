@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
@@ -18,8 +19,8 @@ class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueAssassinFeatures.Assassinate())
         data.add_feature(RogueAssassinFeatures.AssassinsTools())
         return data
@@ -30,8 +31,8 @@ class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueAssassinFeatures.InfiltrationExpertise())
         return data
 
@@ -41,8 +42,8 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
         )
@@ -57,8 +58,8 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
         )

@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability
 from CharacterContent.Features.SpeciesFeatures import AasimarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -12,7 +13,7 @@ class AasimarSpeciesBuilder(SpeciesBuilder):
             name="Aasimar",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = AasimarFeatures.SPEED  # Given by your species
         data.size = AasimarFeatures.SIZE  # Given by your species
 

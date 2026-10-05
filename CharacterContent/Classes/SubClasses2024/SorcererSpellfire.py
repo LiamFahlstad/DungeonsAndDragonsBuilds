@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
@@ -30,8 +31,8 @@ from CharacterContent.Spells.SpellLists import (
 class SorcererSpellfireLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererSpellfireFeatures.SpellfireBurst())
         data.add_feature(SorcererSpellfireFeatures.SpellfireSpells())
         data.add_spell(AbjurationLevel1Spells.CURE_WOUNDS)
@@ -45,8 +46,8 @@ class SorcererSpellfireLevel3(ClassBuilder.SubclassLevel3):
 class SorcererSpellfireLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(AbjurationLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(SorcererLevel3Spells.DISPEL_MAGIC)
         return data
@@ -56,8 +57,8 @@ class SorcererSpellfireLevel5(ClassBuilder.SubclassLevel5):
 class SorcererSpellfireLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel3Spells.COUNTERSPELL)
         data.add_feature(SorcererSpellfireFeatures.AbsorbSpells())
         return data
@@ -67,8 +68,8 @@ class SorcererSpellfireLevel6(ClassBuilder.SubclassLevel6):
 class SorcererSpellfireLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
         data.add_spell(SorcererLevel4Spells.WALL_OF_FIRE)
         return data
@@ -78,8 +79,8 @@ class SorcererSpellfireLevel7(ClassBuilder.SubclassLevel7):
 class SorcererSpellfireLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(AbjurationLevel5Spells.GREATER_RESTORATION)
         data.add_spell(EvocationLevel5Spells.FLAME_STRIKE)
         return data
@@ -89,8 +90,8 @@ class SorcererSpellfireLevel9(ClassBuilder.SubclassLevel9):
 class SorcererSpellfireLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererSpellfireFeatures.HonedSpellfire(),
             extends=SorcererSpellfireFeatures.SpellfireBurst,
@@ -102,8 +103,8 @@ class SorcererSpellfireLevel14(ClassBuilder.SubclassLevel14):
 class SorcererSpellfireLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererSpellfireFeatures.CrownOfSpellfire(),
             extends=SorcererFeatures.InnateSorcery,

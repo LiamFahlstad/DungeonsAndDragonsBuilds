@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import DwarfFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -11,7 +12,7 @@ class DwarfSpeciesBuilder(SpeciesBuilder):
             name="Dwarf",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = DwarfFeatures.SPEED  # Given by your species
         data.size = DwarfFeatures.SIZE  # Given by your species
 

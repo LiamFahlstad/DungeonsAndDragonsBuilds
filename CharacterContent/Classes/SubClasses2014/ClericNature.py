@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericNatureFeatures
 
@@ -17,8 +18,8 @@ class ClericNatureLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericNatureFeatures.AcolyteOfNature())
         data.add_feature(ClericNatureFeatures.BonusProficiency())
         data.add_feature(ClericNatureFeatures.NatureDomainSpells())
@@ -31,8 +32,8 @@ class ClericNatureLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericNatureFeatures.DampenElements())
         return data
 
@@ -42,8 +43,8 @@ class ClericNatureLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ClericNatureFeatures.MasterOfNature(),
             extends=ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity,

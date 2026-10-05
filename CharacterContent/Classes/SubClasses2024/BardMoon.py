@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardMoonFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -21,8 +22,8 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardMoonFeatures.MoonsInspiration(), extends=BardFeatures.BardicInspiration
         )
@@ -35,8 +36,8 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
 class BardMoonLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DruidLevel2Spells.MOONBEAM)
         data.add_feature(BardMoonFeatures.BlessingOfMoonlight())
         return data
@@ -47,8 +48,8 @@ class BardMoonLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardMoonFeatures.EventidesSplendor(), extends=BardFeatures.BardicInspiration
         )

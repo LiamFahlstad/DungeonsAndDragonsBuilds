@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockHexbladeFeatures,
@@ -19,8 +20,8 @@ class WarlockHexbladeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockHexbladeFeatures.HexbladeExpandedSpells())
         data.add_feature(WarlockHexbladeFeatures.HexbladesCurse())
         data.add_feature(WarlockHexbladeFeatures.HexWarrior())
@@ -32,8 +33,8 @@ class WarlockHexbladeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockHexbladeFeatures.AccursedSpecter())
         return data
 
@@ -43,8 +44,8 @@ class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WarlockHexbladeFeatures.ArmorOfHexes(),
             extends=WarlockHexbladeFeatures.HexbladesCurse,
@@ -57,8 +58,8 @@ class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WarlockHexbladeFeatures.MasterOfHexes(),
             extends=WarlockHexbladeFeatures.HexbladesCurse,

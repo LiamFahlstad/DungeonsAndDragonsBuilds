@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.CombatFeatures import Maneuvers
 from CharacterContent.Features.SubClassFeatures.Fighter import (
@@ -23,8 +24,8 @@ class FighterBattleMasterLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         superiority_dice = FighterBattleMasterFeatures.SuperiorityDice()
         data.add_feature(self.maneuver_1, extends=superiority_dice)
         data.add_feature(self.maneuver_2, extends=superiority_dice)
@@ -41,8 +42,8 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -60,8 +61,8 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -82,8 +83,8 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -102,8 +103,8 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterBattleMasterFeatures.UltimateCombatSuperiority(),
             extends=FighterBattleMasterFeatures.SuperiorityDice,

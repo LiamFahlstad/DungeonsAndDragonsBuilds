@@ -16,7 +16,6 @@ without a cycle.
 
 from __future__ import annotations
 
-from contextlib import contextmanager
 from typing import Any, Callable, Iterator, Literal, Optional, Sequence
 
 import attr
@@ -29,6 +28,7 @@ from Model.ClassLevels import ClassLevels
 from Model.Effects import Effects, Ledger
 from Model.Inventory import Inventory
 from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
+from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
 
 MAX_ATTUNED_ITEMS = 3
 
@@ -93,12 +93,10 @@ class Character:
     # in the order they were declared - see extensions_of().
     feature_extensions: list[FeatureExtension] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
-    spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
-    # Optional free-text "where did I get this spell" (e.g. "Chosen spell"),
-    # keyed by the entry's index in `spells`; absent means untagged. Kept
-    # beside `spells` so that tuple's shape is unchanged - read it with
-    # get_spell_source().
-    spell_sources: dict[int, str] = attr.Factory(dict)
+    # Every spell and cantrip granted, and every declared replacement - see
+    # Model/Spells.py. `spells` is the resolved list.
+    spell_grants: list[SpellGrant] = attr.Factory(list)
+    spell_replacements: list[SpellReplacement] = attr.Factory(list)
     spell_casting_ability: Optional[Ability] = None
     # Spell slots set outright rather than worked out from caster levels.
     fixed_spell_slots: dict[int, int] = attr.Factory(dict)
@@ -139,20 +137,6 @@ class Character:
     _apply_order: Callable[[list[Effect]], list[Effect]] = attr.ib(
         default=_in_given_order, init=False, eq=False, repr=False
     )
-    # Class-relative level currently being applied by
-    # BaseClassLevelFeatures.add_features, used to tag each spell/cantrip
-    # with the level it was granted on (see set_current_grant_level). Defaults
-    # to 1, matching the convention _feature_level uses for features whose
-    # origin can't be parsed - this covers spells granted outside the
-    # per-level class flow (species spells, origin feat spells via
-    # grant_origin_feat, etc).
-    _current_grant_level: int = attr.ib(default=1, init=False, eq=False, repr=False)
-    # Index into spells where the duplicate check starts - see
-    # separate_spell_source.
-    _duplicate_spell_check_start: int = attr.ib(
-        default=0, init=False, eq=False, repr=False
-    )
-
     # ── Sources: what the character has ──────────────────────────────────────
 
     def _changed(self) -> None:
@@ -317,12 +301,6 @@ class Character:
         self._changed()
         self.class_levels.level_per_class[character_class] = level
 
-    def set_current_grant_level(self, level: int) -> None:
-        """Set the class-relative level that subsequent add_spell/add_cantrip
-        calls will be tagged with. Called by BaseClassLevelFeatures.add_features
-        right before invoking each per-level add_features method."""
-        self._current_grant_level = level
-
     def add_armor(self, armor: ArmorGear):
         """Add armor outside starting equipment and adventuring gear (see
         Inventory.add_armor)."""
@@ -347,19 +325,25 @@ class Character:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
+        grant_level: int = 1,
+        granted_by: str = "Other",
     ):
-        spell_casting_ability = self._resolve_spell_casting_ability(
-            spell_casting_ability
-        )
-
-        if spell in self._spell_names_checked_for_duplicates():
-            raise ValueError(f"Spell {spell} already added.")
+        """Grant a spell. `source` is a free-text label for the sheet ("Chosen
+        spell"); `grant_level` and `granted_by` are normally stamped by the
+        builder's Grants scope (Model/Grants.py). The same spell from two
+        different grants is listed for each; twice from one grant fails
+        validate()."""
         self._changed()
-        self.spells.append(
-            (spell, spell_casting_ability, additional_ruling, self._current_grant_level)
+        self.spell_grants.append(
+            SpellGrant(
+                name=spell,
+                ability=self._resolve_spell_casting_ability(spell_casting_ability),
+                ruling=additional_ruling,
+                grant_level=grant_level,
+                granted_by=granted_by,
+                source=source,
+            )
         )
-        if source is not None:
-            self.spell_sources[len(self.spells) - 1] = source
 
     def add_cantrip(
         self,
@@ -367,50 +351,23 @@ class Character:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
+        grant_level: int = 1,
+        granted_by: str = "Other",
     ):
-        spell_casting_ability = self._resolve_spell_casting_ability(
-            spell_casting_ability
+        self.add_spell(
+            cantrip,
+            spell_casting_ability,
+            additional_ruling,
+            source=source,
+            grant_level=grant_level,
+            granted_by=granted_by,
         )
-        if cantrip in self._spell_names_checked_for_duplicates():
-            raise ValueError(f"Cantrip {cantrip} already added.")
-        self._changed()
-        self.spells.append(
-            (
-                cantrip,
-                spell_casting_ability,
-                additional_ruling,
-                self._current_grant_level,
-            )
-        )
-        if source is not None:
-            self.spell_sources[len(self.spells) - 1] = source
 
-    def get_spell_source(
-        self, spell_entry: tuple[str, Ability, Optional[str], int]
-    ) -> Optional[str]:
-        """Where the character got this entry of `spells`, or None. Matched by
-        identity, so the same spell granted twice (e.g. by class and species)
-        keeps each grant's own source."""
-        for index, entry in enumerate(self.spells):
-            if entry is spell_entry:
-                return self.spell_sources.get(index)
-        return None
-
-    def _spell_names_checked_for_duplicates(self) -> list[str]:
-        return [s[0] for s in self.spells[self._duplicate_spell_check_start :]]
-
-    @contextmanager
-    def separate_spell_source(self) -> Iterator[None]:
-        """Spells and cantrips added inside this block are only checked for
-        duplicates against each other, not against spells granted before
-        it. Species spells use this: a species granting a spell the
-        character's class also grants (Rock Gnome Prestidigitation on a
-        Wizard) lists it from both sources rather than failing the build."""
-        self._duplicate_spell_check_start = len(self.spells)
-        try:
-            yield
-        finally:
-            self._duplicate_spell_check_start = 0
+    @property
+    def spells(self) -> list[SpellGrant]:
+        """Every spell known, replacements applied, in canonical order (grant
+        level, name, granted_by) - see Model/Spells.py."""
+        return resolve_spells(self.spell_grants, self.spell_replacements)
 
     def replace_spells(self, replace_spells: dict[str, str]):
         for old_spell, new_spell in replace_spells.items():
@@ -423,32 +380,18 @@ class Character:
         new_spell_ability: Optional[Ability] = None,
         new_additional_ruling: Optional[str] = None,
     ):
-        new_spells = []
-        success = False
-        for spell_name, spell_ability, additional_ruling, grant_level in self.spells:
-            if spell_name == old_spell:
-                new_spells.append(
-                    (
-                        new_spell,
-                        new_spell_ability or spell_ability,
-                        (
-                            new_additional_ruling
-                            if new_additional_ruling is not None
-                            else additional_ruling
-                        ),
-                        grant_level,
-                    )
-                )
-                success = True
-            else:
-                new_spells.append(
-                    (spell_name, spell_ability, additional_ruling, grant_level)
-                )
-        if not success:
-            raise ValueError(f"Spell {old_spell} not found to replace.")
-        # Positions are unchanged, so the replacement keeps the old spell's
-        # source (a swapped chosen spell is still a chosen spell).
-        self.spells = new_spells
+        """Declare that every grant of `old_spell` is `new_spell` instead
+        (resolved when the spells are read, so it may be declared before the
+        old spell is granted). It keeps the old grant's level and label."""
+        self._changed()
+        self.spell_replacements.append(
+            SpellReplacement(
+                old=old_spell,
+                new=new_spell,
+                ability=new_spell_ability,
+                ruling=new_additional_ruling,
+            )
+        )
 
     def add_invocation(self, invocation: str):
         self._changed()
@@ -539,8 +482,10 @@ class Character:
         """Checks that need no evaluation: every field a finished character
         needs is set (builders fill them in piecemeal, so most are Optional
         while a build is in progress), at most one worn body armor, the
-        attunement limit, and that every extension's parent is granted."""
+        attunement limit, that every extension's parent is granted, and that
+        the spells resolve (see Model/Spells.py)."""
         self._resolved_extensions()
+        self.spells
         if self.character_name is None:
             raise ValueError("Character name must be set.")
         if self.character_subclass is None:

@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import (
     RogueScionOfTheThreeFeatures,
@@ -20,8 +21,8 @@ class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScionOfTheThreeFeatures.Bloodthirst())
         data.add_feature(RogueScionOfTheThreeFeatures.DreadAllegiance())
         return data
@@ -32,8 +33,8 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueScionOfTheThreeFeatures.StrikeFear(), extends=RogueFeatures.SneakAttack
         )
@@ -45,8 +46,8 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueScionOfTheThreeFeatures.AuraOfMalevolence(),
             extends=RogueScionOfTheThreeFeatures.Bloodthirst,
@@ -59,8 +60,8 @@ class RogueScionOfTheThreeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueScionOfTheThreeFeatures.DreadIncarnate())
         return data
 

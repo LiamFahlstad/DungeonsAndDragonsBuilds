@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardCreationFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -18,8 +19,8 @@ class BardCreationLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardCreationFeatures.MoteOfPotential(),
             extends=BardFeatures.BardicInspiration,
@@ -33,8 +34,8 @@ class BardCreationLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardCreationFeatures.AnimatingPerformance())
         return data
 
@@ -44,8 +45,8 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardCreationFeatures.CreativeCrescendo(),
             extends=BardCreationFeatures.PerformanceOfCreation,

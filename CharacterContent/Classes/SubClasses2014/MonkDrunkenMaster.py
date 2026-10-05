@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import (
     MonkDrunkenMasterFeatures,
@@ -18,8 +19,8 @@ from CharacterContent.Features.SubClassFeatures2014.Monk import (
 class MonkDrunkenMasterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkDrunkenMasterFeatures.BonusProficiencies())
         data.add_feature(MonkDrunkenMasterFeatures.DrunkenTechnique())
         return data
@@ -29,8 +30,8 @@ class MonkDrunkenMasterLevel3(ClassBuilder.SubclassLevel3):
 class MonkDrunkenMasterLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkDrunkenMasterFeatures.TipsySway())
         return data
 
@@ -40,8 +41,8 @@ class MonkDrunkenMasterLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkDrunkenMasterFeatures.DrunkardsLuck())
         return data
 
@@ -51,8 +52,8 @@ class MonkDrunkenMasterLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkDrunkenMasterFeatures.IntoxicatedFrenzy())
         return data
 

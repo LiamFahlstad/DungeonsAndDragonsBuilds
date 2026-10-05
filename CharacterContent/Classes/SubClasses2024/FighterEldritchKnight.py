@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.SubClassFeatures.Fighter import (
@@ -20,8 +21,8 @@ class FighterEldritchKnightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEldritchKnightFeatures.EldritchKnightSpellcasting())
         data.add_feature(FighterEldritchKnightFeatures.WarBond())
         return data
@@ -32,8 +33,8 @@ class FighterEldritchKnightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEldritchKnightFeatures.WarMagic())
         return data
 
@@ -43,8 +44,8 @@ class FighterEldritchKnightLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEldritchKnightFeatures.EldritchStrike())
         return data
 
@@ -54,8 +55,8 @@ class FighterEldritchKnightLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEldritchKnightFeatures.ArcaneCharge())
         return data
 
@@ -65,8 +66,8 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterEldritchKnightFeatures.ImprovedWarMagic(),
             extends=FighterEldritchKnightFeatures.WarMagic,

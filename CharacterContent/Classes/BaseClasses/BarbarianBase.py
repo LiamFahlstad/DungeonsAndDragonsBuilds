@@ -5,9 +5,10 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
-from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Items import Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 
@@ -19,16 +20,15 @@ class BarbarianLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
         data.add_feature(BarbarianFeatures.Rage())
-        if len(data.armors) == 0 or (
-            len(data.armors) == 1 and isinstance(data.armors[0], Armor.ShieldArmor)
-        ):
-            data.add_feature(BarbarianFeatures.UnarmoredDefense())
+        # Its AC formula only applies while no armor is worn (a Shield is
+        # fine), so it's granted unconditionally - the gear isn't known yet.
+        data.add_feature(BarbarianFeatures.UnarmoredDefense())
         data.add_feature(BarbarianFeatures.UnarmoredDefenseText())
         data.add_feature(BarbarianFeatures.WeaponMastery())
         return data
@@ -37,7 +37,7 @@ class BarbarianLevel1(ClassBuilder.BaseClassLevel1):
 @attr.dataclass
 class BarbarianLevel2(ClassBuilder.BaseClassLevel2):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(BarbarianFeatures.DangerSenseText())
         data.add_feature(BarbarianFeatures.DangerSense())
         data.add_feature(BarbarianFeatures.RecklessAttack())
@@ -48,7 +48,7 @@ class BarbarianLevel2(ClassBuilder.BaseClassLevel2):
 class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
     skill_proficiency: Definitions.Skill
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             BarbarianFeatures.PrimalKnowledgeSkillProficiency(self.skill_proficiency)
         )
@@ -60,7 +60,7 @@ class BarbarianLevel3(ClassBuilder.BaseClassLevel3):
 class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -69,7 +69,7 @@ class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
 @attr.dataclass
 class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             BarbarianFeatures.FastMovement(),
             extends=BarbarianFeatures.UnarmoredDefenseText,
@@ -82,14 +82,14 @@ class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
 @attr.dataclass
 class BarbarianLevel6(ClassBuilder.BaseClassLevel6):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         return data
 
 
 @attr.dataclass
 class BarbarianLevel7(ClassBuilder.BaseClassLevel7):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(BarbarianFeatures.FeralInstinct())
         data.add_feature(
             BarbarianFeatures.InstinctivePounce(), extends=BarbarianFeatures.Rage
@@ -101,7 +101,7 @@ class BarbarianLevel7(ClassBuilder.BaseClassLevel7):
 class BarbarianLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -112,8 +112,8 @@ class BarbarianLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianFeatures.BrutalStrike(), extends=BarbarianFeatures.RecklessAttack
         )
@@ -125,8 +125,8 @@ class BarbarianLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         return data
 
 
@@ -135,8 +135,8 @@ class BarbarianLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianFeatures.RelentlessRage(), extends=BarbarianFeatures.Rage
         )
@@ -147,7 +147,7 @@ class BarbarianLevel11(ClassBuilder.BaseClassLevel11):
 class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -156,7 +156,7 @@ class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
 @attr.dataclass
 class BarbarianLevel13(ClassBuilder.BaseClassLevel13):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             BarbarianFeatures.ImprovedBrutalStrikeLevel13(),
             extends=BarbarianFeatures.RecklessAttack,
@@ -169,15 +169,15 @@ class BarbarianLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         return data
 
 
 @attr.dataclass
 class BarbarianLevel15(ClassBuilder.BaseClassLevel15):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             BarbarianFeatures.PersistentRage(), extends=BarbarianFeatures.Rage
         )
@@ -188,7 +188,7 @@ class BarbarianLevel15(ClassBuilder.BaseClassLevel15):
 class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -197,7 +197,7 @@ class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
 @attr.dataclass
 class BarbarianLevel17(ClassBuilder.BaseClassLevel17):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             BarbarianFeatures.ImprovedBrutalStrikeLevel17(),
             extends=BarbarianFeatures.RecklessAttack,
@@ -210,8 +210,8 @@ class BarbarianLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianFeatures.IndomitableMight())
         return data
 
@@ -220,7 +220,7 @@ class BarbarianLevel18(ClassBuilder.BaseClassLevel18):
 class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.epic_boon.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
@@ -229,7 +229,7 @@ class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class BarbarianLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(BarbarianFeatures.PrimalChampion())
         return data
 

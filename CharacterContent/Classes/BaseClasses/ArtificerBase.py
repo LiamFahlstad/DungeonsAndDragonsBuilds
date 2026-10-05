@@ -4,6 +4,7 @@ import attr
 
 import Core.Definitions as Definitions
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import (
@@ -44,8 +45,8 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.Spellcasting())
         data.add_feature(ArtificerFeatures.TinkersMagic())
         data.add_cantrip(self.cantrip_1)
@@ -61,8 +62,8 @@ class ArtificerLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.ReplicateMagicItem())
         data.add_spell(self.spell)
         return data
@@ -74,8 +75,8 @@ class ArtificerLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -87,8 +88,8 @@ class ArtificerLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -101,8 +102,8 @@ class ArtificerLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -112,8 +113,8 @@ class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ArtificerFeatures.MagicItemTinker(),
             extends=ArtificerFeatures.ReplicateMagicItem,
@@ -127,8 +128,8 @@ class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.FlashofGenius())
         data.add_spell(self.spell)
         return data
@@ -140,8 +141,8 @@ class ArtificerLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -154,8 +155,8 @@ class ArtificerLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -167,8 +168,8 @@ class ArtificerLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.MagicItemAdept())
         data.add_cantrip(self.cantrip)
         return data
@@ -180,8 +181,8 @@ class ArtificerLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.SpellStoringItem())
         data.add_spell(self.spell)
         return data
@@ -193,8 +194,8 @@ class ArtificerLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -206,8 +207,8 @@ class ArtificerLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -218,8 +219,8 @@ class ArtificerLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ArtificerFeatures.AdvancedArtifice(),
             extends=ArtificerFeatures.FlashofGenius,
@@ -234,8 +235,8 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -244,7 +245,7 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
 class ArtificerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -257,8 +258,8 @@ class ArtificerLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -269,8 +270,8 @@ class ArtificerLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerFeatures.MagicItemMaster())
         return data
 
@@ -282,8 +283,8 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.epic_boon.origin = f"Artificer Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -293,7 +294,7 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class ArtificerLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             ArtificerFeatures.SoulOfArtifice(), extends=ArtificerFeatures.FlashofGenius
         )

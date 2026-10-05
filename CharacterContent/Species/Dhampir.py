@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import CreatureSize
 from CharacterContent.Features.SpeciesFeatures import DhampirFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -16,7 +17,7 @@ class DhampirSpeciesBuilder(SpeciesBuilder):
         self.character_level = character_level
         self.size = size
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = DhampirFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 

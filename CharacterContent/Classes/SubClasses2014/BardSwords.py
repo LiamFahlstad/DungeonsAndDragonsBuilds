@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass2014, Skill
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardSwordsFeatures
@@ -19,8 +20,8 @@ class BardSwordsLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardSwordsFeatures.BonusProficiencies())
         data.add_feature(BardSwordsFeatures.BladeFlourish())
         data.add_fighting_style(self.fighting_style)
@@ -32,8 +33,8 @@ class BardSwordsLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardSwordsFeatures.ExtraAttack())
         return data
 
@@ -43,8 +44,8 @@ class BardSwordsLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BardSwordsFeatures.MastersFlourish(),
             extends=BardSwordsFeatures.BladeFlourish,

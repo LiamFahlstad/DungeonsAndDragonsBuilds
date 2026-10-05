@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterCavalierFeatures,
@@ -19,8 +20,8 @@ class FighterCavalierLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterCavalierFeatures.BonusProficiency())
         data.add_feature(FighterCavalierFeatures.BornToTheSaddle())
         data.add_feature(FighterCavalierFeatures.UnwaveringMark())
@@ -32,8 +33,8 @@ class FighterCavalierLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterCavalierFeatures.WardingManeuver())
         return data
 
@@ -43,8 +44,8 @@ class FighterCavalierLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterCavalierFeatures.HoldTheLine())
         return data
 
@@ -54,8 +55,8 @@ class FighterCavalierLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterCavalierFeatures.FerociousCharger())
         return data
 
@@ -65,8 +66,8 @@ class FighterCavalierLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterCavalierFeatures.VigilantDefender())
         return data
 

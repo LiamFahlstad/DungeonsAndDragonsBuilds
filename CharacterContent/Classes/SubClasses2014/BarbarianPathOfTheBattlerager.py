@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
@@ -20,8 +21,8 @@ class BarbarianBattleragerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerArmor())
         return data
 
@@ -31,8 +32,8 @@ class BarbarianBattleragerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.RecklessAbandon(),
             extends=BarbarianFeatures.RecklessAttack,
@@ -45,8 +46,8 @@ class BarbarianBattleragerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.BattleragerCharge(),
             extends=BarbarianFeatures.Rage,
@@ -59,8 +60,8 @@ class BarbarianBattleragerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.SpikedRetribution(),
             extends=BarbarianPathOfTheBattleragerFeatures.BattleragerArmor,

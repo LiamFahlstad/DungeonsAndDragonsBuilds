@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerArtilleristFeatures,
@@ -29,8 +30,8 @@ from CharacterContent.Spells.SpellLists import (
 class ArtificerArtilleristLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerArtilleristFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerArtilleristFeatures.Spells())
         data.add_feature(ArtificerArtilleristFeatures.EldritchCannon())
@@ -43,8 +44,8 @@ class ArtificerArtilleristLevel3(ClassBuilder.SubclassLevel3):
 class ArtificerArtilleristLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerArtilleristFeatures.ArcaneFirearm())
         data.add_spell(SorcererLevel2Spells.SCORCHING_RAY)
         data.add_spell(BardLevel2Spells.SHATTER)
@@ -55,8 +56,8 @@ class ArtificerArtilleristLevel5(ClassBuilder.SubclassLevel5):
 class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ArtificerArtilleristFeatures.ExplosiveCannon(),
             extends=ArtificerArtilleristFeatures.EldritchCannon,
@@ -70,8 +71,8 @@ class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
 class ArtificerArtilleristLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DruidLevel4Spells.ICE_STORM)
         data.add_spell(DruidLevel4Spells.WALL_OF_FIRE)
         return data
@@ -81,8 +82,8 @@ class ArtificerArtilleristLevel13(ClassBuilder.SubclassLevel13):
 class ArtificerArtilleristLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ArtificerArtilleristFeatures.FortifiedPosition(),
             extends=ArtificerArtilleristFeatures.EldritchCannon,
@@ -94,8 +95,8 @@ class ArtificerArtilleristLevel15(ClassBuilder.SubclassLevel15):
 class ArtificerArtilleristLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DruidLevel5Spells.CONE_OF_COLD)
         data.add_spell(WizardLevel5Spells.WALL_OF_FORCE)
         return data

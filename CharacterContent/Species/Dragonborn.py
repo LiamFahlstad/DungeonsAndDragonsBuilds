@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import DragonbornFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -13,7 +14,7 @@ class DragonbornSpeciesBuilder(SpeciesBuilder):
             name="Dragonborn",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = DragonbornFeatures.SPEED  # Given by your species
         data.size = DragonbornFeatures.SIZE  # Given by your species
 

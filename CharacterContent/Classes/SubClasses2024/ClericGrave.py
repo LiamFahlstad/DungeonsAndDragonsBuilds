@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericGraveFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
@@ -30,8 +31,8 @@ class ClericGraveLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel1Spells.DETECT_EVIL_AND_GOOD)
         data.add_spell(NecromancyLevel1Spells.FALSE_LIFE)
         data.add_spell(ClericLevel2Spells.GENTLE_REPOSE)
@@ -49,8 +50,8 @@ class ClericGraveLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel3Spells.REVIVIFY)
         data.add_spell(NecromancyLevel3Spells.VAMPIRIC_TOUCH)
         return data
@@ -61,8 +62,8 @@ class ClericGraveLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericGraveFeatures.SentinelAtDeathsDoor())
         return data
 
@@ -72,8 +73,8 @@ class ClericGraveLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(NecromancyLevel4Spells.BLIGHT)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
         return data
@@ -84,8 +85,8 @@ class ClericGraveLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel5Spells.DISPEL_EVIL_AND_GOOD)
         data.add_spell(ClericLevel5Spells.RAISE_DEAD)
         return data
@@ -96,8 +97,8 @@ class ClericGraveLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericGraveFeatures.DivineReaper())
         return data
 

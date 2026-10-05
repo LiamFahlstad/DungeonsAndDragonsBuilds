@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidSeaFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -27,8 +28,8 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidSeaFeatures.CircleOfTheSeaSpells())
         data.add_feature(DruidSeaFeatures.WrathOfTheSea())
         data.add_spell(
@@ -51,8 +52,8 @@ class DruidSeaLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             SorcererLevel3Spells.LIGHTNING_BOLT, source="Circle of the Sea Spells table"
         )
@@ -67,8 +68,8 @@ class DruidSeaLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidSeaFeatures.AquaticAffinity(), extends=DruidSeaFeatures.WrathOfTheSea
         )
@@ -80,8 +81,8 @@ class DruidSeaLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             DruidLevel4Spells.CONTROL_WATER, source="Circle of the Sea Spells table"
         )
@@ -96,8 +97,8 @@ class DruidSeaLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             DruidLevel5Spells.CONJURE_ELEMENTAL, source="Circle of the Sea Spells table"
         )
@@ -112,8 +113,8 @@ class DruidSeaLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidSeaFeatures.Stormborn(), extends=DruidSeaFeatures.WrathOfTheSea
         )
@@ -125,8 +126,8 @@ class DruidSeaLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidSeaFeatures.OceanicGift(), extends=DruidSeaFeatures.WrathOfTheSea
         )

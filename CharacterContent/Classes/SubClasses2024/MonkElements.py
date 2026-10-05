@@ -3,6 +3,7 @@ from typing import Optional
 import attr
 
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
@@ -18,8 +19,8 @@ from Core.Definitions import Ability, MonkSubclass, Skill
 class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkElementsFeatures.ElementalAttunement(), extends=MonkFeatures.MonksFocus
         )
@@ -32,8 +33,8 @@ class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
 class MonkElementsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkElementsFeatures.ElementalBurst(), extends=MonkFeatures.MonksFocus
         )
@@ -45,8 +46,8 @@ class MonkElementsLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkElementsFeatures.StrideOfTheElements(), extends=MonkFeatures.MonksFocus
         )
@@ -58,8 +59,8 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkElementsFeatures.ElementalEpitome(), extends=MonkFeatures.MonksFocus
         )

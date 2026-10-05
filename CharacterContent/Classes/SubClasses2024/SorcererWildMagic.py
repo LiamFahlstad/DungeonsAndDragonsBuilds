@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (
     SorcererWildMagicFeatures,
@@ -18,8 +19,8 @@ from CharacterContent.Features.SubClassFeatures.Sorcerer import (
 class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererWildMagicFeatures.WildMagicSurge())
         data.add_feature(
             SorcererWildMagicFeatures.WildMagicSurgeTable(),
@@ -33,8 +34,8 @@ class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
 class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererWildMagicFeatures.BendLuck())
         return data
 
@@ -43,8 +44,8 @@ class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
 class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererWildMagicFeatures.ControlledChaos(),
             extends=SorcererWildMagicFeatures.WildMagicSurge,
@@ -56,8 +57,8 @@ class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
 class SorcererWildMagicLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererWildMagicFeatures.TamedSurge(),
             extends=SorcererWildMagicFeatures.WildMagicSurge,

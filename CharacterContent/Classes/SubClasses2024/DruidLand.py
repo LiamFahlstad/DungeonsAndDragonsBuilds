@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidLandType, DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidLandFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -82,8 +83,8 @@ class DruidLandLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidLandFeatures.CircleOfTheLandSpells(land_type=self.land_type)
         )
@@ -99,8 +100,8 @@ class DruidLandLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             _LEVEL_5_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
@@ -113,8 +114,8 @@ class DruidLandLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidLandFeatures.NaturalRecovery())
         return data
 
@@ -125,8 +126,8 @@ class DruidLandLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             _LEVEL_7_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
@@ -140,8 +141,8 @@ class DruidLandLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(
             _LEVEL_9_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
@@ -155,8 +156,8 @@ class DruidLandLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidLandFeatures.NaturesWard(land_type=self.land_type))
         return data
 
@@ -166,8 +167,8 @@ class DruidLandLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidLandFeatures.NaturesSanctuary())
         return data
 

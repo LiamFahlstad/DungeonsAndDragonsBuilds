@@ -178,9 +178,6 @@ def get_starter_class_builder():
                 20: PaladinGloryLevel20(),
             },
         ),
-        replace_spells={
-            PaladinLevel1Spells.CURE_WOUNDS: PaladinLevel2Spells.MAGIC_WEAPON,
-        },
     )
 
 

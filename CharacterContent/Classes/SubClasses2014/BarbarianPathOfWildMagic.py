@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfWildMagicFeatures,
@@ -20,8 +21,8 @@ class BarbarianWildMagicLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfWildMagicFeatures.MagicAwareness())
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.WildSurge(), extends=BarbarianFeatures.Rage
@@ -34,8 +35,8 @@ class BarbarianWildMagicLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfWildMagicFeatures.BolsteringMagic())
         return data
 
@@ -45,8 +46,8 @@ class BarbarianWildMagicLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.UnstableBacklash(),
             extends=BarbarianFeatures.Rage,
@@ -59,8 +60,8 @@ class BarbarianWildMagicLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.ControlledSurge(),
             extends=BarbarianFeatures.Rage,

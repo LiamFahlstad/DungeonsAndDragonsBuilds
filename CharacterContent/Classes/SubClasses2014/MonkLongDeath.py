@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkLongDeathFeatures
 
@@ -16,8 +17,8 @@ from CharacterContent.Features.SubClassFeatures2014.Monk import MonkLongDeathFea
 class MonkLongDeathLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkLongDeathFeatures.TouchOfDeath())
         return data
 
@@ -26,8 +27,8 @@ class MonkLongDeathLevel3(ClassBuilder.SubclassLevel3):
 class MonkLongDeathLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkLongDeathFeatures.HourOfReaping())
         return data
 
@@ -37,8 +38,8 @@ class MonkLongDeathLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkLongDeathFeatures.MasteryOfDeath())
         return data
 
@@ -48,8 +49,8 @@ class MonkLongDeathLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkLongDeathFeatures.TouchOfTheLongDeath())
         return data
 

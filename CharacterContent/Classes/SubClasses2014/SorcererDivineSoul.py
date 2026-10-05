@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
     SorcererDivineSoulFeatures,
@@ -20,8 +21,8 @@ class SorcererDivineSoulLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             SorcererDivineSoulFeatures.DivineMagic(),
             extends=SorcererFeatures.Spellcasting,
@@ -35,8 +36,8 @@ class SorcererDivineSoulLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererDivineSoulFeatures.EmpoweredHealing())
         return data
 
@@ -46,8 +47,8 @@ class SorcererDivineSoulLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererDivineSoulFeatures.AngelicForm())
         return data
 
@@ -57,8 +58,8 @@ class SorcererDivineSoulLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(SorcererDivineSoulFeatures.UnearthlyRecovery())
         return data
 

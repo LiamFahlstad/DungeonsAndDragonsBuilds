@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheWorldTreeFeatures,
@@ -20,8 +21,8 @@ class BarbarianWorldTreeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.VitalityOfTheTree(),
             extends=BarbarianFeatures.Rage,
@@ -34,8 +35,8 @@ class BarbarianWorldTreeLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.BranchesOfTheTree(),
             extends=BarbarianFeatures.Rage,
@@ -48,8 +49,8 @@ class BarbarianWorldTreeLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheWorldTreeFeatures.BatteringRoots())
         return data
 
@@ -59,8 +60,8 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.TravelAlongTheTree(),
             extends=BarbarianFeatures.Rage,

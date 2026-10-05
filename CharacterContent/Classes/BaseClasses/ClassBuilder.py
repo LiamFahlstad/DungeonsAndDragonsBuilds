@@ -5,6 +5,7 @@ import attr
 
 import Core.Definitions as Definitions
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Weapons
@@ -21,8 +22,8 @@ class LevelFeatures(ABC):
     @abstractmethod
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         pass
 
 
@@ -215,7 +216,7 @@ class BaseClassLevel19(LevelFeatures):
 class BaseClassLevel20(LevelFeatures):
     level: int = attr.field(init=False, default=20)
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         return data
 
 
@@ -280,8 +281,7 @@ class BaseClassLevelFeatures:
                     continue
                 applied_levels.add(key)
 
-                data.set_current_grant_level(level)
-                data = features.add_features(data=data)
+                features.add_features(Grants(data, level, base_class.value))
         return data
 
 

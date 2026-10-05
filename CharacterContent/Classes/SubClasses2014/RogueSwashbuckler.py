@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Rogue import (
     RogueSwashbucklerFeatures,
@@ -20,8 +21,8 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSwashbucklerFeatures.FancyFootwork())
         data.add_feature(
             RogueSwashbucklerFeatures.RakishAudacity(),
@@ -35,8 +36,8 @@ class RogueSwashbucklerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSwashbucklerFeatures.Panache())
         return data
 
@@ -46,8 +47,8 @@ class RogueSwashbucklerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSwashbucklerFeatures.ElegantManeuver())
         return data
 
@@ -57,8 +58,8 @@ class RogueSwashbucklerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSwashbucklerFeatures.MasterDuelist())
         return data
 

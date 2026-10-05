@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockFiendFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -27,8 +28,8 @@ class WarlockFiendLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFiendFeatures.FiendSpells())
         data.add_feature(WarlockFiendFeatures.DarkOnesBlessing())
         data.add_spell(SorcererLevel1Spells.BURNING_HANDS)
@@ -43,8 +44,8 @@ class WarlockFiendLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel3Spells.FIREBALL)
         data.add_spell(SorcererLevel3Spells.STINKING_CLOUD)
         return data
@@ -55,8 +56,8 @@ class WarlockFiendLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFiendFeatures.DarkOnesOwnLuck())
         return data
 
@@ -66,8 +67,8 @@ class WarlockFiendLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
         data.add_spell(SorcererLevel4Spells.WALL_OF_FIRE)
         return data
@@ -78,8 +79,8 @@ class WarlockFiendLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(BardLevel5Spells.GEAS)
         data.add_spell(SorcererLevel5Spells.INSECT_PLAGUE)
         return data
@@ -90,8 +91,8 @@ class WarlockFiendLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFiendFeatures.FiendishResilience())
         return data
 
@@ -101,8 +102,8 @@ class WarlockFiendLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFiendFeatures.HurlThroughHell())
         return data
 

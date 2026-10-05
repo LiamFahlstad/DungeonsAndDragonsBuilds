@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, CharacterClass, Skill
 from Model.Character import Character
+from Model.Grants import Grants
 from Model.Effects import Effects
 
 
@@ -31,11 +32,14 @@ class OriginFeat(Feature):
     def get_spells(self) -> list[str]:
         return []
 
-    def grant_to(self, data: Character) -> None:
-        """Grant this feat and the spells it comes with."""
+    def grant_to(self, data: Character | Grants) -> None:
+        """Grant this feat and the spells it comes with (listed under the
+        feat)."""
         data.add_feature(self)
         for spell in self.get_spells():
-            data.add_spell(spell, self.get_spell_casting_ability())
+            data.add_spell(
+                spell, self.get_spell_casting_ability(), granted_by=self.name
+            )
 
 
 class Skilled(OriginFeat):

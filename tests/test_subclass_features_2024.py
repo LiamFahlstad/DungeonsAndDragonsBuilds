@@ -14,6 +14,7 @@ armor) applies, in no particular order, then requirements are validated.
 import pytest
 
 from Model.Character import Character
+from Model.Grants import Grants
 from Model.ClassLevels import ClassLevels
 from Core.Definitions import (
     Ability,
@@ -79,6 +80,13 @@ def apply_features(character, features, armors=()):
 
 # ---------------------------------------------------------------------------
 # Always-prepared subclass spells: grant levels and spell names, transcribed
+
+
+def _names_and_levels(data):
+    """(spell, grant level) for every spell known."""
+    return [(s.name, s.grant_level) for s in data.spells]
+
+
 # from SourceTexts/SubclassTexts2024/*.txt. data.spells is a list of
 # (spell, ability, ruling, grant_level) tuples accumulated by add_spell(),
 # with grant_level set from the class level being processed when the
@@ -172,7 +180,7 @@ class TestPaladinOathSpellGrantLevels:
         }
         oath_grant_levels = {
             level
-            for spell, _a, _r, level in data.spells
+            for spell, level in _names_and_levels(data)
             if getattr(spell, "value", spell) in oath_spells
         }
         assert oath_grant_levels == {3, 5, 9, 13, 17}
@@ -185,7 +193,7 @@ class TestPaladinOathSpellGrantLevels:
         data = BuildSelector.get_build("Y2024_Paladin_Glory_BalderSunoath").build()
         assert data.level_per_class[CharacterClass.PALADIN] == 20
         by_level = {}
-        for spell, _ability, _ruling, level in data.spells:
+        for spell, level in _names_and_levels(data):
             by_level.setdefault(level, set()).add(spell.value)
         # Subset checks (not equality): the level tag is also shared by
         # non-subclass spells granted at the same character level (e.g. feats
@@ -228,16 +236,17 @@ class TestSorcererAndWarlockSpellGrantLevels:
         from CharacterContent.Classes.SubClasses2024 import SorcererDraconic
 
         data = Character(spell_casting_ability=Ability.CHARISMA)
-        # set_current_grant_level mirrors what ClassBuilder.create() does before
-        # calling each level's add_features(), so add_spell() tags spells with
-        # the right level (see Model/Character.py add_spell).
-        data.set_current_grant_level(3)
-        SorcererDraconic.SorcererDraconicLevel3().add_features(data)
-        data.set_current_grant_level(5)
-        SorcererDraconic.SorcererDraconicLevel5().add_features(data)
+        # A Grants scope is what ClassBuilder.create() hands each level's
+        # add_features(): it stamps every spell with that level.
+        SorcererDraconic.SorcererDraconicLevel3().add_features(
+            Grants(data, 3, "Sorcerer")
+        )
+        SorcererDraconic.SorcererDraconicLevel5().add_features(
+            Grants(data, 5, "Sorcerer")
+        )
 
         by_level = {}
-        for spell, _ability, _ruling, level in data.spells:
+        for spell, level in _names_and_levels(data):
             by_level.setdefault(level, set()).add(spell.value)
         assert by_level[3] == {
             "Alter Self",
@@ -252,7 +261,7 @@ class TestSorcererAndWarlockSpellGrantLevels:
         # stops at Warlock level 9 (Dominate Person, Seeming); unlike Paladin
         # oaths there is no 13th/17th-level row for Warlock patrons.
         data = BuildSelector.get_build("Y2024_Warlock_Archfey_CaelumBladefey").build()
-        grant_levels = {level for _, _, _, level in data.spells}
+        grant_levels = {s.grant_level for s in data.spells}
         for forbidden_level in (13, 17):
             assert forbidden_level not in grant_levels
 
@@ -261,7 +270,7 @@ class TestSorcererAndWarlockSpellGrantLevels:
         # Calm Emotions, Faerie Fire, Misty Step, Phantasmal Force, Sleep (5).
         data = BuildSelector.get_build("Y2024_Warlock_Archfey_WrennaThornpact").build()
         level_3_spells = {
-            spell.value for spell, _a, _r, level in data.spells if level == 3
+            spell.value for spell, level in _names_and_levels(data) if level == 3
         }
         # Subset: cantrips/level-1 spells known also tag as grant level 3 for
         # a level-3 Warlock, alongside the always-prepared Archfey Spells.
@@ -317,7 +326,7 @@ class TestDruidCircleOfTheLandSpells:
         data = Character(spell_casting_ability=Ability.WISDOM)
         builder_cls = self.LEVEL_BUILDERS[level]
         builder_cls(land_type=land_type).add_features(data)
-        names = {spell.value for spell, _a, _r, _lvl in data.spells}
+        names = {s.name.value for s in data.spells}
         assert names == self.LAND_SPELLS[land_type][level]
 
 

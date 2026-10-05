@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardGlamourFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
@@ -18,8 +19,8 @@ from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.BardLevel1Spells.CHARM_PERSON)
         data.add_spell(SpellDefinitions.BardLevel2Spells.MIRROR_IMAGE)
         data.add_feature(BardGlamourFeatures.BeguilingMagic())
@@ -31,8 +32,8 @@ class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
 class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
         data.add_feature(
             BardGlamourFeatures.MantleOfMajesty(),
@@ -46,8 +47,8 @@ class BardGlamourLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BardGlamourFeatures.UnbreakableMajesty())
         return data
 

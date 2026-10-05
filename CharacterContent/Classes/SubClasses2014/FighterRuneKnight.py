@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterRuneKnightFeatures,
@@ -19,8 +20,8 @@ class FighterRuneKnightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterRuneKnightFeatures.BonusProficiencies())
         data.add_feature(FighterRuneKnightFeatures.RuneCarver())
         data.add_feature(FighterRuneKnightFeatures.GiantsMight())
@@ -32,8 +33,8 @@ class FighterRuneKnightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterRuneKnightFeatures.RunicShield())
         return data
 
@@ -43,8 +44,8 @@ class FighterRuneKnightLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterRuneKnightFeatures.GreatStature(),
             extends=FighterRuneKnightFeatures.GiantsMight,
@@ -57,8 +58,8 @@ class FighterRuneKnightLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterRuneKnightFeatures.MasterOfRunes(),
             extends=FighterRuneKnightFeatures.RuneCarver,
@@ -71,8 +72,8 @@ class FighterRuneKnightLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterRuneKnightFeatures.RunicJuggernaut(),
             extends=FighterRuneKnightFeatures.GiantsMight,

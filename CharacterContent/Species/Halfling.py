@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import HalflingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 
@@ -11,7 +12,7 @@ class HalflingSpeciesBuilder(SpeciesBuilder):
             name="Halfling",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = HalflingFeatures.SPEED  # Given by your species
         data.size = HalflingFeatures.SIZE  # Given by your species
 

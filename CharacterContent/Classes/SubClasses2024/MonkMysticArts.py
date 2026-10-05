@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
@@ -18,8 +19,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkMysticArtsFeatur
 class MonkMysticArtsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMysticArtsFeatures.MysticArtsSpellcasting())
         return data
 
@@ -28,8 +29,8 @@ class MonkMysticArtsLevel3(ClassBuilder.SubclassLevel3):
 class MonkMysticArtsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMysticArtsFeatures.MysticFightingStyle())
         data.add_feature(
             MonkMysticArtsFeatures.MysticFocus(), extends=MonkFeatures.MonksFocus
@@ -42,8 +43,8 @@ class MonkMysticArtsLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMysticArtsFeatures.FocusedStrike())
         return data
 
@@ -53,8 +54,8 @@ class MonkMysticArtsLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkMysticArtsFeatures.ImprovedMysticFightingStyle(),
             extends=MonkMysticArtsFeatures.MysticFightingStyle,

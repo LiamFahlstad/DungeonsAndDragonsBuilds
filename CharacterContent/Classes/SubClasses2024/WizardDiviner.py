@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardDivinerFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -46,8 +47,8 @@ class WizardDivinerLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardDivinerFeatures.DivinationSavant())
         data.add_feature(WizardDivinerFeatures.Portent())
         data.add_spell(self.spell_1)
@@ -61,8 +62,8 @@ class WizardDivinerLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -72,8 +73,8 @@ class WizardDivinerLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardDivinerFeatures.ExpertDivination())
         return data
 
@@ -84,8 +85,8 @@ class WizardDivinerLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -96,8 +97,8 @@ class WizardDivinerLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -107,8 +108,8 @@ class WizardDivinerLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardDivinerFeatures.TheThirdEye())
         return data
 
@@ -119,8 +120,8 @@ class WizardDivinerLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -131,8 +132,8 @@ class WizardDivinerLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -142,8 +143,8 @@ class WizardDivinerLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardDivinerFeatures.GreaterPortent(),
             extends=WizardDivinerFeatures.Portent,
@@ -157,8 +158,8 @@ class WizardDivinerLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -169,8 +170,8 @@ class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 

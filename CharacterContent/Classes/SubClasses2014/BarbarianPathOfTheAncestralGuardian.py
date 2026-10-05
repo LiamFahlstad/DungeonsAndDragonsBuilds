@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfTheAncestralGuardianFeatures,
@@ -20,8 +21,8 @@ class BarbarianAncestralGuardianLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.AncestralProtectors(),
             extends=BarbarianFeatures.Rage,
@@ -34,8 +35,8 @@ class BarbarianAncestralGuardianLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.SpiritShield(),
             extends=BarbarianFeatures.Rage,
@@ -48,8 +49,8 @@ class BarbarianAncestralGuardianLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.ConsultTheSpirits()
         )
@@ -61,8 +62,8 @@ class BarbarianAncestralGuardianLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.VengefulAncestors(),
             extends=BarbarianFeatures.Rage,

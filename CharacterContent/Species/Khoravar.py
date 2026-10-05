@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import KhoravarFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -28,7 +29,7 @@ class KhoravarSpeciesBuilder(SpeciesBuilder):
         ], "Fey Gift uses Intelligence, Wisdom, or Charisma."
         self.spell_casting_ability = spell_casting_ability
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = KhoravarFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 

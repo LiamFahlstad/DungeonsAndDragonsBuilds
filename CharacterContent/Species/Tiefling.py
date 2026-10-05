@@ -1,6 +1,7 @@
 from enum import Enum
 
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import TieflingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 from CharacterContent.Spells.SpellLists import (
@@ -31,7 +32,7 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
             name="Tiefling",
         )
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = TieflingFeatures.SPEED  # Given by your species
         data.size = TieflingFeatures.SIZE  # Given by your species
 

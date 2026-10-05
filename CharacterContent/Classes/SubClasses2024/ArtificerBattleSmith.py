@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerBattleSmithFeatures,
@@ -29,8 +30,8 @@ from CharacterContent.Spells.SpellLists import (
 class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerBattleSmithFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerBattleSmithFeatures.Spells())
         data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
@@ -44,8 +45,8 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
 class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerBattleSmithFeatures.ExtraAttack())
         data.add_spell(PaladinLevel2Spells.SHINING_SMITE)
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
@@ -56,8 +57,8 @@ class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
 class ArtificerBattleSmithLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerBattleSmithFeatures.ArcaneJolt())
         data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(RangerLevel3Spells.CONJURE_BARRAGE)
@@ -68,8 +69,8 @@ class ArtificerBattleSmithLevel9(ClassBuilder.SubclassLevel9):
 class ArtificerBattleSmithLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(PaladinLevel4Spells.AURA_OF_PURITY)
         data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
         return data
@@ -79,8 +80,8 @@ class ArtificerBattleSmithLevel13(ClassBuilder.SubclassLevel13):
 class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ArtificerBattleSmithFeatures.ImprovedDefender(),
             extends=ArtificerBattleSmithFeatures.ArcaneJolt,
@@ -92,8 +93,8 @@ class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
 class ArtificerBattleSmithLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
         data.add_spell(BardLevel5Spells.MASS_CURE_WOUNDS)
         return data

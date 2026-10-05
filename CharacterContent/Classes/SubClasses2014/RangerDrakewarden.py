@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Optional
 
 import attr
 
@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DamageType, RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (
     RangerDrakewardenFeatures,
@@ -22,8 +23,8 @@ class RangerDrakewardenLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerDrakewardenFeatures.DraconicGift(language=self.language))
         data.add_feature(
             RangerDrakewardenFeatures.DrakeCompanion(damage_type=self.damage_type)
@@ -37,14 +38,11 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
-            RangerDrakewardenFeatures.DrakeCompanion,
-            data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
-        )
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
-            RangerDrakewardenFeatures.BondOfFangAndScale(), extends=drake_companion
+            RangerDrakewardenFeatures.BondOfFangAndScale(),
+            extends=RangerDrakewardenFeatures.DrakeCompanion,
         )
         return data
 
@@ -54,8 +52,8 @@ class RangerDrakewardenLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerDrakewardenFeatures.DrakesBreath())
         return data
 
@@ -65,14 +63,11 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        drake_companion: RangerDrakewardenFeatures.DrakeCompanion = cast(
-            RangerDrakewardenFeatures.DrakeCompanion,
-            data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
-        )
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
-            RangerDrakewardenFeatures.PerfectedBond(), extends=drake_companion
+            RangerDrakewardenFeatures.PerfectedBond(),
+            extends=RangerDrakewardenFeatures.DrakeCompanion,
         )
         return data
 

@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardEvokerFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -46,8 +47,8 @@ class EvokerWizardLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardEvokerFeatures.EvocationSavant())
         data.add_feature(WizardEvokerFeatures.PotentCantrip())
         data.add_spell(self.spell_1)
@@ -61,8 +62,8 @@ class EvokerWizardLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -72,8 +73,8 @@ class EvokerWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardEvokerFeatures.SculptSpells())
         return data
 
@@ -84,8 +85,8 @@ class EvokerWizardLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -96,8 +97,8 @@ class EvokerWizardLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -107,8 +108,8 @@ class EvokerWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardEvokerFeatures.EmpoweredEvocation())
         return data
 
@@ -119,8 +120,8 @@ class EvokerWizardLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -131,8 +132,8 @@ class EvokerWizardLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -142,8 +143,8 @@ class EvokerWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardEvokerFeatures.Overchannel())
         return data
 
@@ -154,8 +155,8 @@ class EvokerWizardLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -166,8 +167,8 @@ class EvokerWizardLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 

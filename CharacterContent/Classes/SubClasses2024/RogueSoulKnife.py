@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueSoulKnifeFeatures
 
@@ -17,8 +18,8 @@ class RogueSoulKnifeLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSoulKnifeFeatures.PsionicPower())
         data.add_feature(RogueSoulKnifeFeatures.PsychicBlades())
         return data
@@ -29,8 +30,8 @@ class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueSoulKnifeFeatures.SoulBlades(),
             extends=RogueSoulKnifeFeatures.PsychicBlades,
@@ -43,8 +44,8 @@ class RogueSoulKnifeLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueSoulKnifeFeatures.PsychicVeil())
         return data
 
@@ -54,8 +55,8 @@ class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueSoulKnifeFeatures.RendMind(),
             extends=RogueSoulKnifeFeatures.PsychicBlades,

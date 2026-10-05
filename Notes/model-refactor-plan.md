@@ -290,7 +290,19 @@ Rules of thumb:
 - **Tests:** grant the child before the parent and get the same sheet; the error cases for a missing or ambiguous parent; an optional extension without its parent is dropped; one feature instance granted to two characters doesn't share extensions.
 - **Verify:** A, B, C, D, plus `-m slow`. The goldens must not move.
 
-### Step 9: Spells are order-free grants, through a `Grants` scope *(design-critical)*
+### Step 9: Spells are order-free grants, through a `Grants` scope *(design-critical)* — done
+
+- **Result:**
+  - **Spell records.** `Model/Spells.py` has `SpellGrant(name, ability, ruling, grant_level, granted_by, source)`, `SpellReplacement`, and `resolve_spells()`, which applies the replacements, checks the rules, and returns the spells in canonical order. `character.spells` is that resolved list. The sources are `spell_grants` and `spell_replacements`.
+  - **The `Grants` scope.** `Model/Grants.py` is what `ClassBuilder` and `SpeciesBuilder` hand to `add_features`/`_grant`. It forwards `add_feature`, `add_fighting_style`, `add_weapon_mastery`, `add_invocation`, `add_spell` and `add_cantrip`, plus the species' `base_speed`/`size`. It stamps every spell's level, and `granted_by` with the class (`base_class.value`, for class and subclass levels alike) or the species name. `OriginFeat.grant_to` lists its spells under the feat.
+  - **Codemod.** 1888 annotations were rewritten (`data: Character -> Character` became `data: Grants -> Grants`).
+  - **Removed from `Character`:** `_current_grant_level`, `set_current_grant_level`, `_duplicate_spell_check_start`, `separate_spell_source`, the index-keyed `spell_sources` and `get_spell_source`.
+- **Changes from the plan below:**
+  - **Two "source" fields.** The stamped field is `granted_by`, and `source` stays the free-text label you added ("Chosen spell"), so `add_spell(..., source=...)` is unchanged.
+  - **Chains are rejected, as planned.** Swapping into a spell that's already known is also rejected now (the old code silently listed it twice). That surfaced six builds (Bard Dance/Glamour/Spirits examples, Paladin Glory example, Iselle, Balder) that swapped a level 1 spell for one they learn later. The swap was removed, so each keeps its original choice, and only those six sheets changed (reviewed: one duplicate card gone, the original spell back).
+  - **Reads during granting removed.** Barbarian level 1 and Bladesinger checked `data.armors` while granting, but `CharacterBuilder` attaches the inventory after the class levels, so they always saw no armor. Barbarian now grants Unarmored Defense unconditionally (its AC formula already ignores worn armor), and the dead Bladesinger check is gone. Output is identical.
+  - **A Step 8 leftover.** 10 lookups wrapped in `cast(...)` were converted to `extends=<Type>`.
+- **Features aren't stamped yet;** that's Step 10. The 50-build leak list is unchanged.
 
 - **Goal:** spell handling has no call-order rules and no builder state on `Character`.
 - **Changes:**

@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WizardSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
     WizardOrderOfScribesFeatures,
@@ -19,8 +20,8 @@ class WizardOrderOfScribesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardOrderOfScribesFeatures.WizardlyQuill())
         data.add_feature(WizardOrderOfScribesFeatures.AwakenedSpellbook())
         return data
@@ -31,8 +32,8 @@ class WizardOrderOfScribesLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardOrderOfScribesFeatures.ManifestMind(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,
@@ -45,8 +46,8 @@ class WizardOrderOfScribesLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardOrderOfScribesFeatures.MasterScriviner(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,
@@ -59,8 +60,8 @@ class WizardOrderOfScribesLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardOrderOfScribesFeatures.OneWithTheWord(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,

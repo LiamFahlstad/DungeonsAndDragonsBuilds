@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterBanneretFeatures
@@ -19,8 +20,8 @@ class FighterBanneretLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterBanneretFeatures.KnightlyEnvoy())
         data.add_feature(FighterBanneretFeatures.GroupRecovery())
         data.add_spell(
@@ -36,8 +37,8 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterBanneretFeatures.TeamTactics(),
             extends=FighterBanneretFeatures.GroupRecovery,
@@ -50,8 +51,8 @@ class FighterBanneretLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterBanneretFeatures.RallyingSurge(), extends=FighterFeatures.ActionSurge
         )
@@ -63,8 +64,8 @@ class FighterBanneretLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterBanneretFeatures.SharedResilience(),
             extends=FighterFeatures.Indomitable,
@@ -77,8 +78,8 @@ class FighterBanneretLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterBanneretFeatures.InspiringCommander())
         return data
 

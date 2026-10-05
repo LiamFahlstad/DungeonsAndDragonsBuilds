@@ -161,15 +161,8 @@ def test_grant_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     def regrant(data: Character) -> None:
         data.features = reorder(data.features)
         data.feature_extensions = reorder(data.feature_extensions)
-        # A spell's source label is keyed by its index in `spells`, so it
-        # moves with its spell (Step 9 makes both one record).
-        regranted = reorder(
-            [(spell, data.spell_sources.get(i)) for i, spell in enumerate(data.spells)]
-        )
-        data.spells = [spell for spell, _source in regranted]
-        data.spell_sources = {
-            i: source for i, (_spell, source) in enumerate(regranted) if source
-        }
+        data.spell_grants = reorder(data.spell_grants)
+        data.spell_replacements = reorder(data.spell_replacements)
 
     sheets = render_and_hash(name, tmp_path, prepare=regrant)
     _assert_sheet_unchanged(name, sheets, f"grant order ({order})")

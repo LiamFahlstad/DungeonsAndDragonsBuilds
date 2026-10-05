@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheWildHeartFeatures,
@@ -25,8 +26,8 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
         data.add_spell(
             DruidLevel2Spells.BEAST_SENSE,
@@ -50,8 +51,8 @@ class BarbarianWildHeartLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AspectOfTheWilds())
         return data
 
@@ -61,8 +62,8 @@ class BarbarianWildHeartLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.NatureSpeaker())
         data.add_spell(
             DruidLevel5Spells.COMMUNE_WITH_NATURE,
@@ -77,8 +78,8 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds(),
             extends=BarbarianFeatures.Rage,

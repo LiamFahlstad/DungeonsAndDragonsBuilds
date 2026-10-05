@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkMercyFeatures
 
@@ -16,8 +17,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkMercyFeatures
 class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMercyFeatures.HandOfHarm())
         data.add_feature(MonkMercyFeatures.HandOfHealing())
         data.add_feature(MonkMercyFeatures.ImplementsOfMercy())
@@ -28,8 +29,8 @@ class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
 class MonkMercyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             MonkMercyFeatures.PhysiciansTouch(), extends=MonkMercyFeatures.HandOfHarm
         )
@@ -41,8 +42,8 @@ class MonkMercyLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMercyFeatures.FlurryOfHealingAndHarm())
         return data
 
@@ -52,8 +53,8 @@ class MonkMercyLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkMercyFeatures.HandOfUltimateMercy())
         return data
 

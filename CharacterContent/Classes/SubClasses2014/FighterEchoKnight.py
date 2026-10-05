@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterEchoKnightFeatures,
@@ -19,8 +20,8 @@ class FighterEchoKnightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEchoKnightFeatures.ManifestEcho())
         data.add_feature(FighterEchoKnightFeatures.UnleashIncarnation())
         return data
@@ -31,8 +32,8 @@ class FighterEchoKnightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEchoKnightFeatures.EchoAvatar())
         return data
 
@@ -42,8 +43,8 @@ class FighterEchoKnightLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEchoKnightFeatures.ShadowMartyr())
         return data
 
@@ -53,8 +54,8 @@ class FighterEchoKnightLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterEchoKnightFeatures.ReclaimPotential())
         return data
 
@@ -64,8 +65,8 @@ class FighterEchoKnightLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterEchoKnightFeatures.LegionOfOne(),
             extends=FighterEchoKnightFeatures.ManifestEcho,

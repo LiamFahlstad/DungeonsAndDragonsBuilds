@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianStormEnvironment, BarbarianSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfTheStormHeraldFeatures,
@@ -21,8 +22,8 @@ class BarbarianStormHeraldLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.StormAura(
                 environment=self.environment
@@ -38,8 +39,8 @@ class BarbarianStormHeraldLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.StormSoul(
                 environment=self.environment
@@ -53,8 +54,8 @@ class BarbarianStormHeraldLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheStormHeraldFeatures.ShieldingStorm())
         return data
 
@@ -65,8 +66,8 @@ class BarbarianStormHeraldLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.RagingStorm(
                 environment=self.environment

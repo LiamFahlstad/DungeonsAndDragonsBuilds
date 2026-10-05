@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import PaladinSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Paladin import (
     PaladinWatchersFeatures,
@@ -29,8 +30,8 @@ class PaladinWatchersLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinWatchersFeatures.WatchersSpells())
         data.add_feature(
             PaladinWatchersFeatures.WatchersWill(),
@@ -50,8 +51,8 @@ class PaladinWatchersLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DruidLevel2Spells.MOONBEAM)
         data.add_spell(WizardLevel2Spells.SEE_INVISIBILITY)
         return data
@@ -62,8 +63,8 @@ class PaladinWatchersLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinWatchersFeatures.AuraOfTheSentinel())
         return data
 
@@ -73,8 +74,8 @@ class PaladinWatchersLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel3Spells.COUNTERSPELL)
         data.add_spell(WizardLevel3Spells.NONDETECTION)
         return data
@@ -85,8 +86,8 @@ class PaladinWatchersLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(PaladinLevel4Spells.AURA_OF_PURITY)
         data.add_spell(PaladinLevel4Spells.BANISHMENT)
         return data
@@ -97,8 +98,8 @@ class PaladinWatchersLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinWatchersFeatures.VigilantRebuke())
         return data
 
@@ -108,8 +109,8 @@ class PaladinWatchersLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
         data.add_spell(WizardLevel5Spells.SCRYING)
         return data
@@ -120,8 +121,8 @@ class PaladinWatchersLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinWatchersFeatures.AuraOfTheSentinelExpansion(),
             extends=PaladinWatchersFeatures.AuraOfTheSentinel,
@@ -134,8 +135,8 @@ class PaladinWatchersLevel20(ClassBuilder.SubclassLevel20):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinWatchersFeatures.MortalBulwark())
         return data
 

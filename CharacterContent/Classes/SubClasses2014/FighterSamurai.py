@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterSamuraiFeatures,
@@ -19,8 +20,8 @@ class FighterSamuraiLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterSamuraiFeatures.BonusProficiency())
         data.add_feature(FighterSamuraiFeatures.FightingSpirit())
         return data
@@ -31,8 +32,8 @@ class FighterSamuraiLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterSamuraiFeatures.ElegantCourtier())
         return data
 
@@ -42,8 +43,8 @@ class FighterSamuraiLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterSamuraiFeatures.TirelessSpirit(),
             extends=FighterSamuraiFeatures.FightingSpirit,
@@ -56,8 +57,8 @@ class FighterSamuraiLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterSamuraiFeatures.RapidStrike())
         return data
 
@@ -67,8 +68,8 @@ class FighterSamuraiLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterSamuraiFeatures.StrengthBeforeDeath())
         return data
 

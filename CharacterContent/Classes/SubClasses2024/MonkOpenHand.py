@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkOpenHandFeatures
 
@@ -16,8 +17,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkOpenHandFeatures
 class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkOpenHandFeatures.OpenHandTechnique())
         return data
 
@@ -26,8 +27,8 @@ class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
 class MonkOpenHandLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkOpenHandFeatures.WholenessOfBody())
         return data
 
@@ -37,8 +38,8 @@ class MonkOpenHandLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkOpenHandFeatures.FleetStep())
         return data
 
@@ -48,8 +49,8 @@ class MonkOpenHandLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(MonkOpenHandFeatures.QuiveringPalm())
         return data
 

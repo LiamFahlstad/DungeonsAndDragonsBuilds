@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidWildfireFeatures
 
@@ -20,8 +21,8 @@ class DruidWildfireLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidWildfireFeatures.CircleSpells())
         data.add_feature(DruidWildfireFeatures.SummonWildfireSpirit())
         return data
@@ -32,8 +33,8 @@ class DruidWildfireLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidWildfireFeatures.EnhancedBond(),
             extends=DruidWildfireFeatures.SummonWildfireSpirit,
@@ -46,8 +47,8 @@ class DruidWildfireLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidWildfireFeatures.CauterizingFlames())
         return data
 
@@ -57,8 +58,8 @@ class DruidWildfireLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidWildfireFeatures.BlazingRevival(),
             extends=DruidWildfireFeatures.SummonWildfireSpirit,

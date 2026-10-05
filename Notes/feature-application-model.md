@@ -222,6 +222,17 @@ type (exactly one granted top-level feature must match) or a feature instance; `
 or `"standalone"` handles a parent that may not be granted. A missing or ambiguous parent raises
 from `validate()`.
 
+## Spells
+
+A spell is a `SpellGrant` (`Model/Spells.py`): name, casting ability, ruling, the class-relative
+level it was granted at, who granted it (`granted_by`: "Wizard", "Rock Gnome", "Magic Initiate"),
+and an optional free-text `source` label for the sheet. Level and species builders grant through a
+`Grants` scope (`Model/Grants.py`) that stamps the level and `granted_by`, so neither is state on
+the `Character`. A replacement is a declared `SpellReplacement`, resolved when `character.spells`
+is read (which lists them in canonical order). The same spell from two grants is listed for each;
+the same spell twice from one grant, a replacement of a spell nobody grants, and a chain of
+replacements all fail `validate()`.
+
 ## Equipment isolation
 
 `CharacterBuilder.build()` hands every sheet the builder's own weapon objects. That's safe

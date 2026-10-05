@@ -4,6 +4,7 @@ import attr
 
 import Core.Definitions as Definitions
 from Model.Character import Character
+from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.ClassFeatures import SpellSlots
@@ -73,8 +74,8 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericFeatures.Spellcasting())
         if isinstance(self.divine_order, DivineOrderThaumaturgeChoice):
             data.add_feature(
@@ -101,8 +102,8 @@ class ClericLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericFeatures.ChannelDivinity())
         data.add_spell(self.spell)
         return data
@@ -114,8 +115,8 @@ class ClericLevel3(ClassBuilder.BaseClassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -128,8 +129,8 @@ class ClericLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Cleric Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
@@ -144,8 +145,8 @@ class ClericLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ClericFeatures.SearUndead(), extends=ClericFeatures.ChannelDivinity
         )
@@ -160,8 +161,8 @@ class ClericLevel6(ClassBuilder.BaseClassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -173,8 +174,8 @@ class ClericLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         if isinstance(self.blessed_strikes, PotentSpellcastingChoice):
             data.add_feature(ClericFeatures.PotentSpellcasting())
         else:
@@ -190,8 +191,8 @@ class ClericLevel8(ClassBuilder.BaseClassLevel8):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Cleric Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -205,8 +206,8 @@ class ClericLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -219,8 +220,8 @@ class ClericLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
         data.add_feature(ClericFeatures.DivineIntervention())
@@ -233,8 +234,8 @@ class ClericLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -245,8 +246,8 @@ class ClericLevel12(ClassBuilder.BaseClassLevel12):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.general_feat.origin = f"Cleric Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -258,8 +259,8 @@ class ClericLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -269,8 +270,8 @@ class ClericLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         # Upgrades whichever Blessed Strikes option level 7 granted.
         data.add_feature(
             ClericFeatures.ImprovedDivineStrike(),
@@ -291,8 +292,8 @@ class ClericLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -301,7 +302,7 @@ class ClericLevel15(ClassBuilder.BaseClassLevel15):
 class ClericLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Cleric Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -313,8 +314,8 @@ class ClericLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -325,8 +326,8 @@ class ClericLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -338,8 +339,8 @@ class ClericLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         self.epic_boon.origin = f"Cleric Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -350,7 +351,7 @@ class ClericLevel19(ClassBuilder.BaseClassLevel19):
 class ClericLevel20(ClassBuilder.BaseClassLevel20):
     spell: ClericSpellsUpTo9
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(
             ClericFeatures.GreaterDivineIntervention(),
             extends=ClericFeatures.DivineIntervention,

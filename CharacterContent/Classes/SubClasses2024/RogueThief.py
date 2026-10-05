@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueThiefFeatures
 from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
@@ -18,8 +19,8 @@ class RogueThiefLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueThiefFeatures.FastHands())
         data.add_feature(RogueThiefFeatures.SecondStoryWork())
         return data
@@ -30,8 +31,8 @@ class RogueThiefLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             RogueThiefFeatures.SupremeSneak(), extends=RogueFeatures.SneakAttack
         )
@@ -43,8 +44,8 @@ class RogueThiefLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueThiefFeatures.UseMagicDevice())
         return data
 
@@ -54,8 +55,8 @@ class RogueThiefLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RogueThiefFeatures.ThiefsReflexes())
         return data
 

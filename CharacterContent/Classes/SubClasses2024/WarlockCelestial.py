@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
 from CharacterContent.Features.SubClassFeatures.Warlock import WarlockCelestialFeatures
@@ -27,8 +28,8 @@ class WarlockCelestialLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockCelestialFeatures.CelestialSpells())
         data.add_feature(WarlockCelestialFeatures.HealingLight())
         data.add_cantrip(ClericLevel0Spells.LIGHT)
@@ -45,8 +46,8 @@ class WarlockCelestialLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel3Spells.DAYLIGHT)
         data.add_spell(ClericLevel3Spells.REVIVIFY)
         return data
@@ -57,8 +58,8 @@ class WarlockCelestialLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockCelestialFeatures.RadiantSoul())
         return data
 
@@ -68,8 +69,8 @@ class WarlockCelestialLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
         data.add_spell(SorcererLevel4Spells.WALL_OF_FIRE)
         return data
@@ -80,8 +81,8 @@ class WarlockCelestialLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel5Spells.GREATER_RESTORATION)
         data.add_spell(ClericLevel5Spells.SUMMON_CELESTIAL)
         return data
@@ -92,8 +93,8 @@ class WarlockCelestialLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WarlockCelestialFeatures.CelestialResilience(),
             extends=WarlockFeatures.MagicalCunning,
@@ -106,8 +107,8 @@ class WarlockCelestialLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockCelestialFeatures.SearingVengeance())
         return data
 

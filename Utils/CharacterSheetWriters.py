@@ -30,6 +30,7 @@ from CharacterContent.Spells.SpellFactory.Writer import (
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from Model.Character import Character
+from Model.Spells import SpellGrant
 from Model.Skills import Skills
 from Utils import DamageCalculator, Html
 from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
@@ -110,10 +111,10 @@ class HtmlCharacterSheetWriter:
         return parse_feature_level(origin)
 
     @staticmethod
-    def _spell_level(spell: tuple[str, Ability, Optional[str], int]) -> int:
+    def _spell_level(spell: SpellGrant) -> int:
         """Class-relative level a spell/cantrip was granted on, mirroring
-        _feature_level - see Character._current_grant_level."""
-        return spell[3]
+        _feature_level - stamped by the builder's Grants scope."""
+        return spell.grant_level
 
     @staticmethod
     def _write_nav(file: TextIO, current_path: str, pages: list[tuple[str, str]]):
@@ -813,7 +814,7 @@ class HtmlCharacterSheetWriter:
         self,
         character: Character,
         file: TextIO,
-        spells: list[tuple[str, Ability, Optional[str], int]],
+        spells: list[SpellGrant],
     ):
         """Write the '<div class='spells'>' block of individual spell cards
         (grouped by spell level with a header per group) for the given
@@ -826,13 +827,9 @@ class HtmlCharacterSheetWriter:
 
         created_spells = []
         for entry in spells:
-            spell_name, spell_casting_ability, additional_ruling, _grant_level = entry
             created_spells.append(
                 SpellFactory.create(
-                    spell_name,
-                    spell_casting_ability,
-                    additional_ruling,
-                    character.get_spell_source(entry),
+                    entry.name, entry.ability, entry.ruling, entry.source
                 )
             )
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))
@@ -852,7 +849,7 @@ class HtmlCharacterSheetWriter:
         self,
         character: Character,
         file: TextIO,
-        spells: list[tuple[str, Ability, Optional[str], int]],
+        spells: list[SpellGrant],
         include_probability_tables: bool = False,
     ):
         if not spells and not character.spell_slots and not character.pact_magic_slots:
@@ -867,7 +864,7 @@ class HtmlCharacterSheetWriter:
             return
 
         casting_abilities = sorted(
-            {ability for _, ability, _, _ in spells},
+            {spell.ability for spell in spells},
             key=lambda a: a.value,
         )
         # Own subheading, so the headline and spell cards don't read as a
@@ -1409,7 +1406,7 @@ class HtmlCharacterSheetWriter:
                 feature
             )
 
-        spells_by_level: dict[int, list[tuple[str, Ability, Optional[str], int]]] = {}
+        spells_by_level: dict[int, list[SpellGrant]] = {}
         for spell in spells:
             spells_by_level.setdefault(self._spell_level(spell), []).append(spell)
 
@@ -1575,7 +1572,7 @@ class HtmlCharacterSheetWriter:
         weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str], int]],
+        spells: list[SpellGrant],
         include_probability_tables: bool,
     ):
         with self._open_page(path) as file:
@@ -1601,7 +1598,7 @@ class HtmlCharacterSheetWriter:
             self._write_abilities(character, file)
             if spells:
                 casting_abilities = sorted(
-                    {ability for _, ability, _, _ in spells},
+                    {spell.ability for spell in spells},
                     key=lambda a: a.value,
                 )
                 file.write("<br class='section-gap'>\n")
@@ -1777,7 +1774,7 @@ class HtmlCharacterSheetWriter:
         weapon_masteries: list[AbstractWeapon],
         fighting_styles: list[FightingStyle],
         invocations: list[str],
-        spells: list[tuple[str, Ability, Optional[str], int]],
+        spells: list[SpellGrant],
         equipment_entries: list[EquipmentEntry],
         starting_equipment_entry: Optional[EquipmentEntry],
         tool_proficiencies: list[ToolProficiency],
@@ -1853,7 +1850,7 @@ class HtmlCharacterSheetWriter:
         level: int,
         level_features: list[Feature],
         description_mode: Literal["table", "concise"] | None,
-        level_spells: list[tuple[str, Ability, Optional[str], int]],
+        level_spells: list[SpellGrant],
         level_extensions: list[tuple[Feature, Feature]] | None = None,
     ):
         if level_extensions is None:

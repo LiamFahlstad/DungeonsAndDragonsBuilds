@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WizardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardAbjurerFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -46,8 +47,8 @@ class AbjurerWizardLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardAbjurerFeatures.AbjurationSavant())
         data.add_feature(WizardAbjurerFeatures.ArcaneWard())
         data.add_spell(self.spell_1)
@@ -61,8 +62,8 @@ class AbjurerWizardLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -72,8 +73,8 @@ class AbjurerWizardLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             WizardAbjurerFeatures.ProjectedWard(),
             extends=WizardAbjurerFeatures.ArcaneWard,
@@ -87,8 +88,8 @@ class AbjurerWizardLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -99,8 +100,8 @@ class AbjurerWizardLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -110,8 +111,8 @@ class AbjurerWizardLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardAbjurerFeatures.SpellBreaker())
         data.add_spell(AbjurationLevel3Spells.COUNTERSPELL)
         data.add_spell(AbjurationLevel3Spells.DISPEL_MAGIC)
@@ -124,8 +125,8 @@ class AbjurerWizardLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -136,8 +137,8 @@ class AbjurerWizardLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -147,8 +148,8 @@ class AbjurerWizardLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WizardAbjurerFeatures.SpellResistance())
         return data
 
@@ -159,8 +160,8 @@ class AbjurerWizardLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -171,8 +172,8 @@ class AbjurerWizardLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(self.spell)
         return data
 

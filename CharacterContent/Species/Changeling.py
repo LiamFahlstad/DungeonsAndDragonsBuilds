@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import ChangelingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -16,7 +17,7 @@ class ChangelingSpeciesBuilder(SpeciesBuilder):
         self.size = size
         self.instinct_skills = instinct_skills
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = ChangelingFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 

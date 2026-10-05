@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterChampionFeatures
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
@@ -18,8 +19,8 @@ class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterChampionFeatures.ImprovedCritical())
         data.add_feature(FighterChampionFeatures.RemarkableAthlete())
         return data
@@ -30,8 +31,8 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterChampionFeatures.AdditionalFightingStyle(),
             extends=FighterFeatures.FightingStyle,
@@ -44,8 +45,8 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterChampionFeatures.HeroicWarrior())
         return data
 
@@ -55,8 +56,8 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             FighterChampionFeatures.SuperiorCritical(),
             extends=FighterChampionFeatures.ImprovedCritical,
@@ -69,8 +70,8 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(FighterChampionFeatures.Survivor())
         return data
 

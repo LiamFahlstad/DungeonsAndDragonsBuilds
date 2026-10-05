@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import ShifterFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -19,7 +20,7 @@ class ShifterSpeciesBuilder(SpeciesBuilder):
         assert size in [CreatureSize.MEDIUM, CreatureSize.SMALL]
         self.size = size
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = ShifterFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 

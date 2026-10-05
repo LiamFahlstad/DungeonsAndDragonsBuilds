@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheZealotFeatures,
@@ -20,8 +21,8 @@ class BarbarianZealotLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.DivineFury(),
             extends=BarbarianFeatures.Rage,
@@ -35,8 +36,8 @@ class BarbarianZealotLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.FanaticalFocus(),
             extends=BarbarianFeatures.Rage,
@@ -49,8 +50,8 @@ class BarbarianZealotLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(BarbarianPathOfTheZealotFeatures.ZealousPresence())
         return data
 
@@ -60,8 +61,8 @@ class BarbarianZealotLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.RageOfTheGods(),
             extends=BarbarianFeatures.Rage,

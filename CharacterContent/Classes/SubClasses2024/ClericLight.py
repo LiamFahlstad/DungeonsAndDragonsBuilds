@@ -9,6 +9,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericLightFeatures
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
@@ -19,8 +20,8 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.EvocationLevel1Spells.BURNING_HANDS)
         data.add_spell(SpellDefinitions.EvocationLevel1Spells.FAERIE_FIRE)
         data.add_spell(SpellDefinitions.EvocationLevel2Spells.SCORCHING_RAY)
@@ -38,8 +39,8 @@ class ClericLightLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.EvocationLevel3Spells.DAYLIGHT)
         data.add_spell(SpellDefinitions.EvocationLevel3Spells.FIREBALL)
         return data
@@ -50,8 +51,8 @@ class ClericLightLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ClericLightFeatures.ImprovedWardingFlare(),
             extends=ClericLightFeatures.WardingFlare,
@@ -64,8 +65,8 @@ class ClericLightLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.DivinationLevel4Spells.ARCANE_EYE)
         data.add_spell(SpellDefinitions.EvocationLevel4Spells.WALL_OF_FIRE)
         return data
@@ -76,8 +77,8 @@ class ClericLightLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(SpellDefinitions.EvocationLevel5Spells.FLAME_STRIKE)
         data.add_spell(SpellDefinitions.DivinationLevel5Spells.SCRYING)
         return data
@@ -88,8 +89,8 @@ class ClericLightLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericLightFeatures.CoronaOfLight())
         return data
 

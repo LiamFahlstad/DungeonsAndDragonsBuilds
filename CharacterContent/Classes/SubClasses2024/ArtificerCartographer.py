@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Optional
 
 import attr
 
@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (
     ArtificerCartographerFeatures,
@@ -30,8 +31,8 @@ from CharacterContent.Spells.SpellLists import (
 class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ArtificerCartographerFeatures.CartographerToolsOfTheTrade())
         data.add_feature(ArtificerCartographerFeatures.CartographerSpells())
         data.add_feature(ArtificerCartographerFeatures.AdventurersAtlas())
@@ -46,16 +47,11 @@ class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
 class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        cartographer_spells: ArtificerCartographerFeatures.CartographerSpells = cast(
-            ArtificerCartographerFeatures.CartographerSpells,
-            data.get_features_by_type(ArtificerCartographerFeatures.CartographerSpells)[
-                0
-            ],
-        )
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
-            ArtificerCartographerFeatures.GuidedPrecision(), extends=cartographer_spells
+            ArtificerCartographerFeatures.GuidedPrecision(),
+            extends=ArtificerCartographerFeatures.CartographerSpells,
         )
         data.add_spell(DivinationLevel2Spells.LOCATE_OBJECT)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
@@ -66,14 +62,11 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
 class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        flash_of_genius: ArtificerFeatures.FlashofGenius = cast(
-            ArtificerFeatures.FlashofGenius,
-            data.get_features_by_type(ArtificerFeatures.FlashofGenius)[0],
-        )
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
-            ArtificerCartographerFeatures.IngeniousMovement(), extends=flash_of_genius
+            ArtificerCartographerFeatures.IngeniousMovement(),
+            extends=ArtificerFeatures.FlashofGenius,
         )
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
         data.add_spell(BardLevel3Spells.CLAIRVOYANCE)
@@ -84,8 +77,8 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
 class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ClericLevel4Spells.BANISHMENT)
         data.add_spell(DivinationLevel4Spells.LOCATE_CREATURE)
         return data
@@ -95,16 +88,11 @@ class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
 class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
-        adventurers_atlas: ArtificerCartographerFeatures.AdventurersAtlas = cast(
-            ArtificerCartographerFeatures.AdventurersAtlas,
-            data.get_features_by_type(ArtificerCartographerFeatures.AdventurersAtlas)[
-                0
-            ],
-        )
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
-            ArtificerCartographerFeatures.SuperiorAtlas(), extends=adventurers_atlas
+            ArtificerCartographerFeatures.SuperiorAtlas(),
+            extends=ArtificerCartographerFeatures.AdventurersAtlas,
         )
         return data
 
@@ -113,8 +101,8 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
 class ArtificerCartographerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(DivinationLevel5Spells.SCRYING)
         data.add_spell(BardLevel5Spells.TELEPORTATION_CIRCLE)
         return data

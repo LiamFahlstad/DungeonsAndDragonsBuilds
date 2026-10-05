@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockFathomlessFeatures,
@@ -20,8 +21,8 @@ class WarlockFathomlessLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFathomlessFeatures.ExpandedSpellList())
         data.add_feature(WarlockFathomlessFeatures.TentacleOfTheDeep())
         data.add_feature(WarlockFathomlessFeatures.GiftOfTheSea())
@@ -33,8 +34,8 @@ class WarlockFathomlessLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFathomlessFeatures.OceanicSoul())
         data.add_feature(
             WarlockFathomlessFeatures.GuardianCoil(),
@@ -48,8 +49,8 @@ class WarlockFathomlessLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFathomlessFeatures.GraspingTentacles())
         data.add_spell(
             ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES,
@@ -63,8 +64,8 @@ class WarlockFathomlessLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(WarlockFathomlessFeatures.FathomlessPlunge())
         return data
 

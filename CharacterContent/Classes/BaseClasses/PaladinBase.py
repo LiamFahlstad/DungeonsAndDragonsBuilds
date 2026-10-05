@@ -5,6 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
@@ -30,8 +31,8 @@ class PaladinLevel1(ClassBuilder.BaseClassLevel1):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
         data.add_feature(PaladinFeatures.WeaponMastery())
@@ -50,7 +51,7 @@ class PaladinLevel2(ClassBuilder.BaseClassLevel2):
     fighting_style: FightingStyles.FightingStyle
     spell: PaladinLevel1Spells
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
 
         # Choose one Fighting Style
         data.add_fighting_style(self.fighting_style)
@@ -68,7 +69,7 @@ class PaladinLevel2(ClassBuilder.BaseClassLevel2):
 class PaladinLevel3(ClassBuilder.BaseClassLevel3):
     spell: PaladinLevel1Spells
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         channel_divinity_feature = PaladinFeatures.ChannelDivinity()
         channel_divinity_feature.add_spell("Divine Sense")
         data.add_feature(channel_divinity_feature)
@@ -81,7 +82,7 @@ class PaladinLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
     spell: PaladinLevel1Spells
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
@@ -92,7 +93,7 @@ class PaladinLevel4(ClassBuilder.BaseClassLevel4):
 class PaladinLevel5(ClassBuilder.BaseClassLevel5):
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         # Automatic feature
         data.add_feature(PaladinFeatures.ExtraAttack())
         data.add_feature(PaladinFeatures.FaithfulSteed())
@@ -106,7 +107,7 @@ class PaladinLevel5(ClassBuilder.BaseClassLevel5):
 @attr.dataclass
 class PaladinLevel6(ClassBuilder.BaseClassLevel6):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_feature(PaladinFeatures.AuraOfProtection())
         return data
 
@@ -115,7 +116,7 @@ class PaladinLevel6(ClassBuilder.BaseClassLevel6):
 class PaladinLevel7(ClassBuilder.BaseClassLevel7):
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -124,7 +125,7 @@ class PaladinLevel7(ClassBuilder.BaseClassLevel7):
 class PaladinLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -137,8 +138,8 @@ class PaladinLevel9(ClassBuilder.BaseClassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         # Abjure Foes joins Channel Divinity's options here; ChannelDivinity
         # works that out from the Paladin level when it's read.
         data.add_spell(self.spell_1)
@@ -151,8 +152,8 @@ class PaladinLevel10(ClassBuilder.BaseClassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinFeatures.AuraOfCourage(), extends=PaladinFeatures.AuraOfProtection
         )
@@ -165,8 +166,8 @@ class PaladinLevel11(ClassBuilder.BaseClassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(PaladinFeatures.RadiantStrikes())
         data.add_spell(self.spell)
         return data
@@ -176,7 +177,7 @@ class PaladinLevel11(ClassBuilder.BaseClassLevel11):
 class PaladinLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -191,7 +192,7 @@ class PaladinLevel13(ClassBuilder.BaseClassLevel13):
         | PaladinLevel4Spells
     )
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -201,8 +202,8 @@ class PaladinLevel14(ClassBuilder.BaseClassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinFeatures.RestoringTouch(), extends=PaladinFeatures.LayOnHands
         )
@@ -218,7 +219,7 @@ class PaladinLevel15(ClassBuilder.BaseClassLevel15):
         | PaladinLevel4Spells
     )
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_spell(self.spell)
         return data
 
@@ -227,7 +228,7 @@ class PaladinLevel15(ClassBuilder.BaseClassLevel15):
 class PaladinLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.general_feat.origin = f"Paladin Level {self.level}"
         data.add_feature(self.general_feat)
         return data
@@ -250,7 +251,7 @@ class PaladinLevel17(ClassBuilder.BaseClassLevel17):
         | PaladinLevel5Spells
     )
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -261,8 +262,8 @@ class PaladinLevel18(ClassBuilder.BaseClassLevel18):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             PaladinFeatures.AuraExpansion(), extends=PaladinFeatures.AuraOfProtection
         )
@@ -280,7 +281,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
         | PaladinLevel5Spells
     )
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         self.epic_boon.origin = f"Paladin Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
@@ -290,7 +291,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
 @attr.dataclass
 class PaladinLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Character) -> Character:
+    def add_features(self, data: Grants) -> Grants:
         return data
 
 

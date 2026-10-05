@@ -1,4 +1,5 @@
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import CreatureSize, DamageType, Skill
 from CharacterContent.Features.SpeciesFeatures import RebornFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
@@ -18,7 +19,7 @@ class RebornSpeciesBuilder(SpeciesBuilder):
         self.knowledge_skill = knowledge_skill
         self.strange_endurance = strange_endurance
 
-    def _grant(self, data: Character) -> None:
+    def _grant(self, data: Grants) -> None:
         data.base_speed = RebornFeatures.SPEED  # Given by your species
         data.size = self.size  # Given by your species
 

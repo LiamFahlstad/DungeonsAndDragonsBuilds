@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererFeatures
 from CharacterContent.Spells.SpellLists import (
@@ -28,8 +29,8 @@ class RangerFeyWandererLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerFeyWandererFeatures.DreadfulStrikes())
         data.add_feature(RangerFeyWandererFeatures.FeyWandererSpells())
         data.add_feature(RangerFeyWandererFeatures.OtherworldlyGlamour())
@@ -42,8 +43,8 @@ class RangerFeyWandererLevel5(ClassBuilder.SubclassLevel5):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel2Spells.MISTY_STEP)
         return data
 
@@ -53,8 +54,8 @@ class RangerFeyWandererLevel7(ClassBuilder.SubclassLevel7):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerFeyWandererFeatures.BeguilingTwist())
         return data
 
@@ -64,8 +65,8 @@ class RangerFeyWandererLevel9(ClassBuilder.SubclassLevel9):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
         return data
 
@@ -75,8 +76,8 @@ class RangerFeyWandererLevel11(ClassBuilder.SubclassLevel11):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerFeyWandererFeatures.FeyReinforcements())
         return data
 
@@ -86,8 +87,8 @@ class RangerFeyWandererLevel13(ClassBuilder.SubclassLevel13):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(ConjurationLevel4Spells.DIMENSION_DOOR)
         return data
 
@@ -97,8 +98,8 @@ class RangerFeyWandererLevel15(ClassBuilder.SubclassLevel15):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(RangerFeyWandererFeatures.MistyWanderer())
         return data
 
@@ -108,8 +109,8 @@ class RangerFeyWandererLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_spell(IllusionLevel5Spells.MISLEAD)
         return data
 

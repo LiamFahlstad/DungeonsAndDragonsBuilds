@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericPeaceFeatures
 
@@ -17,8 +18,8 @@ class ClericPeaceLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(ClericPeaceFeatures.ImplementOfPeace())
         data.add_feature(ClericPeaceFeatures.PeaceDomainSpells())
         data.add_feature(ClericPeaceFeatures.EmboldeningBond())
@@ -31,8 +32,8 @@ class ClericPeaceLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ClericPeaceFeatures.ProtectiveBond(),
             extends=ClericPeaceFeatures.EmboldeningBond,
@@ -45,8 +46,8 @@ class ClericPeaceLevel17(ClassBuilder.SubclassLevel17):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             ClericPeaceFeatures.ExpansiveBond(),
             extends=ClericPeaceFeatures.EmboldeningBond,

@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidCustomStarterClassArgs,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidSporesFeatures
 
@@ -17,8 +18,8 @@ class DruidSporesLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidSporesFeatures.CircleSporesSpells())
         data.add_feature(DruidSporesFeatures.HaloOfSpores())
         data.add_feature(DruidSporesFeatures.SymbioticEntity())
@@ -30,8 +31,8 @@ class DruidSporesLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidSporesFeatures.FungalInfestation())
         return data
 
@@ -41,8 +42,8 @@ class DruidSporesLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidSporesFeatures.SpreadingSpores(),
             extends=DruidSporesFeatures.SymbioticEntity,
@@ -55,8 +56,8 @@ class DruidSporesLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidSporesFeatures.FungalBody())
         return data
 

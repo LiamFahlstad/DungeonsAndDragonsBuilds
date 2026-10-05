@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
 )
 from Model.Character import Character
+from Model.Grants import Grants
 from Core.Definitions import DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidStarsFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells, EvocationLevel1Spells
@@ -18,8 +19,8 @@ class DruidStarsLevel3(ClassBuilder.SubclassLevel3):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidStarsFeatures.StarMap())
         data.add_feature(DruidStarsFeatures.StarryForm())
         data.add_spell(DruidLevel0Spells.GUIDANCE, source="Star Map")
@@ -32,8 +33,8 @@ class DruidStarsLevel6(ClassBuilder.SubclassLevel6):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(DruidStarsFeatures.CosmicOmen())
         return data
 
@@ -43,8 +44,8 @@ class DruidStarsLevel10(ClassBuilder.SubclassLevel10):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidStarsFeatures.TwinklingConstellations(),
             extends=DruidStarsFeatures.StarryForm,
@@ -57,8 +58,8 @@ class DruidStarsLevel14(ClassBuilder.SubclassLevel14):
 
     def add_features(
         self,
-        data: Character,
-    ) -> Character:
+        data: Grants,
+    ) -> Grants:
         data.add_feature(
             DruidStarsFeatures.FullOfStars(), extends=DruidStarsFeatures.StarryForm
         )
