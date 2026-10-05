@@ -33,10 +33,10 @@ class ClericPeaceLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        emboldening_bond: ClericPeaceFeatures.EmboldeningBond = (
-            data.get_features_by_type(ClericPeaceFeatures.EmboldeningBond)[0]
+        data.add_feature(
+            ClericPeaceFeatures.ProtectiveBond(),
+            extends=ClericPeaceFeatures.EmboldeningBond,
         )
-        emboldening_bond.extend_feature(ClericPeaceFeatures.ProtectiveBond())
         return data
 
 
@@ -47,10 +47,10 @@ class ClericPeaceLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        emboldening_bond: ClericPeaceFeatures.EmboldeningBond = (
-            data.get_features_by_type(ClericPeaceFeatures.EmboldeningBond)[0]
+        data.add_feature(
+            ClericPeaceFeatures.ExpansiveBond(),
+            extends=ClericPeaceFeatures.EmboldeningBond,
         )
-        emboldening_bond.extend_feature(ClericPeaceFeatures.ExpansiveBond())
         return data
 
 

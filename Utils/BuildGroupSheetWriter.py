@@ -91,7 +91,7 @@ def _write_features_page(
         for character_sheet_data, stat_block in prepared:
             text_features = [
                 f
-                for f in character_sheet_data.features
+                for f in character_sheet_data.top_level_features()
                 if f.render_html_description(stat_block, description_mode) is not None
                 and (min_level is None or writer._feature_level(f) >= min_level)
                 and (max_level is None or writer._feature_level(f) <= max_level)

@@ -22,10 +22,10 @@ class SorcererDivineSoulLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        spellcasting: SorcererFeatures.Spellcasting = data.get_features_by_type(
-            SorcererFeatures.Spellcasting
-        )[0]
-        spellcasting.extend_feature(SorcererDivineSoulFeatures.DivineMagic())
+        data.add_feature(
+            SorcererDivineSoulFeatures.DivineMagic(),
+            extends=SorcererFeatures.Spellcasting,
+        )
         data.add_feature(SorcererDivineSoulFeatures.FavoredByTheGods())
         return data
 

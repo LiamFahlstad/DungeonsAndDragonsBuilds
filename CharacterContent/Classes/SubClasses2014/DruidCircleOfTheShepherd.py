@@ -49,7 +49,7 @@ class DruidShepherdLevel10(ClassBuilder.SubclassLevel10):
             DruidShepherdFeatures.SpiritTotem,
             data.get_features_by_type(DruidShepherdFeatures.SpiritTotem)[0],
         )
-        spirit_totem.extend_feature(DruidShepherdFeatures.GuardianSpirit())
+        data.add_feature(DruidShepherdFeatures.GuardianSpirit(), extends=spirit_totem)
         return data
 
 

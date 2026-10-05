@@ -23,10 +23,9 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkShadowFeatures.ShadowArts())
+        data.add_feature(
+            MonkShadowFeatures.ShadowArts(), extends=MonkFeatures.MonksFocus
+        )
         data.add_spell(
             EvocationLevel2Spells.DARKNESS,
             Ability.WISDOM,
@@ -53,10 +52,10 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Character,
     ) -> Character:
-        shadow_step: MonkShadowFeatures.ShadowStep = data.get_features_by_type(
-            MonkShadowFeatures.ShadowStep
-        )[0]
-        shadow_step.extend_feature(MonkShadowFeatures.ImprovedShadowStep())
+        data.add_feature(
+            MonkShadowFeatures.ImprovedShadowStep(),
+            extends=MonkShadowFeatures.ShadowStep,
+        )
         return data
 
 
@@ -67,10 +66,9 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkShadowFeatures.CloakOfShadows())
+        data.add_feature(
+            MonkShadowFeatures.CloakOfShadows(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 

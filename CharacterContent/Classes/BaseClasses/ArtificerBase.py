@@ -114,10 +114,10 @@ class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Character,
     ) -> Character:
-        replicate_magic_item: ArtificerFeatures.ReplicateMagicItem = (
-            data.get_features_by_type(ArtificerFeatures.ReplicateMagicItem)[0]
+        data.add_feature(
+            ArtificerFeatures.MagicItemTinker(),
+            extends=ArtificerFeatures.ReplicateMagicItem,
         )
-        replicate_magic_item.extend_feature(ArtificerFeatures.MagicItemTinker())
         return data
 
 
@@ -220,10 +220,10 @@ class ArtificerLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: Character,
     ) -> Character:
-        flash_of_genius: ArtificerFeatures.FlashofGenius = data.get_features_by_type(
-            ArtificerFeatures.FlashofGenius
-        )[0]
-        flash_of_genius.extend_feature(ArtificerFeatures.AdvancedArtifice())
+        data.add_feature(
+            ArtificerFeatures.AdvancedArtifice(),
+            extends=ArtificerFeatures.FlashofGenius,
+        )
         data.add_cantrip(self.cantrip)
         return data
 
@@ -294,10 +294,9 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
 class ArtificerLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: Character) -> Character:
-        flash_of_genius: ArtificerFeatures.FlashofGenius = data.get_features_by_type(
-            ArtificerFeatures.FlashofGenius
-        )[0]
-        flash_of_genius.extend_feature(ArtificerFeatures.SoulOfArtifice())
+        data.add_feature(
+            ArtificerFeatures.SoulOfArtifice(), extends=ArtificerFeatures.FlashofGenius
+        )
         return data
 
 

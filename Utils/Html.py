@@ -495,7 +495,11 @@ def write_pact_slot_progression(
     for i, (from_level, slot_level) in enumerate(slot_levels):
         to_level = slot_levels[i + 1][0] - 1 if i + 1 < len(slot_levels) else 20
         span = f"{from_level}" if from_level == to_level else f"{from_level}–{to_level}"
-        text = f"{slot_level} (character levels {span})" if i == 0 else f"{slot_level} ({span})"
+        text = (
+            f"{slot_level} (character levels {span})"
+            if i == 0
+            else f"{slot_level} ({span})"
+        )
         if from_level <= current_level <= to_level:
             text = f"<strong>{text}</strong>"
         ranges.append(text)

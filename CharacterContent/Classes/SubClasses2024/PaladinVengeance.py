@@ -87,10 +87,10 @@ class PaladinVengeanceLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        vow_of_enmity: PaladinVengeanceFeatures.VowOfEnmity = data.get_features_by_type(
-            PaladinVengeanceFeatures.VowOfEnmity
-        )[0]
-        vow_of_enmity.extend_feature(PaladinVengeanceFeatures.SoulOfVengeance())
+        data.add_feature(
+            PaladinVengeanceFeatures.SoulOfVengeance(),
+            extends=PaladinVengeanceFeatures.VowOfEnmity,
+        )
         return data
 
 

@@ -104,19 +104,13 @@ def test_single_class_caster_uses_class_ability(name):
     assert data.spell_casting_ability == PHB_SPELLCASTING_ABILITY[data.base_class]
 
 
-def _all_features(features):
-    for feature in features:
-        yield feature
-        yield from _all_features(feature.extensions)
-
-
 @pytest.mark.parametrize("name", BUILD_PARAMS)
 def test_every_feature_renders(name):
     # Descriptions are only evaluated when a sheet is written, so a broken
     # get_description (missing import, deleted helper) otherwise goes unseen.
     data = type(ALL_BUILDS[name])().build()
     character = data.validate()
-    for feature in _all_features(data.features):
+    for feature in data.iter_features_with_extensions():
         description = feature.get_description(character)
         assert description is None or isinstance(description, str), feature.name
         feature.get_table_description(character)

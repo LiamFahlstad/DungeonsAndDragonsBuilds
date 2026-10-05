@@ -276,7 +276,7 @@ class TestBlessedStrikesComesFromBaseClassOnly:
         if base_strikes:
             assert any(
                 isinstance(child, ClericOrderFeatures.OrdersWrath)
-                for child in base_strikes[0].extensions
+                for child in data.extensions_of(base_strikes[0])
             )
 
 
@@ -392,14 +392,14 @@ class TestClassLevelVsCharacterLevelScaling:
         assert table["Effect"] == "Regain 1d6 + 7 HP"
 
 
-# ── extend_feature wiring: a feature learned later augments an earlier one ────
+# ── Extensions: a feature learned later augments an earlier one ─────────────
 
 
 class TestExtendFeatureWiring:
     """Rune Knight layers Great Stature (level 10) and Runic Juggernaut (level
     18) onto the original Giant's Might feature object, and Master of Runes
-    (level 15) onto Rune Carver, via Feature.extend_feature - not by adding a
-    new top-level feature. Verify both the wiring and BaseClassLevelFeatures'
+    (level 15) onto Rune Carver, as declared extensions (add_feature(...,
+    extends=...)) - not as new top-level features. Verify both the wiring and BaseClassLevelFeatures'
     level-gating: a level-10 Rune Knight has Great Stature but not Runic
     Juggernaut yet."""
 
@@ -429,14 +429,14 @@ class TestExtendFeatureWiring:
         giants_might = data.get_features_by_type(FighterRuneKnightFeatures.GiantsMight)[
             0
         ]
-        assert giants_might.extensions == []
+        assert data.extensions_of(giants_might) == []
 
     def test_giants_might_gains_great_stature_at_level_10(self):
         data = self._build_up_to(10)
         giants_might = data.get_features_by_type(FighterRuneKnightFeatures.GiantsMight)[
             0
         ]
-        extension_types = [type(f) for f in giants_might.extensions]
+        extension_types = [type(f) for f in data.extensions_of(giants_might)]
         assert extension_types == [FighterRuneKnightFeatures.GreatStature]
 
     def test_giants_might_gains_runic_juggernaut_at_level_18(self):
@@ -444,7 +444,7 @@ class TestExtendFeatureWiring:
         giants_might = data.get_features_by_type(FighterRuneKnightFeatures.GiantsMight)[
             0
         ]
-        extension_types = [type(f) for f in giants_might.extensions]
+        extension_types = [type(f) for f in data.extensions_of(giants_might)]
         assert extension_types == [
             FighterRuneKnightFeatures.GreatStature,
             FighterRuneKnightFeatures.RunicJuggernaut,
@@ -455,13 +455,13 @@ class TestExtendFeatureWiring:
         rune_carver = data_before.get_features_by_type(
             FighterRuneKnightFeatures.RuneCarver
         )[0]
-        assert rune_carver.extensions == []
+        assert data_before.extensions_of(rune_carver) == []
 
         data_after = self._build_up_to(15)
         rune_carver = data_after.get_features_by_type(
             FighterRuneKnightFeatures.RuneCarver
         )[0]
-        assert [type(f) for f in rune_carver.extensions] == [
+        assert [type(f) for f in data_after.extensions_of(rune_carver)] == [
             FighterRuneKnightFeatures.MasterOfRunes
         ]
 

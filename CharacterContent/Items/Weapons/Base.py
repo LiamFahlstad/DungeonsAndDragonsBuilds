@@ -335,9 +335,7 @@ class AbstractWeapon(Item, ABC):
         )
 
 
-def weapon_matches_proficiency(
-    weapon: AbstractWeapon, proficiency: Enum
-) -> bool:
+def weapon_matches_proficiency(weapon: AbstractWeapon, proficiency: Enum) -> bool:
     is_simple = weapon.weapon_type in (
         WeaponType.SIMPLE_MELEE,
         WeaponType.SIMPLE_RANGED,

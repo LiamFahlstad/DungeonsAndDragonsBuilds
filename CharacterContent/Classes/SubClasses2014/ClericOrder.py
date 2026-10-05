@@ -47,11 +47,11 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
     ) -> Character:
         # The 2024 base Cleric's Blessed Strikes replaces the 2014 domain's own
         # Divine Strike, so Order's Wrath rides on that when it was chosen.
-        divine_strikes = data.get_features_by_type(ClericFeatures.DivineStrike)
-        if divine_strikes:
-            divine_strikes[0].extend_feature(ClericOrderFeatures.OrdersWrath())
-        else:
-            data.add_feature(ClericOrderFeatures.OrdersWrath())
+        data.add_feature(
+            ClericOrderFeatures.OrdersWrath(),
+            extends=ClericFeatures.DivineStrike,
+            if_missing="standalone",
+        )
         return data
 
 

@@ -26,10 +26,9 @@ class ClericWarLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.ClericLevel1Spells.SHIELD_OF_FAITH)
         data.add_spell(SpellDefinitions.ClericLevel2Spells.SPIRITUAL_WEAPON)
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericWarFeatures.GuidedStrike())
+        data.add_feature(
+            ClericWarFeatures.GuidedStrike(), extends=ClericFeatures.ChannelDivinity
+        )
         data.add_feature(ClericWarFeatures.WarPriest())
         return data
 
@@ -53,10 +52,9 @@ class ClericWarLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericWarFeatures.WarGodsBlessing())
+        data.add_feature(
+            ClericWarFeatures.WarGodsBlessing(), extends=ClericFeatures.ChannelDivinity
+        )
         return data
 
 

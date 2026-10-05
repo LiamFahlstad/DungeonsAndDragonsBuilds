@@ -22,10 +22,9 @@ class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.Frenzy())
+        data.add_feature(
+            BarbarianPathOfTheBerserkerFeatures.Frenzy(), extends=BarbarianFeatures.Rage
+        )
         return data
 
 
@@ -36,10 +35,10 @@ class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.MindlessRage())
+        data.add_feature(
+            BarbarianPathOfTheBerserkerFeatures.MindlessRage(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -61,10 +60,10 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence())
+        data.add_feature(
+            BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 

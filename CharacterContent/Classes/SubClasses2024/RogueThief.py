@@ -32,10 +32,9 @@ class RogueThiefLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueThiefFeatures.SupremeSneak())
+        data.add_feature(
+            RogueThiefFeatures.SupremeSneak(), extends=RogueFeatures.SneakAttack
+        )
         return data
 
 

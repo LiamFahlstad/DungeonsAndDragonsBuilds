@@ -30,9 +30,9 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
         data: Character,
     ) -> Character:
         monks_focus = MonkFeatures.MonksFocus()
-        monks_focus.extend_feature(MonkFeatures.FlurryOfBlows())
-        monks_focus.extend_feature(MonkFeatures.PatientDefense())
-        monks_focus.extend_feature(MonkFeatures.StepOfTheWind())
+        data.add_feature(MonkFeatures.FlurryOfBlows(), extends=monks_focus)
+        data.add_feature(MonkFeatures.PatientDefense(), extends=monks_focus)
+        data.add_feature(MonkFeatures.StepOfTheWind(), extends=monks_focus)
         data.add_feature(monks_focus)
         data.add_feature(MonkFeatures.UnarmoredMovement())
         data.add_feature(MonkFeatures.UncannyMetabolism())
@@ -46,10 +46,7 @@ class MonkLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.DeflectAttacks())
+        data.add_feature(MonkFeatures.DeflectAttacks(), extends=MonkFeatures.MonksFocus)
         return data
 
 
@@ -73,10 +70,7 @@ class MonkLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.StunningStrike())
+        data.add_feature(MonkFeatures.StunningStrike(), extends=MonkFeatures.MonksFocus)
         data.add_feature(MonkFeatures.ExtraAttack())
         return data
 
@@ -130,10 +124,9 @@ class MonkLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.HeightenedFocus())
+        data.add_feature(
+            MonkFeatures.HeightenedFocus(), extends=MonkFeatures.MonksFocus
+        )
         data.add_feature(MonkFeatures.SelfRestoration())
         return data
 
@@ -166,10 +159,7 @@ class MonkLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.DeflectEnergy())
+        data.add_feature(MonkFeatures.DeflectEnergy(), extends=MonkFeatures.MonksFocus)
         return data
 
 
@@ -180,10 +170,10 @@ class MonkLevel14(ClassBuilder.BaseClassLevel14):
         data: Character,
     ) -> Character:
         data.add_feature(MonkFeatures.DisciplinedSurvivorSavingThrows())
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.DisciplinedSurvivorMartialFocus())
+        data.add_feature(
+            MonkFeatures.DisciplinedSurvivorMartialFocus(),
+            extends=MonkFeatures.MonksFocus,
+        )
 
         return data
 
@@ -223,10 +213,9 @@ class MonkLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkFeatures.SuperiorDefense())
+        data.add_feature(
+            MonkFeatures.SuperiorDefense(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 

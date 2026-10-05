@@ -28,11 +28,9 @@ class MonkAstralSelfLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        arms_of_the_astral_self: MonkAstralSelfFeatures.ArmsOfTheAstralSelf = (
-            data.get_features_by_type(MonkAstralSelfFeatures.ArmsOfTheAstralSelf)[0]
-        )
-        arms_of_the_astral_self.extend_feature(
-            MonkAstralSelfFeatures.VisageOfTheAstralSelf()
+        data.add_feature(
+            MonkAstralSelfFeatures.VisageOfTheAstralSelf(),
+            extends=MonkAstralSelfFeatures.ArmsOfTheAstralSelf,
         )
         return data
 

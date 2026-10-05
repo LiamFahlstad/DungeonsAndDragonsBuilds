@@ -10,6 +10,7 @@ import pytest
 
 from Model.Character import Character
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
+from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     SkillBonus,
@@ -53,7 +54,9 @@ class TestReEvaluatesAfterEveryKindOfChange:
         data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
         data = data.build()
         assert not data.is_immune_to_damage(DamageType.FIRE)
-        data.features[0].extend_feature(ClericForgeFeatures.SaintOfForgeAndFire())
+        data.add_feature(
+            ClericForgeFeatures.SaintOfForgeAndFire(), extends=data.features[0]
+        )
         assert data.is_immune_to_damage(DamageType.FIRE)
 
     def test_evaluation_never_changes_the_base_scores(self):
@@ -180,3 +183,107 @@ def test_apply_order_change_re_evaluates(make_character):
     character._apply_order = lambda effects: effects[::-1]
     character.validate()
     assert applied == ["b", "a"]
+
+
+class _Parent(Feature):
+    pass
+
+
+class _Child(Feature):
+    pass
+
+
+class TestDeclaredExtensions:
+    """Extensions are declared grants (add_feature(child, extends=...)),
+    resolved when the character is read - so parent and child may be granted
+    in either order, and nothing is changed on a feature after granting."""
+
+    def test_child_granted_before_its_parent(self, make_character):
+        character = make_character()
+        child = _Child(name="Child")
+        character.add_feature(child, extends=_Parent)
+        parent = _Parent(name="Parent")
+        character.add_feature(parent)
+        assert character.extensions_of(parent) == [child]
+        assert list(character.iter_features_with_extensions()) == [parent, child]
+
+    def test_extends_a_specific_instance(self, make_character):
+        character = make_character()
+        first, second = _Parent(name="First"), _Parent(name="Second")
+        child = _Child(name="Child")
+        character.add_feature(first)
+        character.add_feature(second)
+        character.add_feature(child, extends=second)
+        assert character.extensions_of(first) == []
+        assert character.extensions_of(second) == [child]
+
+    def test_missing_parent_raises(self, make_character):
+        character = make_character()
+        character.add_feature(_Child(name="Child"), extends=_Parent)
+        with pytest.raises(ValueError, match="extends _Parent, which isn't granted"):
+            character.validate()
+
+    def test_ambiguous_parent_type_raises(self, make_character):
+        character = make_character()
+        character.add_feature(_Parent(name="First"))
+        character.add_feature(_Parent(name="Second"))
+        character.add_feature(_Child(name="Child"), extends=_Parent)
+        with pytest.raises(ValueError, match="2 granted features match it"):
+            character.validate()
+
+    def test_if_missing_drop(self, make_character):
+        character = make_character()
+        character.add_feature(_Child(name="Child"), extends=_Parent, if_missing="drop")
+        character.validate()
+        assert list(character.iter_features_with_extensions()) == []
+
+    def test_if_missing_standalone(self, make_character):
+        character = make_character()
+        child = _Child(name="Child")
+        character.add_feature(child, extends=_Parent, if_missing="standalone")
+        assert character.top_level_features() == [child]
+        parent = _Parent(name="Parent")
+        character.add_feature(parent)
+        assert character.top_level_features() == [parent]
+        assert character.extensions_of(parent) == [child]
+
+    def test_if_missing_needs_extends(self, make_character):
+        with pytest.raises(ValueError, match="only applies with extends"):
+            make_character().add_feature(_Child(), if_missing="drop")
+
+    def test_a_shared_feature_instance_keeps_extensions_per_character(
+        self, make_character
+    ):
+        shared = _Parent(name="Shared")
+        first, second = make_character(), make_character()
+        first.add_feature(shared)
+        second.add_feature(shared)
+        child = _Child(name="Child")
+        first.add_feature(child, extends=shared)
+        assert first.extensions_of(shared) == [child]
+        assert second.extensions_of(shared) == []
+
+
+class TestAbjureFoes:
+    """2024 PHB: a Paladin gains Abjure Foes as a Channel Divinity option at
+    level 9. Worked out from the Paladin level, not added to the feature
+    after it was granted."""
+
+    def _descriptions(self, make_character, paladin_level):
+        """(Channel Divinity's description, Abjure Foes' own text)."""
+        from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
+
+        character = make_character(levels={CharacterClass.PALADIN: paladin_level})
+        channel_divinity = PaladinFeatures.ChannelDivinity()
+        channel_divinity.add_spell("Divine Sense")
+        character.add_feature(channel_divinity)
+        abjure_foes = PaladinFeatures.AbjureFoes().get_description(character)
+        return channel_divinity.get_description(character), abjure_foes
+
+    def test_not_before_level_9(self, make_character):
+        description, abjure_foes = self._descriptions(make_character, 8)
+        assert abjure_foes not in description
+
+    def test_from_level_9(self, make_character):
+        description, abjure_foes = self._descriptions(make_character, 9)
+        assert abjure_foes in description

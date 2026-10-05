@@ -31,10 +31,9 @@ class MonkMysticArtsLevel6(ClassBuilder.SubclassLevel6):
         data: Character,
     ) -> Character:
         data.add_feature(MonkMysticArtsFeatures.MysticFightingStyle())
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkMysticArtsFeatures.MysticFocus())
+        data.add_feature(
+            MonkMysticArtsFeatures.MysticFocus(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 
@@ -56,11 +55,9 @@ class MonkMysticArtsLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        mystic_fighting_style: MonkMysticArtsFeatures.MysticFightingStyle = (
-            data.get_features_by_type(MonkMysticArtsFeatures.MysticFightingStyle)[0]
-        )
-        mystic_fighting_style.extend_feature(
-            MonkMysticArtsFeatures.ImprovedMysticFightingStyle()
+        data.add_feature(
+            MonkMysticArtsFeatures.ImprovedMysticFightingStyle(),
+            extends=MonkMysticArtsFeatures.MysticFightingStyle,
         )
         return data
 

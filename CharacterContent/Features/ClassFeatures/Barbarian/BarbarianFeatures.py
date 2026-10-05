@@ -269,8 +269,8 @@ class FastMovement(Feature):
 
 class FastMovementBonus(Feature):
     """Mechanical half of Fast Movement, kept separate from the descriptive
-    FastMovement feature since extend_feature()'d features never get apply()
-    called on them - this one must be add_feature()'d directly."""
+    FastMovement extension (shown on Unarmored Defense's card) as a stat-only
+    feature of its own, skipped on condensed sheets."""
 
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])

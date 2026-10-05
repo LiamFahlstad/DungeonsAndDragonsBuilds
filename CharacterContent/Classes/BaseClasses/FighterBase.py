@@ -41,10 +41,9 @@ class FighterLevel2(ClassBuilder.BaseClassLevel2):
 
     def add_features(self, data: Character) -> Character:
         data.add_feature(FighterFeatures.ActionSurge())
-        second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
-            FighterFeatures.SecondWind
-        )[0]
-        second_wind.extend_feature(FighterFeatures.TacticalMind())
+        data.add_feature(
+            FighterFeatures.TacticalMind(), extends=FighterFeatures.SecondWind
+        )
         return data
 
 
@@ -72,10 +71,9 @@ class FighterLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(self, data: Character) -> Character:
         data.add_feature(FighterFeatures.ExtraAttack())
-        second_wind: FighterFeatures.SecondWind = data.get_features_by_type(
-            FighterFeatures.SecondWind
-        )[0]
-        second_wind.extend_feature(FighterFeatures.TacticalShift())
+        data.add_feature(
+            FighterFeatures.TacticalShift(), extends=FighterFeatures.SecondWind
+        )
         return data
 
 
@@ -114,10 +112,9 @@ class FighterLevel9(ClassBuilder.BaseClassLevel9):
         data: Character,
     ) -> Character:
         data.add_feature(FighterFeatures.Indomitable())
-        weapon_mastery: FighterFeatures.WeaponMastery = data.get_features_by_type(
-            FighterFeatures.WeaponMastery
-        )[0]
-        weapon_mastery.extend_feature(FighterFeatures.TacticalMaster())
+        data.add_feature(
+            FighterFeatures.TacticalMaster(), extends=FighterFeatures.WeaponMastery
+        )
         return data
 
 
@@ -140,10 +137,9 @@ class FighterLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Character,
     ) -> Character:
-        extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
-            FighterFeatures.ExtraAttack
-        )[0]
-        extra_attack.extend_feature(FighterFeatures.TwoExtraAttacks())
+        data.add_feature(
+            FighterFeatures.TwoExtraAttacks(), extends=FighterFeatures.ExtraAttack
+        )
         return data
 
 
@@ -228,10 +224,9 @@ class FighterLevel19(ClassBuilder.BaseClassLevel19):
 class FighterLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: Character) -> Character:
-        extra_attack: FighterFeatures.ExtraAttack = data.get_features_by_type(
-            FighterFeatures.ExtraAttack
-        )[0]
-        extra_attack.extend_feature(FighterFeatures.ThreeExtraAttacks())
+        data.add_feature(
+            FighterFeatures.ThreeExtraAttacks(), extends=FighterFeatures.ExtraAttack
+        )
         return data
 
 

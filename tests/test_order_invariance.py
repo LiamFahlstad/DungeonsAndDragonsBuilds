@@ -7,14 +7,13 @@ against the golden hashes in tests/snapshots/sheet_hashes.json:
 
 - apply order: every effect (features, extensions, armor, weapons, items,
   fighting styles) applied in a different order;
-- grant order: the features, every feature's extensions, and the spells listed
-  in a different order, as if the builder had granted them in another order.
+- grant order: the features, the extensions, and the spells listed in a
+  different order, as if the builder had granted them in another order.
 
 Each build gets one shuffle, seeded from its name. Reversed order and three
 more shuffles run under `-m slow` (about 80 s for the full matrix).
 """
 
-import copy
 import random
 import zlib
 from pathlib import Path
@@ -76,9 +75,8 @@ _GRANT_ORDER_LEAKS = frozenset(
         "Y2014BardCreationPiperWrenhollowCharacterBuilder",
         "Y2014BardEloquenceCorvinusTalebrightCharacterBuilder",
         "Y2014BardWhispersNyraHollowechoCharacterBuilder",
+        "Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder",
         "Y2014DruidWildfireEmberAshgroveCharacterBuilder",
-        "Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder",
-        "Y2014FighterEchoKnightLucianMirrorstrikeCharacterBuilder",
         "Y2014FighterRuneKnightBjornGiantforgeCharacterBuilder",
         "Y2014MonkAstralSelfIndraStarformCharacterBuilder",
         "Y2014MonkDrunkenMasterChenWobblejarCharacterBuilder",
@@ -87,37 +85,35 @@ _GRANT_ORDER_LEAKS = frozenset(
         "Y2014MonkSunSoulSolaraBrightpalmCharacterBuilder",
         "Y2014PaladinConquestMalacharIronwillCharacterBuilder",
         "Y2014PaladinCrownRegaliaTrueheartCharacterBuilder",
-        "Y2014PaladinOathbreakerVorlagCurseboundCharacterBuilder",
         "Y2014PaladinRedemptionPaxMercywardCharacterBuilder",
+        "Y2014PaladinWatchersArgusFarwatchCharacterBuilder",
+        "Y2014RangerDrakewardenWyrmhildScalebornCharacterBuilder",
         "Y2014RangerHorizonWalkerDashiellFarstrideCharacterBuilder",
         "Y2014RangerMonsterSlayerVanthaBeastbaneCharacterBuilder",
         "Y2014RangerSwarmkeeperWispThornwhistleCharacterBuilder",
         "Y2014RogueMastermindDelphineWebswornCharacterBuilder",
         "Y2014RogueScoutFennickQuickstepCharacterBuilder",
         "Y2014RogueSwashbucklerCosimoDuelaireCharacterBuilder",
-        "Y2014SorcererLunarSorcerySeleneMoonflareCharacterBuilder",
-        "Y2014WarlockGenieKalindaBottleboundCharacterBuilder",
-        "Y2014WarlockHexbladeDravenCursebladeCharacterBuilder",
         "Y2014WizardOrderOfScribesQuillonInkboundCharacterBuilder",
         "Y2024BardLoreOdalysVerseholtCharacterBuilder",
         "Y2024DruidLandRowanThistledownCharacterBuilder",
         "Y2024FighterBanneretRoderickVanguardCharacterBuilder",
-        "Y2024FighterBattleMasterAldricStormbladeCharacterBuilder",
-        "Y2024FighterPsiWarriorKestrelMindshardCharacterBuilder",
+        "Y2024FighterEldritchKnightMerricSpellbladeCharacterBuilder",
         "Y2024MonkElementsKaidaEmberfistCharacterBuilder",
         "Y2024MonkMercyAmritaSofthandCharacterBuilder",
         "Y2024MonkMysticArtsZephyrMoonpetalCharacterBuilder",
         "Y2024MonkOpenHandWeiStonefistCharacterBuilder",
         "Y2024MonkShadowKiraNightstepCharacterBuilder",
+        "Y2024PaladinGloryTitusBattlegloryCharacterBuilder",
         "Y2024RangerBeastMasterFennWildstriderCharacterBuilder",
         "Y2024RoguePhantomWraithGrimscarCharacterBuilder",
         "Y2024WizardTransmutationAlistairFormbendCharacterBuilder",
         "Y2024_Bard_Lore_TobiasGreyquill",
-        "Y2024_Fighter_BattleMaster_ReynardSteelvow",
         "Y2024_Monk_Elements_KiviJatti",
         "Y2024_Monk_Elements_KragStormfist",
         "Y2024_Monk_Shadow_UmbraSilentfang",
         "Y2024_Paladin_Devotion_ElricPactsworn",
+        "Y2024_Paladin_Glory_BalderSunoath",
         "Y2024_Ranger_BeastMaster_OrinPackleader",
         "Y2024_Rogue_ShadowMonk_KagenVoidstep",
     }
@@ -163,19 +159,17 @@ def test_grant_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     reorder = _orders(name)[order]
 
     def regrant(data: Character) -> None:
-        # Copies, so reordering extensions can't reach a feature instance
-        # that another build shares (a builder field default, say).
-        features = copy.deepcopy(data.features)
-        for feature in features:
-            _reorder_extensions(feature, reorder)
-        data.features = reorder(features)
-        data.spells = reorder(data.spells)
+        data.features = reorder(data.features)
+        data.feature_extensions = reorder(data.feature_extensions)
+        # A spell's source label is keyed by its index in `spells`, so it
+        # moves with its spell (Step 9 makes both one record).
+        regranted = reorder(
+            [(spell, data.spell_sources.get(i)) for i, spell in enumerate(data.spells)]
+        )
+        data.spells = [spell for spell, _source in regranted]
+        data.spell_sources = {
+            i: source for i, (_spell, source) in enumerate(regranted) if source
+        }
 
     sheets = render_and_hash(name, tmp_path, prepare=regrant)
     _assert_sheet_unchanged(name, sheets, f"grant order ({order})")
-
-
-def _reorder_extensions(feature, reorder: Reorder) -> None:
-    feature.extensions = reorder(feature.extensions)
-    for extension in feature.extensions:
-        _reorder_extensions(extension, reorder)

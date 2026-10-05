@@ -57,10 +57,10 @@ class ArtificerArtilleristLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = (
-            data.get_features_by_type(ArtificerArtilleristFeatures.EldritchCannon)[0]
+        data.add_feature(
+            ArtificerArtilleristFeatures.ExplosiveCannon(),
+            extends=ArtificerArtilleristFeatures.EldritchCannon,
         )
-        eldritch_cannon.extend_feature(ArtificerArtilleristFeatures.ExplosiveCannon())
         data.add_spell(SorcererLevel3Spells.FIREBALL)
         data.add_spell(DruidLevel3Spells.WIND_WALL)
         return data
@@ -83,10 +83,10 @@ class ArtificerArtilleristLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        eldritch_cannon: ArtificerArtilleristFeatures.EldritchCannon = (
-            data.get_features_by_type(ArtificerArtilleristFeatures.EldritchCannon)[0]
+        data.add_feature(
+            ArtificerArtilleristFeatures.FortifiedPosition(),
+            extends=ArtificerArtilleristFeatures.EldritchCannon,
         )
-        eldritch_cannon.extend_feature(ArtificerArtilleristFeatures.FortifiedPosition())
         return data
 
 

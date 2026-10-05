@@ -23,10 +23,9 @@ class BarbarianWildMagicLevel3(ClassBuilder.SubclassLevel3):
         data: Character,
     ) -> Character:
         data.add_feature(BarbarianPathOfWildMagicFeatures.MagicAwareness())
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfWildMagicFeatures.WildSurge())
+        data.add_feature(
+            BarbarianPathOfWildMagicFeatures.WildSurge(), extends=BarbarianFeatures.Rage
+        )
         return data
 
 
@@ -48,10 +47,10 @@ class BarbarianWildMagicLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfWildMagicFeatures.UnstableBacklash())
+        data.add_feature(
+            BarbarianPathOfWildMagicFeatures.UnstableBacklash(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -62,10 +61,10 @@ class BarbarianWildMagicLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfWildMagicFeatures.ControlledSurge())
+        data.add_feature(
+            BarbarianPathOfWildMagicFeatures.ControlledSurge(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 

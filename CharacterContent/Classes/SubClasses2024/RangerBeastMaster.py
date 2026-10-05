@@ -40,10 +40,10 @@ class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
-            data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
+        data.add_feature(
+            RangerBeastMasterFeatures.ExceptionalTraining(),
+            extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        primal_companion.extend_feature(RangerBeastMasterFeatures.ExceptionalTraining())
         return data
 
 
@@ -54,10 +54,10 @@ class RangerBeastMasterLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Character,
     ) -> Character:
-        primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
-            data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
+        data.add_feature(
+            RangerBeastMasterFeatures.BestialFury(),
+            extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        primal_companion.extend_feature(RangerBeastMasterFeatures.BestialFury())
         return data
 
 
@@ -68,10 +68,10 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        primal_companion: RangerBeastMasterFeatures.PrimalCompanion = (
-            data.get_features_by_type(RangerBeastMasterFeatures.PrimalCompanion)[0]
+        data.add_feature(
+            RangerBeastMasterFeatures.ShareSpells(),
+            extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        primal_companion.extend_feature(RangerBeastMasterFeatures.ShareSpells())
         return data
 
 

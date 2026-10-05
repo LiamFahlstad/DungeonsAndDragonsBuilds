@@ -265,7 +265,14 @@ Rules of thumb:
   - Delete the 16 flat part properties in the same commit, so there is no deprecated alias to forget.
 - **Verify:** A, B, C, D, plus a grep proving that no `\.(skills|saving_throws|senses|defenses|languages|armor_class|worn_armor|hit_points|initiative|speed|carrying_capacity|equipment_training|weapon_bonuses|ability_requirements|spellcasting)\b` read remains outside `Model/`.
 
-### Step 8: Declared extensions, no global, no lookups *(design-critical, then mechanical)*
+### Step 8: Declared extensions, no global, no lookups *(design-critical, then mechanical)* — done
+
+- **Result:** `Character.add_feature(feature, extends=..., if_missing=...)` records a `FeatureExtension` source, and the parent is found when the character is read. `character.extensions_of(feature)` and `character.top_level_features()` are the reads. An AST codemod rewrote all 230 extension sites (214 lookups and 16 local instances), deleted the lookups, and reported the 6 it couldn't handle; those were edited by hand. `Feature.extensions`, `Feature.extend_feature`, `note_feature_extended`, the global counter and `Character.remove_features` (unused) are gone. Changes from the plan below:
+  - **`if_missing="error" | "drop" | "standalone"` replaces `optional: bool`.** Order Cleric's `OrdersWrath` needs a third case: extend Divine Strike if it's granted, otherwise stand alone. So `top_level_features()` lists plain grants plus standalone extensions, and both sheet writers use it.
+  - **Paladin's Channel Divinity works out Abjure Foes from the Paladin level (≥ 9)** when its description is read, instead of the level 9 builder changing the granted feature. The rule is the same and the sheet text is identical.
+  - **Extensions stay in declaration order, not a canonical one.** Sorting them would move the goldens, which this step must not do, so the sorting is left to Step 10.
+  - **`get_features_by_type` stays.** It's a legitimate read ("is this feature granted?") that tests use.
+- **Before this step:** your presentation commits had changed 137 sheets without regenerating `sheet_hashes.json`, so it was regenerated on purpose (stats unchanged). The grant-order test now also moves each spell's index-keyed source label along with its spell. The strict leak list was recomputed after this step, because extensions now shuffle as one list: 50 builds, every one with a known tie. Pages are byte-for-byte identical to the post-regeneration baseline.
 
 - **Goal:** the parent and child of an extension can be granted in either order, and nothing is mutated after granting.
 - **Changes:**
@@ -302,6 +309,7 @@ Rules of thumb:
 - **Goal:** reordering `add_feature` calls never changes the sheet.
 - **Changes:**
   - Every feature and extension carries the `(grant level, source kind, source name)` stamp from its `Grants` scope (Step 9). The sheet buckets by the stamped level instead of parsing `origin` (`parse_feature_level`). `origin` stays as display text only.
+  - `extensions_of()` returns extensions in canonical order too (Step 8 kept declaration order so the goldens wouldn't move).
   - Keep the existing `(passive, name)` sort, and add tie-breakers from the stamp: `(passive, name, source kind rank: species → background → origin feat → class → subclass → feat, source name)`. Keeping the existing keys first means only tied cards move. `_sort_features_key` and the level-page sort (`CharacterSheetWriters.py:67` and `:1228`) become one key function. Nested extensions and extension cards on their own level pages use the same key.
   - Remove `_GRANT_ORDER_LEAKS` and every `xfail` on `test_grant_order_keeps_sheet`, including the slow orders.
 - **Verify:**

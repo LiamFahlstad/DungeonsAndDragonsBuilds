@@ -138,11 +138,9 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(
-            RogueArcaneTricksterFeatures.VersatileTrickster()
+        data.add_feature(
+            RogueArcaneTricksterFeatures.VersatileTrickster(),
+            extends=RogueFeatures.SneakAttack,
         )
         data.add_spell(self.spell)
         return data

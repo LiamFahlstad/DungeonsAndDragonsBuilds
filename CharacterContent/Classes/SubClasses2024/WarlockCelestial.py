@@ -94,10 +94,10 @@ class WarlockCelestialLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        magical_cunning: WarlockFeatures.MagicalCunning = data.get_features_by_type(
-            WarlockFeatures.MagicalCunning
-        )[0]
-        magical_cunning.extend_feature(WarlockCelestialFeatures.CelestialResilience())
+        data.add_feature(
+            WarlockCelestialFeatures.CelestialResilience(),
+            extends=WarlockFeatures.MagicalCunning,
+        )
         return data
 
 

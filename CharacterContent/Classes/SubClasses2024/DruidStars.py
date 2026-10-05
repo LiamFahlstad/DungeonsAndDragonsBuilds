@@ -45,10 +45,10 @@ class DruidStarsLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        starry_form: DruidStarsFeatures.StarryForm = data.get_features_by_type(
-            DruidStarsFeatures.StarryForm
-        )[0]
-        starry_form.extend_feature(DruidStarsFeatures.TwinklingConstellations())
+        data.add_feature(
+            DruidStarsFeatures.TwinklingConstellations(),
+            extends=DruidStarsFeatures.StarryForm,
+        )
         return data
 
 
@@ -59,10 +59,9 @@ class DruidStarsLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        starry_form: DruidStarsFeatures.StarryForm = data.get_features_by_type(
-            DruidStarsFeatures.StarryForm
-        )[0]
-        starry_form.extend_feature(DruidStarsFeatures.FullOfStars())
+        data.add_feature(
+            DruidStarsFeatures.FullOfStars(), extends=DruidStarsFeatures.StarryForm
+        )
         return data
 
 

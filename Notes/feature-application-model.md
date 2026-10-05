@@ -50,9 +50,9 @@ objects are shared by every sheet it builds, with no copies and no idempotence g
 
 The evaluation is cached under a version key: the character's own version (bumped by every
 `add_*`/`set_*` call and, through an attrs `on_setattr` hook, by assigning any public field), the
-inventory's version (bumped by every gear change), and a global count of feature extensions.
-`extend_feature()` can't reach the character a feature was granted to, so it bumps that count
-(`note_feature_extended()`) and every character re-evaluates on its next query.
+inventory's version (bumped by every gear change), and the effect order (`_apply_order`, a
+test seam). Extensions are sources on the character like any other grant, so declaring one
+re-evaluates too.
 
 ## How each value is worked out on read
 
@@ -147,7 +147,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 | "Your Strength must be at least N" | `StrengthRequirement(N, reason)` (checked in validation) |
 | "You gain proficiency with Martial weapons / Heavy armor / Smith's Tools" | `GrantWeaponProficiency([...])`, `GrantArmorTraining([...])`, `GrantToolProficiency([...])` |
 | "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `weapon -> bool` filter. Never write into the weapon |
-| An upgrade to an earlier feature | `parent.extend_feature(Upgrade())`. Its `apply()` runs too, so don't also `add_feature()` it |
+| An upgrade to an earlier feature | `data.add_feature(Upgrade(), extends=Parent)`. Its `apply()` runs too, so don't also grant it plainly |
 
 **`apply(self, effects: Effects)` can only record.** `Effects` offers `add_*`/`set_*`/
 `register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
@@ -211,9 +211,16 @@ is the `Senses` part).
 
 ## Extensions
 
-`parent.extend_feature(child)` controls how the sheet **groups** a feature: the child renders
-inside the parent's card. Mechanically, a child is a normal feature, and its `apply()` runs like
-any other. Don't also `add_feature()` the same instance, or it will apply twice.
+`data.add_feature(child, extends=Parent)` controls how the sheet **groups** a feature: the child
+renders inside the parent's card. Mechanically, a child is a normal feature, and its `apply()` runs
+like any other. Don't also grant the same instance plainly, or it will apply twice.
+
+Extensions are declared, not attached: the character records a `FeatureExtension` and finds the
+parent when it's read (`character.extensions_of(parent)`), so the parent and the child may be
+granted in either order, and no feature is ever changed after it's granted. `Parent` is a feature
+type (exactly one granted top-level feature must match) or a feature instance; `if_missing="drop"`
+or `"standalone"` handles a parent that may not be granted. A missing or ambiguous parent raises
+from `validate()`.
 
 ## Equipment isolation
 

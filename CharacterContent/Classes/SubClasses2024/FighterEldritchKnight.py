@@ -67,10 +67,10 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        war_magic: FighterEldritchKnightFeatures.WarMagic = data.get_features_by_type(
-            FighterEldritchKnightFeatures.WarMagic
-        )[0]
-        war_magic.extend_feature(FighterEldritchKnightFeatures.ImprovedWarMagic())
+        data.add_feature(
+            FighterEldritchKnightFeatures.ImprovedWarMagic(),
+            extends=FighterEldritchKnightFeatures.WarMagic,
+        )
         return data
 
 

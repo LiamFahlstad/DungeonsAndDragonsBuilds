@@ -38,10 +38,10 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
             Ability.WISDOM,
             additional_ruling="Ritual only",
         )
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds())
+        data.add_feature(
+            BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -79,10 +79,10 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds())
+        data.add_feature(
+            BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 

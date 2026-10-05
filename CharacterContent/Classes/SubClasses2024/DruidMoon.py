@@ -29,9 +29,15 @@ class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
     ) -> Character:
         data.add_feature(DruidMoonFeatures.CircleForms())
         data.add_feature(DruidMoonFeatures.CircleOfTheMoonSpells())
-        data.add_spell(DruidLevel0Spells.STARRY_WISP, source="Circle of the Moon Spells table")
-        data.add_spell(DruidLevel1Spells.CURE_WOUNDS, source="Circle of the Moon Spells table")
-        data.add_spell(DruidLevel2Spells.MOONBEAM, source="Circle of the Moon Spells table")
+        data.add_spell(
+            DruidLevel0Spells.STARRY_WISP, source="Circle of the Moon Spells table"
+        )
+        data.add_spell(
+            DruidLevel1Spells.CURE_WOUNDS, source="Circle of the Moon Spells table"
+        )
+        data.add_spell(
+            DruidLevel2Spells.MOONBEAM, source="Circle of the Moon Spells table"
+        )
         return data
 
 
@@ -42,7 +48,9 @@ class DruidMoonLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(DruidLevel3Spells.CONJURE_ANIMALS, source="Circle of the Moon Spells table")
+        data.add_spell(
+            DruidLevel3Spells.CONJURE_ANIMALS, source="Circle of the Moon Spells table"
+        )
         return data
 
 
@@ -53,10 +61,10 @@ class DruidMoonLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        circle_forms: DruidMoonFeatures.CircleForms = data.get_features_by_type(
-            DruidMoonFeatures.CircleForms
-        )[0]
-        circle_forms.extend_feature(DruidMoonFeatures.ImprovedCircleForms())
+        data.add_feature(
+            DruidMoonFeatures.ImprovedCircleForms(),
+            extends=DruidMoonFeatures.CircleForms,
+        )
         return data
 
 
@@ -67,7 +75,10 @@ class DruidMoonLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(DruidLevel4Spells.FOUNT_OF_MOONLIGHT, source="Circle of the Moon Spells table")
+        data.add_spell(
+            DruidLevel4Spells.FOUNT_OF_MOONLIGHT,
+            source="Circle of the Moon Spells table",
+        )
         return data
 
 
@@ -78,7 +89,9 @@ class DruidMoonLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        data.add_spell(DruidLevel5Spells.MASS_CURE_WOUNDS, source="Circle of the Moon Spells table")
+        data.add_spell(
+            DruidLevel5Spells.MASS_CURE_WOUNDS, source="Circle of the Moon Spells table"
+        )
         return data
 
 
@@ -100,10 +113,9 @@ class DruidMoonLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        moonlight_step: DruidMoonFeatures.MoonlightStep = data.get_features_by_type(
-            DruidMoonFeatures.MoonlightStep
-        )[0]
-        moonlight_step.extend_feature(DruidMoonFeatures.LunarForm())
+        data.add_feature(
+            DruidMoonFeatures.LunarForm(), extends=DruidMoonFeatures.MoonlightStep
+        )
         return data
 
 

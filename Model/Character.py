@@ -17,7 +17,7 @@ without a cycle.
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Any, Callable, Iterator, Optional, Sequence
+from typing import Any, Callable, Iterator, Literal, Optional, Sequence
 
 import attr
 
@@ -32,16 +32,23 @@ from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
 
 MAX_ATTUNED_ITEMS = 3
 
-# How many times any feature, anywhere, has gained an extension. A feature
-# can't reach the Character(s) it was granted to, so Feature.extend_feature()
-# bumps this and every Character treats its cached evaluation as out of date.
-_feature_extensions = 0
 
+@attr.s(frozen=True, auto_attribs=True, eq=False)
+class FeatureExtension:
+    """A feature granted as an extension of another: a rider or upgrade that
+    shows on its parent's card and applies like any other feature. Declared,
+    not attached - the parent is found when the character is read, so parent
+    and extension may be granted in either order.
 
-def note_feature_extended() -> None:
-    """Called by Feature.extend_feature() - see _feature_extensions."""
-    global _feature_extensions
-    _feature_extensions += 1
+    parent: a feature type, matched with isinstance against the granted
+    top-level features (exactly one must match), or a granted feature
+    instance. if_missing: what happens when no parent is granted -
+    "error" (the default), "drop" (an upgrade to whichever of two choices
+    was made) or "standalone" (shown as a feature of its own)."""
+
+    feature: GrantedFeature
+    parent: type | GrantedFeature
+    if_missing: Literal["error", "drop", "standalone"] = "error"
 
 
 def _in_given_order(effects: list[Effect]) -> list[Effect]:
@@ -82,6 +89,9 @@ class Character:
     # Every feature in the order it was granted. The order only decides how
     # the sheet lists them: no stat depends on it (see _get_ledger).
     features: list[GrantedFeature] = attr.Factory(list)
+    # Features granted as extensions of others (add_feature(..., extends=)),
+    # in the order they were declared - see extensions_of().
+    feature_extensions: list[FeatureExtension] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
     spells: list[tuple[str, Ability, Optional[str], int]] = attr.Factory(list)
     # Optional free-text "where did I get this spell" (e.g. "Chosen spell"),
@@ -109,13 +119,20 @@ class Character:
 
     # Goes up on every change to the sources above (every add_*/set_* call,
     # and any field assignment - see _count_change). Together with the
-    # inventory's own version, _feature_extensions and _apply_order it
+    # inventory's own version and _apply_order it
     # decides when the cached evaluation is out of date.
     _version: int = attr.ib(default=0, init=False, eq=False, repr=False)
     _ledger: Optional[Ledger] = attr.ib(default=None, init=False, eq=False, repr=False)
     _ledger_key: Optional[tuple[Any, ...]] = attr.ib(
         default=None, init=False, eq=False, repr=False
     )
+    # ({id(parent): [extension, ...]}, [standalone extension, ...]),
+    # resolved from feature_extensions and cached under the version it was
+    # resolved at.
+    _extension_tree: Optional[
+        tuple[dict[int, list[GrantedFeature]], list[GrantedFeature]]
+    ] = attr.ib(default=None, init=False, eq=False, repr=False)
+    _extension_tree_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
     # The order iter_stat_effects() applies in: as listed, unless a test
     # reorders it to prove the order doesn't matter (tests/
     # test_feature_apply_order.py, tests/test_order_invariance.py).
@@ -195,24 +212,92 @@ class Character:
         """(item, quantity), with same-type stacks merged."""
         return self.inventory.items
 
-    def add_feature(self, feature: GrantedFeature):
+    def add_feature(
+        self,
+        feature: GrantedFeature,
+        extends: type | GrantedFeature | None = None,
+        if_missing: Literal["error", "drop", "standalone"] = "error",
+    ):
+        """Grant `feature` - or, with `extends`, grant it as an extension of
+        that feature (a type, or a feature instance): see FeatureExtension."""
+        if extends is None:
+            if if_missing != "error":
+                raise ValueError("if_missing only applies with extends=.")
+            self.features.append(feature)
+        else:
+            self.feature_extensions.append(
+                FeatureExtension(feature, extends, if_missing)
+            )
         self._changed()
-        self.features.append(feature)
 
-    def remove_features(self, should_remove) -> None:
-        """Remove every feature for which `should_remove(feature)` is true."""
-        self.features = [f for f in self.features if not should_remove(f)]
+    def top_level_features(self) -> list[GrantedFeature]:
+        """The features with a card of their own: every plain grant, then
+        every "standalone" extension whose parent isn't granted."""
+        return [*self.features, *self._resolved_extensions()[1]]
+
+    def extensions_of(self, feature: GrantedFeature) -> list[GrantedFeature]:
+        """The extensions granted onto `feature`, in the order they were
+        declared."""
+        return list(self._resolved_extensions()[0].get(id(feature), []))
 
     def iter_features_with_extensions(self) -> Iterator[GrantedFeature]:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
+        tree = self._resolved_extensions()[0]
 
         def walk(features: Sequence[GrantedFeature]) -> Iterator[GrantedFeature]:
             for feature in features:
                 yield feature
-                yield from walk(feature.extensions)
+                yield from walk(tree.get(id(feature), []))
 
-        return walk(self.features)
+        return walk(self.top_level_features())
+
+    def _resolved_extensions(
+        self,
+    ) -> tuple[dict[int, list[GrantedFeature]], list[GrantedFeature]]:
+        """({id(parent): [extension, ...]}, [standalone extension, ...]) for
+        every declared extension. Raises if an extension's parent isn't
+        granted (unless if_missing says otherwise), or if a parent type
+        matches more than one granted feature."""
+        if self._extension_tree_version == self._version:
+            assert self._extension_tree is not None
+            return self._extension_tree
+        granted = {id(f) for f in self.features} | {
+            id(e.feature) for e in self.feature_extensions
+        }
+        tree: dict[int, list[GrantedFeature]] = {}
+        standalone: list[GrantedFeature] = []
+        for extension in self.feature_extensions:
+            parent = self._extension_parent(extension, granted)
+            if parent is not None:
+                tree.setdefault(id(parent), []).append(extension.feature)
+            elif extension.if_missing == "standalone":
+                standalone.append(extension.feature)
+        self._extension_tree = (tree, standalone)
+        self._extension_tree_version = self._version
+        return self._extension_tree
+
+    def _extension_parent(
+        self, extension: FeatureExtension, granted: set[int]
+    ) -> Optional[GrantedFeature]:
+        if isinstance(extension.parent, type):
+            label = extension.parent.__name__
+            matches = [f for f in self.features if isinstance(f, extension.parent)]
+        else:
+            label = extension.parent.name
+            matches = [extension.parent] if id(extension.parent) in granted else []
+        if len(matches) > 1:
+            raise ValueError(
+                f"{extension.feature.name} extends {label}, but {len(matches)} "
+                "granted features match it - extend a specific instance instead."
+            )
+        if matches:
+            return matches[0]
+        if extension.if_missing != "error":
+            return None
+        raise ValueError(
+            f"{extension.feature.name} extends {label}, which isn't granted."
+        )
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
@@ -420,7 +505,6 @@ class Character:
         key = (
             self._version,
             self.inventory.version,
-            _feature_extensions,
             self._apply_order,
         )
         if self._ledger is not None and self._ledger_key == key:
@@ -454,8 +538,9 @@ class Character:
     def _validate_sources(self) -> None:
         """Checks that need no evaluation: every field a finished character
         needs is set (builders fill them in piecemeal, so most are Optional
-        while a build is in progress), at most one worn body armor, and the
-        attunement limit."""
+        while a build is in progress), at most one worn body armor, the
+        attunement limit, and that every extension's parent is granted."""
+        self._resolved_extensions()
         if self.character_name is None:
             raise ValueError("Character name must be set.")
         if self.character_subclass is None:

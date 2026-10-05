@@ -37,10 +37,9 @@ class ClericGraveLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(ClericLevel2Spells.GENTLE_REPOSE)
         data.add_spell(NecromancyLevel2Spells.RAY_OF_ENFEEBLEMENT)
         data.add_spell(ClericLevel0Spells.SPARE_THE_DYING)
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericGraveFeatures.PathToTheGrave())
+        data.add_feature(
+            ClericGraveFeatures.PathToTheGrave(), extends=ClericFeatures.ChannelDivinity
+        )
         data.add_feature(ClericGraveFeatures.CircleOfMortality())
         return data
 

@@ -114,11 +114,9 @@ class PaladinRedemptionLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        aura_of_the_guardian: PaladinRedemptionFeatures.AuraOfTheGuardian = (
-            data.get_features_by_type(PaladinRedemptionFeatures.AuraOfTheGuardian)[0]
-        )
-        aura_of_the_guardian.extend_feature(
-            PaladinRedemptionFeatures.AuraOfTheGuardianExpansion()
+        data.add_feature(
+            PaladinRedemptionFeatures.AuraOfTheGuardianExpansion(),
+            extends=PaladinRedemptionFeatures.AuraOfTheGuardian,
         )
         return data
 

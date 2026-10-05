@@ -22,10 +22,10 @@ class BarbarianZealotLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheZealotFeatures.DivineFury())
+        data.add_feature(
+            BarbarianPathOfTheZealotFeatures.DivineFury(),
+            extends=BarbarianFeatures.Rage,
+        )
         data.add_feature(BarbarianPathOfTheZealotFeatures.WarriorOfTheGods())
         return data
 
@@ -37,10 +37,10 @@ class BarbarianZealotLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheZealotFeatures.FanaticalFocus())
+        data.add_feature(
+            BarbarianPathOfTheZealotFeatures.FanaticalFocus(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -62,10 +62,10 @@ class BarbarianZealotLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheZealotFeatures.RageOfTheGods())
+        data.add_feature(
+            BarbarianPathOfTheZealotFeatures.RageOfTheGods(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 

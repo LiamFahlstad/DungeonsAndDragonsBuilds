@@ -23,10 +23,10 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
         data: Character,
     ) -> Character:
         data.add_feature(RogueSwashbucklerFeatures.FancyFootwork())
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueSwashbucklerFeatures.RakishAudacity())
+        data.add_feature(
+            RogueSwashbucklerFeatures.RakishAudacity(),
+            extends=RogueFeatures.SneakAttack,
+        )
         return data
 
 

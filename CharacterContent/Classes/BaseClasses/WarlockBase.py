@@ -253,7 +253,7 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
-        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
+        data.add_feature(WarlockFeatures.MysticArcanum(), extends=mystic_arcanum)
         data.add_spell(self.spell)
         return data
 
@@ -281,7 +281,7 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
-        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
+        data.add_feature(WarlockFeatures.MysticArcanum(), extends=mystic_arcanum)
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
         return data
@@ -309,7 +309,7 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
             WarlockFeatures.MysticArcanum,
             data.get_features_by_type(WarlockFeatures.MysticArcanum)[0],
         )
-        mystic_arcanum.extend_feature(WarlockFeatures.MysticArcanum())
+        data.add_feature(WarlockFeatures.MysticArcanum(), extends=mystic_arcanum)
         data.add_spell(self.spell)
         return data
 
@@ -349,7 +349,7 @@ class WarlockLevel20(ClassBuilder.BaseClassLevel20):
             WarlockFeatures.MagicalCunning,
             data.get_features_by_type(WarlockFeatures.MagicalCunning)[0],
         )
-        magical_cunning.extend_feature(WarlockFeatures.EldritchMaster())
+        data.add_feature(WarlockFeatures.EldritchMaster(), extends=magical_cunning)
         return data
 
 

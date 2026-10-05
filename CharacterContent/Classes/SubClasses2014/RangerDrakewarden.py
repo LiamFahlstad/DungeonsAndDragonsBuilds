@@ -43,7 +43,9 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
             RangerDrakewardenFeatures.DrakeCompanion,
             data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
         )
-        drake_companion.extend_feature(RangerDrakewardenFeatures.BondOfFangAndScale())
+        data.add_feature(
+            RangerDrakewardenFeatures.BondOfFangAndScale(), extends=drake_companion
+        )
         return data
 
 
@@ -69,7 +71,9 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
             RangerDrakewardenFeatures.DrakeCompanion,
             data.get_features_by_type(RangerDrakewardenFeatures.DrakeCompanion)[0],
         )
-        drake_companion.extend_feature(RangerDrakewardenFeatures.PerfectedBond())
+        data.add_feature(
+            RangerDrakewardenFeatures.PerfectedBond(), extends=drake_companion
+        )
         return data
 
 

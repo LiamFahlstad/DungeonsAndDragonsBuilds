@@ -130,10 +130,10 @@ class WizardTransmuterLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        transmuters_stone: WizardTransmuterFeatures.TransmutersStone = (
-            data.get_features_by_type(WizardTransmuterFeatures.TransmutersStone)[0]
+        data.add_feature(
+            WizardTransmuterFeatures.PotentStone(),
+            extends=WizardTransmuterFeatures.TransmutersStone,
         )
-        transmuters_stone.extend_feature(WizardTransmuterFeatures.PotentStone())
         data.add_feature(WizardTransmuterFeatures.ShapeShifter())
         data.add_spell(
             TransmutationLevel4Spells.POLYMORPH,
@@ -173,10 +173,10 @@ class WizardTransmuterLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        transmuters_stone: WizardTransmuterFeatures.TransmutersStone = (
-            data.get_features_by_type(WizardTransmuterFeatures.TransmutersStone)[0]
+        data.add_feature(
+            WizardTransmuterFeatures.MasterTransmuter(),
+            extends=WizardTransmuterFeatures.TransmutersStone,
         )
-        transmuters_stone.extend_feature(WizardTransmuterFeatures.MasterTransmuter())
         return data
 
 

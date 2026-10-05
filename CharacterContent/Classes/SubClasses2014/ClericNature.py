@@ -44,14 +44,10 @@ class ClericNatureLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        charm_animals_and_plants: (
-            ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity
-        ) = data.get_features_by_type(
-            ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity
-        )[
-            0
-        ]
-        charm_animals_and_plants.extend_feature(ClericNatureFeatures.MasterOfNature())
+        data.add_feature(
+            ClericNatureFeatures.MasterOfNature(),
+            extends=ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity,
+        )
         return data
 
 

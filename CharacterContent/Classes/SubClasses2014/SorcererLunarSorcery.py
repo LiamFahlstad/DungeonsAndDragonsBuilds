@@ -67,15 +67,15 @@ class SorcererLunarSorceryLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        metamagic: SorcererFeatures.Metamagic = data.get_features_by_type(
-            SorcererFeatures.Metamagic
-        )[0]
-        metamagic.extend_feature(SorcererLunarSorceryFeatures.LunarBoons())
-
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
-            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        data.add_feature(
+            SorcererLunarSorceryFeatures.LunarBoons(),
+            extends=SorcererFeatures.Metamagic,
         )
-        lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.WaxingAndWaning())
+
+        data.add_feature(
+            SorcererLunarSorceryFeatures.WaxingAndWaning(),
+            extends=SorcererLunarSorceryFeatures.LunarEmbodiment,
+        )
         return data
 
 
@@ -112,10 +112,10 @@ class SorcererLunarSorceryLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
-            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        data.add_feature(
+            SorcererLunarSorceryFeatures.LunarEmpowerment(),
+            extends=SorcererLunarSorceryFeatures.LunarEmbodiment,
         )
-        lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.LunarEmpowerment())
         return data
 
 
@@ -126,10 +126,10 @@ class SorcererLunarSorceryLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        lunar_embodiment: SorcererLunarSorceryFeatures.LunarEmbodiment = (
-            data.get_features_by_type(SorcererLunarSorceryFeatures.LunarEmbodiment)[0]
+        data.add_feature(
+            SorcererLunarSorceryFeatures.LunarPhenomenon(),
+            extends=SorcererLunarSorceryFeatures.LunarEmbodiment,
         )
-        lunar_embodiment.extend_feature(SorcererLunarSorceryFeatures.LunarPhenomenon())
         return data
 
 

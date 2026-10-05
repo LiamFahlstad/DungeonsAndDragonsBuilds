@@ -22,10 +22,10 @@ class BarbarianWorldTreeLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.VitalityOfTheTree())
+        data.add_feature(
+            BarbarianPathOfTheWorldTreeFeatures.VitalityOfTheTree(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -36,10 +36,10 @@ class BarbarianWorldTreeLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.BranchesOfTheTree())
+        data.add_feature(
+            BarbarianPathOfTheWorldTreeFeatures.BranchesOfTheTree(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -61,10 +61,10 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheWorldTreeFeatures.TravelAlongTheTree())
+        data.add_feature(
+            BarbarianPathOfTheWorldTreeFeatures.TravelAlongTheTree(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 

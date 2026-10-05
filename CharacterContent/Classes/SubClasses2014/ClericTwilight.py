@@ -45,12 +45,10 @@ class ClericTwilightLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        twilight_sanctuary: ClericTwilightFeatures.TwilightSanctuaryChannelDivinity = (
-            data.get_features_by_type(
-                ClericTwilightFeatures.TwilightSanctuaryChannelDivinity
-            )[0]
+        data.add_feature(
+            ClericTwilightFeatures.TwilightShroud(),
+            extends=ClericTwilightFeatures.TwilightSanctuaryChannelDivinity,
         )
-        twilight_sanctuary.extend_feature(ClericTwilightFeatures.TwilightShroud())
         return data
 
 

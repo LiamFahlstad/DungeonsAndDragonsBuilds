@@ -104,10 +104,10 @@ class WarlockUndeadLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        form_of_dread: WarlockUndeadFeatures.FormOfDread = data.get_features_by_type(
-            WarlockUndeadFeatures.FormOfDread
-        )[0]
-        form_of_dread.extend_feature(WarlockUndeadFeatures.SuperiorDread())
+        data.add_feature(
+            WarlockUndeadFeatures.SuperiorDread(),
+            extends=WarlockUndeadFeatures.FormOfDread,
+        )
         return data
 
 

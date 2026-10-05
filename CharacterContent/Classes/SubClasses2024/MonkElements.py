@@ -20,10 +20,9 @@ class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkElementsFeatures.ElementalAttunement())
+        data.add_feature(
+            MonkElementsFeatures.ElementalAttunement(), extends=MonkFeatures.MonksFocus
+        )
         data.add_feature(MonkElementsFeatures.ManipulateElements())
         data.add_cantrip(DruidLevel0Spells.ELEMENTALISM, Ability.WISDOM)
         return data
@@ -35,10 +34,9 @@ class MonkElementsLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkElementsFeatures.ElementalBurst())
+        data.add_feature(
+            MonkElementsFeatures.ElementalBurst(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 
@@ -49,10 +47,9 @@ class MonkElementsLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkElementsFeatures.StrideOfTheElements())
+        data.add_feature(
+            MonkElementsFeatures.StrideOfTheElements(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 
@@ -63,10 +60,9 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        monks_focus: MonkFeatures.MonksFocus = data.get_features_by_type(
-            MonkFeatures.MonksFocus
-        )[0]
-        monks_focus.extend_feature(MonkElementsFeatures.ElementalEpitome())
+        data.add_feature(
+            MonkElementsFeatures.ElementalEpitome(), extends=MonkFeatures.MonksFocus
+        )
         return data
 
 

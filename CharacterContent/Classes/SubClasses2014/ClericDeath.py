@@ -33,12 +33,10 @@ class ClericDeathLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        touch_of_death: ClericDeathFeatures.TouchOfDeathChannelDivinity = (
-            data.get_features_by_type(ClericDeathFeatures.TouchOfDeathChannelDivinity)[
-                0
-            ]
+        data.add_feature(
+            ClericDeathFeatures.InescapableDestruction(),
+            extends=ClericDeathFeatures.TouchOfDeathChannelDivinity,
         )
-        touch_of_death.extend_feature(ClericDeathFeatures.InescapableDestruction())
         return data
 
 
@@ -49,10 +47,9 @@ class ClericDeathLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        reaper: ClericDeathFeatures.Reaper = data.get_features_by_type(
-            ClericDeathFeatures.Reaper
-        )[0]
-        reaper.extend_feature(ClericDeathFeatures.ImprovedReaper())
+        data.add_feature(
+            ClericDeathFeatures.ImprovedReaper(), extends=ClericDeathFeatures.Reaper
+        )
         return data
 
 

@@ -7,7 +7,7 @@ Each Protocol lists exactly what the Model reads. Widen one only when Model
 code starts reading something new.
 """
 
-from typing import Optional, Protocol, Sequence
+from typing import Optional, Protocol
 
 from Model.Effects import Effects
 
@@ -19,14 +19,9 @@ class Effect(Protocol):
 
 
 class GrantedFeature(Effect, Protocol):
-    """A feature, feat or fighting-style card on the sheet. `extensions`
-    goes away in Step 8 of Notes/model-refactor-plan.md, when extensions
-    become declared grants on the Character."""
+    """A feature, feat or fighting-style card on the sheet."""
 
     name: str
-
-    @property
-    def extensions(self) -> Sequence["GrantedFeature"]: ...
 
 
 class Gear(Effect, Protocol):

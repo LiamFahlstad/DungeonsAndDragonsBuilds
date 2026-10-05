@@ -25,10 +25,10 @@ class ClericLightLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(SpellDefinitions.EvocationLevel1Spells.FAERIE_FIRE)
         data.add_spell(SpellDefinitions.EvocationLevel2Spells.SCORCHING_RAY)
         data.add_spell(SpellDefinitions.SorcererLevel2Spells.SEE_INVISIBILITY)
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericLightFeatures.RadianceOfTheDawn())
+        data.add_feature(
+            ClericLightFeatures.RadianceOfTheDawn(),
+            extends=ClericFeatures.ChannelDivinity,
+        )
         data.add_feature(ClericLightFeatures.WardingFlare())
         return data
 
@@ -52,10 +52,10 @@ class ClericLightLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        warding_flare: ClericLightFeatures.WardingFlare = data.get_features_by_type(
-            ClericLightFeatures.WardingFlare
-        )[0]
-        warding_flare.extend_feature(ClericLightFeatures.ImprovedWardingFlare())
+        data.add_feature(
+            ClericLightFeatures.ImprovedWardingFlare(),
+            extends=ClericLightFeatures.WardingFlare,
+        )
         return data
 
 

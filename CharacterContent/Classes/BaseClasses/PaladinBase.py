@@ -139,10 +139,8 @@ class PaladinLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Character,
     ) -> Character:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
-        )
-        channel_divinity_feature.add_spell("Abjure Foes")
+        # Abjure Foes joins Channel Divinity's options here; ChannelDivinity
+        # works that out from the Paladin level when it's read.
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -155,10 +153,9 @@ class PaladinLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        data.add_feature(
+            PaladinFeatures.AuraOfCourage(), extends=PaladinFeatures.AuraOfProtection
         )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraOfCourage())
         return data
 
 
@@ -206,10 +203,9 @@ class PaladinLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: Character,
     ) -> Character:
-        lay_on_hands: PaladinFeatures.LayOnHands = data.get_features_by_type(
-            PaladinFeatures.LayOnHands
-        )[0]
-        lay_on_hands.extend_feature(PaladinFeatures.RestoringTouch())
+        data.add_feature(
+            PaladinFeatures.RestoringTouch(), extends=PaladinFeatures.LayOnHands
+        )
         return data
 
 
@@ -267,10 +263,9 @@ class PaladinLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        data.add_feature(
+            PaladinFeatures.AuraExpansion(), extends=PaladinFeatures.AuraOfProtection
         )
-        aura_of_protection.extend_feature(PaladinFeatures.AuraExpansion())
         return data
 
 

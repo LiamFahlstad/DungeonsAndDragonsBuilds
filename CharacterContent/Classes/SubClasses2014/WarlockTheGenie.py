@@ -48,10 +48,10 @@ class WarlockTheGenieLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        genies_vessel: WarlockTheGenieFeatures.GeniesVessel = data.get_features_by_type(
-            WarlockTheGenieFeatures.GeniesVessel
-        )[0]
-        genies_vessel.extend_feature(WarlockTheGenieFeatures.SanctuaryVessel())
+        data.add_feature(
+            WarlockTheGenieFeatures.SanctuaryVessel(),
+            extends=WarlockTheGenieFeatures.GeniesVessel,
+        )
         return data
 
 
@@ -62,10 +62,10 @@ class WarlockTheGenieLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        genies_vessel: WarlockTheGenieFeatures.GeniesVessel = data.get_features_by_type(
-            WarlockTheGenieFeatures.GeniesVessel
-        )[0]
-        genies_vessel.extend_feature(WarlockTheGenieFeatures.LimitedWish())
+        data.add_feature(
+            WarlockTheGenieFeatures.LimitedWish(),
+            extends=WarlockTheGenieFeatures.GeniesVessel,
+        )
         return data
 
 

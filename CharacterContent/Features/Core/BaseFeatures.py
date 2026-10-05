@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, Sequence, TextIO
 
-from Model.Character import note_feature_extended
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import Html
@@ -460,7 +459,6 @@ class Feature:
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
-        self.extensions: list["Feature"] = []
         # Set True for features that only modify the stat block (e.g. a flat bonus
         # or a resource pool) where the prose description adds nothing on a
         # concise/table character sheet. Full-mode sheets always show it.
@@ -482,13 +480,6 @@ class Feature:
         # max uses, what resets them, and optionally a formula explaining the
         # current uses based on character stats.
         self.uses = uses
-
-    def extend_feature(self, feature: "Feature"):
-        self.extensions.append(feature)
-        # Extensions apply too, and this feature can't reach the Character
-        # it was granted to - so every Character re-evaluates on its next
-        # query.
-        note_feature_extended()
 
     def apply(self, effects: Effects):
         """Record this feature's effects on the stat block. Features, armor
@@ -686,7 +677,7 @@ class Feature:
         if self.uses is not None:
             file.write(self._uses_html(self.uses) + "\n")
 
-        for extension in self.extensions:
+        for extension in character.extensions_of(self):
             ext_level = parse_feature_level(extension.origin)
             parent_level = parse_feature_level(self.origin)
 

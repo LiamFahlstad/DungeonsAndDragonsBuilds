@@ -114,11 +114,9 @@ class PaladinConquestLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        aura_of_conquest: PaladinConquestFeatures.AuraOfConquest = (
-            data.get_features_by_type(PaladinConquestFeatures.AuraOfConquest)[0]
-        )
-        aura_of_conquest.extend_feature(
-            PaladinConquestFeatures.AuraOfConquestExpansion()
+        data.add_feature(
+            PaladinConquestFeatures.AuraOfConquestExpansion(),
+            extends=PaladinConquestFeatures.AuraOfConquest,
         )
         return data
 

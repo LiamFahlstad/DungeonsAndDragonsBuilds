@@ -115,10 +115,10 @@ class PaladinOathbreakerLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        aura_of_hate: PaladinOathbreakerFeatures.AuraOfHate = data.get_features_by_type(
-            PaladinOathbreakerFeatures.AuraOfHate
-        )[0]
-        aura_of_hate.extend_feature(PaladinOathbreakerFeatures.AuraOfHateExpansion())
+        data.add_feature(
+            PaladinOathbreakerFeatures.AuraOfHateExpansion(),
+            extends=PaladinOathbreakerFeatures.AuraOfHate,
+        )
         return data
 
 

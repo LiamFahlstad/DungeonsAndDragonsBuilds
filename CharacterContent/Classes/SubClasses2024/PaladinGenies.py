@@ -29,10 +29,10 @@ class PaladinGeniesLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        data.add_feature(
+            PaladinGeniesFeatures.ElementalSmite(),
+            extends=PaladinFeatures.ChannelDivinity,
         )
-        channel_divinity_feature.extend_feature(PaladinGeniesFeatures.ElementalSmite())
         data.add_feature(PaladinGeniesFeatures.GeniesSplendor())
         data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
         data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
@@ -59,11 +59,9 @@ class PaladinGeniesLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
-        )
-        aura_of_protection.extend_feature(
-            PaladinGeniesFeatures.AuraOfElementalShielding()
+        data.add_feature(
+            PaladinGeniesFeatures.AuraOfElementalShielding(),
+            extends=PaladinFeatures.AuraOfProtection,
         )
         return data
 

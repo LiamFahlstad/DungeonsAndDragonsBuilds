@@ -23,13 +23,11 @@ class BarbarianStormHeraldLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(
+        data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.StormAura(
                 environment=self.environment
-            )
+            ),
+            extends=BarbarianFeatures.Rage,
         )
         return data
 

@@ -32,10 +32,10 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        fighting_style: FighterFeatures.FightingStyle = data.get_features_by_type(
-            FighterFeatures.FightingStyle
-        )[0]
-        fighting_style.extend_feature(FighterChampionFeatures.AdditionalFightingStyle())
+        data.add_feature(
+            FighterChampionFeatures.AdditionalFightingStyle(),
+            extends=FighterFeatures.FightingStyle,
+        )
         return data
 
 
@@ -57,10 +57,10 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        improved_critical: FighterChampionFeatures.ImprovedCritical = (
-            data.get_features_by_type(FighterChampionFeatures.ImprovedCritical)[0]
+        data.add_feature(
+            FighterChampionFeatures.SuperiorCritical(),
+            extends=FighterChampionFeatures.ImprovedCritical,
         )
-        improved_critical.extend_feature(FighterChampionFeatures.SuperiorCritical())
         return data
 
 

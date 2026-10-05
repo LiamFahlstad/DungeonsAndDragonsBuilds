@@ -44,10 +44,10 @@ class FighterSamuraiLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        fighting_spirit: FighterSamuraiFeatures.FightingSpirit = (
-            data.get_features_by_type(FighterSamuraiFeatures.FightingSpirit)[0]
+        data.add_feature(
+            FighterSamuraiFeatures.TirelessSpirit(),
+            extends=FighterSamuraiFeatures.FightingSpirit,
         )
-        fighting_spirit.extend_feature(FighterSamuraiFeatures.TirelessSpirit())
         return data
 
 

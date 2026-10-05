@@ -31,10 +31,10 @@ class FighterPsiWarriorLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        psionic_power: FighterPsiWarriorFeatures.PsionicPower = (
-            data.get_features_by_type(FighterPsiWarriorFeatures.PsionicPower)[0]
+        data.add_feature(
+            FighterPsiWarriorFeatures.TelekineticAdept(),
+            extends=FighterPsiWarriorFeatures.PsionicPower,
         )
-        psionic_power.extend_feature(FighterPsiWarriorFeatures.TelekineticAdept())
         return data
 
 

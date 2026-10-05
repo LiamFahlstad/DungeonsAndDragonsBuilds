@@ -38,10 +38,10 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        group_recovery: FighterBanneretFeatures.GroupRecovery = (
-            data.get_features_by_type(FighterBanneretFeatures.GroupRecovery)[0]
+        data.add_feature(
+            FighterBanneretFeatures.TeamTactics(),
+            extends=FighterBanneretFeatures.GroupRecovery,
         )
-        group_recovery.extend_feature(FighterBanneretFeatures.TeamTactics())
         return data
 
 
@@ -52,10 +52,9 @@ class FighterBanneretLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        action_surge: FighterFeatures.ActionSurge = data.get_features_by_type(
-            FighterFeatures.ActionSurge
-        )[0]
-        action_surge.extend_feature(FighterBanneretFeatures.RallyingSurge())
+        data.add_feature(
+            FighterBanneretFeatures.RallyingSurge(), extends=FighterFeatures.ActionSurge
+        )
         return data
 
 
@@ -66,10 +65,10 @@ class FighterBanneretLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        indomitable: FighterFeatures.Indomitable = data.get_features_by_type(
-            FighterFeatures.Indomitable
-        )[0]
-        indomitable.extend_feature(FighterBanneretFeatures.SharedResilience())
+        data.add_feature(
+            FighterBanneretFeatures.SharedResilience(),
+            extends=FighterFeatures.Indomitable,
+        )
         return data
 
 

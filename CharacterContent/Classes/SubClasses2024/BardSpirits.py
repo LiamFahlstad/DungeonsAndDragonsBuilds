@@ -43,10 +43,10 @@ class BardSpiritsLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        spirits_from_beyond: BardSpiritsFeatures.SpiritsFromBeyond = (
-            data.get_features_by_type(BardSpiritsFeatures.SpiritsFromBeyond)[0]
+        data.add_feature(
+            BardSpiritsFeatures.MysticalConnection(),
+            extends=BardSpiritsFeatures.SpiritsFromBeyond,
         )
-        spirits_from_beyond.extend_feature(BardSpiritsFeatures.MysticalConnection())
         return data
 
 

@@ -28,10 +28,10 @@ class PaladinDevotionLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        data.add_feature(
+            PaladinDevotionFeatures.SacredWeapon(),
+            extends=PaladinFeatures.ChannelDivinity,
         )
-        channel_divinity_feature.extend_feature(PaladinDevotionFeatures.SacredWeapon())
         data.add_spell(ClericLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
         data.add_spell(PaladinLevel1Spells.SHIELD_OF_FAITH)
         return data
@@ -56,10 +56,10 @@ class PaladinDevotionLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        data.add_feature(
+            PaladinDevotionFeatures.AuraOfDevotion(),
+            extends=PaladinFeatures.AuraOfProtection,
         )
-        aura_of_protection.extend_feature(PaladinDevotionFeatures.AuraOfDevotion())
         return data
 
 
@@ -94,10 +94,10 @@ class PaladinDevotionLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        data.add_feature(
+            PaladinDevotionFeatures.SmiteOfProtection(),
+            extends=PaladinFeatures.AuraOfProtection,
         )
-        aura_of_protection.extend_feature(PaladinDevotionFeatures.SmiteOfProtection())
         return data
 
 
@@ -120,10 +120,10 @@ class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: Character,
     ) -> Character:
-        aura_of_protection: PaladinFeatures.AuraOfProtection = (
-            data.get_features_by_type(PaladinFeatures.AuraOfProtection)[0]
+        data.add_feature(
+            PaladinDevotionFeatures.HolyNimbus(),
+            extends=PaladinFeatures.AuraOfProtection,
         )
-        aura_of_protection.extend_feature(PaladinDevotionFeatures.HolyNimbus())
         return data
 
 

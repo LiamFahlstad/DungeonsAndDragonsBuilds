@@ -56,10 +56,9 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
             DivinationLevel2Spells.MIND_SPIKE, additional_ruling=additional_ruling
         )
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericKnowledgeFeatures.MindMagic())
+        data.add_feature(
+            ClericKnowledgeFeatures.MindMagic(), extends=ClericFeatures.ChannelDivinity
+        )
         data.add_feature(
             ClericKnowledgeFeatures.BlessingsOfKnowledge(
                 self.skill_proficiency_and_expertise_1,

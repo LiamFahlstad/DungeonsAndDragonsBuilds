@@ -32,10 +32,9 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.LESSER_RESTORATION)
 
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericLifeFeatures.PreserveLife())
+        data.add_feature(
+            ClericLifeFeatures.PreserveLife(), extends=ClericFeatures.ChannelDivinity
+        )
         data.add_feature(ClericLifeFeatures.DiscipleOfLife())
         return data
 

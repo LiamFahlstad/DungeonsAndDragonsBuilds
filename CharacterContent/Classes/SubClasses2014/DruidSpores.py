@@ -43,10 +43,10 @@ class DruidSporesLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        symbiotic_entity: DruidSporesFeatures.SymbioticEntity = (
-            data.get_features_by_type(DruidSporesFeatures.SymbioticEntity)[0]
+        data.add_feature(
+            DruidSporesFeatures.SpreadingSpores(),
+            extends=DruidSporesFeatures.SymbioticEntity,
         )
-        symbiotic_entity.extend_feature(DruidSporesFeatures.SpreadingSpores())
         return data
 
 

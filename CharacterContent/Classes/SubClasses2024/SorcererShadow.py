@@ -99,10 +99,9 @@ class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        innate_sorcery: SorcererFeatures.InnateSorcery = data.get_features_by_type(
-            SorcererFeatures.InnateSorcery
-        )[0]
-        innate_sorcery.extend_feature(SorcererShadowFeatures.UmbralForm())
+        data.add_feature(
+            SorcererShadowFeatures.UmbralForm(), extends=SorcererFeatures.InnateSorcery
+        )
         return data
 
 

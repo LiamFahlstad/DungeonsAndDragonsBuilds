@@ -44,10 +44,10 @@ class ClericForgeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        soul_of_the_forge: ClericForgeFeatures.SoulOfTheForge = (
-            data.get_features_by_type(ClericForgeFeatures.SoulOfTheForge)[0]
+        data.add_feature(
+            ClericForgeFeatures.SaintOfForgeAndFire(),
+            extends=ClericForgeFeatures.SoulOfTheForge,
         )
-        soul_of_the_forge.extend_feature(ClericForgeFeatures.SaintOfForgeAndFire())
         return data
 
 

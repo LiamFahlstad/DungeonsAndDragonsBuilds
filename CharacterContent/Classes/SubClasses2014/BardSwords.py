@@ -45,10 +45,10 @@ class BardSwordsLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        blade_flourish: BardSwordsFeatures.BladeFlourish = data.get_features_by_type(
-            BardSwordsFeatures.BladeFlourish
-        )[0]
-        blade_flourish.extend_feature(BardSwordsFeatures.MastersFlourish())
+        data.add_feature(
+            BardSwordsFeatures.MastersFlourish(),
+            extends=BardSwordsFeatures.BladeFlourish,
+        )
         return data
 
 

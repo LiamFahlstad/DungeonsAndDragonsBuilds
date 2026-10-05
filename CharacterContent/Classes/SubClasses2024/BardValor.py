@@ -19,10 +19,10 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardValorFeatures.CombatInspiration())
+        data.add_feature(
+            BardValorFeatures.CombatInspiration(),
+            extends=BardFeatures.BardicInspiration,
+        )
         data.add_feature(BardValorFeatures.MartialTraining())
         return data
 

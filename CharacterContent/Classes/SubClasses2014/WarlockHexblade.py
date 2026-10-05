@@ -45,10 +45,10 @@ class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
-            data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
+        data.add_feature(
+            WarlockHexbladeFeatures.ArmorOfHexes(),
+            extends=WarlockHexbladeFeatures.HexbladesCurse,
         )
-        hexblades_curse.extend_feature(WarlockHexbladeFeatures.ArmorOfHexes())
         return data
 
 
@@ -59,10 +59,10 @@ class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        hexblades_curse: WarlockHexbladeFeatures.HexbladesCurse = (
-            data.get_features_by_type(WarlockHexbladeFeatures.HexbladesCurse)[0]
+        data.add_feature(
+            WarlockHexbladeFeatures.MasterOfHexes(),
+            extends=WarlockHexbladeFeatures.HexbladesCurse,
         )
-        hexblades_curse.extend_feature(WarlockHexbladeFeatures.MasterOfHexes())
         return data
 
 

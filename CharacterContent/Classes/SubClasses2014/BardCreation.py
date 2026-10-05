@@ -20,10 +20,10 @@ class BardCreationLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardCreationFeatures.MoteOfPotential())
+        data.add_feature(
+            BardCreationFeatures.MoteOfPotential(),
+            extends=BardFeatures.BardicInspiration,
+        )
         data.add_feature(BardCreationFeatures.PerformanceOfCreation())
         return data
 
@@ -46,10 +46,10 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        performance_of_creation: BardCreationFeatures.PerformanceOfCreation = (
-            data.get_features_by_type(BardCreationFeatures.PerformanceOfCreation)[0]
+        data.add_feature(
+            BardCreationFeatures.CreativeCrescendo(),
+            extends=BardCreationFeatures.PerformanceOfCreation,
         )
-        performance_of_creation.extend_feature(BardCreationFeatures.CreativeCrescendo())
         return data
 
 

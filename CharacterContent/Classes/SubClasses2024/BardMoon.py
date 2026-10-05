@@ -23,10 +23,9 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardMoonFeatures.MoonsInspiration())
+        data.add_feature(
+            BardMoonFeatures.MoonsInspiration(), extends=BardFeatures.BardicInspiration
+        )
         data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill_proficiency))
         data.add_cantrip(self.cantrip)
         return data
@@ -50,10 +49,9 @@ class BardMoonLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardMoonFeatures.EventidesSplendor())
+        data.add_feature(
+            BardMoonFeatures.EventidesSplendor(), extends=BardFeatures.BardicInspiration
+        )
         return data
 
 

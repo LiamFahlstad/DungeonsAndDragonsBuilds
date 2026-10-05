@@ -102,6 +102,18 @@ class ChannelDivinity(Feature):
     def add_spell(self, spell: str):
         self.spells.append(spell)
 
+    # Paladin level at which Abjure Foes becomes a Channel Divinity option.
+    ABJURE_FOES_LEVEL = 9
+
+    def _has_abjure_foes(self, character: Character) -> bool:
+        """Worked out from the Paladin level when read, so the level 9 grant
+        never has to change this feature after it was granted."""
+        return (
+            "Abjure Foes" in self.spells
+            or character.get_class_level(CharacterClass.PALADIN)
+            >= self.ABJURE_FOES_LEVEL
+        )
+
     def get_divine_sense_description(self, character: Character):
         indent = self._INDENT
         return (
@@ -155,7 +167,7 @@ class ChannelDivinity(Feature):
             description += "\n"
             description += self.get_sacred_weapon_description(character)
 
-        if "Abjure Foes" in self.spells:
+        if self._has_abjure_foes(character):
             description += "\n"
             description += AbjureFoes().get_description(character) + "\n"
 

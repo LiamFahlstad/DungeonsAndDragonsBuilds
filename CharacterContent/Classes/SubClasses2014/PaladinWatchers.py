@@ -32,12 +32,13 @@ class PaladinWatchersLevel3(ClassBuilder.SubclassLevel3):
         data: Character,
     ) -> Character:
         data.add_feature(PaladinWatchersFeatures.WatchersSpells())
-        channel_divinity_feature: PaladinFeatures.ChannelDivinity = (
-            data.get_features_by_type(PaladinFeatures.ChannelDivinity)[0]
+        data.add_feature(
+            PaladinWatchersFeatures.WatchersWill(),
+            extends=PaladinFeatures.ChannelDivinity,
         )
-        channel_divinity_feature.extend_feature(PaladinWatchersFeatures.WatchersWill())
-        channel_divinity_feature.extend_feature(
-            PaladinWatchersFeatures.AbjureTheExtraplanar()
+        data.add_feature(
+            PaladinWatchersFeatures.AbjureTheExtraplanar(),
+            extends=PaladinFeatures.ChannelDivinity,
         )
         data.add_spell(PaladinLevel1Spells.DETECT_MAGIC)
         data.add_spell(RangerLevel1Spells.ALARM)
@@ -121,11 +122,9 @@ class PaladinWatchersLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        aura_of_the_sentinel: PaladinWatchersFeatures.AuraOfTheSentinel = (
-            data.get_features_by_type(PaladinWatchersFeatures.AuraOfTheSentinel)[0]
-        )
-        aura_of_the_sentinel.extend_feature(
-            PaladinWatchersFeatures.AuraOfTheSentinelExpansion()
+        data.add_feature(
+            PaladinWatchersFeatures.AuraOfTheSentinelExpansion(),
+            extends=PaladinWatchersFeatures.AuraOfTheSentinel,
         )
         return data
 

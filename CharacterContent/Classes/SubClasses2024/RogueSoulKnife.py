@@ -31,10 +31,10 @@ class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        psychic_blades: RogueSoulKnifeFeatures.PsychicBlades = (
-            data.get_features_by_type(RogueSoulKnifeFeatures.PsychicBlades)[0]
+        data.add_feature(
+            RogueSoulKnifeFeatures.SoulBlades(),
+            extends=RogueSoulKnifeFeatures.PsychicBlades,
         )
-        psychic_blades.extend_feature(RogueSoulKnifeFeatures.SoulBlades())
         return data
 
 
@@ -56,10 +56,10 @@ class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Character,
     ) -> Character:
-        psychic_blades: RogueSoulKnifeFeatures.PsychicBlades = (
-            data.get_features_by_type(RogueSoulKnifeFeatures.PsychicBlades)[0]
+        data.add_feature(
+            RogueSoulKnifeFeatures.RendMind(),
+            extends=RogueSoulKnifeFeatures.PsychicBlades,
         )
-        psychic_blades.extend_feature(RogueSoulKnifeFeatures.RendMind())
         return data
 
 

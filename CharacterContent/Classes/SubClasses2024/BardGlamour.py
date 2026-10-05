@@ -34,10 +34,10 @@ class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
         data: Character,
     ) -> Character:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardGlamourFeatures.MantleOfMajesty())
+        data.add_feature(
+            BardGlamourFeatures.MantleOfMajesty(),
+            extends=BardFeatures.BardicInspiration,
+        )
         return data
 
 

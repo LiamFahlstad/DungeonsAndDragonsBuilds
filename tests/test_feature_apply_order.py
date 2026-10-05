@@ -498,8 +498,10 @@ class TestExtensionsApply:
         data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
         data = data.build()
         assert not data.validate().is_immune_to_damage(DamageType.FIRE)
-        # extend_feature() can't invalidate the cache itself.
-        data.features[0].extend_feature(ClericForgeFeatures.SaintOfForgeAndFire())
+        # An extension is a source like any other: granting one re-evaluates.
+        data.add_feature(
+            ClericForgeFeatures.SaintOfForgeAndFire(), extends=data.features[0]
+        )
         assert data.validate().is_immune_to_damage(DamageType.FIRE)
 
 

@@ -31,10 +31,9 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
                 self.skill_proficiency_3,
             )
         )
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardLoreFeatures.CuttingWords())
+        data.add_feature(
+            BardLoreFeatures.CuttingWords(), extends=BardFeatures.BardicInspiration
+        )
         return data
 
 
@@ -80,10 +79,9 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        bardic_inspiration: BardFeatures.BardicInspiration = data.get_features_by_type(
-            BardFeatures.BardicInspiration
-        )[0]
-        bardic_inspiration.extend_feature(BardLoreFeatures.PeerlessSkill())
+        data.add_feature(
+            BardLoreFeatures.PeerlessSkill(), extends=BardFeatures.BardicInspiration
+        )
         return data
 
 

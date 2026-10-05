@@ -33,11 +33,9 @@ class BarbarianBattleragerLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Character,
     ) -> Character:
-        reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
-            BarbarianFeatures.RecklessAttack
-        )[0]
-        reckless_attack.extend_feature(
-            BarbarianPathOfTheBattleragerFeatures.RecklessAbandon()
+        data.add_feature(
+            BarbarianPathOfTheBattleragerFeatures.RecklessAbandon(),
+            extends=BarbarianFeatures.RecklessAttack,
         )
         return data
 
@@ -49,10 +47,10 @@ class BarbarianBattleragerLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerCharge())
+        data.add_feature(
+            BarbarianPathOfTheBattleragerFeatures.BattleragerCharge(),
+            extends=BarbarianFeatures.Rage,
+        )
         return data
 
 
@@ -63,13 +61,9 @@ class BarbarianBattleragerLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Character,
     ) -> Character:
-        battlerager_armor: BarbarianPathOfTheBattleragerFeatures.BattleragerArmor = (
-            data.get_features_by_type(
-                BarbarianPathOfTheBattleragerFeatures.BattleragerArmor
-            )[0]
-        )
-        battlerager_armor.extend_feature(
-            BarbarianPathOfTheBattleragerFeatures.SpikedRetribution()
+        data.add_feature(
+            BarbarianPathOfTheBattleragerFeatures.SpikedRetribution(),
+            extends=BarbarianPathOfTheBattleragerFeatures.BattleragerArmor,
         )
         return data
 

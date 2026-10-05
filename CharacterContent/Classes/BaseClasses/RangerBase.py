@@ -178,10 +178,9 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
     )
 
     def add_features(self, data: Character) -> Character:
-        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
-            RangerFeatures.FavoredEnemy
-        )[0]
-        favored_enemy.extend_feature(RangerFeatures.RelentlessHunter())
+        data.add_feature(
+            RangerFeatures.RelentlessHunter(), extends=RangerFeatures.FavoredEnemy
+        )
         data.add_spell(self.spell)
         return data
 
@@ -241,10 +240,9 @@ class RangerLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(self, data: Character) -> Character:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
-            RangerFeatures.FavoredEnemy
-        )[0]
-        favored_enemy.extend_feature(RangerFeatures.PreciseHunter())
+        data.add_feature(
+            RangerFeatures.PreciseHunter(), extends=RangerFeatures.FavoredEnemy
+        )
 
         return data
 
@@ -282,10 +280,9 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
 class RangerLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: Character) -> Character:
-        favored_enemy: RangerFeatures.FavoredEnemy = data.get_features_by_type(
-            RangerFeatures.FavoredEnemy
-        )[0]
-        favored_enemy.extend_feature(RangerFeatures.FoeSlayer())
+        data.add_feature(
+            RangerFeatures.FoeSlayer(), extends=RangerFeatures.FavoredEnemy
+        )
         return data
 
 

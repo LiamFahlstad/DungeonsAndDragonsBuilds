@@ -34,10 +34,9 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueScionOfTheThreeFeatures.StrikeFear())
+        data.add_feature(
+            RogueScionOfTheThreeFeatures.StrikeFear(), extends=RogueFeatures.SneakAttack
+        )
         return data
 
 
@@ -48,10 +47,10 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Character,
     ) -> Character:
-        bloodthirst: RogueScionOfTheThreeFeatures.Bloodthirst = (
-            data.get_features_by_type(RogueScionOfTheThreeFeatures.Bloodthirst)[0]
+        data.add_feature(
+            RogueScionOfTheThreeFeatures.AuraOfMalevolence(),
+            extends=RogueScionOfTheThreeFeatures.Bloodthirst,
         )
-        bloodthirst.extend_feature(RogueScionOfTheThreeFeatures.AuraOfMalevolence())
         return data
 
 

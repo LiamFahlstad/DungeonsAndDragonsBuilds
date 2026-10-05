@@ -136,10 +136,9 @@ class DruidLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: Character,
     ) -> Character:
-        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
-            DruidFeatures.WildShape
-        )[0]
-        wild_shape.extend_feature(DruidFeatures.WildResurgence())
+        data.add_feature(
+            DruidFeatures.WildResurgence(), extends=DruidFeatures.WildShape
+        )
         data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
         data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         return data
@@ -272,16 +271,17 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: Character,
     ) -> Character:
-        potent_spellcasting = data.get_features_by_type(
-            DruidFeatures.PotentSpellcasting
+        # Upgrades whichever Elemental Fury option level 7 granted.
+        data.add_feature(
+            DruidFeatures.ImprovedPotentSpellcasting(),
+            extends=DruidFeatures.PotentSpellcasting,
+            if_missing="drop",
         )
-        primal_strike = data.get_features_by_type(DruidFeatures.PrimalStrike)
-        if potent_spellcasting:
-            potent_spellcasting[0].extend_feature(
-                DruidFeatures.ImprovedPotentSpellcasting()
-            )
-        elif primal_strike:
-            primal_strike[0].extend_feature(DruidFeatures.ImprovedPrimalStrike())
+        data.add_feature(
+            DruidFeatures.ImprovedPrimalStrike(),
+            extends=DruidFeatures.PrimalStrike,
+            if_missing="drop",
+        )
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
@@ -316,10 +316,7 @@ class DruidLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: Character,
     ) -> Character:
-        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
-            DruidFeatures.WildShape
-        )[0]
-        wild_shape.extend_feature(DruidFeatures.BeastSpells())
+        data.add_feature(DruidFeatures.BeastSpells(), extends=DruidFeatures.WildShape)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 
@@ -344,10 +341,7 @@ class DruidLevel20(ClassBuilder.BaseClassLevel20):
     spell: DruidSpellsUpTo9
 
     def add_features(self, data: Character) -> Character:
-        wild_shape: DruidFeatures.WildShape = data.get_features_by_type(
-            DruidFeatures.WildShape
-        )[0]
-        wild_shape.extend_feature(DruidFeatures.Archdruid())
+        data.add_feature(DruidFeatures.Archdruid(), extends=DruidFeatures.WildShape)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
 

@@ -802,7 +802,9 @@ class HtmlCharacterSheetWriter:
         # table of slots (e.g. a companion's) has no progression to show.
         progression = character.get_slot_progression()
         if progression is not None and progression.spell_slots:
-            Html.write_slot_progression_table(progression.spell_slots, file, reset_label)
+            Html.write_slot_progression_table(
+                progression.spell_slots, file, reset_label
+            )
         else:
             Html.write_slot_table(character.get_spell_slots(), file, reset_label)
         file.write("<br class='section-gap'>\n")
@@ -1373,7 +1375,7 @@ class HtmlCharacterSheetWriter:
         armors = [_as(a, Armor.AbstractArmor) for a in data.armors]
         armor_proficiencies = character.ledger.equipment_training.armor_training
         weapon_proficiencies = character.ledger.equipment_training.weapon_proficiencies
-        features = [_as(f, Feature) for f in data.features]
+        features = [_as(f, Feature) for f in data.top_level_features()]
         weapons = [_as(w, AbstractWeapon) for w in data.weapons]
         weapon_masteries = [_as(w, AbstractWeapon) for w in data.weapon_masteries]
         fighting_styles = [_as(s, FightingStyle) for s in data.fighting_styles]
@@ -1417,7 +1419,7 @@ class HtmlCharacterSheetWriter:
         extensions_by_level: dict[int, list[tuple[Feature, Feature]]] = {}
         for feature in features:  # Iterate full list, not just text_features
             parent_level = self._feature_level(feature)
-            for extension in feature.extensions:
+            for extension in data.extensions_of(feature):
                 ext_level = self._feature_level(extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page

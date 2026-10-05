@@ -20,10 +20,9 @@ class RoguePhantomLevel3(ClassBuilder.SubclassLevel3):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RoguePhantomFeatures.WailsFromTheGrave())
+        data.add_feature(
+            RoguePhantomFeatures.WailsFromTheGrave(), extends=RogueFeatures.SneakAttack
+        )
         data.add_feature(RoguePhantomFeatures.WhispersOfTheDead())
         return data
 

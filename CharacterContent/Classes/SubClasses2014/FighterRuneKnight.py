@@ -45,10 +45,10 @@ class FighterRuneKnightLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Character,
     ) -> Character:
-        giants_might: FighterRuneKnightFeatures.GiantsMight = data.get_features_by_type(
-            FighterRuneKnightFeatures.GiantsMight
-        )[0]
-        giants_might.extend_feature(FighterRuneKnightFeatures.GreatStature())
+        data.add_feature(
+            FighterRuneKnightFeatures.GreatStature(),
+            extends=FighterRuneKnightFeatures.GiantsMight,
+        )
         return data
 
 
@@ -59,10 +59,10 @@ class FighterRuneKnightLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Character,
     ) -> Character:
-        rune_carver: FighterRuneKnightFeatures.RuneCarver = data.get_features_by_type(
-            FighterRuneKnightFeatures.RuneCarver
-        )[0]
-        rune_carver.extend_feature(FighterRuneKnightFeatures.MasterOfRunes())
+        data.add_feature(
+            FighterRuneKnightFeatures.MasterOfRunes(),
+            extends=FighterRuneKnightFeatures.RuneCarver,
+        )
         return data
 
 
@@ -73,10 +73,10 @@ class FighterRuneKnightLevel18(ClassBuilder.SubclassLevel18):
         self,
         data: Character,
     ) -> Character:
-        giants_might: FighterRuneKnightFeatures.GiantsMight = data.get_features_by_type(
-            FighterRuneKnightFeatures.GiantsMight
-        )[0]
-        giants_might.extend_feature(FighterRuneKnightFeatures.RunicJuggernaut())
+        data.add_feature(
+            FighterRuneKnightFeatures.RunicJuggernaut(),
+            extends=FighterRuneKnightFeatures.GiantsMight,
+        )
         return data
 
 

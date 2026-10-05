@@ -70,10 +70,10 @@ class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
 class BarbarianLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(self, data: Character) -> Character:
-        unarmored_defense_text: BarbarianFeatures.UnarmoredDefenseText = (
-            data.get_features_by_type(BarbarianFeatures.UnarmoredDefenseText)[0]
+        data.add_feature(
+            BarbarianFeatures.FastMovement(),
+            extends=BarbarianFeatures.UnarmoredDefenseText,
         )
-        unarmored_defense_text.extend_feature(BarbarianFeatures.FastMovement())
         data.add_feature(BarbarianFeatures.FastMovementBonus())
         data.add_feature(BarbarianFeatures.ExtraAttack())
         return data
@@ -91,10 +91,9 @@ class BarbarianLevel7(ClassBuilder.BaseClassLevel7):
 
     def add_features(self, data: Character) -> Character:
         data.add_feature(BarbarianFeatures.FeralInstinct())
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianFeatures.InstinctivePounce())
+        data.add_feature(
+            BarbarianFeatures.InstinctivePounce(), extends=BarbarianFeatures.Rage
+        )
         return data
 
 
@@ -115,10 +114,9 @@ class BarbarianLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Character,
     ) -> Character:
-        reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
-            BarbarianFeatures.RecklessAttack
-        )[0]
-        reckless_attack.extend_feature(BarbarianFeatures.BrutalStrike())
+        data.add_feature(
+            BarbarianFeatures.BrutalStrike(), extends=BarbarianFeatures.RecklessAttack
+        )
         return data
 
 
@@ -139,10 +137,9 @@ class BarbarianLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Character,
     ) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianFeatures.RelentlessRage())
+        data.add_feature(
+            BarbarianFeatures.RelentlessRage(), extends=BarbarianFeatures.Rage
+        )
         return data
 
 
@@ -160,10 +157,10 @@ class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
 class BarbarianLevel13(ClassBuilder.BaseClassLevel13):
 
     def add_features(self, data: Character) -> Character:
-        reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
-            BarbarianFeatures.RecklessAttack
-        )[0]
-        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrikeLevel13())
+        data.add_feature(
+            BarbarianFeatures.ImprovedBrutalStrikeLevel13(),
+            extends=BarbarianFeatures.RecklessAttack,
+        )
         return data
 
 
@@ -181,10 +178,9 @@ class BarbarianLevel14(ClassBuilder.BaseClassLevel14):
 class BarbarianLevel15(ClassBuilder.BaseClassLevel15):
 
     def add_features(self, data: Character) -> Character:
-        rage: BarbarianFeatures.Rage = data.get_features_by_type(
-            BarbarianFeatures.Rage
-        )[0]
-        rage.extend_feature(BarbarianFeatures.PersistentRage())
+        data.add_feature(
+            BarbarianFeatures.PersistentRage(), extends=BarbarianFeatures.Rage
+        )
         return data
 
 
@@ -202,10 +198,10 @@ class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
 class BarbarianLevel17(ClassBuilder.BaseClassLevel17):
 
     def add_features(self, data: Character) -> Character:
-        reckless_attack: BarbarianFeatures.RecklessAttack = data.get_features_by_type(
-            BarbarianFeatures.RecklessAttack
-        )[0]
-        reckless_attack.extend_feature(BarbarianFeatures.ImprovedBrutalStrikeLevel17())
+        data.add_feature(
+            BarbarianFeatures.ImprovedBrutalStrikeLevel17(),
+            extends=BarbarianFeatures.RecklessAttack,
+        )
         return data
 
 

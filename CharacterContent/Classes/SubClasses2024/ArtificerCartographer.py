@@ -54,8 +54,8 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
                 0
             ],
         )
-        cartographer_spells.extend_feature(
-            ArtificerCartographerFeatures.GuidedPrecision()
+        data.add_feature(
+            ArtificerCartographerFeatures.GuidedPrecision(), extends=cartographer_spells
         )
         data.add_spell(DivinationLevel2Spells.LOCATE_OBJECT)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
@@ -72,8 +72,8 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
             ArtificerFeatures.FlashofGenius,
             data.get_features_by_type(ArtificerFeatures.FlashofGenius)[0],
         )
-        flash_of_genius.extend_feature(
-            ArtificerCartographerFeatures.IngeniousMovement()
+        data.add_feature(
+            ArtificerCartographerFeatures.IngeniousMovement(), extends=flash_of_genius
         )
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
         data.add_spell(BardLevel3Spells.CLAIRVOYANCE)
@@ -103,7 +103,9 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
                 0
             ],
         )
-        adventurers_atlas.extend_feature(ArtificerCartographerFeatures.SuperiorAtlas())
+        data.add_feature(
+            ArtificerCartographerFeatures.SuperiorAtlas(), extends=adventurers_atlas
+        )
         return data
 
 

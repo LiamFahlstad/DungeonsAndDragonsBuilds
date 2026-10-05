@@ -146,10 +146,9 @@ class ClericLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: Character,
     ) -> Character:
-        channel_divinity: ClericFeatures.ChannelDivinity = data.get_features_by_type(
-            ClericFeatures.ChannelDivinity
-        )[0]
-        channel_divinity.extend_feature(ClericFeatures.SearUndead())
+        data.add_feature(
+            ClericFeatures.SearUndead(), extends=ClericFeatures.ChannelDivinity
+        )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         return data
@@ -272,16 +271,17 @@ class ClericLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: Character,
     ) -> Character:
-        divine_strikes = data.get_features_by_type(ClericFeatures.DivineStrike)
-        potent_spellcastings = data.get_features_by_type(
-            ClericFeatures.PotentSpellcasting
+        # Upgrades whichever Blessed Strikes option level 7 granted.
+        data.add_feature(
+            ClericFeatures.ImprovedDivineStrike(),
+            extends=ClericFeatures.DivineStrike,
+            if_missing="drop",
         )
-        if divine_strikes:
-            divine_strikes[0].extend_feature(ClericFeatures.ImprovedDivineStrike())
-        elif potent_spellcastings:
-            potent_spellcastings[0].extend_feature(
-                ClericFeatures.ImprovedPotentSpellcasting()
-            )
+        data.add_feature(
+            ClericFeatures.ImprovedPotentSpellcasting(),
+            extends=ClericFeatures.PotentSpellcasting,
+            if_missing="drop",
+        )
         return data
 
 
@@ -351,10 +351,10 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
     spell: ClericSpellsUpTo9
 
     def add_features(self, data: Character) -> Character:
-        divine_intervention: ClericFeatures.DivineIntervention = (
-            data.get_features_by_type(ClericFeatures.DivineIntervention)[0]
+        data.add_feature(
+            ClericFeatures.GreaterDivineIntervention(),
+            extends=ClericFeatures.DivineIntervention,
         )
-        divine_intervention.extend_feature(ClericFeatures.GreaterDivineIntervention())
         data.add_spell(self.spell)
         return data
 

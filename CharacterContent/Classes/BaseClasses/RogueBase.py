@@ -66,10 +66,9 @@ class RogueLevel4(ClassBuilder.BaseClassLevel4):
 class RogueLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(self, data: Character) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.CunningStrike())
+        data.add_feature(
+            RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
+        )
         data.add_feature(RogueFeatures.UncannyDodge())
         return data
 
@@ -129,10 +128,9 @@ class RogueLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.ImprovedCunningStrike())
+        data.add_feature(
+            RogueFeatures.ImprovedCunningStrike(), extends=RogueFeatures.SneakAttack
+        )
         return data
 
 
@@ -160,10 +158,9 @@ class RogueLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: Character,
     ) -> Character:
-        sneak_attack_feature: RogueFeatures.SneakAttack = data.get_features_by_type(
-            RogueFeatures.SneakAttack
-        )[0]
-        sneak_attack_feature.extend_feature(RogueFeatures.DeviousStrikes())
+        data.add_feature(
+            RogueFeatures.DeviousStrikes(), extends=RogueFeatures.SneakAttack
+        )
         return data
 
 
