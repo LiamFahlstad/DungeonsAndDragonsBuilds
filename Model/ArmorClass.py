@@ -4,7 +4,7 @@ from typing import Optional
 from Core.Definitions import Ability
 from Core.Rules import UNARMORED_AC_BASE
 from Model.Bonuses import Bonuses
-from Model.Contracts import Formula, StatView
+from Model.Contracts import StatView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -54,12 +54,8 @@ class ArmorClass(Recorder):
         self.armor_class_formulas.append(formula)
 
     @records
-    def add_bonus(self, bonus: int) -> None:
+    def add_bonus(self, bonus: Value) -> None:
         self.bonuses.add(bonus)
-
-    @records
-    def add_derived_bonus(self, bonus: Formula) -> None:
-        self.bonuses.add_formula(bonus)
 
     @records
     def add_shield_bonus(self, armor_class_bonus: int) -> None:

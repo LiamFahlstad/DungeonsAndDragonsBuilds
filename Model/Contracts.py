@@ -79,3 +79,6 @@ class StatView(Protocol):
 
 # A value that depends on other stats, worked out when it's read.
 Formula = Callable[[StatView], int]
+
+# A bonus: a flat number, or a Formula worked out when it's read.
+Value = int | Formula

@@ -1,6 +1,6 @@
 import attr
 
-from Model.Contracts import Formula, StatView
+from Model.Contracts import Formula, StatView, Value
 from Model.Recorder import Recorder, records
 from Model.Records.SourcedValue import SourcedValue
 
@@ -33,12 +33,12 @@ class Bonuses(Recorder):
         self._formulas: list[SourcedFormula] = []
 
     @records
-    def add(self, value: int, source: str = OTHER_SOURCE) -> None:
-        self._flat.append(SourcedValue(value, source))
-
-    @records
-    def add_formula(self, formula: Formula, source: str = OTHER_SOURCE) -> None:
-        self._formulas.append(SourcedFormula(formula, source))
+    def add(self, value: Value, source: str = OTHER_SOURCE) -> None:
+        """A flat bonus, or a formula worked out on every read."""
+        if callable(value):
+            self._formulas.append(SourcedFormula(value, source))
+        else:
+            self._flat.append(SourcedValue(value, source))
 
     def total(self, view: StatView) -> int:
         flat = sum(bonus.value for bonus in self._flat)

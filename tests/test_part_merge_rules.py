@@ -79,13 +79,15 @@ def _raises_in_every_order(make_part, records, match: str) -> None:
 
 
 def test_bonuses_sum_and_list_sources_sorted():
+    """Flat values and formulas go through the same add(); flat sources list
+    first, then non-zero formula sources, each sorted by (source, value)."""
     result = _same_in_every_order(
         Bonuses,
         [
             lambda b: b.add(1, "Bless"),
             lambda b: b.add(2, "Archery"),
-            lambda b: b.add_formula(lambda view: 3, "Wisdom"),
-            lambda b: b.add_formula(lambda view: 1, "Charisma"),
+            lambda b: b.add(lambda view: 3, "Wisdom"),
+            lambda b: b.add(lambda view: 1, "Charisma"),
         ],
         lambda b: (b.total(VIEW), b.sources(VIEW)),
     )
@@ -118,7 +120,7 @@ class TestSkills:
             [
                 lambda s: s.add_skill_bonus(Skill.ARCANA, 1, "Item"),
                 lambda s: s.add_skill_bonus(Skill.ARCANA, 2, "Feat"),
-                lambda s: s.add_derived_bonus(Skill.ARCANA, lambda view: 3, "Order"),
+                lambda s: s.add_skill_bonus(Skill.ARCANA, lambda view: 3, "Order"),
             ],
             lambda s: (
                 s.get_total_bonus(Skill.ARCANA, VIEW),
@@ -454,7 +456,7 @@ def test_initiative():
             lambda i: i.add_roll_condition(ADV),
             lambda i: i.add_roll_condition(DIS),
             lambda i: i.add_bonus(2),
-            lambda i: i.add_derived_bonus(lambda view: 3),
+            lambda i: i.add_bonus(lambda view: 3),
         ],
         lambda i: (i.total(FakeView()), i.roll_condition(FakeView())),
     )
@@ -465,7 +467,7 @@ def test_speed():
         Speed,
         [
             lambda s: s.add_bonus(10),
-            lambda s: s.add_derived_bonus(lambda view: 5),
+            lambda s: s.add_bonus(lambda view: 5),
         ],
         lambda s: s.total(FakeView(base_speed=30)),
     )

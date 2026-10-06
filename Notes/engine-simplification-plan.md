@@ -655,7 +655,26 @@ refers to the checks in section 4.
   names.
 - **Verify:** A, B, C, D, E. **Output:** none.
 
-### Step 3: One way to record a bonus *(small API change)*
+### Step 3: One way to record a bonus *(small API change)* — done
+
+- **Result:**
+  - **`Value = int | Formula`** lives in `Model/Contracts.py`, next to
+    `Formula`. Step 7 renames that module to `View.py`. `Improvements.py`
+    imports `Value` instead of defining its own.
+  - **`Bonuses.add(value: Value, source)`** is the one place that tells a
+    formula from a flat number. `add_formula` is gone.
+  - **Deleted:**
+    - the six `add_derived_*` methods on `Effects`, and each part's
+      `add_derived_bonus`. The flat `add_*_bonus` methods take a `Value`;
+    - the six `if callable(self.bonus)` branches in `Improvements.py`.
+    - `SkillBonus` defaults its source to `OTHER_SOURCE` instead of
+      branching on `None`. No caller passed `None`.
+  - **Content was never touched:** it reaches bonuses only through
+    `Improvements`, so the planned "about 25 content sites" were 0.
+  - **Tests.** 5 test sites were updated. The `Bonuses` merge test records a
+    flat value and a formula through the same `add()`.
+  - **Verified:** A, B (3308 passed), C, D, E (1096 slow passed). 117 lines
+    deleted, 48 added.
 
 - **Goal:** a bonus is a `Value` (`int | Formula`), recorded by one method.
 - **Changes:**

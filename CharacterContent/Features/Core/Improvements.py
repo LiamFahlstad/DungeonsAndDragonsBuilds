@@ -49,13 +49,9 @@ from Core.Definitions import (
 )
 from Model.ArmorClass import ArmorClassFormula
 from Model.Bonuses import OTHER_SOURCE
-from Model.Contracts import Formula, StatView
+from Model.Contracts import Formula, StatView, Value
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
-
-# A flat bonus, or a formula evaluated against the finished character at read
-# time (see the ordering contract above).
-Value = int | Formula
 
 
 class CharacterImprovement(ABC):
@@ -232,10 +228,7 @@ class SavingThrowBonus(CharacterImprovement):
 
     def apply(self, effects: Effects):
         for ability in self.abilities:
-            if callable(self.bonus):
-                effects.add_derived_saving_throw_bonus(ability, self.bonus)
-            else:
-                effects.add_saving_throw_bonus(ability, self.bonus)
+            effects.add_saving_throw_bonus(ability, self.bonus)
 
 
 class AbilityScoreBonus(CharacterImprovement):
@@ -343,10 +336,7 @@ class ArmorClassBonus(CharacterImprovement):
         self.bonus = bonus
 
     def apply(self, effects: Effects):
-        if callable(self.bonus):
-            effects.add_derived_armor_class_bonus(self.bonus)
-        else:
-            effects.add_armor_class_bonus(self.bonus)
+        effects.add_armor_class_bonus(self.bonus)
 
 
 # ── Weapon attack and damage bonuses ──────────────────────────────────────────
@@ -427,10 +417,7 @@ class InitiativeBonus(CharacterImprovement):
         self.bonus = bonus
 
     def apply(self, effects: Effects):
-        if callable(self.bonus):
-            effects.add_derived_initiative_bonus(self.bonus)
-        else:
-            effects.add_initiative_bonus(self.bonus)
+        effects.add_initiative_bonus(self.bonus)
 
 
 class HitPointsBonus(CharacterImprovement):
@@ -441,10 +428,7 @@ class HitPointsBonus(CharacterImprovement):
         self.bonus = bonus
 
     def apply(self, effects: Effects):
-        if callable(self.bonus):
-            effects.add_derived_hit_points_bonus(self.bonus)
-        else:
-            effects.add_hit_points_bonus(self.bonus)
+        effects.add_hit_points_bonus(self.bonus)
 
 
 class HitPointsPerLevelBonus(HitPointsBonus):
@@ -460,20 +444,13 @@ class SkillBonus(CharacterImprovement):
     time (e.g. "equal to your Wisdom modifier"). `source` names where the
     bonus comes from (e.g. the item or feature name) on the character sheet."""
 
-    def __init__(self, skill: Skill, bonus: Value, source: Optional[str] = None):
+    def __init__(self, skill: Skill, bonus: Value, source: str = OTHER_SOURCE):
         self.skill = skill
         self.bonus = bonus
         self.source = source
 
     def apply(self, effects: Effects):
-        if callable(self.bonus):
-            effects.add_derived_skill_bonus(
-                self.skill, self.bonus, self.source or OTHER_SOURCE
-            )
-        elif self.source is not None:
-            effects.add_skill_bonus(self.skill, self.bonus, self.source)
-        else:
-            effects.add_skill_bonus(self.skill, self.bonus)
+        effects.add_skill_bonus(self.skill, self.bonus, self.source)
 
 
 class SkillToAbilityOverride(CharacterImprovement):
@@ -497,9 +474,7 @@ class JackOfAllTradesBonus(CharacterImprovement):
 
     def apply(self, effects: Effects):
         for skill in Skill:
-            effects.add_derived_skill_bonus(
-                skill, self._bonus_for(skill), "Jack of All Trades"
-            )
+            effects.add_skill_bonus(skill, self._bonus_for(skill), "Jack of All Trades")
 
     @staticmethod
     def _bonus_for(skill: Skill) -> Formula:
@@ -520,10 +495,7 @@ class SpeedBonus(CharacterImprovement):
         self.bonus = bonus
 
     def apply(self, effects: Effects):
-        if callable(self.bonus):
-            effects.add_derived_speed_bonus(self.bonus)
-        else:
-            effects.add_speed_bonus(self.bonus)
+        effects.add_speed_bonus(self.bonus)
 
 
 class CarryingCapacityBonus(CharacterImprovement):

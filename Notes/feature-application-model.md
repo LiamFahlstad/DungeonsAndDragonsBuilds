@@ -180,9 +180,9 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 **`apply(self, effects: Effects)` can only record.** `Effects` offers `add_*`/`set_*`/
 `register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
 no levels either. If a value depends on anything, pass a formula (`lambda character: ...`); it gets
-the finished `Character` when the value is read. Every bonus with a formula form has an
-`add_derived_*` method on `Effects` (skills, saving throws, AC, HP, speed, initiative), and the
-improvements above choose between the flat and formula forms for you. `get_description()` and the
+the finished `Character` when the value is read. Every bonus (skills, saving throws, AC, HP,
+speed, initiative) is a `Value` (`Model/Contracts.py`): a flat `int` or a formula, recorded by the
+same `add_*_bonus` method on `Effects`. `Bonuses.add` is the one place that tells them apart. `get_description()` and the
 other rendering methods still get the `Character`, and may read anything.
 
 ## The parts

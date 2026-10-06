@@ -4,7 +4,7 @@ from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_con
 from Core.Rules import EXPERTISE_MULTIPLIER
 from Model.Bonuses import OTHER_SOURCE, Bonuses
 from Model.Records.SourcedValue import SourcedValue
-from Model.Contracts import Formula, StatView
+from Model.Contracts import StatView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -40,14 +40,8 @@ class Skills(Recorder):
         return self._bonuses.setdefault(skill, Bonuses())
 
     @records
-    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = OTHER_SOURCE):
+    def add_skill_bonus(self, skill: Skill, bonus: Value, source: str = OTHER_SOURCE):
         self._bonuses_for(skill).add(bonus, source)
-
-    @records
-    def add_derived_bonus(
-        self, skill: Skill, bonus: Formula, source: str = OTHER_SOURCE
-    ) -> None:
-        self._bonuses_for(skill).add_formula(bonus, source)
 
     def get_total_bonus(self, skill: Skill, view: StatView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
