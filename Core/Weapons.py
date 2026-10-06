@@ -1,3 +1,7 @@
+"""Weapon rules enums: properties, masteries, types, proficiency categories
+and kinds, damage types and damage rolls. The weapons themselves are in
+CharacterContent/Items/Weapons/, which re-exports these for build files."""
+
 from enum import Enum
 
 

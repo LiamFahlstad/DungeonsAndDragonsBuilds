@@ -1,6 +1,6 @@
 """Conditions mixin for CombatAppQt."""
 
-from Combat.Definitions import Action, Condition
+from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat
 
 # Conditions that incapacitate a creature and break concentration per 2024 D&D rules
@@ -82,7 +82,7 @@ class ConditionsMixin:
                 action=Action.REMOVE_CONDITION,
                 value=cond_value,
             )
-            if cond == Condition.CONCENTRATING.value:
+            if cond == CombatStatus.CONCENTRATING.value:
                 self._end_concentration_spells(char)
             self._rebuild_card(char)
 
@@ -111,7 +111,7 @@ class ConditionsMixin:
             return
         self._add_condition_to(
             self.selected_character,
-            Condition.CONCENTRATING.value,
+            CombatStatus.CONCENTRATING.value,
             source=self.selected_character,
         )
 
@@ -121,7 +121,7 @@ class ConditionsMixin:
             return
         self._remove_condition_from(
             self.selected_character,
-            Condition.CONCENTRATING.value,
+            CombatStatus.CONCENTRATING.value,
             source=self.selected_character,
         )
 

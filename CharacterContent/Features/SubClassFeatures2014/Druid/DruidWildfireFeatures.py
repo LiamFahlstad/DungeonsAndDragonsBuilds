@@ -1,13 +1,12 @@
 from Core.Definitions import Ability
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
     DamageTypeEntry,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
 )
+from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import CharacterClass, DamageType
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
@@ -55,7 +54,7 @@ def _build_wildfire_spirit(
         cr="—",
         monster_type=MonsterType.ELEMENTAL,
         alignment=Alignment.UNALIGNED,
-        size=Size.SMALL,
+        size=CreatureSize.SMALL,
         ac_note="natural armor",
         hp_formula=f"5 + five times your druid level ({druid_level})",
         speed_ground_ft=30,

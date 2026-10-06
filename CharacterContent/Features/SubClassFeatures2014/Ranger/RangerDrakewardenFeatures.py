@@ -7,14 +7,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from Combat.Definitions import (
+from Core.Definitions import CreatureSize
+from Model.Creatures.Combatants import (
     Alignment,
     DamageTypeEntry,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
 )
+from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import CharacterClass, DamageType
 from Model.Character import Character
 from Utils.CreatureStatBlocks import format_creature_stat_block
@@ -28,7 +28,11 @@ def _build_drake(
     chosen_type = damage_type if damage_type is not None else DamageType.FIRE
     has_wings = ranger_level >= 7
     is_large = ranger_level >= 15
-    size = Size.LARGE if is_large else (Size.MEDIUM if has_wings else Size.SMALL)
+    size = (
+        CreatureSize.LARGE
+        if is_large
+        else (CreatureSize.MEDIUM if has_wings else CreatureSize.SMALL)
+    )
 
     bite_extra_dice = "1d6"
     if is_large:

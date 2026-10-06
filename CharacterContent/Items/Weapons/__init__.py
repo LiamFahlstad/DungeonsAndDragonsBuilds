@@ -1,4 +1,4 @@
-from .Enums import (
+from Core.Weapons import (
     WeaponProperty,
     WeaponMastery,
     WeaponType,

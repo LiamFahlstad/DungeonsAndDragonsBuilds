@@ -29,12 +29,8 @@ import re
 import sys
 from pathlib import Path
 
-from Combat.Definitions import (
-    ExtendedCombatantData,
-    MeleeAttack,
-    Multiattack,
-    SavingThrowEffect,
-)
+from Model.Creatures.Combatants import ExtendedCombatantData
+from Model.Creatures.MonsterAbilities import MeleeAttack, Multiattack, SavingThrowEffect
 
 MONSTERS_DIR = Path(__file__).resolve().parent.parent / "Monsters"
 TEMPLATE_HTML = (

@@ -9,7 +9,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
 from Model.Character import Character
-from .Enums import (
+from Core.Weapons import (
     WeaponMastery,
     WeaponProficiency,
     WeaponProperty,

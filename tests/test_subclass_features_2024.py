@@ -67,7 +67,7 @@ from CharacterContent.Features.SubClassFeatures.Paladin import (
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererFeatures
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures
 from CharacterContent.Items import Armor
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from Core.Weapons import WeaponProficiency
 from tests._grants import apply_level, grant
 
 
@@ -639,7 +639,7 @@ class TestBladesingerWeaponProficiencyScope:
     def test_martial_melee_not_heavy_or_two_handed(self, weapon_name, expected):
         from CharacterContent.Items.Weapons import MartialMelee
         from CharacterContent.Items.Weapons.Base import weapon_matches_proficiency
-        from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+        from Core.Weapons import WeaponProficiency
 
         weapon = getattr(MartialMelee, weapon_name)()
         assert (
@@ -652,7 +652,7 @@ class TestBladesingerWeaponProficiencyScope:
     def test_does_not_cover_martial_ranged(self):
         from CharacterContent.Items.Weapons import Ranged
         from CharacterContent.Items.Weapons.Base import weapon_matches_proficiency
-        from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+        from Core.Weapons import WeaponProficiency
 
         # Hand Crossbow is Light, but ranged - not a Melee Martial weapon.
         assert not weapon_matches_proficiency(

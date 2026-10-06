@@ -2,25 +2,21 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AdultBrassDragon,
 # AdultWhiteDragon, Nalfeshnee, Rakshasa, ShadowDragon, StormGiant, Ultroloth,
 # Vampire.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -46,7 +42,7 @@ class AdultBrassDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.CHAOTIC_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="15d12 + 75",
             speed_ground_ft=40,
@@ -139,7 +135,7 @@ class AdultWhiteDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="16d12 + 96",
             speed_ground_ft=40,
@@ -223,7 +219,7 @@ class Beholder(ExtendedCombatantData):
             monster_type=MonsterType.ABERRATION,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="20d10 + 80",
             speed_ground_ft=5,
@@ -275,7 +271,7 @@ class Nalfeshnee(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Demon",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="16d10 + 96",
             speed_ground_ft=20,
@@ -360,7 +356,7 @@ class Rakshasa(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="26d8 + 104",
             speed_ground_ft=40,
@@ -438,7 +434,7 @@ class ShadowDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="18d12 + 72",
             speed_ground_ft=40,
@@ -534,7 +530,7 @@ class StormGiant(ExtendedCombatantData):
             monster_type=MonsterType.GIANT,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="20d12 + 100",
             speed_ground_ft=50,
@@ -617,7 +613,7 @@ class Ultroloth(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Yugoloth",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="26d8 + 104",
             speed_ground_ft=30,
@@ -711,7 +707,7 @@ class Vampire(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="23d8 + 92",
             speed_ground_ft=40,

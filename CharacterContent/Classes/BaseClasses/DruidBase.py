@@ -3,7 +3,7 @@ from typing import Optional, Type, TypeAlias
 import attr
 
 import Core.Definitions as Definitions
-from Combat.Definitions import ExtendedCombatantData
+from Model.Creatures.Combatants import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Model.Character import Character, SpellSource
 from Core.Definitions import Ability, CharacterClass, Skill

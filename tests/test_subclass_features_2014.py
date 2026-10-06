@@ -92,7 +92,7 @@ from CharacterContent.Items.Weapons import MartialMelee
 from CharacterContent.Items.Weapons.Base import is_proficient_with
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Items import Armor
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from Core.Weapons import WeaponProficiency
 from Core.Definitions import (
     ArmorType,
     BarbarianStormEnvironment,

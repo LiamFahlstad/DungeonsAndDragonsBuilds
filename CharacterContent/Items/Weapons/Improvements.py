@@ -4,7 +4,7 @@ from typing import Optional
 from Core.Definitions import Ability
 from CharacterContent.Features.Core.Improvements import ItemImprovement
 from .Base import AbstractWeapon
-from .Enums import WeaponProperty, WeaponDamageRolls, WeaponDamageTypes
+from Core.Weapons import WeaponProperty, WeaponDamageRolls, WeaponDamageTypes
 from .ExtraDamage import ExtraDamage  # re-exported: weapons are built with it
 
 # ──────────────────────────────────────────────────────────────────────────────

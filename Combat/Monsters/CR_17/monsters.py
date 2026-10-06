@@ -2,7 +2,7 @@
 #
 # NOTE: All classes in this file (AdultGoldDragon, AdultRedDragon, DeathKnight,
 # Dracolich, DragonTurtle, Goristro, SphinxOfValor) have been hand-edited to use
-# the structured MonsterAbility subclasses in Combat/Definitions.py (Amphibious,
+# the structured MonsterAbility subclasses in Model/Creatures/MonsterAbilities.py (Amphibious,
 # CastSpellLegendaryAction, LegendaryResistance, MagicResistance, MeleeAttack,
 # Multiattack, Pounce, SavingThrowEffect, SiegeMonster) wherever the original
 # description text matched a known template exactly.
@@ -12,31 +12,30 @@
 # Additionally, entries whose freeform description names a save DC (e.g. "DC
 # 15 Wisdom saving throw") without matching a full structured template have
 # been wrapped in
-# DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still read
+# DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still read
 # the DC back out for the combat UI, without rewriting the entry as a fully
 # structured subclass. Affected classes: AdultGoldDragon, AdultRedDragon,
 # DeathKnight, Dracolich, SphinxOfValor.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
     Amphibious,
     CastSpellLegendaryAction,
-    Condition,
-    DamageType,
-    DamageTypeEntry,
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     LegendaryResistance,
     MagicResistance,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
     Multiattack,
     Pounce,
     SavingThrowEffect,
     SiegeMonster,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -63,7 +62,7 @@ class AdultGoldDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.LAWFUL_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="18d12 + 126",
             speed_ground_ft=40,
@@ -177,7 +176,7 @@ class AdultRedDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="19d12 + 133",
             speed_ground_ft=40,
@@ -272,7 +271,7 @@ class DeathKnight(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="21d8 + 105",
             speed_ground_ft=30,
@@ -388,7 +387,7 @@ class Dracolich(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="18d12 + 108",
             speed_ground_ft=40,
@@ -505,7 +504,7 @@ class DragonTurtle(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="",
             alignment=Alignment.NEUTRAL,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="23d20 + 115",
             speed_ground_ft=20,
@@ -601,7 +600,7 @@ class Goristro(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Demon",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="23d12 + 161",
             speed_ground_ft=50,
@@ -695,7 +694,7 @@ class SphinxOfValor(ExtendedCombatantData):
             monster_type=MonsterType.CELESTIAL,
             monster_type_note="",
             alignment=Alignment.LAWFUL_NEUTRAL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="19d10 + 95",
             speed_ground_ft=40,

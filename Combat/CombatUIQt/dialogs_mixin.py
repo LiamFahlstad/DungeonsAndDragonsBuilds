@@ -19,12 +19,9 @@ from PyQt6.QtWidgets import (
 )
 
 import Core.Definitions as Definitions
-from Combat.Definitions import (
-    ConditionRule,
-    DamageType,
-    DcMonsterAbility,
-    extract_dc_from_text,
-)
+from Combat.Definitions import ConditionRule
+from Core.Definitions import DamageType
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_text
 from Combat.Rules import Rule, group_by_category, load_rules
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success

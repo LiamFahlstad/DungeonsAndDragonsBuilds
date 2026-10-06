@@ -743,7 +743,55 @@ refers to the checks in section 4.
     publicly, and the import moves to the top of the module.
 - **Verify:** A, B, C, D, E. **Output:** none.
 
-### Step 5: One copy of each enum; content stops importing Combat *(structure)*
+### Step 5: One copy of each enum; content stops importing Combat *(structure)* — done
+
+- **Result:**
+  - **`Combat/Definitions.py` was split by what each class is:**
+    - `Model/Creatures/MonsterAbilities.py`: `MonsterAbility`, all 28
+      structured subclasses, `DcMonsterAbility`, `extract_dc_from_text`,
+      `DiceType`;
+    - `Model/Creatures/Combatants.py`: `BasicCombatantData`,
+      `ExtendedCombatantData`, `MonsterType`, `Alignment`, `Visibility`,
+      `DamageTypeEntry`;
+    - **`Combat/Definitions.py` keeps only combat-runtime names:** `Action`,
+      `ConditionRule`, the new `CombatStatus` (Bloodied, Concentrating) and
+      `tracked_condition_names()`. The tracker's condition list is checked to
+      be identical (same 17 names, same order).
+  - **Duplicates merged into Core:**
+    - Combat's `DamageType` and `Condition` became Core's; their values were
+      the same;
+    - Combat's `Size` became `Core.Definitions.CreatureSize` (539 `Size.X`
+      sites in the catalog, plus content).
+    - The two pyright errors from mixing the `DamageType`s (Wildfire,
+      Drakewarden) are fixed.
+  - **The rewrite.** An AST script rewrote the imports in 63 files: 37
+    monster files, 6 content files, the Combat UI and tools,
+    `Utils/CreatureStatBlocks.py` and the scenarios.
+    `Combat/Tools/generate_monsters.py` writes the new imports and
+    `CreatureSize`, so regenerating keeps them.
+  - **Weapon enums.** `CharacterContent/Items/Weapons/Enums.py` moved to
+    `Core/Weapons.py` (`git mv`), and the `Weapons` package re-exports them
+    (Decision 5).
+  - **Layering.** Content → Combat, monster catalog → Combat, and
+    `CreatureStatBlocks` → Combat are all gone from the allowlist. What's left
+    is the 4 content files that render stat blocks (Step 6).
+  - **Agent docs updated:** `dnd-monster-creator`,
+    `dnd-monster-ability-refactor` (new subclasses go at the end of
+    `MonsterAbilities.py`), `combat-sim`, `combat-sim-haiku`.
+  - **Left as is:**
+    - `DiceType` (monsters) vs `Core.Definitions.Die`. Their APIs disagree:
+      `Die.average` is a property, `DiceType.average(count)` a method. Merging
+      them renames one API, which is a separate decision.
+    - The one-shot `Combat/Tools/migrate_monster_*.py` scripts still contain
+      the old import text. They've already been applied, and their match
+      strings no longer occur anywhere.
+  - **Verified:**
+    - A: no golden change. B: 3308 passed. D: 0 errors.
+    - Pyright over Combat, content, Utils and Core against a clean HEAD
+      worktree: no new errors, 2 fixed.
+    - C: `RunCharacterCreator.py` and `RunBuildGroups.py` run; the combat app
+      loads every scenario and the Players group offscreen; all 539 catalog
+      monsters build; the Combat tools import.
 
 - **Goal:** each enum is defined once, and nothing in content imports `Combat`.
 - **Changes:**

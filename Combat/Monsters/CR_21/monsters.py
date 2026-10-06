@@ -2,24 +2,20 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AncientBlackDragon,
 # AncientCopperDragon, Archhag, Lich, Solar.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -49,7 +45,7 @@ class AncientBlackDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="21d20 + 147",
             speed_ground_ft=40,
@@ -137,7 +133,7 @@ class AncientCopperDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.CHAOTIC_GOOD,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="21d20 + 147",
             speed_ground_ft=40,
@@ -225,7 +221,7 @@ class Archhag(ExtendedCombatantData):
             monster_type=MonsterType.FEY,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="29d10 + 174",
             speed_ground_ft=40,
@@ -338,7 +334,7 @@ class Lich(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="Wizard",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="42d8 + 126",
             speed_ground_ft=30,
@@ -446,7 +442,7 @@ class Solar(ExtendedCombatantData):
             monster_type=MonsterType.CELESTIAL,
             monster_type_note="Angel",
             alignment=Alignment.LAWFUL_GOOD,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="22d10 + 176",
             speed_ground_ft=50,

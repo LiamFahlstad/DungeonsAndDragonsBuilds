@@ -81,7 +81,7 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
         }
 
         """
-from Combat.Definitions import ExtendedCombatantData
+from Model.Creatures.Combatants import ExtendedCombatantData
 from Core.Definitions import Ability
 from Model.Character import Character
 from Core.Rules import ability_modifier

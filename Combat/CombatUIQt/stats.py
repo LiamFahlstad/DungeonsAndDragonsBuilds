@@ -1,6 +1,7 @@
 """Battle statistics configuration."""
 
-from Combat.Definitions import Action, DamageType
+from Combat.Definitions import Action
+from Core.Definitions import DamageType
 
 SPELL_SLOT_LEVELS = range(1, 10)
 

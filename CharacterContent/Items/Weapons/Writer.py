@@ -5,7 +5,7 @@ from Model.Character import Character
 from Utils import DamageCalculator, Html, ItemSheetSettings
 
 from .Base import AbstractWeapon, BonusPart, UnarmedStrike
-from .Enums import WeaponDamageTypes, WeaponProperty
+from Core.Weapons import WeaponDamageTypes, WeaponProperty
 
 _DAMAGE_TYPE_CSS_CLASS = {
     WeaponDamageTypes.SLASHING: "wtag-dmg-slashing",

@@ -25,7 +25,7 @@ from Combat.CombatUIQt.stats import (
     damage_taken_key,
     spell_slots_used_key,
 )
-from Combat.Definitions import DamageType
+from Core.Definitions import DamageType
 
 
 def player_roster() -> list[str]:

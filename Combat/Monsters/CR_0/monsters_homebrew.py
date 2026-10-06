@@ -1,16 +1,12 @@
-from Combat.Definitions import (
-    Alignment,
-    Condition,
-    DamageType,
+from Core.Definitions import Condition, CreatureSize, DamageType
+from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, MonsterType
+from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
     Multiattack,
     RangedAttack,
-    Size,
 )
 from Core.Definitions import Ability, Skill
 
@@ -38,7 +34,7 @@ class Accursed(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="2d8+2",
             speed_ground_ft=20,
@@ -96,7 +92,7 @@ class FreshAccursed(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="4d6",
             speed_ground_ft=30,
@@ -157,7 +153,7 @@ class PhysicalAccursed(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="3d8+3",
             speed_ground_ft=30,
@@ -220,7 +216,7 @@ class ArmoredAccursed(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="5d8+5",
             speed_ground_ft=20,
@@ -290,7 +286,7 @@ class BrainBloatedAccursed(ExtendedCombatantData):
             monster_type=MonsterType.CONSTRUCT,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="4d8+2",
             speed_ground_ft=10,
@@ -362,7 +358,7 @@ class CurseHighAccursed(ExtendedCombatantData):
             monster_type=MonsterType.FEY,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="4d8",
             speed_ground_ft=20,

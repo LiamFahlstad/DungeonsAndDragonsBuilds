@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Callable
 
-from Combat.Definitions import BasicCombatantData
+from Model.Creatures.Combatants import BasicCombatantData
 
 
 @dataclass

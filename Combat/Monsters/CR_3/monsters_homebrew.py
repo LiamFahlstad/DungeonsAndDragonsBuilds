@@ -1,17 +1,16 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
     Multiattack,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -38,7 +37,7 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Curse-Touched",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="voice-amplifying horn and ritual wrappings",
             hp_formula="10d8 + 20",
             speed_ground_ft=30,
@@ -118,7 +117,7 @@ class GarronTheKindly(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Goliath",
             alignment=Alignment.LAWFUL_NEUTRAL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="hide armor, natural bulk",
             hp_formula="10d10 + 10",
             speed_ground_ft=30,
@@ -200,7 +199,7 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Orc",
             alignment=Alignment.LAWFUL_NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="half plate armor",
             hp_formula="9d8 + 27",
             speed_ground_ft=30,
@@ -290,7 +289,7 @@ class Greypaw(ExtendedCombatantData):
             monster_type=MonsterType.BEAST,
             monster_type_note="Mutated",
             alignment=Alignment.UNALIGNED,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="Thick Hide",
             hp_formula="10d10 + 20",
             speed_ground_ft=40,

@@ -2,25 +2,21 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AdultBronzeDragon,
 # AdultGreenDragon, MummyLord, PurpleWorm, SalamanderInfernoMaster,
 # VampireUmbralLord.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -46,7 +42,7 @@ class AdultBronzeDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.LAWFUL_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="17d12 + 102",
             speed_ground_ft=40,
@@ -138,7 +134,7 @@ class AdultGreenDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="18d12 + 90",
             speed_ground_ft=40,
@@ -231,7 +227,7 @@ class MummyLord(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="Cleric",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="25d8 + 75",
             speed_ground_ft=30,
@@ -341,7 +337,7 @@ class PurpleWorm(ExtendedCombatantData):
             monster_type=MonsterType.MONSTROSITY,
             monster_type_note="",
             alignment=Alignment.UNALIGNED,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="15d20 + 90",
             speed_ground_ft=50,
@@ -411,7 +407,7 @@ class SalamanderInfernoMaster(ExtendedCombatantData):
             monster_type=MonsterType.ELEMENTAL,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="27d10 + 108",
             speed_ground_ft=40,
@@ -494,7 +490,7 @@ class VampireUmbralLord(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="22d8 + 88",
             speed_ground_ft=40,

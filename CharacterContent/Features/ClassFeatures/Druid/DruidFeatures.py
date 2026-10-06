@@ -19,7 +19,7 @@ from CharacterContent.Features.Core.Improvements import (
     GrantArmorTraining,
     GrantWeaponProficiency,
 )
-from Combat.Definitions import ExtendedCombatantData
+from Model.Creatures.Combatants import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Character import Character

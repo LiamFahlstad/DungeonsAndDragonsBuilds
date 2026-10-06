@@ -1,16 +1,15 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -40,7 +39,7 @@ class MarshalVirel(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Yellow Cape",
             alignment=Alignment.LAWFUL_NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="breastplate",
             hp_formula="12d8 + 24",
             speed_ground_ft=30,

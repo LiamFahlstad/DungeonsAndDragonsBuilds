@@ -73,22 +73,6 @@ MAY_IMPORT = {
 
 # (file or folder/, layer it imports but shouldn't) - today's offenders.
 LAYER_ALLOWLIST: set[tuple[str, str]] = {
-    # Content uses the combat stat-block types for wild shapes and
-    # companions (Step 5 moves them to Model/Creatures/).
-    ("CharacterContent/Classes/BaseClasses/DruidBase.py", "combat"),
-    ("CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py", "combat"),
-    ("CharacterContent/Features/ClassFeatures/Druid/WildShapeForms.py", "combat"),
-    ("CharacterContent/Features/ClassFeatures/Ranger/PrimalCompanions.py", "combat"),
-    (
-        "CharacterContent/Features/SubClassFeatures2014/Druid/DruidWildfireFeatures.py",
-        "combat",
-    ),
-    (
-        "CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py",
-        "combat",
-    ),
-    # The monster catalog imports the same types (Step 5).
-    ("Combat/Monsters/", "combat"),
     # Content renders companion and wild shape stat blocks itself (Step 6
     # moves rendering out of content).
     ("CharacterContent/Features/ClassFeatures/Druid/WildShapeForms.py", "presentation"),
@@ -104,8 +88,6 @@ LAYER_ALLOWLIST: set[tuple[str, str]] = {
         "CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py",
         "presentation",
     ),
-    # Utils/CreatureStatBlocks.py reads the combat stat-block types (Step 5).
-    ("Utils/CreatureStatBlocks.py", "combat"),
 }
 
 TYPE_CHECKING_ALLOWLIST: set[str] = set()

@@ -12,7 +12,7 @@ from CharacterContent.Items.Items import ItemRarity
 from Core.Definitions import Ability, DiceRollCondition, Skill
 
 from .Base import AbstractWeapon
-from .Enums import (
+from Core.Weapons import (
     WeaponDamageRolls,
     WeaponDamageTypes,
     WeaponMastery,

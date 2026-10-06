@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.Improvements import (
     SpeedBonus,
     WeaponDamageBonus,
 )
-from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from Core.Weapons import WeaponProficiency
 from .Base import Item, ItemCategory, ItemRarity
 
 

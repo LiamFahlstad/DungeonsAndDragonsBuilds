@@ -1,15 +1,14 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
     Multiattack,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -39,7 +38,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Cultist",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="ragged vestments and a bone gorget",
             hp_formula="13d8 + 26",
             speed_ground_ft=30,

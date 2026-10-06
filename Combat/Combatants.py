@@ -1,4 +1,4 @@
-from Combat.Definitions import BasicCombatantData
+from Model.Creatures.Combatants import BasicCombatantData
 
 
 class Pirate(BasicCombatantData):

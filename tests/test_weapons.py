@@ -10,7 +10,7 @@ import pytest
 
 from CharacterContent.Items import Weapons
 from CharacterContent.Items.Weapons.Base import is_proficient_with
-from CharacterContent.Items.Weapons.Enums import (
+from Core.Weapons import (
     WeaponDamageRolls as R,
     WeaponDamageTypes as T,
     WeaponMastery as Ma,

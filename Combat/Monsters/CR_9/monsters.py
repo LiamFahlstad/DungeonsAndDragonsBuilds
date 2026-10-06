@@ -2,24 +2,20 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AbominableYeti, BrazenGorgon,
 # CloudGiant, Glabrezu, GraySlaad, YoungBlueDragon, YoungSilverDragon.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -45,7 +41,7 @@ class AbominableYeti(ExtendedCombatantData):
             monster_type=MonsterType.MONSTROSITY,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="11d12 + 66",
             speed_ground_ft=40,
@@ -125,7 +121,7 @@ class BoneDevil(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Devil",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="17d10 + 68",
             speed_ground_ft=40,
@@ -199,7 +195,7 @@ class BrazenGorgon(ExtendedCombatantData):
             monster_type=MonsterType.CONSTRUCT,
             monster_type_note="",
             alignment=Alignment.UNALIGNED,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="17d10 + 68",
             speed_ground_ft=40,
@@ -269,7 +265,7 @@ class ClayGolem(ExtendedCombatantData):
             monster_type=MonsterType.CONSTRUCT,
             monster_type_note="",
             alignment=Alignment.UNALIGNED,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="13d10 + 52",
             speed_ground_ft=20,
@@ -361,7 +357,7 @@ class CloudGiant(ExtendedCombatantData):
             monster_type=MonsterType.GIANT,
             monster_type_note="",
             alignment=Alignment.NEUTRAL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="16d12 + 96",
             speed_ground_ft=40,
@@ -434,7 +430,7 @@ class FireGiant(ExtendedCombatantData):
             monster_type=MonsterType.GIANT,
             monster_type_note="",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="13d12 + 78",
             speed_ground_ft=30,
@@ -501,7 +497,7 @@ class Glabrezu(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Demon",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="18d10 + 90",
             speed_ground_ft=40,
@@ -580,7 +576,7 @@ class GraySlaad(ExtendedCombatantData):
             monster_type=MonsterType.ABERRATION,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="20d8 + 60",
             speed_ground_ft=40,
@@ -660,7 +656,7 @@ class Nycaloth(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Yugoloth",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="16d10 + 64",
             speed_ground_ft=40,
@@ -737,7 +733,7 @@ class Treant(ExtendedCombatantData):
             monster_type=MonsterType.PLANT,
             monster_type_note="",
             alignment=Alignment.CHAOTIC_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="12d12 + 60",
             speed_ground_ft=30,
@@ -810,7 +806,7 @@ class YoungBlueDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="16d10 + 64",
             speed_ground_ft=40,
@@ -872,7 +868,7 @@ class YoungSilverDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.LAWFUL_GOOD,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="16d10 + 80",
             speed_ground_ft=40,

@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
 )
 
 from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
-from Combat.Definitions import Action, Condition
+from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 
@@ -67,8 +67,8 @@ class SpellsMixin:
         if any(e.get("concentration") for e in char.get("active_spells") or []):
             return
         conditions = char.get("conditions", [])
-        if Condition.CONCENTRATING.value in conditions:
-            conditions.remove(Condition.CONCENTRATING.value)
+        if CombatStatus.CONCENTRATING.value in conditions:
+            conditions.remove(CombatStatus.CONCENTRATING.value)
 
     def _end_concentration_spells(self, char: dict):
         """End every active spell on char that requires concentration. Call this
@@ -339,7 +339,9 @@ class SpellsMixin:
                     remaining_spells.append(entry)
             source["active_spells"] = remaining_spells
             # Concentration always belongs to the caster, regardless of who the spell targets.
-            self._add_condition_to(source, Condition.CONCENTRATING.value, source=source)
+            self._add_condition_to(
+                source, CombatStatus.CONCENTRATING.value, source=source
+            )
 
         # Action economy: the caster spends the action, regardless of who it affects
         try:

@@ -1,15 +1,14 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
     LegendaryResistance,
     MonsterAbility,
-    MonsterType,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -38,7 +37,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
             monster_type=MonsterType.ABERRATION,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="scarred, wound-thick flesh and rusted ritual chains",
             hp_formula="13d10 + 52",
             speed_ground_ft=5,
@@ -125,7 +124,7 @@ class TheHunter(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Cursebound",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="worn leathers and curse-hardened grey skin",
             hp_formula="13d10 + 39",
             speed_ground_ft=35,

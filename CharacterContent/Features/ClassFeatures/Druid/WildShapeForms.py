@@ -3,7 +3,7 @@ from typing import Type
 from CharacterContent.Features.SubClassFeatures.Druid.DruidMoonFeatures import (
     CircleForms,
 )
-from Combat.Definitions import ExtendedCombatantData
+from Model.Creatures.Combatants import ExtendedCombatantData
 from Utils.CreatureStatBlocks import format_creature_stat_block
 from Model.Character import Character
 

@@ -1,17 +1,16 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
     LegendaryResistance,
     MonsterAbility,
-    MonsterType,
     Multiattack,
     NamedAttackAction,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -35,7 +34,7 @@ class TheBellSaint(ExtendedCombatantData):
             saving_throws={},
             spell_slots={},
             cr="9",
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.UNALIGNED,

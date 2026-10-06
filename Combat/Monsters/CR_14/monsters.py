@@ -2,24 +2,20 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AdultBlackDragon,
 # AdultCopperDragon, DeathTyrant, IceDevil.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -45,7 +41,7 @@ class AdultBlackDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="17d12 + 85",
             speed_ground_ft=40,
@@ -133,7 +129,7 @@ class AdultCopperDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.CHAOTIC_GOOD,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="16d12 + 80",
             speed_ground_ft=40,
@@ -221,7 +217,7 @@ class DeathTyrant(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="Beholder",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="26d10 + 52",
             speed_ground_ft=5,
@@ -352,7 +348,7 @@ class IceDevil(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Devil",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="24d10 + 96",
             speed_ground_ft=40,

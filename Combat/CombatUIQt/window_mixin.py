@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Definitions import DamageType
+from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
 from .styles import QSS
 

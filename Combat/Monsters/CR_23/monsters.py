@@ -2,24 +2,20 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: AncientBlueDragon,
 # AncientSilverDragon, Empyrean, Kraken.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -45,7 +41,7 @@ class AncientBlueDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Chromatic",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="26d20 + 208",
             speed_ground_ft=40,
@@ -128,7 +124,7 @@ class AncientSilverDragon(ExtendedCombatantData):
             monster_type=MonsterType.DRAGON,
             monster_type_note="Metallic",
             alignment=Alignment.LAWFUL_GOOD,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="24d20 + 216",
             speed_ground_ft=40,
@@ -216,7 +212,7 @@ class BlobOfAnnihilation(ExtendedCombatantData):
             monster_type=MonsterType.OOZE,
             monster_type_note="Titan",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="23d20 + 207",
             speed_ground_ft=30,
@@ -283,7 +279,7 @@ class Empyrean(ExtendedCombatantData):
             monster_type=None,
             monster_type_note="Celestial or Fiend (Titan)",
             alignment=Alignment.NEUTRAL,
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             ac_note="",
             hp_formula="21d12 + 210",
             speed_ground_ft=50,
@@ -381,7 +377,7 @@ class Kraken(ExtendedCombatantData):
             monster_type=MonsterType.MONSTROSITY,
             monster_type_note="Titan",
             alignment=Alignment.CHAOTIC_EVIL,
-            size=Size.GARGANTUAN,
+            size=CreatureSize.GARGANTUAN,
             ac_note="",
             hp_formula="26d20 + 208",
             speed_ground_ft=30,

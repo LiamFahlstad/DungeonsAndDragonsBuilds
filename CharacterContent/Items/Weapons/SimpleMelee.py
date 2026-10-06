@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
-from .Enums import (
+from Core.Weapons import (
     WeaponMastery,
     WeaponProperty,
     WeaponType,

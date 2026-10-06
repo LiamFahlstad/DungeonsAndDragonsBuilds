@@ -8,9 +8,9 @@ from PyQt6.QtWidgets import QApplication
 
 import Core.Definitions as Definitions
 from CharacterContent.Items import Armor
-from Combat.Definitions import (
+from Combat.Definitions import tracked_condition_names
+from Model.Creatures.Combatants import (
     BasicCombatantData,
-    Condition,
     ExtendedCombatantData,
     Visibility,
 )
@@ -69,7 +69,7 @@ class CombatAppQt(
         for c in combatants:
             self._add_basic_combatant(c)
 
-        self.conditions = Condition.list_all()
+        self.conditions = tracked_condition_names()
         self.visibility_states = Visibility.list_all()
         self.selected_character: dict | None = None
         self.target_characters: list[dict] = []

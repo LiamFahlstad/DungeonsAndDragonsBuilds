@@ -1,18 +1,17 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
     Multiattack,
     RangedAttack,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -39,7 +38,7 @@ class CommonCultist(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Cultist",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="scavenged padding",
             hp_formula="5d8+5",
             speed_ground_ft=30,
@@ -129,7 +128,7 @@ class AccursedGroupOf3(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.LARGE,
+            size=CreatureSize.LARGE,
             ac_note="",
             hp_formula="8d6+4",
             speed_ground_ft=20,
@@ -201,7 +200,7 @@ class CurseCracked(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="unnaturally cracked hide",
             hp_formula="5d8+5",
             speed_ground_ft=30,
@@ -279,7 +278,7 @@ class CurseBodyBroken(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="grotesquely warped bone and hide",
             hp_formula="5d8+10",
             speed_ground_ft=30,
@@ -364,7 +363,7 @@ class CurseMindBroken(ExtendedCombatantData):
             monster_type=MonsterType.UNDEAD,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="curse-flesh where a face should be",
             hp_formula="5d8+5",
             speed_ground_ft=30,

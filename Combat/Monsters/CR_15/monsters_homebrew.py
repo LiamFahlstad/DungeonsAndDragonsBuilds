@@ -1,19 +1,18 @@
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    ExtendedCombatantData,
     LegendaryResistance,
     MeleeAttack,
     MonsterAbility,
-    MonsterType,
     Multiattack,
     NamedAttackAction,
-    Size,
-    Skill,
 )
 from Core.Definitions import Ability
 
@@ -37,7 +36,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
             saving_throws={Ability.WISDOM: 4},
             spell_slots={},
             cr="15",
-            size=Size.HUGE,
+            size=CreatureSize.HUGE,
             monster_type=MonsterType.DRAGON,
             monster_type_note="",
             alignment=Alignment.NEUTRAL_EVIL,

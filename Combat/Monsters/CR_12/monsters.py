@@ -2,24 +2,20 @@
 #
 # NOTE: entries whose freeform description names a save DC (e.g. "DC 15 Wisdom
 # saving throw") without matching a full structured template have been wrapped
-# in DcMonsterAbility (see Combat/Definitions.py) so extract_dc() can still
+# in DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still
 # read the DC back out for the combat UI, without rewriting the entry as a
 # fully structured subclass. Affected classes: Arcanaloth, Archmage,
 # Archpriest, Erinyes, GithzeraiPsion, QuestingKnight.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Combat.Definitions import (
+from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Model.Creatures.Combatants import (
     Alignment,
-    Condition,
-    DamageType,
     DamageTypeEntry,
-    DcMonsterAbility,
     ExtendedCombatantData,
-    MonsterAbility,
     MonsterType,
-    Size,
-    Skill,
 )
+from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
 
 
@@ -50,7 +46,7 @@ class Arcanaloth(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Yugoloth",
             alignment=Alignment.NEUTRAL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="27d8 + 54",
             speed_ground_ft=30,
@@ -149,7 +145,7 @@ class Archmage(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Wizard",
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="31d8 + 31",
             speed_ground_ft=30,
@@ -231,7 +227,7 @@ class Archpriest(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="Cleric",
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="32d8 + 96",
             speed_ground_ft=30,
@@ -309,7 +305,7 @@ class Erinyes(ExtendedCombatantData):
             monster_type=MonsterType.FIEND,
             monster_type_note="Devil",
             alignment=Alignment.LAWFUL_EVIL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="21d8 + 84",
             speed_ground_ft=30,
@@ -397,7 +393,7 @@ class GithzeraiPsion(ExtendedCombatantData):
             monster_type=MonsterType.ABERRATION,
             monster_type_note="Gith",
             alignment=Alignment.LAWFUL_NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="26d8 + 52",
             speed_ground_ft=40,
@@ -467,7 +463,7 @@ class PirateAdmiral(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="",
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="28d8 + 56",
             speed_ground_ft=30,
@@ -550,7 +546,7 @@ class QuestingKnight(ExtendedCombatantData):
             monster_type=MonsterType.HUMANOID,
             monster_type_note="",
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="",
             hp_formula="27d8 + 81",
             speed_ground_ft=30,

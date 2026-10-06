@@ -1,13 +1,9 @@
 from enum import Enum
 from typing import Optional
 
-from Combat.Definitions import (
-    Alignment,
-    ExtendedCombatantData,
-    MonsterAbility,
-    MonsterType,
-    Size,
-)
+from Core.Definitions import CreatureSize
+from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, MonsterType
+from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Utils.CreatureStatBlocks import format_creature_stat_block
 from Model.Character import Character
@@ -84,7 +80,7 @@ class BeastOfTheLand(ExtendedCombatantData):
             cr="None",
             monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"5 + five times your Ranger level ({ranger_level} d8 Hit Dice)",
             speed_ground_ft=40,
@@ -149,7 +145,7 @@ class BeastOfTheSea(ExtendedCombatantData):
             cr="None",
             monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
-            size=Size.MEDIUM,
+            size=CreatureSize.MEDIUM,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"5 + five times your Ranger level ({ranger_level} d8 Hit Dice)",
             speed_ground_ft=5,
@@ -216,7 +212,7 @@ class BeastOfTheSky(ExtendedCombatantData):
             cr="None",
             monster_type=MonsterType.BEAST,
             alignment=Alignment.NEUTRAL,
-            size=Size.SMALL,
+            size=CreatureSize.SMALL,
             ac_note="13 plus your Wisdom modifier",
             hp_formula=f"4 + four times your Ranger level ({ranger_level} d6 Hit Dice)",
             speed_ground_ft=10,
