@@ -637,11 +637,13 @@ class Character:
         level `max_level`: the levels taken so far follow the classes
         actually taken, and later levels carry on in the most recently taken
         class. None when the class taken at some level isn't recorded."""
-        taken = [
-            self.class_by_character_level.get(level)
-            for level in range(1, self.character_level + 1)
-        ]
-        if not taken or None in taken:
+        taken: list[CharacterClass] = []
+        for level in range(1, self.character_level + 1):
+            character_class = self.class_by_character_level.get(level)
+            if character_class is None:
+                return None
+            taken.append(character_class)
+        if not taken:
             return None
         class_path = taken + [taken[-1]] * (max_level - len(taken))
         return self.ledger.spellcasting.slot_progression(class_path)

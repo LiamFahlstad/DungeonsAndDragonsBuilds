@@ -13,14 +13,16 @@ carrying capacity read.
 
 from __future__ import annotations
 
-from typing import Optional, Sequence
+from typing import Generic, Optional, Sequence, TypeVar
 
 import attr
 
 from Model.Sources import ArmorGear, Gear
 
+GearT = TypeVar("GearT", bound=Gear)
 
-class Bought:
+
+class Bought(Generic[GearT]):
     """Wrap an item passed to add_adventuring_gear() to mark it as
     purchased rather than found. Bought(item) pays the item's own catalog
     value; Bought(item, price=X) overrides the amount actually paid (e.g.
@@ -29,7 +31,7 @@ class Bought:
 
     def __init__(
         self,
-        item: Gear,
+        item: GearT,
         price: Optional[float] = None,
     ):
         self.item = item
@@ -57,8 +59,8 @@ class EquipmentEntry:
 
 
 def _unwrap_bought(
-    maybe_bought: Gear | Bought,
-) -> tuple[Gear, Optional[float]]:
+    maybe_bought: GearT | Bought[GearT],
+) -> tuple[GearT, Optional[float]]:
     if isinstance(maybe_bought, Bought):
         price = (
             maybe_bought.price
@@ -156,9 +158,9 @@ class Inventory:
     def add_adventuring_gear(
         self,
         label: str,
-        armor: Optional[Sequence[ArmorGear | Bought]] = None,
-        weapons: Optional[Sequence[Gear | Bought]] = None,
-        items: Optional[Sequence[tuple[Gear | Bought, int]]] = None,
+        armor: Optional[Sequence[ArmorGear | Bought[ArmorGear]]] = None,
+        weapons: Optional[Sequence[Gear | Bought[Gear]]] = None,
+        items: Optional[Sequence[tuple[Gear | Bought[Gear], int]]] = None,
         gold: float = 0,
     ) -> EquipmentEntry:
         """Record gear picked up after character creation as its own labeled

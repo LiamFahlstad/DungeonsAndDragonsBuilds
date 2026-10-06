@@ -31,7 +31,7 @@ class Grants:
         self.character = character
         self.level = level
         self.granted_by = granted_by
-        self.kind = kind
+        self.kind: GrantKind = kind
 
     # -- Features ---------------------------------------------------------------
 

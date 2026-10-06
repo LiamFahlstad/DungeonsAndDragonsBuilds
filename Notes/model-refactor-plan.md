@@ -357,6 +357,58 @@ Rules of thumb:
   - Rewrite the "Where things live" and "What enforces this" sections of `Notes/feature-application-model.md` to match section 2b, and update `.claude/agents/dnd-builds.md` (the pipeline, key APIs, `Grants`, `extends=`, and the `Model/` rows).
   - Final run under both hash seeds, plus `-m slow`.
 
+### Follow-ups
+
+Found during Steps 0–11, and left out because they're beyond what this plan set out to do. Each is its own commit, and each is verified like the steps above.
+
+### Step 12: Type-check the Model *(small; Decision 4)* — done
+
+- **Result:** `pyright-model.json` (basic mode, `Model/` only) is run by `./typecheck.sh`, which is check D. It's deliberately not named `pyrightconfig.json`, so it doesn't change what Pylance reports in the editor. pyright found three real typing gaps in `Model/`, all fixed:
+  - `Character.slot_progression` passed a list that could hold `None`;
+  - `Grants.kind` widened from `GrantKind` to `str`;
+  - `Inventory` lost `ArmorGear` when unwrapping `Bought`. `Bought` and `_unwrap_bought` are now generic.
+
+  It now reports 0 errors.
+- **Hand-offs:** a one-off check of the writers found the expected hand-offs: `extensions_of()` returns `GrantedFeature` where the writer wants `Feature`. They're narrowed at the boundary, with `_as` in the writer and an `isinstance` assert in `Feature.write_to_file`.
+- **Left out of scope:** one older error. `_write_scroll_body` is typed `Item` but reads `Scroll.save_dc`/`attack_bonus`. Narrowing it to `Scroll` would raise for a scroll-category item that isn't a `Scroll`, which is a content/presentation decision. Fix that first if the writers should join check D.
+- No output change.
+
+- **Goal:** a checker, not just tests, verifies the Protocols and the layering.
+- **Changes:**
+  - Add a dev-only `pyright` config (basic mode) scoped to `Model/`, and run it as check D.
+  - Fix what it finds. Expect hand-offs from Protocol-typed lists to code that wants concrete types: the writer reads `data.fighting_styles` as `FightingStyle`, and `top_level_features()` as `Feature`. Either narrow at the boundary with one helper (the writer's `_as`), or widen the writer's parameters to the Protocol.
+- **Verify:** A, B, C, D. No output change.
+
+### Step 13: Feature labels come from the stamp *(deliberate output change)*
+
+- **Goal:** a card's "Bard Level 9" label always matches where the feature was granted, and builders stop changing features before granting them.
+- **Why:**
+  - **The labels can be wrong.** Since Step 10, a card sits on its stamped level page, but its label is still the feature's hard-coded `origin` default. 47 cards disagree with their page: the second Bard/Rogue Expertise says "Level 1", and the level 13 Mystic Arcanum says "Level 11".
+  - **Builders mutate features.** 68 builder sites set `feature.origin = f"... Level {self.level}"` on builder-owned instances.
+- **Changes:**
+  - The writer labels a card from `character.stamp_of(feature)`: `"{granted_by} Level {level}"` for a class or subclass grant, the source name otherwise.
+  - Keep a feature's own `origin` only where it says something the stamp can't (e.g. "Maneuver").
+  - Delete the 68 `.origin = ...` assignments.
+- **Verify:** regenerate sheet hashes on purpose. Check with the card-extraction compare from Step 10 that only labels changed. The stats don't move.
+
+### Step 14: Content checks the model can now make *(content fixes, small rules)*
+
+- **Goal:** turn this refactor's content findings into validation, and fix the builds they flag.
+- **Changes:**
+  - `validate()` rejects the same feat granted twice when the feat isn't repeatable. 24 example builds grant "Tough" or "Alert" both from the background and from the species: fix each by picking a different feat, or confirm it with you.
+  - Review the six builds whose duplicate-producing spell swap Step 9 removed (Sable, Faelan, Marlowe, Titus, Iselle, Balder), and give each the spell it was meant to swap in.
+- **Verify:** A, B, C. Sheet hashes move only for the fixed builds. Review each with `diff -r` against a dump.
+
+### Step 15: Every grant goes through a scope *(mechanical)*
+
+- **Goal:** no grant is stamped "Other" by accident, and the scope is the only way to grant.
+- **Changes:**
+  - Make `level`, `kind` and `granted_by` required on `Character.add_feature` / `add_spell`, so only `Grants` (and tests, explicitly) pass them.
+  - Give tests and tools a `Grants(character, ...)` helper instead.
+  - Make `add_features(self, data: Grants) -> None`: the 935 `return data` lines go, because nothing uses the return value since Step 9.
+  - Optional: index `stamp_of` by `id(feature)`. It scans `feature_grants` on every call, and the sheet sorts call it often.
+- **Verify:** A, B, C. No output change.
+
 ---
 
 ## 4. Verification (every step)
@@ -368,8 +420,8 @@ python -m pytest tests/test_build_snapshots.py -q && git diff --exit-code tests/
 ./run_tests.sh -q
 # C. smoke: every build renders
 python RunCharacterCreator.py
-# D. type check (from Step 3 on, if Decision 4 is yes)
-pyright Model/
+# D. type check (Step 12)
+./typecheck.sh
 ```
 
 - When a step legitimately changes output (only Steps 2 and 10 may), regenerate with `UPDATE_SNAPSHOTS=1 python -m pytest tests/test_build_snapshots.py`, `diff -r` a `SNAPSHOT_DUMP_DIR` dump against the `refactor-baseline` dump, and explain the diff in the commit message.
@@ -401,4 +453,4 @@ pyright Model/
    - Resolve by a fixed rule: for example, the higher caster type wins.
 
    Tools are not a conflict. The same tool from two sources is merged (section 2c).
-4. **Add a type checker (pyright, basic mode, dev-only, scoped to `Model/`)?** *(recommended)* Without one, nothing checks that features and items really satisfy the `Effect`/`Gear` Protocols, or that removing `TYPE_CHECKING` left the annotations correct. Pylance in VS Code already uses pyright, so the only new thing is running it as check D. If you say no, drop D and rely on the Step 3 conformance test.
+4. **Add a type checker (pyright, basic mode, dev-only, scoped to `Model/`)?** *(recommended; done in Step 12)* Without one, nothing checks that features and items really satisfy the `Effect`/`Gear` Protocols, or that removing `TYPE_CHECKING` left the annotations correct. Pylance in VS Code already uses pyright, so the only new thing is running it as check D. If you say no, drop D and rely on the Step 3 conformance test.

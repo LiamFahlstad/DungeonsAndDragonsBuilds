@@ -1406,7 +1406,7 @@ class HtmlCharacterSheetWriter:
         extensions_by_level: dict[int, list[tuple[Feature, Feature]]] = {}
         for feature in features:  # Iterate full list, not just text_features
             parent_level = self._feature_level(data, feature)
-            for extension in data.extensions_of(feature):
+            for extension in [_as(e, Feature) for e in data.extensions_of(feature)]:
                 ext_level = self._feature_level(data, extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page

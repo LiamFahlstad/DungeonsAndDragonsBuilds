@@ -666,6 +666,9 @@ class Feature:
             file.write(self._uses_html(self.uses) + "\n")
 
         for extension in character.extensions_of(self):
+            # The Model holds features as GrantedFeature (Model/Sources.py);
+            # an extension of a Feature is always a Feature.
+            assert isinstance(extension, Feature)
             ext_level = character.stamp_of(extension).level
             parent_level = character.stamp_of(self).level
 
