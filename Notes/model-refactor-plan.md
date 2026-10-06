@@ -344,7 +344,12 @@ Rules of thumb:
   - The stats goldens must not move.
   - Then run A, B, C, D, `-m slow`, and the snapshots under both hash seeds.
 
-### Step 11: Tidy the sources and finish *(small)*
+### Step 11: Tidy the sources and finish *(small)* — done
+
+- **Result:**
+  - **No grouping of sources.** `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields, documented as sources. Grouping them would rewrite ~40 builder lines to save two names, which isn't a net win.
+  - **`DerivedBonus` is gone.** Every part uses `Formula`.
+  - **Docs.** `Notes/feature-application-model.md` gained "Where things live" (the source / ledger / query table and the layering), its pipeline and parts sections match the code, and "What enforces all this" lists every test file. `.claude/agents/dnd-builds.md` and `dnd-builds-haiku.md` describe the pipeline, key APIs and `Model/` layout as they are now.
 
 - **Changes:**
   - Group species facts (`size`, `base_speed`) into a `SpeciesTraits` source, and group `spell_casting_ability` and `fixed_spell_slots` into a `SpellcastingSource`. Do each grouping only if it is a net win after counting callers (`size` is written 27 times, `base_speed` 21, `spell_casting_ability` 14). Otherwise leave them as flat scalar fields and document them as sources.

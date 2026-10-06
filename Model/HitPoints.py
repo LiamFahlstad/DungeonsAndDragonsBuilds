@@ -1,5 +1,5 @@
-from Model.Bonuses import Bonuses, DerivedBonus
-from Model.Contracts import StatView
+from Model.Bonuses import Bonuses
+from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
 
@@ -18,7 +18,7 @@ class HitPoints(Recorder):
         self.bonuses.add(amount)
 
     @records
-    def add_derived_bonus(self, bonus: DerivedBonus) -> None:
+    def add_derived_bonus(self, bonus: Formula) -> None:
         self.bonuses.add_formula(bonus)
 
     def total(self, view: StatView) -> int:

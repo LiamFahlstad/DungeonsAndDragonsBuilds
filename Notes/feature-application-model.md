@@ -33,9 +33,9 @@ There is one object, `Character` (`Model/Character.py`). It holds the player's d
 the sources they grant (features, spells, fighting styles, `inventory`, base ability scores and
 speed), and answers every query (`calculate_armor_class()`, `get_skill_modifier()`, ...).
 
-Evaluation is internal and lazy. The first query after a change builds a fresh `Effects` record
-(`Model/Effects.py`: one part per concern, see below), starting from a copy of the base
-ability scores, the base speed and the class spellcasting ability, then:
+Evaluation is internal and lazy. The first query after a change builds a fresh, empty `Ledger`
+(`Model/Effects.py`: one part per concern, see below) - no part starts from a copy of a source -
+then:
 
 | # | Stage | What runs |
 |---|---|---|
@@ -53,6 +53,32 @@ The evaluation is cached under a version key: the character's own version (bumpe
 inventory's version (bumped by every gear change), and the effect order (`_apply_order`, a
 test seam). Extensions are sources on the character like any other grant, so declaring one
 re-evaluates too.
+
+## Where things live
+
+`Character` has exactly three kinds of public member, and the name says which:
+
+| Kind | Question it answers | Where it lives | Example |
+|---|---|---|---|
+| **Source** | What did the player choose, or what were they granted? | A field on `Character`, set by a builder (`add_*` / `set_*`, or through a `Grants` scope) | `class_levels`, `base_abilities`, `base_speed`, `size`, `spell_casting_ability`, `fixed_spell_slots`, `feature_grants`, `spell_grants`, `inventory` |
+| **Ledger** | What did the effects record? | `character.ledger.<part>`: evaluated on demand, sealed, read-only. A part holds only what effects recorded - never a copy of a source, never a final value | `character.ledger.skills`, `character.ledger.senses` |
+| **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `StatView`) to a part's resolver | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features` |
+
+Rules of thumb:
+
+- Anything derived is not stored on `Character`; a source is never copied into a part.
+- Builder bookkeeping (the level being granted, who grants it) lives in the builder's `Grants`
+  scope (`Model/Grants.py`), never on `Character`.
+- A feature is never changed after it's granted: a later level's addition is its own grant
+  (an extension, a spell).
+- `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields:
+  grouping them into objects would rewrite ~40 builder lines to save two names.
+
+The `Model` package imports only point down: `Core` → `Model/Contracts.py` (Protocols: `StatView`,
+`Formula`) → the parts → `Model/Effects.py` (`Ledger`, `Effects`) and `Model/Sources.py`
+(Protocols for features, fighting styles and gear) → `Model/Character.py` → `Model/Grants.py`. It
+never imports `CharacterContent`, not even for type hints, and nothing in the repo uses
+`if TYPE_CHECKING:` (`tests/test_model_layering.py`).
 
 ## How each value is worked out on read
 
@@ -169,12 +195,12 @@ query on `Character` is one line that hands itself to a resolver. No part import
 `CharacterContent`.
 
 `Bonuses` (`Model/Bonuses.py`) is a small value object - flat values and formulas
-(`DerivedBonus`), each with a source label - shared by every part that is "a bonus total plus
+(`Formula`, from `Model/Contracts.py`), each with a source label - shared by every part that is "a bonus total plus
 sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `SavingThrows` each hold
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
 flat-list/formula-list/source-list shape themselves.
 
-| Part (`character.<attr>`) | Owns |
+| Part (`character.ledger.<attr>`) | Owns |
 |---|---|
 | `equipment_training` (`EquipmentTraining`) | `weapon_proficiencies`, `armor_training`, `tool_proficiencies`, `has_shield_training` |
 | `languages` (`Languages`) | Known languages, each with sources (`knows`, `sources`, `add`) |
@@ -192,7 +218,7 @@ flat-list/formula-list/source-list shape themselves.
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags and a `Bonuses` per skill/ability; `modifier(_, view)`, `roll_condition(_, view)`, and for skills `ability(skill, view)` and `roll_condition_reasons(skill, view)` |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
 
-Every part is exposed directly under its own name, for reading. Recording goes through
+Every part is read through `character.ledger`. Recording goes through
 `Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
 each write one part; `Character` has none of them, and once the `Ledger` is evaluated it is
 sealed (`Model/Recorder.py`): every part mutator raises `SealedError`, so nothing can record onto
@@ -254,7 +280,20 @@ their weapon bonuses on the stat block (`weapon_bonuses`), and mastery is worked
 
 ## What enforces all this
 
-All in `tests/test_feature_apply_order.py`:
+The whole model:
+
+| Test file | Catches |
+|---|---|
+| `test_order_invariance.py` | Every build's rendered sheet (full and concise) is identical when its effects apply in another order, and when its features, extensions, spells and replacements are granted in another order (`-m slow` adds reversed order and three more shuffles) |
+| `test_part_merge_rules.py` | Every part gives the same answer for the same contributions in every permutation, including the order of listed sources; conflicting grants raise |
+| `test_part_resolvers.py` | Every part works out its final values from a fake `StatView`, with no builder and no `Character` |
+| `test_contracts.py` | `Character` really satisfies `StatView` (every member called), `Effects` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
+| `test_model_layering.py` | No `TYPE_CHECKING` anywhere; `Model` imports nothing from `CharacterContent`, `Builds` or `Utils` |
+| `test_spell_grants.py` | Spell stamping, duplicate and replacement rules, and order-free spell grants |
+| `test_character_model.py` | The sealed `Ledger`, `add_effect`, immutable base scores, declared extensions (either order, `if_missing`, errors) and grant stamps |
+| `test_build_snapshots.py` | Every build's stats and every rendered page against golden snapshots |
+
+The feature pipeline in particular, in `tests/test_feature_apply_order.py`:
 
 | Test | Catches |
 |---|---|
@@ -263,7 +302,7 @@ All in `tests/test_feature_apply_order.py`:
 | `TestCompetingEffectsNeverOverwrite` | Unarmored Defenses don't stack, armor and Shield interactions, Defense, roll-condition cancelling, skill-ability overrides and multiclass spell slots, in every permutation |
 | `test_effects_can_only_record` | `Effects` exposes only `add_*`/`set_*`/`register_*` methods and holds nothing but its private record |
 | `test_evaluation_passes_apply_the_write_only_record` | Every build's evaluation hands `apply()` an `Effects`, never the `Character` |
-| `test_content_never_reaches_into_the_record` | **Static:** no code in `CharacterContent` touches `Effects._parts` |
+| `test_content_never_reaches_into_the_record` | **Static:** no code in `CharacterContent` touches `Effects._ledger` |
 | `TestModifierBonusesTrackLaterScoreIncreases`, `TestJackOfAllTrades`, `TestExpertiseRequirement`, `TestExtensionsApply`, `test_dropped_gear_does_not_leave_bonuses_on_weapons` | Formula features, validation, extensions and equipment isolation |
 
 The shuffle test was checked by mutation: resolving capped increases in grant order fails many

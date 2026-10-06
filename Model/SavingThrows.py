@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
-from Model.Bonuses import Bonuses, DerivedBonus
-from Model.Contracts import StatView
+from Model.Bonuses import Bonuses
+from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
 
@@ -67,7 +67,7 @@ class SavingThrows(Recorder):
         self._bonuses_for(ability).add(bonus)
 
     @records
-    def add_derived_bonus(self, ability: Ability, bonus: DerivedBonus) -> None:
+    def add_derived_bonus(self, ability: Ability, bonus: Formula) -> None:
         self._bonuses_for(ability).add_formula(bonus)
 
     def get_total_bonus(self, ability: Ability, view: StatView) -> int:

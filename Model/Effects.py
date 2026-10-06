@@ -16,9 +16,8 @@ from Core.SpellcastingRules import CasterType
 from Model.AbilityRequirements import AbilityRequirements
 from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
-from Model.Bonuses import DerivedBonus
 from Model.CarryingCapacity import CarryingCapacity
-from Model.Contracts import StatView
+from Model.Contracts import Formula, StatView
 from Model.Defenses import Defenses
 from Model.EquipmentTraining import EquipmentTraining
 from Model.HitPoints import HitPoints
@@ -124,7 +123,7 @@ class Effects:
     requirements. It has no way to read anything back - not a score, not a
     proficiency, not even the character's level - because effects apply in no
     particular order, and a value read while they apply could still change.
-    Anything that depends on another stat is a formula (a DerivedBonus,
+    Anything that depends on another stat is a formula (a Formula,
     `lambda character: ...`), evaluated against the finished Character when
     it's read. See Notes/feature-application-model.md."""
 
@@ -162,7 +161,7 @@ class Effects:
         self._ledger.skills.add_skill_bonus(skill, bonus, source)
 
     def add_derived_skill_bonus(
-        self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
+        self, skill: Skill, bonus: Formula, source: str = "Other"
     ) -> None:
         self._ledger.skills.add_derived_bonus(skill, bonus, source)
 
@@ -191,9 +190,7 @@ class Effects:
     def add_saving_throw_bonus(self, ability: Ability, bonus: int) -> None:
         self._ledger.saving_throws.add_bonus(ability, bonus)
 
-    def add_derived_saving_throw_bonus(
-        self, ability: Ability, bonus: DerivedBonus
-    ) -> None:
+    def add_derived_saving_throw_bonus(self, ability: Ability, bonus: Formula) -> None:
         self._ledger.saving_throws.add_derived_bonus(ability, bonus)
 
     # ── Armor Class and worn armor ──────────────────────────────────────────
@@ -204,7 +201,7 @@ class Effects:
     def add_armor_class_bonus(self, bonus: int) -> None:
         self._ledger.armor_class.add_bonus(bonus)
 
-    def add_derived_armor_class_bonus(self, bonus: DerivedBonus) -> None:
+    def add_derived_armor_class_bonus(self, bonus: Formula) -> None:
         self._ledger.armor_class.add_derived_bonus(bonus)
 
     def set_worn_armor(self, armor_type: ArmorType, name: str) -> None:
@@ -221,13 +218,13 @@ class Effects:
     def add_hit_points_bonus(self, amount: int) -> None:
         self._ledger.hit_points.add_bonus(amount)
 
-    def add_derived_hit_points_bonus(self, bonus: DerivedBonus) -> None:
+    def add_derived_hit_points_bonus(self, bonus: Formula) -> None:
         self._ledger.hit_points.add_derived_bonus(bonus)
 
     def add_speed_bonus(self, bonus: int) -> None:
         self._ledger.speed.add_bonus(bonus)
 
-    def add_derived_speed_bonus(self, bonus: DerivedBonus) -> None:
+    def add_derived_speed_bonus(self, bonus: Formula) -> None:
         self._ledger.speed.add_derived_bonus(bonus)
 
     def add_carrying_capacity_bonus(self, source: str, bonus: int) -> None:
@@ -244,7 +241,7 @@ class Effects:
     def add_initiative_bonus(self, bonus: int) -> None:
         self._ledger.initiative.add_bonus(bonus)
 
-    def add_derived_initiative_bonus(self, bonus: DerivedBonus) -> None:
+    def add_derived_initiative_bonus(self, bonus: Formula) -> None:
         self._ledger.initiative.add_derived_bonus(bonus)
 
     # ── Spellcasting ────────────────────────────────────────────────────────

@@ -1,8 +1,8 @@
 from typing import Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
-from Model.Bonuses import Bonuses, DerivedBonus
-from Model.Contracts import StatView
+from Model.Bonuses import Bonuses
+from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
 
@@ -43,7 +43,7 @@ class Skills(Recorder):
 
     @records
     def add_derived_bonus(
-        self, skill: Skill, bonus: DerivedBonus, source: str = "Other"
+        self, skill: Skill, bonus: Formula, source: str = "Other"
     ) -> None:
         self._bonuses_for(skill).add_formula(bonus, source)
 
