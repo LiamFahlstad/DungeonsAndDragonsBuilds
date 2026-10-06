@@ -16,8 +16,6 @@ without a cycle.
 
 from __future__ import annotations
 
-import collections
-
 from typing import Any, Callable, Iterator, Optional, Sequence
 
 import attr
@@ -400,9 +398,7 @@ class Character:
 
     # ── Evaluation ───────────────────────────────────────────────────────────
 
-    def iter_stat_effects(
-        self, features: Optional[list[GrantedFeature]] = None
-    ) -> list[Effect]:
+    def iter_stat_effects(self) -> list[Effect]:
         """Everything that records effects: features and their extensions,
         armor, weapons, items, fighting styles (only those with a computed
         effect - Defense, Archery, Dueling, ... - record anything) and extra
@@ -410,10 +406,8 @@ class Character:
         the order is irrelevant. (Proficiencies come from features too - e.g.
         ClassProficiencies.) Weapons are never changed: bonuses the wielder
         brings to them are recorded in weapon_bonuses."""
-        if features is None:
-            features = list(self.iter_features_with_extensions())
         return [
-            *features,
+            *self.iter_features_with_extensions(),
             *self.armors,
             *self.weapons,
             *(item for item, _quantity in self.items),
@@ -510,20 +504,15 @@ class Character:
         """A feat that isn't Repeatable can be taken only once - from the
         background, the species and every Ability Score Improvement level
         together."""
-        counts = collections.Counter(
-            type(feature)
-            for feature in self.iter_features_with_extensions()
-            if not feature.repeatable
-        )
-        for feature_type, count in counts.items():
-            if count > 1:
-                name = next(
-                    f.name
-                    for f in self.iter_features_with_extensions()
-                    if type(f) is feature_type
-                )
+        grants_by_type: dict[type, list[GrantedFeature]] = {}
+        for feature in self.iter_features_with_extensions():
+            if not feature.repeatable:
+                grants_by_type.setdefault(type(feature), []).append(feature)
+        for grants in grants_by_type.values():
+            if len(grants) > 1:
                 raise ValueError(
-                    f"{name} is granted {count} times, but it isn't Repeatable."
+                    f"{grants[0].name} is granted {len(grants)} times, "
+                    "but it isn't Repeatable."
                 )
 
     def validate(self) -> "Character":

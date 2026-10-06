@@ -240,15 +240,9 @@ class Inventory:
         see get_starting_item() for a lookup scoped to starting gear only."""
         if isinstance(item, type):
             item = self._find_item_by_type(item)
-        owned = (
-            [self._unarmed_strike]
-            + [a for entry in self._entries for a in entry.armors]
-            + [w for entry in self._entries for w in entry.weapons]
-            + [i for entry in self._entries for i, _ in entry.items]
-        )
-        if not any(o is item for o in owned):
+        if not any(owned is item for owned in self._all_gear()):
             raise ValueError(
-                f"Cannot drop {getattr(item, 'name', item)!r}: it isn't in this "
+                f"Cannot drop {item.name!r}: it isn't in this "
                 "character's equipment (already dropped, or never added?)."
             )
         self.version += 1
@@ -258,6 +252,18 @@ class Inventory:
             entry.armors = [a for a in entry.armors if a is not item]
             entry.weapons = [w for w in entry.weapons if w is not item]
             entry.items = [(i, q) for i, q in entry.items if i is not item]
+
+    def _all_gear(self) -> list[Gear]:
+        """Every armor, weapon and item instance in every entry, plus the
+        Unarmed Strike (unstacked: one entry per instance added)."""
+        gear: list[Gear] = []
+        if self._unarmed_strike is not None:
+            gear.append(self._unarmed_strike)
+        for entry in self._entries:
+            gear.extend(entry.armors)
+            gear.extend(entry.weapons)
+            gear.extend(item for item, _quantity in entry.items)
+        return gear
 
     def consume_item(self, item_type: type, quantity: int = 1) -> None:
         """Reduce a stackable item's quantity (use 1 of 5 potions, fire 3 of
@@ -312,16 +318,19 @@ class Inventory:
         """Same-type item stacks are merged across entries, since that's what
         carrying-capacity math expects: the first-seen instance of a type
         absorbs later same-type quantities."""
-        merged: list[tuple[Gear, int]] = []
+        first_of_type: dict[type, Gear] = {}
+        quantity_of_type: dict[type, int] = {}
         for entry in self._entries:
             for item, quantity in entry.items:
-                for i, (existing_item, existing_quantity) in enumerate(merged):
-                    if type(existing_item) is type(item):
-                        merged[i] = (existing_item, existing_quantity + quantity)
-                        break
-                else:
-                    merged.append((item, quantity))
-        return merged
+                item_type = type(item)
+                if item_type not in first_of_type:
+                    first_of_type[item_type] = item
+                    quantity_of_type[item_type] = 0
+                quantity_of_type[item_type] += quantity
+        return [
+            (item, quantity_of_type[item_type])
+            for item_type, item in first_of_type.items()
+        ]
 
     @property
     def starting_gold(self) -> Optional[float]:

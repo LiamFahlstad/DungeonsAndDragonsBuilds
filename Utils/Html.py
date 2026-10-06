@@ -25,7 +25,22 @@ CURRENT_PREFIX = "[CURRENT:"
 CURRENT_SUFFIX = "]"
 
 
-def _bold_prefix(line: str, separator: str, max_words: int):
+# A lead-in is bolded when it's a short phrase ending in "." (a name, as in
+# "Rage. You can ...") or a longer one ending in ":".
+_PERIOD_LEAD_IN_MAX_WORDS = 5
+_COLON_LEAD_IN_MAX_WORDS = 10
+
+
+def bold_lead_in(line: str) -> str | None:
+    """`line` with its lead-in phrase bolded ("<strong>Rage.</strong> You
+    can ..."), or None when it has no short lead-in."""
+    bolded = _bold_prefix(line, ".", _PERIOD_LEAD_IN_MAX_WORDS)
+    if bolded is not None:
+        return bolded
+    return _bold_prefix(line, ":", _COLON_LEAD_IN_MAX_WORDS)
+
+
+def _bold_prefix(line: str, separator: str, max_words: int) -> str | None:
     if separator not in line:
         return None
 
@@ -270,17 +285,11 @@ def bolden_text_html(text: str) -> str:
             new_lines.append(line)
             continue
 
-        bolded_line = _bold_prefix(stripped, ".", 5)
+        bolded_line = bold_lead_in(stripped)
         if bolded_line is not None:
             new_lines.append(bolded_line)
-            continue
-
-        bolded_line = _bold_prefix(stripped, ":", 10)
-        if bolded_line is not None:
-            new_lines.append(bolded_line)
-            continue
-
-        new_lines.append(line)
+        else:
+            new_lines.append(line)
 
     return "\n".join(new_lines)
 

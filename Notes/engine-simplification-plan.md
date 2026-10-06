@@ -689,7 +689,35 @@ refers to the checks in section 4.
   method.
 - **Verify:** A, B, C, D, E. **Output:** none.
 
-### Step 4: Rewrite the dense spots *(internal)*
+### Step 4: Rewrite the dense spots *(internal)* — done
+
+- **Result:**
+  - **`AbilityScores`** is a frozen attrs class with six `int` fields:
+    - the property factory and the `MappingProxyType` are gone;
+    - `get_score` is an explicit mapping;
+    - `with_scores` builds a plain `AbilityScores` from `attr.asdict`. It
+      isn't `attr.evolve`, which would re-run the standard-array or point-buy
+      validation on the changed copy;
+    - the two highest-modifier helpers are one `max(...)` each.
+
+    `StandardArrayAbilityScores` and `PointBuyAbilityScores` keep their
+    names and constructor (keywords or positional), and validate in
+    `__attrs_post_init__`. Assigning a score still raises `AttributeError`.
+  - **`Character`:**
+    - `iter_stat_effects()` lost its unused `features=` parameter;
+    - `_validate_feats_taken_once` groups features by type once, with no
+      `Counter` and no `next(...)`.
+  - **`Inventory`:**
+    - `items` merges stacks with a dict keyed by type, which keeps the first
+      instance and the first-seen order, as before;
+    - `drop_item` uses `_all_gear()` instead of four concatenated
+      comprehensions, and `item.name` instead of `getattr`.
+  - **Bolding.** `Utils/Html.py` has a public `bold_lead_in(line)`. The same
+    "`.` within 5 words, else `:` within 10" logic was written twice (in
+    `Html` and in `Feature._bolden_line`, which imported the private
+    `_bold_prefix` inside the function). The two word limits are named.
+  - **Verified:** A, B (3308 passed), C, D, E (1096 slow passed). 164 lines
+    deleted, 99 added.
 
 - **Goal:** every row of 1a marked "4" reads top to bottom.
 - **Changes:**

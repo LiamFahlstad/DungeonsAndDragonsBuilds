@@ -830,12 +830,7 @@ class Feature:
 
     @staticmethod
     def _bolden_line(text: str) -> str:
-        from Utils.Html import _bold_prefix
-
-        bolded = _bold_prefix(text, ".", 5)
-        if bolded is not None:
-            return bolded
-        bolded = _bold_prefix(text, ":", 10)
+        bolded = Html.bold_lead_in(text)
         if bolded is not None:
             return bolded
         return text
