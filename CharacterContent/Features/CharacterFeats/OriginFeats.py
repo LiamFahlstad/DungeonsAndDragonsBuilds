@@ -24,6 +24,7 @@ from Model.Character import Character
 from Model.Grants import Grants
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.Records.GrantStamp import GrantKind
 
 
 class OriginFeat(Feature):
@@ -40,7 +41,7 @@ class OriginFeat(Feature):
     def grant_to(self, data: Grants) -> None:
         """Grant this feat and the spells it comes with (listed under the
         feat)."""
-        data.add_feature(self, kind="origin feat", granted_by=self.name)
+        data.add_feature(self, kind=GrantKind.ORIGIN_FEAT, granted_by=self.name)
         for spell in self.get_spells():
             data.add_spell(
                 spell, self.get_spell_casting_ability(), granted_by=self.name

@@ -48,11 +48,11 @@ class Spellcasting(Recorder):
         if not self._casters:
             return view.fixed_spell_slots
         levels = view.class_levels.level_per_class
-        return calculate_spell_slots(self._casters, levels)[0]
+        return calculate_spell_slots(self._casters, levels).spell_slots
 
     def pact_magic_slots(self, view: StatView) -> dict[int, int]:
         levels = view.class_levels.level_per_class
-        return calculate_spell_slots(self._casters, levels)[1]
+        return calculate_spell_slots(self._casters, levels).pact_magic_slots
 
     def slot_progression(
         self, class_by_character_level: Sequence[CharacterClass]

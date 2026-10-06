@@ -26,6 +26,7 @@ from CharacterContent.Spells.SpellFactory.Writer import (
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from Model.Character import Character
+from Model.Records.SourcedValue import SourcedValue
 from Model.Spells import SpellGrant
 from Model.Skills import Skills
 from Utils import DamageCalculator, Html
@@ -90,7 +91,7 @@ class HtmlCharacterSheetWriter:
         sheet's one order (Character.feature_sort_key)."""
         stamp = character.stamp_of(feat)
         passive, *rest = character.feature_sort_key(feat)
-        leveled = stamp.kind in ("class", "subclass")
+        leveled = stamp.kind.is_class_level
         return (passive, leveled, stamp.level if leveled else 0, *rest)
 
     @staticmethod
@@ -639,21 +640,21 @@ class HtmlCharacterSheetWriter:
         """Modifier as a sum of its parts, e.g. '2 + 3 (proficiency) + 1 (Ring of X)',
         followed by the roll condition and its reason, e.g. 'Disadvantage (Chain Mail)'.
         """
-        terms: list[tuple[int, str]] = []
+        terms: list[SourcedValue] = []
         proficiency_bonus = character.get_proficiency_bonus()
         if character.has_expertise_in_skill(skill):
-            terms.append((proficiency_bonus, "proficiency"))
-            terms.append((proficiency_bonus, "expertise"))
+            terms.append(SourcedValue(proficiency_bonus, "proficiency"))
+            terms.append(SourcedValue(proficiency_bonus, "expertise"))
         elif character.is_proficient_in_skill(skill):
-            terms.append((proficiency_bonus, "proficiency"))
+            terms.append(SourcedValue(proficiency_bonus, "proficiency"))
         terms.extend(character.get_skill_bonus_sources(skill))
 
         breakdown = str(
             character.get_ability_modifier(character.get_skill_ability(skill))
         )
-        for value, label in terms:
-            sign = "+" if value >= 0 else "-"
-            breakdown += f" {sign} {abs(value)} ({label})"
+        for term in terms:
+            sign = "+" if term.value >= 0 else "-"
+            breakdown += f" {sign} {abs(term.value)} ({term.source})"
 
         if condition != Definitions.DiceRollCondition.NEUTRAL:
             condition_text = condition.value
@@ -1075,10 +1076,10 @@ class HtmlCharacterSheetWriter:
             f"<span class='overview-detail'><span class='od-label'>Carrying Capacity</span>"
             f"{carrying_capacity} slots</span>\n"
         )
-        for source, slots in character.get_carrying_capacity_sources():
-            slot_boxes = "<span class='slot-box'></span>" * slots
+        for source in character.get_carrying_capacity_sources():
+            slot_boxes = "<span class='slot-box'></span>" * source.value
             file.write(
-                f"<span class='carrying-source'><span class='cs-label'>{source} ({slots})</span>"
+                f"<span class='carrying-source'><span class='cs-label'>{source.source} ({source.value})</span>"
                 f"<span class='slot-box-group'>{slot_boxes}</span></span>\n"
             )
         file.write("</div>\n")

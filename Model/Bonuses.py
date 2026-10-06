@@ -1,8 +1,19 @@
+import attr
+
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
+from Model.Records.SourcedValue import SourcedValue
 
 # The source label of a bonus granted without one.
 OTHER_SOURCE = "Other"
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class SourcedFormula:
+    """A bonus worked out on read (a Formula), and its source label."""
+
+    formula: Formula
+    source: str
 
 
 class Bonuses(Recorder):
@@ -18,33 +29,35 @@ class Bonuses(Recorder):
     sorted by (source, value)."""
 
     def __init__(self):
-        self._flat: list[tuple[int, str]] = []
-        self._formulas: list[tuple[Formula, str]] = []
+        self._flat: list[SourcedValue] = []
+        self._formulas: list[SourcedFormula] = []
 
     @records
     def add(self, value: int, source: str = OTHER_SOURCE) -> None:
-        self._flat.append((value, source))
+        self._flat.append(SourcedValue(value, source))
 
     @records
     def add_formula(self, formula: Formula, source: str = OTHER_SOURCE) -> None:
-        self._formulas.append((formula, source))
+        self._formulas.append(SourcedFormula(formula, source))
 
     def total(self, view: StatView) -> int:
-        flat = sum(value for value, _source in self._flat)
-        resolved = sum(formula(view) for formula, _source in self._formulas)
+        flat = sum(bonus.value for bonus in self._flat)
+        resolved = sum(bonus.formula(view) for bonus in self._formulas)
         return flat + resolved
 
-    def sources(self, view: StatView) -> list[tuple[int, str]]:
+    def sources(self, view: StatView) -> list[SourcedValue]:
         """Every source: flat sources, then non-zero resolved formula
         sources, each sorted by (source, value). A formula that currently
         evaluates to 0 (e.g. Jack of All Trades on a skill you're proficient
         in) isn't a source worth listing."""
+        resolved = []
+        for bonus in self._formulas:
+            value = bonus.formula(view)
+            if value != 0:
+                resolved.append(SourcedValue(value, bonus.source))
+        return sorted(self._flat, key=by_source) + sorted(resolved, key=by_source)
 
-        def by_source(entry: tuple[int, str]) -> tuple[str, int]:
-            return entry[1], entry[0]
 
-        resolved = [(formula(view), source) for formula, source in self._formulas]
-        return sorted(self._flat, key=by_source) + sorted(
-            ((value, source) for value, source in resolved if value != 0),
-            key=by_source,
-        )
+def by_source(bonus: SourcedValue) -> tuple[str, int]:
+    """The canonical order of a list of sources: by label, then value."""
+    return bonus.source, bonus.value

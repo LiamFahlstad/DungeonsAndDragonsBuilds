@@ -3,6 +3,7 @@ from typing import Optional
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
 from Core.Rules import EXPERTISE_MULTIPLIER
 from Model.Bonuses import OTHER_SOURCE, Bonuses
+from Model.Records.SourcedValue import SourcedValue
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
@@ -55,9 +56,7 @@ class Skills(Recorder):
         bonuses = self._bonuses.get(skill)
         return bonuses.total(view) if bonuses is not None else 0
 
-    def get_all_bonus_sources(
-        self, skill: Skill, view: StatView
-    ) -> list[tuple[int, str]]:
+    def get_all_bonus_sources(self, skill: Skill, view: StatView) -> list[SourcedValue]:
         bonuses = self._bonuses.get(skill)
         return bonuses.sources(view) if bonuses is not None else []
 

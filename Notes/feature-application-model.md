@@ -243,18 +243,19 @@ is the `Senses` part).
 renders inside the parent's card. Mechanically, a child is a normal feature, and its `apply()` runs
 like any other. Don't also grant the same instance plainly, or it will apply twice.
 
-Extensions are declared, not attached: the character records a `FeatureGrant` with `extends=` and
-finds the parent when it's read (`character.extensions_of(parent)`), so the parent and the child
-may be granted in either order, and no feature is ever changed after it's granted. `Parent` is a feature
-type (exactly one granted top-level feature must match) or a feature instance; `if_missing="drop"`
-or `"standalone"` handles a parent that may not be granted. A missing or ambiguous parent raises
-from `validate()`.
+Extensions are declared, not attached: the character records a `FeatureGrant` with `extends=`
+(`Model/FeatureGrants.py`), and `ExtensionTree.resolve` finds each parent from the complete set of
+grants when the character is read (`character.extensions_of(parent)`), so the parent and the child
+may be granted in either order, and no feature is ever changed after it's granted. `Parent` is a
+feature type (exactly one granted top-level feature must match) or a feature instance;
+`if_missing=IfParentMissing.DROP` or `IfParentMissing.STANDALONE` handles a parent that may not be
+granted. A missing or ambiguous parent raises from `validate()`.
 
 ## Where a feature was granted, and the sheet's order
 
-Every feature is recorded as a `FeatureGrant` with a `GrantStamp` (`Model/Character.py`): the
-class-relative level it was granted at, the kind of source (species, background, origin feat,
-class, subclass) and which one ("Wizard", "Rock Gnome", "Alert"). The builder's `Grants` scope
+Every feature is recorded as a `FeatureGrant` with a `GrantStamp` (`Model/Records/GrantStamp.py`):
+the class-relative level it was granted at, the kind of source (a `GrantKind`: species,
+background, origin feat, class, subclass) and which one ("Wizard", "Rock Gnome", "Alert"). The builder's `Grants` scope
 (`Model/Grants.py`) stamps it. A feature's `origin` text is only its default card label:
 `Feature.label(character)` makes it agree with the stamp - a "... Level N" label takes the
 stamped level, and a general feat or epic boon taken at a class level reads "Fighter Level 8" -

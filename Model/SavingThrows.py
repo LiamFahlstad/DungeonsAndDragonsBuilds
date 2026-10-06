@@ -1,7 +1,28 @@
+import attr
+
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class ConditionalProficiency:
+    """Proficiency in `ability`; if the character already has it, in the
+    first of `alternatives` they lack instead."""
+
+    ability: Ability
+    alternatives: tuple[Ability, ...]
+
+    @property
+    def choices(self) -> tuple[Ability, ...]:
+        """Every ability it may grant, in order of preference."""
+        return (self.ability, *self.alternatives)
+
+    def sort_key(self) -> list[int]:
+        """Its choices, by position in Ability order."""
+        ability_order = list(Ability)
+        return [ability_order.index(choice) for choice in self.choices]
 
 
 class SavingThrows(Recorder):
@@ -17,9 +38,9 @@ class SavingThrows(Recorder):
         # Per-ability flat and formula-valued bonuses, each with a source
         # (see Model/Bonuses.py).
         self._bonuses: dict[Ability, Bonuses] = {}
-        # "Proficiency in X; if you already have it, in Y instead" grants, as
-        # (X, (Y, ...)) - resolved on read, see _resolved_proficiencies.
-        self._conditional_proficiencies: list[tuple[Ability, tuple[Ability, ...]]] = []
+        # "Proficiency in X; if you already have it, in Y instead" grants,
+        # resolved on read - see _resolved_proficiencies.
+        self._conditional_proficiencies: list[ConditionalProficiency] = []
 
     def is_proficient(self, ability: Ability) -> bool:
         return ability in self._resolved_proficiencies()
@@ -34,22 +55,22 @@ class SavingThrows(Recorder):
     ) -> None:
         """Proficiency in `ability`, or - if the character is proficient in it
         from anything else - in the first of `alternatives` they lack."""
-        self._conditional_proficiencies.append((ability, tuple(alternatives)))
+        grant = ConditionalProficiency(ability, tuple(alternatives))
+        self._conditional_proficiencies.append(grant)
 
     def _resolved_proficiencies(self) -> set[Ability]:
         """Every proficient ability. Conditional grants resolve against all
         the other grants, not just those applied before them, and in a fixed
         order, so the result doesn't depend on grant order."""
         proficient = set(self._proficiencies)
-        order = list(Ability)
-        for ability, alternatives in sorted(
-            self._conditional_proficiencies,
-            key=lambda grant: [order.index(a) for a in (grant[0], *grant[1])],
-        ):
-            choices = [ability, *alternatives]
-            granted = next((a for a in choices if a not in proficient), None)
-            if granted is not None:
-                proficient.add(granted)
+        grants = sorted(
+            self._conditional_proficiencies, key=ConditionalProficiency.sort_key
+        )
+        for grant in grants:
+            for choice in grant.choices:
+                if choice not in proficient:
+                    proficient.add(choice)
+                    break
         return proficient
 
     def is_advantaged(self, ability: Ability) -> bool:

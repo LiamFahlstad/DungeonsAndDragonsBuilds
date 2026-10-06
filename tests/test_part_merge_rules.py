@@ -46,6 +46,7 @@ from Model.Spellcasting import Spellcasting
 from Model.WeaponBonuses import WeaponBonus, WeaponBonuses
 from Model.WornArmor import WornArmor
 from tests._fake_view import FakeView
+from Model.Records.SourcedValue import SourcedValue
 
 # Formulas are resolved against a character; these ignore it.
 VIEW: Any = object()
@@ -88,7 +89,13 @@ def test_bonuses_sum_and_list_sources_sorted():
         ],
         lambda b: (b.total(VIEW), b.sources(VIEW)),
     )
-    assert result == (7, [(2, "Archery"), (1, "Bless"), (1, "Charisma"), (3, "Wisdom")])
+    expected_sources = [
+        SourcedValue(2, "Archery"),
+        SourcedValue(1, "Bless"),
+        SourcedValue(1, "Charisma"),
+        SourcedValue(3, "Wisdom"),
+    ]
+    assert result == (7, expected_sources)
 
 
 class TestSkills:
@@ -247,7 +254,7 @@ def test_carrying_capacity():
             c.total(FakeView({Ability.STRENGTH: 12})),
         ),
     )
-    assert result[0][0] == ("Person", 4)
+    assert result[0][0] == SourcedValue(4, "Person")
     assert result[1] == 12
 
 

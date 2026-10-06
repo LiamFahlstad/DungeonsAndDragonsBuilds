@@ -22,6 +22,7 @@ from Model.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormul
 from Model.ClassLevels import ClassLevels
 from Model.HitPoints import HitPoints
 from tests._fake_view import FakeView
+from Model.Records.SourcedValue import SourcedValue
 
 
 class TestAbilityScores:
@@ -252,8 +253,8 @@ class TestSkills:
         basic_skills.add_skill_bonus(Skill.ARCANA, 1, "Feat")
         sources = basic_skills.get_all_bonus_sources(Skill.ARCANA, None)
         assert len(sources) == 2
-        assert (2, "Magic Item") in sources
-        assert (1, "Feat") in sources
+        assert SourcedValue(2, "Magic Item") in sources
+        assert SourcedValue(1, "Feat") in sources
 
     def test_skill_to_ability_mapping(self, basic_skills):
         """Test that default skill-to-ability mapping is correct."""
@@ -334,8 +335,8 @@ class TestCarryingCapacity:
         basic_carrying_capacity.add_bonus("Backpack", 2)
         view = FakeView({Ability.STRENGTH: 12})
         assert basic_carrying_capacity.sources(view) == [
-            ("Person", 4),
-            ("Backpack", 2),
+            SourcedValue(4, "Person"),
+            SourcedValue(2, "Backpack"),
         ]
         assert basic_carrying_capacity.total(view) == 6
 

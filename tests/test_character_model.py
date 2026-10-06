@@ -22,6 +22,8 @@ from Model.Effects import Ledger
 from Model.Recorder import SealedError
 from tests._fake_view import FakeView
 from tests._grants import grant
+from Model.FeatureGrants import IfParentMissing
+from Model.Records.GrantStamp import GrantKind
 
 
 def test_a_build_is_one_character():
@@ -235,7 +237,7 @@ class TestDeclaredExtensions:
     def test_if_missing_drop(self, make_character):
         character = make_character()
         grant(character).add_feature(
-            _Child(name="Child"), extends=_Parent, if_missing="drop"
+            _Child(name="Child"), extends=_Parent, if_missing=IfParentMissing.DROP
         )
         character.validate()
         assert list(character.iter_features_with_extensions()) == []
@@ -243,7 +245,9 @@ class TestDeclaredExtensions:
     def test_if_missing_standalone(self, make_character):
         character = make_character()
         child = _Child(name="Child")
-        grant(character).add_feature(child, extends=_Parent, if_missing="standalone")
+        grant(character).add_feature(
+            child, extends=_Parent, if_missing=IfParentMissing.STANDALONE
+        )
         assert character.top_level_features() == [child]
         parent = _Parent(name="Parent")
         grant(character).add_feature(parent)
@@ -252,7 +256,9 @@ class TestDeclaredExtensions:
 
     def test_if_missing_needs_extends(self, make_character):
         with pytest.raises(ValueError, match="only applies with extends"):
-            grant(make_character()).add_feature(_Child(), if_missing="drop")
+            grant(make_character()).add_feature(
+                _Child(), if_missing=IfParentMissing.DROP
+            )
 
     def test_a_shared_feature_instance_keeps_extensions_per_character(
         self, make_character
@@ -301,9 +307,13 @@ class TestGrantStamps:
 
         character = make_character()
         feature = _Parent(name="Rage")
-        Grants(character, 3, "Barbarian", "class").add_feature(feature)
+        Grants(character, 3, "Barbarian", GrantKind.CLASS).add_feature(feature)
         stamp = character.stamp_of(feature)
-        assert (stamp.level, stamp.kind, stamp.granted_by) == (3, "class", "Barbarian")
+        assert (stamp.level, stamp.kind, stamp.granted_by) == (
+            3,
+            GrantKind.CLASS,
+            "Barbarian",
+        )
 
     def test_same_name_features_order_by_who_granted_them(self, make_character):
         from Model.Grants import Grants
@@ -311,8 +321,8 @@ class TestGrantStamps:
         character = make_character()
         from_class = _Parent(name="Expertise")
         from_species = _Parent(name="Expertise")
-        Grants(character, 1, "Rogue", "class").add_feature(from_class)
-        Grants(character, 1, "Elf", "species").add_feature(from_species)
+        Grants(character, 1, "Rogue", GrantKind.CLASS).add_feature(from_class)
+        Grants(character, 1, "Elf", GrantKind.SPECIES).add_feature(from_species)
         ordered = sorted(character.features, key=character.feature_sort_key)
         assert ordered == [from_species, from_class]
 
@@ -323,16 +333,22 @@ class TestGrantStamps:
         parent = _Parent(name="Rage")
         late = _Child(name="Instinctive Pounce")
         early = _Child(name="Relentless Rage")
-        Grants(character, 7, "Barbarian", "class").add_feature(late, extends=parent)
-        Grants(character, 1, "Barbarian", "class").add_feature(parent)
-        Grants(character, 5, "Barbarian", "class").add_feature(early, extends=parent)
+        Grants(character, 7, "Barbarian", GrantKind.CLASS).add_feature(
+            late, extends=parent
+        )
+        Grants(character, 1, "Barbarian", GrantKind.CLASS).add_feature(parent)
+        Grants(character, 5, "Barbarian", GrantKind.CLASS).add_feature(
+            early, extends=parent
+        )
         assert character.extensions_of(parent) == [early, late]
 
 
 class TestFeatureLabels:
     """A card's origin label agrees with where the feature was granted."""
 
-    def _granted(self, make_character, feature, level, kind="class", source="Bard"):
+    def _granted(
+        self, make_character, feature, level, kind=GrantKind.CLASS, source="Bard"
+    ):
         from Model.Grants import Grants
 
         character = make_character()
@@ -347,17 +363,23 @@ class TestFeatureLabels:
 
     def test_a_subclass_prefix_is_kept(self, make_character):
         feature = _Parent(name="Bladesong", origin="Bladesinger Wizard Level 3")
-        character = self._granted(make_character, feature, 3, "subclass", "Wizard")
+        character = self._granted(
+            make_character, feature, 3, GrantKind.SUBCLASS, "Wizard"
+        )
         assert feature.label(character) == "Bladesinger Wizard Level 3"
 
     def test_free_text_is_kept(self, make_character):
         feature = _Parent(name="Resourceful", origin="Human Trait")
-        character = self._granted(make_character, feature, 1, "species", "Human")
+        character = self._granted(
+            make_character, feature, 1, GrantKind.SPECIES, "Human"
+        )
         assert feature.label(character) == "Human Trait"
 
     def test_an_empty_class_label_names_the_class_level(self, make_character):
         feature = _Parent(name="Class Skill Proficiencies")
-        character = self._granted(make_character, feature, 1, "class", "Paladin")
+        character = self._granted(
+            make_character, feature, 1, GrantKind.CLASS, "Paladin"
+        )
         assert feature.label(character) == "Paladin Level 1"
 
     def test_a_feature_not_granted_keeps_its_origin(self, make_character):
@@ -372,7 +394,7 @@ class TestFeatureLabels:
         feat = GeneralFeats.AbilityScoreImprovement(
             [(Ability.STRENGTH, 1), (Ability.CONSTITUTION, 1)]
         )
-        character = self._granted(make_character, feat, 8, "class", "Fighter")
+        character = self._granted(make_character, feat, 8, GrantKind.CLASS, "Fighter")
         assert feat.label(character) == "Fighter Level 8"
 
 
@@ -383,8 +405,8 @@ class TestFeatsTakenOnce:
         from CharacterContent.Features.CharacterFeats import OriginFeats
 
         character = make_character()
-        grant(character).add_feature(OriginFeats.Tough(), kind="background")
-        grant(character).add_feature(OriginFeats.Tough(), kind="species")
+        grant(character).add_feature(OriginFeats.Tough(), kind=GrantKind.BACKGROUND)
+        grant(character).add_feature(OriginFeats.Tough(), kind=GrantKind.SPECIES)
         with pytest.raises(ValueError, match="Tough is granted 2 times"):
             character.validate()
 

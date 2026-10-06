@@ -1,7 +1,22 @@
+import attr
+
 from Core.Definitions import Ability
 from Core.Rules import MULTICLASS_MIN_SCORE
 from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class AbilityMinimum:
+    """`ability` must be at least `min_score`, because of `reason`."""
+
+    ability: Ability
+    min_score: int
+    reason: str
+
+    def sort_key(self) -> tuple[int, int, str]:
+        """Ability order, then minimum, then reason."""
+        return list(Ability).index(self.ability), self.min_score, self.reason
 
 
 class AbilityRequirements(Recorder):
@@ -17,24 +32,22 @@ class AbilityRequirements(Recorder):
     depend on the order they were recorded in."""
 
     def __init__(self):
-        # (ability, minimum score, reason) - checked by validate() once
-        # everything has applied, against the character's own score.
-        self._minimums: list[tuple[Ability, int, str]] = []
+        # Checked by validate() once everything has applied, against the
+        # character's own score.
+        self._minimums: list[AbilityMinimum] = []
 
     @records
     def add_ability_requirement(
         self, ability: Ability, min_score: int, reason: str
     ) -> None:
-        self._minimums.append((ability, min_score, reason))
+        self._minimums.append(AbilityMinimum(ability, min_score, reason))
 
     def validate(self, view: StatView) -> None:
-        order = list(Ability)
-        for ability, min_score, reason in sorted(
-            self._minimums, key=lambda m: (order.index(m[0]), m[1], m[2])
-        ):
-            if view.get_own_ability_score(ability) < min_score:
+        for minimum in sorted(self._minimums, key=AbilityMinimum.sort_key):
+            if view.get_own_ability_score(minimum.ability) < minimum.min_score:
                 raise ValueError(
-                    f"{ability.value} score must be at least {min_score} ({reason})."
+                    f"{minimum.ability.value} score must be at least "
+                    f"{minimum.min_score} ({minimum.reason})."
                 )
         self._validate_multiclass_prerequisites(view)
 

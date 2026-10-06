@@ -37,6 +37,8 @@ LAYER_OF = {
     "Utils.BuildGroupSheetWriter": "presentation",
     "Utils.CreatureStatBlocks": "presentation",
     "Model": "model",
+    # Plain records the whole Model shares; they import only Core.
+    "Model.Records": "records",
     "CharacterContent": "content",
     # The monster catalog: stat blocks that builds use for wild shapes and
     # companions. Data, not the combat engine.
@@ -54,14 +56,15 @@ LAYER_OF = {
     "tests": "apps",
 }
 
-_BELOW_BUILDS = {"core", "helpers", "model", "content", "creatures"}
+_BELOW_BUILDS = {"core", "helpers", "records", "model", "content", "creatures"}
 
 MAY_IMPORT = {
     "core": {"core"},
     "helpers": {"core", "helpers"},
-    "model": {"core", "helpers", "model"},
-    "content": {"core", "helpers", "model", "content"},
-    "creatures": {"core", "helpers", "model", "creatures"},
+    "records": {"core", "records"},
+    "model": {"core", "helpers", "records", "model"},
+    "content": {"core", "helpers", "records", "model", "content"},
+    "creatures": {"core", "helpers", "records", "model", "creatures"},
     "builds": _BELOW_BUILDS | {"builds", "presentation"},
     "presentation": _BELOW_BUILDS | {"builds", "presentation"},
     "combat": _BELOW_BUILDS | {"builds", "presentation", "combat"},

@@ -3,7 +3,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, Sequence, TextIO
 
-from Model.Character import Character, GrantStamp
+from Model.Character import Character
+from Model.Records.GrantStamp import GrantStamp
 from Model.Effects import Effects
 from Utils import Html
 
@@ -505,7 +506,7 @@ class Feature:
         match = _LEVEL_LABEL.match(origin)
         if match:
             return f"{match.group(1)} Level {stamp.level}"
-        if not origin and stamp.kind in ("class", "subclass"):
+        if not origin and stamp.kind.is_class_level:
             return f"{stamp.granted_by} Level {stamp.level}"
         return origin
 

@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import collections
 
-from typing import Any, Callable, Iterator, Literal, Optional, Sequence
+from typing import Any, Callable, Iterator, Optional, Sequence
 
 import attr
 
@@ -29,55 +29,13 @@ from Core.SpellcastingRules import SlotProgression
 from Model.AbilityScores import AbilityScores
 from Model.ClassLevels import ClassLevels
 from Model.Effects import Effects, Ledger
+from Model.FeatureGrants import ExtensionTree, FeatureGrant, IfParentMissing
 from Model.Inventory import Inventory
+from Model.Records.GrantStamp import GrantStamp
+from Model.Records.SourcedValue import SourcedValue
+from Model.Senses import SenseGrant
 from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
-
-# Who a grant comes from, in the order the sheet lists features that tie on
-# level, passiveness and name (see Character.feature_sort_key).
-GrantKind = Literal[
-    "species", "background", "origin feat", "class", "subclass", "other"
-]
-GRANT_KINDS: tuple[GrantKind, ...] = (
-    "species",
-    "background",
-    "origin feat",
-    "class",
-    "subclass",
-    "other",
-)
-
-
-@attr.s(frozen=True, auto_attribs=True)
-class GrantStamp:
-    """Where a grant comes from: the class-relative level it was granted at,
-    what kind of source granted it, and which one ("Wizard", "Rock Gnome",
-    "Alert"). Stamped by the builder's Grants scope (Model/Grants.py)."""
-
-    level: int = 1
-    kind: GrantKind = "other"
-    granted_by: str = "Other"
-
-
-@attr.s(frozen=True, auto_attribs=True, eq=False)
-class FeatureGrant:
-    """One granted feature, stamped with where it came from.
-
-    extends: None for a feature with a card of its own; otherwise the parent
-    it extends - a rider or upgrade shown on the parent's card, applying like
-    any other feature. A feature type (matched with isinstance against the
-    granted top-level features: exactly one must match) or a granted feature
-    instance. Declared, not attached: the parent is found when the character
-    is read, so parent and extension may be granted in either order.
-
-    if_missing: what happens when an extension's parent isn't granted -
-    "error" (the default), "drop" (an upgrade to whichever of two choices
-    was made) or "standalone" (shown as a feature of its own)."""
-
-    feature: GrantedFeature
-    stamp: GrantStamp = GrantStamp()
-    extends: type | GrantedFeature | None = None
-    if_missing: Literal["error", "drop", "standalone"] = "error"
 
 
 def _in_given_order(effects: list[Effect]) -> list[Effect]:
@@ -151,12 +109,11 @@ class Character:
     _ledger_key: Optional[tuple[Any, ...]] = attr.ib(
         default=None, init=False, eq=False, repr=False
     )
-    # ({id(parent): [extension, ...]}, [standalone extension, ...]),
-    # resolved from feature_grants and cached under the version it was
-    # resolved at.
-    _extension_tree: Optional[
-        tuple[dict[int, list[GrantedFeature]], list[GrantedFeature]]
-    ] = attr.ib(default=None, init=False, eq=False, repr=False)
+    # Resolved from feature_grants and cached under the version it was
+    # resolved at - see _extensions.
+    _extension_tree: Optional[ExtensionTree] = attr.ib(
+        default=None, init=False, eq=False, repr=False
+    )
     _extension_tree_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
     # {id(feature): stamp} - see _stamps.
     _stamp_index: dict[int, GrantStamp] = attr.ib(
@@ -234,13 +191,13 @@ class Character:
         *,
         stamp: GrantStamp,
         extends: type | GrantedFeature | None = None,
-        if_missing: Literal["error", "drop", "standalone"] = "error",
+        if_missing: IfParentMissing = IfParentMissing.ERROR,
     ):
         """Grant `feature` - or, with `extends`, grant it as an extension of
         that feature (a type, or a feature instance): see FeatureGrant.
         `stamp` says where it's granted from; builders grant through a Grants
         scope (Model/Grants.py), which stamps it."""
-        if extends is None and if_missing != "error":
+        if extends is None and if_missing != IfParentMissing.ERROR:
             raise ValueError("if_missing only applies with extends=.")
         self.feature_grants.append(FeatureGrant(feature, stamp, extends, if_missing))
         self._changed()
@@ -266,25 +223,25 @@ class Character:
 
     def feature_sort_key(self, feature: GrantedFeature) -> tuple:
         """The one order the sheet lists features in: passive last, then by
-        name, then by who granted it (GRANT_KINDS order, then the source's
+        name, then by who granted it (GrantKind order, then the source's
         name) - never by the order they were granted in."""
         stamp = self.stamp_of(feature)
         return (
             getattr(feature, "skippable_in_concise", False),
             feature.name,
-            GRANT_KINDS.index(stamp.kind),
+            stamp.kind.sheet_rank,
             stamp.granted_by,
         )
 
     def top_level_features(self) -> list[GrantedFeature]:
         """The features with a card of their own: every plain grant, then
         every "standalone" extension whose parent isn't granted."""
-        return [*self.features, *self._resolved_extensions()[1]]
+        return [*self.features, *self._extensions().standalone]
 
     def extensions_of(self, feature: GrantedFeature) -> list[GrantedFeature]:
         """The extensions granted onto `feature`, by grant level, then in the
         sheet's order (feature_sort_key)."""
-        extensions = self._resolved_extensions()[0].get(id(feature), [])
+        extensions = self._extensions().children_of(feature)
         return sorted(
             extensions,
             key=lambda e: (self.stamp_of(e).level, self.feature_sort_key(e)),
@@ -293,63 +250,25 @@ class Character:
     def iter_features_with_extensions(self) -> Iterator[GrantedFeature]:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
-        tree = self._resolved_extensions()[0]
+        tree = self._extensions()
 
         def walk(features: Sequence[GrantedFeature]) -> Iterator[GrantedFeature]:
             for feature in features:
                 yield feature
-                yield from walk(tree.get(id(feature), []))
+                yield from walk(tree.children_of(feature))
 
         return walk(self.top_level_features())
 
-    def _resolved_extensions(
-        self,
-    ) -> tuple[dict[int, list[GrantedFeature]], list[GrantedFeature]]:
-        """({id(parent): [extension, ...]}, [standalone extension, ...]) for
-        every declared extension. Raises if an extension's parent isn't
-        granted (unless if_missing says otherwise), or if a parent type
-        matches more than one granted feature."""
-        if self._extension_tree_version == self._version:
-            assert self._extension_tree is not None
-            return self._extension_tree
-        granted = {id(g.feature) for g in self.feature_grants}
-        tree: dict[int, list[GrantedFeature]] = {}
-        standalone: list[GrantedFeature] = []
-        for extension in self.feature_grants:
-            if extension.extends is None:
-                continue
-            parent = self._extension_parent(extension, granted)
-            if parent is not None:
-                tree.setdefault(id(parent), []).append(extension.feature)
-            elif extension.if_missing == "standalone":
-                standalone.append(extension.feature)
-        self._extension_tree = (tree, standalone)
-        self._extension_tree_version = self._version
+    def _extensions(self) -> ExtensionTree:
+        """The extension tree (Model/FeatureGrants.py), cached under the
+        version it was resolved at."""
+        if (
+            self._extension_tree is None
+            or self._extension_tree_version != self._version
+        ):
+            self._extension_tree = ExtensionTree.resolve(self.feature_grants)
+            self._extension_tree_version = self._version
         return self._extension_tree
-
-    def _extension_parent(
-        self, extension: FeatureGrant, granted: set[int]
-    ) -> Optional[GrantedFeature]:
-        parent = extension.extends
-        if isinstance(parent, type):
-            label = parent.__name__
-            matches = [f for f in self.features if isinstance(f, parent)]
-        else:
-            assert parent is not None
-            label = parent.name
-            matches = [parent] if id(parent) in granted else []
-        if len(matches) > 1:
-            raise ValueError(
-                f"{extension.feature.name} extends {label}, but {len(matches)} "
-                "granted features match it - extend a specific instance instead."
-            )
-        if matches:
-            return matches[0]
-        if extension.if_missing != "error":
-            return None
-        raise ValueError(
-            f"{extension.feature.name} extends {label}, which isn't granted."
-        )
 
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
@@ -546,7 +465,7 @@ class Character:
         while a build is in progress), at most one worn body armor, the
         attunement limit, that every extension's parent is granted, and that
         the spells resolve (see Model/Spells.py)."""
-        self._resolved_extensions()
+        self._extensions()
         self.spells
         self._validate_feats_taken_once()
         if self.character_name is None:
@@ -698,7 +617,7 @@ class Character:
     def calculate_speed(self) -> int:
         return self.ledger.speed.total(self)
 
-    def get_carrying_capacity_sources(self) -> list[tuple[str, int]]:
+    def get_carrying_capacity_sources(self) -> list[SourcedValue]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
         return self.ledger.carrying_capacity.sources(self)
 
@@ -783,7 +702,7 @@ class Character:
     def get_skill_bonus(self, skill: Skill) -> int:
         return self.ledger.skills.get_total_bonus(skill, self)
 
-    def get_skill_bonus_sources(self, skill: Skill) -> list[tuple[int, str]]:
+    def get_skill_bonus_sources(self, skill: Skill) -> list[SourcedValue]:
         return self.ledger.skills.get_all_bonus_sources(skill, self)
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
@@ -873,7 +792,7 @@ class Character:
     def get_sense_range(self, sense: Definitions.Sense) -> int:
         return self.ledger.senses.get_sense_range(sense)
 
-    def get_sense_sources(self, sense: Definitions.Sense) -> list[tuple[int, str]]:
+    def get_sense_sources(self, sense: Definitions.Sense) -> list[SenseGrant]:
         return self.ledger.senses.get_sense_sources(sense)
 
     def knows_language(self, language: Definitions.Language) -> bool:

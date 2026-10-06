@@ -25,6 +25,7 @@ from CharacterContent.Spells.SpellLists import (
     DruidLevel9Spells,
 )
 from Model.Grants import Grants
+from Model.FeatureGrants import IfParentMissing
 
 DruidSpellsUpTo2: TypeAlias = DruidLevel1Spells | DruidLevel2Spells
 
@@ -260,12 +261,12 @@ class DruidLevel15(ClassBuilder.BaseClassLevel15):
         data.add_feature(
             DruidFeatures.ImprovedPotentSpellcasting(),
             extends=DruidFeatures.PotentSpellcasting,
-            if_missing="drop",
+            if_missing=IfParentMissing.DROP,
         )
         data.add_feature(
             DruidFeatures.ImprovedPrimalStrike(),
             extends=DruidFeatures.PrimalStrike,
-            if_missing="drop",
+            if_missing=IfParentMissing.DROP,
         )
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
 

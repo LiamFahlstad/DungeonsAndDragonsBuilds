@@ -572,7 +572,55 @@ refers to the checks in section 4.
   point-buy cost table. Expected values come from the book, not from the code.
 - **Verify:** A, B, C, D. **Output:** none.
 
-### Step 2: Named records and enums *(internal)*
+### Step 2: Named records and enums *(internal)* — done
+
+- **Result:**
+  - **`Model/Records/GrantStamp.py`:**
+    - `GrantKind` is an `Enum`, and its definition order is the sheet order.
+      `sheet_rank` replaces `GRANT_KINDS.index`, and `is_class_level`
+      replaces the four `kind in ("class", "subclass")` checks (the sheet
+      writer, `Feature`, `GeneralFeat`, `EpicBoon`).
+    - `GrantStamp` lives here too.
+    - The `str` passed as a `GrantKind` in `ClassBuilder` is gone.
+  - **`Model/FeatureGrants.py`:** `IfParentMissing`, `FeatureGrant` and
+    `ExtensionTree` (`resolve`, `children_of`, `standalone`), which replaces
+    the `(dict, list)` tuple. The content and test sites that pass
+    `if_missing=` use the enum.
+  - **`Model/Records/SourcedValue.py`.** `SourcedValue(value, source)` is
+    shared by `Bonuses`, `Skills`, `CarryingCapacity` and the writer.
+    `CarryingCapacity` now stores `(value, source)` like everything else, and
+    `Bonuses.by_source` is the one sort key, so its order is unchanged.
+    `get_skill_bonus_sources`, `get_carrying_capacity_sources` and
+    `get_sense_sources` now return records, and their callers (the writer, 6
+    test sites) read fields by name.
+  - **One change from the plan:** a record used by only one part lives in
+    that part's module, next to the only code that reads it:
+    - `SourcedFormula` (`Bonuses`);
+    - `SenseGrant` (`Senses`);
+    - `CappedIncrease` (`AbilityIncreases`), which now keeps uncapped
+      equipment bonuses as a per-ability sum, so no `Optional` cap needs
+      checking;
+    - `AbilityMinimum` (`AbilityRequirements`);
+    - `ConditionalProficiency` (`SavingThrows`);
+    - `BodyArmor` (`WornArmor`).
+
+    Only records shared across modules go in `Model/Records/`.
+  - **`SlotTable(spell_slots, pact_magic_slots)`** is a `NamedTuple` in
+    `Core/SpellcastingRules.py`, like `SlotProgression` next to it, and it's
+    read by name.
+  - **Done early from Step 4:**
+    - `SavingThrows._resolved_proficiencies` is a plain loop with a named sort
+      key;
+    - `AbilityRequirements` has a named sort key;
+    - the `((cls, type),) = items()` unpacking in `calculate_spell_slots` is
+      gone.
+  - **Weapon-bonus labels** (`WeaponBonuses.attack_bonuses`) still return
+    `(value, label)` tuples. They're combined with each weapon's own bonus
+    tuples, and Step 10 moves that math to `AttackProfile`.
+  - **Verified:** A, B (3308 passed, 17 xfailed), C, D, E (1096 slow passed),
+    and the snapshots under `PYTHONHASHSEED` 1 and 2. In the touched modules
+    outside `Model/`, the only pyright errors left are the two known `Scroll`
+    ones.
 
 - **Goal:** every tuple with a meaning gets field names, and every closed set
   of strings becomes an enum.

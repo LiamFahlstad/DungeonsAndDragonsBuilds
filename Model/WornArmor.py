@@ -1,7 +1,17 @@
 from typing import Optional
 
+import attr
+
 from Core.Definitions import ArmorType
 from Model.Recorder import Recorder, records
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class BodyArmor:
+    """The worn body armor's type and display name."""
+
+    armor_type: ArmorType
+    name: str
 
 
 class WornArmor(Recorder):
@@ -15,16 +25,20 @@ class WornArmor(Recorder):
     a flag, so recording it twice changes nothing."""
 
     def __init__(self):
-        self._body_armor: Optional[tuple[ArmorType, str]] = None
+        self._body_armor: Optional[BodyArmor] = None
         self.shield_wielded = False
 
     @property
     def body_armor_type(self) -> Optional[ArmorType]:
-        return self._body_armor[0] if self._body_armor is not None else None
+        if self._body_armor is None:
+            return None
+        return self._body_armor.armor_type
 
     @property
     def body_armor_name(self) -> Optional[str]:
-        return self._body_armor[1] if self._body_armor is not None else None
+        if self._body_armor is None:
+            return None
+        return self._body_armor.name
 
     @property
     def is_wearing_armor(self) -> bool:
@@ -36,9 +50,9 @@ class WornArmor(Recorder):
         if self._body_armor is not None:
             raise ValueError(
                 f"Character cannot wear multiple armors at once: "
-                f"{self._body_armor[1]} and {name}."
+                f"{self._body_armor.name} and {name}."
             )
-        self._body_armor = (armor_type, name)
+        self._body_armor = BodyArmor(armor_type, name)
 
     @records
     def wield_shield(self) -> None:

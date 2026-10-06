@@ -73,9 +73,9 @@ from tests._grants import grant
 
 def _source_bonus(character, skill, source):
     return [
-        value
-        for value, name in character.get_skill_bonus_sources(skill)
-        if name == source
+        bonus.value
+        for bonus in character.get_skill_bonus_sources(skill)
+        if bonus.source == source
     ]
 
 

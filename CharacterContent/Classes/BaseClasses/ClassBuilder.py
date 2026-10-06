@@ -14,6 +14,7 @@ from CharacterContent.Items import Items, Packs
 from Model.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
 from Core.Rules import MAX_LEVEL, MIN_LEVEL
+from Model.Records.GrantStamp import GrantKind
 
 
 @attr.dataclass
@@ -258,12 +259,12 @@ class BaseClassLevelFeatures:
             (
                 self.base_class_features_by_level,
                 applied_level_features.base_class_levels,
-                "class",
+                GrantKind.CLASS,
             ),
             (
                 self.subclass_features_by_level,
                 applied_level_features.subclass_levels,
-                "subclass",
+                GrantKind.SUBCLASS,
             ),
         ]:
             for level in sorted(features_by_level):
@@ -505,12 +506,12 @@ class StarterClassBuilder(ClassBuilder):
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
 
-        background = Grants(data, 1, "Background", "background")
+        background = Grants(data, 1, "Background", GrantKind.BACKGROUND)
         background.add_feature(self.background_ability_bonuses)
         background.add_feature(self.background_skill_proficiencies)
         self.origin_feat.grant_to(background)
 
-        grants = Grants(data, 1, self.base_class.value, "class")
+        grants = Grants(data, 1, self.base_class.value, GrantKind.CLASS)
         if self.caster_type is not None:
             grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
         grants.add_feature(
@@ -563,7 +564,7 @@ class MulticlassBuilder(ClassBuilder):
             # The builder that introduced the class already registered its
             # SpellSlots feature and granted its proficiencies.
             return
-        grants = Grants(data, 1, self.base_class.value, "class")
+        grants = Grants(data, 1, self.base_class.value, GrantKind.CLASS)
         if self.caster_type is not None:
             grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
         # Only part of the class's proficiencies.

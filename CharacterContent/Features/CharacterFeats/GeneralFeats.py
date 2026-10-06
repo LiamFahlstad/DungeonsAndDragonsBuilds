@@ -17,7 +17,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Character import Character, GrantStamp
+from Model.Character import Character
+from Model.Records.GrantStamp import GrantStamp
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
 
@@ -30,7 +31,7 @@ class GeneralFeat(Feature):
     def _label_for(self, stamp: GrantStamp) -> str:
         """Taken at a class level, it's labeled with that level ("Fighter
         Level 8"); its own origin only says when it's available."""
-        if stamp.kind in ("class", "subclass"):
+        if stamp.kind.is_class_level:
             return f"{stamp.granted_by} Level {stamp.level}"
         return super()._label_for(stamp)
 

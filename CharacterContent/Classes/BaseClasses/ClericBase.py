@@ -23,6 +23,7 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel9Spells,
 )
 from Core.Definitions import Ability, CharacterClass, Skill
+from Model.FeatureGrants import IfParentMissing
 
 ClericSpellsUpTo2: TypeAlias = ClericLevel1Spells | ClericLevel2Spells
 
@@ -260,12 +261,12 @@ class ClericLevel14(ClassBuilder.BaseClassLevel14):
         data.add_feature(
             ClericFeatures.ImprovedDivineStrike(),
             extends=ClericFeatures.DivineStrike,
-            if_missing="drop",
+            if_missing=IfParentMissing.DROP,
         )
         data.add_feature(
             ClericFeatures.ImprovedPotentSpellcasting(),
             extends=ClericFeatures.PotentSpellcasting,
-            if_missing="drop",
+            if_missing=IfParentMissing.DROP,
         )
 
 

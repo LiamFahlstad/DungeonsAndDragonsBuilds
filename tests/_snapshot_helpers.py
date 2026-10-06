@@ -61,8 +61,8 @@ def compute_stats(data: Character) -> dict:
         ],
         "skill_sources": [
             sorted(
-                f"{value}:{source}"
-                for value, source in character.get_skill_bonus_sources(s)
+                f"{bonus.value}:{bonus.source}"
+                for bonus in character.get_skill_bonus_sources(s)
             )
             for s in Skill
         ],

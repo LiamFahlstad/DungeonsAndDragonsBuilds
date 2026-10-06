@@ -4,6 +4,7 @@ from typing import Optional
 import Core.Definitions as Definitions
 from Model.Character import Character
 from Model.Grants import Grants
+from Model.Records.GrantStamp import GrantKind
 
 
 class SpeciesBuilder:
@@ -22,7 +23,7 @@ class SpeciesBuilder:
         # level 1, like every other grant outside the per-level class flow,
         # and listed under the species - so a spell the class also grants
         # (Rock Gnome Prestidigitation on a Wizard) appears for both.
-        self._grant(Grants(data, 1, self.name, "species"))
+        self._grant(Grants(data, 1, self.name, GrantKind.SPECIES))
         return data
 
     @abstractmethod

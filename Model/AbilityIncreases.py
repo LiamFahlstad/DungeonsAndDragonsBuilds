@@ -1,8 +1,19 @@
 from typing import Optional
 
+import attr
+
 from Core.Definitions import Ability
 from Model.Contracts import StatView
 from Model.Recorder import Recorder, records
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class CappedIncrease:
+    """+`bonus` to `ability`, to a maximum of `max_score`."""
+
+    ability: Ability
+    bonus: int
+    max_score: int
 
 
 class AbilityIncreases(Recorder):
@@ -24,8 +35,9 @@ class AbilityIncreases(Recorder):
     each cap), uncapped increases sum."""
 
     def __init__(self):
-        # (ability, bonus, max_score); max_score None = uncapped.
-        self._increases: list[tuple[Ability, int, Optional[int]]] = []
+        self._capped: list[CappedIncrease] = []
+        # Uncapped (equipment) bonuses, summed per ability.
+        self._equipment_bonus: dict[Ability, int] = {}
 
     @records
     def add(self, ability: Ability, bonus: int, max_score: Optional[int] = None):
@@ -33,28 +45,30 @@ class AbilityIncreases(Recorder):
             raise ValueError("Bonus must be an integer.")
         if not isinstance(ability, Ability):
             raise ValueError("Invalid ability.")
-        self._increases.append((ability, bonus, max_score))
+        if max_score is None:
+            current = self._equipment_bonus.get(ability, 0)
+            self._equipment_bonus[ability] = current + bonus
+        else:
+            self._capped.append(CappedIncrease(ability, bonus, max_score))
 
     def own_score(self, ability: Ability, view: StatView) -> int:
         """The base score plus capped increases (species, background, ASIs,
         feats, class features) - everything but equipment bonuses."""
         score = view.get_base_ability_score(ability)
-        capped = sorted(
-            (
-                (max_score, bonus)
-                for increased, bonus, max_score in self._increases
-                if increased == ability and max_score is not None
-            ),
-            key=lambda increase: increase[0],
-        )
-        for max_score, bonus in capped:
-            score += min(bonus, max(0, max_score - score))
+        for increase in self._capped_lowest_cap_first(ability):
+            room_below_cap = max(0, increase.max_score - score)
+            score += min(increase.bonus, room_below_cap)
         return score
 
     def score(self, ability: Ability, view: StatView) -> int:
         """The final score: own_score() plus every equipment bonus."""
-        return self.own_score(ability, view) + sum(
-            bonus
-            for increased, bonus, max_score in self._increases
-            if increased == ability and max_score is None
-        )
+        equipment_bonus = self._equipment_bonus.get(ability, 0)
+        return self.own_score(ability, view) + equipment_bonus
+
+    def _capped_lowest_cap_first(self, ability: Ability) -> list[CappedIncrease]:
+        capped = [increase for increase in self._capped if increase.ability == ability]
+        return sorted(capped, key=_max_score)
+
+
+def _max_score(increase: CappedIncrease) -> int:
+    return increase.max_score

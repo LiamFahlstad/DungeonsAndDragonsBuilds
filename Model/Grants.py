@@ -12,11 +12,13 @@ The surface is exactly what level and species builders do. Anything else
 (stat queries, evaluation) belongs to the Character, not to a builder.
 """
 
-from typing import Literal, Optional
+from typing import Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from Model.Character import Character, GrantKind, GrantStamp
+from Model.Character import Character
+from Model.FeatureGrants import IfParentMissing
+from Model.Records.GrantStamp import GrantKind, GrantStamp
 from Model.Sources import Effect, Gear, GrantedFeature
 
 
@@ -26,7 +28,7 @@ class Grants:
         character: Character,
         level: int,
         granted_by: str,
-        kind: GrantKind = "other",
+        kind: GrantKind = GrantKind.OTHER,
     ):
         self.character = character
         self.level = level
@@ -39,7 +41,7 @@ class Grants:
         self,
         feature: GrantedFeature,
         extends: type | GrantedFeature | None = None,
-        if_missing: Literal["error", "drop", "standalone"] = "error",
+        if_missing: IfParentMissing = IfParentMissing.ERROR,
         kind: Optional[GrantKind] = None,
         granted_by: Optional[str] = None,
     ) -> None:

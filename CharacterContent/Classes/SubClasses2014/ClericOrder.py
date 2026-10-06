@@ -12,6 +12,7 @@ from Model.Grants import Grants
 from Core.Definitions import ClericSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericOrderFeatures
+from Model.FeatureGrants import IfParentMissing
 
 
 @attr.dataclass
@@ -49,7 +50,7 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
         data.add_feature(
             ClericOrderFeatures.OrdersWrath(),
             extends=ClericFeatures.DivineStrike,
-            if_missing="standalone",
+            if_missing=IfParentMissing.STANDALONE,
         )
 
 

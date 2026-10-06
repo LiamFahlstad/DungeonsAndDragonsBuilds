@@ -1,7 +1,8 @@
 """A Grants scope for tests: builders grant through one (Model/Grants.py), so
 a test granting a feature or spell to a bare Character does too."""
 
-from Model.Character import Character, GrantKind
+from Model.Character import Character
+from Model.Records.GrantStamp import GrantKind
 from Model.Grants import Grants
 
 
@@ -9,7 +10,7 @@ def grant(
     character: Character,
     level: int = 1,
     granted_by: str = "Test",
-    kind: GrantKind = "other",
+    kind: GrantKind = GrantKind.OTHER,
 ) -> Grants:
     return Grants(character, level, granted_by, kind)
 
