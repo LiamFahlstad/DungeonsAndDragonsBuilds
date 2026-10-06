@@ -79,7 +79,8 @@ The `Model` package imports only point down: `Core` → `Model/Contracts.py` (Pr
 `Formula`) → the parts → `Model/Effects.py` (`Ledger`, `Effects`) and `Model/Sources.py`
 (Protocols for features, fighting styles and gear) → `Model/Character.py` → `Model/Grants.py`. It
 never imports `CharacterContent`, not even for type hints, and nothing in the repo uses
-`if TYPE_CHECKING:` (`tests/test_model_layering.py`).
+`if TYPE_CHECKING:` (`tests/test_layering.py`, which checks the layer of every import in the
+repo).
 
 ## How each value is worked out on read
 
@@ -300,7 +301,8 @@ The whole model:
 | `test_part_merge_rules.py` | Every part gives the same answer for the same contributions in every permutation, including the order of listed sources; conflicting grants raise |
 | `test_part_resolvers.py` | Every part works out its final values from a fake `StatView`, with no builder and no `Character` |
 | `test_contracts.py` | `Character` really satisfies `StatView` (every member called), `Effects` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
-| `test_model_layering.py` | No `TYPE_CHECKING` anywhere; `Model` imports nothing from `CharacterContent`, `Builds` or `Utils` |
+| `test_layering.py` | Every import points down the layers (`Core` → `Utils` helpers → `Model` → `CharacterContent` → `Builds`/presentation → `Combat`), with an allowlist of today's offenders; no `TYPE_CHECKING`, `typing.cast` or `_as(...)` narrowing |
+| `test_creator_roundtrip.py` | The Character Creator loads every build file and generates one that builds to the same stats (builds it can't reproduce yet are strict xfails, with the reason) |
 | `test_spell_grants.py` | Spell stamping, duplicate and replacement rules, and order-free spell grants |
 | `test_character_model.py` | The sealed `Ledger`, `add_effect`, immutable base scores, declared extensions (either order, `if_missing`, errors) and grant stamps |
 | `test_build_snapshots.py` | Every build's stats and every rendered page against golden snapshots |
