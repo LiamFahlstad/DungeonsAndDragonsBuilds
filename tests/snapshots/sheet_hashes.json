@@ -311,20 +311,20 @@
   "full": {
    "character.html": "db3f4fb5416d02ca8ebcc9da7ae74d562ae1e40223e9ba7e516aac1d527cc13f",
    "features/level_01.html": "25ced438587417bd227fc135f9def02eea5dbc263d57910a90f923d6fec5e5b7",
-   "features/level_02.html": "ca8cfc6b8f9e01e6425e47707248ae7eebeed9806702125b2e15c1ddc824c1d9",
+   "features/level_02.html": "858f9c084bf2d8eb1f10e96787b175d3f35567ed02db80ae4119c82854a33a88",
    "features/level_03.html": "821c93dc7f17054211e964b534fe3480a0787bec2b55815ff9b3e909236cc674",
    "features/level_04.html": "1061e73a7ca0af1b6073d0d6d3b2b912e236c07d4264f8ebf2b82bc7c5423eb8",
    "features/level_05.html": "c97f97124e8ea79b4a1aa6056ef4fce7321f52c86d2f6d1b0ed630297ddc094c",
    "features/level_06.html": "e6335639971597082596ca063b999301b0e58733de01ac19fb604005f80c8b39",
    "features/level_07.html": "8738db34d7ba95ba4b61119737177f98a2a95ec808042e32abf128d2d391f857",
    "features/level_08.html": "a451a0dad8a7103ea0b3f7b55aa7514781a71962abe9734fd5912f378ca9d546",
-   "features/level_09.html": "43c0fff9366e2a294f150c5b20b93c38fda937e17879b16e8cb5bac2145d71b0",
+   "features/level_09.html": "a0e9e1857fac080ac852167b6c8e7d964a86ef66ec20abc193ffd424ec31b550",
    "features/level_10.html": "4bcffa5e30dd1d80c7f845dfca51c5674b48e5cc136358a041a800061dbbe3cd",
    "features/level_11.html": "3700c8ad394458c55ac103f993f033130f5162ea85ac8460d05c6ddc06779b47",
    "features/level_12.html": "2e5646c3e486224960adf0849e9c52539cb0bd1bdec13745f8fbd27842fb1197",
    "features/level_13.html": "1993470d92b6eb3f80a5689e5d259b7cfe05e92dea86c4f79218018e1c682248",
    "features/level_14.html": "de6b1e80510e02e14dae7d75f07fad0404b820f84fab8d490e1e430d01b503c3",
-   "full_character_sheet.html": "aaca2a45f259a1e0baca489d8d130ed03caa8ae74a94aeb152c276673ff2fe51",
+   "full_character_sheet.html": "350422be1088ee8089a5284bb17ebec2e16926064b99288f91833fccc5844506",
    "items.html": "43e7bdd6fed434ce96d3f7983330d83fa1a12c443c6e6a7fc6f40d5ae5835ae3"
   }
  },
@@ -350,20 +350,20 @@
   "full": {
    "character.html": "9d975137227a12451a3bfb5fcd6f2457ebc4d4043822a1fe4a69c3a043efdf83",
    "features/level_01.html": "90d3d6c0354d8a92a646d23a8f82db8672212223152021cea1440de881c67d76",
-   "features/level_02.html": "395409121be063e79e398b81ff9a8b6f5761aa05eb2102e2bcd453b4113a8d45",
+   "features/level_02.html": "b2c0ff4b74a877ae87ee1c327084844cf7a248bb15e7d99b333ef7fe9078e6e7",
    "features/level_03.html": "e9b0a230deeb9bb5611f09d23b27d4920356d04e153a3f077eeb5d0c9964cbe1",
    "features/level_04.html": "7761f71dd15b514a9b45a193285d500ae0ac032c388d89242153afbaf2f95f74",
    "features/level_05.html": "a2276b5691e2819a55341fe519b6f22a277135237a3f40473c1234debf1e5fee",
    "features/level_06.html": "fa65962aa34bd0a3467e6140c1f2b67602b5aca8dbfa2f1b7b486a98f65d6b56",
    "features/level_07.html": "ed0e0541b9c7ddf38913873083d5a270d605f785c39fd4c62819d79c135306e0",
    "features/level_08.html": "ca4765faeb20d4c17f2e86a42a6f4aab4112ebe9491feca40a2ab23c5e4b276e",
-   "features/level_09.html": "02824e08ad7d0a2e10b302c25516186e0209bca470de747131a64f55d2e88fa8",
+   "features/level_09.html": "8be6850440aed1395348339c41b047204a4a80fcc0e5ab69f83d971df630f0ba",
    "features/level_10.html": "659f1fa895da1cddc150d41cfd444121abc73e6c511ce7a96c6af2930e75ec2a",
    "features/level_11.html": "a60c1c5f8ea4391dfd8e9b454be3937a345120d88cdd7e7b53413784d44c9ae9",
    "features/level_12.html": "6e90e88b7944beb8aa22d6744db8b372fa250af3f5ac7951e9aa7af8f74395e4",
    "features/level_13.html": "8be23c6086cca829ba029446d923a33578510c9efdea81cf06778235325cb530",
    "features/level_14.html": "734b954cac0024fd090f45366c1c2b93cbcc5a3a872e2725d98f6686c43914a0",
-   "full_character_sheet.html": "40de9223d5ecee165a1a0dc3ef9c068e8f4a37a476436310f86701449a8884a5",
+   "full_character_sheet.html": "dbd120340a3675529bc67f13eb41153acf85d1fe3bc897fd008608e5a89cf662",
    "items.html": "38194efd247a390f84239d79984fb5fbbf8122ab52c9b8a755d66df4bc6a40e3"
   }
  },
@@ -390,21 +390,21 @@
   "full": {
    "character.html": "3ae3a763e5dd6008792bfc4f9fb65cb5edfd1630c1fefda338829e4fe61947fb",
    "features/level_01.html": "d27b87e53501842dbe398f17222b3f4e52279b90c536bb4e88ceea7e2176d53d",
-   "features/level_02.html": "313f239bfd36540c03328faa2ce158946ca6b2084689875ec7495c9df0e809e1",
+   "features/level_02.html": "4e78644fd9ab7f13bdd74100948e358daa649c186eb6d6c781e313d190c3eb92",
    "features/level_03.html": "7f293d5e4bb699f441f32ce69ce6f19066629d8900e7f7bdc651375efeb46e20",
    "features/level_04.html": "20e83f87d7d6b4b73ff5782ceaa738a47609b5e49687de15f88f4efc8783419a",
    "features/level_05.html": "5014d54cf89648921d35964ca88691365062aba00fcab0d98021171705bf667a",
    "features/level_06.html": "1763ebf2988247032536ac67a947b493a50f053a517bb039bce3c01147d93ed5",
    "features/level_07.html": "3c7851d494e09abda19ac23719443bc81d186f207da6a4e575f8b4504a78287b",
    "features/level_08.html": "6d2434afb4af97ba3e2f69ef1a21bd96415494ab38d5d06300cd7b5a15ca77d0",
-   "features/level_09.html": "f97e725e5f33c05e4fe2f5bf9d53865c03bc63fe03c419cc9717f40b8229a5c4",
+   "features/level_09.html": "81059ab257dcadc5dc5ad676995f927f82bfd5a5fac1ec9d9f8bb85dbac225f8",
    "features/level_10.html": "4c86a40c76bbd41f66659d765dee2a42e3318e8400b64a8faa00b282efaec83d",
    "features/level_11.html": "80318db19f0db2aac424b0f3d2795d4876caca6269110be3064156fc3d804b8a",
    "features/level_12.html": "989680fbf5ec1c84d7d21a8a9deb742e363091a37d39c54b2d4700b7750022d2",
    "features/level_13.html": "4c9c0cc3dd94d1320d33a16bc00cc0d8e220d1b21fb47caf2244186bce898c91",
    "features/level_14.html": "825c56c69304779702fb74d90aeec784188ebc2156cf0499d07369b69c039ffe",
    "fighting_styles.html": "09d53a506953593e0472897cde07bc23b397ced2d57ec845c388ffca995a8f03",
-   "full_character_sheet.html": "a99be5aa2c47bfe3955a1a3e07037834e2dd5daa519a046df9384624126b3ebe",
+   "full_character_sheet.html": "e3cecb55d06fe6bbbf0db7c9b999cad0fd89926b1ff0690c5c0987b3de4d74d5",
    "items.html": "5b0ca82836e30e79536a788aa3d19a9121aa515e2ab188666cd85041f94b8ddc"
   }
  },
@@ -430,20 +430,20 @@
   "full": {
    "character.html": "7b06a72c711036932955fddbd878b574522426106b8698c2d32252c66de61db7",
    "features/level_01.html": "ec438002f51778591f797877534782f29c7e07bb75a719e546bebe1748229946",
-   "features/level_02.html": "cf39b8606a7b49eabd4f29bcf1ab9c274e9398cb0923668ca51f1f9b2a249ae6",
+   "features/level_02.html": "2ce7a000220608c4c137273fda74e238c6d2f2c70c96a1a00c2cb9969501911e",
    "features/level_03.html": "6bab8c8d09df27c2237f5648512d40a4c526b8ffe74c9aa37e8ce00a3b17d70a",
    "features/level_04.html": "cbc916201b0d40c699d3c5300a5f4c269b69b4e159272afadb748d0fae29a944",
    "features/level_05.html": "9c030c2d68a9a5f8ec99d4fe82fab13bb8bf020494895c84b79847f1d6370653",
    "features/level_06.html": "03c2b499a1bd6bc0999654796e73238e16092e948508d41ffd890e50706209d6",
    "features/level_07.html": "42ff1335dd4c6f150549ce0491ccac0a6b793c4e961e9c367dae19573c0ede08",
    "features/level_08.html": "e2cfc3f33552346f0292723abc6b539c14e4d5a62f7f16234878e944b8361094",
-   "features/level_09.html": "006e5413f8e48a3419d449352c900fc31f73c8e44189fffaed87ff5aaa1766d1",
+   "features/level_09.html": "7637f8eaf689e506208d44f4245f7e89fb8aed30a5d5728df6e6dbcf542b55d9",
    "features/level_10.html": "e02c8d1ab3c770b382428fb55eb48b6357392aff4f033d12603abf0548a55863",
    "features/level_11.html": "d134149a2a63f17a79ab91e3f7d8882226b5316a7efd18ccfb92eb2370539edc",
    "features/level_12.html": "fe9603655e05e09d88b1411a66a98b0dceb239363ad3ba3c4eb7a42d59454792",
    "features/level_13.html": "ea37097e81eeb841782fa44f5f842c4ba7ec6f47e845bc496121a995ba2a23e8",
    "features/level_14.html": "6cda709599fa5446800f036783b08c05185988e2913b095c214a807e7e2360f3",
-   "full_character_sheet.html": "8378e02c2dc417457d585e3951b373dbfeaa5591c6136470d6c052c7ad79b76e",
+   "full_character_sheet.html": "417bb7aca81e5a71290ba3c32361393e057def21909e96993a100c5e92b9c803",
    "items.html": "e08fe08da818d406115bfe6f10ebe210e2bf2e279f519d17b69fd64a6065a5e8"
   }
  },
@@ -1586,7 +1586,7 @@
    "features/level_06.html": "6852bf1363e3cb5ff76a27353f14bf25ea4151861b82286f328008db9bd463cf",
    "features/level_07.html": "d09c5da8f026db82bff150c12ee051fa79c7112b23056ab07f45038cf0a718bb",
    "features/level_08.html": "702d40fce541f09a76a82642ec9ee41d9199bae2fc04f08c5912246e0366ca15",
-   "features/level_09.html": "104fb327bf035a3e68553dae9a4a84fd4dd6b8f85bafd428a176950676d657c5",
+   "features/level_09.html": "bc840147802c5aa19975a03ecaa6fb7c3dba6eb90152dcaa01d1aadee5918d98",
    "features/level_10.html": "94941a10a8c8a41e6e7e7046bb6b31292816ff861b814b26bc0423647df639fe",
    "features/level_11.html": "39e7caaa6e4f82dbb46819e5ea273124c3cd7de1ed40c2aeeeafc5930073a657",
    "features/level_12.html": "d10069d68b4b9ad03fd1a7d451398528559589cae24299aa8b61a8ee64ead104",
@@ -1596,7 +1596,7 @@
    "features/level_16.html": "2201371ee96ea5d67a7d83623a6c4111935bf24ed3eb48e81f68439e06570ca6",
    "features/level_17.html": "28e452d564e8654e4d13c616ce0f0661d451b9bc5e310593b3ec741a771c3a25",
    "fighting_styles.html": "a71416924b76b128ef4d34fba224627648e432c4dc09254e400cbc84422bb237",
-   "full_character_sheet.html": "8cd4a36ffb1f73484086db0199081f4ae49ca6aa3f249c81db95718c2f184a47",
+   "full_character_sheet.html": "7e0d1625698402f7e42a05ff71b6f5a5ed549b3f9697f641a57845c8bcd4f11d",
    "items.html": "611fdd8ae1707496f12dbc35d22e6b8bf86d78cc9e59729770c2290ee014765e"
   }
  },
@@ -1630,7 +1630,7 @@
    "features/level_06.html": "cf500a9aa77720d43fa793d087a8c8484e21b68151b1a06b3805441d9971590b",
    "features/level_07.html": "da5fed1d72ea1bae3766f0eebf54797fe728cf2351f25d0dc53a4fc01793ff58",
    "features/level_08.html": "5147d98a1d66e44518fadc5a350ab86e5898c69f4d6d69414aa10b0955f1d59f",
-   "features/level_09.html": "170e3ea5cbe9ff157d35381b61de779270bcf4a745282abe2f82af9f561e2329",
+   "features/level_09.html": "5b68417a3bd821203a7d5bb3f9214b65cd9a1dd7d550b6205986cdbd3f1258c2",
    "features/level_10.html": "b9a88a36468e8db4d5beb7d6d61b21c7c6c193e46465f064fc7fb70440fcf597",
    "features/level_11.html": "f000046d3fb409b49690f48d6d5b0af65f2f86266cadd683c9532ca581d9b61c",
    "features/level_12.html": "4b0268e9d608d2edc22baafa6b2e1b3b28a33a003bfb96e3307b2c6f7e964927",
@@ -1640,7 +1640,7 @@
    "features/level_16.html": "2e3589fb3b605c9819356adefca08169e15ade4e43ab58bea8cf9d244c64bc8c",
    "features/level_17.html": "16bc42adbe36a49603d390ad7fec3c593b16e2ba95d6df09acf5b18289045739",
    "fighting_styles.html": "1fe170614db2c72994ad32cefde9241ac025622af412662e570d1bcd98dae4a4",
-   "full_character_sheet.html": "3436e94405c09827b3f01e8099ce353486d3d1ee098054473929ea86d2afc9e7",
+   "full_character_sheet.html": "f1cb45f594d04371458462f15fbc7b28c99eba2e0ad054c3a94f5756d0419830",
    "items.html": "3afefdf8b891148b09759648ff84acf2ff066189110806750b8b678f74c6137c"
   }
  },
@@ -1674,7 +1674,7 @@
    "features/level_06.html": "fa2f71af179637df3fe8fb337be3f2908c53387b771129e69d9d8204427c4841",
    "features/level_07.html": "ef644d76e90e322ff9a4f4c2aa6bd3cf09978b589ae8f022a625a1aa6a74d7db",
    "features/level_08.html": "9a22fb053b47bd1742cb4e26658eef79b3c51768830165a6e6d0b46338dea990",
-   "features/level_09.html": "c3b69da8f9728f51485a7a49b1ba37b9892ad766498b59d6fc8999f542cb1fc8",
+   "features/level_09.html": "d98bda1fc2203574e4416fab5a3a617437cbe567b685ead9b7e3191192007074",
    "features/level_10.html": "ee2710e120c9ed4253ebaa705ca0625c7996621ebb120d5de5675f4abedb0a62",
    "features/level_11.html": "505f10bd6887eb1afb145174f38ea7d9c0c6b1071fda965bfcdef3235c8c3556",
    "features/level_12.html": "6fcc1fb7485654a15af4ff982db8525e11488f754b23930cc83f5a405ee501dc",
@@ -1684,7 +1684,7 @@
    "features/level_16.html": "4d53d7570627b65f08e792ab70d306f698d7aa7d6b98312e23d351cc038b802e",
    "features/level_17.html": "b808046a2bfd5e0e45d1af0e57379a232c3c53a9adf2c627e64ed18bd1f062bc",
    "fighting_styles.html": "17e16db4ebf61b95447e7f86ab7c8b72159c484caa5eb1fb2781798b2dcef936",
-   "full_character_sheet.html": "a04dfde01fba15fc619cf3394c417e2172a0db4b76072a2e0491e6b1df80cec1",
+   "full_character_sheet.html": "9e5bd6b49de51cde9233ec7bdb0f7643bbd4dd13147176924d328fe94180431d",
    "items.html": "b0a56edd40d8a6d515db4d77afd818db200b68e89c38843ea19d402f1ecd5668"
   }
  },
@@ -1718,7 +1718,7 @@
    "features/level_06.html": "12f40d1f8323d0d02b5e8d350998e2185f72897e6f2c1901952d2bd95dc82813",
    "features/level_07.html": "cdfe32745e57db3596018a5fd8f5257c4c484d0fc42f3ca74ea67ba28172c0e2",
    "features/level_08.html": "3e67f3702d5cde4ac7af44b95a4bb5b681e1165ff94464349d02ba3b4e70cff4",
-   "features/level_09.html": "6c131ebae7bfecf36a777c77509dbb21246021edca265b786a8d0978b6fe0185",
+   "features/level_09.html": "5ae707e4b986cc72a053c98d043ad35745e4f2710af668d47e1bfa67c704ea0a",
    "features/level_10.html": "1329033df979601a50d57865006e6f4fb74b060fd0a5d47e3db26aeb5ffd3954",
    "features/level_11.html": "c74b8038acce1cb6a850c40c13bdf1c60346ecc575421e6a1633595be51290c8",
    "features/level_12.html": "4a49d6cb574eca7371e2ca9056b75ca172d80e16af84b4c340ddfb8f1b68e1a7",
@@ -1728,7 +1728,7 @@
    "features/level_16.html": "b69888bcf74374351631bd97b3bca696e58b880b238a62a1d603489812db3fa3",
    "features/level_17.html": "d3ace663e19e3ccb2fd81d98c4ebeae3b4f716f5186cedfc7d6077bf914c5778",
    "fighting_styles.html": "f019ba8de0d6fff021f9bb1cff268c65e9cc39eaf550accc4f997038e4293f08",
-   "full_character_sheet.html": "6f1cad09dc8db26f8e657bc1fc0b5f30e8ad458a798016e86dfd3e6394113a0b",
+   "full_character_sheet.html": "3e4557050146d7b5386406d01dd4b263206d0be77eb2f87bd137b3ca1786888e",
    "items.html": "9b7d4b448fbe9b3c41d7002348b9e26e3d06dea1002d398189c95b0dba82c050"
   }
  },
@@ -1755,7 +1755,7 @@
    "features/level_03.html": "51b518557f57dd281fb3f01174853c49256feacc0c7f45ce15e60d0828817eab",
    "features/level_04.html": "b8427fa49d0071230c3f2e4da1367749fa2f7f37433b646ab757cee7940068c1",
    "features/level_05.html": "5ff3a444ff640dbb1ae1fff69b4708016db077f3578fd18f8cb0a45d8bbb2d4c",
-   "features/level_06.html": "fedbd73dd21100318dd66b1ed3998e281aa98d0384b2efb4fdaef9d5e36326d3",
+   "features/level_06.html": "55c5a5532ecb3ab85cae944110f2f15c0d3abd45d986f724dd8b896ceeb1be95",
    "features/level_07.html": "01a5cf0ba479177bdde4680b147f3cf38cdd227f5accda4dd584ce6e753a17db",
    "features/level_08.html": "da344035e08deed89b79a7796db8d01304e65462b22b90994e3a4562aba141fb",
    "features/level_09.html": "a25caf50c5642fc66a6476476bc9a0f24a60dad5b0a18100f04ebe7c38c86c80",
@@ -1767,7 +1767,7 @@
    "features/level_15.html": "0b428594ce306aafe485371fb6143025013cc9e45ab552246a12b172d64c86f2",
    "features/level_16.html": "3970ff6a5e99501b804cc584d6229a5487437c5d0026a5515b61a0e9b0c6e2d9",
    "features/level_17.html": "8749227aabba2b7cf52e0cfcece03ccf6ce024e2d8d5faa66f9ec251780766b6",
-   "full_character_sheet.html": "58e9f8db3a419ec6be869840636d4c255ff7058adc590c2b73b411c882670df6",
+   "full_character_sheet.html": "23bd3f66aae09e8a31c4e32546f0282f42c0bb10a3f2a1783ad11ceccc8e0f51",
    "items.html": "010271dc43d3edc9f8ecdce185290c7ed08ebcdc0b377628d5cb311566f52f9e"
   }
  },
@@ -1794,7 +1794,7 @@
    "features/level_03.html": "c883dbebc122fdbd1ca493e8373755ab88ea281c99a92114081ef57fe1a4ccdc",
    "features/level_04.html": "16382d7bf753205d1eddb3a8b50fe15ddbfefa69267990943035d488bf8511d2",
    "features/level_05.html": "eda64cdde25f4ce39e4823b6741e54d797b9b8aad42ab2253bd8031383b27b83",
-   "features/level_06.html": "3d3cf81af2c2d394cc0428b0e72f3abf6a655c1bdfbee450bbecef2f8f1388df",
+   "features/level_06.html": "7fbec380cb680da94422a2dd189664a09a975243889b5984c916a51a34f0c3ad",
    "features/level_07.html": "ba32ab427fc975619eaecadfaeb128a183016fe41724a9e81f033302f8880214",
    "features/level_08.html": "d057cb38aa03cdc0dd8bb3b0cc83f4192d1b9e765792678e8a4618c3b37159b9",
    "features/level_09.html": "caf375519b0034fbe3670279961457fca5b39e10e47cd651e65c1148709e4dfe",
@@ -1806,7 +1806,7 @@
    "features/level_15.html": "900d88e08d5873013cc2776383b36a40d82870679ac783901ce0fc667124c609",
    "features/level_16.html": "760df949a00f760788a4f2b8e14b5df385b72633d432a5737146e09afeea109d",
    "features/level_17.html": "0d14d81c3e0f22fc6f5508d06d7867c57ef2c2091e3cb013c8cb2dbee6b49fd3",
-   "full_character_sheet.html": "7b3581ea2e04d3ef8dc54a388892de13a8eac58351a9e0e7517645386e2b558c",
+   "full_character_sheet.html": "c3e378dbdef7ecdaf0579c920b8851cf8af03cb6a9b7920771ee7319dd1ba56a",
    "items.html": "4b4a81a40baa9b3f4a6e95fe104783a2fcd7bef1b3adf8fb5fc5c4544bab17a1"
   }
  },
@@ -1833,7 +1833,7 @@
    "features/level_03.html": "1ab6425ae2ede403465ff840b8e68661ed08beac0ad5c95fb403bbb7bdb7a187",
    "features/level_04.html": "2932d7a425d828e97e903eada3ba7e195e0a765f8fe565116af4656035cd0683",
    "features/level_05.html": "659650eaa19691fde16d499e1151cd2c660527a4c6eeb30da528b19916402786",
-   "features/level_06.html": "352e09b5d1db8eb46102ba599b9a341dcf60d044d830c53b251a40c972f486b8",
+   "features/level_06.html": "1618b0260bdc916e105ae7b631cef3c7d6af1913d5d29018b49833e9590b94c1",
    "features/level_07.html": "793c1a693c748adaec9f72ec8ec5520aa63dd4641c45b500cf58b48056c78697",
    "features/level_08.html": "74871f92b8c1060006a687ea0ee2e4967822b279d7dcb44a5b6524c4a8f34d86",
    "features/level_09.html": "995ea01c81d3bdb11420e64e0d89bf183cb377a319212f3b1c993fc994739d64",
@@ -1845,7 +1845,7 @@
    "features/level_15.html": "8e9de4dd57c8109cb02654fe4832ac6c420572ef348442d48211bf9ca1c32f65",
    "features/level_16.html": "3ba0de670eb28feae6015234b32b8432fd8f6869804f8eea32e89b4c52c511ac",
    "features/level_17.html": "6eb227e56f8788c7b794d83f350cc348582ee2082230cff23b41dc9887ee21ad",
-   "full_character_sheet.html": "84c44524a62c16e3f32015e0c563d308c62354a31988da0a27f350848024ed83",
+   "full_character_sheet.html": "a794c90d2c5c646db9205243d5a2db98963295dd74f4459837331b94b9d956da",
    "items.html": "0ee8f5ffd05164149b5ca421631afaf41f4a4e0423ffcd27da54f20337855ff6"
   }
  },
@@ -2001,9 +2001,9 @@
    "features/level_09.html": "8842832426ebf176efa0b1a657b13d945dcab3936d400d386edb79ae40455aac",
    "features/level_10.html": "daa2df0c9d9fc89d9c0d84b66084234539f3ae5a5665d16acebcfcaa00ff662f",
    "features/level_11.html": "99cfcda4952b8951ab037b03b2e7a833c35e0bdefb4fd30267ed193fa93892bf",
-   "features/level_13.html": "a47c71022c1ae7416592dd8035705b22c1bdfa297f5a8589cd3a07b958227ca0",
+   "features/level_13.html": "d8eb9d69a3bcd6f509351ab10e3dab92055de7390c40d8b07c63f445fa5a9831",
    "features/level_14.html": "56ad6b6056b69156feae5353d0a61b2016e92473ff67917fca5380287ad32142",
-   "full_character_sheet.html": "030333960e46d325cb03abebb3a2c37d215273f8f44a00d87f445939eaf42ad9",
+   "full_character_sheet.html": "6e4e51942ef46d0b4ceabe5caee71a86844439f31f0b94d9a995f6791444cba7",
    "items.html": "8b6f3f3f2b347154be6b0b807d4b52991b9627914a445fcc33736879c2102de1"
   },
   "full": {
@@ -2020,9 +2020,9 @@
    "features/level_10.html": "03468535f5b93eb947be5796daf498fe9108fc5e7fd8ec0252a21074ffe1c814",
    "features/level_11.html": "a46bb62afc6d17fc96d75116ca6b770e3e5ff5fea6fb81dd594d1b6a260a0a3e",
    "features/level_12.html": "70ec1c07b1108baf0430ba0e51cfd188e30628fc332343bbebb4c4af68ca7908",
-   "features/level_13.html": "7df381fd4665e583637aa43ea757aa95a148c285ae222877da7541d22c533380",
+   "features/level_13.html": "9240c610da3491c5833c2149ae41acf14627dbf34dcc8fa7705985096090d302",
    "features/level_14.html": "585a8b473633bf8ad6bb479724f8f67aae127c8f5eb537873f2f81481b2fd37a",
-   "full_character_sheet.html": "1e49ebbdbd13deda4a06626eb11e235e6775cbe1b8e09b3c3975ec404daeeb22",
+   "full_character_sheet.html": "a163d1696b3cbf07411fac793b44b5fbf10ac9d014bf54df2931b5a93720058f",
    "items.html": "3970b43ddb3e726b48e2b912cfbf601103aa24bbe34bc1f61bfa52e68ca37cb3"
   }
  },
@@ -2040,9 +2040,9 @@
    "features/level_09.html": "b0fb6ad30a0448577dc5c7c606eaa88a1109b91a870af29469075520b31c57d0",
    "features/level_10.html": "434ad2f62c94462e58d6448add48e1744d3138523c41eceba51dc63d600b5501",
    "features/level_11.html": "bc97b27ad7c1580b45ed8518593dd5380b866e0ec65a510af26c2952c199bcfe",
-   "features/level_13.html": "2292190d6b7d36be23e39b4c19bacdb530dbce10007150f397de65ee290734af",
+   "features/level_13.html": "30d52ab1b8d41f2df1188ee9d19ca34448ef5ccb5c8cf0d05908e4a672c11e5d",
    "features/level_14.html": "b3455516d99f9562b52e9845c01db65f563c3d0b919900e6eaee9c78ce1be1d2",
-   "full_character_sheet.html": "ef89ac5ab6dd59517b988b07c34fc097f81f2dd75d5f6a69005f4b74346e9250",
+   "full_character_sheet.html": "8cfe91a162f5d84877ac974ed9e8e1e8e4706598663929ace1eef2e31637cec6",
    "items.html": "f6f8d702fc276a43316bee6dea8034d1c274b029702c7baaeec7ed659e766dfa"
   },
   "full": {
@@ -2059,9 +2059,9 @@
    "features/level_10.html": "9450452b25b8c82af1deca1fbae485e8d3a3471c47368c463175ada9a9fda3ad",
    "features/level_11.html": "9cbf1a07a80ef8e5547387b5dec746a4f6eb9f40d9e53a9be0a50d751f11ae5c",
    "features/level_12.html": "6026323076c2473ebf222aa867ad52c22497bd524aca94bece02a73f3c00be9f",
-   "features/level_13.html": "1ec0f91d6a677e6d7a98352e29a8310e2c74a54f127f37653ec115aa7c5e2199",
+   "features/level_13.html": "08b95b811355866fb8f9962c36073203569af5f4a0c168c2e7fa3a81623c53d5",
    "features/level_14.html": "2e5ef1b952e7ce2766c8e1787041e7af94a345ac5b51da00d806212acf39d182",
-   "full_character_sheet.html": "d7db815c49ce10a15e4604d5e67feaee340c7fc9b671de8bfa586bdc155d6afc",
+   "full_character_sheet.html": "183be8d81a6b3daae3abfa0d4a546e755c93f4bd6e3e6d5e7ff6dd496e46af89",
    "items.html": "0cc8cd413c80bf7676917087ab491cdcd0c72272ec344bb63de342c764654534"
   }
  },
@@ -2079,9 +2079,9 @@
    "features/level_09.html": "bae89d893ba8658a9348e610b477878cf349fca9f9d59298be7cfb16f28d2859",
    "features/level_10.html": "c5acebff8f57598201e5512757f6c3bdc8f75691d48bd73ecc7ba020903064fc",
    "features/level_11.html": "c67ea78aae0b1c05f1f698084363e822d0a9e8e00108e8d6aa994dafa9917863",
-   "features/level_13.html": "3588f5686cb2f29596a53500ba95fef5a6147b10abd5fd3d59c4941060c66ef5",
+   "features/level_13.html": "07659da66b23a41678975153e970d00c0650d0df9a444145b67c823b2e42509d",
    "features/level_14.html": "d8532fb33ce68ac3526e8940eea095af876d1a085bad97552c7d16c20cddbe2e",
-   "full_character_sheet.html": "30dfb324d5168f5137c7afa484317ab81c7e8d8b79f09bb037e4a07f973881cd",
+   "full_character_sheet.html": "b1fc0d383653ca79525a902d532c4cd9972c01d71d3dc9a3273d4cf9a108aaa0",
    "items.html": "1018abbd794e2440bc401f85a311db4e2d7c02b09d37e51af041f35b81f4573f"
   },
   "full": {
@@ -2098,9 +2098,9 @@
    "features/level_10.html": "73aa95fce64371101582a2e22f6c63603366db14b7ca1c0ec68b1fc4b3c462b1",
    "features/level_11.html": "d69586bd13928062e537075cac72503a1fc06d7ce5d25f4d7efb37ffde48494b",
    "features/level_12.html": "64c1e5c926255a841150b09c9c762505be9e651a4469c7e2d2b7adc1f0dd0180",
-   "features/level_13.html": "36bcc476fa19cce302e5f57226fdbfaa59d0c0567a9fc31c20755386842dbd79",
+   "features/level_13.html": "7f964eb78d6bc935c071161cc9e44f54578e747a52ca08ec4c0ed2f4c4368058",
    "features/level_14.html": "654f45a3e415d913c9731ad0ea01b464745925a57049b90cde365542e072ed1a",
-   "full_character_sheet.html": "66004bbab1e562d782c09da09029b9da4a94f0f02a2d1b30de66904fd0d4fad5",
+   "full_character_sheet.html": "eac966cc4eaeae3fde5c92dbe3cd1e16007bf5e80909c017eb90db4532cac335",
    "items.html": "daa5b52221aefbd31c2059ddd934674405b1505456bc9992729f489014939cea"
   }
  },
@@ -2118,9 +2118,9 @@
    "features/level_09.html": "a0ebac850be4f8a0739265d3cd50a31f955c559ea878d6aee1c00f21838ecd1c",
    "features/level_10.html": "5dee34ad5a579d8746babde0fc26c28b71c6c6eb1627fd8eeb2c16d3ff82f44b",
    "features/level_11.html": "e72102570526f9e015c1164a617a1fec6c71483fc37ab72ab85d7aace9f1ffa8",
-   "features/level_13.html": "cca2ef9346c33355e08ef37f567b7e5365417a202afff7f7854f33cdf9faaa58",
+   "features/level_13.html": "2c639aa2cfb7af2fade4ed5b3005debe5bcc75d09a3798d6590f668fac2dbfa3",
    "features/level_14.html": "1f930e28fa6fd3709143116ed1b9715951ef5ea8d3e62cac8c90929ff12c9c5c",
-   "full_character_sheet.html": "aa3220a1cdc9aa9cba539a5627d99729e3e8c479dfa08bb8e8311e3fd71392b5",
+   "full_character_sheet.html": "db8c3ebe7353aa2b2950fde736dbf3509d6d2aa5b47b51541bca2040d8866ec0",
    "items.html": "42c6ca3b5afbfe8382b59376d793b1734a45dbfaff89ca0bf97405e0c5f380be"
   },
   "full": {
@@ -2137,9 +2137,9 @@
    "features/level_10.html": "1fbbdc3771002dd38914e2ccc4b9df1d0c23b4b934f4981ee0a7e1e23e09a572",
    "features/level_11.html": "7bccff9614049a9d2957f56f00a73acc88d9234c5ec8ffbd7c28fd74d4a9f7fe",
    "features/level_12.html": "f4cce691231ee800bb817450ade2579ff0f14b478faacc258a3e83c6b294b339",
-   "features/level_13.html": "07059af448f38ff51143f45968c7bc571682a8912edd4a8679afa7b73d155413",
+   "features/level_13.html": "0acde418a4c84bb9a31b1dfdff31014b79adf128d0228ec1c88a6385fd46d221",
    "features/level_14.html": "1f3499a1e758b87b9281e4c51f41ccbb273c01c18ae76f50b315b9bdffcb92a0",
-   "full_character_sheet.html": "7a3d74b0920146a78d503f5d1691708013af345b006e9a9fb09cfa89da7501ce",
+   "full_character_sheet.html": "509566adf476afba98e8f93c762f9f1ae6d79fe62f8499d29f013a19065af321",
    "items.html": "73cc94b66e568789a7f559f63edacf03cb686f075c3c2468a6af4657608adb1f"
   }
  },
@@ -2446,10 +2446,10 @@
   "full": {
    "character.html": "445edded298df052a9c83c5f2a61b94289360f3b9246728ee71ed3c26f922de8",
    "features/level_01.html": "0d2db7ea7b9a6104ead6a6399ce3e231e178688c108a881519cfe461fdd6abdb",
-   "features/level_02.html": "054610579c17b76df0ea547e7633d9a66d6b262c4091830ca1a7aedaca262f7a",
+   "features/level_02.html": "4c30dd2424185eb21e59c38b018b2dc18d3bbbfd09930ad5f17f816709001b8b",
    "features/level_03.html": "4d2a1abff2a48019f78a096307e6d146c41d9a18bc6b6048fd88850e75464995",
    "features/level_04.html": "d55c392e564516b5f7035070035d1f44f7e117fe55db6a7b7b5c73e233f06e95",
-   "full_character_sheet.html": "e51d6a469088f6f34d5dec472536ae8ec76c8fbfbcdb715940ecd555e47ab98a",
+   "full_character_sheet.html": "fcbe1544270760f16d992a518afc3b879dee460cc5e5619a2d14ce65458bf784",
    "items.html": "a51d19c1ffdb5097e8617131baf4c59c27f737a6f2587268157dedf19953f3e9"
   }
  },
@@ -2466,10 +2466,10 @@
   "full": {
    "character.html": "248f2d74f16e3ede8642c34dbe2e906b6fef63a380efb817751071a06fb668cb",
    "features/level_01.html": "2928f77ec6dde9be3c8595b04eb4dd203275ba322b8b37e3e171877c2d9f1d15",
-   "features/level_02.html": "5e810aae081b879c20ee2d915f3fb9ebbe00e655499fbbf73f366bab6d2265f7",
+   "features/level_02.html": "730219982cd5ec7d6047b220dba270fb647c8fa31a285dc28eec272780adadc3",
    "features/level_03.html": "6122ff1536c56f519b18e603c6ab19214cf64631dc0f73e5c3d1c88a7fc36665",
    "features/level_04.html": "ac90eb24920b06460f45ecc97cd8212be97f6309a792604be2b031b6b9fdcbac",
-   "full_character_sheet.html": "f289263d2567182ad4113fe680d61950c770153499e26f9105d1f666c7b1f967",
+   "full_character_sheet.html": "e660b0288da2d0509172c0f0288ac8b06f9eae22157b73ed652a0f2b9cb38d69",
    "items.html": "35f2f4a818202a540996f98eafacc8df140e1fcb2c623cfd649bdf1648e10f6f"
   }
  },
@@ -2501,14 +2501,14 @@
   "full": {
    "character.html": "791cf3a1628a05a1d8b6ed54d2dc3771cf85b2cccd74a67b9bbd3ae0a1f1b8bb",
    "features/level_01.html": "a37846981cdad24f85e386d8b07ac1132f743eccb2515095fac63c0e8711d3e5",
-   "features/level_02.html": "56fcbad0f16d9492e5a229d4675c5cb292b54a1573742cd55f006e0d56527840",
+   "features/level_02.html": "ddadde291cbb3625bd162c75f729f15e9cf15e0e8262a85e5894f8585e4ad08c",
    "features/level_03.html": "d6fc39c36074817c9667ef4d947102fdf2aa747d9d3a3845d63fcb09055ee366",
    "features/level_04.html": "b09eba981a6f30cf5582ea28d430670ef7d42e22237d7eb2e2e54194c5a84310",
    "features/level_05.html": "af79787f5b004c98ba9cb1e3898080c8701ff0ee4a1d3edc0821a8ef3b280aa1",
    "features/level_06.html": "d7148e622ed47a325164b9ad5d3d20c23cfe7e6d6bd17b3b4e3c5fc384eaccd7",
    "features/level_07.html": "07e9b04c51555042ebd9d1395d1683447c54295e957050a3cc430647e33f32fd",
    "features/level_08.html": "6c670ac5f1a01ff7258cbcc8078c19b11af9d67946c206448e0d36d3cbae1505",
-   "features/level_09.html": "c33dacfd526e60451951269d0e9607cc51f1111c66cc65bf3ce04f27143a4cce",
+   "features/level_09.html": "dd2176d05fdf4c0db03c2d8d594678359b818b56943db0f3f2ad19d9d707a1c3",
    "features/level_10.html": "cf017f842dacf39ae3a3c83b1cb4d25c193aaa2f0270ee5e854922589f075f16",
    "features/level_11.html": "4d4d3fccbf15b0c5f79c507ec53141d68d59341b739daecff65ee36bbcc55f70",
    "features/level_12.html": "c75a264699c0320803350e31e13a3b63f46901087701b00426efbaa1a8cd1314",
@@ -2520,7 +2520,7 @@
    "features/level_18.html": "7c785546ac8d3324d47f6a84b6a0476c91d7e32a303b8106f507b5c7a6ba2876",
    "features/level_19.html": "ae4da04cbcf4e459c9b073860e32bdf6b3ab666281b2f7a4e7dc9f4ec9af2f1b",
    "features/level_20.html": "74643e241fa016fd7375572ad48f016dfc7ac312e8b0f2d64762574bde704011",
-   "full_character_sheet.html": "16e40f3e523ec92a6479ba21c097ce605ee56511ee5623b9b33ff88e6e206a90",
+   "full_character_sheet.html": "f764a5a1c8888290142aeddc8f1bd47ce24f219eb8029c8d1a7e359e673aa761",
    "items.html": "0ec3d25d7beff767b641a3b1ee7e3f885054b1cc8aaa19157fd49205fb1351d4"
   }
  },
@@ -2537,10 +2537,10 @@
   "full": {
    "character.html": "05015a13a1758f093341e0893cdb71ec8b54f109256d098425e347441643311e",
    "features/level_01.html": "3b9638b2284f0d5f3b83af73674d6ecc782f32b3d55e5013295c6eb61f2588e7",
-   "features/level_02.html": "d32cb3a95b945d30d5e4c1f4fab4a9a4d0bc762b279f8b56d16018149881ad9d",
+   "features/level_02.html": "815b0e60773a088f6133a75d72f9066d5b7f826f98622fd7b88d7c8849e55e76",
    "features/level_03.html": "5177a7edbb319dcd6c8168a1932e74f2918480675823a6c16cc7dfc561ac1fc8",
    "features/level_04.html": "ac91d66441a68898778184c8a16045a29fa385c7a4f757ba497460493a21c0b0",
-   "full_character_sheet.html": "fdd38715f499394f5795a31c235db1cb9c14b09036936ec19ff8a451fe499ad5",
+   "full_character_sheet.html": "d47d64e31cdb954431d60e1910a20c1f6faa46f7fe00dfbe158cead5f22ae53b",
    "items.html": "19a0bc269d365c2d38cee647b094b5697041c2e8f02b2341188b96d2a5263b05"
   }
  },
@@ -3267,7 +3267,7 @@
    "features/level_06.html": "e512e97678ed3f1d8e2641ecedd0cd3effe132c43cc6ca23b00a363b696899b2",
    "features/level_07.html": "40667790434b5e9b33d0762b942ae782e0e55e6d0bf4fdcb6e183ef028294813",
    "features/level_08.html": "efb425fbb159be4fd326715a4400b9e2796f59c31d1b8aa34c9f2ce4ecafd22a",
-   "features/level_09.html": "786d309c29f272ea366c1bde8cb98700ccc0fd37cce38ae341ee87ce21e6d5bd",
+   "features/level_09.html": "019e920092b989594b6ebe1c2cdcbda443decb76880d0d4fdb9363af29b2d03f",
    "features/level_10.html": "194c887b405963b50a235b03a30652d620d08077970690a03623f9d0efeaa0ee",
    "features/level_11.html": "e25da9c9f124da94e606f3744d9a4785c2f38fecb733af9349f783ec081b2306",
    "features/level_12.html": "27db343e7c1a5076510d9ead8d584e356e23251f4b26bce20ce57853362b2d0d",
@@ -3280,7 +3280,7 @@
    "features/level_19.html": "ab6661c2ca99bd32662e52bcf79a998bfd1749b996b0518506deddb1d4d3f7d8",
    "features/level_20.html": "15563f91e2c3dbf6ce527ce432b290dda162b3e38fa0bfb87ea9551c2582ee8c",
    "fighting_styles.html": "85f4565357dc13769bf2d9598954d3cc1cf252f7191a8b419aee8afad88bdf61",
-   "full_character_sheet.html": "1daa0361436e4c36f9b681261debea63d31b7d9e4a2ba8d2747f623febb2fe23",
+   "full_character_sheet.html": "d16bf15b9d491b862dffa83167d77039f54c78c85ca558c8bffe7de0abc5780a",
    "items.html": "0dbf55a7e33f501d4c5b8579c9510830c48a20b84af7368f3fe7692526b43050"
   }
  },
@@ -3427,7 +3427,7 @@
    "features/level_03.html": "e628f6ebb8fff35b1adfb5de2258ba4eb7e36e4a8c8ae7953156a2e17420e412",
    "features/level_04.html": "e071b68782c625179e7f3f93e4b6a754633a6ba19a00ca1ab50200ee0ba1d054",
    "features/level_05.html": "92bcd099f6ddc361694ca5bd41cba37d42484315436a6dc2a33a8d96031f1dc0",
-   "features/level_06.html": "e645b8e6c9acd4dd8787f30e7635f24baf8946f09fd52622bd66293fe30612ad",
+   "features/level_06.html": "131370f318d669efee9eb58cdb96e7ae7d0463b849c5d2fc9479535100699eef",
    "features/level_07.html": "ae5a3e0eb05eb3cf08620b3c819cb4d31a3974dc2cf3f503562db82108a2442f",
    "features/level_08.html": "2b395dc770c33be11ff297ef2f37cadb26a6c659e00f0727f68db19e821fca27",
    "features/level_09.html": "29c3b64e6ca74a029a19762bc314c35b7a86d01b360b1b456e28b79aebba9a0c",
@@ -3439,7 +3439,7 @@
    "features/level_15.html": "d6b7fe99e00556af080dc4915c21656d9f383ff2f4361b5fa5b6def8398a9edf",
    "features/level_16.html": "3931362789c91f6962c6b301df4a5d31511591e15830d3e51485f11f80d4eea3",
    "features/level_17.html": "7b43d1d4f0deb4da4db43bf6d5c02fbb9b112e6d44670e75d1daabd575ac76d9",
-   "full_character_sheet.html": "26141f2b383563cf3a929781529c10ca879c365b21e5dd1651a7139b0aa3d403",
+   "full_character_sheet.html": "41ba04aaac4b7edc102af530b3b377b1cc27cf4f719ccf2d7ccbd2bf7ffe9982",
    "items.html": "18e8f8a49a3dff9bfa8142c26e0499474c6e1a9c30108189db6eb7c701935e27"
   }
  },
@@ -3543,9 +3543,9 @@
    "features/level_09.html": "b9c60ed680476ab00f32b32596a614440bbbcf24b4ebc985e87ac79878622a6a",
    "features/level_10.html": "ee0b2bddf32a3718622d9216e29c488e8282197453b1c97bddcfac3a0ff88ae3",
    "features/level_11.html": "76f75e12d2f4a7077d7ee4e1e14532e4d5597326c225b1b06bc2ff8ac8d717de",
-   "features/level_13.html": "2959b9f65e4b3ecaadfcfe8bf42866eb5f7d5d7ed6bfd02ed56f0432622f5647",
+   "features/level_13.html": "f389d34b750e98e55372f4a0e9b93d56587fa510979027a674308c5486d0ab95",
    "features/level_14.html": "98aab0df982823d2ff9a525476beed72b0680461651f9c06c91d0c9a70e32ff7",
-   "full_character_sheet.html": "0cc6501277118de0bc6736cf7fde6f6268371a01f45268139c7ebcd9bbe8c27b",
+   "full_character_sheet.html": "5c2475105f9ef2339c91246ec023861799eb9c817abb1e407b36e75b812945b0",
    "items.html": "47f5fded10747ea02cfbb265982acae586990909121fb2e84081d816faadfd62"
   },
   "full": {
@@ -3562,9 +3562,9 @@
    "features/level_10.html": "8ac6cad6f0d75095a6929172c988a3a648ebb246ddf83c6c73267093e1d7048a",
    "features/level_11.html": "6fc9c0ba924fb054d2eaff55d9103da5e14025a817b355b22db2539bd719b52f",
    "features/level_12.html": "9552263d1595f8af4b5b216610fdfe5b20e8f70ff1063f38cf5cf1e794bb9144",
-   "features/level_13.html": "fbc02cee98b304f8908d056ea3925de6d307dccaf1783554c145e5870fb0b743",
+   "features/level_13.html": "dccdb1ae15c7b482b56008d173f53b8a7422d01a4f6656f5d35544a58234924a",
    "features/level_14.html": "6a0a2bcc4b4ca57ea46fc4c40647adc8ab290378fa43dc94e39539808e82073b",
-   "full_character_sheet.html": "e811771c9b49bbd25c4c981d13122c249e624c17cf2e92f99d470c3d54e214ac",
+   "full_character_sheet.html": "94284d4c0953b6d5fe88864e207150842f5dbd6e4ebeb55748ad400bb8e7b061",
    "items.html": "9d988a5e8d10731b1d11e51609969e8a153abfef88ae0b4d4b30b043a906ea88"
   }
  },
@@ -3742,10 +3742,10 @@
   "full": {
    "character.html": "7b4269fbb37e8ad1fd5a5683667ca0b5648da9e4bd06dd49e0e0c60041428edc",
    "features/level_01.html": "cfdfbe66aec45a2e9304a090e6ebeb7388f6c67d0bf237588ff72a9c0db6075d",
-   "features/level_02.html": "eb1c7158c04c49f9660770e9f88c85d08f52d7f131069317d63cc6a08c493144",
+   "features/level_02.html": "49e6ffada05b6434979967e9955544cf5494f7a38a2028da78d2f29409e17e66",
    "features/level_03.html": "bbc67cb76c49a8c6a6bb1dbc8390970eb3d066f7964df92ff3d86b4c8c2ff558",
    "features/level_04.html": "d9e73db3ff8a7bfce1aaf9560f44d981af7794bbbd2ce3e2b9b34aad5cff7775",
-   "full_character_sheet.html": "13008f52a7dabbebce1fc3771233278c49390e507f726b972ec075aa28678ebd",
+   "full_character_sheet.html": "729f7cf5c92b7b83865656101ab05c9786b244d043e5d58feab000be10fa87c0",
    "items.html": "3714ddc1e1a7a8b8294a65cecd362f8740e3568e2a88e9bee0f9fd88afbe28c9"
   }
  },
@@ -3777,14 +3777,14 @@
   "full": {
    "character.html": "914007220d073fcd59da29c654586cdf5e50fde2e378ed05b97ebaa640cdd5e9",
    "features/level_01.html": "291d963f626de6edaec14e91903efa6e8c3714830228abbb8b177eac87c36115",
-   "features/level_02.html": "0040f336ddfb347003021e91f20dfa05f6c28757ffe2894183f6731dabc9a3e2",
+   "features/level_02.html": "e2bb965809e9919cea184d85995f42e312fa0893276401ec14649e93bedbb83a",
    "features/level_03.html": "e9bb2617da2d6f0f7377995b33c067fa7f5b87954987f10c870fca3b13f2f953",
    "features/level_04.html": "4662912673ee3d12da58707f0d06e5b37c1937ae44a34e8c70804ec5dfaf9fca",
    "features/level_05.html": "17996aa7ef08f7c317cce9c1c48819c986a33794df24aadbab9da71c428e45d1",
    "features/level_06.html": "9b192ded2e22d21c965f27b2e170449fd90102f0bb60842bae99d012d67ff4cc",
    "features/level_07.html": "817e5f5bc5f5bc100474420e43ed1c353bdb7eaffca13741753aa4d7aadce389",
    "features/level_08.html": "00f798580375f6a888acc0681ebe19ba9884011d95dd85da4ab289317309f962",
-   "features/level_09.html": "52e470c3966adfb315af6cc24bf7a0f3f92ab899ce1f4591f3c9c4e3fbece2d4",
+   "features/level_09.html": "452bbbe9613e343d61663608cdbea75549d3da3524c0271af6d95875a624faf6",
    "features/level_10.html": "1f7bdcf4d5808d510ef21a4c0e5fce718c60a33112e16144a4c7c5db435dbc2d",
    "features/level_11.html": "575d50732a7b59eabf93af7133b471aca8f34b76228b3e7237897936f391b12b",
    "features/level_12.html": "6f7bab2d13e4e976cf377e746ea65c19a6aa60f394baffb3c09469ca778a895d",
@@ -3796,7 +3796,7 @@
    "features/level_18.html": "7c7250e541b85728a9c7886d844d9662864f365efdb6eec83cbaaa910addc016",
    "features/level_19.html": "835475b9c3e7281fc02972948faeb6150ef91541bec29a41547dbb2a2d300d88",
    "features/level_20.html": "556fd723b1eaf3a5fe5abf6233a01776ee5758a662d212965ce37bc242b458cc",
-   "full_character_sheet.html": "5cac50b9df50af9b06e588240ca041e50731ee32e3e418c1da685b44db1f5806",
+   "full_character_sheet.html": "1b39a758692c5db59a997d0355ed3c8a0d763c3ae0cc38cf3ac56ea61dfee6ca",
    "items.html": "b5abcbf961a0694a822d59e5cba682a329deca262f071b62c6be225cc24229e9"
   }
  },
@@ -3812,9 +3812,9 @@
   "full": {
    "character.html": "8b67d1db6b76559f5c6ab9311870a8b75b96e0c3a529a5f7041bc21f9787cab5",
    "features/level_01.html": "308ad1087d0a5ffdf72c456cb93e105f2a7a0ec99904defbf4ea6add47d8a66a",
-   "features/level_02.html": "6eea23c7d5d707c8006cc4547b4e5c32868cd897dbaee15881485a83e3d9917b",
+   "features/level_02.html": "bc2f6d7851bd0c2fb8a56554d006af0f17c36bd8b89a5f58c45ce2d1259f5563",
    "features/level_03.html": "6ac1e1dff0e8935dee6aef5237a3a8cb211a9aac019dcf7ded263f38f3f07cfb",
-   "full_character_sheet.html": "1db5840e5325d579a44bc816363472023920f9e51057ce9ecc082867143c847c",
+   "full_character_sheet.html": "c783e83a62a971564e6d6099650fc7637954708de7359fd42b956fe8e1b8a5e0",
    "items.html": "d76623643d7d37a985559d1577aa5dc113f0edddad13007fade84305473548da"
   }
  },
@@ -4199,7 +4199,7 @@
    "features/level_06.html": "eacb424c0d23ec959efb2b0c1cbddd5219d7682f9aeab2c50d2a3a91e5b218a7",
    "features/level_07.html": "6a7ad699e93ccbe8bbb10eae5a79263412c593a83762d9d5411e7ec44c03cf06",
    "features/level_08.html": "31d7d7123bbbde4ad16c2a93e316d0eb02ec1db3a9424ab7844aa640c6f1f5a6",
-   "features/level_09.html": "4d3edc98de472d673d74c49790b8a1aad95b67219970e3135a91b8ca76a58793",
+   "features/level_09.html": "36857ea12e448a8a134b86e6d11a8140b184225325605ca20477ba543afcb984",
    "features/level_10.html": "10b34dad80595450280d8db78bfae398bc31fb148c8fae71bb5753a5536ac13b",
    "features/level_11.html": "79c2e832dc88e1eef64490dff46df622042f3b752329dec98598b61df684e735",
    "features/level_12.html": "1b0f1c0c2a0e69e0a452cafd556d97724864d10fecc1343efc85dbf9d0eaef7f",
@@ -4212,7 +4212,7 @@
    "features/level_19.html": "c8813a5ca38f78e75fb6808cc69c132ddb7d003db22f3ec5c204a7a6cb57bf91",
    "features/level_20.html": "7d53decb8041bd116e0da58225e180e2ab09d1b7dc8c17fba9123ea6ffd91cd6",
    "fighting_styles.html": "8c6464797406dbc02a97d522f30b3faf6ebfc93c112b532fad863fb9c4c85302",
-   "full_character_sheet.html": "0b7be282fdfd3132d35586dd407c8c52f7cdaaee44af97936a12fbc5f4dc6ba8",
+   "full_character_sheet.html": "2e0a22c762ea26b2530b8d58cc86b3013543c24f88ef304f3daaa3e3476bfd7b",
    "items.html": "d7e821d36b68d581ef1f4f9e577178e80e1823f194601d1983c5af061ba60e85"
   }
  },

@@ -61,7 +61,6 @@ class BarbarianLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -102,7 +101,6 @@ class BarbarianLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -148,7 +146,6 @@ class BarbarianLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -189,7 +186,6 @@ class BarbarianLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -221,7 +217,6 @@ class BarbarianLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
     def add_features(self, data: Grants) -> Grants:
-        self.epic_boon.origin = f"Barbarian Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
 

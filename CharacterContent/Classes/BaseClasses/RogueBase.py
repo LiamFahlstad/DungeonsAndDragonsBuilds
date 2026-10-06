@@ -58,7 +58,6 @@ class RogueLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Rogue Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -100,7 +99,6 @@ class RogueLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Rogue Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -117,7 +115,6 @@ class RogueLevel10(ClassBuilder.BaseClassLevel10):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Rogue Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -140,7 +137,6 @@ class RogueLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Rogue Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -178,7 +174,6 @@ class RogueLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Rogue Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -206,7 +201,6 @@ class RogueLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
     def add_features(self, data: Grants) -> Grants:
-        self.epic_boon.origin = f"Rogue Level {self.level}"
         data.add_feature(self.epic_boon)
         return data
 

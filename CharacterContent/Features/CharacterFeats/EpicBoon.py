@@ -1,9 +1,14 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from Model.Character import Character
+from Model.Character import Character, GrantStamp
 
 
 class EpicBoon(Feature):
-    pass
+    def _label_for(self, stamp: GrantStamp) -> str:
+        """Taken at a class level, it's labeled with that level ("Fighter
+        Level 8"); its own origin only says when it's available."""
+        if stamp.kind in ("class", "subclass"):
+            return f"{stamp.granted_by} Level {stamp.level}"
+        return super()._label_for(stamp)
 
 
 class DummyEpicBoon(EpicBoon):

@@ -121,7 +121,6 @@ class DruidLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
@@ -183,7 +182,6 @@ class DruidLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data
@@ -237,7 +235,6 @@ class DruidLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -292,7 +289,6 @@ class DruidLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Druid Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -331,7 +327,6 @@ class DruidLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: Grants,
     ) -> Grants:
-        self.epic_boon.origin = f"Druid Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
         return data

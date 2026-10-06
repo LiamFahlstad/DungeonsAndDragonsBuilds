@@ -50,8 +50,9 @@ class FeaturesMixin:
             description = feature.get_description(sb)
 
         tooltip_html = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
-        if feature.origin:
-            tooltip_html += f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
+        origin = feature.label(sb) if sb is not None else feature.origin
+        if origin:
+            tooltip_html += f"<br><span style='color:#a0a0b0;'>{origin}</span>"
         tooltip_html += "<br><br>"
 
         regained_on = feature.regained_on(sb) if sb is not None else None
@@ -106,6 +107,13 @@ class FeaturesMixin:
             return
 
         features = self.selected_character.get("_feature_objects", [])
+        stat_block = self.selected_character.get("_stat_block")
+
+        def origin_of(feature) -> str:
+            if stat_block is None:
+                return feature.origin
+            return feature.label(stat_block)
+
         dlg = QDialog(self._window)
         dlg.setWindowTitle(f"Enable Feature — {self.selected_character['name']}")
         dlg.setMinimumSize(760, 560)
@@ -144,7 +152,7 @@ class FeaturesMixin:
 
         category_items: dict[str, QTreeWidgetItem] = {}
         for feature in features:
-            category = feature.origin or "Other"
+            category = origin_of(feature) or "Other"
             cat_item = category_items.get(category)
             if cat_item is None:
                 cat_item = QTreeWidgetItem([category])
@@ -190,9 +198,9 @@ class FeaturesMixin:
             html_content = (
                 f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
             )
-            if feature.origin:
+            if origin_of(feature):
                 html_content += (
-                    f"<br><span style='color:#a0a0b0;'>{feature.origin}</span>"
+                    f"<br><span style='color:#a0a0b0;'>{origin_of(feature)}</span>"
                 )
             html_content += "<br><br>"
             html_content += f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"

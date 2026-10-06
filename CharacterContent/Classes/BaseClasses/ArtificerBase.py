@@ -90,7 +90,6 @@ class ArtificerLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
@@ -143,7 +142,6 @@ class ArtificerLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -196,7 +194,6 @@ class ArtificerLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -246,7 +243,6 @@ class ArtificerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Artificer Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -285,7 +281,6 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: Grants,
     ) -> Grants:
-        self.epic_boon.origin = f"Artificer Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data

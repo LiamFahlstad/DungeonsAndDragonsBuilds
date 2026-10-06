@@ -324,3 +324,50 @@ class TestGrantStamps:
         Grants(character, 1, "Barbarian", "class").add_feature(parent)
         Grants(character, 5, "Barbarian", "class").add_feature(early, extends=parent)
         assert character.extensions_of(parent) == [early, late]
+
+
+class TestFeatureLabels:
+    """A card's origin label agrees with where the feature was granted."""
+
+    def _granted(self, make_character, feature, level, kind="class", source="Bard"):
+        from Model.Grants import Grants
+
+        character = make_character()
+        Grants(character, level, source, kind).add_feature(feature)
+        return character
+
+    def test_a_level_label_takes_the_stamped_level(self, make_character):
+        # The second Expertise is granted at level 9, but its origin says 1.
+        expertise = _Parent(name="Expertise", origin="Bard Level 1")
+        character = self._granted(make_character, expertise, 9)
+        assert expertise.label(character) == "Bard Level 9"
+
+    def test_a_subclass_prefix_is_kept(self, make_character):
+        feature = _Parent(name="Bladesong", origin="Bladesinger Wizard Level 3")
+        character = self._granted(make_character, feature, 3, "subclass", "Wizard")
+        assert feature.label(character) == "Bladesinger Wizard Level 3"
+
+    def test_free_text_is_kept(self, make_character):
+        feature = _Parent(name="Resourceful", origin="Human Trait")
+        character = self._granted(make_character, feature, 1, "species", "Human")
+        assert feature.label(character) == "Human Trait"
+
+    def test_an_empty_class_label_names_the_class_level(self, make_character):
+        feature = _Parent(name="Class Skill Proficiencies")
+        character = self._granted(make_character, feature, 1, "class", "Paladin")
+        assert feature.label(character) == "Paladin Level 1"
+
+    def test_a_feature_not_granted_keeps_its_origin(self, make_character):
+        feature = _Parent(name="Expertise", origin="Bard Level 1")
+        assert feature.label(make_character()) == "Bard Level 1"
+
+    def test_a_general_feat_is_labeled_with_the_level_it_was_taken(
+        self, make_character
+    ):
+        from CharacterContent.Features.CharacterFeats import GeneralFeats
+
+        feat = GeneralFeats.AbilityScoreImprovement(
+            [(Ability.STRENGTH, 1), (Ability.CONSTITUTION, 1)]
+        )
+        character = self._granted(make_character, feat, 8, "class", "Fighter")
+        assert feat.label(character) == "Fighter Level 8"

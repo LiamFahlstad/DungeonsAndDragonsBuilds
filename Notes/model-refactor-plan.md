@@ -379,7 +379,17 @@ Found during Steps 0–11, and left out because they're beyond what this plan se
   - Fix what it finds. Expect hand-offs from Protocol-typed lists to code that wants concrete types: the writer reads `data.fighting_styles` as `FightingStyle`, and `top_level_features()` as `Feature`. Either narrow at the boundary with one helper (the writer's `_as`), or widen the writer's parameters to the Protocol.
 - **Verify:** A, B, C, D. No output change.
 
-### Step 13: Feature labels come from the stamp *(deliberate output change)*
+### Step 13: Feature labels come from the stamp *(deliberate output change)* — done
+
+- **Result:** `Feature.label(character)` builds a card's label from the feature's own `origin` and its stamp (`_label_for`):
+  - a "… Level N" label keeps its text and takes the stamped level ("Bladesinger Wizard Level 3" stays; "Bard Level 1" granted at 9 becomes "Bard Level 9");
+  - an empty label of a class grant becomes "`<class>` Level N";
+  - free text ("Human Trait", "Maneuver", "Paladin Spellcasting") is kept;
+  - a feature the character didn't grant keeps its `origin`;
+  - `GeneralFeat` and `EpicBoon` override `_label_for`: taken at a class level they read "Fighter Level 8". So the 68 builder `self.general_feat.origin = ...` / `self.epic_boon.origin = ...` assignments are deleted.
+
+  The card header, nested extension labels and the combat UI's feature tooltips and dialog all use `label()`.
+- **Reviewed output change:** only 26 builds, and only their labels (every page is identical with labels blanked). The changes are exactly the five wrong levels: Bard 1→2 and 1→9, Rogue 1→6, Ranger 7→9, Warlock 11→13. General feats render as before, now derived from the stamp, and the filled-in empty labels aren't shown on any card. The stats didn't move.
 
 - **Goal:** a card's "Bard Level 9" label always matches where the feature was granted, and builders stop changing features before granting them.
 - **Why:**

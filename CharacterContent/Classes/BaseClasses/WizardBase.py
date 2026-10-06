@@ -103,7 +103,6 @@ class WizardLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
@@ -158,7 +157,6 @@ class WizardLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
         return data
@@ -212,7 +210,6 @@ class WizardLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: Grants,
     ) -> Grants:
-        self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         return data
 
@@ -260,7 +257,6 @@ class WizardLevel16(ClassBuilder.BaseClassLevel16):
     spell_2: WizardSpellsUpTo8
 
     def add_features(self, data: Grants) -> Grants:
-        self.general_feat.origin = f"Wizard Level {self.level}"
         data.add_feature(self.general_feat)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
@@ -301,7 +297,6 @@ class WizardLevel19(ClassBuilder.BaseClassLevel19):
         self,
         data: Grants,
     ) -> Grants:
-        self.epic_boon.origin = f"Wizard Level {self.level}"
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
         return data

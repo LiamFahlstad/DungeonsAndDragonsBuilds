@@ -253,6 +253,9 @@ class Character:
         """Every feature granted plainly (not as an extension)."""
         return [g.feature for g in self.feature_grants if g.extends is None]
 
+    def has_granted(self, feature: GrantedFeature) -> bool:
+        return any(grant.feature is feature for grant in self.feature_grants)
+
     def stamp_of(self, feature: GrantedFeature) -> GrantStamp:
         """Where `feature` was granted from (a default stamp if it wasn't)."""
         for grant in self.feature_grants:

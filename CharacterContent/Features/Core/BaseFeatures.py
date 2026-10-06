@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal, Sequence, TextIO
 
-from Model.Character import Character
+from Model.Character import Character, GrantStamp
 from Model.Effects import Effects
 from Utils import Html
 
@@ -134,6 +134,11 @@ class FeatureActivation:
             if seconds_per_unit is not None:
                 return int(count) * seconds_per_unit
         return self.duration
+
+
+# An origin label naming the level it's granted at: "Bard Level 3",
+# "Oath of Glory Paladin Level 7" (not "General Feat Level 4+").
+_LEVEL_LABEL = re.compile(r"^(.*\S)\s+Level (\d+)$")
 
 
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
@@ -479,6 +484,26 @@ class Feature:
     def get_description(self, character: Character) -> str | None:
         return None
 
+    def label(self, character: Character) -> str:
+        """The origin label on this feature's card ("Bard Level 9"): its own
+        `origin` text, made to agree with where `character` granted it (see
+        _label_for). A feature the character didn't grant keeps `origin`."""
+        if not character.has_granted(self):
+            return self.origin or ""
+        return self._label_for(character.stamp_of(self))
+
+    def _label_for(self, stamp: GrantStamp) -> str:
+        """A "... Level N" origin takes its level from the stamp; an empty one
+        becomes "<class> Level N" for a class grant; anything else ("Human
+        Trait", "Maneuver") is kept as written."""
+        origin = self.origin or ""
+        match = _LEVEL_LABEL.match(origin)
+        if match:
+            return f"{match.group(1)} Level {stamp.level}"
+        if not origin and stamp.kind in ("class", "subclass"):
+            return f"{stamp.granted_by} Level {stamp.level}"
+        return origin
+
     def get_table_description(
         self, character: Character
     ) -> list[tuple[str, str]] | None:
@@ -595,7 +620,10 @@ class Feature:
         return [tag for tag in tags if tag]
 
     def _write_card_open(
-        self, file: TextIO, description_mode: Literal["table", "concise"] | None
+        self,
+        file: TextIO,
+        description_mode: Literal["table", "concise"] | None,
+        label: str,
     ) -> None:
         """Write a card's header (name, tag chips, origin) and open its body.
         Close with _write_card_close."""
@@ -611,7 +639,7 @@ class Feature:
         for tag in self._header_tags_html(description_mode):
             file.write(f"{tag}\n")
         file.write("</span>\n")
-        file.write(f"<span class='feature-origin'>{self.origin}</span>\n")
+        file.write(f"<span class='feature-origin'>{label}</span>\n")
         file.write("</div>\n")
         file.write("<div class='feature-body'>\n")
 
@@ -644,7 +672,7 @@ class Feature:
         if html_description is None:
             return
 
-        self._write_card_open(file, description_mode)
+        self._write_card_open(file, description_mode, self.label(character))
 
         resource_tiles = self.get_resource_tiles(character)
         if resource_tiles:
@@ -691,7 +719,7 @@ class Feature:
             )
             file.write(
                 self._upgrade_block_html(
-                    f"{extension.origin}: {extension.name}{ext_tags}",
+                    f"{extension.label(character)}: {extension.name}{ext_tags}",
                     ext_html,
                     extension.uses,
                 )
@@ -716,7 +744,7 @@ class Feature:
 
         # The card header already carries this feature's tags (Passive included),
         # so the label only names the parent.
-        self._write_card_open(file, description_mode)
+        self._write_card_open(file, description_mode, self.label(character))
         file.write(
             self._upgrade_block_html(
                 f"Extends {parent_name}",
