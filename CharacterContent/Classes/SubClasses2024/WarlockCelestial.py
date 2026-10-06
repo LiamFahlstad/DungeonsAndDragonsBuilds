@@ -29,7 +29,7 @@ class WarlockCelestialLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockCelestialFeatures.CelestialSpells())
         data.add_feature(WarlockCelestialFeatures.HealingLight())
         data.add_cantrip(ClericLevel0Spells.LIGHT)
@@ -38,7 +38,6 @@ class WarlockCelestialLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.LESSER_RESTORATION)
-        return data
 
 
 @attr.dataclass
@@ -47,10 +46,9 @@ class WarlockCelestialLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel3Spells.DAYLIGHT)
         data.add_spell(ClericLevel3Spells.REVIVIFY)
-        return data
 
 
 @attr.dataclass
@@ -59,9 +57,8 @@ class WarlockCelestialLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockCelestialFeatures.RadiantSoul())
-        return data
 
 
 @attr.dataclass
@@ -70,10 +67,9 @@ class WarlockCelestialLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
         data.add_spell(SorcererLevel4Spells.WALL_OF_FIRE)
-        return data
 
 
 @attr.dataclass
@@ -82,10 +78,9 @@ class WarlockCelestialLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel5Spells.GREATER_RESTORATION)
         data.add_spell(ClericLevel5Spells.SUMMON_CELESTIAL)
-        return data
 
 
 @attr.dataclass
@@ -94,12 +89,11 @@ class WarlockCelestialLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockCelestialFeatures.CelestialResilience(),
             extends=WarlockFeatures.MagicalCunning,
         )
-        return data
 
 
 @attr.dataclass
@@ -108,9 +102,8 @@ class WarlockCelestialLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockCelestialFeatures.SearingVengeance())
-        return data
 
 
 class WarlockCelestialCustomStarterClassArgs(WarlockCustomStarterClassArgs):

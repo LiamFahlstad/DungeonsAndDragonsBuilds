@@ -29,12 +29,11 @@ class RangerSwarmkeeperLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerSwarmkeeperFeatures.GatheredSwarm())
         data.add_feature(RangerSwarmkeeperFeatures.SwarmkeeperMagic())
         data.add_cantrip(WizardLevel0Spells.MAGE_HAND)
         data.add_spell(DruidLevel1Spells.FAERIE_FIRE)
-        return data
 
 
 @attr.dataclass
@@ -43,9 +42,8 @@ class RangerSwarmkeeperLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel2Spells.WEB)
-        return data
 
 
 @attr.dataclass
@@ -54,9 +52,8 @@ class RangerSwarmkeeperLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerSwarmkeeperFeatures.WrithingTide())
-        return data
 
 
 @attr.dataclass
@@ -65,9 +62,8 @@ class RangerSwarmkeeperLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel3Spells.GASEOUS_FORM)
-        return data
 
 
 @attr.dataclass
@@ -76,12 +72,11 @@ class RangerSwarmkeeperLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerSwarmkeeperFeatures.MightySwarm(),
             extends=RangerSwarmkeeperFeatures.GatheredSwarm,
         )
-        return data
 
 
 @attr.dataclass
@@ -90,9 +85,8 @@ class RangerSwarmkeeperLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel4Spells.ARCANE_EYE)
-        return data
 
 
 @attr.dataclass
@@ -101,9 +95,8 @@ class RangerSwarmkeeperLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerSwarmkeeperFeatures.SwarmingDispersal())
-        return data
 
 
 @attr.dataclass
@@ -112,9 +105,8 @@ class RangerSwarmkeeperLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel5Spells.INSECT_PLAGUE)
-        return data
 
 
 class RangerSwarmkeeperCustomStarterClassArgs(RangerCustomStarterClassArgs):

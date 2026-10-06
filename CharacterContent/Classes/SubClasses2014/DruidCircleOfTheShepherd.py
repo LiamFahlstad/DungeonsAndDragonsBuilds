@@ -22,10 +22,9 @@ class DruidShepherdLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidShepherdFeatures.SpeechOfTheWoods())
         data.add_feature(DruidShepherdFeatures.SpiritTotem())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class DruidShepherdLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidShepherdFeatures.MightySummoner())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class DruidShepherdLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidShepherdFeatures.GuardianSpirit(),
             extends=DruidShepherdFeatures.SpiritTotem,
         )
-        return data
 
 
 @attr.dataclass
@@ -59,9 +56,8 @@ class DruidShepherdLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidShepherdFeatures.FaithfulSummons())
-        return data
 
 
 class DruidShepherdCustomStarterClassArgs(DruidCustomStarterClassArgs):

@@ -25,14 +25,13 @@ class FighterBattleMasterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         superiority_dice = FighterBattleMasterFeatures.SuperiorityDice()
         data.add_feature(self.maneuver_1, extends=superiority_dice)
         data.add_feature(self.maneuver_2, extends=superiority_dice)
         data.add_feature(self.maneuver_3, extends=superiority_dice)
         data.add_feature(superiority_dice)
         data.add_feature(FighterBattleMasterFeatures.StudentOfWar())
-        return data
 
 
 @attr.dataclass
@@ -43,7 +42,7 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -51,7 +50,6 @@ class FighterBattleMasterLevel7(ClassBuilder.SubclassLevel7):
             self.maneuver_2, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
         data.add_feature(FighterBattleMasterFeatures.KnowYourEnemy())
-        return data
 
 
 @attr.dataclass
@@ -62,7 +60,7 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -73,7 +71,6 @@ class FighterBattleMasterLevel10(ClassBuilder.SubclassLevel10):
             FighterBattleMasterFeatures.ImprovedCombatSuperiority(),
             extends=FighterBattleMasterFeatures.SuperiorityDice,
         )
-        return data
 
 
 @attr.dataclass
@@ -84,7 +81,7 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             self.maneuver_1, extends=FighterBattleMasterFeatures.SuperiorityDice
         )
@@ -95,7 +92,6 @@ class FighterBattleMasterLevel15(ClassBuilder.SubclassLevel15):
             FighterBattleMasterFeatures.Relentless(),
             extends=FighterBattleMasterFeatures.SuperiorityDice,
         )
-        return data
 
 
 @attr.dataclass
@@ -104,12 +100,11 @@ class FighterBattleMasterLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterBattleMasterFeatures.UltimateCombatSuperiority(),
             extends=FighterBattleMasterFeatures.SuperiorityDice,
         )
-        return data
 
 
 class FighterBattleMasterCustomStarterClassArgs(FighterCustomStarterClassArgs):

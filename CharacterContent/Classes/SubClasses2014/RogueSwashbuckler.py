@@ -22,13 +22,12 @@ class RogueSwashbucklerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSwashbucklerFeatures.FancyFootwork())
         data.add_feature(
             RogueSwashbucklerFeatures.RakishAudacity(),
             extends=RogueFeatures.SneakAttack,
         )
-        return data
 
 
 @attr.dataclass
@@ -37,9 +36,8 @@ class RogueSwashbucklerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSwashbucklerFeatures.Panache())
-        return data
 
 
 @attr.dataclass
@@ -48,9 +46,8 @@ class RogueSwashbucklerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSwashbucklerFeatures.ElegantManeuver())
-        return data
 
 
 @attr.dataclass
@@ -59,9 +56,8 @@ class RogueSwashbucklerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSwashbucklerFeatures.MasterDuelist())
-        return data
 
 
 class RogueSwashbucklerCustomStarterClassArgs(RogueCustomStarterClassArgs):

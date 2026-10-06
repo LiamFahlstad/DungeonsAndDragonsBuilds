@@ -68,6 +68,7 @@ from Core.Definitions import (
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
 from Model.Effects import Effects
+from tests._grants import grant
 
 
 def _source_bonus(character, skill, source):
@@ -471,7 +472,7 @@ class TestExpertiseRequirement:
 
     def test_expertise_without_proficiency_is_rejected(self):
         data, skill = self._data_and_unproficient_skill()
-        data.add_feature(_GrantExpertise(skill))
+        grant(data).add_feature(_GrantExpertise(skill))
         with pytest.raises(ValueError, match="unproficient skill"):
             data.validate()
 
@@ -479,8 +480,8 @@ class TestExpertiseRequirement:
         # e.g. a class's Expertise pick relying on a species proficiency,
         # which merges after every class builder.
         data, skill = self._data_and_unproficient_skill()
-        data.add_feature(_GrantExpertise(skill))
-        data.add_feature(_GrantProficiency(skill))
+        grant(data).add_feature(_GrantExpertise(skill))
+        grant(data).add_feature(_GrantProficiency(skill))
         character = data.validate()
         assert character.has_expertise_in_skill(skill)
 
@@ -499,7 +500,7 @@ class TestExtensionsApply:
         data = data.build()
         assert not data.validate().is_immune_to_damage(DamageType.FIRE)
         # An extension is a source like any other: granting one re-evaluates.
-        data.add_feature(
+        grant(data).add_feature(
             ClericForgeFeatures.SaintOfForgeAndFire(), extends=data.features[0]
         )
         assert data.validate().is_immune_to_damage(DamageType.FIRE)
@@ -603,7 +604,7 @@ class TestProficienciesResolveOnRead:
         data.add_weapon(longbow)
         assert not longbow.is_proficient(data.validate())
         # Granted after the weapon was added - no longer too late.
-        data.add_feature(_GrantMartialWeapons())
+        grant(data).add_feature(_GrantMartialWeapons())
         character = data.validate()
         assert longbow.is_proficient(character)
         assert (

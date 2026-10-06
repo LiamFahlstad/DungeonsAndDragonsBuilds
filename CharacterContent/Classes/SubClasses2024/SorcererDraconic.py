@@ -28,14 +28,13 @@ class SorcererDraconicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDraconicFeatures.DraconicSpells())
         data.add_feature(SorcererDraconicFeatures.DraconicResilience())
         data.add_spell(SorcererLevel1Spells.CHROMATIC_ORB)
         data.add_spell(SorcererLevel2Spells.ALTER_SELF)
         data.add_spell(BardLevel1Spells.COMMAND)
         data.add_spell(SorcererLevel2Spells.DRAGONS_BREATH)
-        return data
 
 
 @attr.dataclass
@@ -43,10 +42,9 @@ class SorcererDraconicLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel3Spells.FEAR)
         data.add_spell(SorcererLevel3Spells.FLY)
-        return data
 
 
 @attr.dataclass
@@ -56,11 +54,10 @@ class SorcererDraconicLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererDraconicFeatures.ElementalAffinity(self.elemental_affinity)
         )
-        return data
 
 
 @attr.dataclass
@@ -68,10 +65,9 @@ class SorcererDraconicLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel4Spells.ARCANE_EYE)
         data.add_spell(SorcererLevel4Spells.CHARM_MONSTER)
-        return data
 
 
 @attr.dataclass
@@ -79,10 +75,9 @@ class SorcererDraconicLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel5Spells.LEGEND_LORE)
         data.add_spell(WizardLevel5Spells.SUMMON_DRAGON)
-        return data
 
 
 @attr.dataclass
@@ -90,9 +85,8 @@ class SorcererDraconicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDraconicFeatures.DragonWings())
-        return data
 
 
 @attr.dataclass
@@ -100,9 +94,8 @@ class SorcererDraconicLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDraconicFeatures.DragonCompanion())
-        return data
 
 
 class SorcererDraconicCustomStarterClassArgs(SorcererCustomStarterClassArgs):

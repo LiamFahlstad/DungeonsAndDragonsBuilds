@@ -64,7 +64,7 @@ class WizardTransmuterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardTransmuterFeatures.TransmutationSavant())
         data.add_feature(WizardTransmuterFeatures.TransmutersStone())
         data.add_feature(WizardTransmuterFeatures.WondrousAlteration())
@@ -74,7 +74,6 @@ class WizardTransmuterLevel3(ClassBuilder.SubclassLevel3):
         )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -84,9 +83,8 @@ class WizardTransmuterLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -95,9 +93,8 @@ class WizardTransmuterLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardTransmuterFeatures.EmpoweredTransmutation())
-        return data
 
 
 @attr.dataclass
@@ -107,9 +104,8 @@ class WizardTransmuterLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -119,9 +115,8 @@ class WizardTransmuterLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -130,7 +125,7 @@ class WizardTransmuterLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardTransmuterFeatures.PotentStone(),
             extends=WizardTransmuterFeatures.TransmutersStone,
@@ -140,7 +135,6 @@ class WizardTransmuterLevel10(ClassBuilder.SubclassLevel10):
             TransmutationLevel4Spells.POLYMORPH,
             additional_ruling="Always prepared; cast once without a spell slot per Long Rest",
         )
-        return data
 
 
 @attr.dataclass
@@ -150,9 +144,8 @@ class WizardTransmuterLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -162,9 +155,8 @@ class WizardTransmuterLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -173,12 +165,11 @@ class WizardTransmuterLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardTransmuterFeatures.MasterTransmuter(),
             extends=WizardTransmuterFeatures.TransmutersStone,
         )
-        return data
 
 
 @attr.dataclass
@@ -188,9 +179,8 @@ class WizardTransmuterLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -200,9 +190,8 @@ class WizardTransmuterLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 class WizardTransmuterCustomStarterClassArgs(WizardCustomStarterClassArgs):

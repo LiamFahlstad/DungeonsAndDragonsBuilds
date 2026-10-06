@@ -30,7 +30,7 @@ class SorcererAberrantLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererAberrantFeatures.PsionicSpells())
         data.add_spell(ConjurationLevel1Spells.ARMS_OF_HADAR)
         data.add_spell(EnchantmentLevel2Spells.CALM_EMOTIONS)
@@ -38,7 +38,6 @@ class SorcererAberrantLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(EnchantmentLevel1Spells.DISSONANT_WHISPERS)
         data.add_spell(EnchantmentLevel0Spells.MIND_SLIVER)
         data.add_feature(SorcererAberrantFeatures.TelepathicSpeech())
-        return data
 
 
 @attr.dataclass
@@ -46,10 +45,9 @@ class SorcererAberrantLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ConjurationLevel3Spells.HUNGER_OF_HADAR)
         data.add_spell(DivinationLevel3Spells.SENDING)
-        return data
 
 
 @attr.dataclass
@@ -57,13 +55,12 @@ class SorcererAberrantLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererAberrantFeatures.PsionicSorcery(),
             extends=SorcererAberrantFeatures.PsionicSpells,
         )
         data.add_feature(SorcererAberrantFeatures.PsychicDefenses())
-        return data
 
 
 @attr.dataclass
@@ -71,10 +68,9 @@ class SorcererAberrantLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES)
         data.add_spell(ConjurationLevel4Spells.SUMMON_ABERRATION)
-        return data
 
 
 @attr.dataclass
@@ -82,10 +78,9 @@ class SorcererAberrantLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DivinationLevel5Spells.RARYS_TELEPATHIC_BOND)
         data.add_spell(TransmutationLevel5Spells.TELEKINESIS)
-        return data
 
 
 @attr.dataclass
@@ -93,9 +88,8 @@ class SorcererAberrantLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererAberrantFeatures.RevelationInFlesh())
-        return data
 
 
 @attr.dataclass
@@ -103,9 +97,8 @@ class SorcererAberrantLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererAberrantFeatures.WarpingImplosion())
-        return data
 
 
 class SorcererAberrantCustomStarterClassArgs(SorcererCustomStarterClassArgs):

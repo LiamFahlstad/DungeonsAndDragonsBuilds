@@ -27,7 +27,7 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel1Spells.BLESS)
         data.add_spell(ClericLevel1Spells.CURE_WOUNDS)
         data.add_spell(ClericLevel2Spells.AID)
@@ -37,7 +37,6 @@ class ClericLifeLevel3(ClassBuilder.SubclassLevel3):
             ClericLifeFeatures.PreserveLife(), extends=ClericFeatures.ChannelDivinity
         )
         data.add_feature(ClericLifeFeatures.DiscipleOfLife())
-        return data
 
 
 @attr.dataclass
@@ -46,10 +45,9 @@ class ClericLifeLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel3Spells.MASS_HEALING_WORD)
         data.add_spell(ClericLevel3Spells.REVIVIFY)
-        return data
 
 
 @attr.dataclass
@@ -58,9 +56,8 @@ class ClericLifeLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericLifeFeatures.BlessedHealer())
-        return data
 
 
 @attr.dataclass
@@ -69,10 +66,9 @@ class ClericLifeLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel4Spells.AURA_OF_LIFE)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
-        return data
 
 
 @attr.dataclass
@@ -81,10 +77,9 @@ class ClericLifeLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel5Spells.GREATER_RESTORATION)
         data.add_spell(ClericLevel5Spells.MASS_CURE_WOUNDS)
-        return data
 
 
 @attr.dataclass
@@ -93,9 +88,8 @@ class ClericLifeLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericLifeFeatures.SupremeHealing())
-        return data
 
 
 class ClericLifeCustomStarterClassArgs(ClericCustomStarterClassArgs):

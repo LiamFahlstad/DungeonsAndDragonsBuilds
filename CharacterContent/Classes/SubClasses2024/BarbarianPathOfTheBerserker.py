@@ -22,11 +22,10 @@ class BarbarianBerserkerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBerserkerFeatures.Frenzy(), extends=BarbarianFeatures.Rage
         )
-        return data
 
 
 @attr.dataclass
@@ -35,12 +34,11 @@ class BarbarianBerserkerLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBerserkerFeatures.MindlessRage(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -49,9 +47,8 @@ class BarbarianBerserkerLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheBerserkerFeatures.Retaliation())
-        return data
 
 
 @attr.dataclass
@@ -60,12 +57,11 @@ class BarbarianBerserkerLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBerserkerFeatures.IntimidatingPresence(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianBerserkerCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

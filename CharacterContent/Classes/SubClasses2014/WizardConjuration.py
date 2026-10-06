@@ -21,10 +21,9 @@ class WizardConjurationLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardConjurationFeatures.ConjurationSavant())
         data.add_feature(WizardConjurationFeatures.MinorConjuration())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class WizardConjurationLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardConjurationFeatures.BenignTransportation())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class WizardConjurationLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardConjurationFeatures.FocusedConjuration())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class WizardConjurationLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardConjurationFeatures.DurableSummons())
-        return data
 
 
 class WizardConjurationCustomStarterClassArgs(WizardCustomStarterClassArgs):

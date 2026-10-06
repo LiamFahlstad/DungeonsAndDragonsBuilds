@@ -22,10 +22,9 @@ class FighterEldritchKnightLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEldritchKnightFeatures.EldritchKnightSpellcasting())
         data.add_feature(FighterEldritchKnightFeatures.WarBond())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class FighterEldritchKnightLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEldritchKnightFeatures.WarMagic())
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class FighterEldritchKnightLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEldritchKnightFeatures.EldritchStrike())
-        return data
 
 
 @attr.dataclass
@@ -56,9 +53,8 @@ class FighterEldritchKnightLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEldritchKnightFeatures.ArcaneCharge())
-        return data
 
 
 @attr.dataclass
@@ -67,12 +63,11 @@ class FighterEldritchKnightLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterEldritchKnightFeatures.ImprovedWarMagic(),
             extends=FighterEldritchKnightFeatures.WarMagic,
         )
-        return data
 
 
 class FighterEldritchKnightCustomStarterClassArgs(FighterCustomStarterClassArgs):

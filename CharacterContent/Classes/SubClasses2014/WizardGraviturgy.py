@@ -21,9 +21,8 @@ class WizardGraviturgyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardGraviturgyFeatures.AdjustDensity())
-        return data
 
 
 @attr.dataclass
@@ -32,9 +31,8 @@ class WizardGraviturgyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardGraviturgyFeatures.GravityWell())
-        return data
 
 
 @attr.dataclass
@@ -43,9 +41,8 @@ class WizardGraviturgyLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardGraviturgyFeatures.ViolentAttraction())
-        return data
 
 
 @attr.dataclass
@@ -54,9 +51,8 @@ class WizardGraviturgyLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardGraviturgyFeatures.EventHorizon())
-        return data
 
 
 class WizardGraviturgyCustomStarterClassArgs(WizardCustomStarterClassArgs):

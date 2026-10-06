@@ -21,10 +21,9 @@ class WizardEnchantmentLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardEnchantmentFeatures.EnchantmentSavant())
         data.add_feature(WizardEnchantmentFeatures.HypnoticGaze())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class WizardEnchantmentLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardEnchantmentFeatures.InstinctiveCharm())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class WizardEnchantmentLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardEnchantmentFeatures.SplitEnchantment())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class WizardEnchantmentLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardEnchantmentFeatures.AlterMemories())
-        return data
 
 
 class WizardEnchantmentCustomStarterClassArgs(WizardCustomStarterClassArgs):

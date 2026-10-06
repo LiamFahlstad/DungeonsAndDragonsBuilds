@@ -53,7 +53,7 @@ class SorcererLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererFeatures.Spellcasting())
         data.add_feature(SorcererFeatures.InnateSorcery())
         data.add_cantrip(self.cantrip_1)
@@ -62,7 +62,6 @@ class SorcererLevel1(ClassBuilder.BaseClassLevel1):
         data.add_cantrip(self.cantrip_4)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -73,12 +72,11 @@ class SorcererLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererFeatures.FontOfMagic())
         data.add_feature(SorcererFeatures.Metamagic())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -89,10 +87,9 @@ class SorcererLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -104,11 +101,10 @@ class SorcererLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -119,14 +115,13 @@ class SorcererLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererFeatures.SorcerousRestoration(),
             extends=SorcererFeatures.FontOfMagic,
         )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -136,9 +131,8 @@ class SorcererLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -148,12 +142,11 @@ class SorcererLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererFeatures.SorceryIncarnate(), extends=SorcererFeatures.InnateSorcery
         )
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -164,10 +157,9 @@ class SorcererLevel8(ClassBuilder.BaseClassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -178,10 +170,9 @@ class SorcererLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -192,10 +183,9 @@ class SorcererLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -205,9 +195,8 @@ class SorcererLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -217,9 +206,8 @@ class SorcererLevel12(ClassBuilder.BaseClassLevel12):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -229,9 +217,8 @@ class SorcererLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -240,8 +227,8 @@ class SorcererLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
-        return data
+    ) -> None:
+        pass
 
 
 @attr.dataclass
@@ -251,18 +238,16 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class SorcererLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -272,9 +257,8 @@ class SorcererLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -284,9 +268,8 @@ class SorcererLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -297,22 +280,20 @@ class SorcererLevel19(ClassBuilder.BaseClassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class SorcererLevel20(ClassBuilder.BaseClassLevel20):
     spell: SorcererSpellsUpTo9
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             SorcererFeatures.ArcaneApotheosis(), extends=SorcererFeatures.InnateSorcery
         )
         data.add_spell(self.spell)
-        return data
 
 
 class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

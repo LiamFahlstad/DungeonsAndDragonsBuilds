@@ -29,14 +29,13 @@ class WarlockFiendLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFiendFeatures.FiendSpells())
         data.add_feature(WarlockFiendFeatures.DarkOnesBlessing())
         data.add_spell(SorcererLevel1Spells.BURNING_HANDS)
         data.add_spell(BardLevel1Spells.COMMAND)
         data.add_spell(SorcererLevel2Spells.SCORCHING_RAY)
         data.add_spell(WarlockLevel2Spells.SUGGESTION)
-        return data
 
 
 @attr.dataclass
@@ -45,10 +44,9 @@ class WarlockFiendLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel3Spells.FIREBALL)
         data.add_spell(SorcererLevel3Spells.STINKING_CLOUD)
-        return data
 
 
 @attr.dataclass
@@ -57,9 +55,8 @@ class WarlockFiendLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFiendFeatures.DarkOnesOwnLuck())
-        return data
 
 
 @attr.dataclass
@@ -68,10 +65,9 @@ class WarlockFiendLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
         data.add_spell(SorcererLevel4Spells.WALL_OF_FIRE)
-        return data
 
 
 @attr.dataclass
@@ -80,10 +76,9 @@ class WarlockFiendLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(BardLevel5Spells.GEAS)
         data.add_spell(SorcererLevel5Spells.INSECT_PLAGUE)
-        return data
 
 
 @attr.dataclass
@@ -92,9 +87,8 @@ class WarlockFiendLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFiendFeatures.FiendishResilience())
-        return data
 
 
 @attr.dataclass
@@ -103,9 +97,8 @@ class WarlockFiendLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFiendFeatures.HurlThroughHell())
-        return data
 
 
 class WarlockFiendCustomStarterClassArgs(WarlockCustomStarterClassArgs):

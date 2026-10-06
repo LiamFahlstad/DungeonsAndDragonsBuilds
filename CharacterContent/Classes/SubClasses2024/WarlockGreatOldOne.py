@@ -32,7 +32,7 @@ class WarlockGreatOldOneLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockGreatOldOneFeatures.GreatOldOneSpells())
         data.add_feature(WarlockGreatOldOneFeatures.AwakenedMind())
         data.add_feature(WarlockGreatOldOneFeatures.PsychicSpells())
@@ -40,7 +40,6 @@ class WarlockGreatOldOneLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(BardLevel1Spells.DISSONANT_WHISPERS)
         data.add_spell(SorcererLevel2Spells.PHANTASMAL_FORCE)
         data.add_spell(WarlockLevel1Spells.TASHAS_HIDEOUS_LAUGHTER)
-        return data
 
 
 @attr.dataclass
@@ -49,10 +48,9 @@ class WarlockGreatOldOneLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel3Spells.CLAIRVOYANCE)
         data.add_spell(WarlockLevel3Spells.HUNGER_OF_HADAR)
-        return data
 
 
 @attr.dataclass
@@ -61,12 +59,11 @@ class WarlockGreatOldOneLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockGreatOldOneFeatures.ClairvoyantCombatant(),
             extends=WarlockGreatOldOneFeatures.AwakenedMind,
         )
-        return data
 
 
 @attr.dataclass
@@ -75,10 +72,9 @@ class WarlockGreatOldOneLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel4Spells.CONFUSION)
         data.add_spell(WarlockLevel4Spells.SUMMON_ABERRATION)
-        return data
 
 
 @attr.dataclass
@@ -87,10 +83,9 @@ class WarlockGreatOldOneLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(BardLevel5Spells.MODIFY_MEMORY)
         data.add_spell(SorcererLevel5Spells.TELEKINESIS)
-        return data
 
 
 @attr.dataclass
@@ -99,11 +94,10 @@ class WarlockGreatOldOneLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockGreatOldOneFeatures.EldritchHex())
         data.add_spell(WarlockLevel1Spells.HEX, additional_ruling="Always prepared")
         data.add_feature(WarlockGreatOldOneFeatures.ThoughtShield())
-        return data
 
 
 @attr.dataclass
@@ -112,9 +106,8 @@ class WarlockGreatOldOneLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockGreatOldOneFeatures.CreateThrall())
-        return data
 
 
 class WarlockGreatOldOneCustomStarterClassArgs(WarlockCustomStarterClassArgs):

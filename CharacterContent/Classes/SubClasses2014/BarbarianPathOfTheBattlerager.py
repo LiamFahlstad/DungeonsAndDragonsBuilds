@@ -22,9 +22,8 @@ class BarbarianBattleragerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheBattleragerFeatures.BattleragerArmor())
-        return data
 
 
 @attr.dataclass
@@ -33,12 +32,11 @@ class BarbarianBattleragerLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.RecklessAbandon(),
             extends=BarbarianFeatures.RecklessAttack,
         )
-        return data
 
 
 @attr.dataclass
@@ -47,12 +45,11 @@ class BarbarianBattleragerLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.BattleragerCharge(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -61,12 +58,11 @@ class BarbarianBattleragerLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheBattleragerFeatures.SpikedRetribution(),
             extends=BarbarianPathOfTheBattleragerFeatures.BattleragerArmor,
         )
-        return data
 
 
 class BarbarianBattleragerCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

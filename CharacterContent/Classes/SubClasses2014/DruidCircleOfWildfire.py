@@ -22,10 +22,9 @@ class DruidWildfireLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidWildfireFeatures.CircleSpells())
         data.add_feature(DruidWildfireFeatures.SummonWildfireSpirit())
-        return data
 
 
 @attr.dataclass
@@ -34,12 +33,11 @@ class DruidWildfireLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidWildfireFeatures.EnhancedBond(),
             extends=DruidWildfireFeatures.SummonWildfireSpirit,
         )
-        return data
 
 
 @attr.dataclass
@@ -48,9 +46,8 @@ class DruidWildfireLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidWildfireFeatures.CauterizingFlames())
-        return data
 
 
 @attr.dataclass
@@ -59,12 +56,11 @@ class DruidWildfireLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidWildfireFeatures.BlazingRevival(),
             extends=DruidWildfireFeatures.SummonWildfireSpirit,
         )
-        return data
 
 
 class DruidWildfireCustomStarterClassArgs(DruidCustomStarterClassArgs):

@@ -19,11 +19,10 @@ class ClericArcanaLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericArcanaFeatures.ArcaneInitiate())
         data.add_feature(ClericArcanaFeatures.ArcanaDomainSpells())
         data.add_feature(ClericArcanaFeatures.ArcaneAbjurationChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -32,9 +31,8 @@ class ClericArcanaLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericArcanaFeatures.SpellBreaker())
-        return data
 
 
 @attr.dataclass
@@ -43,12 +41,11 @@ class ClericArcanaLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericArcanaFeatures.ArcaneMastery(),
             extends=ClericArcanaFeatures.ArcanaDomainSpells,
         )
-        return data
 
 
 class ClericArcanaCustomStarterClassArgs(ClericCustomStarterClassArgs):

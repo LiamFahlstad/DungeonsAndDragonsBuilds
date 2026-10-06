@@ -24,14 +24,13 @@ class RangerBeastMasterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerBeastMasterFeatures.PrimalCompanion(
                 companion_type=self.companion_type,
                 damage_type=self.damage_type,
             )
         )
-        return data
 
 
 @attr.dataclass
@@ -40,12 +39,11 @@ class RangerBeastMasterLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerBeastMasterFeatures.ExceptionalTraining(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        return data
 
 
 @attr.dataclass
@@ -54,12 +52,11 @@ class RangerBeastMasterLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerBeastMasterFeatures.BestialFury(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        return data
 
 
 @attr.dataclass
@@ -68,12 +65,11 @@ class RangerBeastMasterLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerBeastMasterFeatures.ShareSpells(),
             extends=RangerBeastMasterFeatures.PrimalCompanion,
         )
-        return data
 
 
 class RangerBeastMasterCustomStarterClassArgs(RangerCustomStarterClassArgs):

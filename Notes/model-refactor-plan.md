@@ -416,7 +416,13 @@ Found during Steps 0–11, and left out because they're beyond what this plan se
   - Review the six builds whose duplicate-producing spell swap Step 9 removed (Sable, Faelan, Marlowe, Titus, Iselle, Balder), and give each the spell it was meant to swap in.
 - **Verify:** A, B, C. Sheet hashes move only for the fixed builds. Review each with `diff -r` against a dump.
 
-### Step 15: Every grant goes through a scope *(mechanical)*
+### Step 15: Every grant goes through a scope *(mechanical)* — done
+
+- **Required stamps:** `Character.add_feature`, `add_spell` and `add_cantrip` take a required keyword-only `stamp: GrantStamp`, and `Grants` builds it. Nothing can be granted unstamped, and the "Other" defaults are gone. `OriginFeat.grant_to` takes only a `Grants`.
+- **Tests:** they grant through `tests/_grants.py`, with `grant(character, level=1, granted_by="Test")` for a single grant and `apply_level(level_builder, character)` to run one level builder at its own level, as `ClassBuilder` does. 31 direct test grants and 12 direct `add_features(data)` calls were rewritten.
+- **Return values:** the 934 level builders' `add_features` return `None`, and their `return data` lines are gone. `BaseClassLevelFeatures.add_features` and `SpeciesBuilder.build` still return the `Character`, because their callers use it.
+- **`stamp_of` / `has_granted`** use an id-indexed map, cached under the character's version.
+- No output change.
 
 - **Goal:** no grant is stamped "Other" by accident, and the scope is the only way to grant.
 - **Changes:**

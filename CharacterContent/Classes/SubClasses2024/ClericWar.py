@@ -21,7 +21,7 @@ class ClericWarLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(SpellDefinitions.TransmutationLevel2Spells.MAGIC_WEAPON)
         data.add_spell(SpellDefinitions.ClericLevel1Spells.SHIELD_OF_FAITH)
@@ -31,7 +31,6 @@ class ClericWarLevel3(ClassBuilder.SubclassLevel3):
             ClericWarFeatures.GuidedStrike(), extends=ClericFeatures.ChannelDivinity
         )
         data.add_feature(ClericWarFeatures.WarPriest())
-        return data
 
 
 @attr.dataclass
@@ -40,10 +39,9 @@ class ClericWarLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EvocationLevel3Spells.CRUSADERS_MANTLE)
         data.add_spell(SpellDefinitions.ClericLevel3Spells.SPIRIT_GUARDIANS)
-        return data
 
 
 @attr.dataclass
@@ -52,11 +50,10 @@ class ClericWarLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericWarFeatures.WarGodsBlessing(), extends=ClericFeatures.ChannelDivinity
         )
-        return data
 
 
 @attr.dataclass
@@ -65,10 +62,9 @@ class ClericWarLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EvocationLevel4Spells.FIRE_SHIELD)
         data.add_spell(SpellDefinitions.ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
-        return data
 
 
 @attr.dataclass
@@ -77,10 +73,9 @@ class ClericWarLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EnchantmentLevel5Spells.HOLD_MONSTER)
         data.add_spell(SpellDefinitions.ConjurationLevel5Spells.STEEL_WIND_STRIKE)
-        return data
 
 
 @attr.dataclass
@@ -89,9 +84,8 @@ class ClericWarLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericWarFeatures.AvatarOfBattle())
-        return data
 
 
 class ClericWarCustomStarterClassArgs(ClericCustomStarterClassArgs):

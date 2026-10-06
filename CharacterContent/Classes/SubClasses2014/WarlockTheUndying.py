@@ -21,10 +21,9 @@ class WarlockTheUndyingLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockTheUndyingFeatures.UndyingExpandedSpells())
         data.add_feature(WarlockTheUndyingFeatures.AmongTheDead())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class WarlockTheUndyingLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockTheUndyingFeatures.DefyDeath())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class WarlockTheUndyingLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockTheUndyingFeatures.UndyingNature())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class WarlockTheUndyingLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockTheUndyingFeatures.IndestructibleLife())
-        return data
 
 
 class WarlockTheUndyingCustomStarterClassArgs(WarlockCustomStarterClassArgs):

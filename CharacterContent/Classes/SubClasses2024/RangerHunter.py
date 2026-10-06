@@ -40,13 +40,12 @@ class RangerHunterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerHunterFeatures.HuntersLore())
         if isinstance(self.hunters_prey, HordeBreakerChoice):
             data.add_feature(RangerHunterFeatures.HordeBreaker())
         else:
             data.add_feature(RangerHunterFeatures.ColossusSlayer())
-        return data
 
 
 @attr.dataclass
@@ -56,12 +55,11 @@ class RangerHunterLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         if isinstance(self.defensive_tactics, MultiattackDefenseChoice):
             data.add_feature(RangerHunterFeatures.MultiattackDefense())
         else:
             data.add_feature(RangerHunterFeatures.EscapeTheHorde())
-        return data
 
 
 @attr.dataclass
@@ -70,9 +68,8 @@ class RangerHunterLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerHunterFeatures.SuperiorHuntersPrey())
-        return data
 
 
 @attr.dataclass
@@ -81,9 +78,8 @@ class RangerHunterLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerHunterFeatures.SuperiorHuntersDefense())
-        return data
 
 
 class RangerHunterCustomStarterClassArgs(RangerCustomStarterClassArgs):

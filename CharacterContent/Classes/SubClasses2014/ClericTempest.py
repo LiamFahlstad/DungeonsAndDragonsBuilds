@@ -19,12 +19,11 @@ class ClericTempestLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericTempestFeatures.BonusProficiencies())
         data.add_feature(ClericTempestFeatures.WrathOfTheStorm())
         data.add_feature(ClericTempestFeatures.TempestDomainSpells())
         data.add_feature(ClericTempestFeatures.DestructiveWrathChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class ClericTempestLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericTempestFeatures.ThunderousStrike())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class ClericTempestLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericTempestFeatures.Stormborn())
-        return data
 
 
 class ClericTempestCustomStarterClassArgs(ClericCustomStarterClassArgs):

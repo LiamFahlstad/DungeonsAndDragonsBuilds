@@ -22,10 +22,9 @@ class RogueScionOfTheThreeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScionOfTheThreeFeatures.Bloodthirst())
         data.add_feature(RogueScionOfTheThreeFeatures.DreadAllegiance())
-        return data
 
 
 @attr.dataclass
@@ -34,11 +33,10 @@ class RogueScionOfTheThreeLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueScionOfTheThreeFeatures.StrikeFear(), extends=RogueFeatures.SneakAttack
         )
-        return data
 
 
 @attr.dataclass
@@ -47,12 +45,11 @@ class RogueScionOfTheThreeLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueScionOfTheThreeFeatures.AuraOfMalevolence(),
             extends=RogueScionOfTheThreeFeatures.Bloodthirst,
         )
-        return data
 
 
 @attr.dataclass
@@ -61,9 +58,8 @@ class RogueScionOfTheThreeLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScionOfTheThreeFeatures.DreadIncarnate())
-        return data
 
 
 class RogueScionOfTheThreeCustomStarterClassArgs(RogueCustomStarterClassArgs):

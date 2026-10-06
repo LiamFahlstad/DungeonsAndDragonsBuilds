@@ -21,10 +21,9 @@ class SorcererStormSorceryLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererStormSorceryFeatures.WindSpeaker())
         data.add_feature(SorcererStormSorceryFeatures.TempestuousMagic())
-        return data
 
 
 @attr.dataclass
@@ -33,10 +32,9 @@ class SorcererStormSorceryLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererStormSorceryFeatures.HeartOfTheStorm())
         data.add_feature(SorcererStormSorceryFeatures.StormGuide())
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class SorcererStormSorceryLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererStormSorceryFeatures.StormsFury())
-        return data
 
 
 @attr.dataclass
@@ -56,9 +53,8 @@ class SorcererStormSorceryLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererStormSorceryFeatures.WindSoul())
-        return data
 
 
 class SorcererStormSorceryCustomStarterClassArgs(SorcererCustomStarterClassArgs):

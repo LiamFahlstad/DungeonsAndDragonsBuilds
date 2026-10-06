@@ -22,13 +22,12 @@ class BarbarianZealotLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.DivineFury(),
             extends=BarbarianFeatures.Rage,
         )
         data.add_feature(BarbarianPathOfTheZealotFeatures.WarriorOfTheGods())
-        return data
 
 
 @attr.dataclass
@@ -37,12 +36,11 @@ class BarbarianZealotLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.FanaticalFocus(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -51,9 +49,8 @@ class BarbarianZealotLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheZealotFeatures.ZealousPresence())
-        return data
 
 
 @attr.dataclass
@@ -62,12 +59,11 @@ class BarbarianZealotLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheZealotFeatures.RageOfTheGods(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianZealotCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

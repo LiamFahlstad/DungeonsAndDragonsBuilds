@@ -71,7 +71,7 @@ class WarlockLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFeatures.ReplacingEldritchInvocations())
         data.add_feature(WarlockFeatures.ReplacingCantripsAndSpells())
         data.add_feature(WarlockFeatures.RegainingSpellSlots())
@@ -80,7 +80,6 @@ class WarlockLevel1(ClassBuilder.BaseClassLevel1):
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
@@ -92,12 +91,11 @@ class WarlockLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFeatures.MagicalCunning())
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation_1)
         data.add_invocation(self.eldritch_invocation_2)
-        return data
 
 
 @attr.dataclass
@@ -107,9 +105,8 @@ class WarlockLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -121,11 +118,10 @@ class WarlockLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -137,11 +133,10 @@ class WarlockLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation_1)
         data.add_invocation(self.eldritch_invocation_2)
-        return data
 
 
 @attr.dataclass
@@ -151,9 +146,8 @@ class WarlockLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -164,10 +158,9 @@ class WarlockLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
@@ -178,10 +171,9 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -192,12 +184,11 @@ class WarlockLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFeatures.ContactPatron())
         data.add_spell(WarlockLevel5Spells.CONTACT_OTHER_PLANE)
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
@@ -207,9 +198,8 @@ class WarlockLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_cantrip(self.cantrip)
-        return data
 
 
 @attr.dataclass
@@ -219,10 +209,9 @@ class WarlockLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFeatures.MysticArcanum())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -233,10 +222,9 @@ class WarlockLevel12(ClassBuilder.BaseClassLevel12):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
@@ -246,12 +234,11 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -260,8 +247,8 @@ class WarlockLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
-        return data
+    ) -> None:
+        pass
 
 
 @attr.dataclass
@@ -272,22 +259,20 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
         data.add_spell(self.spell)
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
 class WarlockLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -297,12 +282,11 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -312,9 +296,8 @@ class WarlockLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_invocation(self.eldritch_invocation)
-        return data
 
 
 @attr.dataclass
@@ -325,20 +308,18 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class WarlockLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             WarlockFeatures.EldritchMaster(), extends=WarlockFeatures.MagicalCunning
         )
-        return data
 
 
 class WarlockCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

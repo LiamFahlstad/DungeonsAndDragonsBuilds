@@ -30,14 +30,13 @@ class ArtificerArmorerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerArmorerFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerArmorerFeatures.Spells())
         data.add_feature(ArtificerArmorerFeatures.ArcaneArmor())
         data.add_feature(ArtificerArmorerFeatures.ArmorModel())
         data.add_spell(SorcererLevel1Spells.MAGIC_MISSILE)
         data.add_spell(BardLevel1Spells.THUNDERWAVE)
-        return data
 
 
 @attr.dataclass
@@ -45,11 +44,10 @@ class ArtificerArmorerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerArmorerFeatures.ExtraAttack())
         data.add_spell(BardLevel2Spells.MIRROR_IMAGE)
         data.add_spell(BardLevel2Spells.SHATTER)
-        return data
 
 
 @attr.dataclass
@@ -57,14 +55,13 @@ class ArtificerArmorerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerArmorerFeatures.ImprovedArmorer(),
             extends=ArtificerArmorerFeatures.ArmorModel,
         )
         data.add_spell(BardLevel3Spells.HYPNOTIC_PATTERN)
         data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
-        return data
 
 
 @attr.dataclass
@@ -72,10 +69,9 @@ class ArtificerArmorerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel4Spells.FIRE_SHIELD)
         data.add_spell(BardLevel4Spells.GREATER_INVISIBILITY)
-        return data
 
 
 @attr.dataclass
@@ -83,12 +79,11 @@ class ArtificerArmorerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerArmorerFeatures.PerfectedArmor(),
             extends=ArtificerArmorerFeatures.ArmorModel,
         )
-        return data
 
 
 @attr.dataclass
@@ -96,10 +91,9 @@ class ArtificerArmorerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel5Spells.PASSWALL)
         data.add_spell(WizardLevel5Spells.WALL_OF_FORCE)
-        return data
 
 
 class ArtificerArmorerCustomStarterClassArgs(ArtificerCustomStarterClassArgs):

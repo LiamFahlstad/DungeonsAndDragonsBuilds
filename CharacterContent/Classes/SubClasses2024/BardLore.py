@@ -24,7 +24,7 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardLoreFeatures.BonusProficiencies(
                 self.skill_proficiency_1,
@@ -35,7 +35,6 @@ class BardLoreLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(
             BardLoreFeatures.CuttingWords(), extends=BardFeatures.BardicInspiration
         )
-        return data
 
 
 @attr.dataclass
@@ -66,11 +65,10 @@ class BardLoreLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(BardLoreFeatures.MagicalDiscoveries())
-        return data
 
 
 @attr.dataclass
@@ -79,11 +77,10 @@ class BardLoreLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardLoreFeatures.PeerlessSkill(), extends=BardFeatures.BardicInspiration
         )
-        return data
 
 
 class BardLoreCustomStarterClassArgs(BardCustomStarterClassArgs):

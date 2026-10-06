@@ -18,9 +18,8 @@ class MonkOpenHandLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkOpenHandFeatures.OpenHandTechnique())
-        return data
 
 
 @attr.dataclass
@@ -28,9 +27,8 @@ class MonkOpenHandLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkOpenHandFeatures.WholenessOfBody())
-        return data
 
 
 @attr.dataclass
@@ -39,9 +37,8 @@ class MonkOpenHandLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkOpenHandFeatures.FleetStep())
-        return data
 
 
 @attr.dataclass
@@ -50,9 +47,8 @@ class MonkOpenHandLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkOpenHandFeatures.QuiveringPalm())
-        return data
 
 
 class MonkOpenHandCustomStarterClassArgs(MonkCustomStarterClassArgs):

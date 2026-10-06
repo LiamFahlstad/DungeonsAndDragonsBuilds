@@ -18,12 +18,11 @@ class MonkKenseiLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkKenseiFeatures.KenseiWeapons())
         data.add_feature(MonkKenseiFeatures.AgileParry())
         data.add_feature(MonkKenseiFeatures.KenseiShot())
         data.add_feature(MonkKenseiFeatures.WayOfTheBrush())
-        return data
 
 
 @attr.dataclass
@@ -31,13 +30,12 @@ class MonkKenseiLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkKenseiFeatures.MagicKenseiWeapons(),
             extends=MonkKenseiFeatures.KenseiWeapons,
         )
         data.add_feature(MonkKenseiFeatures.DeftStrike())
-        return data
 
 
 @attr.dataclass
@@ -46,9 +44,8 @@ class MonkKenseiLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkKenseiFeatures.SharpenTheBlade())
-        return data
 
 
 @attr.dataclass
@@ -57,9 +54,8 @@ class MonkKenseiLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkKenseiFeatures.UnearringAccuracy())
-        return data
 
 
 class MonkKenseiCustomStarterClassArgs(MonkCustomStarterClassArgs):

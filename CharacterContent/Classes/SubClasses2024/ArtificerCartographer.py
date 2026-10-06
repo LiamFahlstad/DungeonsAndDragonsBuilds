@@ -32,7 +32,7 @@ class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerCartographerFeatures.CartographerToolsOfTheTrade())
         data.add_feature(ArtificerCartographerFeatures.CartographerSpells())
         data.add_feature(ArtificerCartographerFeatures.AdventurersAtlas())
@@ -40,7 +40,6 @@ class ArtificerCartographerLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(DruidLevel1Spells.FAERIE_FIRE)
         data.add_spell(ClericLevel1Spells.GUIDING_BOLT)
         data.add_spell(ClericLevel1Spells.HEALING_WORD)
-        return data
 
 
 @attr.dataclass
@@ -48,14 +47,13 @@ class ArtificerCartographerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerCartographerFeatures.GuidedPrecision(),
             extends=ArtificerCartographerFeatures.CartographerSpells,
         )
         data.add_spell(DivinationLevel2Spells.LOCATE_OBJECT)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
-        return data
 
 
 @attr.dataclass
@@ -63,14 +61,13 @@ class ArtificerCartographerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerCartographerFeatures.IngeniousMovement(),
             extends=ArtificerFeatures.FlashofGenius,
         )
         data.add_spell(DruidLevel3Spells.CALL_LIGHTNING)
         data.add_spell(BardLevel3Spells.CLAIRVOYANCE)
-        return data
 
 
 @attr.dataclass
@@ -78,10 +75,9 @@ class ArtificerCartographerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel4Spells.BANISHMENT)
         data.add_spell(DivinationLevel4Spells.LOCATE_CREATURE)
-        return data
 
 
 @attr.dataclass
@@ -89,12 +85,11 @@ class ArtificerCartographerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerCartographerFeatures.SuperiorAtlas(),
             extends=ArtificerCartographerFeatures.AdventurersAtlas,
         )
-        return data
 
 
 @attr.dataclass
@@ -102,10 +97,9 @@ class ArtificerCartographerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DivinationLevel5Spells.SCRYING)
         data.add_spell(BardLevel5Spells.TELEPORTATION_CIRCLE)
-        return data
 
 
 class ArtificerCartographerCustomStarterClassArgs(ArtificerCustomStarterClassArgs):

@@ -20,12 +20,11 @@ class RoguePhantomLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RoguePhantomFeatures.WailsFromTheGrave(), extends=RogueFeatures.SneakAttack
         )
         data.add_feature(RoguePhantomFeatures.WhispersOfTheDead())
-        return data
 
 
 @attr.dataclass
@@ -34,10 +33,9 @@ class RoguePhantomLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RoguePhantomFeatures.TokensOfTheDeparted())
         data.add_feature(RoguePhantomFeatures.VoiceOfDeath())
-        return data
 
 
 @attr.dataclass
@@ -46,9 +44,8 @@ class RoguePhantomLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RoguePhantomFeatures.GhostWalk())
-        return data
 
 
 @attr.dataclass
@@ -57,9 +54,8 @@ class RoguePhantomLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RoguePhantomFeatures.DeathsFriend())
-        return data
 
 
 class RoguePhantomCustomStarterClassArgs(RogueCustomStarterClassArgs):

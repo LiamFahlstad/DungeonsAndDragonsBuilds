@@ -19,12 +19,11 @@ class ClericNatureLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericNatureFeatures.AcolyteOfNature())
         data.add_feature(ClericNatureFeatures.BonusProficiency())
         data.add_feature(ClericNatureFeatures.NatureDomainSpells())
         data.add_feature(ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class ClericNatureLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericNatureFeatures.DampenElements())
-        return data
 
 
 @attr.dataclass
@@ -44,12 +42,11 @@ class ClericNatureLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericNatureFeatures.MasterOfNature(),
             extends=ClericNatureFeatures.CharmAnimalsAndPlantsChannelDivinity,
         )
-        return data
 
 
 class ClericNatureCustomStarterClassArgs(ClericCustomStarterClassArgs):

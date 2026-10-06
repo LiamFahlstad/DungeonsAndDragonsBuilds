@@ -19,12 +19,11 @@ class ClericPeaceLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericPeaceFeatures.ImplementOfPeace())
         data.add_feature(ClericPeaceFeatures.PeaceDomainSpells())
         data.add_feature(ClericPeaceFeatures.EmboldeningBond())
         data.add_feature(ClericPeaceFeatures.BalmOfPeaceChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -33,12 +32,11 @@ class ClericPeaceLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericPeaceFeatures.ProtectiveBond(),
             extends=ClericPeaceFeatures.EmboldeningBond,
         )
-        return data
 
 
 @attr.dataclass
@@ -47,12 +45,11 @@ class ClericPeaceLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericPeaceFeatures.ExpansiveBond(),
             extends=ClericPeaceFeatures.EmboldeningBond,
         )
-        return data
 
 
 class ClericPeaceCustomStarterClassArgs(ClericCustomStarterClassArgs):

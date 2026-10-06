@@ -28,13 +28,12 @@ class PaladinCrownLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinCrownFeatures.CrownSpells())
         data.add_feature(PaladinCrownFeatures.ChampionChallenge())
         data.add_feature(PaladinCrownFeatures.TurnTheTide())
         data.add_spell(PaladinLevel1Spells.COMMAND)
         data.add_spell(PaladinLevel1Spells.COMPELLED_DUEL)
-        return data
 
 
 @attr.dataclass
@@ -43,10 +42,9 @@ class PaladinCrownLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
         data.add_spell(PaladinLevel2Spells.ZONE_OF_TRUTH)
-        return data
 
 
 @attr.dataclass
@@ -55,9 +53,8 @@ class PaladinCrownLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinCrownFeatures.DivineAllegiance())
-        return data
 
 
 @attr.dataclass
@@ -66,10 +63,9 @@ class PaladinCrownLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(ClericLevel3Spells.SPIRIT_GUARDIANS)
-        return data
 
 
 @attr.dataclass
@@ -78,10 +74,9 @@ class PaladinCrownLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel4Spells.BANISHMENT)
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
-        return data
 
 
 @attr.dataclass
@@ -90,9 +85,8 @@ class PaladinCrownLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinCrownFeatures.UnyieldingSaint())
-        return data
 
 
 @attr.dataclass
@@ -101,10 +95,9 @@ class PaladinCrownLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel5Spells.CIRCLE_OF_POWER)
         data.add_spell(PaladinLevel5Spells.GEAS)
-        return data
 
 
 @attr.dataclass
@@ -113,9 +106,8 @@ class PaladinCrownLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinCrownFeatures.ExaltedChampion())
-        return data
 
 
 class PaladinCrownCustomStarterClassArgs(PaladinCustomStarterClassArgs):

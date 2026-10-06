@@ -21,7 +21,7 @@ class ClericTrickeryLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EnchantmentLevel1Spells.CHARM_PERSON)
         data.add_spell(SpellDefinitions.IllusionLevel1Spells.DISGUISE_SELF)
         data.add_spell(SpellDefinitions.IllusionLevel2Spells.INVISIBILITY)
@@ -32,7 +32,6 @@ class ClericTrickeryLevel3(ClassBuilder.SubclassLevel3):
             extends=ClericFeatures.ChannelDivinity,
         )
         data.add_feature(ClericTrickeryFeatures.BlessingOfTheTrickster())
-        return data
 
 
 @attr.dataclass
@@ -41,10 +40,9 @@ class ClericTrickeryLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.IllusionLevel3Spells.HYPNOTIC_PATTERN)
         data.add_spell(SpellDefinitions.AbjurationLevel3Spells.NONDETECTION)
-        return data
 
 
 @attr.dataclass
@@ -53,12 +51,11 @@ class ClericTrickeryLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericTrickeryFeatures.TrickstersTransposition(),
             extends=ClericFeatures.ChannelDivinity,
         )
-        return data
 
 
 @attr.dataclass
@@ -67,10 +64,9 @@ class ClericTrickeryLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EnchantmentLevel4Spells.CONFUSION)
         data.add_spell(SpellDefinitions.ConjurationLevel4Spells.DIMENSION_DOOR)
-        return data
 
 
 @attr.dataclass
@@ -79,10 +75,9 @@ class ClericTrickeryLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.EnchantmentLevel5Spells.DOMINATE_PERSON)
         data.add_spell(SpellDefinitions.EnchantmentLevel5Spells.MODIFY_MEMORY)
-        return data
 
 
 @attr.dataclass
@@ -91,12 +86,11 @@ class ClericTrickeryLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericTrickeryFeatures.ImprovedDuplicity(),
             extends=ClericFeatures.ChannelDivinity,
         )
-        return data
 
 
 class ClericTrickeryCustomStarterClassArgs(ClericCustomStarterClassArgs):

@@ -27,7 +27,7 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
         data.add_spell(
             DruidLevel2Spells.BEAST_SENSE,
@@ -43,7 +43,6 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
             BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -52,9 +51,8 @@ class BarbarianWildHeartLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AspectOfTheWilds())
-        return data
 
 
 @attr.dataclass
@@ -63,14 +61,13 @@ class BarbarianWildHeartLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.NatureSpeaker())
         data.add_spell(
             DruidLevel5Spells.COMMUNE_WITH_NATURE,
             Ability.WISDOM,
             additional_ruling="Ritual only",
         )
-        return data
 
 
 @attr.dataclass
@@ -79,12 +76,11 @@ class BarbarianWildHeartLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheWildHeartFeatures.PowerOfTheWilds(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianWildHeartCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

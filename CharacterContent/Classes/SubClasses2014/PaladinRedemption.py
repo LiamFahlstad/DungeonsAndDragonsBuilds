@@ -29,13 +29,12 @@ class PaladinRedemptionLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinRedemptionFeatures.RedemptionSpells())
         data.add_feature(PaladinRedemptionFeatures.EmissaryOfPeace())
         data.add_feature(PaladinRedemptionFeatures.RebukeTheViolent())
         data.add_spell(ClericLevel1Spells.SANCTUARY)
         data.add_spell(WizardLevel1Spells.SLEEP)
-        return data
 
 
 @attr.dataclass
@@ -44,10 +43,9 @@ class PaladinRedemptionLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel2Spells.CALM_EMOTIONS)
         data.add_spell(ClericLevel2Spells.HOLD_PERSON)
-        return data
 
 
 @attr.dataclass
@@ -56,9 +54,8 @@ class PaladinRedemptionLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinRedemptionFeatures.AuraOfTheGuardian())
-        return data
 
 
 @attr.dataclass
@@ -67,10 +64,9 @@ class PaladinRedemptionLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel3Spells.COUNTERSPELL)
         data.add_spell(WizardLevel3Spells.HYPNOTIC_PATTERN)
-        return data
 
 
 @attr.dataclass
@@ -79,10 +75,9 @@ class PaladinRedemptionLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel4Spells.OTILUKES_RESILIENT_SPHERE)
         data.add_spell(WizardLevel4Spells.STONESKIN)
-        return data
 
 
 @attr.dataclass
@@ -91,9 +86,8 @@ class PaladinRedemptionLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinRedemptionFeatures.ProtectiveSpirit())
-        return data
 
 
 @attr.dataclass
@@ -102,10 +96,9 @@ class PaladinRedemptionLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel5Spells.HOLD_MONSTER)
         data.add_spell(WizardLevel5Spells.WALL_OF_FORCE)
-        return data
 
 
 @attr.dataclass
@@ -114,12 +107,11 @@ class PaladinRedemptionLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinRedemptionFeatures.AuraOfTheGuardianExpansion(),
             extends=PaladinRedemptionFeatures.AuraOfTheGuardian,
         )
-        return data
 
 
 @attr.dataclass
@@ -128,9 +120,8 @@ class PaladinRedemptionLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinRedemptionFeatures.EmissaryOfRedemption())
-        return data
 
 
 class PaladinRedemptionCustomStarterClassArgs(PaladinCustomStarterClassArgs):

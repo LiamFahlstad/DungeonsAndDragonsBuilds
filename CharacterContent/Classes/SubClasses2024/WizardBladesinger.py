@@ -19,12 +19,11 @@ class WizardBladesingerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardBladesingerFeatures.Bladesong())
         data.add_feature(
             WizardBladesingerFeatures.TrainingInWarAndSong(Skill.ATHLETICS)
         )
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class WizardBladesingerLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardBladesingerFeatures.ExtraAttack())
-        return data
 
 
 @attr.dataclass
@@ -44,12 +42,11 @@ class WizardBladesingerLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardBladesingerFeatures.SongOfDefense(),
             extends=WizardBladesingerFeatures.Bladesong,
         )
-        return data
 
 
 @attr.dataclass
@@ -58,9 +55,8 @@ class WizardBladesingerLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardBladesingerFeatures.SongOfVictory())
-        return data
 
 
 class WizardBladesingerCustomStarterClassArgs(WizardCustomStarterClassArgs):

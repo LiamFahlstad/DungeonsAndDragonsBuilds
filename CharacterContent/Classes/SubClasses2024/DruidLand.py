@@ -84,14 +84,13 @@ class DruidLandLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidLandFeatures.CircleOfTheLandSpells(land_type=self.land_type)
         )
         data.add_feature(DruidLandFeatures.LandsAid())
         for spell in _LEVEL_3_CIRCLE_SPELLS[self.land_type]:
             data.add_spell(spell, source="Circle of the Land Spells table")
-        return data
 
 
 @attr.dataclass
@@ -101,12 +100,11 @@ class DruidLandLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             _LEVEL_5_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
         )
-        return data
 
 
 @attr.dataclass
@@ -115,9 +113,8 @@ class DruidLandLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidLandFeatures.NaturalRecovery())
-        return data
 
 
 @attr.dataclass
@@ -127,12 +124,11 @@ class DruidLandLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             _LEVEL_7_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
         )
-        return data
 
 
 @attr.dataclass
@@ -142,12 +138,11 @@ class DruidLandLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             _LEVEL_9_CIRCLE_SPELLS[self.land_type],
             source="Circle of the Land Spells table",
         )
-        return data
 
 
 @attr.dataclass
@@ -157,9 +152,8 @@ class DruidLandLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidLandFeatures.NaturesWard(land_type=self.land_type))
-        return data
 
 
 @attr.dataclass
@@ -168,9 +162,8 @@ class DruidLandLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidLandFeatures.NaturesSanctuary())
-        return data
 
 
 class DruidLandCustomStarterClassArgs(DruidCustomStarterClassArgs):

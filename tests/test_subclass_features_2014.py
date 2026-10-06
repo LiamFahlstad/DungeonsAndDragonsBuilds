@@ -17,6 +17,8 @@ House rules (2024 engine running 2014 content):
 
 import pytest
 
+from tests._grants import apply_level
+
 from RunCharacterCreator import ExampleSelector
 
 from Model.Character import Character
@@ -519,7 +521,7 @@ class TestPromisedProficienciesGranted:
         data = Character(
             class_levels=ClassLevels(level_per_class={CharacterClass.BARD: 3})
         )
-        BardSwordsLevel3(fighting_style=FightingStyles.Dueling()).add_features(data)
+        apply_level(BardSwordsLevel3(fighting_style=FightingStyles.Dueling()), data)
         character = granted(data, make_character)
         assert ArmorType.MEDIUM in character.ledger.equipment_training.armor_training
         assert MartialMelee.Scimitar().is_proficient(character)

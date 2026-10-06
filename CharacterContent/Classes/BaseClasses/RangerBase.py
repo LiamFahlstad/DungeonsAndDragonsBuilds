@@ -32,7 +32,7 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
 
@@ -44,7 +44,6 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
         data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -53,21 +52,19 @@ class RangerLevel2(ClassBuilder.BaseClassLevel2):
     fighting_style: FightingStyles.FightingStyle
     spell: RangerLevel1Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
         data.add_feature(RangerFeatures.DeftExplorerExpertise(self.skill_expertise))
         data.add_fighting_style(self.fighting_style)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel3(ClassBuilder.BaseClassLevel3):
     spell: RangerLevel1Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -75,47 +72,42 @@ class RangerLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
     spell: RangerLevel1Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
 
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel5(ClassBuilder.BaseClassLevel5):
     spell: RangerLevel1Spells | RangerLevel2Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(RangerFeatures.ExtraAttack())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel6(ClassBuilder.BaseClassLevel6):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(RangerFeatures.Roving())
-        return data
 
 
 @attr.dataclass
 class RangerLevel7(ClassBuilder.BaseClassLevel7):
     spell: RangerLevel1Spells | RangerLevel2Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -125,13 +117,12 @@ class RangerLevel9(ClassBuilder.BaseClassLevel9):
     spell_1: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
     spell_2: RangerLevel1Spells | RangerLevel2Spells | RangerLevel3Spells
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             RangerFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2)
         )
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -140,9 +131,8 @@ class RangerLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerFeatures.Tireless())
-        return data
 
 
 @attr.dataclass
@@ -152,18 +142,16 @@ class RangerLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -175,12 +163,11 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
         | RangerLevel4Spells
     )
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             RangerFeatures.RelentlessHunter(), extends=RangerFeatures.FavoredEnemy
         )
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -189,9 +176,8 @@ class RangerLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerFeatures.NaturesVeil())
-        return data
 
 
 @attr.dataclass
@@ -203,18 +189,16 @@ class RangerLevel15(ClassBuilder.BaseClassLevel15):
         | RangerLevel4Spells
     )
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -234,14 +218,12 @@ class RangerLevel17(ClassBuilder.BaseClassLevel17):
         | RangerLevel5Spells
     )
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_feature(
             RangerFeatures.PreciseHunter(), extends=RangerFeatures.FavoredEnemy
         )
-
-        return data
 
 
 @attr.dataclass
@@ -250,9 +232,8 @@ class RangerLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerFeatures.FeralSenses())
-        return data
 
 
 @attr.dataclass
@@ -266,20 +247,18 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
         | RangerLevel5Spells
     )
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class RangerLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             RangerFeatures.FoeSlayer(), extends=RangerFeatures.FavoredEnemy
         )
-        return data
 
 
 class RangerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

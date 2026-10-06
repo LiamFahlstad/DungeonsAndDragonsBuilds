@@ -20,13 +20,12 @@ class BardCreationLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardCreationFeatures.MoteOfPotential(),
             extends=BardFeatures.BardicInspiration,
         )
         data.add_feature(BardCreationFeatures.PerformanceOfCreation())
-        return data
 
 
 @attr.dataclass
@@ -35,9 +34,8 @@ class BardCreationLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardCreationFeatures.AnimatingPerformance())
-        return data
 
 
 @attr.dataclass
@@ -46,12 +44,11 @@ class BardCreationLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardCreationFeatures.CreativeCrescendo(),
             extends=BardCreationFeatures.PerformanceOfCreation,
         )
-        return data
 
 
 class BardCreationCustomStarterClassArgs(BardCustomStarterClassArgs):

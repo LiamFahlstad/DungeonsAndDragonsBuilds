@@ -51,13 +51,12 @@ class IllusionistWizardLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardIllusionistFeatures.IllusionSavant())
         data.add_feature(WizardIllusionistFeatures.ImprovedIllusions())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION)
-        return data
 
 
 @attr.dataclass
@@ -67,9 +66,8 @@ class IllusionistWizardLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -78,11 +76,10 @@ class IllusionistWizardLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardIllusionistFeatures.PhantasmalCreatures())
         data.add_spell(ConjurationLevel2Spells.SUMMON_BEAST)
         data.add_spell(ConjurationLevel3Spells.SUMMON_FEY)
-        return data
 
 
 @attr.dataclass
@@ -92,9 +89,8 @@ class IllusionistWizardLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -104,9 +100,8 @@ class IllusionistWizardLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -115,9 +110,8 @@ class IllusionistWizardLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardIllusionistFeatures.IllusorySelf())
-        return data
 
 
 @attr.dataclass
@@ -127,9 +121,8 @@ class IllusionistWizardLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -139,9 +132,8 @@ class IllusionistWizardLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -150,9 +142,8 @@ class IllusionistWizardLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardIllusionistFeatures.IllusoryReality())
-        return data
 
 
 @attr.dataclass
@@ -162,9 +153,8 @@ class IllusionistWizardLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -174,9 +164,8 @@ class IllusionistWizardLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 class IllusionistWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):

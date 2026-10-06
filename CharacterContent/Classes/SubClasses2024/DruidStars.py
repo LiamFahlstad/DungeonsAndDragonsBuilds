@@ -20,12 +20,11 @@ class DruidStarsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidStarsFeatures.StarMap())
         data.add_feature(DruidStarsFeatures.StarryForm())
         data.add_spell(DruidLevel0Spells.GUIDANCE, source="Star Map")
         data.add_spell(EvocationLevel1Spells.GUIDING_BOLT, source="Star Map")
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class DruidStarsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidStarsFeatures.CosmicOmen())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class DruidStarsLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidStarsFeatures.TwinklingConstellations(),
             extends=DruidStarsFeatures.StarryForm,
         )
-        return data
 
 
 @attr.dataclass
@@ -59,11 +56,10 @@ class DruidStarsLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidStarsFeatures.FullOfStars(), extends=DruidStarsFeatures.StarryForm
         )
-        return data
 
 
 class DruidStarsCustomStarterClassArgs(DruidCustomStarterClassArgs):

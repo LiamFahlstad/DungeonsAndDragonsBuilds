@@ -18,9 +18,8 @@ class MonkSunSoulLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkSunSoulFeatures.RadiantSunBolt())
-        return data
 
 
 @attr.dataclass
@@ -28,9 +27,8 @@ class MonkSunSoulLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkSunSoulFeatures.SearingArcStrike())
-        return data
 
 
 @attr.dataclass
@@ -39,9 +37,8 @@ class MonkSunSoulLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkSunSoulFeatures.SearingSunburst())
-        return data
 
 
 @attr.dataclass
@@ -50,9 +47,8 @@ class MonkSunSoulLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkSunSoulFeatures.SunShield())
-        return data
 
 
 class MonkSunSoulCustomStarterClassArgs(MonkCustomStarterClassArgs):

@@ -22,12 +22,11 @@ class BarbarianAncestralGuardianLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.AncestralProtectors(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -36,12 +35,11 @@ class BarbarianAncestralGuardianLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.SpiritShield(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -50,11 +48,10 @@ class BarbarianAncestralGuardianLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.ConsultTheSpirits()
         )
-        return data
 
 
 @attr.dataclass
@@ -63,12 +60,11 @@ class BarbarianAncestralGuardianLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheAncestralGuardianFeatures.VengefulAncestors(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianAncestralGuardianCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

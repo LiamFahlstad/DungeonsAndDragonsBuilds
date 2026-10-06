@@ -19,11 +19,10 @@ class DruidSporesLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidSporesFeatures.CircleSporesSpells())
         data.add_feature(DruidSporesFeatures.HaloOfSpores())
         data.add_feature(DruidSporesFeatures.SymbioticEntity())
-        return data
 
 
 @attr.dataclass
@@ -32,9 +31,8 @@ class DruidSporesLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidSporesFeatures.FungalInfestation())
-        return data
 
 
 @attr.dataclass
@@ -43,12 +41,11 @@ class DruidSporesLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidSporesFeatures.SpreadingSpores(),
             extends=DruidSporesFeatures.SymbioticEntity,
         )
-        return data
 
 
 @attr.dataclass
@@ -57,9 +54,8 @@ class DruidSporesLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidSporesFeatures.FungalBody())
-        return data
 
 
 class DruidSporesCustomStarterClassArgs(DruidCustomStarterClassArgs):

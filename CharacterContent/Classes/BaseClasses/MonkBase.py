@@ -18,10 +18,9 @@ class MonkLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.MartialArts())
         data.add_feature(MonkFeatures.UnarmoredDefense())
-        return data
 
 
 @attr.dataclass
@@ -29,7 +28,7 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         monks_focus = MonkFeatures.MonksFocus()
         data.add_feature(MonkFeatures.FlurryOfBlows(), extends=monks_focus)
         data.add_feature(MonkFeatures.PatientDefense(), extends=monks_focus)
@@ -38,17 +37,14 @@ class MonkLevel2(ClassBuilder.BaseClassLevel2):
         data.add_feature(MonkFeatures.UnarmoredMovement())
         data.add_feature(MonkFeatures.UncannyMetabolism())
 
-        return data
-
 
 @attr.dataclass
 class MonkLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.DeflectAttacks(), extends=MonkFeatures.MonksFocus)
-        return data
 
 
 @attr.dataclass
@@ -58,10 +54,9 @@ class MonkLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_feature(MonkFeatures.SlowFall())
-        return data
 
 
 @attr.dataclass
@@ -69,10 +64,9 @@ class MonkLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.StunningStrike(), extends=MonkFeatures.MonksFocus)
         data.add_feature(MonkFeatures.ExtraAttack())
-        return data
 
 
 @attr.dataclass
@@ -80,9 +74,8 @@ class MonkLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.EmpoweredStrikes())
-        return data
 
 
 @attr.dataclass
@@ -90,9 +83,8 @@ class MonkLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.Evasion())
-        return data
 
 
 @attr.dataclass
@@ -102,9 +94,8 @@ class MonkLevel8(ClassBuilder.BaseClassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -112,9 +103,8 @@ class MonkLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.AcrobaticMovement())
-        return data
 
 
 @attr.dataclass
@@ -122,12 +112,11 @@ class MonkLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkFeatures.HeightenedFocus(), extends=MonkFeatures.MonksFocus
         )
         data.add_feature(MonkFeatures.SelfRestoration())
-        return data
 
 
 @attr.dataclass
@@ -135,8 +124,8 @@ class MonkLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
-        return data
+    ) -> None:
+        pass
 
 
 @attr.dataclass
@@ -146,9 +135,8 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -156,9 +144,8 @@ class MonkLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.DeflectEnergy(), extends=MonkFeatures.MonksFocus)
-        return data
 
 
 @attr.dataclass
@@ -166,14 +153,12 @@ class MonkLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.DisciplinedSurvivorSavingThrows())
         data.add_feature(
             MonkFeatures.DisciplinedSurvivorMartialFocus(),
             extends=MonkFeatures.MonksFocus,
         )
-
-        return data
 
 
 @attr.dataclass
@@ -181,18 +166,16 @@ class MonkLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkFeatures.PerfectFocus())
-        return data
 
 
 @attr.dataclass
 class MonkLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -200,8 +183,8 @@ class MonkLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
-        return data
+    ) -> None:
+        pass
 
 
 @attr.dataclass
@@ -209,11 +192,10 @@ class MonkLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkFeatures.SuperiorDefense(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 @attr.dataclass
@@ -223,16 +205,14 @@ class MonkLevel19(ClassBuilder.BaseClassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.epic_boon)
-        return data
 
 
 @attr.dataclass
 class MonkLevel20(ClassBuilder.BaseClassLevel20):
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(MonkFeatures.BodyAndMind())
-        return data
 
 
 class MonkCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

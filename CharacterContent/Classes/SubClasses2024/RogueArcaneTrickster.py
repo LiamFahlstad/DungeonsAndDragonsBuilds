@@ -46,7 +46,7 @@ class RogueArcaneTricksterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueArcaneTricksterFeatures.Spellcasting())
         data.add_feature(RogueArcaneTricksterFeatures.MageHandLegerdemain())
         data.add_cantrip(WizardLevel0Spells.MAGE_HAND)
@@ -55,7 +55,6 @@ class RogueArcaneTricksterLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
         data.add_spell(self.spell_3)
-        return data
 
 
 @attr.dataclass
@@ -65,9 +64,8 @@ class RogueArcaneTricksterLevel4(ClassBuilder.SubclassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -77,9 +75,8 @@ class RogueArcaneTricksterLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -89,9 +86,8 @@ class RogueArcaneTricksterLevel8(ClassBuilder.SubclassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -100,9 +96,8 @@ class RogueArcaneTricksterLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueArcaneTricksterFeatures.MagicalAmbush())
-        return data
 
 
 @attr.dataclass
@@ -113,10 +108,9 @@ class RogueArcaneTricksterLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -126,9 +120,8 @@ class RogueArcaneTricksterLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -138,13 +131,12 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueArcaneTricksterFeatures.VersatileTrickster(),
             extends=RogueFeatures.SneakAttack,
         )
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -154,9 +146,8 @@ class RogueArcaneTricksterLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -166,9 +157,8 @@ class RogueArcaneTricksterLevel16(ClassBuilder.SubclassLevel16):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -177,9 +167,8 @@ class RogueArcaneTricksterLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueArcaneTricksterFeatures.SpellThief())
-        return data
 
 
 @attr.dataclass
@@ -189,9 +178,8 @@ class RogueArcaneTricksterLevel19(ClassBuilder.SubclassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -201,9 +189,8 @@ class RogueArcaneTricksterLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 class RogueArcaneTricksterCustomStarterClassArgs(RogueCustomStarterClassArgs):

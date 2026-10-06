@@ -66,6 +66,7 @@ from Core.Definitions import (
     Sense,
     Skill,
 )
+from tests._grants import grant
 
 
 def bug(reason):
@@ -562,12 +563,12 @@ class TestGrantedSpellsAndCantrips:
         from CharacterContent.Spells.SpellLists import BardLevel0Spells
 
         data = Character()
-        data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
+        grant(data).add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
         assert RockGnomeSpeciesBuilder().build(data) is data
         assert spell_names(data).count("Prestidigitation") == 2
         assert data.base_speed == GnomeFeatures.SPEED
         # The same spell twice from one grant is an error, found on read.
-        data.add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
+        grant(data).add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
         with pytest.raises(ValueError, match="already added"):
             data.spells
 

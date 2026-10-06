@@ -68,6 +68,7 @@ from CharacterContent.Features.SubClassFeatures.Ranger import RangerFeyWandererF
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures
 from CharacterContent.Items import Armor
 from CharacterContent.Items.Weapons.Enums import WeaponProficiency
+from tests._grants import apply_level, grant
 
 
 def apply_features(character, features, armors=()):
@@ -103,7 +104,7 @@ def _cleric_data_with_channel_divinity():
     from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 
     data = Character(spell_casting_ability=Ability.WISDOM)
-    data.add_feature(ClericFeatures.ChannelDivinity())
+    grant(data).add_feature(ClericFeatures.ChannelDivinity())
     return data
 
 
@@ -118,13 +119,13 @@ class TestClericDomainSpellLevels:
         from CharacterContent.Classes.SubClasses2024 import ClericWar
 
         data = _cleric_data_with_channel_divinity()
-        ClericWar.ClericWarLevel3().add_features(data)
+        apply_level(ClericWar.ClericWarLevel3(), data)
         assert len(data.spells) == 4
-        ClericWar.ClericWarLevel5().add_features(data)
+        apply_level(ClericWar.ClericWarLevel5(), data)
         assert len(data.spells) == 4 + 2
-        ClericWar.ClericWarLevel7().add_features(data)
+        apply_level(ClericWar.ClericWarLevel7(), data)
         assert len(data.spells) == 4 + 2 + 2
-        ClericWar.ClericWarLevel9().add_features(data)
+        apply_level(ClericWar.ClericWarLevel9(), data)
         assert len(data.spells) == 4 + 2 + 2 + 2
 
     def test_knowledge_domain_spell_count_at_level_3_is_six(self):
@@ -135,8 +136,8 @@ class TestClericDomainSpellLevels:
         from CharacterContent.Classes.SubClasses2024 import ClericKnowledge
 
         data = _cleric_data_with_channel_divinity()
-        ClericKnowledge.ClericKnowledgeLevel3(Skill.ARCANA, Skill.HISTORY).add_features(
-            data
+        apply_level(
+            ClericKnowledge.ClericKnowledgeLevel3(Skill.ARCANA, Skill.HISTORY), data
         )
         assert len(data.spells) == 6
 
@@ -150,13 +151,13 @@ class TestClericDomainSpellLevels:
         from CharacterContent.Classes.SubClasses2024 import ClericLife
 
         data = _cleric_data_with_channel_divinity()
-        ClericLife.ClericLifeLevel3().add_features(data)
+        apply_level(ClericLife.ClericLifeLevel3(), data)
         assert len(data.spells) == 4
-        ClericLife.ClericLifeLevel5().add_features(data)
+        apply_level(ClericLife.ClericLifeLevel5(), data)
         assert len(data.spells) == 4 + 2
-        ClericLife.ClericLifeLevel7().add_features(data)
+        apply_level(ClericLife.ClericLifeLevel7(), data)
         assert len(data.spells) == 4 + 2 + 2
-        ClericLife.ClericLifeLevel9().add_features(data)
+        apply_level(ClericLife.ClericLifeLevel9(), data)
         assert len(data.spells) == 4 + 2 + 2 + 2
 
 
@@ -325,7 +326,7 @@ class TestDruidCircleOfTheLandSpells:
     def test_land_spells_by_type_and_level(self, land_type, level):
         data = Character(spell_casting_ability=Ability.WISDOM)
         builder_cls = self.LEVEL_BUILDERS[level]
-        builder_cls(land_type=land_type).add_features(data)
+        apply_level(builder_cls(land_type=land_type), data)
         names = {s.name.value for s in data.spells}
         assert names == self.LAND_SPELLS[land_type][level]
 
@@ -754,7 +755,7 @@ class TestPromisedPassiveBenefits:
             class_levels=ClassLevels(level_per_class={CharacterClass.ARTIFICER: 3}),
             spell_casting_ability=Ability.INTELLIGENCE,
         )
-        ArtificerBattleSmith.ArtificerBattleSmithLevel3().add_features(data)
+        apply_level(ArtificerBattleSmith.ArtificerBattleSmithLevel3(), data)
         character = make_character(levels={CharacterClass.ARTIFICER: 3})
         for feature in data.iter_features_with_extensions():
             character.add_effect(feature)

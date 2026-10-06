@@ -21,11 +21,10 @@ class FighterRuneKnightLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterRuneKnightFeatures.BonusProficiencies())
         data.add_feature(FighterRuneKnightFeatures.RuneCarver())
         data.add_feature(FighterRuneKnightFeatures.GiantsMight())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class FighterRuneKnightLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterRuneKnightFeatures.RunicShield())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class FighterRuneKnightLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterRuneKnightFeatures.GreatStature(),
             extends=FighterRuneKnightFeatures.GiantsMight,
         )
-        return data
 
 
 @attr.dataclass
@@ -59,12 +56,11 @@ class FighterRuneKnightLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterRuneKnightFeatures.MasterOfRunes(),
             extends=FighterRuneKnightFeatures.RuneCarver,
         )
-        return data
 
 
 @attr.dataclass
@@ -73,12 +69,11 @@ class FighterRuneKnightLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterRuneKnightFeatures.RunicJuggernaut(),
             extends=FighterRuneKnightFeatures.GiantsMight,
         )
-        return data
 
 
 class FighterRuneKnightCustomStarterClassArgs(FighterCustomStarterClassArgs):

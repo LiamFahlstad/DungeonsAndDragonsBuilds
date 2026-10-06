@@ -22,11 +22,10 @@ class WarlockFathomlessLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFathomlessFeatures.ExpandedSpellList())
         data.add_feature(WarlockFathomlessFeatures.TentacleOfTheDeep())
         data.add_feature(WarlockFathomlessFeatures.GiftOfTheSea())
-        return data
 
 
 @attr.dataclass
@@ -35,13 +34,12 @@ class WarlockFathomlessLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFathomlessFeatures.OceanicSoul())
         data.add_feature(
             WarlockFathomlessFeatures.GuardianCoil(),
             extends=WarlockFathomlessFeatures.TentacleOfTheDeep,
         )
-        return data
 
 
 @attr.dataclass
@@ -50,13 +48,12 @@ class WarlockFathomlessLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFathomlessFeatures.GraspingTentacles())
         data.add_spell(
             ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES,
             additional_ruling="Doesn't count against the number of Warlock spells known",
         )
-        return data
 
 
 @attr.dataclass
@@ -65,9 +62,8 @@ class WarlockFathomlessLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockFathomlessFeatures.FathomlessPlunge())
-        return data
 
 
 class WarlockFathomlessCustomStarterClassArgs(WarlockCustomStarterClassArgs):

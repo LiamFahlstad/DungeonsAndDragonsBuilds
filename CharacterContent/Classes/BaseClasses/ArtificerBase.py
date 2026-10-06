@@ -46,14 +46,13 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.Spellcasting())
         data.add_feature(ArtificerFeatures.TinkersMagic())
         data.add_cantrip(self.cantrip_1)
         data.add_cantrip(self.cantrip_2)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -63,10 +62,9 @@ class ArtificerLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.ReplicateMagicItem())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -76,9 +74,8 @@ class ArtificerLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -89,10 +86,9 @@ class ArtificerLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -102,9 +98,8 @@ class ArtificerLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -113,12 +108,11 @@ class ArtificerLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerFeatures.MagicItemTinker(),
             extends=ArtificerFeatures.ReplicateMagicItem,
         )
-        return data
 
 
 @attr.dataclass
@@ -128,10 +122,9 @@ class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.FlashofGenius())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -141,9 +134,8 @@ class ArtificerLevel8(ClassBuilder.BaseClassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -154,10 +146,9 @@ class ArtificerLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -167,10 +158,9 @@ class ArtificerLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.MagicItemAdept())
         data.add_cantrip(self.cantrip)
-        return data
 
 
 @attr.dataclass
@@ -180,10 +170,9 @@ class ArtificerLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.SpellStoringItem())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -193,9 +182,8 @@ class ArtificerLevel12(ClassBuilder.BaseClassLevel12):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -205,9 +193,8 @@ class ArtificerLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -217,13 +204,12 @@ class ArtificerLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerFeatures.AdvancedArtifice(),
             extends=ArtificerFeatures.FlashofGenius,
         )
         data.add_cantrip(self.cantrip)
-        return data
 
 
 @attr.dataclass
@@ -233,18 +219,16 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class ArtificerLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -255,10 +239,9 @@ class ArtificerLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -267,9 +250,8 @@ class ArtificerLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerFeatures.MagicItemMaster())
-        return data
 
 
 @attr.dataclass
@@ -280,20 +262,18 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class ArtificerLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             ArtificerFeatures.SoulOfArtifice(), extends=ArtificerFeatures.FlashofGenius
         )
-        return data
 
 
 class ArtificerCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

@@ -20,10 +20,9 @@ class RogueAssassinLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueAssassinFeatures.Assassinate())
         data.add_feature(RogueAssassinFeatures.AssassinsTools())
-        return data
 
 
 @attr.dataclass
@@ -32,9 +31,8 @@ class RogueAssassinLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueAssassinFeatures.InfiltrationExpertise())
-        return data
 
 
 @attr.dataclass
@@ -43,14 +41,13 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
         )
         data.add_feature(
             RogueAssassinFeatures.EnvenomWeapons(), extends=RogueFeatures.SneakAttack
         )
-        return data
 
 
 @attr.dataclass
@@ -59,12 +56,11 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
         )
         data.add_feature(RogueAssassinFeatures.DeathStrike())
-        return data
 
 
 class RogueAssassinCustomStarterClassArgs(RogueCustomStarterClassArgs):

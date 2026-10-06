@@ -19,10 +19,9 @@ class RogueScoutLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScoutFeatures.Skirmisher())
         data.add_feature(RogueScoutFeatures.Survivalist())
-        return data
 
 
 @attr.dataclass
@@ -31,9 +30,8 @@ class RogueScoutLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScoutFeatures.SuperiorMobility())
-        return data
 
 
 @attr.dataclass
@@ -42,9 +40,8 @@ class RogueScoutLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScoutFeatures.AmbushMaster())
-        return data
 
 
 @attr.dataclass
@@ -53,9 +50,8 @@ class RogueScoutLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueScoutFeatures.SuddenStrike())
-        return data
 
 
 class RogueScoutCustomStarterClassArgs(RogueCustomStarterClassArgs):

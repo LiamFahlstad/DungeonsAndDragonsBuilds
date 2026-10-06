@@ -26,11 +26,10 @@ class RangerHollowWardenLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerHollowWardenFeatures.HollowWardenSpells())
         data.add_feature(RangerHollowWardenFeatures.WrathOfTheWild())
         data.add_spell(NecromancyLevel1Spells.WRATHFUL_SMITE)
-        return data
 
 
 @attr.dataclass
@@ -39,9 +38,8 @@ class RangerHollowWardenLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(TransmutationLevel2Spells.ALTER_SELF)
-        return data
 
 
 @attr.dataclass
@@ -50,12 +48,11 @@ class RangerHollowWardenLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerHollowWardenFeatures.HungeringMight(),
             extends=RangerHollowWardenFeatures.WrathOfTheWild,
         )
-        return data
 
 
 @attr.dataclass
@@ -64,9 +61,8 @@ class RangerHollowWardenLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(IllusionLevel3Spells.PHANTOM_STEED)
-        return data
 
 
 @attr.dataclass
@@ -75,12 +71,11 @@ class RangerHollowWardenLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerHollowWardenFeatures.RotAndViolence(),
             extends=RangerHollowWardenFeatures.WrathOfTheWild,
         )
-        return data
 
 
 @attr.dataclass
@@ -89,9 +84,8 @@ class RangerHollowWardenLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(RangerLevel4Spells.DOMINATE_BEAST)
-        return data
 
 
 @attr.dataclass
@@ -100,12 +94,11 @@ class RangerHollowWardenLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerHollowWardenFeatures.AncientMight(),
             extends=RangerHollowWardenFeatures.WrathOfTheWild,
         )
-        return data
 
 
 @attr.dataclass
@@ -114,9 +107,8 @@ class RangerHollowWardenLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(RangerLevel5Spells.STEEL_WIND_STRIKE)
-        return data
 
 
 class RangerHollowWardenCustomStarterClassArgs(RangerCustomStarterClassArgs):

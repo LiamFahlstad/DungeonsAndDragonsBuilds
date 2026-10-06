@@ -54,7 +54,7 @@ class WizardLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardFeatures.RitualAdept())
         data.add_feature(WizardFeatures.ArcaneRecovery())
         data.add_cantrip(self.cantrip_1)
@@ -64,7 +64,6 @@ class WizardLevel1(ClassBuilder.BaseClassLevel1):
         data.add_spell(self.spell_2)
         data.add_spell(self.spell_3)
         data.add_spell(self.spell_4)
-        return data
 
 
 @attr.dataclass
@@ -75,10 +74,9 @@ class WizardLevel2(ClassBuilder.BaseClassLevel2):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardFeatures.Scholar(self.skill_expertise))
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -88,9 +86,8 @@ class WizardLevel3(ClassBuilder.BaseClassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -102,11 +99,10 @@ class WizardLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -117,11 +113,10 @@ class WizardLevel5(ClassBuilder.BaseClassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardFeatures.MemorizeSpell())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -131,9 +126,8 @@ class WizardLevel6(ClassBuilder.BaseClassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -143,9 +137,8 @@ class WizardLevel7(ClassBuilder.BaseClassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -156,10 +149,9 @@ class WizardLevel8(ClassBuilder.BaseClassLevel8):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -170,10 +162,9 @@ class WizardLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -184,10 +175,9 @@ class WizardLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_cantrip(self.cantrip)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -197,9 +187,8 @@ class WizardLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -209,9 +198,8 @@ class WizardLevel12(ClassBuilder.BaseClassLevel12):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -221,9 +209,8 @@ class WizardLevel13(ClassBuilder.BaseClassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -233,9 +220,8 @@ class WizardLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -245,9 +231,8 @@ class WizardLevel15(ClassBuilder.BaseClassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -256,11 +241,10 @@ class WizardLevel16(ClassBuilder.BaseClassLevel16):
     spell_1: WizardSpellsUpTo8
     spell_2: WizardSpellsUpTo8
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -270,9 +254,8 @@ class WizardLevel17(ClassBuilder.BaseClassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -282,10 +265,9 @@ class WizardLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardFeatures.SpellMastery())
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -296,20 +278,18 @@ class WizardLevel19(ClassBuilder.BaseClassLevel19):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.epic_boon)
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
 class WizardLevel20(ClassBuilder.BaseClassLevel20):
     spell: WizardSpellsUpTo9
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(WizardFeatures.SignatureSpells())
         data.add_spell(self.spell)
-        return data
 
 
 class WizardCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

@@ -23,7 +23,7 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkShadowFeatures.ShadowArts(), extends=MonkFeatures.MonksFocus
         )
@@ -33,7 +33,6 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
             additional_ruling="Cast by expending 1 Focus Point instead of a spell slot",
         )
         data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION, Ability.WISDOM)
-        return data
 
 
 @attr.dataclass
@@ -41,9 +40,8 @@ class MonkShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkShadowFeatures.ShadowStep())
-        return data
 
 
 @attr.dataclass
@@ -52,12 +50,11 @@ class MonkShadowLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkShadowFeatures.ImprovedShadowStep(),
             extends=MonkShadowFeatures.ShadowStep,
         )
-        return data
 
 
 @attr.dataclass
@@ -66,11 +63,10 @@ class MonkShadowLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkShadowFeatures.CloakOfShadows(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 class MonkShadowCustomStarterClassArgs(MonkCustomStarterClassArgs):

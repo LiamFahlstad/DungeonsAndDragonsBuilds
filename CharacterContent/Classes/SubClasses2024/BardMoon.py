@@ -23,13 +23,12 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardMoonFeatures.MoonsInspiration(), extends=BardFeatures.BardicInspiration
         )
         data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill_proficiency))
         data.add_cantrip(self.cantrip)
-        return data
 
 
 @attr.dataclass
@@ -37,10 +36,9 @@ class BardMoonLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel2Spells.MOONBEAM)
         data.add_feature(BardMoonFeatures.BlessingOfMoonlight())
-        return data
 
 
 @attr.dataclass
@@ -49,11 +47,10 @@ class BardMoonLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardMoonFeatures.EventidesSplendor(), extends=BardFeatures.BardicInspiration
         )
-        return data
 
 
 class BardMoonCustomStarterClassArgs(BardCustomStarterClassArgs):

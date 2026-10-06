@@ -20,9 +20,8 @@ class MonkMysticArtsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMysticArtsFeatures.MysticArtsSpellcasting())
-        return data
 
 
 @attr.dataclass
@@ -30,12 +29,11 @@ class MonkMysticArtsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMysticArtsFeatures.MysticFightingStyle())
         data.add_feature(
             MonkMysticArtsFeatures.MysticFocus(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class MonkMysticArtsLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMysticArtsFeatures.FocusedStrike())
-        return data
 
 
 @attr.dataclass
@@ -55,12 +52,11 @@ class MonkMysticArtsLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkMysticArtsFeatures.ImprovedMysticFightingStyle(),
             extends=MonkMysticArtsFeatures.MysticFightingStyle,
         )
-        return data
 
 
 class MonkMysticArtsCustomStarterClassArgs(MonkCustomStarterClassArgs):

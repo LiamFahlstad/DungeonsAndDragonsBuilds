@@ -20,14 +20,13 @@ class SorcererWildMagicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererWildMagicFeatures.WildMagicSurge())
         data.add_feature(
             SorcererWildMagicFeatures.WildMagicSurgeTable(),
             extends=SorcererWildMagicFeatures.WildMagicSurge,
         )
         data.add_feature(SorcererWildMagicFeatures.TidesOfChaos())
-        return data
 
 
 @attr.dataclass
@@ -35,9 +34,8 @@ class SorcererWildMagicLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererWildMagicFeatures.BendLuck())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class SorcererWildMagicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererWildMagicFeatures.ControlledChaos(),
             extends=SorcererWildMagicFeatures.WildMagicSurge,
         )
-        return data
 
 
 @attr.dataclass
@@ -58,12 +55,11 @@ class SorcererWildMagicLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererWildMagicFeatures.TamedSurge(),
             extends=SorcererWildMagicFeatures.WildMagicSurge,
         )
-        return data
 
 
 class SorcererWildMagicCustomStarterClassArgs(SorcererCustomStarterClassArgs):

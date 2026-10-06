@@ -33,14 +33,13 @@ class ArtificerReanimatorLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerReanimatorFeatures.ReanimatorSpells())
         data.add_feature(ArtificerReanimatorFeatures.ReanimatorSkillSet())
         data.add_feature(ArtificerReanimatorFeatures.ReanimatedCompanion())
         data.add_cantrip(NecromancyLevel0Spells.SPARE_THE_DYING)
         data.add_spell(NecromancyLevel1Spells.FALSE_LIFE)
         data.add_spell(WizardLevel1Spells.WITCH_BOLT)
-        return data
 
 
 @attr.dataclass
@@ -48,14 +47,13 @@ class ArtificerReanimatorLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerReanimatorFeatures.StrangeModifications(),
             extends=ArtificerReanimatorFeatures.ReanimatedCompanion,
         )
         data.add_spell(BardLevel2Spells.BLINDNESS_DEAFNESS)
         data.add_spell(ArtificerLevel2Spells.ENHANCE_ABILITY)
-        return data
 
 
 @attr.dataclass
@@ -63,7 +61,7 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerReanimatorFeatures.ImprovedReanimation(),
             extends=ArtificerReanimatorFeatures.ReanimatedCompanion,
@@ -74,7 +72,6 @@ class ArtificerReanimatorLevel9(ClassBuilder.SubclassLevel9):
         )
         data.add_spell(ClericLevel3Spells.ANIMATE_DEAD)
         data.add_spell(SorcererLevel3Spells.LIGHTNING_BOLT)
-        return data
 
 
 @attr.dataclass
@@ -82,10 +79,9 @@ class ArtificerReanimatorLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel4Spells.BLIGHT)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
-        return data
 
 
 @attr.dataclass
@@ -93,9 +89,8 @@ class ArtificerReanimatorLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerReanimatorFeatures.RefinedReanimation())
-        return data
 
 
 @attr.dataclass
@@ -103,10 +98,9 @@ class ArtificerReanimatorLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel5Spells.ANTILIFE_SHELL)
         data.add_spell(ClericLevel5Spells.RAISE_DEAD)
-        return data
 
 
 class ArtificerReanimatorCustomStarterClassArgs(ArtificerCustomStarterClassArgs):

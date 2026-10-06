@@ -29,13 +29,12 @@ class PaladinConquestLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinConquestFeatures.ConquestSpells())
         data.add_feature(PaladinConquestFeatures.ConqueringPresence())
         data.add_feature(PaladinConquestFeatures.GuidedStrike())
         data.add_spell(WarlockLevel1Spells.ARMOR_OF_AGATHYS)
         data.add_spell(PaladinLevel1Spells.COMMAND)
-        return data
 
 
 @attr.dataclass
@@ -44,10 +43,9 @@ class PaladinConquestLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel2Spells.HOLD_PERSON)
         data.add_spell(ClericLevel2Spells.SPIRITUAL_WEAPON)
-        return data
 
 
 @attr.dataclass
@@ -56,9 +54,8 @@ class PaladinConquestLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinConquestFeatures.AuraOfConquest())
-        return data
 
 
 @attr.dataclass
@@ -67,10 +64,9 @@ class PaladinConquestLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel3Spells.BESTOW_CURSE)
         data.add_spell(WizardLevel3Spells.FEAR)
-        return data
 
 
 @attr.dataclass
@@ -79,10 +75,9 @@ class PaladinConquestLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(DruidLevel4Spells.DOMINATE_BEAST)
         data.add_spell(DruidLevel4Spells.STONESKIN)
-        return data
 
 
 @attr.dataclass
@@ -91,9 +86,8 @@ class PaladinConquestLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinConquestFeatures.ScornfulRebuke())
-        return data
 
 
 @attr.dataclass
@@ -102,10 +96,9 @@ class PaladinConquestLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel5Spells.CLOUDKILL)
         data.add_spell(WizardLevel5Spells.DOMINATE_PERSON)
-        return data
 
 
 @attr.dataclass
@@ -114,12 +107,11 @@ class PaladinConquestLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinConquestFeatures.AuraOfConquestExpansion(),
             extends=PaladinConquestFeatures.AuraOfConquest,
         )
-        return data
 
 
 @attr.dataclass
@@ -128,9 +120,8 @@ class PaladinConquestLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinConquestFeatures.InvincibleConqueror())
-        return data
 
 
 class PaladinConquestCustomStarterClassArgs(PaladinCustomStarterClassArgs):

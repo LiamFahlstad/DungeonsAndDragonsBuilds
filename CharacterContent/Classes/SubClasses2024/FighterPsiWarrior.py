@@ -20,9 +20,8 @@ class FighterPsiWarriorLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterPsiWarriorFeatures.PsionicPower())
-        return data
 
 
 @attr.dataclass
@@ -31,12 +30,11 @@ class FighterPsiWarriorLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterPsiWarriorFeatures.TelekineticAdept(),
             extends=FighterPsiWarriorFeatures.PsionicPower,
         )
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class FighterPsiWarriorLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterPsiWarriorFeatures.GuardedMind())
-        return data
 
 
 @attr.dataclass
@@ -56,9 +53,8 @@ class FighterPsiWarriorLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterPsiWarriorFeatures.BulwarkOfForce())
-        return data
 
 
 @attr.dataclass
@@ -67,14 +63,13 @@ class FighterPsiWarriorLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterPsiWarriorFeatures.TelekineticMaster())
         data.add_spell(
             WizardLevel5Spells.TELEKINESIS,
             Ability.INTELLIGENCE,
             additional_ruling="Always prepared; cast without a spell slot or components",
         )
-        return data
 
 
 class FighterPsiWarriorCustomStarterClassArgs(FighterCustomStarterClassArgs):

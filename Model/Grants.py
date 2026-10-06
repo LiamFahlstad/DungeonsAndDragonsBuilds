@@ -16,7 +16,7 @@ from typing import Literal, Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from Model.Character import Character, GrantKind
+from Model.Character import Character, GrantKind, GrantStamp
 from Model.Sources import Effect, Gear, GrantedFeature
 
 
@@ -48,11 +48,11 @@ class Grants:
         an origin feat)."""
         self.character.add_feature(
             feature,
+            stamp=GrantStamp(
+                self.level, kind or self.kind, granted_by or self.granted_by
+            ),
             extends=extends,
             if_missing=if_missing,
-            level=self.level,
-            kind=kind or self.kind,
-            granted_by=granted_by or self.granted_by,
         )
 
     def add_fighting_style(self, fighting_style: Effect) -> None:
@@ -80,9 +80,8 @@ class Grants:
             spell,
             spell_casting_ability,
             additional_ruling,
-            source=source,
-            grant_level=self.level,
-            granted_by=granted_by or self.granted_by,
+            source,
+            stamp=GrantStamp(self.level, self.kind, granted_by or self.granted_by),
         )
 
     def add_cantrip(

@@ -22,10 +22,9 @@ class WizardNecromancyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardNecromancyFeatures.NecromancySavant())
         data.add_feature(WizardNecromancyFeatures.GrimHarvest())
-        return data
 
 
 @attr.dataclass
@@ -34,10 +33,9 @@ class WizardNecromancyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardNecromancyFeatures.UndeadThralls())
         data.add_spell(NecromancyLevel3Spells.ANIMATE_DEAD)
-        return data
 
 
 @attr.dataclass
@@ -46,9 +44,8 @@ class WizardNecromancyLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardNecromancyFeatures.InuredToUndeath())
-        return data
 
 
 @attr.dataclass
@@ -57,9 +54,8 @@ class WizardNecromancyLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardNecromancyFeatures.CommandUndead())
-        return data
 
 
 class WizardNecromancyCustomStarterClassArgs(WizardCustomStarterClassArgs):

@@ -23,14 +23,13 @@ class BarbarianStormHeraldLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.StormAura(
                 environment=self.environment
             ),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -40,13 +39,12 @@ class BarbarianStormHeraldLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.StormSoul(
                 environment=self.environment
             )
         )
-        return data
 
 
 @attr.dataclass
@@ -55,9 +53,8 @@ class BarbarianStormHeraldLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheStormHeraldFeatures.ShieldingStorm())
-        return data
 
 
 @attr.dataclass
@@ -67,13 +64,12 @@ class BarbarianStormHeraldLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheStormHeraldFeatures.RagingStorm(
                 environment=self.environment
             )
         )
-        return data
 
 
 class BarbarianStormHeraldCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

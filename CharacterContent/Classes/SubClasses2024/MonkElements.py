@@ -20,13 +20,12 @@ class MonkElementsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkElementsFeatures.ElementalAttunement(), extends=MonkFeatures.MonksFocus
         )
         data.add_feature(MonkElementsFeatures.ManipulateElements())
         data.add_cantrip(DruidLevel0Spells.ELEMENTALISM, Ability.WISDOM)
-        return data
 
 
 @attr.dataclass
@@ -34,11 +33,10 @@ class MonkElementsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkElementsFeatures.ElementalBurst(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 @attr.dataclass
@@ -47,11 +45,10 @@ class MonkElementsLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkElementsFeatures.StrideOfTheElements(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 @attr.dataclass
@@ -60,11 +57,10 @@ class MonkElementsLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkElementsFeatures.ElementalEpitome(), extends=MonkFeatures.MonksFocus
         )
-        return data
 
 
 class MonkElementsCustomStarterClassArgs(MonkCustomStarterClassArgs):

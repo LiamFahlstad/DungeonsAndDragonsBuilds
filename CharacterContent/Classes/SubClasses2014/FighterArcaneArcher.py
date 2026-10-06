@@ -23,12 +23,11 @@ class FighterArcaneArcherLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterArcaneArcherFeatures.ArcaneArcherLore(self.skill, self.cantrip)
         )
         data.add_feature(FighterArcaneArcherFeatures.ArcaneShot())
-        return data
 
 
 @attr.dataclass
@@ -37,10 +36,9 @@ class FighterArcaneArcherLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterArcaneArcherFeatures.MagicArrow())
         data.add_feature(FighterArcaneArcherFeatures.CurvingShot())
-        return data
 
 
 @attr.dataclass
@@ -49,12 +47,11 @@ class FighterArcaneArcherLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterArcaneArcherFeatures.EverReadyShot(),
             extends=FighterArcaneArcherFeatures.ArcaneShot,
         )
-        return data
 
 
 class FighterArcaneArcherCustomStarterClassArgs(FighterCustomStarterClassArgs):

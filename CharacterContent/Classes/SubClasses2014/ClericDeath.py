@@ -19,12 +19,11 @@ class ClericDeathLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericDeathFeatures.BonusProficiency())
         data.add_feature(ClericDeathFeatures.Reaper())
         data.add_feature(ClericDeathFeatures.DeathDomainSpells())
         data.add_feature(ClericDeathFeatures.TouchOfDeathChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -33,12 +32,11 @@ class ClericDeathLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericDeathFeatures.InescapableDestruction(),
             extends=ClericDeathFeatures.TouchOfDeathChannelDivinity,
         )
-        return data
 
 
 @attr.dataclass
@@ -47,11 +45,10 @@ class ClericDeathLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericDeathFeatures.ImprovedReaper(), extends=ClericDeathFeatures.Reaper
         )
-        return data
 
 
 class ClericDeathCustomStarterClassArgs(ClericCustomStarterClassArgs):

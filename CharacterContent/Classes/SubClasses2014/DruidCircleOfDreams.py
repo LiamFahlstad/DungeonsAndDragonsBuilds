@@ -22,9 +22,8 @@ class DruidDreamsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidDreamsFeatures.BalmOfTheSummerCourt())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class DruidDreamsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidDreamsFeatures.HearthOfMoonlightAndShadow())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class DruidDreamsLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidDreamsFeatures.HiddenPaths())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class DruidDreamsLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidDreamsFeatures.WalkerInDreams())
-        return data
 
 
 class DruidDreamsCustomStarterClassArgs(DruidCustomStarterClassArgs):

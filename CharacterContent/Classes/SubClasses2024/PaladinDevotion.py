@@ -28,14 +28,13 @@ class PaladinDevotionLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinDevotionFeatures.SacredWeapon(),
             extends=PaladinFeatures.ChannelDivinity,
         )
         data.add_spell(ClericLevel1Spells.PROTECTION_FROM_EVIL_AND_GOOD)
         data.add_spell(PaladinLevel1Spells.SHIELD_OF_FAITH)
-        return data
 
 
 @attr.dataclass
@@ -44,10 +43,9 @@ class PaladinDevotionLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel2Spells.AID)
         data.add_spell(ClericLevel2Spells.ZONE_OF_TRUTH)
-        return data
 
 
 @attr.dataclass
@@ -56,12 +54,11 @@ class PaladinDevotionLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinDevotionFeatures.AuraOfDevotion(),
             extends=PaladinFeatures.AuraOfProtection,
         )
-        return data
 
 
 @attr.dataclass
@@ -70,10 +67,9 @@ class PaladinDevotionLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel3Spells.BEACON_OF_HOPE)
         data.add_spell(ClericLevel3Spells.DISPEL_MAGIC)
-        return data
 
 
 @attr.dataclass
@@ -82,10 +78,9 @@ class PaladinDevotionLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel4Spells.FREEDOM_OF_MOVEMENT)
         data.add_spell(ClericLevel4Spells.GUARDIAN_OF_FAITH)
-        return data
 
 
 @attr.dataclass
@@ -94,12 +89,11 @@ class PaladinDevotionLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinDevotionFeatures.SmiteOfProtection(),
             extends=PaladinFeatures.AuraOfProtection,
         )
-        return data
 
 
 @attr.dataclass
@@ -108,10 +102,9 @@ class PaladinDevotionLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel5Spells.COMMUNE)
         data.add_spell(ClericLevel5Spells.FLAME_STRIKE)
-        return data
 
 
 @attr.dataclass
@@ -120,12 +113,11 @@ class PaladinDevotionLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinDevotionFeatures.HolyNimbus(),
             extends=PaladinFeatures.AuraOfProtection,
         )
-        return data
 
 
 class PaladinDevotionCustomStarterClassArgs(PaladinCustomStarterClassArgs):

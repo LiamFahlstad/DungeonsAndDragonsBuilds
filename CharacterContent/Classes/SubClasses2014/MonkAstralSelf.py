@@ -18,9 +18,8 @@ class MonkAstralSelfLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkAstralSelfFeatures.ArmsOfTheAstralSelf())
-        return data
 
 
 @attr.dataclass
@@ -28,12 +27,11 @@ class MonkAstralSelfLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkAstralSelfFeatures.VisageOfTheAstralSelf(),
             extends=MonkAstralSelfFeatures.ArmsOfTheAstralSelf,
         )
-        return data
 
 
 @attr.dataclass
@@ -42,9 +40,8 @@ class MonkAstralSelfLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkAstralSelfFeatures.BodyOfTheAstralSelf())
-        return data
 
 
 @attr.dataclass
@@ -53,9 +50,8 @@ class MonkAstralSelfLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkAstralSelfFeatures.AwakenedAstralSelf())
-        return data
 
 
 class MonkAstralSelfCustomStarterClassArgs(MonkCustomStarterClassArgs):

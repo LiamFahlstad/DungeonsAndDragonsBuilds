@@ -32,7 +32,7 @@ class ClericGraveLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel1Spells.DETECT_EVIL_AND_GOOD)
         data.add_spell(NecromancyLevel1Spells.FALSE_LIFE)
         data.add_spell(ClericLevel2Spells.GENTLE_REPOSE)
@@ -42,7 +42,6 @@ class ClericGraveLevel3(ClassBuilder.SubclassLevel3):
             ClericGraveFeatures.PathToTheGrave(), extends=ClericFeatures.ChannelDivinity
         )
         data.add_feature(ClericGraveFeatures.CircleOfMortality())
-        return data
 
 
 @attr.dataclass
@@ -51,10 +50,9 @@ class ClericGraveLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel3Spells.REVIVIFY)
         data.add_spell(NecromancyLevel3Spells.VAMPIRIC_TOUCH)
-        return data
 
 
 @attr.dataclass
@@ -63,9 +61,8 @@ class ClericGraveLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericGraveFeatures.SentinelAtDeathsDoor())
-        return data
 
 
 @attr.dataclass
@@ -74,10 +71,9 @@ class ClericGraveLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(NecromancyLevel4Spells.BLIGHT)
         data.add_spell(ClericLevel4Spells.DEATH_WARD)
-        return data
 
 
 @attr.dataclass
@@ -86,10 +82,9 @@ class ClericGraveLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel5Spells.DISPEL_EVIL_AND_GOOD)
         data.add_spell(ClericLevel5Spells.RAISE_DEAD)
-        return data
 
 
 @attr.dataclass
@@ -98,9 +93,8 @@ class ClericGraveLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericGraveFeatures.DivineReaper())
-        return data
 
 
 class ClericGraveCustomStarterClassArgs(ClericCustomStarterClassArgs):

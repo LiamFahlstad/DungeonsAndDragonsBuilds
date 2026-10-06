@@ -18,9 +18,8 @@ class MonkLongDeathLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkLongDeathFeatures.TouchOfDeath())
-        return data
 
 
 @attr.dataclass
@@ -28,9 +27,8 @@ class MonkLongDeathLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkLongDeathFeatures.HourOfReaping())
-        return data
 
 
 @attr.dataclass
@@ -39,9 +37,8 @@ class MonkLongDeathLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkLongDeathFeatures.MasteryOfDeath())
-        return data
 
 
 @attr.dataclass
@@ -50,9 +47,8 @@ class MonkLongDeathLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkLongDeathFeatures.TouchOfTheLongDeath())
-        return data
 
 
 class MonkLongDeathCustomStarterClassArgs(MonkCustomStarterClassArgs):

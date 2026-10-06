@@ -18,11 +18,10 @@ class MonkMercyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMercyFeatures.HandOfHarm())
         data.add_feature(MonkMercyFeatures.HandOfHealing())
         data.add_feature(MonkMercyFeatures.ImplementsOfMercy())
-        return data
 
 
 @attr.dataclass
@@ -30,11 +29,10 @@ class MonkMercyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             MonkMercyFeatures.PhysiciansTouch(), extends=MonkMercyFeatures.HandOfHarm
         )
-        return data
 
 
 @attr.dataclass
@@ -43,9 +41,8 @@ class MonkMercyLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMercyFeatures.FlurryOfHealingAndHarm())
-        return data
 
 
 @attr.dataclass
@@ -54,9 +51,8 @@ class MonkMercyLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkMercyFeatures.HandOfUltimateMercy())
-        return data
 
 
 class MonkMercyCustomStarterClassArgs(MonkCustomStarterClassArgs):

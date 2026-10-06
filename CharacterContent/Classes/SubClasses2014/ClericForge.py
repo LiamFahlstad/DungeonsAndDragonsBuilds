@@ -19,12 +19,11 @@ class ClericForgeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericForgeFeatures.BonusProficiencies())
         data.add_feature(ClericForgeFeatures.BlessingOfTheForge())
         data.add_feature(ClericForgeFeatures.ForgeDomainSpells())
         data.add_feature(ClericForgeFeatures.ArtisansBlessingChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class ClericForgeLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericForgeFeatures.SoulOfTheForge())
-        return data
 
 
 @attr.dataclass
@@ -44,12 +42,11 @@ class ClericForgeLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericForgeFeatures.SaintOfForgeAndFire(),
             extends=ClericForgeFeatures.SoulOfTheForge,
         )
-        return data
 
 
 class ClericForgeCustomStarterClassArgs(ClericCustomStarterClassArgs):

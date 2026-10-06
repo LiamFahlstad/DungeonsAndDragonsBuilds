@@ -21,10 +21,9 @@ class FighterEchoKnightLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEchoKnightFeatures.ManifestEcho())
         data.add_feature(FighterEchoKnightFeatures.UnleashIncarnation())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class FighterEchoKnightLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEchoKnightFeatures.EchoAvatar())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class FighterEchoKnightLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEchoKnightFeatures.ShadowMartyr())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class FighterEchoKnightLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterEchoKnightFeatures.ReclaimPotential())
-        return data
 
 
 @attr.dataclass
@@ -66,12 +62,11 @@ class FighterEchoKnightLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterEchoKnightFeatures.LegionOfOne(),
             extends=FighterEchoKnightFeatures.ManifestEcho,
         )
-        return data
 
 
 class FighterEchoKnightCustomStarterClassArgs(FighterCustomStarterClassArgs):

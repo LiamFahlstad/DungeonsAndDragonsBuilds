@@ -22,13 +22,12 @@ class SorcererDivineSoulLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererDivineSoulFeatures.DivineMagic(),
             extends=SorcererFeatures.Spellcasting,
         )
         data.add_feature(SorcererDivineSoulFeatures.FavoredByTheGods())
-        return data
 
 
 @attr.dataclass
@@ -37,9 +36,8 @@ class SorcererDivineSoulLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDivineSoulFeatures.EmpoweredHealing())
-        return data
 
 
 @attr.dataclass
@@ -48,9 +46,8 @@ class SorcererDivineSoulLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDivineSoulFeatures.AngelicForm())
-        return data
 
 
 @attr.dataclass
@@ -59,9 +56,8 @@ class SorcererDivineSoulLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererDivineSoulFeatures.UnearthlyRecovery())
-        return data
 
 
 class SorcererDivineSoulCustomStarterClassArgs(SorcererCustomStarterClassArgs):

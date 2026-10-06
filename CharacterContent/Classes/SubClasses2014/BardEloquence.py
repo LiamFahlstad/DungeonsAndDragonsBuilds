@@ -20,13 +20,12 @@ class BardEloquenceLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardEloquenceFeatures.SilverTongue())
         data.add_feature(
             BardEloquenceFeatures.UnsettlingWords(),
             extends=BardFeatures.BardicInspiration,
         )
-        return data
 
 
 @attr.dataclass
@@ -35,13 +34,12 @@ class BardEloquenceLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardEloquenceFeatures.UnfailingInspiration(),
             extends=BardFeatures.BardicInspiration,
         )
         data.add_feature(BardEloquenceFeatures.UniversalSpeech())
-        return data
 
 
 @attr.dataclass
@@ -50,12 +48,11 @@ class BardEloquenceLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardEloquenceFeatures.InfectiousInspiration(),
             extends=BardFeatures.BardicInspiration,
         )
-        return data
 
 
 class BardEloquenceCustomStarterClassArgs(BardCustomStarterClassArgs):

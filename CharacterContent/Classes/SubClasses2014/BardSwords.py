@@ -21,11 +21,10 @@ class BardSwordsLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardSwordsFeatures.BonusProficiencies())
         data.add_feature(BardSwordsFeatures.BladeFlourish())
         data.add_fighting_style(self.fighting_style)
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class BardSwordsLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardSwordsFeatures.ExtraAttack())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class BardSwordsLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardSwordsFeatures.MastersFlourish(),
             extends=BardSwordsFeatures.BladeFlourish,
         )
-        return data
 
 
 class BardSwordsCustomStarterClassArgs(BardCustomStarterClassArgs):

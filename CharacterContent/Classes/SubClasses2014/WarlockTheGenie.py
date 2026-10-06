@@ -22,12 +22,11 @@ class WarlockTheGenieLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockTheGenieFeatures.GenieExpandedSpells(kind=self.genie_kind)
         )
         data.add_feature(WarlockTheGenieFeatures.GeniesVessel(kind=self.genie_kind))
-        return data
 
 
 @attr.dataclass
@@ -37,9 +36,8 @@ class WarlockTheGenieLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockTheGenieFeatures.ElementalGift(kind=self.genie_kind))
-        return data
 
 
 @attr.dataclass
@@ -48,12 +46,11 @@ class WarlockTheGenieLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockTheGenieFeatures.SanctuaryVessel(),
             extends=WarlockTheGenieFeatures.GeniesVessel,
         )
-        return data
 
 
 @attr.dataclass
@@ -62,12 +59,11 @@ class WarlockTheGenieLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockTheGenieFeatures.LimitedWish(),
             extends=WarlockTheGenieFeatures.GeniesVessel,
         )
-        return data
 
 
 class WarlockTheGenieCustomStarterClassArgs(WarlockCustomStarterClassArgs):

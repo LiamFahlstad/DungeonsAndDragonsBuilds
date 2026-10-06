@@ -20,12 +20,11 @@ class ClericOrderLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericOrderFeatures.BonusProficiencies())
         data.add_feature(ClericOrderFeatures.VoiceOfAuthority())
         data.add_feature(ClericOrderFeatures.OrderDomainSpells())
         data.add_feature(ClericOrderFeatures.OrdersDemandChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class ClericOrderLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericOrderFeatures.EmbodimentOfTheLaw())
-        return data
 
 
 @attr.dataclass
@@ -45,7 +43,7 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         # The 2024 base Cleric's Blessed Strikes replaces the 2014 domain's own
         # Divine Strike, so Order's Wrath rides on that when it was chosen.
         data.add_feature(
@@ -53,7 +51,6 @@ class ClericOrderLevel17(ClassBuilder.SubclassLevel17):
             extends=ClericFeatures.DivineStrike,
             if_missing="standalone",
         )
-        return data
 
 
 class ClericOrderCustomStarterClassArgs(ClericCustomStarterClassArgs):

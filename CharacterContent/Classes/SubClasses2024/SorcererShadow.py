@@ -31,14 +31,13 @@ class SorcererShadowLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererShadowFeatures.ShadowSpells())
         data.add_spell(EnchantmentLevel1Spells.BANE)
         data.add_spell(SorcererLevel2Spells.DARKNESS)
         data.add_spell(NecromancyLevel1Spells.INFLICT_WOUNDS)
         data.add_spell(AbjurationLevel2Spells.PASS_WITHOUT_TRACE)
         data.add_feature(SorcererShadowFeatures.PowerOfShadow())
-        return data
 
 
 @attr.dataclass
@@ -46,10 +45,9 @@ class SorcererShadowLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ConjurationLevel3Spells.HUNGER_OF_HADAR)
         data.add_spell(AbjurationLevel3Spells.NONDETECTION)
-        return data
 
 
 @attr.dataclass
@@ -57,9 +55,8 @@ class SorcererShadowLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererShadowFeatures.BeastsOfIllOmen())
-        return data
 
 
 @attr.dataclass
@@ -67,10 +64,9 @@ class SorcererShadowLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SorcererLevel4Spells.GREATER_INVISIBILITY)
         data.add_spell(IllusionLevel4Spells.PHANTASMAL_KILLER)
-        return data
 
 
 @attr.dataclass
@@ -78,10 +74,9 @@ class SorcererShadowLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(NecromancyLevel5Spells.CONTAGION)
         data.add_spell(SorcererLevel5Spells.CREATION)
-        return data
 
 
 @attr.dataclass
@@ -89,9 +84,8 @@ class SorcererShadowLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(SorcererShadowFeatures.ShadowWalk())
-        return data
 
 
 @attr.dataclass
@@ -99,11 +93,10 @@ class SorcererShadowLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             SorcererShadowFeatures.UmbralForm(), extends=SorcererFeatures.InnateSorcery
         )
-        return data
 
 
 class SorcererShadowCustomStarterClassArgs(SorcererCustomStarterClassArgs):

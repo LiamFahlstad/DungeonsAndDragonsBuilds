@@ -21,7 +21,7 @@ class FighterBanneretLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterBanneretFeatures.KnightlyEnvoy())
         data.add_feature(FighterBanneretFeatures.GroupRecovery())
         data.add_spell(
@@ -29,7 +29,6 @@ class FighterBanneretLevel3(ClassBuilder.SubclassLevel3):
             Ability.CHARISMA,
             additional_ruling="Ritual only",
         )
-        return data
 
 
 @attr.dataclass
@@ -38,12 +37,11 @@ class FighterBanneretLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterBanneretFeatures.TeamTactics(),
             extends=FighterBanneretFeatures.GroupRecovery,
         )
-        return data
 
 
 @attr.dataclass
@@ -52,11 +50,10 @@ class FighterBanneretLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterBanneretFeatures.RallyingSurge(), extends=FighterFeatures.ActionSurge
         )
-        return data
 
 
 @attr.dataclass
@@ -65,12 +62,11 @@ class FighterBanneretLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterBanneretFeatures.SharedResilience(),
             extends=FighterFeatures.Indomitable,
         )
-        return data
 
 
 @attr.dataclass
@@ -79,9 +75,8 @@ class FighterBanneretLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterBanneretFeatures.InspiringCommander())
-        return data
 
 
 class FighterBanneretCustomStarterClassArgs(FighterCustomStarterClassArgs):

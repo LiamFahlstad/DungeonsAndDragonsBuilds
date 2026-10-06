@@ -24,13 +24,12 @@ class RangerDrakewardenLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerDrakewardenFeatures.DraconicGift(language=self.language))
         data.add_feature(
             RangerDrakewardenFeatures.DrakeCompanion(damage_type=self.damage_type)
         )
         data.add_cantrip(ClericLevel0Spells.THAUMATURGY)
-        return data
 
 
 @attr.dataclass
@@ -39,12 +38,11 @@ class RangerDrakewardenLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerDrakewardenFeatures.BondOfFangAndScale(),
             extends=RangerDrakewardenFeatures.DrakeCompanion,
         )
-        return data
 
 
 @attr.dataclass
@@ -53,9 +51,8 @@ class RangerDrakewardenLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RangerDrakewardenFeatures.DrakesBreath())
-        return data
 
 
 @attr.dataclass
@@ -64,12 +61,11 @@ class RangerDrakewardenLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RangerDrakewardenFeatures.PerfectedBond(),
             extends=RangerDrakewardenFeatures.DrakeCompanion,
         )
-        return data
 
 
 class RangerDrakewardenCustomStarterClassArgs(RangerCustomStarterClassArgs):

@@ -20,10 +20,9 @@ class FighterChampionLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterChampionFeatures.ImprovedCritical())
         data.add_feature(FighterChampionFeatures.RemarkableAthlete())
-        return data
 
 
 @attr.dataclass
@@ -32,12 +31,11 @@ class FighterChampionLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterChampionFeatures.AdditionalFightingStyle(),
             extends=FighterFeatures.FightingStyle,
         )
-        return data
 
 
 @attr.dataclass
@@ -46,9 +44,8 @@ class FighterChampionLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterChampionFeatures.HeroicWarrior())
-        return data
 
 
 @attr.dataclass
@@ -57,12 +54,11 @@ class FighterChampionLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterChampionFeatures.SuperiorCritical(),
             extends=FighterChampionFeatures.ImprovedCritical,
         )
-        return data
 
 
 @attr.dataclass
@@ -71,9 +67,8 @@ class FighterChampionLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterChampionFeatures.Survivor())
-        return data
 
 
 class FighterChampionCustomStarterClassArgs(FighterCustomStarterClassArgs):

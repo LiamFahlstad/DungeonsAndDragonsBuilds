@@ -31,14 +31,13 @@ class ArtificerBattleSmithLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerBattleSmithFeatures.ToolsOfTheTrade())
         data.add_feature(ArtificerBattleSmithFeatures.Spells())
         data.add_feature(ArtificerBattleSmithFeatures.BattleReady())
         data.add_feature(ArtificerBattleSmithFeatures.SteelDefender())
         data.add_spell(PaladinLevel1Spells.HEROISM)
         data.add_spell(SorcererLevel1Spells.SHIELD)
-        return data
 
 
 @attr.dataclass
@@ -46,11 +45,10 @@ class ArtificerBattleSmithLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerBattleSmithFeatures.ExtraAttack())
         data.add_spell(PaladinLevel2Spells.SHINING_SMITE)
         data.add_spell(PaladinLevel2Spells.WARDING_BOND)
-        return data
 
 
 @attr.dataclass
@@ -58,11 +56,10 @@ class ArtificerBattleSmithLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ArtificerBattleSmithFeatures.ArcaneJolt())
         data.add_spell(PaladinLevel3Spells.AURA_OF_VITALITY)
         data.add_spell(RangerLevel3Spells.CONJURE_BARRAGE)
-        return data
 
 
 @attr.dataclass
@@ -70,10 +67,9 @@ class ArtificerBattleSmithLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel4Spells.AURA_OF_PURITY)
         data.add_spell(SorcererLevel4Spells.FIRE_SHIELD)
-        return data
 
 
 @attr.dataclass
@@ -81,12 +77,11 @@ class ArtificerBattleSmithLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ArtificerBattleSmithFeatures.ImprovedDefender(),
             extends=ArtificerBattleSmithFeatures.ArcaneJolt,
         )
-        return data
 
 
 @attr.dataclass
@@ -94,10 +89,9 @@ class ArtificerBattleSmithLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(PaladinLevel5Spells.BANISHING_SMITE)
         data.add_spell(BardLevel5Spells.MASS_CURE_WOUNDS)
-        return data
 
 
 class ArtificerBattleSmithCustomStarterClassArgs(ArtificerCustomStarterClassArgs):

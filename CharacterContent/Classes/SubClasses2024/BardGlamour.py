@@ -20,12 +20,11 @@ class BardGlamourLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.BardLevel1Spells.CHARM_PERSON)
         data.add_spell(SpellDefinitions.BardLevel2Spells.MIRROR_IMAGE)
         data.add_feature(BardGlamourFeatures.BeguilingMagic())
         data.add_feature(BardGlamourFeatures.MantleOfInspiration())
-        return data
 
 
 @attr.dataclass
@@ -33,13 +32,12 @@ class BardGlamourLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(SpellDefinitions.BardLevel1Spells.COMMAND)
         data.add_feature(
             BardGlamourFeatures.MantleOfMajesty(),
             extends=BardFeatures.BardicInspiration,
         )
-        return data
 
 
 @attr.dataclass
@@ -48,9 +46,8 @@ class BardGlamourLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardGlamourFeatures.UnbreakableMajesty())
-        return data
 
 
 class BardGlamourCustomStarterClassArgs(BardCustomStarterClassArgs):

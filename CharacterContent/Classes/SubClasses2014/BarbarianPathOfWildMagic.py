@@ -22,12 +22,11 @@ class BarbarianWildMagicLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfWildMagicFeatures.MagicAwareness())
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.WildSurge(), extends=BarbarianFeatures.Rage
         )
-        return data
 
 
 @attr.dataclass
@@ -36,9 +35,8 @@ class BarbarianWildMagicLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfWildMagicFeatures.BolsteringMagic())
-        return data
 
 
 @attr.dataclass
@@ -47,12 +45,11 @@ class BarbarianWildMagicLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.UnstableBacklash(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -61,12 +58,11 @@ class BarbarianWildMagicLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfWildMagicFeatures.ControlledSurge(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianWildMagicCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

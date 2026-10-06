@@ -19,13 +19,12 @@ class ClericTwilightLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericTwilightFeatures.BonusProficiencies())
         data.add_feature(ClericTwilightFeatures.TwilightDomainSpells())
         data.add_feature(ClericTwilightFeatures.EyesOfNight())
         data.add_feature(ClericTwilightFeatures.VigilantBlessing())
         data.add_feature(ClericTwilightFeatures.TwilightSanctuaryChannelDivinity())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class ClericTwilightLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericTwilightFeatures.StepsOfNight())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class ClericTwilightLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             ClericTwilightFeatures.TwilightShroud(),
             extends=ClericTwilightFeatures.TwilightSanctuaryChannelDivinity,
         )
-        return data
 
 
 class ClericTwilightCustomStarterClassArgs(ClericCustomStarterClassArgs):

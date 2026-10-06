@@ -160,6 +160,11 @@ class Character:
         tuple[dict[int, list[GrantedFeature]], list[GrantedFeature]]
     ] = attr.ib(default=None, init=False, eq=False, repr=False)
     _extension_tree_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
+    # {id(feature): stamp} - see _stamps.
+    _stamp_index: dict[int, GrantStamp] = attr.ib(
+        factory=dict, init=False, eq=False, repr=False
+    )
+    _stamp_index_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
     # The order iter_stat_effects() applies in: as listed, unless a test
     # reorders it to prove the order doesn't matter (tests/
     # test_feature_apply_order.py, tests/test_order_invariance.py).
@@ -228,26 +233,18 @@ class Character:
     def add_feature(
         self,
         feature: GrantedFeature,
+        *,
+        stamp: GrantStamp,
         extends: type | GrantedFeature | None = None,
         if_missing: Literal["error", "drop", "standalone"] = "error",
-        level: int = 1,
-        kind: GrantKind = "other",
-        granted_by: str = "Other",
     ):
         """Grant `feature` - or, with `extends`, grant it as an extension of
         that feature (a type, or a feature instance): see FeatureGrant.
-        `level`, `kind` and `granted_by` are normally stamped by the
-        builder's Grants scope (Model/Grants.py)."""
+        `stamp` says where it's granted from; builders grant through a Grants
+        scope (Model/Grants.py), which stamps it."""
         if extends is None and if_missing != "error":
             raise ValueError("if_missing only applies with extends=.")
-        self.feature_grants.append(
-            FeatureGrant(
-                feature,
-                GrantStamp(level, kind, granted_by),
-                extends,
-                if_missing,
-            )
-        )
+        self.feature_grants.append(FeatureGrant(feature, stamp, extends, if_missing))
         self._changed()
 
     @property
@@ -256,14 +253,18 @@ class Character:
         return [g.feature for g in self.feature_grants if g.extends is None]
 
     def has_granted(self, feature: GrantedFeature) -> bool:
-        return any(grant.feature is feature for grant in self.feature_grants)
+        return id(feature) in self._stamps()
 
     def stamp_of(self, feature: GrantedFeature) -> GrantStamp:
         """Where `feature` was granted from (a default stamp if it wasn't)."""
-        for grant in self.feature_grants:
-            if grant.feature is feature:
-                return grant.stamp
-        return GrantStamp()
+        return self._stamps().get(id(feature), GrantStamp())
+
+    def _stamps(self) -> dict[int, GrantStamp]:
+        """{id(feature): stamp}, cached under the version it was built at."""
+        if self._stamp_index_version != self._version:
+            self._stamp_index = {id(g.feature): g.stamp for g in self.feature_grants}
+            self._stamp_index_version = self._version
+        return self._stamp_index
 
     def feature_sort_key(self, feature: GrantedFeature) -> tuple:
         """The one order the sheet lists features in: passive last, then by
@@ -394,22 +395,21 @@ class Character:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
-        grant_level: int = 1,
-        granted_by: str = "Other",
+        *,
+        stamp: GrantStamp,
     ):
         """Grant a spell. `source` is a free-text label for the sheet ("Chosen
-        spell"); `grant_level` and `granted_by` are normally stamped by the
-        builder's Grants scope (Model/Grants.py). The same spell from two
-        different grants is listed for each; twice from one grant fails
-        validate()."""
+        spell"); `stamp` says where it's granted from (builders grant through
+        a Grants scope, Model/Grants.py). The same spell from two different
+        grants is listed for each; twice from one grant fails validate()."""
         self._changed()
         self.spell_grants.append(
             SpellGrant(
                 name=spell,
                 ability=self._resolve_spell_casting_ability(spell_casting_ability),
                 ruling=additional_ruling,
-                grant_level=grant_level,
-                granted_by=granted_by,
+                grant_level=stamp.level,
+                granted_by=stamp.granted_by,
                 source=source,
             )
         )
@@ -420,16 +420,11 @@ class Character:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
-        grant_level: int = 1,
-        granted_by: str = "Other",
+        *,
+        stamp: GrantStamp,
     ):
         self.add_spell(
-            cantrip,
-            spell_casting_ability,
-            additional_ruling,
-            source=source,
-            grant_level=grant_level,
-            granted_by=granted_by,
+            cantrip, spell_casting_ability, additional_ruling, source, stamp=stamp
         )
 
     @property

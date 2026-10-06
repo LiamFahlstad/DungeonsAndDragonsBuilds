@@ -68,7 +68,8 @@ Rules of thumb:
 
 - Anything derived is not stored on `Character`; a source is never copied into a part.
 - Builder bookkeeping (the level being granted, who grants it) lives in the builder's `Grants`
-  scope (`Model/Grants.py`), never on `Character`.
+  scope (`Model/Grants.py`), never on `Character`. `Character.add_feature` / `add_spell` require a
+  `stamp`, so every grant goes through a scope (tests use `tests/_grants.py`).
 - A feature is never changed after it's granted: a later level's addition is its own grant
   (an extension, a spell).
 - `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields:

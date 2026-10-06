@@ -20,12 +20,11 @@ class BardWhispersLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardWhispersFeatures.PsychicBlades(), extends=BardFeatures.BardicInspiration
         )
         data.add_feature(BardWhispersFeatures.WordsOfTerror())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class BardWhispersLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardWhispersFeatures.MantleOfWhispers())
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class BardWhispersLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardWhispersFeatures.ShadowLore())
-        return data
 
 
 class BardWhispersCustomStarterClassArgs(BardCustomStarterClassArgs):

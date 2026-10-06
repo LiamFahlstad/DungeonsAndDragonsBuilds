@@ -19,10 +19,9 @@ class RogueMastermindLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueMastermindFeatures.MasterOfIntrigue())
         data.add_feature(RogueMastermindFeatures.MasterOfTactics())
-        return data
 
 
 @attr.dataclass
@@ -31,9 +30,8 @@ class RogueMastermindLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueMastermindFeatures.InsightfulManipulator())
-        return data
 
 
 @attr.dataclass
@@ -42,9 +40,8 @@ class RogueMastermindLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueMastermindFeatures.Misdirection())
-        return data
 
 
 @attr.dataclass
@@ -53,9 +50,8 @@ class RogueMastermindLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueMastermindFeatures.SoulOfDeceit())
-        return data
 
 
 class RogueMastermindCustomStarterClassArgs(RogueCustomStarterClassArgs):

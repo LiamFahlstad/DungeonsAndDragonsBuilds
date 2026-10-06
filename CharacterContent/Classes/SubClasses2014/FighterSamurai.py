@@ -21,10 +21,9 @@ class FighterSamuraiLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterSamuraiFeatures.BonusProficiency())
         data.add_feature(FighterSamuraiFeatures.FightingSpirit())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class FighterSamuraiLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterSamuraiFeatures.ElegantCourtier())
-        return data
 
 
 @attr.dataclass
@@ -44,12 +42,11 @@ class FighterSamuraiLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterSamuraiFeatures.TirelessSpirit(),
             extends=FighterSamuraiFeatures.FightingSpirit,
         )
-        return data
 
 
 @attr.dataclass
@@ -58,9 +55,8 @@ class FighterSamuraiLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterSamuraiFeatures.RapidStrike())
-        return data
 
 
 @attr.dataclass
@@ -69,9 +65,8 @@ class FighterSamuraiLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterSamuraiFeatures.StrengthBeforeDeath())
-        return data
 
 
 class FighterSamuraiCustomStarterClassArgs(FighterCustomStarterClassArgs):

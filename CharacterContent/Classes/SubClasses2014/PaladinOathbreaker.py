@@ -30,13 +30,12 @@ class PaladinOathbreakerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinOathbreakerFeatures.OathbreakerSpells())
         data.add_feature(PaladinOathbreakerFeatures.ControlUndead())
         data.add_feature(PaladinOathbreakerFeatures.DreadfulAspect())
         data.add_spell(WarlockLevel1Spells.HELLISH_REBUKE)
         data.add_spell(ClericLevel1Spells.INFLICT_WOUNDS)
-        return data
 
 
 @attr.dataclass
@@ -45,10 +44,9 @@ class PaladinOathbreakerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WarlockLevel2Spells.CROWN_OF_MADNESS)
         data.add_spell(WarlockLevel2Spells.DARKNESS)
-        return data
 
 
 @attr.dataclass
@@ -57,9 +55,8 @@ class PaladinOathbreakerLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinOathbreakerFeatures.AuraOfHate())
-        return data
 
 
 @attr.dataclass
@@ -68,10 +65,9 @@ class PaladinOathbreakerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel3Spells.ANIMATE_DEAD)
         data.add_spell(ClericLevel3Spells.BESTOW_CURSE)
-        return data
 
 
 @attr.dataclass
@@ -80,10 +76,9 @@ class PaladinOathbreakerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(WizardLevel4Spells.BLIGHT)
         data.add_spell(WizardLevel4Spells.CONFUSION)
-        return data
 
 
 @attr.dataclass
@@ -92,9 +87,8 @@ class PaladinOathbreakerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinOathbreakerFeatures.SupernaturalResistance())
-        return data
 
 
 @attr.dataclass
@@ -103,10 +97,9 @@ class PaladinOathbreakerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(ClericLevel5Spells.CONTAGION)
         data.add_spell(WizardLevel5Spells.DOMINATE_PERSON)
-        return data
 
 
 @attr.dataclass
@@ -115,12 +108,11 @@ class PaladinOathbreakerLevel18(ClassBuilder.SubclassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             PaladinOathbreakerFeatures.AuraOfHateExpansion(),
             extends=PaladinOathbreakerFeatures.AuraOfHate,
         )
-        return data
 
 
 @attr.dataclass
@@ -129,9 +121,8 @@ class PaladinOathbreakerLevel20(ClassBuilder.SubclassLevel20):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(PaladinOathbreakerFeatures.DreadLord())
-        return data
 
 
 class PaladinOathbreakerCustomStarterClassArgs(PaladinCustomStarterClassArgs):

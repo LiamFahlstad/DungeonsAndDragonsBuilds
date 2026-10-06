@@ -29,7 +29,7 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(DruidSeaFeatures.CircleOfTheSeaSpells())
         data.add_feature(DruidSeaFeatures.WrathOfTheSea())
         data.add_spell(
@@ -44,7 +44,6 @@ class DruidSeaLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(
             DruidLevel1Spells.THUNDERWAVE, source="Circle of the Sea Spells table"
         )
-        return data
 
 
 @attr.dataclass
@@ -53,14 +52,13 @@ class DruidSeaLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             SorcererLevel3Spells.LIGHTNING_BOLT, source="Circle of the Sea Spells table"
         )
         data.add_spell(
             DruidLevel3Spells.WATER_BREATHING, source="Circle of the Sea Spells table"
         )
-        return data
 
 
 @attr.dataclass
@@ -69,11 +67,10 @@ class DruidSeaLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidSeaFeatures.AquaticAffinity(), extends=DruidSeaFeatures.WrathOfTheSea
         )
-        return data
 
 
 @attr.dataclass
@@ -82,14 +79,13 @@ class DruidSeaLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             DruidLevel4Spells.CONTROL_WATER, source="Circle of the Sea Spells table"
         )
         data.add_spell(
             DruidLevel4Spells.ICE_STORM, source="Circle of the Sea Spells table"
         )
-        return data
 
 
 @attr.dataclass
@@ -98,14 +94,13 @@ class DruidSeaLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(
             DruidLevel5Spells.CONJURE_ELEMENTAL, source="Circle of the Sea Spells table"
         )
         data.add_spell(
             BardLevel5Spells.HOLD_MONSTER, source="Circle of the Sea Spells table"
         )
-        return data
 
 
 @attr.dataclass
@@ -114,11 +109,10 @@ class DruidSeaLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidSeaFeatures.Stormborn(), extends=DruidSeaFeatures.WrathOfTheSea
         )
-        return data
 
 
 @attr.dataclass
@@ -127,11 +121,10 @@ class DruidSeaLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             DruidSeaFeatures.OceanicGift(), extends=DruidSeaFeatures.WrathOfTheSea
         )
-        return data
 
 
 class DruidSeaCustomStarterClassArgs(DruidCustomStarterClassArgs):

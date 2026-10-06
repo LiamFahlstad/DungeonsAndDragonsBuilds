@@ -20,10 +20,9 @@ class RogueThiefLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueThiefFeatures.FastHands())
         data.add_feature(RogueThiefFeatures.SecondStoryWork())
-        return data
 
 
 @attr.dataclass
@@ -32,11 +31,10 @@ class RogueThiefLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueThiefFeatures.SupremeSneak(), extends=RogueFeatures.SneakAttack
         )
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class RogueThiefLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueThiefFeatures.UseMagicDevice())
-        return data
 
 
 @attr.dataclass
@@ -56,9 +53,8 @@ class RogueThiefLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueThiefFeatures.ThiefsReflexes())
-        return data
 
 
 class RogueThiefCustomStarterClassArgs(RogueCustomStarterClassArgs):

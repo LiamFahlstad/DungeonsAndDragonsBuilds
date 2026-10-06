@@ -21,11 +21,10 @@ class WarlockHexbladeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockHexbladeFeatures.HexbladeExpandedSpells())
         data.add_feature(WarlockHexbladeFeatures.HexbladesCurse())
         data.add_feature(WarlockHexbladeFeatures.HexWarrior())
-        return data
 
 
 @attr.dataclass
@@ -34,9 +33,8 @@ class WarlockHexbladeLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WarlockHexbladeFeatures.AccursedSpecter())
-        return data
 
 
 @attr.dataclass
@@ -45,12 +43,11 @@ class WarlockHexbladeLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockHexbladeFeatures.ArmorOfHexes(),
             extends=WarlockHexbladeFeatures.HexbladesCurse,
         )
-        return data
 
 
 @attr.dataclass
@@ -59,12 +56,11 @@ class WarlockHexbladeLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WarlockHexbladeFeatures.MasterOfHexes(),
             extends=WarlockHexbladeFeatures.HexbladesCurse,
         )
-        return data
 
 
 class WarlockHexbladeCustomStarterClassArgs(WarlockCustomStarterClassArgs):

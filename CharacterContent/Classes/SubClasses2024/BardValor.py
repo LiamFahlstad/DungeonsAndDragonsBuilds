@@ -19,13 +19,12 @@ class BardValorLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BardValorFeatures.CombatInspiration(),
             extends=BardFeatures.BardicInspiration,
         )
         data.add_feature(BardValorFeatures.MartialTraining())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class BardValorLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardValorFeatures.ExtraAttack())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class BardValorLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BardValorFeatures.BattleMagic())
-        return data
 
 
 class BardValorCustomStarterClassArgs(BardCustomStarterClassArgs):

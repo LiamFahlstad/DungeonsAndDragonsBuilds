@@ -19,10 +19,9 @@ class RogueSoulKnifeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSoulKnifeFeatures.PsionicPower())
         data.add_feature(RogueSoulKnifeFeatures.PsychicBlades())
-        return data
 
 
 @attr.dataclass
@@ -31,12 +30,11 @@ class RogueSoulKnifeLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueSoulKnifeFeatures.SoulBlades(),
             extends=RogueSoulKnifeFeatures.PsychicBlades,
         )
-        return data
 
 
 @attr.dataclass
@@ -45,9 +43,8 @@ class RogueSoulKnifeLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(RogueSoulKnifeFeatures.PsychicVeil())
-        return data
 
 
 @attr.dataclass
@@ -56,12 +53,11 @@ class RogueSoulKnifeLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             RogueSoulKnifeFeatures.RendMind(),
             extends=RogueSoulKnifeFeatures.PsychicBlades,
         )
-        return data
 
 
 class RogueSoulKnifeCustomStarterClassArgs(RogueCustomStarterClassArgs):

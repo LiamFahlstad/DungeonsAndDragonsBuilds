@@ -21,6 +21,7 @@ from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Effects import Ledger
 from Model.Recorder import SealedError
 from tests._fake_view import FakeView
+from tests._grants import grant
 
 
 def test_a_build_is_one_character():
@@ -54,7 +55,7 @@ class TestReEvaluatesAfterEveryKindOfChange:
         data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
         data = data.build()
         assert not data.is_immune_to_damage(DamageType.FIRE)
-        data.add_feature(
+        grant(data).add_feature(
             ClericForgeFeatures.SaintOfForgeAndFire(), extends=data.features[0]
         )
         assert data.is_immune_to_damage(DamageType.FIRE)
@@ -201,9 +202,9 @@ class TestDeclaredExtensions:
     def test_child_granted_before_its_parent(self, make_character):
         character = make_character()
         child = _Child(name="Child")
-        character.add_feature(child, extends=_Parent)
+        grant(character).add_feature(child, extends=_Parent)
         parent = _Parent(name="Parent")
-        character.add_feature(parent)
+        grant(character).add_feature(parent)
         assert character.extensions_of(parent) == [child]
         assert list(character.iter_features_with_extensions()) == [parent, child]
 
@@ -211,55 +212,57 @@ class TestDeclaredExtensions:
         character = make_character()
         first, second = _Parent(name="First"), _Parent(name="Second")
         child = _Child(name="Child")
-        character.add_feature(first)
-        character.add_feature(second)
-        character.add_feature(child, extends=second)
+        grant(character).add_feature(first)
+        grant(character).add_feature(second)
+        grant(character).add_feature(child, extends=second)
         assert character.extensions_of(first) == []
         assert character.extensions_of(second) == [child]
 
     def test_missing_parent_raises(self, make_character):
         character = make_character()
-        character.add_feature(_Child(name="Child"), extends=_Parent)
+        grant(character).add_feature(_Child(name="Child"), extends=_Parent)
         with pytest.raises(ValueError, match="extends _Parent, which isn't granted"):
             character.validate()
 
     def test_ambiguous_parent_type_raises(self, make_character):
         character = make_character()
-        character.add_feature(_Parent(name="First"))
-        character.add_feature(_Parent(name="Second"))
-        character.add_feature(_Child(name="Child"), extends=_Parent)
+        grant(character).add_feature(_Parent(name="First"))
+        grant(character).add_feature(_Parent(name="Second"))
+        grant(character).add_feature(_Child(name="Child"), extends=_Parent)
         with pytest.raises(ValueError, match="2 granted features match it"):
             character.validate()
 
     def test_if_missing_drop(self, make_character):
         character = make_character()
-        character.add_feature(_Child(name="Child"), extends=_Parent, if_missing="drop")
+        grant(character).add_feature(
+            _Child(name="Child"), extends=_Parent, if_missing="drop"
+        )
         character.validate()
         assert list(character.iter_features_with_extensions()) == []
 
     def test_if_missing_standalone(self, make_character):
         character = make_character()
         child = _Child(name="Child")
-        character.add_feature(child, extends=_Parent, if_missing="standalone")
+        grant(character).add_feature(child, extends=_Parent, if_missing="standalone")
         assert character.top_level_features() == [child]
         parent = _Parent(name="Parent")
-        character.add_feature(parent)
+        grant(character).add_feature(parent)
         assert character.top_level_features() == [parent]
         assert character.extensions_of(parent) == [child]
 
     def test_if_missing_needs_extends(self, make_character):
         with pytest.raises(ValueError, match="only applies with extends"):
-            make_character().add_feature(_Child(), if_missing="drop")
+            grant(make_character()).add_feature(_Child(), if_missing="drop")
 
     def test_a_shared_feature_instance_keeps_extensions_per_character(
         self, make_character
     ):
         shared = _Parent(name="Shared")
         first, second = make_character(), make_character()
-        first.add_feature(shared)
-        second.add_feature(shared)
+        grant(first).add_feature(shared)
+        grant(second).add_feature(shared)
         child = _Child(name="Child")
-        first.add_feature(child, extends=shared)
+        grant(first).add_feature(child, extends=shared)
         assert first.extensions_of(shared) == [child]
         assert second.extensions_of(shared) == []
 
@@ -276,7 +279,7 @@ class TestAbjureFoes:
         character = make_character(levels={CharacterClass.PALADIN: paladin_level})
         channel_divinity = PaladinFeatures.ChannelDivinity()
         channel_divinity.add_spell("Divine Sense")
-        character.add_feature(channel_divinity)
+        grant(character).add_feature(channel_divinity)
         abjure_foes = PaladinFeatures.AbjureFoes().get_description(character)
         return channel_divinity.get_description(character), abjure_foes
 
@@ -380,8 +383,8 @@ class TestFeatsTakenOnce:
         from CharacterContent.Features.CharacterFeats import OriginFeats
 
         character = make_character()
-        character.add_feature(OriginFeats.Tough(), kind="background")
-        character.add_feature(OriginFeats.Tough(), kind="species")
+        grant(character).add_feature(OriginFeats.Tough(), kind="background")
+        grant(character).add_feature(OriginFeats.Tough(), kind="species")
         with pytest.raises(ValueError, match="Tough is granted 2 times"):
             character.validate()
 
@@ -390,11 +393,13 @@ class TestFeatsTakenOnce:
 
         character = make_character(strength=12, constitution=12)
         for ability in (Ability.STRENGTH, Ability.CONSTITUTION):
-            character.add_feature(GeneralFeats.AbilityScoreImprovement([(ability, 2)]))
+            grant(character).add_feature(
+                GeneralFeats.AbilityScoreImprovement([(ability, 2)])
+            )
         character.validate()
 
     def test_class_features_repeat_freely(self, make_character):
         character = make_character()
-        character.add_feature(_Parent(name="Expertise"))
-        character.add_feature(_Parent(name="Expertise"))
+        grant(character).add_feature(_Parent(name="Expertise"))
+        grant(character).add_feature(_Parent(name="Expertise"))
         character.validate()

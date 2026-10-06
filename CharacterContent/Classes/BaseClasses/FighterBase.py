@@ -25,7 +25,7 @@ class FighterLevel1(ClassBuilder.BaseClassLevel1):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_weapon_mastery(self.weapon_mastery_1)
         data.add_weapon_mastery(self.weapon_mastery_2)
         data.add_weapon_mastery(self.weapon_mastery_3)
@@ -34,25 +34,23 @@ class FighterLevel1(ClassBuilder.BaseClassLevel1):
         data.add_feature(FighterFeatures.SecondWind())
         data.add_feature(FighterFeatures.FightingStyle())
         data.add_feature(FighterFeatures.WeaponMastery())
-        return data
 
 
 @attr.dataclass
 class FighterLevel2(ClassBuilder.BaseClassLevel2):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(FighterFeatures.ActionSurge())
         data.add_feature(
             FighterFeatures.TacticalMind(), extends=FighterFeatures.SecondWind
         )
-        return data
 
 
 @attr.dataclass
 class FighterLevel3(ClassBuilder.BaseClassLevel3):
 
-    def add_features(self, data: Grants) -> Grants:
-        return data
+    def add_features(self, data: Grants) -> None:
+        pass
 
 
 @attr.dataclass
@@ -60,46 +58,42 @@ class FighterLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
     weapon_mastery: Weapons.AbstractWeapon
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_weapon_mastery(self.weapon_mastery)
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
 class FighterLevel5(ClassBuilder.BaseClassLevel5):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(FighterFeatures.ExtraAttack())
         data.add_feature(
             FighterFeatures.TacticalShift(), extends=FighterFeatures.SecondWind
         )
-        return data
 
 
 @attr.dataclass
 class FighterLevel6(ClassBuilder.BaseClassLevel6):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
 class FighterLevel7(ClassBuilder.BaseClassLevel7):
 
-    def add_features(self, data: Grants) -> Grants:
-        return data
+    def add_features(self, data: Grants) -> None:
+        pass
 
 
 @attr.dataclass
 class FighterLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
@@ -108,12 +102,11 @@ class FighterLevel9(ClassBuilder.BaseClassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(FighterFeatures.Indomitable())
         data.add_feature(
             FighterFeatures.TacticalMaster(), extends=FighterFeatures.WeaponMastery
         )
-        return data
 
 
 @attr.dataclass
@@ -123,9 +116,8 @@ class FighterLevel10(ClassBuilder.BaseClassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_weapon_mastery(self.weapon_mastery)
-        return data
 
 
 @attr.dataclass
@@ -134,28 +126,25 @@ class FighterLevel11(ClassBuilder.BaseClassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             FighterFeatures.TwoExtraAttacks(), extends=FighterFeatures.ExtraAttack
         )
-        return data
 
 
 @attr.dataclass
 class FighterLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
 class FighterLevel13(ClassBuilder.BaseClassLevel13):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(FighterFeatures.StudiedAttacks())
-        return data
 
 
 @attr.dataclass
@@ -165,16 +154,15 @@ class FighterLevel14(ClassBuilder.BaseClassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
 class FighterLevel15(ClassBuilder.BaseClassLevel15):
 
-    def add_features(self, data: Grants) -> Grants:
-        return data
+    def add_features(self, data: Grants) -> None:
+        pass
 
 
 @attr.dataclass
@@ -182,17 +170,16 @@ class FighterLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
     weapon_mastery: Weapons.AbstractWeapon
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_weapon_mastery(self.weapon_mastery)
         data.add_feature(self.general_feat)
-        return data
 
 
 @attr.dataclass
 class FighterLevel17(ClassBuilder.BaseClassLevel17):
 
-    def add_features(self, data: Grants) -> Grants:
-        return data
+    def add_features(self, data: Grants) -> None:
+        pass
 
 
 @attr.dataclass
@@ -201,27 +188,25 @@ class FighterLevel18(ClassBuilder.BaseClassLevel18):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
-        return data
+    ) -> None:
+        pass
 
 
 @attr.dataclass
 class FighterLevel19(ClassBuilder.BaseClassLevel19):
     epic_boon: EpicBoon.EpicBoon
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(self.epic_boon)
-        return data
 
 
 @attr.dataclass
 class FighterLevel20(ClassBuilder.BaseClassLevel20):
 
-    def add_features(self, data: Grants) -> Grants:
+    def add_features(self, data: Grants) -> None:
         data.add_feature(
             FighterFeatures.ThreeExtraAttacks(), extends=FighterFeatures.ExtraAttack
         )
-        return data
 
 
 class FighterCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

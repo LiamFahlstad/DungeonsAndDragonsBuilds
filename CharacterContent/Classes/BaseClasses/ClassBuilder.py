@@ -23,7 +23,7 @@ class LevelFeatures(ABC):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         pass
 
 
@@ -216,8 +216,8 @@ class BaseClassLevel19(LevelFeatures):
 class BaseClassLevel20(LevelFeatures):
     level: int = attr.field(init=False, default=20)
 
-    def add_features(self, data: Grants) -> Grants:
-        return data
+    def add_features(self, data: Grants) -> None:
+        pass
 
 
 @attr.dataclass

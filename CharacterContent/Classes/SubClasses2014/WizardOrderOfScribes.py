@@ -21,10 +21,9 @@ class WizardOrderOfScribesLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardOrderOfScribesFeatures.WizardlyQuill())
         data.add_feature(WizardOrderOfScribesFeatures.AwakenedSpellbook())
-        return data
 
 
 @attr.dataclass
@@ -33,12 +32,11 @@ class WizardOrderOfScribesLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardOrderOfScribesFeatures.ManifestMind(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,
         )
-        return data
 
 
 @attr.dataclass
@@ -47,12 +45,11 @@ class WizardOrderOfScribesLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardOrderOfScribesFeatures.MasterScriviner(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,
         )
-        return data
 
 
 @attr.dataclass
@@ -61,12 +58,11 @@ class WizardOrderOfScribesLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardOrderOfScribesFeatures.OneWithTheWord(),
             extends=WizardOrderOfScribesFeatures.AwakenedSpellbook,
         )
-        return data
 
 
 class WizardOrderOfScribesCustomStarterClassArgs(WizardCustomStarterClassArgs):

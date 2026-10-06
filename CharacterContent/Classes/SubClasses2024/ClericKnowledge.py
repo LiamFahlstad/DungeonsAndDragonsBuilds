@@ -35,7 +35,7 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
 
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
@@ -66,7 +66,6 @@ class ClericKnowledgeLevel3(ClassBuilder.SubclassLevel3):
                 self.skill_proficiency_and_expertise_2,
             )
         )
-        return data
 
 
 @attr.dataclass
@@ -75,7 +74,7 @@ class ClericKnowledgeLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
         data.add_spell(ClericLevel3Spells.DISPEL_MAGIC)
@@ -84,7 +83,6 @@ class ClericKnowledgeLevel5(ClassBuilder.SubclassLevel5):
             DivinationLevel3Spells.TONGUES,
             additional_ruling=additional_ruling,
         )
-        return data
 
 
 @attr.dataclass
@@ -93,9 +91,8 @@ class ClericKnowledgeLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericKnowledgeFeatures.UnfetteredMind())
-        return data
 
 
 @attr.dataclass
@@ -104,7 +101,7 @@ class ClericKnowledgeLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
         data.add_spell(
@@ -113,7 +110,6 @@ class ClericKnowledgeLevel7(ClassBuilder.SubclassLevel7):
         )
         data.add_spell(ClericLevel4Spells.BANISHMENT)
         data.add_spell(EnchantmentLevel4Spells.CONFUSION)
-        return data
 
 
 @attr.dataclass
@@ -122,7 +118,7 @@ class ClericKnowledgeLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         additional_ruling = "As a Magic action, you can expend one use of your Channel Divinity to cast this spell. As part of that action, you cast that spell without expending a spell slot or needing Material components."
 
         data.add_spell(
@@ -136,7 +132,6 @@ class ClericKnowledgeLevel9(ClassBuilder.SubclassLevel9):
         data.add_spell(
             WarlockLevel5Spells.SYNAPTIC_STATIC,
         )
-        return data
 
 
 @attr.dataclass
@@ -145,9 +140,8 @@ class ClericKnowledgeLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(ClericKnowledgeFeatures.DivineForeknowledge())
-        return data
 
 
 class ClericKnowledgeCustomStarterClassArgs(ClericCustomStarterClassArgs):

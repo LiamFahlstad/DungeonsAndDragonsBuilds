@@ -22,12 +22,11 @@ class BarbarianWorldTreeLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.VitalityOfTheTree(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -36,12 +35,11 @@ class BarbarianWorldTreeLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.BranchesOfTheTree(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 @attr.dataclass
@@ -50,9 +48,8 @@ class BarbarianWorldTreeLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(BarbarianPathOfTheWorldTreeFeatures.BatteringRoots())
-        return data
 
 
 @attr.dataclass
@@ -61,12 +58,11 @@ class BarbarianWorldTreeLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             BarbarianPathOfTheWorldTreeFeatures.TravelAlongTheTree(),
             extends=BarbarianFeatures.Rage,
         )
-        return data
 
 
 class BarbarianWorldTreeCustomStarterClassArgs(BarbarianCustomStarterClassArgs):

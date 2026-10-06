@@ -48,12 +48,11 @@ class WizardDivinerLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardDivinerFeatures.DivinationSavant())
         data.add_feature(WizardDivinerFeatures.Portent())
         data.add_spell(self.spell_1)
         data.add_spell(self.spell_2)
-        return data
 
 
 @attr.dataclass
@@ -63,9 +62,8 @@ class WizardDivinerLevel5(ClassBuilder.SubclassLevel5):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -74,9 +72,8 @@ class WizardDivinerLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardDivinerFeatures.ExpertDivination())
-        return data
 
 
 @attr.dataclass
@@ -86,9 +83,8 @@ class WizardDivinerLevel7(ClassBuilder.SubclassLevel7):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -98,9 +94,8 @@ class WizardDivinerLevel9(ClassBuilder.SubclassLevel9):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -109,9 +104,8 @@ class WizardDivinerLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardDivinerFeatures.TheThirdEye())
-        return data
 
 
 @attr.dataclass
@@ -121,9 +115,8 @@ class WizardDivinerLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -133,9 +126,8 @@ class WizardDivinerLevel13(ClassBuilder.SubclassLevel13):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -144,12 +136,11 @@ class WizardDivinerLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(
             WizardDivinerFeatures.GreaterPortent(),
             extends=WizardDivinerFeatures.Portent,
         )
-        return data
 
 
 @attr.dataclass
@@ -159,9 +150,8 @@ class WizardDivinerLevel15(ClassBuilder.SubclassLevel15):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 @attr.dataclass
@@ -171,9 +161,8 @@ class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_spell(self.spell)
-        return data
 
 
 class WizardDivinerCustomStarterClassArgs(WizardCustomStarterClassArgs):

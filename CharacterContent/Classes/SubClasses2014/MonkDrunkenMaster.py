@@ -20,10 +20,9 @@ class MonkDrunkenMasterLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkDrunkenMasterFeatures.BonusProficiencies())
         data.add_feature(MonkDrunkenMasterFeatures.DrunkenTechnique())
-        return data
 
 
 @attr.dataclass
@@ -31,9 +30,8 @@ class MonkDrunkenMasterLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkDrunkenMasterFeatures.TipsySway())
-        return data
 
 
 @attr.dataclass
@@ -42,9 +40,8 @@ class MonkDrunkenMasterLevel11(ClassBuilder.SubclassLevel11):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkDrunkenMasterFeatures.DrunkardsLuck())
-        return data
 
 
 @attr.dataclass
@@ -53,9 +50,8 @@ class MonkDrunkenMasterLevel17(ClassBuilder.SubclassLevel17):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(MonkDrunkenMasterFeatures.IntoxicatedFrenzy())
-        return data
 
 
 class MonkDrunkenMasterCustomStarterClassArgs(MonkCustomStarterClassArgs):

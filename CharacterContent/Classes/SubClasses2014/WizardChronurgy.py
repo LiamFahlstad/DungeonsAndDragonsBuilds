@@ -21,10 +21,9 @@ class WizardChronurgyLevel3(ClassBuilder.SubclassLevel3):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardChronurgyFeatures.ChronalShift())
         data.add_feature(WizardChronurgyFeatures.TemporalAwareness())
-        return data
 
 
 @attr.dataclass
@@ -33,9 +32,8 @@ class WizardChronurgyLevel6(ClassBuilder.SubclassLevel6):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardChronurgyFeatures.MomentaryStasis())
-        return data
 
 
 @attr.dataclass
@@ -44,9 +42,8 @@ class WizardChronurgyLevel10(ClassBuilder.SubclassLevel10):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardChronurgyFeatures.ArcaneAbeyance())
-        return data
 
 
 @attr.dataclass
@@ -55,9 +52,8 @@ class WizardChronurgyLevel14(ClassBuilder.SubclassLevel14):
     def add_features(
         self,
         data: Grants,
-    ) -> Grants:
+    ) -> None:
         data.add_feature(WizardChronurgyFeatures.ConvergentFuture())
-        return data
 
 
 class WizardChronurgyCustomStarterClassArgs(WizardCustomStarterClassArgs):
