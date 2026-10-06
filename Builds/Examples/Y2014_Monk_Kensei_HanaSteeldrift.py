@@ -83,7 +83,9 @@ class Y2014MonkKenseiHanaSteeldriftCharacterBuilder(CharacterBuilder):
             name="Hana Steeldrift",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.SLEIGHT_OF_HAND, Skill.STEALTH, Skill.SURVIVAL]
+                ),
                 skill_proficiency=Skill.MEDICINE,
             ),
         )

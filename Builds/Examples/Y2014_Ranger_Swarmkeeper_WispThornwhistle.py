@@ -186,6 +186,8 @@ class Y2014RangerSwarmkeeperWispThornwhistleCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.ANIMAL_HANDLING,
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.ACROBATICS, Skill.SLEIGHT_OF_HAND, Skill.STEALTH]
+                ),
             ),
         )

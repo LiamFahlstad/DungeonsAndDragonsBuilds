@@ -102,27 +102,24 @@ def get_starter_class_builder():
                 6: BarbarianLevel6(),
                 7: BarbarianLevel7(),
                 8: BarbarianLevel8(
-                    general_feat=GeneralFeats.Sentinel(
-                        character_level=4,
-                        ability=Ability.STRENGTH,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.STRENGTH, 2)]
                     )
                 ),
                 9: BarbarianLevel9(),
                 10: BarbarianLevel10(),
                 11: BarbarianLevel11(),
                 12: BarbarianLevel12(
-                    general_feat=GeneralFeats.Sentinel(
-                        character_level=4,
-                        ability=Ability.STRENGTH,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.CONSTITUTION, 2)]
                     )
                 ),
                 13: BarbarianLevel13(),
                 14: BarbarianLevel14(),
                 15: BarbarianLevel15(),
                 16: BarbarianLevel16(
-                    general_feat=GeneralFeats.Sentinel(
-                        character_level=4,
-                        ability=Ability.STRENGTH,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.CONSTITUTION, 2)]
                     )
                 ),
                 17: BarbarianLevel17(),

@@ -26,6 +26,10 @@ from Model.Effects import Effects
 
 
 class OriginFeat(Feature):
+    # A feat can be taken once, unless it says it's Repeatable (see
+    # Character._validate_feats_taken_once).
+    repeatable = False
+
     def get_spell_casting_ability(self) -> Optional[Ability]:
         return None
 
@@ -44,6 +48,9 @@ class OriginFeat(Feature):
 
 class Skilled(OriginFeat):
     """Also add proficiency in any combination of three skills or tools of your choice."""
+
+    # 2024 PHB: Repeatable.
+    repeatable = True
 
     def __init__(self, skills: list[Skill]):
         self._choice = SkillProficiencyChoice(
@@ -174,6 +181,9 @@ class Lucky(OriginFeat):
 
 
 class MagicInitiate(OriginFeat):
+    # 2024 PHB: Repeatable.
+    repeatable = True
+
     def __init__(
         self,
         cantrip_1: str,

@@ -16,6 +16,8 @@ without a cycle.
 
 from __future__ import annotations
 
+import collections
+
 from typing import Any, Callable, Iterator, Literal, Optional, Sequence
 
 import attr
@@ -553,6 +555,7 @@ class Character:
         the spells resolve (see Model/Spells.py)."""
         self._resolved_extensions()
         self.spells
+        self._validate_feats_taken_once()
         if self.character_name is None:
             raise ValueError("Character name must be set.")
         if self.character_subclass is None:
@@ -590,6 +593,26 @@ class Character:
                 f"Character can attune to at most {MAX_ATTUNED_ITEMS} magic items, "
                 f"but is attuned to {len(attuned)}: {', '.join(attuned)}."
             )
+
+    def _validate_feats_taken_once(self) -> None:
+        """A feat that isn't Repeatable can be taken only once - from the
+        background, the species and every Ability Score Improvement level
+        together."""
+        counts = collections.Counter(
+            type(feature)
+            for feature in self.iter_features_with_extensions()
+            if not feature.repeatable
+        )
+        for feature_type, count in counts.items():
+            if count > 1:
+                name = next(
+                    f.name
+                    for f in self.iter_features_with_extensions()
+                    if type(f) is feature_type
+                )
+                raise ValueError(
+                    f"{name} is granted {count} times, but it isn't Repeatable."
+                )
 
     def validate(self) -> "Character":
         """The single validation entry point: the sources (required fields,

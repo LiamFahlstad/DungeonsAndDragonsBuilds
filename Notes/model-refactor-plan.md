@@ -401,7 +401,14 @@ Found during Steps 0–11, and left out because they're beyond what this plan se
   - Delete the 68 `.origin = ...` assignments.
 - **Verify:** regenerate sheet hashes on purpose. Check with the card-extraction compare from Step 10 that only labels changed. The stats don't move.
 
-### Step 14: Content checks the model can now make *(content fixes, small rules)*
+### Step 14: Content checks the model can now make *(content fixes, small rules)* — done
+
+- **Rule:** `Feature.repeatable` defaults to `True`. `OriginFeat`, `GeneralFeat` and `EpicBoon` set it `False`, and Ability Score Improvement, Skilled, Magic Initiate and Elemental Adept set it back to `True` (2024 PHB: Repeatable). `Character.validate()` rejects any non-repeatable feat granted twice.
+- **Builds fixed:** the rule flagged 31 builds, not 24. Per your choice ("safe swaps"):
+  - **24 duplicate origin feats** (Tough ×11, Alert ×10, Lucky ×3, each granted by both the background and the species): the species' copy became `Skilled`, with three skills the character lacked, taken from its best abilities. Skilled only takes skills in the code, so those builds' skill stats change. The 11 Tough builds also lose HP, because their HP bonus had been counted twice.
+  - **17 duplicate general feats** (Sentinel at 4/8/12/16 in four Barbarian examples, Sentinel/Great Weapon Master/Resilient in three Fighter examples): each later copy became an Ability Score Improvement. It went to the ability that copy raised, moved to Constitution wherever the 20 cap would have wasted it (Barbarians at 12/16, Cavalier at 14, Rune Knight at 14/16). No increase is wasted.
+- **The six Step 9 spell swaps stay as they are** (your choice).
+- **Goldens:** stats and sheets moved for exactly those 31 builds, and no other build changed.
 
 - **Goal:** turn this refactor's content findings into validation, and fix the builds they flag.
 - **Changes:**

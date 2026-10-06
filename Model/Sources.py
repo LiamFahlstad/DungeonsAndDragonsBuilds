@@ -22,6 +22,9 @@ class GrantedFeature(Effect, Protocol):
     """A feature, feat or fighting-style card on the sheet."""
 
     name: str
+    # False for a feat that can be taken only once (see
+    # Character._validate_feats_taken_once).
+    repeatable: bool
 
 
 class Gear(Effect, Protocol):

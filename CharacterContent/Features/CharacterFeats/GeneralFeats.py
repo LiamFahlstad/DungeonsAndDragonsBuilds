@@ -22,6 +22,10 @@ from Model.Effects import Effects
 
 
 class GeneralFeat(Feature):
+    # A feat can be taken once, unless it says it's Repeatable (see
+    # Character._validate_feats_taken_once).
+    repeatable = False
+
     def _label_for(self, stamp: GrantStamp) -> str:
         """Taken at a class level, it's labeled with that level ("Fighter
         Level 8"); its own origin only says when it's available."""
@@ -82,6 +86,9 @@ class _AbilityScoreFeat(GeneralFeat):
 
 class AbilityScoreImprovement(GeneralFeat):
     """Also add either [+1, +1] OR [+2] to any abilities."""
+
+    # 2024 PHB: Repeatable.
+    repeatable = True
 
     def __init__(self, bonuses: list[tuple[Ability, int]]):
         self._bonus = AbilityScoreBonus(
@@ -276,6 +283,9 @@ class Durable(_AbilityScoreFeat):
 
 
 class ElementalAdept(_AbilityScoreFeat):
+    # 2024 PHB: Repeatable.
+    repeatable = True
+
     _NAME = "Elemental Adept"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 

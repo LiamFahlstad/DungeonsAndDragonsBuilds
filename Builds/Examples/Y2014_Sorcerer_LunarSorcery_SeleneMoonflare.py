@@ -176,6 +176,8 @@ class Y2014SorcererLunarSorcerySeleneMoonflareCharacterBuilder(CharacterBuilder)
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.INTIMIDATION,
-                origin_feat=OriginFeats.Lucky(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.PERFORMANCE, Skill.ANIMAL_HANDLING, Skill.MEDICINE]
+                ),
             ),
         )

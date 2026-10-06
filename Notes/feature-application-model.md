@@ -262,6 +262,14 @@ feature on the level page of its stamped level, and orders features with
 grant level, then that key. Nothing on the sheet depends on the order features were granted in;
 `tests/test_order_invariance.py` proves it for every build.
 
+## Feats are taken once
+
+A feat that isn't Repeatable (2024 PHB: everything but Ability Score Improvement, Skilled, Magic
+Initiate and Elemental Adept) can be granted only once - from the background, the species and every
+Ability Score Improvement level together. `Feature.repeatable` is `True` by default (class features
+repeat freely); `OriginFeat`, `GeneralFeat` and `EpicBoon` set it `False`, the Repeatable feats back
+to `True`, and `validate()` rejects a second copy.
+
 ## Spells
 
 A spell is a `SpellGrant` (`Model/Spells.py`): name, casting ability, ruling, the class-relative

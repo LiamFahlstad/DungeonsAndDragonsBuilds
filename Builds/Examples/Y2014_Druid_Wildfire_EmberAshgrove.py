@@ -168,7 +168,9 @@ class Y2014DruidWildfireEmberAshgroveCharacterBuilder(CharacterBuilder):
             name="Ember Ashgrove",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                origin_feat=SpeciesOriginFeats.Tough(),
+                origin_feat=SpeciesOriginFeats.Skilled(
+                    [Skill.ANIMAL_HANDLING, Skill.SURVIVAL, Skill.ACROBATICS]
+                ),
                 skill_proficiency=Skill.INSIGHT,
             ),
         )

@@ -185,6 +185,8 @@ class Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.PERCEPTION,
-                origin_feat=OriginFeats.Tough(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.ANIMAL_HANDLING, Skill.MEDICINE, Skill.SURVIVAL]
+                ),
             ),
         )

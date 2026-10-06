@@ -3,6 +3,10 @@ from Model.Character import Character, GrantStamp
 
 
 class EpicBoon(Feature):
+    # A feat can be taken once, unless it says it's Repeatable (see
+    # Character._validate_feats_taken_once).
+    repeatable = False
+
     def _label_for(self, stamp: GrantStamp) -> str:
         """Taken at a class level, it's labeled with that level ("Fighter
         Level 8"); its own origin only says when it's available."""

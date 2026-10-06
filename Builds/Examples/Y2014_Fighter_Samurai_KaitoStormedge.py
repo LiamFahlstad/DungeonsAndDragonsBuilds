@@ -127,16 +127,14 @@ def get_starter_class_builder():
                 ),
                 11: FighterLevel11(),
                 12: FighterLevel12(
-                    general_feat=GeneralFeats.Resilient(
-                        character_level=12,
-                        ability=Ability.WISDOM,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.WISDOM, 2)]
                     )
                 ),
                 13: FighterLevel13(),
                 14: FighterLevel14(
-                    general_feat=GeneralFeats.Resilient(
-                        character_level=14,
-                        ability=Ability.CONSTITUTION,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.CONSTITUTION, 2)]
                     )
                 ),
                 15: FighterLevel15(),

@@ -435,6 +435,11 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
 class Feature:
     """A single feature type. Override apply() to modify the stat block, get_description() to render a card, or both."""
 
+    # Whether a character may be granted this feature more than once. Class
+    # features repeat freely (two Expertise grants, one Spell Slots per
+    # class); feats set this False unless they're Repeatable.
+    repeatable = True
+
     # Optional alternate renderings: get_table_description() and get_concise_description()
     # both fall back to get_description() when they return None.
 

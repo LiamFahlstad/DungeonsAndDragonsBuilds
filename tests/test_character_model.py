@@ -371,3 +371,30 @@ class TestFeatureLabels:
         )
         character = self._granted(make_character, feat, 8, "class", "Fighter")
         assert feat.label(character) == "Fighter Level 8"
+
+
+class TestFeatsTakenOnce:
+    """2024 PHB: a feat can be taken only once unless it's Repeatable."""
+
+    def test_a_feat_granted_twice_fails(self, make_character):
+        from CharacterContent.Features.CharacterFeats import OriginFeats
+
+        character = make_character()
+        character.add_feature(OriginFeats.Tough(), kind="background")
+        character.add_feature(OriginFeats.Tough(), kind="species")
+        with pytest.raises(ValueError, match="Tough is granted 2 times"):
+            character.validate()
+
+    def test_a_repeatable_feat_may_be_taken_again(self, make_character):
+        from CharacterContent.Features.CharacterFeats import GeneralFeats
+
+        character = make_character(strength=12, constitution=12)
+        for ability in (Ability.STRENGTH, Ability.CONSTITUTION):
+            character.add_feature(GeneralFeats.AbilityScoreImprovement([(ability, 2)]))
+        character.validate()
+
+    def test_class_features_repeat_freely(self, make_character):
+        character = make_character()
+        character.add_feature(_Parent(name="Expertise"))
+        character.add_feature(_Parent(name="Expertise"))
+        character.validate()

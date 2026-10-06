@@ -170,6 +170,8 @@ class Y2014SorcererStormSorceryZephyraGalewindCharacterBuilder(CharacterBuilder)
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.INTIMIDATION,
-                origin_feat=OriginFeats.Lucky(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.PERFORMANCE, Skill.ACROBATICS, Skill.ANIMAL_HANDLING]
+                ),
             ),
         )

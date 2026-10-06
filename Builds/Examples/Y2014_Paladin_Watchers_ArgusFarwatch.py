@@ -193,6 +193,8 @@ class Y2014PaladinWatchersArgusFarwatchCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.DECEPTION,
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.INTIMIDATION, Skill.PERFORMANCE, Skill.PERSUASION]
+                ),
             ),
         )

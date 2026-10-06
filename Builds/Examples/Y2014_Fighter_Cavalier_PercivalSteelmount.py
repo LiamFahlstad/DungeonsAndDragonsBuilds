@@ -131,9 +131,8 @@ def get_starter_class_builder():
                 ),
                 13: FighterLevel13(),
                 14: FighterLevel14(
-                    general_feat=GeneralFeats.Sentinel(
-                        character_level=14,
-                        ability=Ability.STRENGTH,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [(Ability.CONSTITUTION, 2)]
                     )
                 ),
                 15: FighterLevel15(),

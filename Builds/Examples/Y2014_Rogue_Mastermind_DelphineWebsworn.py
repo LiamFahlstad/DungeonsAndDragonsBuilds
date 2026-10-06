@@ -163,6 +163,8 @@ class Y2014RogueMastermindDelphineWebswornCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Definitions.Skill.PERCEPTION,
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.ACROBATICS, Skill.SLEIGHT_OF_HAND, Skill.INTIMIDATION]
+                ),
             ),
         )

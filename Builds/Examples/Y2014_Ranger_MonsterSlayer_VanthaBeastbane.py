@@ -186,6 +186,8 @@ class Y2014RangerMonsterSlayerVanthaBeastbaneCharacterBuilder(CharacterBuilder):
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
                 skill_proficiency=Skill.ACROBATICS,
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.SLEIGHT_OF_HAND, Skill.STEALTH, Skill.ANIMAL_HANDLING]
+                ),
             ),
         )

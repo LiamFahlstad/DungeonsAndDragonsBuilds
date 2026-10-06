@@ -83,7 +83,9 @@ class Y2014MonkDrunkenMasterChenWobblejarCharacterBuilder(CharacterBuilder):
             name="Chen Wobblejar",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Human.HumanSpeciesBuilder(
-                origin_feat=OriginFeats.Alert(),
+                origin_feat=OriginFeats.Skilled(
+                    [Skill.INSIGHT, Skill.MEDICINE, Skill.SLEIGHT_OF_HAND]
+                ),
                 skill_proficiency=Skill.ANIMAL_HANDLING,
             ),
         )
