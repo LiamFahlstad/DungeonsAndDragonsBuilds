@@ -35,7 +35,7 @@ class OriginFeat(Feature):
     def grant_to(self, data: Character | Grants) -> None:
         """Grant this feat and the spells it comes with (listed under the
         feat)."""
-        data.add_feature(self)
+        data.add_feature(self, kind="origin feat", granted_by=self.name)
         for spell in self.get_spells():
             data.add_spell(
                 spell, self.get_spell_casting_ability(), granted_by=self.name

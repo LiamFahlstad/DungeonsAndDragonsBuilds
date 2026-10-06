@@ -136,18 +136,6 @@ class FeatureActivation:
         return self.duration
 
 
-def parse_feature_level(origin: str | None) -> int:
-    """Parse the level from a feature's origin string (e.g. 'Bard Level 3' -> 3).
-    Features without a parseable level (background, species, origin feats) default to 1.
-    """
-    if not origin or "Level " not in origin:
-        return 1
-    try:
-        return int(origin.split("Level ")[1].split()[0])
-    except (ValueError, IndexError):
-        return 1
-
-
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
         .features {
             max-width: 100%;
@@ -678,8 +666,8 @@ class Feature:
             file.write(self._uses_html(self.uses) + "\n")
 
         for extension in character.extensions_of(self):
-            ext_level = parse_feature_level(extension.origin)
-            parent_level = parse_feature_level(self.origin)
+            ext_level = character.stamp_of(extension).level
+            parent_level = character.stamp_of(self).level
 
             # When writing to a per-level shard (max_level set), skip extensions
             # whose origin level exceeds the page's level. Full pages (max_level=None)

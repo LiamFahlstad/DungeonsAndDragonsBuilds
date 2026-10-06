@@ -56,80 +56,11 @@ def _orders(name: str) -> dict[str, Reorder]:
     }
 
 
-# Builds whose sheet changes under the default grant-order shuffle, until
-# Step 10 gives the sheet a complete canonical order. The sheet already sorts
-# each level's feature cards by (passive, name), so only ties leak: two
-# features of one name on one level (Expertise, Alert, Spell Slots, Tough,
-# Lucky), and the extensions nested under a feature, which are listed in the
-# order they were attached. Strict, so a build that stops leaking must come
-# off the list. The slow orders shuffle differently and leak in other builds,
-# so they're expected to fail everywhere, without being strict.
-_GRANT_ORDER_LEAKS = frozenset(
-    {
-        "SpellSlotTestPaladin4Wizard3",
-        "SpellSlotTestPaladin5",
-        "Y2014BarbarianAncestralGuardianKodiakStonewatchCharacterBuilder",
-        "Y2014BarbarianBattleragerGruddaIronscarCharacterBuilder",
-        "Y2014BarbarianStormHeraldTorvidStormcallerCharacterBuilder",
-        "Y2014BarbarianWildMagicFenwickChaosbornCharacterBuilder",
-        "Y2014BardCreationPiperWrenhollowCharacterBuilder",
-        "Y2014BardEloquenceCorvinusTalebrightCharacterBuilder",
-        "Y2014BardWhispersNyraHollowechoCharacterBuilder",
-        "Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder",
-        "Y2014DruidWildfireEmberAshgroveCharacterBuilder",
-        "Y2014FighterRuneKnightBjornGiantforgeCharacterBuilder",
-        "Y2014MonkAstralSelfIndraStarformCharacterBuilder",
-        "Y2014MonkDrunkenMasterChenWobblejarCharacterBuilder",
-        "Y2014MonkKenseiHanaSteeldriftCharacterBuilder",
-        "Y2014MonkLongDeathYorrinPaleboneCharacterBuilder",
-        "Y2014MonkSunSoulSolaraBrightpalmCharacterBuilder",
-        "Y2014PaladinConquestMalacharIronwillCharacterBuilder",
-        "Y2014PaladinCrownRegaliaTrueheartCharacterBuilder",
-        "Y2014PaladinRedemptionPaxMercywardCharacterBuilder",
-        "Y2014PaladinWatchersArgusFarwatchCharacterBuilder",
-        "Y2014RangerDrakewardenWyrmhildScalebornCharacterBuilder",
-        "Y2014RangerHorizonWalkerDashiellFarstrideCharacterBuilder",
-        "Y2014RangerMonsterSlayerVanthaBeastbaneCharacterBuilder",
-        "Y2014RangerSwarmkeeperWispThornwhistleCharacterBuilder",
-        "Y2014RogueMastermindDelphineWebswornCharacterBuilder",
-        "Y2014RogueScoutFennickQuickstepCharacterBuilder",
-        "Y2014RogueSwashbucklerCosimoDuelaireCharacterBuilder",
-        "Y2014WizardOrderOfScribesQuillonInkboundCharacterBuilder",
-        "Y2024BardLoreOdalysVerseholtCharacterBuilder",
-        "Y2024DruidLandRowanThistledownCharacterBuilder",
-        "Y2024FighterBanneretRoderickVanguardCharacterBuilder",
-        "Y2024FighterEldritchKnightMerricSpellbladeCharacterBuilder",
-        "Y2024MonkElementsKaidaEmberfistCharacterBuilder",
-        "Y2024MonkMercyAmritaSofthandCharacterBuilder",
-        "Y2024MonkMysticArtsZephyrMoonpetalCharacterBuilder",
-        "Y2024MonkOpenHandWeiStonefistCharacterBuilder",
-        "Y2024MonkShadowKiraNightstepCharacterBuilder",
-        "Y2024PaladinGloryTitusBattlegloryCharacterBuilder",
-        "Y2024RangerBeastMasterFennWildstriderCharacterBuilder",
-        "Y2024RoguePhantomWraithGrimscarCharacterBuilder",
-        "Y2024WizardTransmutationAlistairFormbendCharacterBuilder",
-        "Y2024_Bard_Lore_TobiasGreyquill",
-        "Y2024_Monk_Elements_KiviJatti",
-        "Y2024_Monk_Elements_KragStormfist",
-        "Y2024_Monk_Shadow_UmbraSilentfang",
-        "Y2024_Paladin_Devotion_ElricPactsworn",
-        "Y2024_Paladin_Glory_BalderSunoath",
-        "Y2024_Ranger_BeastMaster_OrinPackleader",
-        "Y2024_Rogue_ShadowMonk_KagenVoidstep",
-    }
-)
-
-
-def _params(expected_leaks=None):
+def _params():
     params = []
     for name in BUILD_PARAMS:
         for order in _orders(name):
             marks = [] if order == "shuffle" else [pytest.mark.slow]
-            if expected_leaks is not None:
-                if order != "shuffle":
-                    marks.append(pytest.mark.xfail(strict=False, reason="Step 10"))
-                elif name in expected_leaks:
-                    marks.append(pytest.mark.xfail(strict=True, reason="Step 10"))
             params.append(pytest.param(name, order, marks=marks, id=f"{name}-{order}"))
     return params
 
@@ -154,13 +85,12 @@ def test_apply_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     _assert_sheet_unchanged(name, sheets, f"effect apply order ({order})")
 
 
-@pytest.mark.parametrize("name, order", _params(expected_leaks=_GRANT_ORDER_LEAKS))
+@pytest.mark.parametrize("name, order", _params())
 def test_grant_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     reorder = _orders(name)[order]
 
     def regrant(data: Character) -> None:
-        data.features = reorder(data.features)
-        data.feature_extensions = reorder(data.feature_extensions)
+        data.feature_grants = reorder(data.feature_grants)
         data.spell_grants = reorder(data.spell_grants)
         data.spell_replacements = reorder(data.spell_replacements)
 

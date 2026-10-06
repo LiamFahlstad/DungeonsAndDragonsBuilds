@@ -316,7 +316,21 @@ Rules of thumb:
 - **Tests:** the same spell sets granted in shuffled order produce equal sheets; a replacement declared before its target works; a chained replacement fails.
 - **Verify:** A, B, C, D, and the snapshots under both hash seeds.
 
-### Step 10: Canonical feature display order *(deliberate output change; see Decision 1)*
+### Step 10: Canonical feature display order *(deliberate output change; see Decision 1)* — done
+
+- **Stamps.** Every feature is a `FeatureGrant(feature, stamp, extends, if_missing)`, which replaces Step 8's `FeatureExtension`. `character.feature_grants` is the one source list, and `character.features` is the read of plain grants. The `GrantStamp` (level, kind, `granted_by`) comes from the `Grants` scope:
+  - class levels are stamped `"class"` and subclass levels `"subclass"`;
+  - the background, the origin feat (`OriginFeat.grant_to` stamps itself `"origin feat"`), Spell Slots and proficiencies are stamped in `_grant_class`;
+  - species are stamped `"species"`.
+- **Sheet order.** The sheet buckets features by their stamped level; `parse_feature_level` is gone. It sorts with `Character.feature_sort_key` (passive, name, kind rank, `granted_by`), and `extensions_of()` sorts by (grant level, key). The full sheet keeps its old shape (non-class features first, then class and subclass features by level) through that key. `_GRANT_ORDER_LEAKS` and every xfail are gone: the default and the slow order matrix pass for every build.
+- **Reviewed output change** (75 builds), checked page by page with every card extracted and compared:
+  - every build has exactly the same cards;
+  - 155 pages only reordered;
+  - 47 cards moved to the level page they were actually granted at. Their `origin` text was a hard-coded default that disagreed with it: the second Bard/Rogue Expertise said "Level 1", Ranger's level 9 Expertise said "Level 7", and the level 13 Mystic Arcanum said "Level 11";
+  - in two Rogue builds, the navigation gained a "Level 6 Features" link, because that page exists now.
+
+  The stats goldens didn't move.
+- **Left as is:** the description tie-breaker from the plan isn't needed. The only remaining ties are builds that grant the identical origin feat twice ("Tough" or "Alert" from both background and species, 24 builds), and those cards render identically. That's probably a content slip in those examples, so it's flagged for you rather than changed.
 
 - **Goal:** reordering `add_feature` calls never changes the sheet.
 - **Changes:**

@@ -253,12 +253,17 @@ class BaseClassLevelFeatures:
         builder already applied for the same class."""
         class_level = data.get_level_for_class(base_class)
 
-        for features_by_level, applied_levels in [
+        for features_by_level, applied_levels, kind in [
             (
                 self.base_class_features_by_level,
                 applied_level_features.base_class_levels,
+                "class",
             ),
-            (self.subclass_features_by_level, applied_level_features.subclass_levels),
+            (
+                self.subclass_features_by_level,
+                applied_level_features.subclass_levels,
+                "subclass",
+            ),
         ]:
             for level in sorted(features_by_level):
                 features = features_by_level[level]
@@ -281,7 +286,7 @@ class BaseClassLevelFeatures:
                     continue
                 applied_levels.add(key)
 
-                features.add_features(Grants(data, level, base_class.value))
+                features.add_features(Grants(data, level, base_class.value, kind))
         return data
 
 
@@ -499,13 +504,15 @@ class StarterClassBuilder(ClassBuilder):
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
 
-        data.add_feature(self.background_ability_bonuses)
-        data.add_feature(self.background_skill_proficiencies)
-        self.origin_feat.grant_to(data)
-        if self.caster_type is not None:
-            data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
+        background = Grants(data, 1, "Background", "background")
+        background.add_feature(self.background_ability_bonuses)
+        background.add_feature(self.background_skill_proficiencies)
+        self.origin_feat.grant_to(background)
 
-        data.add_feature(
+        grants = Grants(data, 1, self.base_class.value, "class")
+        if self.caster_type is not None:
+            grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
+        grants.add_feature(
             ClassProficiencies.ClassProficiencies(
                 self.base_class,
                 armor=list(self.armor_proficiencies or []),
@@ -514,7 +521,9 @@ class StarterClassBuilder(ClassBuilder):
             )
         )
         pool, count = ClassProficiencies.CLASS_SKILL_CHOICES[self.base_class]
-        data.add_feature(ClassProficiencies.ClassSkillChoice(pool, count, self.skills))
+        grants.add_feature(
+            ClassProficiencies.ClassSkillChoice(pool, count, self.skills)
+        )
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by
@@ -553,7 +562,8 @@ class MulticlassBuilder(ClassBuilder):
             # The builder that introduced the class already registered its
             # SpellSlots feature and granted its proficiencies.
             return
+        grants = Grants(data, 1, self.base_class.value, "class")
         if self.caster_type is not None:
-            data.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
+            grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
         # Only part of the class's proficiencies.
-        data.add_feature(ClassProficiencies.MulticlassProficiencies(self.base_class))
+        grants.add_feature(ClassProficiencies.MulticlassProficiencies(self.base_class))

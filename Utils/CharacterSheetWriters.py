@@ -6,11 +6,7 @@ from typing import Collection, Literal, Optional, Sequence, TextIO, TypeVar
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import (
-    FEATURE_CARD_CSS,
-    Feature,
-    parse_feature_level,
-)
+from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
 from CharacterContent.Items.Armor.Writer import ARMOR_CARD_CSS, write_armors_to_file
@@ -88,27 +84,21 @@ class HtmlCharacterSheetWriter:
         return any(type(armor) is Armor.ShieldArmor for armor in armors)
 
     @staticmethod
-    def _sort_features_key(feat: Feature):
-        feat_name = getattr(feat, "name", feat.__class__.__name__)
-        feat_origin = getattr(feat, "origin", "")
-        is_passive = getattr(feat, "skippable_in_concise", False)
-        if "Level " in feat_origin:
-            parts = feat_origin.split("Level ")
-            try:
-                level_num = int(parts[1].split()[0])
-            except (ValueError, IndexError):
-                level_num = 0
-            return (is_passive, 1, level_num, feat_name)
-        return (is_passive, 0, 0, feat_name)
+    def _sort_features_key(character: Character, feat: Feature) -> tuple:
+        """Full-sheet order: species, background and origin-feat features
+        first, then class and subclass features by level; within that, the
+        sheet's one order (Character.feature_sort_key)."""
+        stamp = character.stamp_of(feat)
+        passive, *rest = character.feature_sort_key(feat)
+        leveled = stamp.kind in ("class", "subclass")
+        return (passive, leveled, stamp.level if leveled else 0, *rest)
 
     @staticmethod
-    def _feature_level(feat: Feature) -> int:
-        """Level parsed from origin text (e.g. 'Monk Level 3', 'Necromancy
-        Wizard Level 6') for bucketing into per-level feature pages. Features
-        without a parseable level (background, species, origin feats) are
-        bucketed under level 1, where they were granted."""
-        origin = getattr(feat, "origin", "") or ""
-        return parse_feature_level(origin)
+    def _feature_level(character: Character, feat: Feature) -> int:
+        """The class-relative level `feat` was granted at (its stamp), which
+        decides the level page it's listed on. Species, background and
+        origin-feat features are stamped level 1."""
+        return character.stamp_of(feat).level
 
     @staticmethod
     def _spell_level(spell: SpellGrant) -> int:
@@ -1402,7 +1392,7 @@ class HtmlCharacterSheetWriter:
         ]
         features_by_level: dict[int, list[Feature]] = {}
         for feature in text_features:
-            features_by_level.setdefault(self._feature_level(feature), []).append(
+            features_by_level.setdefault(self._feature_level(data, feature), []).append(
                 feature
             )
 
@@ -1415,9 +1405,9 @@ class HtmlCharacterSheetWriter:
         # level (already nested on the parent's page via write_to_file's max_level filtering).
         extensions_by_level: dict[int, list[tuple[Feature, Feature]]] = {}
         for feature in features:  # Iterate full list, not just text_features
-            parent_level = self._feature_level(feature)
+            parent_level = self._feature_level(data, feature)
             for extension in data.extensions_of(feature):
-                ext_level = self._feature_level(extension)
+                ext_level = self._feature_level(data, extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page
                 if (
@@ -1510,11 +1500,7 @@ class HtmlCharacterSheetWriter:
         for level in level_page_levels:
             page_path = f"features/level_{level:02d}.html"
             sorted_level_features = sorted(
-                features_by_level.get(level, []),
-                key=lambda f: (
-                    getattr(f, "skippable_in_concise", False),
-                    getattr(f, "name", ""),
-                ),
+                features_by_level.get(level, []), key=data.feature_sort_key
             )
             level_spells = spells_by_level.get(level, [])
             level_extensions = extensions_by_level.get(level, [])
@@ -1817,7 +1803,9 @@ class HtmlCharacterSheetWriter:
             # Abilities and Skills still starts on a fresh page.
             if text_features:
                 file.write("<h2 class='print-page-break'>Features</h2>\n")
-                sorted_features = sorted(text_features, key=self._sort_features_key)
+                sorted_features = sorted(
+                    text_features, key=lambda f: self._sort_features_key(character, f)
+                )
                 file.write("<div class='features'>\n")
                 for feature in sorted_features:
                     feature.write_to_file(character, file, description_mode)
@@ -1868,8 +1856,8 @@ class HtmlCharacterSheetWriter:
             sorted_level_extensions = sorted(
                 level_extensions,
                 key=lambda pe: (
-                    getattr(pe[1], "skippable_in_concise", False),
-                    pe[1].name,
+                    character.feature_sort_key(pe[1]),
+                    character.feature_sort_key(pe[0]),
                 ),
             )
             for parent, extension in sorted_level_extensions:

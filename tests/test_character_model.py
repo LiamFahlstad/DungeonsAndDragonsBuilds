@@ -287,3 +287,40 @@ class TestAbjureFoes:
     def test_from_level_9(self, make_character):
         description, abjure_foes = self._descriptions(make_character, 9)
         assert abjure_foes in description
+
+
+class TestGrantStamps:
+    """Every feature is stamped with where it was granted (Model/Grants.py),
+    and the sheet orders features by the stamp - never by grant order."""
+
+    def test_grants_scope_stamps_level_kind_and_source(self, make_character):
+        from Model.Grants import Grants
+
+        character = make_character()
+        feature = _Parent(name="Rage")
+        Grants(character, 3, "Barbarian", "class").add_feature(feature)
+        stamp = character.stamp_of(feature)
+        assert (stamp.level, stamp.kind, stamp.granted_by) == (3, "class", "Barbarian")
+
+    def test_same_name_features_order_by_who_granted_them(self, make_character):
+        from Model.Grants import Grants
+
+        character = make_character()
+        from_class = _Parent(name="Expertise")
+        from_species = _Parent(name="Expertise")
+        Grants(character, 1, "Rogue", "class").add_feature(from_class)
+        Grants(character, 1, "Elf", "species").add_feature(from_species)
+        ordered = sorted(character.features, key=character.feature_sort_key)
+        assert ordered == [from_species, from_class]
+
+    def test_extensions_order_by_grant_level_then_name(self, make_character):
+        from Model.Grants import Grants
+
+        character = make_character()
+        parent = _Parent(name="Rage")
+        late = _Child(name="Instinctive Pounce")
+        early = _Child(name="Relentless Rage")
+        Grants(character, 7, "Barbarian", "class").add_feature(late, extends=parent)
+        Grants(character, 1, "Barbarian", "class").add_feature(parent)
+        Grants(character, 5, "Barbarian", "class").add_feature(early, extends=parent)
+        assert character.extensions_of(parent) == [early, late]

@@ -215,12 +215,23 @@ is the `Senses` part).
 renders inside the parent's card. Mechanically, a child is a normal feature, and its `apply()` runs
 like any other. Don't also grant the same instance plainly, or it will apply twice.
 
-Extensions are declared, not attached: the character records a `FeatureExtension` and finds the
-parent when it's read (`character.extensions_of(parent)`), so the parent and the child may be
-granted in either order, and no feature is ever changed after it's granted. `Parent` is a feature
+Extensions are declared, not attached: the character records a `FeatureGrant` with `extends=` and
+finds the parent when it's read (`character.extensions_of(parent)`), so the parent and the child
+may be granted in either order, and no feature is ever changed after it's granted. `Parent` is a feature
 type (exactly one granted top-level feature must match) or a feature instance; `if_missing="drop"`
 or `"standalone"` handles a parent that may not be granted. A missing or ambiguous parent raises
 from `validate()`.
+
+## Where a feature was granted, and the sheet's order
+
+Every feature is recorded as a `FeatureGrant` with a `GrantStamp` (`Model/Character.py`): the
+class-relative level it was granted at, the kind of source (species, background, origin feat,
+class, subclass) and which one ("Wizard", "Rock Gnome", "Alert"). The builder's `Grants` scope
+(`Model/Grants.py`) stamps it, so a feature's `origin` text is display only. The sheet lists each
+feature on the level page of its stamped level, and orders features with
+`Character.feature_sort_key` (passive last, then name, then kind and source) and extensions by
+grant level, then that key. Nothing on the sheet depends on the order features were granted in;
+`tests/test_order_invariance.py` proves it for every build.
 
 ## Spells
 
