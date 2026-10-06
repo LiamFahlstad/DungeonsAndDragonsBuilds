@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import GrantArmorTraining
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class BonusProficiencies(Feature):
@@ -108,7 +109,7 @@ class EmbodimentOfTheLaw(Feature):
             origin="Order Domain Cleric Level 6",
             usage_tags=["utility"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),

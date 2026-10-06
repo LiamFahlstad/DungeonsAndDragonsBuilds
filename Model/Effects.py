@@ -12,11 +12,13 @@ from Core.Definitions import (
     Sense,
     Skill,
 )
+from Core.Rules import UNTRAINED_ARMOR_ABILITIES
 from Core.SpellcastingRules import CasterType
 from Model.AbilityRequirements import AbilityRequirements
 from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
 from Model.CarryingCapacity import CarryingCapacity
+from Model.Bonuses import OTHER_SOURCE
 from Model.Contracts import Formula, StatView
 from Model.Defenses import Defenses
 from Model.EquipmentTraining import EquipmentTraining
@@ -85,9 +87,8 @@ class Ledger(Recorder):
 
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
         """Disadvantage on D20 Tests with `ability` from untrained armor."""
-        return self.is_wearing_untrained_armor() and ability in (
-            Ability.STRENGTH,
-            Ability.DEXTERITY,
+        return (
+            self.is_wearing_untrained_armor() and ability in UNTRAINED_ARMOR_ABILITIES
         )
 
     def armor_warnings(self) -> list[str]:
@@ -157,11 +158,13 @@ class Effects:
     def add_skill_expertise(self, skill: Skill) -> None:
         self._ledger.skills.add_skill_expertise(skill)
 
-    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other") -> None:
+    def add_skill_bonus(
+        self, skill: Skill, bonus: int, source: str = OTHER_SOURCE
+    ) -> None:
         self._ledger.skills.add_skill_bonus(skill, bonus, source)
 
     def add_derived_skill_bonus(
-        self, skill: Skill, bonus: Formula, source: str = "Other"
+        self, skill: Skill, bonus: Formula, source: str = OTHER_SOURCE
     ) -> None:
         self._ledger.skills.add_derived_bonus(skill, bonus, source)
 

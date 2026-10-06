@@ -84,6 +84,7 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
 from Combat.Definitions import ExtendedCombatantData
 from Core.Definitions import Ability
 from Model.Character import Character
+from Core.Rules import ability_modifier
 
 _MENTAL_ABILITIES = (
     Ability.INTELLIGENCE.short_name,
@@ -218,7 +219,7 @@ def format_creature_stat_block(
         Ability.CONSTITUTION.short_name,
     ):
         score = monster.ability_scores.get(abbr, 10)
-        modifier = (score - 10) // 2
+        modifier = ability_modifier(score)
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
     rows.append(_row("Str / Dex / Con", ", ".join(physical_parts)))
 
@@ -249,7 +250,7 @@ def format_creature_stat_block(
         mental_parts = []
         for abbr in _MENTAL_ABILITIES:
             score = monster.ability_scores.get(abbr, 10)
-            modifier = (score - 10) // 2
+            modifier = ability_modifier(score)
             mental_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
         rows.append(_row("Int / Wis / Cha", ", ".join(mental_parts)))
 

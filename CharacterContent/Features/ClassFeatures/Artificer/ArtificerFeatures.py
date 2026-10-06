@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from Core.Definitions import MAX_ABILITY_MODIFIER
 from Model.Character import Character
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class Spellcasting(Feature):

@@ -13,6 +13,7 @@ from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -152,7 +153,7 @@ class FlurryOfHealingAndHarm(Feature):
             name="Flurry of Healing and Harm",
             origin="Warrior of Mercy Monk Level 11",
             uses=FeatureUses(
-                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),

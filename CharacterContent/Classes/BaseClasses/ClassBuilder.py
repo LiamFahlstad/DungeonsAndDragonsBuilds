@@ -13,6 +13,7 @@ from CharacterContent.Features.ClassFeatures import ClassProficiencies, SpellSlo
 from CharacterContent.Items import Items, Packs
 from Model.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
+from Core.Rules import MAX_LEVEL, MIN_LEVEL
 
 
 @attr.dataclass
@@ -299,9 +300,9 @@ class ClassBuilder(ABC):
         base_class_level: int,
         replace_spells: Optional[dict[str, str]] = None,
     ):
-        if not 1 <= base_class_level <= 20:
+        if not MIN_LEVEL <= base_class_level <= MAX_LEVEL:
             raise ValueError(
-                f"{base_class.value}: class level must be between 1 and 20, "
+                f"{base_class.value}: class level must be between {MIN_LEVEL} and {MAX_LEVEL}, "
                 f"got {base_class_level}."
             )
         self.base_class = base_class

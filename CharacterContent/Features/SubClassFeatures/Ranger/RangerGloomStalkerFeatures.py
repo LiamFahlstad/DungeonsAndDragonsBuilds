@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, RANGER_HIT_DIE, MAX_ABILITY_MODIFIER, Sense
+from Core.Definitions import Ability, RANGER_HIT_DIE, Sense
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -14,6 +14,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class DreadAmbusher(Feature):

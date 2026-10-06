@@ -1,4 +1,4 @@
-from Core.Definitions import Language, MAX_PROFICIENCY_BONUS
+from Core.Definitions import Language
 from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     Feature,
@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import GrantLanguage
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class BonusProficiencies(Feature):

@@ -7,9 +7,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
-from Core.Definitions import MAX_ABILITY_MODIFIER, Ability
+from Core.Definitions import Ability
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class ElementalSmite(Feature):

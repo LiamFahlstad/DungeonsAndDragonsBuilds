@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, DamageType, MAX_ABILITY_MODIFIER, WARLOCK_HIT_DIE
+from Core.Definitions import Ability, DamageType, WARLOCK_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import DamageResistance
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class FormOfDread(Feature):

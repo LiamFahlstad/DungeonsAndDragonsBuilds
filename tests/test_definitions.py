@@ -10,9 +10,8 @@ from Core.Definitions import (
     Species,
     SkillConfig,
     HomeBrewSkill,
-    MAX_PROFICIENCY_BONUS,
-    MAX_ABILITY_MODIFIER,
 )
+from Core.Rules import MAX_ABILITY_MODIFIER, MAX_PROFICIENCY_BONUS
 
 
 class TestAbilityEnum:

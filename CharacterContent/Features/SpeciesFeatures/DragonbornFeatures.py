@@ -15,6 +15,7 @@ from CharacterContent.Features.Core.Improvements import (
 from Core.Definitions import CreatureSize
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -62,7 +63,7 @@ class BreathWeapon(Feature):
             activation=FeatureActivation(range="15-Foot Cone or 30-Foot Line"),
             usage_tags=["damage"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                max_uses=MAX_PROFICIENCY_BONUS,
                 current_formula="Current amount: equal to your proficiency bonus.",
             ),
         )

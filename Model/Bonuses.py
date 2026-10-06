@@ -1,6 +1,9 @@
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
+# The source label of a bonus granted without one.
+OTHER_SOURCE = "Other"
+
 
 class Bonuses(Recorder):
     """Flat values and formula values (a Formula - see Model/Contracts.py),
@@ -19,11 +22,11 @@ class Bonuses(Recorder):
         self._formulas: list[tuple[Formula, str]] = []
 
     @records
-    def add(self, value: int, source: str = "Other") -> None:
+    def add(self, value: int, source: str = OTHER_SOURCE) -> None:
         self._flat.append((value, source))
 
     @records
-    def add_formula(self, formula: Formula, source: str = "Other") -> None:
+    def add_formula(self, formula: Formula, source: str = OTHER_SOURCE) -> None:
         self._formulas.append((formula, source))
 
     def total(self, view: StatView) -> int:

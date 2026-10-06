@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class ExpandedSpellList(Feature):
@@ -43,7 +44,7 @@ class TentacleOfTheDeep(Feature):
             ),
             usage_tags=["damage", "control", "summon"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
             ),

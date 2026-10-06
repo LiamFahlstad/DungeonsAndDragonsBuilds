@@ -11,9 +11,10 @@ from CharacterContent.Features.Core.Improvements import (
     GrantSense,
     HitPointsPerLevelBonus,
 )
-from Core.Definitions import MAX_PROFICIENCY_BONUS, CreatureSize, DamageType, Sense
+from Core.Definitions import CreatureSize, DamageType, Sense
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species

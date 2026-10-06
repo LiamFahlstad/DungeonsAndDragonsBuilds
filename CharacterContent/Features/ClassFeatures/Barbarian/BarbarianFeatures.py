@@ -19,6 +19,7 @@ from Core.Definitions import Ability, Skill
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import ALL_LEVELS
 
 
 class Rage(Feature):
@@ -64,7 +65,7 @@ class Rage(Feature):
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         rage_uses_by_level = {}
         rage_damage_by_level = {}
-        for level in range(1, 21):
+        for level in ALL_LEVELS:
             if level <= 2:
                 rage_uses_by_level[level] = 2
             elif level <= 5:

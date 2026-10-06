@@ -1,9 +1,4 @@
-from Core.Definitions import (
-    CharacterClass,
-    DamageType,
-    RANGER_HIT_DIE,
-    MAX_ABILITY_MODIFIER,
-)
+from Core.Definitions import CharacterClass, DamageType, RANGER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -15,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import DamageResistance
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class FrigidExplorer(Feature):

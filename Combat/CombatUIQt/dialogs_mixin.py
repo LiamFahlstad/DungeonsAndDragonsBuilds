@@ -36,6 +36,7 @@ from .stats import (
     spell_slots_used_key,
 )
 from .styles import QSS
+from Core.Rules import ability_modifier
 
 
 def _display(value) -> str:
@@ -376,7 +377,7 @@ class DialogsMixin:
             tdt = "border:1px solid #0f3460;border-top:2px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
             cells_h = cells_v = cells_m = cells_s = ""
             for key, val in scores.items():
-                mod = (val - 10) // 2
+                mod = ability_modifier(val)
                 sv = saves.get(key, mod)
                 cells_h += f"<td style='{td}'><b>{key}</b></td>"
                 cells_v += f"<td style='{td}'>{val}</td>"

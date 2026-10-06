@@ -19,6 +19,7 @@ from Model.Character import Character
 from Model.Contracts import StatView
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_LEVEL
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -159,7 +160,7 @@ class FlurryOfBlows(Feature):
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can expend 1 Focus Point to make two Unarmed Strikes as a Bonus Action."
-        if monk_level <= 20:
+        if monk_level <= MAX_LEVEL:
             return "You can expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action."
         raise ValueError(f"Invalid monk level: {monk_level}")
 
@@ -177,7 +178,7 @@ class PatientDefense(Feature):
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action."
-        if monk_level <= 20:
+        if monk_level <= MAX_LEVEL:
             return "You can take the Disengage action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and the Dodge actions as a Bonus Action. When you expend a Focus Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die."
         raise ValueError(f"Invalid monk level: {monk_level}")
 
@@ -197,7 +198,7 @@ class StepOfTheWind(Feature):
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn."
-        if monk_level <= 20:
+        if monk_level <= MAX_LEVEL:
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn. When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within 5 feet of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks."
         raise ValueError(f"Invalid monk level: {monk_level}")
 

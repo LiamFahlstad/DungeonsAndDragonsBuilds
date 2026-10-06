@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Definitions import ConditionRule
 from .dialogs_mixin import _damage_entry_text, _speed_text
+from Core.Rules import ability_modifier
 
 
 class CardsMixin:
@@ -537,7 +538,7 @@ class CardsMixin:
             is_raw = any(v > 10 for v in raw_values)
 
             def to_mod(v: int) -> int:
-                return (v - 10) // 2
+                return ability_modifier(v)
 
             entries = []
             for name, val in ability_scores.items():

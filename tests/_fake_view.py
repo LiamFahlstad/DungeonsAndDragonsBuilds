@@ -6,7 +6,7 @@ score and base score are the same number."""
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass
-from Model.AbilityScores import ability_modifier
+from Core.Rules import ability_modifier
 from Model.ClassLevels import ClassLevels
 
 

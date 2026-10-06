@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class MagicAwareness(Feature):
@@ -22,7 +23,7 @@ class MagicAwareness(Feature):
             ),
             usage_tags=["utility"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
             ),
@@ -109,7 +110,7 @@ class BolsteringMagic(Feature):
         )
         return StringUtils.add_boxes(
             description,
-            Definitions.MAX_PROFICIENCY_BONUS,
+            MAX_PROFICIENCY_BONUS,
             regain_all_on="long rest",
             current_formula="Current amount: equal to your proficiency bonus.",
         )

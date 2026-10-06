@@ -1,4 +1,4 @@
-from Core.Definitions import MAX_ABILITY_MODIFIER, ROGUE_HIT_DIE
+from Core.Definitions import ROGUE_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class WailsFromTheGrave(Feature):

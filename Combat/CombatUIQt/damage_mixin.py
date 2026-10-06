@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 from Combat.Definitions import Action
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .styles import QSS
+from Core.Rules import ability_modifier
 
 
 def _damage_type_value(t) -> str:
@@ -189,7 +190,7 @@ class DamageMixin:
         ability_scores = char.get("Ability Scores") or {}
         for key in ("Con", "CON", "CONSTITUTION"):
             if key in ability_scores:
-                return (ability_scores[key] - 10) // 2
+                return ability_modifier(ability_scores[key])
         return 0
 
     def _concentration_check_dialog(self, char: dict, dmg: int):

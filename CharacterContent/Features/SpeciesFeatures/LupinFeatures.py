@@ -1,4 +1,4 @@
-from Core.Definitions import MAX_PROFICIENCY_BONUS, Sense, Skill
+from Core.Definitions import Sense, Skill
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -13,6 +13,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 30  # Given by your species
 

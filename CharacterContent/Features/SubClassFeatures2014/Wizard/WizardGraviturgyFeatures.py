@@ -6,8 +6,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from Core.Definitions import Ability, MAX_ABILITY_MODIFIER
+from Core.Definitions import Ability
 from Model.Character import Character
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class AdjustDensity(Feature):

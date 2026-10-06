@@ -17,6 +17,7 @@ from Core.Definitions import ArmorType
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class BonusProficiencies(Feature):
@@ -161,7 +162,7 @@ class StepsOfNight(Feature):
             ),
             usage_tags=["utility"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_PROFICIENCY_BONUS,
+                max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
             ),

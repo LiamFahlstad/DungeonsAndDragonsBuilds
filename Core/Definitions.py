@@ -1,18 +1,7 @@
 from enum import Enum
 
-###### RESOURCE CAPS ######
-
-# get_proficiency_bonus() = 2 + (character_level - 1) // 4, maxed at
-# character level 20. Used as the box-count ceiling for features whose
-# uses scale with proficiency bonus.
-MAX_PROFICIENCY_BONUS = 6
-
-# Modifier for the highest ability score these box-count formulas are
-# designed to show (a score of 30, reachable via Wish/epic boons). Used as
-# the box-count ceiling for features whose uses scale with an ability
-# modifier (minimum of 1).
-MAX_ABILITY_MODIFIER = 10
-
+# Rules numbers (level range, proficiency bonus, ability score caps, ...) are
+# in Core/Rules.py. The class tables below stay with CharacterClass.
 
 ###### HIT DICE ######
 
@@ -50,25 +39,48 @@ class CharacterClass(str, Enum):
     @property
     def hit_die(self) -> int:
         hit_dice_mapping = {
-            CharacterClass.ARTIFICER: 8,
-            CharacterClass.BARBARIAN: 12,
-            CharacterClass.BARD: 8,
-            CharacterClass.CLERIC: 8,
-            CharacterClass.DRUID: 8,
-            CharacterClass.FIGHTER: 10,
-            CharacterClass.MONK: 8,
-            CharacterClass.PALADIN: 10,
-            CharacterClass.RANGER: 10,
-            CharacterClass.ROGUE: 8,
-            CharacterClass.SORCERER: 6,
-            CharacterClass.WARLOCK: 8,
-            CharacterClass.WIZARD: 6,
+            CharacterClass.ARTIFICER: ARTIFICER_HIT_DIE,
+            CharacterClass.BARBARIAN: BARBARIAN_HIT_DIE,
+            CharacterClass.BARD: BARD_HIT_DIE,
+            CharacterClass.CLERIC: CLERIC_HIT_DIE,
+            CharacterClass.DRUID: DRUID_HIT_DIE,
+            CharacterClass.FIGHTER: FIGHTER_HIT_DIE,
+            CharacterClass.MONK: MONK_HIT_DIE,
+            CharacterClass.PALADIN: PALADIN_HIT_DIE,
+            CharacterClass.RANGER: RANGER_HIT_DIE,
+            CharacterClass.ROGUE: ROGUE_HIT_DIE,
+            CharacterClass.SORCERER: SORCERER_HIT_DIE,
+            CharacterClass.WARLOCK: WARLOCK_HIT_DIE,
+            CharacterClass.WIZARD: WIZARD_HIT_DIE,
         }
         return hit_dice_mapping[self]
 
     @property
     def average_hit_die(self) -> int:
         return (self.hit_die // 2) + 1
+
+    @property
+    def starting_gold(self) -> int:
+        """The class's flat starting gold: the last "Choose A/B/..."
+        alternative of its Starting Equipment (e.g. Fighter's "... or (C)
+        155 GP"), which is always gold with no items - see
+        SourceTexts/ClassTexts/<class>.txt."""
+        starting_gold_mapping = {
+            CharacterClass.ARTIFICER: 150,
+            CharacterClass.BARBARIAN: 75,
+            CharacterClass.BARD: 90,
+            CharacterClass.CLERIC: 110,
+            CharacterClass.DRUID: 50,
+            CharacterClass.FIGHTER: 155,
+            CharacterClass.MONK: 50,
+            CharacterClass.PALADIN: 150,
+            CharacterClass.RANGER: 150,
+            CharacterClass.ROGUE: 100,
+            CharacterClass.SORCERER: 50,
+            CharacterClass.WARLOCK: 100,
+            CharacterClass.WIZARD: 55,
+        }
+        return starting_gold_mapping[self]
 
     @property
     def multiclass_prerequisites(self) -> list[tuple["Ability", ...]]:

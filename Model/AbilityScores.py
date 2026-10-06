@@ -2,10 +2,14 @@ from types import MappingProxyType
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-
-
-def ability_modifier(score: int) -> int:
-    return (score - 10) // 2
+from Core.Rules import (
+    POINT_BUY_BUDGET,
+    POINT_BUY_MAX_SCORE,
+    POINT_BUY_MIN_SCORE,
+    STANDARD_ARRAY,
+    ability_modifier,
+    point_buy_cost,
+)
 
 
 def _score_property(ability: Ability) -> property:
@@ -104,18 +108,18 @@ class StandardArrayAbilityScores(AbilityScores):
         wisdom: int,
         charisma: int,
     ):
-        values_needed = {8, 10, 12, 13, 14, 15}
-        provided_values = {
+        provided_values = [
             strength,
             dexterity,
             constitution,
             intelligence,
             wisdom,
             charisma,
-        }
-        if values_needed != provided_values:
+        ]
+        if sorted(provided_values) != sorted(STANDARD_ARRAY):
+            array = ", ".join(str(score) for score in STANDARD_ARRAY)
             raise ValueError(
-                "StandardArrayAbilityScores must use the standard array values: 15, 14, 13, 12, 10, 8"
+                f"StandardArrayAbilityScores must use the standard array values: {array}"
             )
         super().__init__(
             strength, dexterity, constitution, intelligence, wisdom, charisma
@@ -123,10 +127,6 @@ class StandardArrayAbilityScores(AbilityScores):
 
 
 class PointBuyAbilityScores(AbilityScores):
-    _BUDGET = 27
-    _MIN_SCORE = 8
-    _MAX_SCORE = 15
-
     def __init__(
         self,
         strength: int,
@@ -145,35 +145,19 @@ class PointBuyAbilityScores(AbilityScores):
             Ability.CHARISMA: charisma,
         }
         for ability, score in scores.items():
-            if not (self._MIN_SCORE <= score <= self._MAX_SCORE):
+            if not (POINT_BUY_MIN_SCORE <= score <= POINT_BUY_MAX_SCORE):
                 raise ValueError(
                     f"Point Buy {ability.name.title()} score must be between "
-                    f"{self._MIN_SCORE} and {self._MAX_SCORE}, got {score}."
+                    f"{POINT_BUY_MIN_SCORE} and {POINT_BUY_MAX_SCORE}, got {score}."
                 )
 
-        spent = sum(self._point_cost(score) for score in scores.values())
-        if spent != self._BUDGET:
+        spent = sum(point_buy_cost(score) for score in scores.values())
+        if spent != POINT_BUY_BUDGET:
             raise ValueError(
-                f"Point Buy scores must spend exactly {self._BUDGET} points, got {spent}."
+                f"Point Buy scores must spend exactly {POINT_BUY_BUDGET} points, "
+                f"got {spent}."
             )
 
         super().__init__(
             strength, dexterity, constitution, intelligence, wisdom, charisma
         )
-
-    @staticmethod
-    def _point_cost(score: int) -> int:
-        """
-        Point costs:
-            8  -> 0
-            9  -> 1
-            10 -> 2
-            11 -> 3
-            12 -> 4
-            13 -> 5
-            14 -> 7
-            15 -> 9
-        """
-        if score <= 13:
-            return score - 8
-        return 5 + 2 * (score - 13)

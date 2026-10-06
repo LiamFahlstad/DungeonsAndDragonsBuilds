@@ -6,6 +6,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_SCORE
 
 
 class FreeBackgroundAbilityBonus(Feature):
@@ -17,7 +18,7 @@ class FreeBackgroundAbilityBonus(Feature):
             total=3,
             error_prefix="Free Background Ability Bonus",
             max_per_ability=2,
-            max_score=20,
+            max_score=MAX_ABILITY_SCORE,
         )
         super().__init__(
             name="Free Background Ability Bonus",

@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import (
 
 from .stats import _default_stats
 from .styles import QSS
+from Core.Rules import ability_modifier
 
 
 class TurnsMixin:
@@ -58,7 +59,7 @@ class TurnsMixin:
         ability_scores = char.get("Ability Scores") or {}
         for key in ("DEXTERITY", "Dexterity", "Dex", "DEX"):
             if key in ability_scores:
-                return (ability_scores[key] - 10) // 2
+                return ability_modifier(ability_scores[key])
         return 0
 
     def _add_initiative_row(self, char: dict):

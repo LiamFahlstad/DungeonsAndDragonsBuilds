@@ -19,10 +19,11 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
-from Core.Definitions import MAX_PROFICIENCY_BONUS, Ability, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Character import Character
 from Model.Grants import Grants
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class OriginFeat(Feature):

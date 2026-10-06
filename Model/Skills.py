@@ -1,7 +1,8 @@
 from typing import Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
-from Model.Bonuses import Bonuses
+from Core.Rules import EXPERTISE_MULTIPLIER
+from Model.Bonuses import OTHER_SOURCE, Bonuses
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
 
@@ -38,12 +39,12 @@ class Skills(Recorder):
         return self._bonuses.setdefault(skill, Bonuses())
 
     @records
-    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = "Other"):
+    def add_skill_bonus(self, skill: Skill, bonus: int, source: str = OTHER_SOURCE):
         self._bonuses_for(skill).add(bonus, source)
 
     @records
     def add_derived_bonus(
-        self, skill: Skill, bonus: Formula, source: str = "Other"
+        self, skill: Skill, bonus: Formula, source: str = OTHER_SOURCE
     ) -> None:
         self._bonuses_for(skill).add_formula(bonus, source)
 
@@ -128,7 +129,7 @@ class Skills(Recorder):
         """Ability modifier, plus the proficiency bonus (twice with
         expertise), plus every bonus."""
         if self.has_expertise(skill):
-            proficiency = 2 * view.get_proficiency_bonus()
+            proficiency = EXPERTISE_MULTIPLIER * view.get_proficiency_bonus()
         elif self.is_proficient(skill):
             proficiency = view.get_proficiency_bonus()
         else:

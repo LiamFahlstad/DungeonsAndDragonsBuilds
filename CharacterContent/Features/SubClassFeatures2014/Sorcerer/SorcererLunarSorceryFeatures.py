@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from Model.Character import Character
-from Core.Definitions import MAX_PROFICIENCY_BONUS
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class LunarEmbodiment(Feature):

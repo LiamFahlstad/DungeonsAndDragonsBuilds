@@ -11,25 +11,6 @@ from Core.Definitions import CharacterClass
 from Model.Inventory import EquipmentEntry, Inventory
 from Model.Sources import ArmorGear, Gear
 
-# Each class's flat starting gold - the last "Choose A/B/..." alternative in
-# its Starting Equipment line in SourceTexts/ClassTexts/<class>.txt (e.g.
-# Fighter's "... or (C) 155 GP"), which is always gold with no items.
-_BASELINE_STARTING_GOLD: dict[CharacterClass, float] = {
-    CharacterClass.ARTIFICER: 150,
-    CharacterClass.BARBARIAN: 75,
-    CharacterClass.BARD: 90,
-    CharacterClass.CLERIC: 110,
-    CharacterClass.DRUID: 50,
-    CharacterClass.FIGHTER: 155,
-    CharacterClass.MONK: 50,
-    CharacterClass.PALADIN: 150,
-    CharacterClass.RANGER: 150,
-    CharacterClass.ROGUE: 100,
-    CharacterClass.SORCERER: 50,
-    CharacterClass.WARLOCK: 100,
-    CharacterClass.WIZARD: 55,
-}
-
 
 def _entry_value(entry: EquipmentEntry) -> float:
     """Total GP value of everything in an entry."""
@@ -87,7 +68,7 @@ def set_starting_equipment(
     )
     inventory.set_starting_equipment(
         entry,
-        starting_gold=_BASELINE_STARTING_GOLD[base_class] - _entry_value(entry),
+        starting_gold=base_class.starting_gold - _entry_value(entry),
         unarmed_strike=unarmed_strike,
     )
     return entry

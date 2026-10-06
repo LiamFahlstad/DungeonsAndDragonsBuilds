@@ -1,3 +1,6 @@
+from Core.Rules import MAX_LEVEL
+
+
 def wrap_text(description: str, max_sentence_length: int, html: bool = False) -> str:
     """
     Wraps text so that no line exceeds max_sentence_length.
@@ -25,7 +28,7 @@ def wrap_text(description: str, max_sentence_length: int, html: bool = False) ->
 
 
 def compress_level_progression(
-    level_to_value: dict, max_level: int = 20
+    level_to_value: dict, max_level: int = MAX_LEVEL
 ) -> list[tuple[str, str]]:
     """Collapse a level->value mapping into compact (level range, value)
     pairs, merging consecutive levels that share the same value into one

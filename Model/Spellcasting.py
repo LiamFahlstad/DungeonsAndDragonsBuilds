@@ -1,6 +1,7 @@
 from typing import Optional, Sequence
 
 from Core.Definitions import Ability, CharacterClass
+from Core.Rules import SPELL_SAVE_DC_BASE
 from Core.SpellcastingRules import (
     CasterType,
     SlotProgression,
@@ -64,7 +65,7 @@ class Spellcasting(Recorder):
     def difficulty_class(self, ability: Ability, view: StatView) -> int:
         """Spell save DC when casting with `ability`."""
         return (
-            8
+            SPELL_SAVE_DC_BASE
             + view.get_proficiency_bonus()
             + view.get_ability_modifier(ability)
             + self.spell_save_dc_bonus

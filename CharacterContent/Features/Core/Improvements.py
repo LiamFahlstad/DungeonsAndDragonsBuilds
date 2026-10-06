@@ -48,6 +48,7 @@ from Core.Definitions import (
     Skill,
 )
 from Model.ArmorClass import ArmorClassFormula
+from Model.Bonuses import OTHER_SOURCE
 from Model.Contracts import Formula, StatView
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
@@ -467,7 +468,7 @@ class SkillBonus(CharacterImprovement):
     def apply(self, effects: Effects):
         if callable(self.bonus):
             effects.add_derived_skill_bonus(
-                self.skill, self.bonus, self.source or "Other"
+                self.skill, self.bonus, self.source or OTHER_SOURCE
             )
         elif self.source is not None:
             effects.add_skill_bonus(self.skill, self.bonus, self.source)

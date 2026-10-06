@@ -1,6 +1,6 @@
 from enum import Enum
 
-from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS
+from Core.Definitions import CreatureSize
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from Model.Character import Character
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species

@@ -44,6 +44,13 @@ from Builds.CharacterCreator import CodeGen as codegen, Loader as loader
 from Builds.CharacterCreator import Registry as registry_module
 from Builds.CharacterCreator.Model import BuildSpec, default_file_name
 from Builds.CharacterCreator.Registry import EditorKind, resolve_annotation
+from Core.Rules import (
+    POINT_BUY_BUDGET,
+    POINT_BUY_MAX_SCORE,
+    POINT_BUY_MIN_SCORE,
+    STANDARD_ARRAY,
+    point_buy_cost,
+)
 
 GENERATED_DIR = registry_module.REPO_ROOT / "Builds" / "GeneratedBuilds"
 
@@ -57,18 +64,16 @@ ABILITY_NAMES = (
 )
 
 # (mode value stored on BuildSpec, label shown in the combo)
+_STANDARD_ARRAY_TEXT = ", ".join(str(score) for score in STANDARD_ARRAY)
 ABILITY_SCORE_MODES = (
-    ("standard_array", "Standard array (must be exactly 15, 14, 13, 12, 10, 8)"),
-    ("point_buy", "Point buy (27 points, each score 8-15)"),
+    ("standard_array", f"Standard array (must be exactly {_STANDARD_ARRAY_TEXT})"),
+    (
+        "point_buy",
+        f"Point buy ({POINT_BUY_BUDGET} points, each score "
+        f"{POINT_BUY_MIN_SCORE}-{POINT_BUY_MAX_SCORE})",
+    ),
     ("manual", "Manual (no validation)"),
 )
-
-
-def _point_buy_cost(score: int) -> int:
-    """Mirrors Model.AbilityScores.PointBuyAbilityScores._point_cost."""
-    if score <= 13:
-        return score - 8
-    return 5 + 2 * (score - 13)
 
 
 # ---------------------------------------------------------------------------
@@ -1670,9 +1675,9 @@ class CreatorApp(QMainWindow):
             self.point_buy_label.setText("")
             return
         spent = sum(
-            _point_buy_cost(spin.value()) for spin in self.ability_spins.values()
+            point_buy_cost(spin.value()) for spin in self.ability_spins.values()
         )
-        self.point_buy_label.setText(f"Points spent: {spent} / 27")
+        self.point_buy_label.setText(f"Points spent: {spent} / {POINT_BUY_BUDGET}")
 
     def _build_equipment(self):
         layout = self.equipment_layout
@@ -2095,28 +2100,31 @@ class CreatorApp(QMainWindow):
         spec.ability_score_mode = self.ability_mode_combo.currentData() or "manual"
         if spec.ability_score_mode == "standard_array" and sorted(
             spec.abilities.values()
-        ) != [8, 10, 12, 13, 14, 15]:
+        ) != sorted(STANDARD_ARRAY):
             problems.append(
-                "Standard array is selected but scores are not 15/14/13/12/10/8."
+                "Standard array is selected but scores are not "
+                + "/".join(str(score) for score in STANDARD_ARRAY)
+                + "."
             )
         elif spec.ability_score_mode == "point_buy":
             out_of_range = [
                 ability
                 for ability, score in spec.abilities.items()
-                if not (8 <= score <= 15)
+                if not (POINT_BUY_MIN_SCORE <= score <= POINT_BUY_MAX_SCORE)
             ]
             if out_of_range:
                 problems.append(
-                    "Point buy is selected but these scores are outside 8-15: "
+                    f"Point buy is selected but these scores are outside "
+                    f"{POINT_BUY_MIN_SCORE}-{POINT_BUY_MAX_SCORE}: "
                     + ", ".join(sorted(out_of_range))
                     + "."
                 )
             else:
-                spent = sum(_point_buy_cost(score) for score in spec.abilities.values())
-                if spent != 27:
+                spent = sum(point_buy_cost(score) for score in spec.abilities.values())
+                if spent != POINT_BUY_BUDGET:
                     problems.append(
                         f"Point buy is selected but spends {spent} points; "
-                        "it must spend exactly 27."
+                        f"it must spend exactly {POINT_BUY_BUDGET}."
                     )
 
         info = self.registry.classes().get(spec.class_key)

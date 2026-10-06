@@ -415,10 +415,15 @@ Every step that touches evaluation or granting (2, 3, 4, 8, 9, 10, 11) runs
 
 ### 2f. Constants (point 13)
 
-`Core/Rules.py` holds the numbers the rulebook defines, each named after its
-rule, plus the few pure functions that are rules
-(`proficiency_bonus(level)`, `ability_modifier(score)`,
+`Core/Rules.py` holds the numbers the rulebook defines that the engine or many
+features share, each named after its rule, plus the few pure functions that
+are rules (`proficiency_bonus(level)`, `ability_modifier(score)`,
 `point_buy_cost(score)`).
+
+- **A number that is one feature's own rule stays in that feature**, where
+  it's read in context. Examples: a feat's `total=2`, Primal Champion's
+  "maximum of 25", a Ring of Intellect's +2, and `fighter_level >= 13` in one
+  feature's table.
 
 - **Class tables stay with `CharacterClass`** in `Core/Definitions.py`: hit
   dice, and starting gold moved from `StartingEquipment.py`. `Rules.py` imports
@@ -499,7 +504,47 @@ refers to the checks in section 4.
      message. They aren't a gate yet.
 - **Verify:** A, B, C, D.
 
-### Step 1: Rules constants in `Core/Rules.py` *(mechanical)*
+### Step 1: Rules constants in `Core/Rules.py` *(mechanical)* — done
+
+- **Result:**
+  - **`Core/Rules.py`** holds:
+    - `MIN_LEVEL`, `MAX_LEVEL`, `ALL_LEVELS`;
+    - `proficiency_bonus()`, `MAX_PROFICIENCY_BONUS` (now derived from
+      level 20), `EXPERTISE_MULTIPLIER`;
+    - `ability_modifier()`, `MAX_ABILITY_SCORE`, `ABSOLUTE_MAX_ABILITY_SCORE`,
+      `MAX_ABILITY_MODIFIER` (now derived from a score of 30);
+    - `STANDARD_ARRAY`, `POINT_BUY_BUDGET`, `POINT_BUY_MIN_SCORE`,
+      `POINT_BUY_MAX_SCORE`, `point_buy_cost()`;
+    - `MULTICLASS_MIN_SCORE`, `UNARMORED_AC_BASE`,
+      `UNTRAINED_ARMOR_ABILITIES`, `SPELL_SAVE_DC_BASE`, `MAX_ATTUNED_ITEMS`,
+      `CARRYING_CAPACITY_BASE_SLOTS`.
+  - **Changed from the plan below:**
+    - The level names are `MIN_LEVEL` / `MAX_LEVEL`, because they bound class
+      levels too.
+    - `CAPSTONE_MAX_ABILITY_SCORE` and `ABILITY_SCORE_IMPROVEMENT_POINTS`
+      weren't added. Each is one feature's own rule, so it stays in that
+      feature (2f).
+  - **Duplicates removed:**
+    - the ability-modifier formula: 7 copies, in the Combat UI (4) and
+      `CreatureStatBlocks` (2), plus `Model/AbilityScores`;
+    - the Creator UI's own point-buy cost, budget and range, and its
+      standard array;
+    - `CharacterClass.hit_die`'s literal table, which now reads the named
+      `*_HIT_DIE` constants;
+    - `StartingEquipment`'s gold table, which is now
+      `CharacterClass.starting_gold`.
+  - **Codemod.** 52 files moved their `MAX_PROFICIENCY_BONUS` /
+    `MAX_ABILITY_MODIFIER` imports to `Core.Rules`, and `Definitions.MAX_X`
+    became the bare name.
+  - **Labels.** `"Other"` is `Bonuses.OTHER_SOURCE`, and `"Person"` is
+    `CarryingCapacity.PERSON_SOURCE`.
+  - **Tests.** `tests/test_rules.py` checks against the PHB tables: proficiency
+    by level, the modifier for scores 1–30, point-buy costs, the budget and the
+    array.
+  - **Verified.** A: no golden change. B: 3308 passed, 17 xfailed. C: both UIs
+    construct offscreen, and the Creator's point-buy label and validation
+    messages read as before. D: 0 errors, and no new pyright errors in the
+    touched modules outside `Model/`.
 
 - **Goal:** no rules number appears as a literal outside `Core/`.
 - **Changes:**

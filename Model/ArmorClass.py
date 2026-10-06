@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from Core.Definitions import Ability
+from Core.Rules import UNARMORED_AC_BASE
 from Model.Bonuses import Bonuses
 from Model.Contracts import Formula, StatView
 from Model.Recorder import Recorder, records
@@ -29,7 +30,7 @@ class ArmorClassFormula:
 
 # Everyone's AC without armor or a feature: 10 + Dexterity modifier.
 UNARMORED_ARMOR_CLASS = ArmorClassFormula(
-    base=10, abilities=frozenset({Ability.DEXTERITY})
+    base=UNARMORED_AC_BASE, abilities=frozenset({Ability.DEXTERITY})
 )
 
 

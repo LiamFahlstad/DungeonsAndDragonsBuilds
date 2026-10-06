@@ -10,9 +10,10 @@ from CharacterContent.Features.Core.Improvements import (
     ConditionImmunity,
     DamageResistance,
 )
-from Core.Definitions import MAX_ABILITY_MODIFIER, Condition, DamageType
+from Core.Definitions import Condition, DamageType
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class ToolsOfTheTrade(Feature):

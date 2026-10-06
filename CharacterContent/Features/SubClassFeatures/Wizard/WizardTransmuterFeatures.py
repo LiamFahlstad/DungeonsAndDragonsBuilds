@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, WIZARD_HIT_DIE, MAX_ABILITY_MODIFIER
+from Core.Definitions import Ability, WIZARD_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from Model.Character import Character
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class TransmutationSavant(Feature):

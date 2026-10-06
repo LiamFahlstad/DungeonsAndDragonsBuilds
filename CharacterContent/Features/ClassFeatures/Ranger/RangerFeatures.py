@@ -12,10 +12,11 @@ from CharacterContent.Features.Core.Improvements import (
     SpeedBonus,
 )
 import Core.Definitions as Definitions
-from Core.Definitions import CharacterClass, Skill, MAX_ABILITY_MODIFIER
+from Core.Definitions import CharacterClass, Skill
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
 
 
 class Spellcasting(Feature):
@@ -74,7 +75,7 @@ class FavoredEnemy(Feature):
         self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         uses_by_level = {}
-        for level in range(1, 21):
+        for level in ALL_LEVELS:
             if level < 5:
                 uses_by_level[level] = 2
             elif level < 9:

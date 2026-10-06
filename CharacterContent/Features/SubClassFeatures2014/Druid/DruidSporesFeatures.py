@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, Condition, MAX_ABILITY_MODIFIER
+from Core.Definitions import Ability, Condition
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class CircleSporesSpells(Feature):

@@ -24,16 +24,14 @@ import attr
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
+from Core.Rules import MAX_ATTUNED_ITEMS, MAX_LEVEL, ability_modifier, proficiency_bonus
 from Core.SpellcastingRules import SlotProgression
-from Model.AbilityScores import AbilityScores, ability_modifier
+from Model.AbilityScores import AbilityScores
 from Model.ClassLevels import ClassLevels
 from Model.Effects import Effects, Ledger
 from Model.Inventory import Inventory
 from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
-
-MAX_ATTUNED_ITEMS = 3
-
 
 # Who a grant comes from, in the order the sheet lists features that tie on
 # level, passiveness and name (see Character.feature_sort_key).
@@ -576,7 +574,7 @@ class Character:
                 f"(Shields do not count toward this limit.)"
             )
 
-        # Attunement: a creature can be attuned to at most three magic items.
+        # Attunement: at most MAX_ATTUNED_ITEMS magic items at once.
         # Unworn gear (is_wearing=False) is carried, not attuned.
         attuned = [
             gear.name
@@ -653,7 +651,9 @@ class Character:
     def pact_magic_slots(self) -> dict[int, int]:
         return self.ledger.spellcasting.pact_magic_slots(self)
 
-    def get_slot_progression(self, max_level: int = 20) -> Optional[SlotProgression]:
+    def get_slot_progression(
+        self, max_level: int = MAX_LEVEL
+    ) -> Optional[SlotProgression]:
         """When each of this character's slots is gained, up to character
         level `max_level`: the levels taken so far follow the classes
         actually taken, and later levels carry on in the most recently taken
@@ -736,7 +736,7 @@ class Character:
         return self.class_levels.get_class_level_segments()
 
     def get_proficiency_bonus(self) -> int:
-        return 2 + (self.character_level - 1) // 4
+        return proficiency_bonus(self.character_level)
 
     def get_ability_score(self, ability: Ability) -> int:
         """The final score: base, every capped increase and equipment bonuses."""

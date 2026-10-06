@@ -1,4 +1,4 @@
-from Core.Definitions import MAX_ABILITY_MODIFIER, PALADIN_HIT_DIE
+from Core.Definitions import PALADIN_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import SpeedBonus
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class InspiringSmite(Feature):

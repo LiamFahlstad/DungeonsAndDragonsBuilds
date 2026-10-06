@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class FiendSpells(Feature):
@@ -42,7 +43,7 @@ class DarkOnesOwnLuck(Feature):
             origin="Fiend Patron Warlock Level 6",
             usage_tags=["buff"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),

@@ -28,6 +28,7 @@ ensure_repo_on_path()
 
 from CharacterContent.Classes.BaseClasses import ClassBuilder  # noqa: E402
 from Core.Definitions import Skill  # noqa: E402
+from Core.Rules import ALL_LEVELS  # noqa: E402
 
 
 class ClassInfo:
@@ -132,7 +133,7 @@ def _skill_constants_in_source(cls) -> list:
 def _base_level_bases():
     return tuple(
         getattr(ClassBuilder, f"BaseClassLevel{n}")
-        for n in range(1, 21)
+        for n in ALL_LEVELS
         if hasattr(ClassBuilder, f"BaseClassLevel{n}")
     )
 
@@ -140,7 +141,7 @@ def _base_level_bases():
 def _subclass_level_bases():
     return tuple(
         getattr(ClassBuilder, f"SubclassLevel{n}")
-        for n in range(1, 21)
+        for n in ALL_LEVELS
         if hasattr(ClassBuilder, f"SubclassLevel{n}")
     )
 

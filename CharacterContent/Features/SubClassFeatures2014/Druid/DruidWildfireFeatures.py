@@ -8,7 +8,7 @@ from Combat.Definitions import (
     MonsterType,
     Size,
 )
-from Core.Definitions import CharacterClass, DamageType, MAX_PROFICIENCY_BONUS
+from Core.Definitions import CharacterClass, DamageType
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -20,6 +20,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from Model.Character import Character
 from Utils import StringUtils
 from Utils.CreatureStatBlocks import format_creature_stat_block
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 def _build_wildfire_spirit(

@@ -1,4 +1,4 @@
-from Core.Definitions import CharacterClass, MAX_ABILITY_MODIFIER
+from Core.Definitions import CharacterClass
 from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     Feature,
@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class BonusProficiency(Feature):

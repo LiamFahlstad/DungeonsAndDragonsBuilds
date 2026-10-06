@@ -15,6 +15,7 @@ from Core.Definitions import Skill
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
 
 
 class Spellcasting(Feature):
@@ -45,7 +46,7 @@ class BardicInspiration(Feature):
             ),
             usage_tags=["buff"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),
@@ -64,7 +65,7 @@ class BardicInspiration(Feature):
         self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         die_by_level = {}
-        for level in range(1, 21):
+        for level in ALL_LEVELS:
             if level >= 15:
                 die_by_level[level] = "1d12"
             elif level >= 10:

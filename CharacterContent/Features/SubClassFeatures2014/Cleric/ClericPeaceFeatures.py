@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, MAX_PROFICIENCY_BONUS
+from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 
 class PeaceDomainSpells(Feature):

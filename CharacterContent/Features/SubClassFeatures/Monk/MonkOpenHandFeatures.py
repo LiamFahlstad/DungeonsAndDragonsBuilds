@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -95,7 +96,7 @@ class WholenessOfBody(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
             uses=FeatureUses(
-                max_uses=Definitions.MAX_ABILITY_MODIFIER,
+                max_uses=MAX_ABILITY_MODIFIER,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),

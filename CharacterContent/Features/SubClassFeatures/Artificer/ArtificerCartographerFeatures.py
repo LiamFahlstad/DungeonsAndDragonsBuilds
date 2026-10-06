@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, MAX_ABILITY_MODIFIER
+from Core.Definitions import ARTIFICER_HIT_DIE
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -8,6 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class CartographerToolsOfTheTrade(Feature):

@@ -5,9 +5,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
-from Core.Definitions import MAX_PROFICIENCY_BONUS, DamageType, Sense
+from Core.Definitions import DamageType, Sense
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 35  # Given by your species
 

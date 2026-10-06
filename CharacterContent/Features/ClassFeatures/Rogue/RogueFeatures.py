@@ -13,6 +13,7 @@ from Core.Definitions import Ability, Language, Skill
 from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Core.Rules import ALL_LEVELS
 
 
 class Expertise(Feature):
@@ -50,7 +51,7 @@ class SneakAttack(Feature):
     def get_resource_tiles(
         self, character: Character
     ) -> list[tuple[str, list[tuple[str, str]]]]:
-        dice_by_level = {level: f"{(level + 1) // 2}d6" for level in range(1, 21)}
+        dice_by_level = {level: f"{(level + 1) // 2}d6" for level in ALL_LEVELS}
         steps = [
             (f"Lv {level_range}", value)
             for level_range, value in StringUtils.compress_level_progression(

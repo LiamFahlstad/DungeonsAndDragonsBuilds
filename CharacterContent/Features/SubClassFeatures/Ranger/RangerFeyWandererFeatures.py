@@ -1,4 +1,4 @@
-from Core.Definitions import RANGER_HIT_DIE, MAX_ABILITY_MODIFIER, Ability, Skill
+from Core.Definitions import RANGER_HIT_DIE, Ability, Skill
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -11,6 +11,7 @@ from CharacterContent.Features.Core.Improvements import SkillBonus
 from Model.Character import Character
 from Model.Contracts import StatView
 from Model.Effects import Effects
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class DreadfulStrikes(Feature):

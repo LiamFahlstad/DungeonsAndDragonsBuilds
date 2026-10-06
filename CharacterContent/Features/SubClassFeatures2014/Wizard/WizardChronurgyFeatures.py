@@ -5,8 +5,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Core.Definitions import MAX_ABILITY_MODIFIER
 from Model.Character import Character
+from Core.Rules import MAX_ABILITY_MODIFIER
 
 
 class ChronalShift(Feature):

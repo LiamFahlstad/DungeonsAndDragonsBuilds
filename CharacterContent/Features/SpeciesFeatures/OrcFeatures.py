@@ -1,4 +1,4 @@
-from Core.Definitions import CreatureSize, MAX_PROFICIENCY_BONUS, Sense
+from Core.Definitions import CreatureSize, Sense
 from CharacterContent.Features.Core.BaseFeatures import (
     Feature,
     FeatureUses,
@@ -10,6 +10,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 from CharacterContent.Features.Core.Improvements import GrantSense
 from Model.Character import Character
 from Model.Effects import Effects
+from Core.Rules import MAX_PROFICIENCY_BONUS
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
