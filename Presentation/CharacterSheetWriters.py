@@ -25,7 +25,8 @@ from Presentation.SpellCards import (
     SPELL_CARD_CSS,
     write_spell_to_file,
 )
-from CharacterContent.ToolProficiencies.Proficiencies import ToolProficiency
+from CharacterContent.ToolProficiencies.Proficiencies import tool_item
+from Model.Records.Tools import ToolProficiency
 from Core.Definitions import Ability, DiceRollCondition, Die
 from Model.Character import Character
 from Model.Records.SourcedValue import SourcedValue
@@ -1288,7 +1289,7 @@ class HtmlCharacterSheetWriter:
 
         used_item_ids: set[int] = set()
         for tool in sorted(tool_proficiencies, key=lambda t: t.name):
-            item = tool.make_item()
+            item = tool_item(tool)
             owned = next(
                 (
                     (owned_item, entry)

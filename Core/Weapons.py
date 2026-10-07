@@ -1,8 +1,13 @@
-"""Weapon rules enums: properties, masteries, types, proficiency categories
-and kinds, damage types and damage rolls. The weapons themselves are in
-CharacterContent/Items/Weapons/, which re-exports these for build files."""
+"""Weapon rules: the enums (properties, masteries, types, proficiency categories
+and kinds, damage types and damage rolls), WeaponTraits - the facts about a
+weapon that rules and bonuses check - and which weapons a proficiency covers.
+The weapons themselves are in CharacterContent/Items/Weapons/, which
+re-exports the enums for build files."""
 
 from enum import Enum
+from typing import Optional
+
+import attr
 
 
 class WeaponProperty(Enum):
@@ -132,3 +137,67 @@ class WeaponDamageRolls(Enum):
     @property
     def die_size(self) -> int:
         return int(self.value.split("d")[1])
+
+
+@attr.s(frozen=True, auto_attribs=True)
+class WeaponTraits:
+    """The facts about a weapon that proficiency rules and wielder bonuses
+    check (Archery: "Ranged weapons"; Bracers of Archery: "the Longbow and
+    Shortbow"). Every weapon exposes its own (AbstractWeapon.traits)."""
+
+    weapon_type: WeaponType
+    properties: frozenset[WeaponProperty]
+    # The weapon's own kind, for the few a proficiency names on its own
+    # (Scimitar, Longbow, Shortbow); None for every other weapon.
+    kind: Optional[WeaponProficiency] = None
+    is_unarmed_strike: bool = False
+
+    @property
+    def is_simple(self) -> bool:
+        return self.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.SIMPLE_RANGED)
+
+    @property
+    def is_martial(self) -> bool:
+        return self.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.MARTIAL_RANGED)
+
+    @property
+    def is_melee(self) -> bool:
+        return self.weapon_type in (WeaponType.SIMPLE_MELEE, WeaponType.MARTIAL_MELEE)
+
+    @property
+    def is_ranged(self) -> bool:
+        return self.weapon_type in (WeaponType.SIMPLE_RANGED, WeaponType.MARTIAL_RANGED)
+
+
+# Proficiencies that name one kind of weapon rather than a category.
+_SINGLE_WEAPON_PROFICIENCIES = (
+    WeaponProficiency.SCIMITAR,
+    WeaponProficiency.LONGBOW,
+    WeaponProficiency.SHORTBOW,
+)
+
+
+def weapon_matches_proficiency(
+    traits: WeaponTraits, proficiency: WeaponProficiency
+) -> bool:
+    """Whether `proficiency` covers a weapon with these traits."""
+    properties = traits.properties
+    if proficiency == WeaponProficiency.SIMPLE:
+        return traits.is_simple
+    if proficiency == WeaponProficiency.MARTIAL:
+        return traits.is_martial
+    if proficiency == WeaponProficiency.MARTIAL_LIGHT:
+        return traits.is_martial and WeaponProperty.LIGHT in properties
+    if proficiency == WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT:
+        return traits.is_martial and (
+            WeaponProperty.FINESSE in properties or WeaponProperty.LIGHT in properties
+        )
+    if proficiency == WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED:
+        return (
+            traits.weapon_type == WeaponType.MARTIAL_MELEE
+            and WeaponProperty.HEAVY not in properties
+            and WeaponProperty.TWO_HANDED not in properties
+        )
+    if proficiency in _SINGLE_WEAPON_PROFICIENCIES:
+        return traits.kind == proficiency
+    raise ValueError(f"Unhandled weapon proficiency: {proficiency}")

@@ -1,5 +1,4 @@
-from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 
 from Core.Definitions import (
     Ability,
@@ -14,6 +13,7 @@ from Core.Definitions import (
 )
 from Core.Rules import UNTRAINED_ARMOR_ABILITIES
 from Core.SpellcastingRules import CasterType
+from Core.Weapons import WeaponProficiency
 from Model.AbilityRequirements import AbilityRequirements
 from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
@@ -26,6 +26,7 @@ from Model.HitPoints import HitPoints
 from Model.Initiative import Initiative
 from Model.Languages import Languages
 from Model.Recorder import Recorder
+from Model.Records.Tools import ToolProficiency
 from Model.SavingThrows import SavingThrows
 from Model.Senses import Senses
 from Model.Skills import Skills
@@ -240,14 +241,14 @@ class Effects:
 
     # ── Weapon, armor and tool training ─────────────────────────────────────
 
-    def add_weapon_proficiency(self, weapon_proficiency: Enum) -> None:
+    def add_weapon_proficiency(self, weapon_proficiency: WeaponProficiency) -> None:
         self._ledger.equipment_training.add_weapon_proficiency(weapon_proficiency)
 
     def add_armor_training(self, armor_type: ArmorType) -> None:
         self._ledger.equipment_training.add_armor_training(armor_type)
 
-    def add_tool_proficiency(self, tool_proficiency: Any) -> None:
-        """Proficiency with a tool (a ToolProficiency). The same tool from
+    def add_tool_proficiency(self, tool_proficiency: ToolProficiency) -> None:
+        """Proficiency with a tool. The same tool from
         several sources is listed once."""
         self._ledger.equipment_training.add_tool_proficiency(tool_proficiency)
 

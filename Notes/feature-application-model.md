@@ -95,7 +95,7 @@ repo).
 | Speed | Base + flat and formula bonuses | `Character.calculate_speed()` |
 | Senses | Plain grants and "or extend" grants | `Character.senses.ranges`: best plain grant + every extension |
 | Weapon proficiency | `weapon_proficiencies` on `Character.equipment_training` (categories such as Martial weapons, or single kinds such as the Scimitar) | `AbstractWeapon.is_proficient(cs)`: an explicit `player_is_proficient` override, or any recorded grant that covers the weapon |
-| Armor training, tools | `armor_training`, `tool_proficiencies` on `Character.equipment_training` | Read directly (the same tool from two sources is listed once) |
+| Armor training, tools | `armor_training`, `tool_proficiencies` on `Character.equipment_training` | Read directly. A tool is a `ToolProficiency` record (`Model/Records/Tools.py`), keyed by name, so the same tool from two sources is listed once |
 | Untrained armor / Shield (2024 PHB) | Worn armor, wielded Shield (`Character.worn_armor`), `armor_training` | Untrained armor: a Disadvantage source on STR/DEX skills (by the skill's actual ability), STR/DEX saves, initiative and STR/DEX weapon attacks, plus a `warnings` entry (no spellcasting). Untrained Shield: its AC bonus is left out. `calculate_armor_class(ignore_shield=True)` gives the sheet's "w/o Shield" AC |
 | Initiative | DEX, proficiency, flat and formula bonuses; roll-condition sources | `calculate_initiative()`, `initiative_roll_condition` |
 | Spell slots | Registered casters `{class: CasterType}` | `spell_slots` / `pact_magic_slots`, via `Core.SpellcastingRules.calculate_spell_slots` |
@@ -174,7 +174,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
 | "Your Strength must be at least N" | `StrengthRequirement(N, reason)` (checked in validation) |
 | "You gain proficiency with Martial weapons / Heavy armor / Smith's Tools" | `GrantWeaponProficiency([...])`, `GrantArmorTraining([...])`, `GrantToolProficiency([...])` |
-| "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `weapon -> bool` filter. Never write into the weapon |
+| "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `WeaponTraits -> bool` filter (`Core/Weapons.py`: the weapon's type, properties and, for the Scimitar, Longbow and Shortbow, its `kind`). Never write into the weapon, and never match class names |
 | An upgrade to an earlier feature | `data.add_feature(Upgrade(), extends=Parent)`. Its `apply()` runs too, so don't also grant it plainly |
 
 **`apply(self, effects: Effects)` can only record.** `Effects` offers `add_*`/`set_*`/
@@ -218,7 +218,7 @@ flat-list/formula-list/source-list shape themselves.
 | `carrying_capacity` (`CarryingCapacity`) | Carrying capacity bonus sources; `sources(view)` / `total(view)` also compute the dynamic "Person" base |
 | `spellcasting` (`Spellcasting`) | Registered casters and the spell save DC bonus; `spell_slots(view)`/`pact_magic_slots(view)` read the class levels and the fixed slots (sources) through the view |
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags and a `Bonuses` per skill/ability; `modifier(_, view)`, `roll_condition(_, view)`, and for skills `ability(skill, view)` and `roll_condition_reasons(skill, view)` |
-| `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon)` / `damage_bonuses(weapon)` return the ones that apply |
+| `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon.traits)` / `damage_bonuses(weapon.traits)` return the ones that apply |
 
 Every part is read through `character.ledger`. Recording goes through
 `Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)

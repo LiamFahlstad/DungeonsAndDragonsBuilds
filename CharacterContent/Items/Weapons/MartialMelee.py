@@ -1,6 +1,7 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
 from Core.Weapons import (
+    WeaponProficiency,
     WeaponMastery,
     WeaponProperty,
     WeaponType,
@@ -150,6 +151,8 @@ class Rapier(DaggerHeavy):
 
 
 class Scimitar(AbstractWeapon):
+    kind = WeaponProficiency.SCIMITAR
+
     def base_stats(self) -> None:
         self.name = "Scimitar"
         self.ability = Ability.STRENGTH

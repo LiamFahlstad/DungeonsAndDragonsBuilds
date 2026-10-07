@@ -967,7 +967,49 @@ refers to the checks in section 4.
   imports `Model.Character`.
 - **Verify:** A, B, C, D. **Output:** none.
 
-### Step 8: Ledger parts record facts only *(design)*
+### Step 8: Ledger parts record facts only *(design)* — done
+
+- **Result:**
+  - **`WeaponTraits` lives in `Core/Weapons.py`, not `Model/Records`.** It's
+    weapon rules data over Core enums, so it sits next to them, along with the
+    proficiency rule `weapon_matches_proficiency(traits, proficiency)`.
+    - Its fields are `weapon_type`, `properties`, `kind` and
+      `is_unarmed_strike`, with `is_simple`/`is_martial`/`is_melee`/`is_ranged`.
+    - Every weapon has `traits`. `Scimitar`, `Longbow` and `Shortbow` declare
+      `kind` as a class attribute, which magic subclasses
+      (`MarksmansLongbow`) inherit, and `UnarmedStrike` sets
+      `is_unarmed_strike`.
+  - **Two class-name hacks are gone:** Bracers of Archery's MRO name matching,
+    and `weapon_matches_proficiency`'s, which the plan hadn't listed. Both
+    compare `traits.kind` now.
+  - **The filters take `WeaponTraits`:** Archery (`is_ranged`), Dueling
+    (melee, not Two-Handed, not unarmed), Thrown Weapon Fighting, and Bracers
+    of Archery. `WeaponFilter` is `Callable[[WeaponTraits], bool]`, so `Any`
+    is gone.
+  - **`ToolProficiency` is a plain record in `Model/Records/Tools.py`,** not
+    a `Feature`. Its card methods were never rendered, because the sheet
+    builds its own tool cards.
+    - The 37 tool classes stay, since the Creator picks tools by subclass.
+    - `craftables` are item names (20 lists rewritten, checked to give the
+      same text).
+    - `make_item`'s `getattr(Items, type(self).__name__)` became the explicit
+      table `TOOL_ITEMS` plus `tool_item(tool)`, with its values typed as
+      no-argument factories.
+  - **`EquipmentTraining` and `Effects` are typed:**
+    `set[WeaponProficiency]`, and tools as `dict[str, ToolProficiency]`
+    keyed by name. `Any` and `Enum` are gone from both.
+  - **Tests:**
+    - `tests/test_weapon_traits.py` has 28 cases with values from the
+      PHB/DMG;
+    - `tests/test_layering.py` adds `test_ledger_parts_record_facts_only`:
+      each part imports only Core, `Model.Records`, `Model.View`,
+      `Model.Bonuses` and `Model.Recorder`.
+  - **Verified:**
+    - A, B (3346 passed), E (1096 slow passed), D: 0 errors.
+    - F: all pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree: no new errors, and one existing
+      one fixed (`ClassProficiencies`' tool table).
+    - C: the entry points run, and the Creator's tool picker builds.
 
 - **Goal:** no part stores a content object, so `Model/Stats` never needs a
   content type, and the Bracers class-name hack goes away.

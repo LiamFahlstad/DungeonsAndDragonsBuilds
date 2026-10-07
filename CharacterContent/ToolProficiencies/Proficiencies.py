@@ -1,69 +1,12 @@
-from typing import Optional
+"""The tool proficiencies (Thieves' Tools, a Lute, ...), and the item each one
+is the training for (TOOL_ITEMS). ToolProficiency itself is a plain record
+in Model/Records/Tools.py, so the Ledger can record it."""
+
+from typing import Callable, Optional
 
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from Model.View import CharacterView
-
-
-class ToolProficiency(Feature):
-    """Represents training with a tool, not the tool itself - see the
-    matching class in CharacterContent.Items.Items for the tool's weight,
-    cost, and what it physically does. This grants your proficiency bonus
-    on ability checks made with the tool, the things it lets you do with the
-    Utilize action (each with its DC) and, where listed, the ability to craft
-    certain items with it during downtime."""
-
-    def __init__(
-        self,
-        name: str,
-        category: str,
-        ability: Ability,
-        utilize: list[tuple[str, int]],
-        craftables: Optional[list[Items.Item]] = None,
-    ):
-        super().__init__(name=name)
-        self.category = category
-        self.ability = ability
-        # (what you can do, DC) pairs - one of these per Utilize action.
-        self.utilize = utilize
-        self.craftables = craftables if craftables is not None else []
-
-    def utilize_text(self) -> str:
-        options = [f"{action} (DC {dc})" for action, dc in self.utilize]
-        # Each option is stored capitalized; lower-case all but the first so
-        # they read as one sentence ("Pick a lock (DC 15), or disarm a trap").
-        options[1:] = [option[0].lower() + option[1:] for option in options[1:]]
-        return ", or ".join(options)
-
-    def craft_text(self) -> str:
-        return ", ".join(item.name for item in self.craftables)
-
-    def make_item(self) -> Optional[Items.Item]:
-        """A new instance of the tool itself: the Items class sharing this
-        proficiency's class name (Proficiencies.Lute / Items.Lute), or None
-        when there isn't one."""
-        item_class = getattr(Items, type(self).__name__, None)
-        return item_class() if item_class is not None else None
-
-    def get_description(self, character: CharacterView) -> str | None:
-        lines = [
-            f"Add your proficiency bonus to {self.ability.value} checks made with {self.name}.",
-            f"Utilize: {self.utilize_text()}.",
-        ]
-        if self.craftables:
-            lines.append(f"Craft: {self.craft_text()}.")
-        return "\n".join(lines)
-
-    def get_table_description(
-        self, character: CharacterView
-    ) -> list[tuple[str, str]] | None:
-        rows = [("Ability", self.ability.value), ("Utilize", self.utilize_text())]
-        if self.craftables:
-            rows.append(("Craft", self.craft_text()))
-        return rows
-
+from Model.Records.Tools import ToolProficiency
 
 GAMING_SET_UTILIZE = [
     ("Discern whether someone is cheating", 10),
@@ -93,7 +36,7 @@ class PoisonersKit(ToolProficiency):
             category="Other Tool",
             ability=Ability.INTELLIGENCE,
             utilize=[("Detect a poisoned object", 10)],
-            craftables=[Items.BasicPoison()],
+            craftables=["Basic Poison"],
         )
 
 
@@ -114,12 +57,7 @@ class HerbalismKit(ToolProficiency):
             category="Other Tool",
             ability=Ability.INTELLIGENCE,
             utilize=[("Identify a plant", 10)],
-            craftables=[
-                Items.Antitoxin(),
-                Items.Candle(),
-                Items.HealersKit(),
-                Items.PotionOfHealing(),
-            ],
+            craftables=["Antitoxin", "Candle", "Healer's Kit", "Potion of Healing"],
         )
 
 
@@ -131,12 +69,12 @@ class AlchemistsSupplies(ToolProficiency):
             ability=Ability.INTELLIGENCE,
             utilize=[("Identify a substance", 15), ("Start a fire", 15)],
             craftables=[
-                Items.Acid(),
-                Items.AlchemistsFire(),
-                Items.ComponentPouch(),
-                Items.Oil(),
-                Items.Paper(),
-                Items.Perfume(),
+                "Acid",
+                "Alchemist's Fire",
+                "Component Pouch",
+                "Oil",
+                "Paper",
+                "Perfume",
             ],
         )
 
@@ -148,7 +86,7 @@ class BrewersSupplies(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.INTELLIGENCE,
             utilize=[("Detect poisoned drink", 15), ("Identify alcohol", 10)],
-            craftables=[Items.Antitoxin()],
+            craftables=["Antitoxin"],
         )
 
 
@@ -161,7 +99,7 @@ class CalligraphersSupplies(ToolProficiency):
             utilize=[
                 ("Write text with impressive flourishes that guard against forgery", 15)
             ],
-            craftables=[Items.Ink(), Items.SpellScroll()],
+            craftables=["Ink", "Spell Scroll"],
         )
 
 
@@ -173,15 +111,15 @@ class CarpentersTools(ToolProficiency):
             ability=Ability.STRENGTH,
             utilize=[("Seal or pry open a door or container", 20)],
             craftables=[
-                Weapons.Club(),
-                Weapons.Greatclub(),
-                Weapons.Quarterstaff(),
-                Items.Barrel(),
-                Items.Chest(),
-                Items.Ladder(),
-                Items.Pole(),
-                Items.PortableRam(),
-                Items.Torch(),
+                "Club",
+                "Greatclub",
+                "Quarterstaff",
+                "Barrel",
+                "Chest",
+                "Ladder",
+                "Pole",
+                "Portable Ram",
+                "Torch",
             ],
         )
 
@@ -193,7 +131,7 @@ class CartographersTools(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.WISDOM,
             utilize=[("Draft a map of a small area", 15)],
-            craftables=[Items.Map()],
+            craftables=["Map"],
         )
 
 
@@ -209,7 +147,7 @@ class CobblersTools(ToolProficiency):
                     10,
                 )
             ],
-            craftables=[Items.ClimbersKit()],
+            craftables=["Climber's Kit"],
         )
 
 
@@ -223,7 +161,7 @@ class CooksUtensils(ToolProficiency):
                 ("Improve food's flavor", 10),
                 ("Detect spoiled or poisoned food", 15),
             ],
-            craftables=[Items.Rations()],
+            craftables=["Rations"],
         )
 
 
@@ -234,12 +172,7 @@ class GlassblowersTools(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.INTELLIGENCE,
             utilize=[("Discern what a glass object held in the past 24 hours", 15)],
-            craftables=[
-                Items.GlassBottle(),
-                Items.MagnifyingGlass(),
-                Items.Spyglass(),
-                Items.Vial(),
-            ],
+            craftables=["Glass Bottle", "Magnifying Glass", "Spyglass", "Vial"],
         )
 
 
@@ -250,7 +183,7 @@ class JewelersTools(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.INTELLIGENCE,
             utilize=[("Discern a gem's value", 15)],
-            craftables=[Items.ArcaneFocus(), Items.HolySymbol()],
+            craftables=["Arcane Focus", "Holy Symbol"],
         )
 
 
@@ -262,17 +195,17 @@ class LeatherworkersTools(ToolProficiency):
             ability=Ability.DEXTERITY,
             utilize=[("Add a design to a leather item", 10)],
             craftables=[
-                Weapons.Sling(),
-                Weapons.Whip(),
-                Armor.LeatherArmor(),
-                Armor.StuddedLeatherArmor(),
-                Items.Backpack(),
-                Items.CrossbowBoltCase(),
-                Items.MapOrScrollCase(),
-                Items.Parchment(),
-                Items.Pouch(),
-                Items.Quiver(),
-                Items.Waterskin(),
+                "Sling",
+                "Whip",
+                "Leather Armor",
+                "Studded Leather Armor",
+                "Backpack",
+                "Crossbow Bolt Case",
+                "Map or Scroll Case",
+                "Parchment",
+                "Pouch",
+                "Quiver",
+                "Waterskin",
             ],
         )
 
@@ -284,7 +217,7 @@ class MasonsTools(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.STRENGTH,
             utilize=[("Chisel a symbol or hole in stone", 10)],
-            craftables=[Items.BlockAndTackle()],
+            craftables=["Block and Tackle"],
         )
 
 
@@ -295,7 +228,7 @@ class PaintersSupplies(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.WISDOM,
             utilize=[("Paint a recognizable image of something you've seen", 10)],
-            craftables=[Items.DruidicFocus(), Items.HolySymbol()],
+            craftables=["Druidic Focus", "Holy Symbol"],
         )
 
 
@@ -306,7 +239,7 @@ class PottersTools(ToolProficiency):
             category="Artisan's Tools",
             ability=Ability.INTELLIGENCE,
             utilize=[("Discern what a ceramic object held in the past 24 hours", 15)],
-            craftables=[Items.Jug(), Items.Lamp()],
+            craftables=["Jug", "Lamp"],
         )
 
 
@@ -318,14 +251,14 @@ class SmithsTools(ToolProficiency):
             ability=Ability.STRENGTH,
             utilize=[("Pry open a door or container", 20)],
             craftables=[
-                Items.BallBearings(),
-                Items.Bucket(),
-                Items.Caltrops(),
-                Items.Chain(),
-                Items.Crowbar(),
-                Items.GrapplingHook(),
-                Items.IronPot(),
-                Items.IronSpikes(),
+                "Ball Bearings",
+                "Bucket",
+                "Caltrops",
+                "Chain",
+                "Crowbar",
+                "Grappling Hook",
+                "Iron Pot",
+                "Iron Spikes",
             ],
         )
 
@@ -343,19 +276,19 @@ class TinkersTools(ToolProficiency):
                 )
             ],
             craftables=[
-                Weapons.Musket(),
-                Weapons.Pistol(),
-                Items.Bell(),
-                Items.BullseyeLantern(),
-                Items.Flask(),
-                Items.HoodedLantern(),
-                Items.HuntingTrap(),
-                Items.Lock(),
-                Items.Manacles(),
-                Items.Mirror(),
-                Items.Shovel(),
-                Items.SignalWhistle(),
-                Items.Tinderbox(),
+                "Musket",
+                "Pistol",
+                "Bell",
+                "Bullseye Lantern",
+                "Flask",
+                "Hooded Lantern",
+                "Hunting Trap",
+                "Lock",
+                "Manacles",
+                "Steel Mirror",
+                "Shovel",
+                "Signal Whistle",
+                "Tinderbox",
             ],
         )
 
@@ -368,17 +301,17 @@ class WeaversTools(ToolProficiency):
             ability=Ability.DEXTERITY,
             utilize=[("Mend a tear in clothing", 10), ("Sew a Tiny design", 10)],
             craftables=[
-                Items.Basket(),
-                Items.Bedroll(),
-                Items.Blanket(),
-                Items.FineClothes(),
-                Items.Net(),
-                Items.Robe(),
-                Items.Rope(),
-                Items.Sack(),
-                Items.String(),
-                Items.Tent(),
-                Items.TravelersClothes(),
+                "Basket",
+                "Bedroll",
+                "Blanket",
+                "Fine Clothes",
+                "Net",
+                "Robe",
+                "Rope (50 ft)",
+                "Sack",
+                "String",
+                "Tent",
+                "Traveler's Clothes",
             ],
         )
 
@@ -391,13 +324,13 @@ class WoodcarversTools(ToolProficiency):
             ability=Ability.DEXTERITY,
             utilize=[("Carve a pattern in wood", 10)],
             craftables=[
-                Weapons.Club(),
-                Weapons.Greatclub(),
-                Weapons.Quarterstaff(),
-                Items.ArcaneFocus(),
-                Items.Arrows(),
-                Items.DruidicFocus(),
-                Items.InkPen(),
+                "Club",
+                "Greatclub",
+                "Quarterstaff",
+                "Arcane Focus",
+                "Arrows",
+                "Druidic Focus",
+                "Ink Pen",
             ],
         )
 
@@ -409,7 +342,7 @@ class DisguiseKit(ToolProficiency):
             category="Other Tool",
             ability=Ability.CHARISMA,
             utilize=[("Apply makeup", 10)],
-            craftables=[Items.Costume()],
+            craftables=["Costume"],
         )
 
 
@@ -564,3 +497,52 @@ class Viol(ToolProficiency):
             ability=Ability.CHARISMA,
             utilize=MUSICAL_INSTRUMENT_UTILIZE,
         )
+
+
+# The item each tool proficiency is the training for (same name in
+# CharacterContent/Items/Items), as its no-argument constructor.
+TOOL_ITEMS: dict[type[ToolProficiency], Callable[[], Items.Item]] = {
+    AlchemistsSupplies: Items.AlchemistsSupplies,
+    Bagpipes: Items.Bagpipes,
+    BrewersSupplies: Items.BrewersSupplies,
+    CalligraphersSupplies: Items.CalligraphersSupplies,
+    CarpentersTools: Items.CarpentersTools,
+    CartographersTools: Items.CartographersTools,
+    CobblersTools: Items.CobblersTools,
+    CooksUtensils: Items.CooksUtensils,
+    Dice: Items.Dice,
+    DisguiseKit: Items.DisguiseKit,
+    Dragonchess: Items.Dragonchess,
+    Drum: Items.Drum,
+    Dulcimer: Items.Dulcimer,
+    Flute: Items.Flute,
+    ForgeryKit: Items.ForgeryKit,
+    GlassblowersTools: Items.GlassblowersTools,
+    HerbalismKit: Items.HerbalismKit,
+    Horn: Items.Horn,
+    JewelersTools: Items.JewelersTools,
+    LeatherworkersTools: Items.LeatherworkersTools,
+    Lute: Items.Lute,
+    Lyre: Items.Lyre,
+    MasonsTools: Items.MasonsTools,
+    NavigatorsTools: Items.NavigatorsTools,
+    PaintersSupplies: Items.PaintersSupplies,
+    PanFlute: Items.PanFlute,
+    PlayingCards: Items.PlayingCards,
+    PoisonersKit: Items.PoisonersKit,
+    PottersTools: Items.PottersTools,
+    Shawm: Items.Shawm,
+    SmithsTools: Items.SmithsTools,
+    ThievesTools: Items.ThievesTools,
+    ThreeDragonAnte: Items.ThreeDragonAnte,
+    TinkersTools: Items.TinkersTools,
+    Viol: Items.Viol,
+    WeaversTools: Items.WeaversTools,
+    WoodcarversTools: Items.WoodcarversTools,
+}
+
+
+def tool_item(tool: ToolProficiency) -> Optional[Items.Item]:
+    """A new instance of the tool itself, or None when it has no item."""
+    item_class = TOOL_ITEMS.get(type(tool))
+    return item_class() if item_class is not None else None

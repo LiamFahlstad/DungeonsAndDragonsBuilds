@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.Improvements import (
     SpeedBonus,
     WeaponDamageBonus,
 )
-from Core.Weapons import WeaponProficiency
+from Core.Weapons import WeaponProficiency, WeaponTraits
 from .Base import Item, ItemCategory, ItemRarity
 
 
@@ -246,13 +246,12 @@ class BracersOfArchery(Item):
     """DMG: proficiency with the Longbow and Shortbow, and +2 damage on ranged
     attacks made with them."""
 
-    _BOWS = ("Longbow", "Shortbow")
+    _BOWS = (WeaponProficiency.LONGBOW, WeaponProficiency.SHORTBOW)
 
     @classmethod
-    def _is_bow(cls, weapon) -> bool:
-        # Match by class name (magic bows subclass these) - importing the
-        # Weapons package here would be circular.
-        return any(kind.__name__ in cls._BOWS for kind in type(weapon).__mro__)
+    def _is_bow(cls, weapon: WeaponTraits) -> bool:
+        # Magic bows subclass Longbow and Shortbow, so they share the kind.
+        return weapon.kind in cls._BOWS
 
     def __init__(self, is_wearing: bool = True):
         super().__init__(

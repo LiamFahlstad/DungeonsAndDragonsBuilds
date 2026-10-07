@@ -247,6 +247,56 @@ def test_content_reads_character_through_view():
     )
 
 
+# The Ledger's parts record facts typed with Core and Model.Records types
+# only - never a content object - so they need no content type to name.
+LEDGER_PARTS = (
+    "AbilityIncreases",
+    "AbilityRequirements",
+    "ArmorClass",
+    "Bonuses",
+    "CarryingCapacity",
+    "Defenses",
+    "EquipmentTraining",
+    "HitPoints",
+    "Initiative",
+    "Languages",
+    "Recorder",
+    "SavingThrows",
+    "Senses",
+    "Skills",
+    "Speed",
+    "Spellcasting",
+    "WeaponBonuses",
+    "WornArmor",
+)
+LEDGER_PART_MAY_IMPORT = (
+    "Core",
+    "Model.Records",
+    "Model.View",
+    "Model.Bonuses",
+    "Model.Recorder",
+)
+
+
+def test_ledger_parts_record_facts_only():
+    offenders = []
+    for part in LEDGER_PARTS:
+        name = f"Model/{part}.py"
+        path = REPO / name
+        imported = _imported_modules(_parse(path), _module_name(name), is_package=False)
+        for module in imported:
+            if _layer(module) is None:
+                continue  # stdlib or third-party
+            if not any(
+                module == allowed or module.startswith(allowed + ".")
+                for allowed in LEDGER_PART_MAY_IMPORT
+            ):
+                offenders.append((name, module))
+    assert (
+        not offenders
+    ), f"Ledger parts may import only {LEDGER_PART_MAY_IMPORT}: {offenders}"
+
+
 def test_no_cast():
     offenders = set()
     for name, path in _project_files():

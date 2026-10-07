@@ -1,10 +1,11 @@
-from typing import Any, Callable, NamedTuple
+from typing import Callable, NamedTuple
+
+from Core.Weapons import WeaponTraits
 from Model.Recorder import Recorder, records
 
 # Which weapons a bonus applies to (e.g. "Ranged weapons", "the Longbow and
-# Shortbow"). Checked against each weapon on read. Typed loosely (Any) since
-# AbstractWeapon lives in CharacterContent, which imports this module.
-WeaponFilter = Callable[[Any], bool]
+# Shortbow"), checked against each weapon's traits on read.
+WeaponFilter = Callable[[WeaponTraits], bool]
 
 
 class WeaponBonus(NamedTuple):
@@ -45,16 +46,16 @@ class WeaponBonuses(Recorder):
     def add_damage_bonus(self, bonus: WeaponBonus) -> None:
         self._damage.append(bonus)
 
-    def attack_bonuses(self, weapon: Any) -> list[tuple[int, str]]:
+    def attack_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
         """(value, label) for every attack roll bonus that applies to `weapon`."""
         return _labels(self._attack, weapon)
 
-    def damage_bonuses(self, weapon: Any) -> list[tuple[int, str]]:
+    def damage_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
         """(value, label) for every damage roll bonus that applies to `weapon`."""
         return _labels(self._damage, weapon)
 
 
-def _labels(bonuses: list[WeaponBonus], weapon: Any) -> list[tuple[int, str]]:
+def _labels(bonuses: list[WeaponBonus], weapon: WeaponTraits) -> list[tuple[int, str]]:
     applicable = [b for b in bonuses if b.applies_to(weapon)]
     return [
         (b.value, b.label)

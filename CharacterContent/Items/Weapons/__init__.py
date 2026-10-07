@@ -21,7 +21,6 @@ from .Improvements import (
 )
 from .Base import (
     AbstractWeapon,
-    weapon_matches_proficiency,
     is_proficient_with,
     UnarmedStrike,
 )

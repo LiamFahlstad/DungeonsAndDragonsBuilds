@@ -34,7 +34,6 @@ every build in shuffled orders and requires the same character.
 """
 
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import Optional, Sequence
 
 from Core.Definitions import (
@@ -48,7 +47,9 @@ from Core.Definitions import (
     Skill,
 )
 from Model.ArmorClass import ArmorClassFormula
+from Core.Weapons import WeaponProficiency
 from Model.Bonuses import OTHER_SOURCE
+from Model.Records.Tools import ToolProficiency
 from Model.View import Formula, CharacterView, Value
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
@@ -177,7 +178,7 @@ class GrantWeaponProficiency(CharacterImprovement):
     weapon works out whether it's covered when it's read, so the grant may
     apply before or after the weapon is added."""
 
-    def __init__(self, weapon_proficiencies: Sequence[Enum]):
+    def __init__(self, weapon_proficiencies: Sequence[WeaponProficiency]):
         self.weapon_proficiencies = list(weapon_proficiencies)
 
     def apply(self, effects: Effects):
@@ -197,9 +198,9 @@ class GrantArmorTraining(CharacterImprovement):
 
 
 class GrantToolProficiency(CharacterImprovement):
-    """Grants proficiency with tools (ToolProficiency instances)."""
+    """Grants proficiency with tools."""
 
-    def __init__(self, tool_proficiencies: list):
+    def __init__(self, tool_proficiencies: list[ToolProficiency]):
         self.tool_proficiencies = tool_proficiencies
 
     def apply(self, effects: Effects):

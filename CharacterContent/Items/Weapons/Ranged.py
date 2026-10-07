@@ -1,6 +1,7 @@
 from Core.Definitions import Ability
 from .Base import AbstractWeapon
 from Core.Weapons import (
+    WeaponProficiency,
     WeaponMastery,
     WeaponProperty,
     WeaponType,
@@ -40,6 +41,8 @@ class LightCrossbow(AbstractWeapon):
 
 
 class Shortbow(AbstractWeapon):
+    kind = WeaponProficiency.SHORTBOW
+
     def base_stats(self) -> None:
         self.name = "Shortbow"
         self.ability = Ability.DEXTERITY
@@ -113,6 +116,8 @@ class HeavyCrossbow(AbstractWeapon):
 
 
 class Longbow(AbstractWeapon):
+    kind = WeaponProficiency.LONGBOW
+
     def base_stats(self) -> None:
         self.name = "Longbow"
         self.ability = Ability.DEXTERITY

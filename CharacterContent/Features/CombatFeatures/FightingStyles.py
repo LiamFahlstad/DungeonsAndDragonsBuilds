@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
 
-from CharacterContent.Items.Weapons import (
-    AbstractWeapon,
-    UnarmedStrike,
-    WeaponProperty,
-    WeaponType,
-)
+from Core.Weapons import WeaponProperty, WeaponTraits
 from CharacterContent.Features.Core.Improvements import (
     ArmorClassBonus,
     WeaponAttackBonus,
@@ -37,8 +32,8 @@ class FightStyleModifier(FightingStyle):
         pass
 
 
-def _is_ranged_weapon(weapon: AbstractWeapon) -> bool:
-    return weapon.weapon_type in (WeaponType.MARTIAL_RANGED, WeaponType.SIMPLE_RANGED)
+def _is_ranged_weapon(weapon: WeaponTraits) -> bool:
+    return weapon.is_ranged
 
 
 class Archery(FightStyleModifier):
@@ -63,12 +58,12 @@ class Defense(FightStyleModifier):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
 
 
-def _is_one_handed_melee_weapon(weapon: AbstractWeapon) -> bool:
+def _is_one_handed_melee_weapon(weapon: WeaponTraits) -> bool:
     return (
-        weapon.weapon_type in (WeaponType.MARTIAL_MELEE, WeaponType.SIMPLE_MELEE)
+        weapon.is_melee
         and WeaponProperty.TWO_HANDED not in weapon.properties
         # An Unarmed Strike isn't a weapon you hold in one hand.
-        and not isinstance(weapon, UnarmedStrike)
+        and not weapon.is_unarmed_strike
     )
 
 
@@ -99,7 +94,7 @@ class Protection(FightingStyle):
         return "Protection: When a creature you can see attacks a target other than you that is within 5 feet of you, you can take a Reaction to interpose your Shield if you're holding one. You impose Disadvantage on the triggering attack roll and all other attack rolls against the target until the start of your next turn if you remain within 5 feet of the target. (calculate manually)"
 
 
-def _is_thrown_weapon(weapon: AbstractWeapon) -> bool:
+def _is_thrown_weapon(weapon: WeaponTraits) -> bool:
     return WeaponProperty.THROWN in weapon.properties
 
 

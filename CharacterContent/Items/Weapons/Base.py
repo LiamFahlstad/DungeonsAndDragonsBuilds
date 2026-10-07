@@ -14,9 +14,11 @@ from Core.Weapons import (
     WeaponMastery,
     WeaponProficiency,
     WeaponProperty,
+    WeaponTraits,
     WeaponType,
     WeaponDamageRolls,
     WeaponDamageTypes,
+    weapon_matches_proficiency,
 )
 from .ExtraDamage import ExtraDamage
 
@@ -56,6 +58,12 @@ class AbstractWeapon(Item, ABC):
     weapon_type: WeaponType
     damage_type: WeaponDamageTypes
     damage_roll: WeaponDamageRolls
+
+    # The weapon's own kind, for the few a proficiency names on its own
+    # (Scimitar, Longbow, Shortbow). Magic versions subclass those, so
+    # they inherit it.
+    kind: Optional[WeaponProficiency] = None
+    is_unarmed_strike = False
 
     def __init__(
         self,
@@ -171,6 +179,16 @@ class AbstractWeapon(Item, ABC):
         ability_modifier, ability = self._calculate_ability_modifier_bonus(character)
         return f"{ability_modifier} (ability mod: {ability})"
 
+    @property
+    def traits(self) -> WeaponTraits:
+        """The facts proficiency rules and wielder bonuses check."""
+        return WeaponTraits(
+            weapon_type=self.weapon_type,
+            properties=frozenset(self.properties),
+            kind=self.kind,
+            is_unarmed_strike=self.is_unarmed_strike,
+        )
+
     def is_proficient(self, character: Character) -> bool:
         """Whether the wielder is proficient with this weapon: an explicit
         player_is_proficient override (e.g. Unarmed Strike), or any weapon
@@ -214,14 +232,14 @@ class AbstractWeapon(Item, ABC):
         are recorded on the stat block, never written into the weapon."""
         return (
             self.attack_roll_bonuses
-            + character.ledger.weapon_bonuses.attack_bonuses(self)
+            + character.ledger.weapon_bonuses.attack_bonuses(self.traits)
         )
 
     def get_damage_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
         """Damage roll counterpart of get_attack_roll_bonuses."""
         return (
             self.damage_roll_bonuses
-            + character.ledger.weapon_bonuses.damage_bonuses(self)
+            + character.ledger.weapon_bonuses.damage_bonuses(self.traits)
         )
 
     def calculate_total_attack_roll_bonus(self, character: Character) -> str:
@@ -311,55 +329,17 @@ class AbstractWeapon(Item, ABC):
         return results
 
 
-def weapon_matches_proficiency(weapon: AbstractWeapon, proficiency: Enum) -> bool:
-    is_simple = weapon.weapon_type in (
-        WeaponType.SIMPLE_MELEE,
-        WeaponType.SIMPLE_RANGED,
-    )
-    is_martial = weapon.weapon_type in (
-        WeaponType.MARTIAL_MELEE,
-        WeaponType.MARTIAL_RANGED,
-    )
-    if proficiency == WeaponProficiency.SIMPLE:
-        return is_simple
-    if proficiency == WeaponProficiency.MARTIAL:
-        return is_martial
-    if proficiency == WeaponProficiency.MARTIAL_LIGHT:
-        return is_martial and WeaponProperty.LIGHT in weapon.properties
-    if proficiency == WeaponProficiency.MARTIAL_FINESSE_OR_LIGHT:
-        return is_martial and (
-            WeaponProperty.FINESSE in weapon.properties
-            or WeaponProperty.LIGHT in weapon.properties
-        )
-    if proficiency == WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED:
-        return (
-            weapon.weapon_type == WeaponType.MARTIAL_MELEE
-            and WeaponProperty.HEAVY not in weapon.properties
-            and WeaponProperty.TWO_HANDED not in weapon.properties
-        )
-    if proficiency in _SINGLE_WEAPON_PROFICIENCIES:
-        # By class name, so magic versions (subclasses) match too - importing
-        # the weapon modules here would be circular.
-        kind = _SINGLE_WEAPON_PROFICIENCIES[proficiency]
-        return any(cls.__name__ == kind for cls in type(weapon).__mro__)
-    raise ValueError(f"Unhandled weapon proficiency: {proficiency}")
-
-
-_SINGLE_WEAPON_PROFICIENCIES: dict[Enum, str] = {
-    WeaponProficiency.SCIMITAR: "Scimitar",
-    WeaponProficiency.LONGBOW: "Longbow",
-    WeaponProficiency.SHORTBOW: "Shortbow",
-}
-
-
 def is_proficient_with(
     weapon: AbstractWeapon,
-    proficiencies: Iterable[Enum],
+    proficiencies: Iterable[WeaponProficiency],
 ) -> bool:
-    return any(weapon_matches_proficiency(weapon, p) for p in proficiencies)
+    traits = weapon.traits
+    return any(weapon_matches_proficiency(traits, p) for p in proficiencies)
 
 
 class UnarmedStrike(AbstractWeapon):
+    is_unarmed_strike = True
+
     def __init__(
         self,
         ability: Optional[Ability] = None,

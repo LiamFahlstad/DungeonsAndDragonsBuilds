@@ -18,7 +18,7 @@ and have no card of their own - the sheet lists proficiencies and saving
 throws in its own sections.
 """
 
-from typing import Sequence
+from typing import Callable, Sequence
 
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
 from CharacterContent.Features.Core.BaseFeatures import Feature
@@ -240,7 +240,11 @@ class ClassProficiencies(Feature):
 # Musical Instrument (Bard) choices from the same entries aren't modelled.
 _MULTICLASS_PROFICIENCIES: dict[
     CharacterClass,
-    tuple[list[ArmorType], list[WeaponProficiency], list[type[Tools.ToolProficiency]]],
+    tuple[
+        list[ArmorType],
+        list[WeaponProficiency],
+        list[Callable[[], Tools.ToolProficiency]],
+    ],
 ] = {
     CharacterClass.ARTIFICER: (
         [ArmorType.LIGHT, ArmorType.MEDIUM, ArmorType.SHIELD],
