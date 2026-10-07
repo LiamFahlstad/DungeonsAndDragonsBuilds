@@ -2,8 +2,9 @@ import pathlib
 from typing import Literal, Optional
 
 from Model.Character import Character
-from Utils import Html
-from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
+from Presentation import Html
+from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
+from Presentation.FeatureCards import render_feature_description, write_feature_card
 
 
 def _level_label(min_level: Optional[int], max_level: Optional[int]) -> str:
@@ -92,7 +93,8 @@ def _write_features_page(
             text_features = [
                 f
                 for f in character_sheet_data.top_level_features()
-                if f.render_html_description(stat_block, description_mode) is not None
+                if render_feature_description(f, stat_block, description_mode)
+                is not None
                 and (
                     min_level is None
                     or writer._feature_level(stat_block, f) >= min_level
@@ -114,8 +116,8 @@ def _write_features_page(
                 # max_level caps nested extension cards to the requested
                 # range's upper bound, same mechanism the per-level shard
                 # pages use (see HtmlCharacterSheetWriter._write_features_page).
-                feature.write_to_file(
-                    stat_block, file, description_mode, max_level=max_level
+                write_feature_card(
+                    feature, stat_block, file, description_mode, max_level=max_level
                 )
         file.write("</div>\n")
 

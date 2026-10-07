@@ -17,7 +17,7 @@ from Model.Creatures.Combatants import (
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import CharacterClass, DamageType
 from Model.Character import Character
-from Utils.CreatureStatBlocks import format_creature_stat_block
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 
 
 def _build_drake(

@@ -815,7 +815,57 @@ refers to the checks in section 4.
 - **Verify:** A, B, C, D, plus `python RunCombatSimulator.py` starts, plus the
   combat tests. **Output:** none.
 
-### Step 6: Presentation leaves the domain classes *(structure, byte-identical)*
+### Step 6: Presentation leaves the domain classes *(structure, byte-identical)* — done
+
+- **Result:**
+  - **`Presentation/` holds every renderer.** All of these moved with
+    `git mv`, keeping history:
+    - `CharacterSheetWriters.py`, `BuildGroupSheetWriter.py`,
+      `CreatureStatBlocks.py` and `Html.py` (all from `Utils/`; nothing below
+      presentation used `Html`);
+    - `WeaponCards.py`, `ArmorCards.py`, `SpellCards.py` (the three content
+      `Writer.py` files);
+    - `SpellCompendium.py` (was `CharacterContent/Spells/SpellCompendiumGenerator.py`;
+      run it with `python -m Presentation.SpellCompendium`).
+
+    `Utils/` keeps only `StringUtils`, `TableUtils`, `DamageCalculator` and
+    `ItemSheetSettings`.
+  - **`Presentation/FeatureCards.py`:** `feature_label`,
+    `render_feature_description`, `description_to_html`,
+    `write_feature_card`, `write_extension_card`, the tag chips and
+    `FEATURE_CARD_CSS`. `Feature` went from 900 lines to about 260: content
+    hooks only.
+  - **`GeneralFeat` and `EpicBoon` no longer override `_label_for`.** They set
+    `labeled_by_class_level = True`.
+  - **`Presentation/FeatureOrder.py`:** `feature_sort_key` and
+    `ordered_extensions`. `Character.feature_sort_key` is gone, and with it the
+    `getattr` on `skippable_in_concise`. `Character.extensions_of` keeps a
+    canonical, order-free order (level, name, kind, `granted_by`); the "passive
+    last" display order is presentation's.
+  - **Deleted dead code:** `FightingStyle.write_to_file`,
+    `Invocation.write_to_file` (both from the text-file era, never called),
+    `Weapon.write_to_file` (a no-op, and an incompatible override pyright
+    reported), and `Weapon.write_damage_report` (never called). The content
+    packages no longer re-export the writer functions; nothing imported them
+    through the package.
+  - **The text markers** (`[BOXES:`, `[RESET:`, `[CURRENT:`) moved to
+    `Utils/StringUtils.py`, which writes them. `Presentation/Html.py` imports
+    them from there, and `add_boxes`'s in-function import of `Html` is gone.
+  - **Left allowlisted:** the 4 content files that build companion and
+    wild-shape stat blocks (`format_creature_stat_block`) inside their
+    description text. That text then goes through `description_to_html` (bolding,
+    damage-type colors), so pulling it out byte-identically means a new
+    content hook ("creatures this feature shows"). That's a follow-up.
+  - **Docs:** agent docs (`dnd-builds-haiku`, `dnd-equipment`,
+    `dnd-feature-summaries`), `Builds/README.md`, `QUICKSTART.txt` and
+    `feature-application-model.md` point at `Presentation/`.
+  - **Verified:**
+    - F: all 3585 pages are byte-identical to the Step 0 baseline dump.
+    - A, B (3308 passed), E (1096 slow passed), D: 0 errors.
+    - Pyright against a clean HEAD worktree: no new errors, 1 fixed.
+    - C: `RunCharacterCreator`, `RunBuildGroups`, `RunItemSheets` and
+      `SpellCompendium` run; both UIs construct offscreen; the combat feature
+      tooltips show the right labels.
 
 - **Goal:** `Model/` and `CharacterContent/` describe a character. Only
   `Presentation/` renders one.

@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 
 from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
 from Combat.Definitions import Action
+from Presentation.FeatureCards import feature_label
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 
@@ -50,7 +51,7 @@ class FeaturesMixin:
             description = feature.get_description(sb)
 
         tooltip_html = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
-        origin = feature.label(sb) if sb is not None else feature.origin
+        origin = feature_label(feature, sb) if sb is not None else feature.origin
         if origin:
             tooltip_html += f"<br><span style='color:#a0a0b0;'>{origin}</span>"
         tooltip_html += "<br><br>"
@@ -112,7 +113,7 @@ class FeaturesMixin:
         def origin_of(feature) -> str:
             if stat_block is None:
                 return feature.origin
-            return feature.label(stat_block)
+            return feature_label(feature, stat_block)
 
         dlg = QDialog(self._window)
         dlg.setWindowTitle(f"Enable Feature — {self.selected_character['name']}")

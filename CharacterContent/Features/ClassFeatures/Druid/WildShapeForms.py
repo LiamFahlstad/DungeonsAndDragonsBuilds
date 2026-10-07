@@ -4,7 +4,7 @@ from CharacterContent.Features.SubClassFeatures.Druid.DruidMoonFeatures import (
     CircleForms,
 )
 from Model.Creatures.Combatants import ExtendedCombatantData
-from Utils.CreatureStatBlocks import format_creature_stat_block
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Character import Character
 
 

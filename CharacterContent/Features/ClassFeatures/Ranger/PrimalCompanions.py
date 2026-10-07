@@ -5,7 +5,7 @@ from Core.Definitions import CreatureSize
 from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, MonsterType
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Utils.CreatureStatBlocks import format_creature_stat_block
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Character import Character
 
 _PRIMAL_BOND_TRAIT = MonsterAbility(

@@ -72,7 +72,7 @@ class Character:
     size: Optional[Definitions.CreatureSize] = None
 
     # Every feature granted, plain or as an extension, each with its stamp.
-    # Their order decides nothing: the sheet sorts by feature_sort_key, and no
+    # Their order decides nothing: the sheet sorts them (Presentation/FeatureOrder.py), and no
     # stat depends on it (see _get_ledger). `features` lists the plain ones.
     feature_grants: list[FeatureGrant] = attr.Factory(list)
     invocations: list[str] = attr.Factory(list)
@@ -219,31 +219,26 @@ class Character:
             self._stamp_index_version = self._version
         return self._stamp_index
 
-    def feature_sort_key(self, feature: GrantedFeature) -> tuple:
-        """The one order the sheet lists features in: passive last, then by
-        name, then by who granted it (GrantKind order, then the source's
-        name) - never by the order they were granted in."""
-        stamp = self.stamp_of(feature)
-        return (
-            getattr(feature, "skippable_in_concise", False),
-            feature.name,
-            stamp.kind.sheet_rank,
-            stamp.granted_by,
-        )
-
     def top_level_features(self) -> list[GrantedFeature]:
         """The features with a card of their own: every plain grant, then
         every "standalone" extension whose parent isn't granted."""
         return [*self.features, *self._extensions().standalone]
 
     def extensions_of(self, feature: GrantedFeature) -> list[GrantedFeature]:
-        """The extensions granted onto `feature`, by grant level, then in the
-        sheet's order (feature_sort_key)."""
-        extensions = self._extensions().children_of(feature)
-        return sorted(
-            extensions,
-            key=lambda e: (self.stamp_of(e).level, self.feature_sort_key(e)),
-        )
+        """The extensions granted onto `feature`, by grant level, then name,
+        then who granted them - never by the order they were granted in.
+        (The sheet orders them its own way: Presentation/FeatureOrder.py.)"""
+
+        def canonical_order(extension: GrantedFeature) -> tuple:
+            stamp = self.stamp_of(extension)
+            return (
+                stamp.level,
+                extension.name,
+                stamp.kind.sheet_rank,
+                stamp.granted_by,
+            )
+
+        return sorted(self._extensions().children_of(feature), key=canonical_order)
 
     def iter_features_with_extensions(self) -> Iterator[GrantedFeature]:
         """Every granted feature followed by its extensions (depth-first).

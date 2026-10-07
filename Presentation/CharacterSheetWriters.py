@@ -6,20 +6,22 @@ from typing import Collection, Literal, Optional, Sequence, TextIO, TypeVar
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
 from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
-from CharacterContent.Items.Armor.Writer import ARMOR_CARD_CSS, write_armors_to_file
+from Presentation.ArmorCards import ARMOR_CARD_CSS, write_armors_to_file
 from CharacterContent.Items.Weapons import (
     AbstractWeapon,
     UnarmedStrike,
     WeaponProficiency,
+)
+from Presentation.WeaponCards import (
+    WEAPON_CARD_CSS,
     write_weapons_reference_to_file,
     write_weapons_to_file,
 )
-from CharacterContent.Items.Weapons.Writer import WEAPON_CARD_CSS
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from CharacterContent.Spells.SpellFactory.Writer import (
+from Presentation.SpellCards import (
     SPELL_CARD_CSS,
     write_spell_to_file,
 )
@@ -29,8 +31,16 @@ from Model.Character import Character
 from Model.Records.SourcedValue import SourcedValue
 from Model.Spells import SpellGrant
 from Model.Skills import Skills
-from Utils import DamageCalculator, Html
-from Utils.CreatureStatBlocks import WILDSHAPE_CARD_CSS
+from Presentation import Html
+from Presentation.CreatureStatBlocks import WILDSHAPE_CARD_CSS
+from Presentation.FeatureCards import (
+    FEATURE_CARD_CSS,
+    render_feature_description,
+    write_extension_card,
+    write_feature_card,
+)
+from Presentation.FeatureOrder import feature_sort_key, ordered_extensions
+from Utils import DamageCalculator
 
 T = TypeVar("T")
 
@@ -88,9 +98,9 @@ class HtmlCharacterSheetWriter:
     def _sort_features_key(character: Character, feat: Feature) -> tuple:
         """Full-sheet order: species, background and origin-feat features
         first, then class and subclass features by level; within that, the
-        sheet's one order (Character.feature_sort_key)."""
+        sheet's one order (Presentation/FeatureOrder.feature_sort_key)."""
         stamp = character.stamp_of(feat)
-        passive, *rest = character.feature_sort_key(feat)
+        passive, *rest = feature_sort_key(character, feat)
         leveled = stamp.kind.is_class_level
         return (passive, leveled, stamp.level if leveled else 0, *rest)
 
@@ -1389,7 +1399,7 @@ class HtmlCharacterSheetWriter:
         text_features = [
             f
             for f in features
-            if f.render_html_description(character, description_mode) is not None
+            if render_feature_description(f, character, description_mode) is not None
         ]
         features_by_level: dict[int, list[Feature]] = {}
         for feature in text_features:
@@ -1403,16 +1413,16 @@ class HtmlCharacterSheetWriter:
 
         # Build a bucket of extensions (feature enhancements) that appear on their
         # own level pages as standalone cards. Skip extensions whose level <= parent
-        # level (already nested on the parent's page via write_to_file's max_level filtering).
+        # level (already nested on the parent's page via write_feature_card's max_level filtering).
         extensions_by_level: dict[int, list[tuple[Feature, Feature]]] = {}
         for feature in features:  # Iterate full list, not just text_features
             parent_level = self._feature_level(data, feature)
-            for extension in [_as(e, Feature) for e in data.extensions_of(feature)]:
+            for extension in ordered_extensions(data, feature):
                 ext_level = self._feature_level(data, extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page
                 if (
-                    extension.render_html_description(character, description_mode)
+                    render_feature_description(extension, character, description_mode)
                     is None
                 ):
                     continue
@@ -1501,7 +1511,8 @@ class HtmlCharacterSheetWriter:
         for level in level_page_levels:
             page_path = f"features/level_{level:02d}.html"
             sorted_level_features = sorted(
-                features_by_level.get(level, []), key=data.feature_sort_key
+                features_by_level.get(level, []),
+                key=lambda feature: feature_sort_key(data, feature),
             )
             level_spells = spells_by_level.get(level, [])
             level_extensions = extensions_by_level.get(level, [])
@@ -1809,7 +1820,7 @@ class HtmlCharacterSheetWriter:
                 )
                 file.write("<div class='features'>\n")
                 for feature in sorted_features:
-                    feature.write_to_file(character, file, description_mode)
+                    write_feature_card(feature, character, file, description_mode)
                 file.write("</div>\n<br class='section-gap'>\n")
             else:
                 file.write("<div class='print-page-break'></div>\n")
@@ -1851,19 +1862,19 @@ class HtmlCharacterSheetWriter:
             file.write(f"<h1>{character_name} - Level {level} Features</h1>\n")
             file.write("<div class='features'>\n")
             for feature in level_features:
-                feature.write_to_file(
-                    character, file, description_mode, max_level=level
+                write_feature_card(
+                    feature, character, file, description_mode, max_level=level
                 )
             sorted_level_extensions = sorted(
                 level_extensions,
                 key=lambda pe: (
-                    character.feature_sort_key(pe[1]),
-                    character.feature_sort_key(pe[0]),
+                    feature_sort_key(character, pe[1]),
+                    feature_sort_key(character, pe[0]),
                 ),
             )
             for parent, extension in sorted_level_extensions:
-                extension.write_extension_card_to_file(
-                    character, file, parent.name, description_mode
+                write_extension_card(
+                    extension, character, file, parent.name, description_mode
                 )
             file.write("</div>\n")
 

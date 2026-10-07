@@ -2,7 +2,7 @@ from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Items.Weapons.MartialMelee import Scimitar
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Spells import SpellLists
-from Utils.CharacterSheetWriters import HtmlCharacterSheetWriter
+from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
 
 
 def generate_stonehill_armory_upgrade_item_sheet():

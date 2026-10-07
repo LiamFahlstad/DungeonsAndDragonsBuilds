@@ -12,11 +12,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from CharacterContent.Spells.SpellFactory.Writer import (
+from Presentation.SpellCards import (
     SPELL_CARD_CSS,
     write_spell_to_file,
 )
-from Utils import Html
+from Presentation import Html
 
 OUTPUT_HTML = "CharacterContent/Spells/AllSpells.html"
 

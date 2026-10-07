@@ -257,12 +257,12 @@ Every feature is recorded as a `FeatureGrant` with a `GrantStamp` (`Model/Record
 the class-relative level it was granted at, the kind of source (a `GrantKind`: species,
 background, origin feat, class, subclass) and which one ("Wizard", "Rock Gnome", "Alert"). The builder's `Grants` scope
 (`Model/Grants.py`) stamps it. A feature's `origin` text is only its default card label:
-`Feature.label(character)` makes it agree with the stamp - a "... Level N" label takes the
+`feature_label(feature, character)` (`Presentation/FeatureCards.py`) makes it agree with the stamp - a "... Level N" label takes the
 stamped level, and a general feat or epic boon taken at a class level reads "Fighter Level 8" -
 so a builder never relabels a feature it grants. The sheet lists each
 feature on the level page of its stamped level, and orders features with
-`Character.feature_sort_key` (passive last, then name, then kind and source) and extensions by
-grant level, then that key. Nothing on the sheet depends on the order features were granted in;
+`feature_sort_key` (passive last, then name, then kind and source) and extensions by
+grant level, then that key (`Presentation/FeatureOrder.py`). Nothing on the sheet depends on the order features were granted in;
 `tests/test_order_invariance.py` proves it for every build.
 
 ## Feats are taken once

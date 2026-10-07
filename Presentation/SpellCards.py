@@ -1,8 +1,8 @@
 from typing import TextIO
 
-from Utils import Html
+from Presentation import Html
 
-from .Spell import Spell
+from CharacterContent.Spells.SpellFactory.Spell import Spell
 
 SPELL_CARD_CSS = """/* ── Spell entries ────────────────────────────────────────────────── */
         .spells {

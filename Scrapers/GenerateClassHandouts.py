@@ -21,12 +21,13 @@ from typing import Optional
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from CharacterContent.Features.Core.BaseFeatures import FEATURE_CARD_CSS, Feature
+from CharacterContent.Features.Core.BaseFeatures import Feature
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.AbilityScores import AbilityScores
 from Model.Character import Character
 from Model.ClassLevels import ClassLevels
-from Utils import Html
+from Presentation import Html
+from Presentation.FeatureCards import FEATURE_CARD_CSS, write_feature_card
 
 CLASS_TEXT_DIR = REPO / "SourceTexts" / "ClassTexts"
 SUBCLASS_TEXT_DIR_2024 = REPO / "SourceTexts" / "SubclassTexts2024"
@@ -1322,7 +1323,7 @@ def collect_features(module_path: str, stat_block: Character) -> list[tuple[int,
 def render_feature_card(feature: Feature, stat_block: Character) -> str:
     try:
         buf = io.StringIO()
-        feature.write_to_file(stat_block, buf)
+        write_feature_card(feature, stat_block, buf)
         html = buf.getvalue()
         if html:
             return html

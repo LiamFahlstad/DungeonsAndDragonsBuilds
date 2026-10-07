@@ -1,5 +1,22 @@
 from Core.Rules import MAX_LEVEL
 
+# Markers written into a feature's description text (by add_boxes) and turned
+# into checkboxes and labels when the sheet renders it (Presentation/Html.py).
+
+# Reset sentinel markers for slot recovery labels
+RESET_PREFIX = "[RESET:"
+RESET_SUFFIX = "]"
+
+# Box-count sentinel marker - the number of checkbox symbols to render.
+# Always the formula's maximum value. Format: [BOXES:count]
+BOXES_PREFIX = "[BOXES:"
+BOXES_SUFFIX = "]"
+
+# Current-value-formula sentinel marker - a short plain-English note on how to
+# derive the build's real current count from the max shown by the boxes.
+CURRENT_PREFIX = "[CURRENT:"
+CURRENT_SUFFIX = "]"
+
 
 def wrap_text(description: str, max_sentence_length: int, html: bool = False) -> str:
     """
@@ -80,15 +97,6 @@ def add_boxes(
             (e.g. "equal to your Monk level."), rendered directly beneath the
             boxes/reset label so the player can work it out by hand.
     """
-    from Utils.Html import (
-        BOXES_PREFIX,
-        BOXES_SUFFIX,
-        CURRENT_PREFIX,
-        CURRENT_SUFFIX,
-        RESET_PREFIX,
-        RESET_SUFFIX,
-    )
-
     result = f"{description}\n{BOXES_PREFIX}{box_count}{BOXES_SUFFIX}\n"
 
     # Determine the reset label to append

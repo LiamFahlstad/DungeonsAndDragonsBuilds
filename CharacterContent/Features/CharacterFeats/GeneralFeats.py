@@ -28,12 +28,7 @@ class GeneralFeat(Feature):
     # Character._validate_feats_taken_once).
     repeatable = False
 
-    def _label_for(self, stamp: GrantStamp) -> str:
-        """Taken at a class level, it's labeled with that level ("Fighter
-        Level 8"); its own origin only says when it's available."""
-        if stamp.kind.is_class_level:
-            return f"{stamp.granted_by} Level {stamp.level}"
-        return super()._label_for(stamp)
+    labeled_by_class_level = True
 
     def regained_on(self, character: Character) -> "RegainedOn | None":
         if self.uses is None or self.uses.regain_all_on is None:

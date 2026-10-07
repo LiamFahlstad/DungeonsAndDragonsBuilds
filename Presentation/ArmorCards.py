@@ -1,9 +1,9 @@
 from typing import Optional, TextIO
 
 import Core.Definitions as Definitions
-from Utils import Html
+from Presentation import Html
 
-from .Base import AbstractArmor
+from CharacterContent.Items.Armor.Base import AbstractArmor
 
 ARMOR_CARD_CSS = """/* ── Armor entries ────────────────────────────────────────────── */
         .armors {

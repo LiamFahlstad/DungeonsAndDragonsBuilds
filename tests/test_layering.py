@@ -28,14 +28,10 @@ SKIPPED_DIRS = {
 }
 
 # Module (dotted prefix) -> layer. The longest matching prefix wins, so a
-# file can sit in a different layer than its folder (the sheet writers in
-# Utils/ are presentation until Step 6 moves them to Presentation/).
+# file can sit in a different layer than its folder (Model.Records).
 LAYER_OF = {
     "Core": "core",
     "Utils": "helpers",
-    "Utils.CharacterSheetWriters": "presentation",
-    "Utils.BuildGroupSheetWriter": "presentation",
-    "Utils.CreatureStatBlocks": "presentation",
     "Model": "model",
     # Plain records the whole Model shares; they import only Core.
     "Model.Records": "records",
@@ -94,7 +90,7 @@ TYPE_CHECKING_ALLOWLIST: set[str] = set()
 
 # Narrowing a value back to a concrete type (Steps 9 and 13 remove these).
 CAST_ALLOWLIST: set[str] = {"Model/Recorder.py"}
-AS_ALLOWLIST: set[str] = {"Utils/CharacterSheetWriters.py"}
+AS_ALLOWLIST: set[str] = {"Presentation/CharacterSheetWriters.py"}
 
 
 def _project_files():
@@ -136,7 +132,7 @@ def _is_module(dotted: str) -> bool:
 def _imported_modules(tree: ast.AST, own_module: str, is_package: bool) -> set[str]:
     """Every module imported anywhere in the file (also inside functions),
     as a dotted name. `from X import Y` counts as importing X.Y when Y is a
-    module, so `from Utils import Html` lands in Html's layer."""
+    module, so `from Presentation import Html` lands in Html's layer."""
     modules = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):

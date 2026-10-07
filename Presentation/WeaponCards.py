@@ -2,9 +2,14 @@ from typing import Optional, TextIO
 
 from Core.Definitions import DiceRollCondition
 from Model.Character import Character
-from Utils import DamageCalculator, Html, ItemSheetSettings
+from Presentation import Html
+from Utils import DamageCalculator, ItemSheetSettings
 
-from .Base import AbstractWeapon, BonusPart, UnarmedStrike
+from CharacterContent.Items.Weapons.Base import (
+    AbstractWeapon,
+    BonusPart,
+    UnarmedStrike,
+)
 from Core.Weapons import WeaponDamageTypes, WeaponProperty
 
 _DAMAGE_TYPE_CSS_CLASS = {

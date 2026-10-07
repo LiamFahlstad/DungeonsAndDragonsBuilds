@@ -18,7 +18,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from Model.Character import Character
 from Utils import StringUtils
-from Utils.CreatureStatBlocks import format_creature_stat_block
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Core.Rules import MAX_PROFICIENCY_BONUS
 
 

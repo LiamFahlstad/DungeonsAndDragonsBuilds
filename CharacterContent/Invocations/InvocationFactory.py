@@ -1,5 +1,4 @@
 import json
-from typing import TextIO
 
 
 def replace_last(text, old, new):
@@ -54,12 +53,6 @@ class Invocation:
 
     def __repr__(self):
         return f"<Invocation {self.name!r}, level {self.level}>"
-
-    def write_to_file(self, file: TextIO):
-        file.write(f"Name: {self.name}\n")
-        file.write(f"Level: {self.level}\n")
-        file.write(f"Description:\n{self.description}\n")
-        file.write(f"Source: {self.source}\n")
 
 
 class InvocationFactory:

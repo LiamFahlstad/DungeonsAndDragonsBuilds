@@ -4,25 +4,19 @@ import re
 from typing import Optional, TextIO
 
 from Core.Definitions import DAMAGE_TYPE_COLORS
+from Utils.StringUtils import (
+    BOXES_PREFIX,
+    BOXES_SUFFIX,
+    CURRENT_PREFIX,
+    CURRENT_SUFFIX,
+    RESET_PREFIX,
+    RESET_SUFFIX,
+)
 
 _DAMAGE_TYPE_PATTERN = re.compile(
     r"\b(" + "|".join(re.escape(name) for name in DAMAGE_TYPE_COLORS) + r")\b",
     re.IGNORECASE,
 )
-
-# Reset sentinel markers for slot recovery labels
-RESET_PREFIX = "[RESET:"
-RESET_SUFFIX = "]"
-
-# Box-count sentinel marker - the number of checkbox symbols to render.
-# Always the formula's maximum value. Format: [BOXES:count]
-BOXES_PREFIX = "[BOXES:"
-BOXES_SUFFIX = "]"
-
-# Current-value-formula sentinel marker - a short plain-English note on how to
-# derive the build's real current count from the max shown by the boxes.
-CURRENT_PREFIX = "[CURRENT:"
-CURRENT_SUFFIX = "]"
 
 
 # A lead-in is bolded when it's a short phrase ending in "." (a name, as in

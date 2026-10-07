@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import TextIO
 
 from CharacterContent.Items.Weapons import (
     AbstractWeapon,
@@ -18,12 +17,6 @@ from Model.Effects import Effects
 
 class FightingStyle(ABC):
     """A fighting style is a feature that modifies a character's combat abilities."""
-
-    def write_to_file(self, file: TextIO):
-        description = self.description()
-        if description[-1] != "\n":
-            description += "\n"
-        file.write(description)
 
     @abstractmethod
     def description(self) -> str:

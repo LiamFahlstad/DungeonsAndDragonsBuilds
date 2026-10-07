@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Iterable, NamedTuple, Optional, TextIO
+from typing import Iterable, NamedTuple, Optional
 from Utils import DamageCalculator
-from Core.Definitions import Ability, DiceRollCondition, Die
+from Core.Definitions import Ability, DiceRollCondition
 from CharacterContent.Features.Core.Improvements import (
     ItemImprovement,
     CharacterImprovement,
@@ -306,33 +306,6 @@ class AbstractWeapon(Item, ABC):
             )
             results.append((ac, prob))
         return results
-
-    def write_to_file(self, character: Character, file: TextIO):
-        pass  # HTML rendering is handled by write_weapons_to_file
-
-    def write_damage_report(
-        self,
-        character: Character,
-        file,
-    ) -> None:
-        attack_roll_die = DamageCalculator.Die.D20
-        attack_roll_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        attack_roll_bonus = self.calculate_total_attack_roll_bonus_int(character)
-        damage_die = Die.die_from_value(self.damage_roll.die_size)
-        number_of_damage_dice = self.damage_roll.number_of_dice
-        damage_condition = DamageCalculator.DiceRollCondition.NEUTRAL
-        damage_bonus = self.calculate_damage_bonus_int(character)
-
-        DamageCalculator.damage_report(
-            file=file,
-            attack_roll_die=attack_roll_die,
-            attack_roll_condition=attack_roll_condition,
-            attack_roll_bonus=attack_roll_bonus,
-            damage_die=damage_die,
-            number_of_damage_dice=number_of_damage_dice,
-            damage_condition=damage_condition,
-            damage_bonus=damage_bonus,
-        )
 
 
 def weapon_matches_proficiency(weapon: AbstractWeapon, proficiency: Enum) -> bool:

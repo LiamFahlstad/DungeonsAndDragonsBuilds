@@ -23,6 +23,8 @@ from Model.Recorder import SealedError
 from tests._fake_view import FakeView
 from tests._grants import grant
 from Model.FeatureGrants import IfParentMissing
+from Presentation.FeatureCards import feature_label
+from Presentation.FeatureOrder import feature_sort_key
 from Model.Records.GrantStamp import GrantKind
 
 
@@ -323,7 +325,10 @@ class TestGrantStamps:
         from_species = _Parent(name="Expertise")
         Grants(character, 1, "Rogue", GrantKind.CLASS).add_feature(from_class)
         Grants(character, 1, "Elf", GrantKind.SPECIES).add_feature(from_species)
-        ordered = sorted(character.features, key=character.feature_sort_key)
+        ordered = sorted(
+            character.features,
+            key=lambda feature: feature_sort_key(character, feature),
+        )
         assert ordered == [from_species, from_class]
 
     def test_extensions_order_by_grant_level_then_name(self, make_character):
@@ -359,32 +364,32 @@ class TestFeatureLabels:
         # The second Expertise is granted at level 9, but its origin says 1.
         expertise = _Parent(name="Expertise", origin="Bard Level 1")
         character = self._granted(make_character, expertise, 9)
-        assert expertise.label(character) == "Bard Level 9"
+        assert feature_label(expertise, character) == "Bard Level 9"
 
     def test_a_subclass_prefix_is_kept(self, make_character):
         feature = _Parent(name="Bladesong", origin="Bladesinger Wizard Level 3")
         character = self._granted(
             make_character, feature, 3, GrantKind.SUBCLASS, "Wizard"
         )
-        assert feature.label(character) == "Bladesinger Wizard Level 3"
+        assert feature_label(feature, character) == "Bladesinger Wizard Level 3"
 
     def test_free_text_is_kept(self, make_character):
         feature = _Parent(name="Resourceful", origin="Human Trait")
         character = self._granted(
             make_character, feature, 1, GrantKind.SPECIES, "Human"
         )
-        assert feature.label(character) == "Human Trait"
+        assert feature_label(feature, character) == "Human Trait"
 
     def test_an_empty_class_label_names_the_class_level(self, make_character):
         feature = _Parent(name="Class Skill Proficiencies")
         character = self._granted(
             make_character, feature, 1, GrantKind.CLASS, "Paladin"
         )
-        assert feature.label(character) == "Paladin Level 1"
+        assert feature_label(feature, character) == "Paladin Level 1"
 
     def test_a_feature_not_granted_keeps_its_origin(self, make_character):
         feature = _Parent(name="Expertise", origin="Bard Level 1")
-        assert feature.label(make_character()) == "Bard Level 1"
+        assert feature_label(feature, make_character()) == "Bard Level 1"
 
     def test_a_general_feat_is_labeled_with_the_level_it_was_taken(
         self, make_character
@@ -395,7 +400,7 @@ class TestFeatureLabels:
             [(Ability.STRENGTH, 1), (Ability.CONSTITUTION, 1)]
         )
         character = self._granted(make_character, feat, 8, GrantKind.CLASS, "Fighter")
-        assert feat.label(character) == "Fighter Level 8"
+        assert feature_label(feat, character) == "Fighter Level 8"
 
 
 class TestFeatsTakenOnce:
