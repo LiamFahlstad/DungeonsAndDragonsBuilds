@@ -1,4 +1,4 @@
-"""Each part works out its own final values from nothing but a StatView
+"""Each part works out its own final values from nothing but a CharacterView
 (Notes/model-refactor-plan.md, Step 6). These run against FakeView: no
 builder, no Character. Expected values come from the 2024 PHB rules.
 """

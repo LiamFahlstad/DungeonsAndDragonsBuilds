@@ -7,15 +7,15 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
 )
 from Core.Definitions import CharacterClass
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class FightingStyle(Feature):
     def __init__(self):
         super().__init__(name="Fighting Style", origin="Fighter Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a Fighting Style feat of your choice (see chapter 5). Defense is recommended.\n"
             "Whenever you gain a Fighter level, you can replace the feat you chose with a different Fighting Style feat."
@@ -38,7 +38,7 @@ class SecondWind(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         base_text = (
             "You have a limited well of physical and mental stamina that you can draw on. "
             "As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.\n"
@@ -48,7 +48,7 @@ class SecondWind(Feature):
 
         return base_text
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         return [
             ("What", "Regain hit points"),
@@ -58,10 +58,10 @@ class SecondWind(Feature):
             ("Recharge", "1 use per short rest, all per long rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         fighter_level = character.get_class_level(CharacterClass.FIGHTER)
         uses = 2
         if fighter_level >= 4:
@@ -70,7 +70,7 @@ class SecondWind(Feature):
             uses = 4
         return uses
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -78,7 +78,7 @@ class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Fighter Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your training with weapons allows you to use the mastery properties of three kinds of Simple or Martial weapons of your choice. Whenever you finish a Long Rest, you can practice weapon drills and change one of those weapon choices.\n"
             "When you reach certain Fighter levels, you gain the ability to use the mastery properties of more kinds of weapons, as shown in the Weapon Mastery column of the Fighter Features table."
@@ -98,7 +98,7 @@ class ActionSurge(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
@@ -106,7 +106,7 @@ class ActionSurge(Feature):
         return description
 
     def get_resource_tiles(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         uses_by_level = {level: (2 if level >= 17 else 1) for level in range(2, 21)}
         steps = [
@@ -117,7 +117,7 @@ class ActionSurge(Feature):
         ]
         return [("Action Surge Uses", steps)]
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         recharge = "Short or long rest"
         if character.get_class_level(CharacterClass.FIGHTER) >= 17:
@@ -129,10 +129,10 @@ class ActionSurge(Feature):
             ("Recharge", recharge),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         fighter_level = character.get_class_level(CharacterClass.FIGHTER)
         return 2 if fighter_level >= 17 else 1
 
@@ -143,11 +143,11 @@ class TacticalMind(Feature):
             name="Tactical Mind", origin="Fighter Level 2", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("When", "When you fail an ability check"),
             ("Cost", "1 Second Wind use"),
@@ -160,7 +160,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -169,11 +169,11 @@ class TacticalShift(Feature):
     def __init__(self):
         super().__init__(name="Tactical Shift", origin="Fighter Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -190,14 +190,14 @@ class Indomitable(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "If you fail a saving throw, you can reroll it with a bonus equal to your Fighter level. You must use the new roll, and you can’t use this feature again until you finish a Long Rest.\n"
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         return [
             ("What", "Reroll a failed saving throw"),
@@ -206,10 +206,10 @@ class Indomitable(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         fighter_level = character.get_class_level(CharacterClass.FIGHTER)
         if fighter_level >= 17:
             return 3
@@ -218,7 +218,7 @@ class Indomitable(Feature):
         else:
             return 1
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -226,7 +226,7 @@ class TacticalMaster(Feature):
     def __init__(self):
         super().__init__(name="Tactical Master", origin="Fighter Level 9")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you attack with a weapon whose mastery property you can use, you can replace that property with the Push, Sap, or Slow property for that attack."
         return description
 
@@ -235,7 +235,7 @@ class TwoExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Two Extra Attacks", origin="Fighter Level 11")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack three times instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -246,11 +246,11 @@ class StudiedAttacks(Feature):
             name="Studied Attacks", origin="Fighter Level 13", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You study your opponents and learn from each attack you make. If you make an attack roll against a creature and miss, you have Advantage on your next attack roll against that creature before the end of your next turn."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -258,7 +258,7 @@ class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Fighter Level 19")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain an Epic Boon feat or another feat of your choice for which you qualify. Boon of Combat Prowess is recommended."
         return description
 
@@ -267,6 +267,6 @@ class ThreeExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Three Extra Attacks", origin="Fighter Level 20")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack four times instead of once whenever you take the Attack action on your turn."
         return description

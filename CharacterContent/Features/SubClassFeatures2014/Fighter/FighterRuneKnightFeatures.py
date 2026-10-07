@@ -8,10 +8,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import GrantLanguage
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 
 class BonusProficiencies(Feature):
@@ -26,7 +26,7 @@ class BonusProficiencies(Feature):
     def apply(self, effects: Effects):
         self._language.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with smith's tools, and you learn to speak, read, and write Giant."
         return description
 
@@ -39,12 +39,12 @@ class RuneCarver(Feature):
             usage_tags=["damage", "buff", "control"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         constitution_modifier = character.get_constitution_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + proficiency_bonus + constitution_modifier
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use magic runes to enhance your gear. You learn two runes of your choice, from among the runes described below, and each time you gain a level in this class, you can replace one rune you know with a different one from this feature. When you reach certain levels in this class, you learn additional runes, as shown in the Runes Known table.\n"
             "\n"
@@ -96,13 +96,13 @@ class GiantsMight(Feature):
             ),
         )
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have learned how to imbue yourself with the might of giants. As a bonus action, you magically gain the following benefits, which last for 1 minute:\n"
             "    * If you are smaller than Large, you become Large, along with anything you are wearing. If you lack the room to become Large, your size doesn't change.\n"
@@ -113,7 +113,7 @@ class GiantsMight(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
 
         return [
@@ -127,7 +127,7 @@ class GiantsMight(Feature):
             ("Regain", "Long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -147,7 +147,7 @@ class RunicShield(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to invoke your rune magic to protect your allies. When another creature you can see within 60 feet of you is hit by an attack roll, you can use your reaction to force the attacker to reroll the d20 and use the new roll.\n"
             "\n"
@@ -155,7 +155,7 @@ class RunicShield(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = self.number_of_uses(character)
 
         return [
@@ -166,13 +166,13 @@ class RunicShield(Feature):
             ("Regain", "Long rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -183,7 +183,7 @@ class GreatStature(Feature):
             origin="Rune Knight Fighter Level 10",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The magic of your runes permanently alters you. When you gain this feature, roll 3d4. You grow a number of inches in height equal to the roll (determine the exact result as you wish).\n"
             "\n"
@@ -191,7 +191,7 @@ class GreatStature(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -202,11 +202,11 @@ class MasterOfRunes(Feature):
             origin="Rune Knight Fighter Level 15",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can invoke each rune you know from your Rune Carver feature twice, rather than once, and you regain all expended uses when you finish a short or long rest."
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -217,9 +217,9 @@ class RunicJuggernaut(Feature):
             origin="Rune Knight Fighter Level 18",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You learn how to amplify your rune-powered transformation. As a result, the extra damage you deal with the Giant's Might feature increases to 1d10. Moreover, when you use that feature, your size can increase to Huge, and while you are that size, your reach increases by 5 feet."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

@@ -7,9 +7,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
     RegainedOn,
 )
-from Model.Character import Character
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class GraveDomainSpells(Feature):
@@ -18,7 +18,7 @@ class GraveDomainSpells(Feature):
             name="Grave Domain Spells", origin="Grave Domain Cleric Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Grave Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Grave Domain Spells\n"
@@ -39,7 +39,7 @@ class CircleOfMortality(Feature):
             usage_tags=["damage", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can manipulate the balance between life and death, granting you the following benefits.\n"
             "Pull of Death. Once per turn, when you deal damage to a creature that's missing any Hit Points by casting a spell or by hitting with an attack roll, that creature takes an extra 1d4 Necrotic damage. This extra damage increases to 1d6 when you reach Cleric level 11.\n"
@@ -62,14 +62,14 @@ class PathToTheGrave(Feature):
             usage_tags=["control", "damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you present your Holy Symbol and expend a use of Channel Divinity to curse one creature you can see within 30 feet of yourself until the start of your next turn. While cursed, the creature has Disadvantage on attack rolls and saving throws.\n"
             "When you or an ally you can see hits the cursed target with an attack roll, you can end the curse early (no action required) to make the attack deal extra Necrotic or Radiant damage (your choice) equal to your Cleric level."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("What", "Curse one creature within 30 feet"),
             ("Trigger", "Bonus Action, Holy Symbol, Channel Divinity"),
@@ -78,7 +78,7 @@ class PathToTheGrave(Feature):
             ("Bonus", "Extra Necrotic or Radiant damage (Cleric level) when hit"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -98,14 +98,14 @@ class SentinelAtDeathsDoor(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you or a Bloodied creature you can see within 60 feet of yourself is hit with an attack roll, you can take a Reaction to halve that attack's damage (round down). If the triggering attack roll was a Critical Hit, any effects triggered by a Critical Hit are canceled.\n"
             "You regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         return [
             ("What", "Halve incoming attack damage"),
@@ -115,13 +115,13 @@ class SentinelAtDeathsDoor(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -134,7 +134,7 @@ class DivineReaper(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your deep connection to this domain renders you a hallowed harbinger of death, granting you the following benefits.\n"
             "Enhanced Necromancy. When you cast a spell of level 5 or lower from the Necromancy school that targets one creature, or when you cast a spell from the Grave Domain Spells table, you can expend a use of Channel Divinity to target a second creature within the spell's range. If the spell requires costly or consumed Material components, you must provide Material components for each target.\n"
@@ -142,5 +142,5 @@ class DivineReaper(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

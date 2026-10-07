@@ -5,14 +5,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class MindInfiltrator(Feature):
     def __init__(self):
         super().__init__(name="Mind Infiltrator", origin="Telepath Psion Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you cast Detect Thoughts, you can expend one\n"
             "Psionic Energy Die to modify the spell so that the\n"
@@ -24,7 +24,7 @@ class MindInfiltrator(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Spell", "Detect Thoughts"),
             ("Cost", "1 Psionic Energy Die"),
@@ -36,7 +36,7 @@ class MindInfiltrator(Feature):
             ),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -49,7 +49,7 @@ class TelepathicDistraction(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When a creature you can see within range of your\n"
             "telepathy hits with an attack roll, you can take a\n"
@@ -60,7 +60,7 @@ class TelepathicDistraction(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -73,7 +73,7 @@ class BulwarkMind(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At the start of your turn, you can expend one Psionic\n"
             "Energy Die to strengthen your mind and enter a\n"
@@ -87,7 +87,7 @@ class BulwarkMind(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Activation", "Start of turn"),
             ("Cost", "1 Psionic Energy Die"),
@@ -100,7 +100,7 @@ class BulwarkMind(Feature):
             ("Restriction", "Not while Incapacitated"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -112,7 +112,7 @@ class PotentThoughts(Feature):
             usage_tags=["damage", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have telepathy with a range of 60 feet. In\n"
             "addition, you add your Intelligence modifier to the\n"
@@ -130,7 +130,7 @@ class TelepathicBolstering(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you or a creature you can see within range of\n"
             "your telepathy fails an ability check or misses with\n"
@@ -143,7 +143,7 @@ class TelepathicBolstering(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Trigger",
@@ -154,7 +154,7 @@ class TelepathicBolstering(Feature):
             ("Cost", "1 Psionic Energy Die (expended only if success)"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -167,7 +167,7 @@ class ScrambleMinds(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can cast Confusion without expending a spell\n"
             "slot by instead expending four Psionic Energy Dice.\n"
@@ -184,12 +184,12 @@ class ScrambleMinds(Feature):
         )
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "Cast Confusion without slot by expending 4 Psionic Energy Dice. Spell's radius becomes 30 feet, "
             "choose one creature to auto-succeed on save, and you pick each creature's confused behavior each turn "
             "(instead of rolling)."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA

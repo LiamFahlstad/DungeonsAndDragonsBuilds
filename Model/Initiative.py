@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -30,7 +30,7 @@ class Initiative(Recorder):
     def add_bonus(self, bonus: Value) -> None:
         self.bonuses.add(bonus)
 
-    def total(self, view: StatView) -> int:
+    def total(self, view: CharacterView) -> int:
         """The Dexterity modifier, plus the full proficiency bonus if
         proficient, plus every flat and formula-valued bonus."""
         proficiency = view.get_proficiency_bonus() if self.proficiency else 0
@@ -40,7 +40,7 @@ class Initiative(Recorder):
             + self.bonuses.total(view)
         )
 
-    def roll_condition(self, view: StatView) -> DiceRollCondition:
+    def roll_condition(self, view: CharacterView) -> DiceRollCondition:
         """Every recorded condition together with untrained-armor
         Disadvantage - combined at once, so two sources that would each
         cancel out on their own still cancel correctly."""

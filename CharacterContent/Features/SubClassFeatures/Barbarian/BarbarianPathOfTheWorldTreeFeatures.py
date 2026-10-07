@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class VitalityOfTheTree(Feature):
@@ -18,7 +18,7 @@ class VitalityOfTheTree(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Rage taps into the life force of the World Tree. You gain the following benefits.\n"
             "Vitality Surge. When you activate your Rage, you gain a number of Temporary Hit Points equal to your Barbarian level.\n"
@@ -26,7 +26,7 @@ class VitalityOfTheTree(Feature):
         )
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "When you activate your Rage, gain Temporary Hit Points equal to your Barbarian level. "
             "At the start of each of your turns while Raging, choose a creature within 10 feet to grant Temporary Hit Points equal to your Rage Damage bonus (in d6s). "
@@ -45,19 +45,19 @@ class BranchesOfTheTree(Feature):
             usage_tags=["control"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         strength_modifier = character.get_strength_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + strength_modifier + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Whenever a creature you can see starts its turn within 30 feet of you while your Rage is active, you can take a Reaction to summon spectral branches of the World Tree around it. The target must succeed on a Strength saving throw (DC 8 plus your Strength modifier and Proficiency Bonus) or be teleported to an unoccupied space you can see within 5 feet of yourself or in the nearest unoccupied space you can see. After the target teleports, you can reduce its Speed to 0 until the end of the current turn."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         dc = self.calculate_dc(character)
         return [
             ("Trigger", "Creature starts turn within 30 feet (while Rage active)"),
@@ -76,11 +76,11 @@ class BatteringRoots(Feature):
             usage_tags=["buff", "control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "During your turn, your reach is 10 feet greater with any Melee weapon that has the Heavy or Versatile property, as tendrils of the World Tree extend from you. When you hit with such a weapon on your turn, you can activate the Push or Topple mastery property in addition to a different mastery property you're using with that weapon."
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "Your reach increases by 10 feet with Heavy or Versatile melee weapons. "
             "When you hit with such a weapon, you can add the Push or Topple mastery property to another mastery property you're using with that weapon."
@@ -98,11 +98,11 @@ class TravelAlongTheTree(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you activate your Rage and as a Bonus Action while your Rage is active, you can teleport up to 60 feet to an unoccupied space you can see. In addition, once per Rage, you can increase the range of that teleport to 150 feet. When you do so, you can also bring up to six willing creatures who are within 10 feet of you. Each creature teleports to an unoccupied space of your choice within 10 feet of your destination space."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus Action (or activation of Rage)"),
             ("Range", "60 feet (150 feet once per Rage)"),

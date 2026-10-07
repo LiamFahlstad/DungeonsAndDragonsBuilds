@@ -1,6 +1,5 @@
 from enum import Enum
 
-from Model.Character import Character
 from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import TieflingFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder

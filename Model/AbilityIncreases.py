@@ -3,7 +3,7 @@ from typing import Optional
 import attr
 
 from Core.Definitions import Ability
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Recorder import Recorder, records
 
 
@@ -51,7 +51,7 @@ class AbilityIncreases(Recorder):
         else:
             self._capped.append(CappedIncrease(ability, bonus, max_score))
 
-    def own_score(self, ability: Ability, view: StatView) -> int:
+    def own_score(self, ability: Ability, view: CharacterView) -> int:
         """The base score plus capped increases (species, background, ASIs,
         feats, class features) - everything but equipment bonuses."""
         score = view.get_base_ability_score(ability)
@@ -60,7 +60,7 @@ class AbilityIncreases(Recorder):
             score += min(increase.bonus, room_below_cap)
         return score
 
-    def score(self, ability: Ability, view: StatView) -> int:
+    def score(self, ability: Ability, view: CharacterView) -> int:
         """The final score: own_score() plus every equipment bonus."""
         equipment_bonus = self._equipment_bonus.get(ability, 0)
         return self.own_score(ability, view) + equipment_bonus

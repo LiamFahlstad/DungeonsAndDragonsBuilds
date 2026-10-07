@@ -4,7 +4,7 @@ from typing import Optional
 from Core.Definitions import Ability
 from Core.Rules import UNARMORED_AC_BASE
 from Model.Bonuses import Bonuses
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -74,7 +74,7 @@ class ArmorClass(Recorder):
             if formula.allows_shield or not is_wielding_shield
         ]
 
-    def total(self, view: StatView, ignore_shield: bool = False) -> int:
+    def total(self, view: CharacterView, ignore_shield: bool = False) -> int:
         """The best applicable AC formula plus every AC bonus. ignore_shield:
         the AC with the Shield set aside (its bonus gone, and formulas it
         disables - Monk's Unarmored Defense - available again). A Shield's
@@ -91,7 +91,7 @@ class ArmorClass(Recorder):
         )
         return base + bonus + shield
 
-    def _from_formula(self, formula: ArmorClassFormula, view: StatView) -> int:
+    def _from_formula(self, formula: ArmorClassFormula, view: CharacterView) -> int:
         ability_modifier = sum(
             view.get_ability_modifier(ability) for ability in formula.abilities
         )

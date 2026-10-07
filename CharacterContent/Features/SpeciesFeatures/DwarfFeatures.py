@@ -12,9 +12,9 @@ from CharacterContent.Features.Core.Improvements import (
     HitPointsPerLevelBonus,
 )
 from Core.Definitions import CreatureSize, DamageType, Sense
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -30,7 +30,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 120 feet."
 
 
@@ -44,7 +44,7 @@ class DwarvenResilience(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
 
 
@@ -61,7 +61,7 @@ class DwarvenToughness(Feature):
     def apply(self, effects: Effects):
         self._hp.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You gain an additional Hit Point for each level you gain."
 
 
@@ -81,18 +81,18 @@ class Stonecunning(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = (
             "As a Bonus Action, you gain Tremorsense with a range of 60 feet for 10 minutes. You must be on a stone surface or touching a stone surface to use this Tremorsense. The stone can be natural or worked.\n"
             "You can use this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return text
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()

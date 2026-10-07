@@ -8,9 +8,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import ConditionImmunity
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class CircleSporesSpells(Feature):
@@ -19,7 +19,7 @@ class CircleSporesSpells(Feature):
             name="Circle of Spores Spells", origin="Circle of Spores Druid Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your symbiotic link to fungi and your ability to tap into the cycle of life and death grants you access to certain spells. You learn the Chill Touch cantrip.\n"
             "At 3rd, 5th, 7th, and 9th level you gain access to the spells listed for that level in the Circle of Spores Spells table. Once you gain access to one of these spells, you always have it prepared, and it doesn't count against the number of spells you can prepare each day. If you gain access to a spell that doesn't appear on the druid spell list, the spell is nonetheless a druid spell for you.\n"
@@ -44,7 +44,7 @@ class HaloOfSpores(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You are surrounded by invisible, necrotic spores that are harmless until you unleash them on a creature nearby. When a creature you can see moves into a space within 10 feet of you or starts its turn there, you can use your reaction to deal necrotic damage to that creature unless it succeeds on a Constitution saving throw against your spell save DC.\n"
             "Halo of Spores Damage by Druid Level\n"
@@ -56,7 +56,7 @@ class HaloOfSpores(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -71,7 +71,7 @@ class SymbioticEntity(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to channel magic into your spores. As an action, you can expend a use of your Wild Shape feature to awaken those spores, rather than transforming into a beast form, and you gain temporary hit points equal to 4 times your Druid level. While this feature is active, you gain the following benefits:\n"
             "    * When you deal your Halo of Spores damage, roll the damage die a second time and add it to the total.\n"
@@ -80,7 +80,7 @@ class SymbioticEntity(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -100,23 +100,23 @@ class FungalInfestation(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your spores gain the ability to infest a corpse and animate it. If a beast or a humanoid that is Small or Medium dies within 10 feet of you, you can use your reaction to animate it, causing it to stand up immediately with 1 hit point. The creature uses the Zombie stat block in the Monster Manual. It remains animate for 1 hour, after which time it collapses and dies.\n"
             "In combat, the zombie's turn comes immediately after yours. It obeys your mental commands, and the only action it can take is the Attack action, making one melee attack."
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wisdom_mod = character.get_ability_modifier(Ability.WISDOM)
         uses = max(1, wisdom_mod)
         return [
@@ -143,7 +143,7 @@ class SpreadingSpores(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to seed an area with deadly spores. As a bonus action while your Symbiotic Entity feature is active, you can hurl spores up to 30 feet away, where they swirl in a 10-foot cube for 1 minute. The spores disappear early if you use this feature again, if you dismiss them as a bonus action, or if your Symbiotic Entity feature is no longer active.\n"
             "Whenever a creature moves into the cube or starts its turn there, that creature takes your Halo of Spores damage, unless the creature succeeds on a Constitution saving throw against your spell save DC. A creature can take this damage no more than once per turn.\n"
@@ -171,6 +171,6 @@ class FungalBody(Feature):
         for immunity in self._immunities:
             immunity.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The fungal spores in your body alter you: you can't be blinded, deafened, frightened, or poisoned, and any critical hit against you counts as a normal hit instead, unless you're incapacitated."
         return description

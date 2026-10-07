@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.WizardBase import (
     WizardMulticlassBuilder,
     WizardCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import Skill, WizardSubclass
 from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures

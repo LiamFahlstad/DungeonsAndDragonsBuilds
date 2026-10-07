@@ -1,5 +1,5 @@
 from Model.Bonuses import Bonuses
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -17,7 +17,7 @@ class HitPoints(Recorder):
     def add_bonus(self, amount: Value) -> None:
         self.bonuses.add(amount)
 
-    def total(self, view: StatView) -> int:
+    def total(self, view: CharacterView) -> int:
         class_levels = view.class_levels
         constitution_modifier = view.get_constitution_modifier()
         # Guaranteed set by the time hit points are calculated - see

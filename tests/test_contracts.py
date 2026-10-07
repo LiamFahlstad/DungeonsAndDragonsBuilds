@@ -1,7 +1,7 @@
-"""Model/Contracts.py and Model/Sources.py: the Protocols the Model is
+"""Model/View.py and Model/Sources.py: the Protocols the Model is
 written against (Notes/model-refactor-plan.md, Steps 3 and 4).
 
-StatView is everything a formula may read:
+CharacterView is everything a formula may read:
 
 - Character really satisfies it: every member is called, not just looked up
   (typing's runtime_checkable only checks that the names exist).
@@ -20,7 +20,8 @@ import pytest
 
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
-from Model.Contracts import StatView
+from Model.View import CharacterView
+from CharacterContent.Features.Core.BaseFeatures import Feature
 from Model.Effects import Effects
 from Model.Recorder import Recorder
 from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
@@ -28,7 +29,7 @@ from tests._snapshot_helpers import ALL_BUILDS
 
 MEMBERS = sorted(
     name
-    for name, value in vars(StatView).items()
+    for name, value in vars(CharacterView).items()
     if not name.startswith("_") and (callable(value) or isinstance(value, property))
 )
 
@@ -36,11 +37,12 @@ SAMPLE_ARGUMENTS = {
     Ability: Ability.WISDOM,
     Skill: Skill.ARCANA,
     CharacterClass: CharacterClass.PALADIN,
+    type: Feature,
 }
 
 
 def _return_annotation(name: str):
-    member = vars(StatView)[name]
+    member = vars(CharacterView)[name]
     function = member.fget if isinstance(member, property) else member
     return typing.get_type_hints(function).get("return")
 
@@ -56,7 +58,7 @@ def test_stat_view_has_members():
 
 @pytest.mark.parametrize("name", MEMBERS)
 def test_character_satisfies_stat_view(character, name):
-    member = vars(StatView)[name]
+    member = vars(CharacterView)[name]
     if isinstance(member, property):
         value = getattr(character, name)
     else:

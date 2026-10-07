@@ -6,14 +6,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class EnchantmentSavant(Feature):
     def __init__(self):
         super().__init__(name="Enchantment Savant", origin="Enchantment Wizard Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The gold and time you must spend to copy an Enchantment spell into your spellbook is halved."
         return description
 
@@ -31,7 +31,7 @@ class HypnoticGaze(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your soft words and enchanting gaze can magically enthrall another creature. As an action, choose one creature that you can see within 5 feet of you. If the target can see or hear you, it must succeed on a Wisdom saving throw against your wizard spell save DC or be charmed by you until the end of your next turn. The charmed creature's speed drops to 0, and the creature is incapacitated and visibly dazed.\n"
             "On subsequent turns, you can use your action to maintain this effect, extending its duration until the end of your next turn. However, the effect ends if you move more than 5 feet away from the creature, if the creature can neither see nor hear you, or if the creature takes damage.\n"
@@ -39,7 +39,7 @@ class HypnoticGaze(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Target", "One creature within 5 feet that can see or hear you"),
@@ -54,7 +54,7 @@ class HypnoticGaze(Feature):
             ("Recharge", "Long rest (per target)"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -69,7 +69,7 @@ class InstinctiveCharm(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When a creature you can see within 30 feet of you makes an attack roll against you, you can use your reaction to divert the attack, provided that another creature is within the attack's range. The attacker must make a Wisdom saving throw against your wizard spell save DC. On a failed save, the attacker must target the creature that is closest to it, not including you or itself. If multiple creatures are closest, the attacker chooses which one to target.\n"
             "On a successful save, you can't use this feature on the attacker again until you finish a long rest.\n"
@@ -77,7 +77,7 @@ class InstinctiveCharm(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Creature within 30 feet makes attack roll against you"),
             ("Action", "Reaction"),
@@ -89,7 +89,7 @@ class InstinctiveCharm(Feature):
             ("Immunity", "Creatures that can't be charmed are immune"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -97,7 +97,7 @@ class SplitEnchantment(Feature):
     def __init__(self):
         super().__init__(name="Split Enchantment", origin="Enchantment Wizard Level 10")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you cast an enchantment spell of 1st level or higher that targets only one creature, you can have it target a second creature."
         return description
 
@@ -111,12 +111,12 @@ class AlterMemories(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to make a creature unaware of your magical influence on it. When you cast an enchantment spell to charm one or more creatures, you can alter one creature's understanding so that it remains unaware of being charmed.\n"
             "Additionally, once before the spell expires, you can use your action to try to make the chosen creature forget some of the time it spent charmed. The creature must succeed on an Intelligence saving throw against your wizard spell save DC or lose a number of hours of its memories equal to 1 + your Charisma modifier. You can make the creature forget less time, and the amount of time can't exceed the duration of your enchantment spell."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

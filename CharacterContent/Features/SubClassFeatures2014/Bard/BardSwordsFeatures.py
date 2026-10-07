@@ -9,8 +9,8 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class BonusProficiencies(Feature):
@@ -24,7 +24,7 @@ class BonusProficiencies(Feature):
         GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(effects)
         GrantArmorTraining([ArmorType.MEDIUM]).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you join the College of Swords at 3rd level, you gain proficiency with medium armor and the scimitar.\n"
             "\n"
@@ -42,10 +42,10 @@ class BladeFlourish(Feature):
             usage_tags=["damage", "buff"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 3rd level, you learn to conduct impressive displays of martial prowess and speed.\n"
             "\n"
@@ -68,7 +68,7 @@ class ExtraAttack(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Starting at 6th level, you can attack twice, instead of once, whenever you take the Attack action on your turn."
         return description
 
@@ -81,6 +81,6 @@ class MastersFlourish(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die."
         return description

@@ -7,10 +7,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class ToolsOfTheTrade(Feature):
@@ -21,7 +21,7 @@ class ToolsOfTheTrade(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Tool Proficiency. You gain proficiency with Smith's Tools. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.\n"
@@ -36,7 +36,7 @@ class Spells(Feature):
             name="Battle Smith spells", origin="Battle Smith Artificer Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach an Artificer level specified in the Battle Smith Spells table, you thereafter always have the listed spells prepared.\n"
             "Battle Smith Spells\n"
@@ -58,7 +58,7 @@ class BattleReady(Feature):
         # "Weapon Knowledge. You gain proficiency with Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your combat training and your experiments with magic have paid off in two ways.\n"
             "Arcane Empowerment. When you attack with a magic weapon, you can use your Intelligence modifier, instead of your Strength or Dexterity modifier, for the attack and damage rolls.\n"
@@ -66,7 +66,7 @@ class BattleReady(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Arcane Empowerment",
@@ -87,7 +87,7 @@ class SteelDefender(Feature):
             usage_tags=["summon"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your tinkering has borne you a companion, a Steel Defender (see the stat block). You determine the defender's appearance and whether it has two legs or four; your choices don't affect the defender's game statistics.\n"
             "The defender is Friendly to you and your allies and obeys you. It vanishes if you die.\n"
@@ -115,7 +115,7 @@ class SteelDefender(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -123,7 +123,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn. You can forgo one of your attacks when you take the Attack action to command your Steel Defender to take the Force-Empowered Rend action."
         return description
 
@@ -142,7 +142,7 @@ class ArcaneJolt(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When either you hit a target with an attack roll using a magic weapon or your Steel Defender hits a target, you can channel magical energy through the strike to create one of the following effects:\n"
             "Destructive Energy. The target takes an extra 2d6 Force damage.\n"
@@ -151,7 +151,7 @@ class ArcaneJolt(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         return [
             ("Trigger", "When you or Steel Defender hits with a magic weapon"),
@@ -160,10 +160,10 @@ class ArcaneJolt(Feature):
             ("Uses", f"{uses}/LR, at most once per turn"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
 
@@ -175,7 +175,7 @@ class ImprovedDefender(Feature):
             usage_tags=["damage", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Arcane Jolt and Steel Defender have become more powerful, granting these benefits.\n"
             "Improved Jolt. The extra damage and healing of your Arcane Jolt both increase to 4d6.\n"
@@ -183,7 +183,7 @@ class ImprovedDefender(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Improved Jolt", "Arcane Jolt's damage and healing both increase to 4d6"),
             (

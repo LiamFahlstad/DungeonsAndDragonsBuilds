@@ -4,7 +4,6 @@ import attr
 
 import Core.Definitions as Definitions
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats

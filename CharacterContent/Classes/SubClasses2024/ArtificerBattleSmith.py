@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerMulticlassBuilder,
     ArtificerCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import ArtificerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Artificer import (

@@ -8,8 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import SkillBonus
-from Model.Character import Character
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
 
@@ -22,11 +21,11 @@ class DreadfulStrikes(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -36,7 +35,7 @@ class FeyWandererSpells(Feature):
             name="Fey Wanderer Spells", origin="Fey Wanderer Ranger Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach a Ranger level specified in the Fey Wanderer spells table, you thereafter always have the listed spells prepared.\n"
             "Fey Wanderer Spells\n"
@@ -75,21 +74,21 @@ class OtherworldlyGlamour(Feature):
 
     @staticmethod
     def _charisma_check_bonus(skill: Skill):
-        def bonus(cs: StatView) -> int:
+        def bonus(cs: CharacterView) -> int:
             if cs.get_skill_ability(skill) != Ability.CHARISMA:
                 return 0
             return max(1, cs.get_wisdom_modifier())
 
         return bonus
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you make a Charisma check, you gain a bonus to the check equal to your Wisdom modifier (Minimum of +1).\n"
             "You also gain proficiency in one of these skills of your choice: Deception, Performance, or Persuasion."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -104,17 +103,17 @@ class BeguilingTwist(Feature):
             usage_tags=["buff", "control"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The magic of the Feywild guards your mind. You have advantage on saving throws to avoid or end the Charmed or Frightened condition.\n"
             "In addition, whenever you or a creature you can see within 120 feet of you succeeds on a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to force a different creature you can see within 120 feet of yourself to make a Wisdom save against your spell save DC. On a failed save, the target is charmed or frightened (your choice) for 1 minute. The target repeats the save at the end of each of its turns, ending the effect on itself on a success."
         )
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "You have advantage on saving throws against Charmed or Frightened conditions. "
             "When you or a creature you can see within 120 feet succeeds on such a save, you can use a Reaction "
@@ -122,7 +121,7 @@ class BeguilingTwist(Feature):
             "it is charmed or frightened (your choice) for 1 minute."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -132,14 +131,14 @@ class FeyReinforcements(Feature):
             name="Fey Reinforcements", origin="Fey Wanderer Ranger Level 11"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can cast Summon Fey without a Material component. You can also cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest.\n"
             "Whenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for the casting."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Spell", "Summon Fey"),
             ("Material Components", "Waived"),
@@ -147,10 +146,10 @@ class FeyReinforcements(Feature):
             ("Concentration", "Optional (no Concentration = 1 minute duration)"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -167,14 +166,14 @@ class MistyWanderer(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can cast Misty Step without expending a spell slot. You can do so a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)
         return [
             ("Spell", "Misty Step"),
@@ -186,11 +185,11 @@ class MistyWanderer(Feature):
             ),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())

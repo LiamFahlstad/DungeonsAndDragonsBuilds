@@ -900,7 +900,48 @@ refers to the checks in section 4.
 - **Verify:** A, B, C, D, and the page dump diffed against the baseline must be
   empty (F). **Output:** none. Every page must be byte-identical.
 
-### Step 7: `CharacterView` *(codemod)*
+### Step 7: `CharacterView` *(codemod)* — done
+
+- **Result:**
+  - **`Model/Contracts.py` is now `Model/View.py`** (`git mv`), and `StatView`
+    is `CharacterView` everywhere: code, tests, `feature-application-model.md`
+    and the agent docs. Its docstring now says it's what parts, formulas
+    *and content* read.
+  - **Members added**, exactly what pyright found content reading (no
+    guesses): `calculate_difficulty_class()` (24 reads),
+    `calculate_difficulty_class_for_ability()`,
+    `calculate_attack_bonus_for_ability()`, and
+    `has_feature(feature_type) -> bool`.
+    `Character.has_feature` is new, and the two Druid reads use it instead of
+    `get_features_by_type(...)`'s list.
+  - **Codemod:** every `character: Character` in the features, items, tool
+    proficiencies, invocations and spells became `character: CharacterView`,
+    and the `Model.Character` imports went (the AST check ignores comments).
+    It also dropped the unused `Character` import from 157 class and species
+    builder files, left over from the `Grants` codemod.
+  - **`format_creature_stat_block`'s `character` parameter was never read,** so
+    it's gone from the function and its 5 callers.
+  - **The weapon base keeps `Character`** (allowlisted) because it reads
+    `character.ledger`; Step 10 moves that math to `AttackProfile`. Its
+    `get_description` takes `CharacterView`, matching `Item`.
+  - **Feature generator.** `FeatureGeneration/GenerateFeatures.py` emits
+    `CharacterView`. Its scratch output, `Output.py`, was left alone
+    (Decision 6).
+  - **Tests:**
+    - `tests/test_layering.py` has a new rule: no feature, item, tool or
+      invocation module imports `Model.Character`;
+    - `tests/test_contracts.py` calls every `CharacterView` member on a real
+      `Character`, including `has_feature`.
+  - **Agent docs:** the builds docs now say content reads through
+    `CharacterView` and uses `has_feature`; the action-tags, summaries and
+    extender docs were updated too.
+  - **Verified:**
+    - A, B (3317 passed), D: 0 errors.
+    - F: all pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree over Model, content, Presentation,
+      Combat, Utils, Core and the entry points: no new errors.
+    - C: the three render entry points run, and all 92 combat feature
+      tooltips render.
 
 - **Goal:** content reads the character through one small, named interface.
 - **Changes:**

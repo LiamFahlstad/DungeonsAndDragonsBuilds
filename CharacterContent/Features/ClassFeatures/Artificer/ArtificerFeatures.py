@@ -6,15 +6,15 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from Model.Character import Character
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Artificer Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Spellcasting:\n"
             "    * Tools Required: You produce your Artificer spells through tools. You can use Thieves' Tools, Tinker's Tools, or another kind of Artisan's Tools with which you have proficiency as a Spellcasting Focus, and you must have one of those focuses in hand when you cast an Artificer spell.\n"
@@ -25,7 +25,7 @@ class Spellcasting(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -46,7 +46,7 @@ class TinkersMagic(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You know the Mending cantrip.\n"
             "As a Magic action while holding Tinker's Tools, you can create one item in an unoccupied space within 5 feet of yourself, choosing the item from the following list:\n"
@@ -66,13 +66,13 @@ class TinkersMagic(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -80,7 +80,7 @@ class ReplicateMagicItem(Feature):
     def __init__(self):
         super().__init__(name="Replicate Magic Item", origin="Artificer Level 2")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have learned arcane plans that you use to make magic items.\n"
             "Plans Known. When you gain this feature, choose four plans to learn from the Magic Item Plans (Artificer Level 2+) table. Bag of Holding, Cap of Water Breathing, Sending Stones, and Wand of the War Mage are recommended. Whenever you gain an Artificer level, you can replace one of the plans you know with a new plan for which you qualify.\n"
@@ -159,7 +159,7 @@ class ReplicateMagicItem(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -167,7 +167,7 @@ class MagicItemTinker(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Tinker", origin="Artificer Level 6")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Replicate Magic Item feature gains the following options.\n"
             "Charge Magic Item. As a Bonus Action, you can touch a magic item within 5 feet of yourself that you created with Replicate Magic Item and that uses charges. You expend a level 1+ spell slot and recharge the item. The number of charges the item regains is equal to the level of spell slot expended.\n"
@@ -176,7 +176,7 @@ class MagicItemTinker(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -196,14 +196,14 @@ class FlashofGenius(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
             "You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         intelligence_modifier = character.get_intelligence_modifier()
         bonus = max(1, intelligence_modifier)
         uses = max(1, intelligence_modifier)
@@ -214,13 +214,13 @@ class FlashofGenius(Feature):
             ("Uses", f"{uses} per Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -228,7 +228,7 @@ class MagicItemAdept(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Adept", origin="Artificer Level 10")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can now attune to up to four magic items at once."
         return description
 
@@ -237,7 +237,7 @@ class SpellStoringItem(Feature):
     def __init__(self):
         super().__init__(name="Spell-storing Item", origin="Artificer Level 11")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you finish a Long Rest, you can touch one Simple or Martial weapon or one item that you can use as a Spellcasting Focus, and you store a spell in it, choosing a level 1, 2, or 3 Artificer spell that has a casting time of an action and doesn't require a Material component that is consumed by the spell (you needn't have the spell prepared).\n"
             "While holding the object, a creature can take a Magic action to produce the spell's effect from it, using your spellcasting ability modifier. If the spell requires Concentration, the creature must concentrate. Once a creature has used the object to produce the spell's effect, the object can't be used this way again until the start of the creature's next turn.\n"
@@ -245,7 +245,7 @@ class SpellStoringItem(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -253,7 +253,7 @@ class AdvancedArtifice(Feature):
     def __init__(self):
         super().__init__(name="Advanced Artifice", origin="Artificer Level 14")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Magic Item Savant. You can now attune to up to five magic items at once.\n"
@@ -266,7 +266,7 @@ class MagicItemMaster(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Master", origin="Artificer Level 18")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can now attune to up to six magic items at once."
         return description
 
@@ -277,7 +277,7 @@ class SoulOfArtifice(Feature):
             name="Soul of Artifice", origin="Artificer Level 20", usage_tags=["heal"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have developed a mystical connection to your magic items, which you can draw on for aid. You gain the following benefits.\n"
             "Cheat Death. If you're reduced to 0 Hit Points but not killed outright, you can disintegrate any number of Uncommon or Rare magic items created by your Replicate Magic Item feature. If you do so, your Hit Points instead change to a number equal to 20 times the number of magic items disintegrated.\n"
@@ -285,7 +285,7 @@ class SoulOfArtifice(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Cheat Death",

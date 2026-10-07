@@ -12,9 +12,9 @@ from CharacterContent.Features.Core.Improvements import (
     InitiativeBonus,
     SavingThrowProficiencyOrAlternative,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class DreadAmbusher(Feature):
@@ -33,7 +33,7 @@ class DreadAmbusher(Feature):
     def apply(self, effects: Effects):
         InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have mastered the art of creating fearsome ambushes, granting you the following benefits.\n"
             "Ambusher's Leap. At the start of your first turn of each combat, your speed increases by 10 feet until the end of that turn.\n"
@@ -42,10 +42,10 @@ class DreadAmbusher(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
 
@@ -55,7 +55,7 @@ class GloomStalkerSpells(Feature):
             name="Gloom Stalker Spells", origin="Gloom Stalker Ranger Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you reach a Ranger level specified in the Gloom Stalker spells table, you thereafter always have the listed spells prepared."
         return description
 
@@ -73,14 +73,14 @@ class UmbralSight(Feature):
     def apply(self, effects: Effects):
         self._darkvision.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain Darkvision with a range of 60 feet. If you already have Darkvision when you gain this feature, its range increases by 60 feet.\n"
             "You are also adept at evading creatures that rely on Darkvision. While entirely in Darkness, you have the Invisible condition to any creature that relies on Darkvision to see you in that Darkness."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -106,7 +106,7 @@ class IronMind(Feature):
             ],
         ).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
         return description
 
@@ -122,10 +122,10 @@ class StalkersFlurry(Feature):
             usage_tags=["damage", "control"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The Psychic damage of your Dreadful Strike becomes 2d8. In addition, when you use the Dreadful Strike effect of your Dread Ambusher feature, you can use one of the following additional effects.\n"
             "Sudden Strike. You can make another attack with the same weapon against a different creature that is within 5 feet of the original target and that is within the weapon's range.\n"
@@ -133,7 +133,7 @@ class StalkersFlurry(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -148,9 +148,9 @@ class ShadowyDodge(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

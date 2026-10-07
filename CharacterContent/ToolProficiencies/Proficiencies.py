@@ -4,7 +4,7 @@ from Core.Definitions import Ability
 from CharacterContent.Features.Core.BaseFeatures import Feature
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Items
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class ToolProficiency(Feature):
@@ -47,7 +47,7 @@ class ToolProficiency(Feature):
         item_class = getattr(Items, type(self).__name__, None)
         return item_class() if item_class is not None else None
 
-    def get_description(self, character: Character) -> str | None:
+    def get_description(self, character: CharacterView) -> str | None:
         lines = [
             f"Add your proficiency bonus to {self.ability.value} checks made with {self.name}.",
             f"Utilize: {self.utilize_text()}.",
@@ -57,7 +57,7 @@ class ToolProficiency(Feature):
         return "\n".join(lines)
 
     def get_table_description(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, str]] | None:
         rows = [("Ability", self.ability.value), ("Utilize", self.utilize_text())]
         if self.craftables:

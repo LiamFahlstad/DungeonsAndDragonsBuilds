@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class BonusProficiencies(Feature):
@@ -24,7 +24,7 @@ class BonusProficiencies(Feature):
     def apply(self, effects: Effects):
         self._proficiency.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with three skills of your choice."
         return description
 
@@ -40,11 +40,11 @@ class CuttingWords(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Trigger",
@@ -58,7 +58,7 @@ class CuttingWords(Feature):
             ),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -68,7 +68,7 @@ class MagicalDiscoveries(Feature):
             name="Magical Discoveries", origin="College of Lore Bard Level 6"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn two spells of your choice. These spells can come from the Cleric, Druid, or Wizard spell list or any combination thereof (see a class's section for its spell list). A spell you choose must be a cantrip or a spell for which you have spell slots, as shown in the Bard Features table.\n"
             "You always have the chosen spells prepared, and whenever you gain a Bard level, you can replace one of the spells with another spell that meets these requirements."
@@ -84,11 +84,11 @@ class PeerlessSkill(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "You fail an ability check or attack roll"),
             (
@@ -99,5 +99,5 @@ class PeerlessSkill(Feature):
             ("Failure Recovery", "If still fails, Bardic Inspiration isn't expended"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

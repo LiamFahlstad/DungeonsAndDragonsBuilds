@@ -4,8 +4,8 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     GrantSense,
 )
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -20,7 +20,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
@@ -30,7 +30,7 @@ class FeyAncestry(Feature):
             name="Fey Ancestry", origin="Khoravar Trait", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on saving throws you make to avoid or end the Charmed condition."
 
 
@@ -38,7 +38,7 @@ class FeyGift(Feature):
     def __init__(self):
         super().__init__(name="Fey Gift", origin="Khoravar Trait")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "You know the Friends cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip "
             "from the Cleric, Druid, or Wizard spell list. Intelligence, Wisdom, or Charisma is your spellcasting ability for the "
@@ -57,7 +57,7 @@ class SkillVersatility(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
 
 
@@ -67,5 +67,5 @@ class LethargyResilience(Feature):
             name="Lethargy Resilience", origin="Khoravar Trait", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can’t do so again until you finish 1d4 Long Rests."

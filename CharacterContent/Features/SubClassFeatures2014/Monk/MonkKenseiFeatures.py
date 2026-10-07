@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -38,7 +38,7 @@ class KenseiWeapons(Feature):
     def __init__(self):
         super().__init__(name="Kensei Weapons", origin="Way of the Kensei Monk Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Choose two types of weapons to be your kensei weapons: one melee weapon and one ranged weapon. "
             "Each of these weapons can be any simple or martial weapon that lacks the heavy and special properties. "
@@ -59,7 +59,7 @@ class AgileParry(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, "
             "you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, "
@@ -67,7 +67,7 @@ class AgileParry(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -83,7 +83,7 @@ class KenseiShot(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use a bonus action on your turn to make your ranged attacks with a kensei weapon more deadly. "
             "When you do so, any target you hit with a ranged attack using a kensei weapon takes an extra 1d4 damage of the weapon's type. "
@@ -91,7 +91,7 @@ class KenseiShot(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -101,7 +101,7 @@ class WayOfTheBrush(Feature):
             name="Way of the Brush", origin="Way of the Kensei Monk Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with your choice of calligrapher's supplies or painter's supplies."
         return description
 
@@ -114,7 +114,7 @@ class MagicKenseiWeapons(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Your attacks with your kensei weapons count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage."
         return description
 
@@ -127,14 +127,14 @@ class DeftStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you hit a target with a kensei weapon, you can spend 1 ki point to cause the weapon to deal extra damage to the target "
             "equal to your Martial Arts die. You can use this feature only once on each of your turns."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -151,7 +151,7 @@ class SharpenTheBlade(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a bonus action, you can expend up to 3 ki points to grant one kensei weapon you touch a bonus to attack and damage rolls "
             "when you attack with it. The bonus equals the number of ki points you spent. This bonus lasts for 1 minute or until you use "
@@ -159,10 +159,10 @@ class SharpenTheBlade(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Bonus action"),
             ("Cost", "1-3 ki points"),
@@ -181,12 +181,12 @@ class UnearringAccuracy(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your mastery of weapons grants you extraordinary accuracy. If you miss with an attack roll using a monk weapon on your turn, "
             "you can reroll it. You can use this feature only once on each of your turns."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

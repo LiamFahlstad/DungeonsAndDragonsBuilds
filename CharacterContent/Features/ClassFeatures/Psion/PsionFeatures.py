@@ -5,7 +5,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class PsionicPower(Feature):
@@ -17,7 +17,7 @@ class PsionicPower(Feature):
             usage_tags=["control", "buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You harbor a wellspring of psionic energy within\n"
             "yourself. This energy is represented by your Psionic\n"
@@ -60,7 +60,7 @@ class PsionicPower(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
 
@@ -68,7 +68,7 @@ class SubtleTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Subtle Telekinesis", origin="Psion Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You know the Mage Hand cantrip. You can cast it\n"
             "without Somatic components, and you can make the\n"
@@ -81,7 +81,7 @@ class PsionicDiscipline(Feature):
     def __init__(self):
         super().__init__(name="Psionic Discipline", origin="Psion Level 2")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn further psionic techniques that are fueled\n"
             "by your Psionic Energy Dice. You gain two\n"
@@ -108,7 +108,7 @@ class PsionicRestoration(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can perform a meditation that focuses the mind\n"
             "for 1 minute. At the end of it, you regain expended\n"
@@ -117,14 +117,14 @@ class PsionicRestoration(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Meditation (1 minute)"),
             ("Effect", "Regain expended Psionic Energy Dice"),
             ("Recharge", "Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -134,7 +134,7 @@ class PsionicSurge(Feature):
             name="Psionic Surge", origin="Psion Level 7", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can push your psionic powers using your life\n"
             "force. After you roll one or more Psionic Energy\n"
@@ -144,7 +144,7 @@ class PsionicSurge(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "After rolling one or more Psionic Energy Dice"),
             ("Cost", "Expend one Hit Point Die"),
@@ -158,7 +158,7 @@ class PsionicReserves(Feature):
             name="Psionic Reserves", origin="Psion Level 18", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you roll Initiative, you regain expended uses\n"
             "of Psionic Energy Dice until you have four if you\n"
@@ -166,7 +166,7 @@ class PsionicReserves(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
 
@@ -174,7 +174,7 @@ class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Psion Level 19")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain an Epic Boon feat or another feat of your\n"
             "choice for which you qualify. Boon of Energy\n"
@@ -189,7 +189,7 @@ class EnkindledLifeForce(Feature):
             name="Enkindled Life Force", origin="Psion Level 20", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You burn your life force to achieve greater psionics.\n"
             "Once per turn, when you roll one or more Psionic\n"
@@ -202,7 +202,7 @@ class EnkindledLifeForce(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Trigger",

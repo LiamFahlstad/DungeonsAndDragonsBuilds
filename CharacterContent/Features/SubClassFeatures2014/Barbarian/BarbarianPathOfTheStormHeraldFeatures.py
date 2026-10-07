@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 _STORM_SOUL_RESISTANCE = {
     Definitions.BarbarianStormEnvironment.DESERT: Definitions.DamageType.FIRE,
@@ -52,12 +52,12 @@ class StormAura(Feature):
         )
         self.environment = environment
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         constitution_modifier = character.get_constitution_modifier()
         return 8 + proficiency_bonus + constitution_modifier
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you select this path at 3rd level, you emanate a stormy, magical aura while you rage. The aura extends 10 feet from you in every direction, but not through total cover.\n"
             "\n"
@@ -92,7 +92,7 @@ class StormSoul(Feature):
             effects
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The storm grants you benefits even when your aura isn't active. The benefits are based on the environment you chose for your Storm Aura.\n"
             "\n"
@@ -115,11 +115,11 @@ class ShieldingStorm(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You learn to use your mastery of the storm to protect others. Each creature of your choice has the damage resistance you gained from the Storm Soul feature while the creature is in your Storm Aura."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -133,7 +133,7 @@ class RagingStorm(Feature):
         )
         self.environment = environment
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The power of the storm you channel grows mightier, lashing out at your foes. The effect is based on the environment you chose for your Storm Aura.\n"
             "\n"

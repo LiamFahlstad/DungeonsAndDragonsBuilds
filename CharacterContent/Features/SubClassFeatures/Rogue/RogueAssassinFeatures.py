@@ -2,8 +2,8 @@ from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
 from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
 from CharacterContent.Features.Core.Improvements import InitiativeRollCondition
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class Assassinate(Feature):
@@ -18,7 +18,7 @@ class Assassinate(Feature):
         # "Initiative. You have Advantage on Initiative rolls."
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You're adept at ambushing a target, granting you the following benefits.\n"
             "Initiative. You have Advantage on Initiative rolls.\n"
@@ -26,7 +26,7 @@ class Assassinate(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Initiative", "Advantage on Initiative rolls"),
             (
@@ -39,7 +39,7 @@ class Assassinate(Feature):
             ),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -47,7 +47,7 @@ class AssassinsTools(Feature):
     def __init__(self):
         super().__init__(name="Assassin's Tools", origin="Assassin Rogue Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them."
         return description
 
@@ -60,7 +60,7 @@ class InfiltrationExpertise(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You are an expert at the following techniques that aid your infiltrations.\n"
             "Masterful Mimicry. You can unerringly mimic another person's speech, handwriting or both if you have spent at least 1 hour studying them.\n"
@@ -77,11 +77,11 @@ class EnvenomWeapons(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -91,14 +91,14 @@ class DeathStrike(Feature):
             name="Death Strike", origin="Assassin Rogue Level 17", usage_tags=["damage"]
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         dexterity_modifier = character.get_dexterity_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

@@ -11,8 +11,8 @@ from CharacterContent.Features.Core.Improvements import (
     SkillExpertise,
     SpeedBonus,
 )
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class Skirmisher(Feature):
@@ -26,11 +26,11 @@ class Skirmisher(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn't provoke opportunity attacks."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -46,7 +46,7 @@ class Survivalist(Feature):
         self._proficiency.apply(effects)
         self._expertise.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
         return description
 
@@ -63,11 +63,11 @@ class SuperiorMobility(Feature):
     def apply(self, effects: Effects):
         self._speed.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -84,7 +84,7 @@ class AmbushMaster(Feature):
         # "You have advantage on initiative rolls."
         InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 13th level, you excel at leading ambushes and acting first in a fight.\n"
             "\n"
@@ -102,9 +102,9 @@ class SuddenStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack as a bonus action. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

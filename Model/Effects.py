@@ -19,7 +19,7 @@ from Model.AbilityIncreases import AbilityIncreases
 from Model.ArmorClass import ArmorClass, ArmorClassFormula
 from Model.CarryingCapacity import CarryingCapacity
 from Model.Bonuses import OTHER_SOURCE
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Defenses import Defenses
 from Model.EquipmentTraining import EquipmentTraining
 from Model.HitPoints import HitPoints
@@ -108,7 +108,7 @@ class Ledger(Recorder):
             )
         return warnings
 
-    def validate(self, view: StatView) -> None:
+    def validate(self, view: CharacterView) -> None:
         """Check every recorded requirement against the complete set of
         effects: expertise needs proficiency, ability minimums (an armor's
         Strength, multiclass prerequisites) need the scores."""

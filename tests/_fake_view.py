@@ -1,4 +1,4 @@
-"""A StatView with fixed answers, for unit-testing a part without a
+"""A CharacterView with fixed answers, for unit-testing a part without a
 Character: a part's resolvers take nothing but the view, so these tests need
 no builder and no Character. Scores have no increases - own score, final
 score and base score are the same number."""

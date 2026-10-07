@@ -4,7 +4,7 @@ from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_con
 from Core.Rules import EXPERTISE_MULTIPLIER
 from Model.Bonuses import OTHER_SOURCE, Bonuses
 from Model.Records.SourcedValue import SourcedValue
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -43,14 +43,16 @@ class Skills(Recorder):
     def add_skill_bonus(self, skill: Skill, bonus: Value, source: str = OTHER_SOURCE):
         self._bonuses_for(skill).add(bonus, source)
 
-    def get_total_bonus(self, skill: Skill, view: StatView) -> int:
+    def get_total_bonus(self, skill: Skill, view: CharacterView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
         `view` (not the ability modifier or proficiency bonus - see
         Character.get_skill_modifier)."""
         bonuses = self._bonuses.get(skill)
         return bonuses.total(view) if bonuses is not None else 0
 
-    def get_all_bonus_sources(self, skill: Skill, view: StatView) -> list[SourcedValue]:
+    def get_all_bonus_sources(
+        self, skill: Skill, view: CharacterView
+    ) -> list[SourcedValue]:
         bonuses = self._bonuses.get(skill)
         return bonuses.sources(view) if bonuses is not None else []
 
@@ -112,13 +114,13 @@ class Skills(Recorder):
 
     UNTRAINED_ARMOR_REASON = "Untrained armor"
 
-    def ability(self, skill: Skill, view: StatView) -> Ability:
+    def ability(self, skill: Skill, view: CharacterView) -> Ability:
         """The ability a check with `skill` uses: the best of
         get_skill_abilities(). Ties go to the first in Ability order, so
         grant order never decides."""
         return max(self.get_skill_abilities(skill), key=view.get_ability_modifier)
 
-    def modifier(self, skill: Skill, view: StatView) -> int:
+    def modifier(self, skill: Skill, view: CharacterView) -> int:
         """Ability modifier, plus the proficiency bonus (twice with
         expertise), plus every bonus."""
         if self.has_expertise(skill):
@@ -131,7 +133,7 @@ class Skills(Recorder):
         return ability_modifier + proficiency + self.get_total_bonus(skill, view)
 
     def roll_condition_sources(
-        self, skill: Skill, view: StatView
+        self, skill: Skill, view: CharacterView
     ) -> dict[DiceRollCondition, list[str]]:
         """Every recorded source of Advantage/Disadvantage, plus Disadvantage
         from untrained armor when the check uses Strength or Dexterity."""
@@ -142,10 +144,10 @@ class Skills(Recorder):
             )
         return sources
 
-    def roll_condition(self, skill: Skill, view: StatView) -> DiceRollCondition:
+    def roll_condition(self, skill: Skill, view: CharacterView) -> DiceRollCondition:
         return combine_roll_conditions(self.roll_condition_sources(skill, view))
 
-    def roll_condition_reasons(self, skill: Skill, view: StatView) -> list[str]:
+    def roll_condition_reasons(self, skill: Skill, view: CharacterView) -> list[str]:
         """The reasons behind the effective roll condition."""
         condition = self.roll_condition(skill, view)
         return self.roll_condition_sources(skill, view).get(condition, [])

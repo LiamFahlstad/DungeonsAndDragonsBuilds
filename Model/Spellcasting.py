@@ -8,7 +8,7 @@ from Core.SpellcastingRules import (
     calculate_slot_progression,
     calculate_spell_slots,
 )
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Recorder import Recorder, records
 
 
@@ -42,7 +42,7 @@ class Spellcasting(Recorder):
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
         self.spell_save_dc_bonus += bonus
 
-    def spell_slots(self, view: StatView) -> Optional[dict[int, int]]:
+    def spell_slots(self, view: CharacterView) -> Optional[dict[int, int]]:
         """Worked out from the registered casters - or, with none, the
         character's fixed table of slots (e.g. a companion's)."""
         if not self._casters:
@@ -50,7 +50,7 @@ class Spellcasting(Recorder):
         levels = view.class_levels.level_per_class
         return calculate_spell_slots(self._casters, levels).spell_slots
 
-    def pact_magic_slots(self, view: StatView) -> dict[int, int]:
+    def pact_magic_slots(self, view: CharacterView) -> dict[int, int]:
         levels = view.class_levels.level_per_class
         return calculate_spell_slots(self._casters, levels).pact_magic_slots
 
@@ -62,7 +62,7 @@ class Spellcasting(Recorder):
         Core.SpellcastingRules.calculate_slot_progression)."""
         return calculate_slot_progression(self._casters, list(class_by_character_level))
 
-    def difficulty_class(self, ability: Ability, view: StatView) -> int:
+    def difficulty_class(self, ability: Ability, view: CharacterView) -> int:
         """Spell save DC when casting with `ability`."""
         return (
             SPELL_SAVE_DC_BASE
@@ -71,6 +71,6 @@ class Spellcasting(Recorder):
             + self.spell_save_dc_bonus
         )
 
-    def attack_bonus(self, ability: Ability, view: StatView) -> int:
+    def attack_bonus(self, ability: Ability, view: CharacterView) -> int:
         """Spell attack bonus when casting with `ability`."""
         return view.get_proficiency_bonus() + view.get_ability_modifier(ability)

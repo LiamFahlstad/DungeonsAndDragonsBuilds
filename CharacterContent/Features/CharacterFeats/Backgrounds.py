@@ -4,9 +4,9 @@ from CharacterContent.Features.Core.Improvements import (
     AbilityScoreBonus,
     SkillProficiencyChoice,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_SCORE
+from Model.View import CharacterView
 
 
 class FreeBackgroundAbilityBonus(Feature):
@@ -30,7 +30,7 @@ class FreeBackgroundAbilityBonus(Feature):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
             f"{ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
         )
@@ -60,7 +60,7 @@ class FreeBackgroundSkillProficiency(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)
         return (
             "Your background grants proficiency in two skills of your choice.\n"

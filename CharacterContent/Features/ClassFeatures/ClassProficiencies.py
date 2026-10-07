@@ -31,7 +31,6 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from CharacterContent.ToolProficiencies import Proficiencies as Tools
-from Model.Character import Character
 from Model.Effects import Effects
 
 # Every class's two saving throw proficiencies, granted by ClassProficiencies

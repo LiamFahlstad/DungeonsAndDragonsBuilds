@@ -62,7 +62,7 @@ re-evaluates too.
 |---|---|---|---|
 | **Source** | What did the player choose, or what were they granted? | A field on `Character`, set by a builder (`add_*` / `set_*`, or through a `Grants` scope) | `class_levels`, `base_abilities`, `base_speed`, `size`, `spell_casting_ability`, `fixed_spell_slots`, `feature_grants`, `spell_grants`, `inventory` |
 | **Ledger** | What did the effects record? | `character.ledger.<part>`: evaluated on demand, sealed, read-only. A part holds only what effects recorded - never a copy of a source, never a final value | `character.ledger.skills`, `character.ledger.senses` |
-| **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `StatView`) to a part's resolver | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features` |
+| **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `CharacterView`) to a part's resolver | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features` |
 
 Rules of thumb:
 
@@ -75,7 +75,7 @@ Rules of thumb:
 - `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields:
   grouping them into objects would rewrite ~40 builder lines to save two names.
 
-The `Model` package imports only point down: `Core` → `Model/Contracts.py` (Protocols: `StatView`,
+The `Model` package imports only point down: `Core` → `Model/View.py` (Protocols: `CharacterView`,
 `Formula`) → the parts → `Model/Effects.py` (`Ledger`, `Effects`) and `Model/Sources.py`
 (Protocols for features, fighting styles and gear) → `Model/Character.py` → `Model/Grants.py`. It
 never imports `CharacterContent`, not even for type hints, and nothing in the repo uses
@@ -181,7 +181,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 `register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
 no levels either. If a value depends on anything, pass a formula (`lambda character: ...`); it gets
 the finished `Character` when the value is read. Every bonus (skills, saving throws, AC, HP,
-speed, initiative) is a `Value` (`Model/Contracts.py`): a flat `int` or a formula, recorded by the
+speed, initiative) is a `Value` (`Model/View.py`): a flat `int` or a formula, recorded by the
 same `add_*_bonus` method on `Effects`. `Bonuses.add` is the one place that tells them apart. `get_description()` and the
 other rendering methods still get the `Character`, and may read anything.
 
@@ -189,15 +189,15 @@ other rendering methods still get the `Character`, and may read anything.
 
 The `Ledger` (`Model/Effects.py`) holds one part per concern (`Model/*.py`), plus the rules that
 combine two parts (untrained armor, Shield training, `armor_warnings()`). Each part owns its own
-state *and* works out its own final values: every resolver takes one argument, a `StatView`
-(`Model/Contracts.py`) of the finished character, e.g. `HitPoints.total(view)`,
+state *and* works out its own final values: every resolver takes one argument, a `CharacterView`
+(`Model/View.py`) of the finished character, e.g. `HitPoints.total(view)`,
 `Initiative.total(view)`, `Skills.modifier(skill, view)`. A part never names `Character`, so it can
 be unit-tested against a fake view (`tests/_fake_view.py`, `tests/test_part_resolvers.py`). Every
 query on `Character` is one line that hands itself to a resolver. No part imports
 `CharacterContent`.
 
 `Bonuses` (`Model/Bonuses.py`) is a small value object - flat values and formulas
-(`Formula`, from `Model/Contracts.py`), each with a source label - shared by every part that is "a bonus total plus
+(`Formula`, from `Model/View.py`), each with a source label - shared by every part that is "a bonus total plus
 sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `SavingThrows` each hold
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
 flat-list/formula-list/source-list shape themselves.
@@ -300,8 +300,8 @@ The whole model:
 |---|---|
 | `test_order_invariance.py` | Every build's rendered sheet (full and concise) is identical when its effects apply in another order, and when its features, extensions, spells and replacements are granted in another order (`-m slow` adds reversed order and three more shuffles) |
 | `test_part_merge_rules.py` | Every part gives the same answer for the same contributions in every permutation, including the order of listed sources; conflicting grants raise |
-| `test_part_resolvers.py` | Every part works out its final values from a fake `StatView`, with no builder and no `Character` |
-| `test_contracts.py` | `Character` really satisfies `StatView` (every member called), `Effects` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
+| `test_part_resolvers.py` | Every part works out its final values from a fake `CharacterView`, with no builder and no `Character` |
+| `test_contracts.py` | `Character` really satisfies `CharacterView` (every member called), `Effects` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
 | `test_layering.py` | Every import points down the layers (`Core` → `Utils` helpers → `Model` → `CharacterContent` → `Builds`/presentation → `Combat`), with an allowlist of today's offenders; no `TYPE_CHECKING`, `typing.cast` or `_as(...)` narrowing |
 | `test_creator_roundtrip.py` | The Character Creator loads every build file and generates one that builds to the same stats (builds it can't reproduce yet are strict xfails, with the reason) |
 | `test_spell_grants.py` | Spell stamping, duplicate and replacement rules, and order-free spell grants |

@@ -11,9 +11,9 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
 )
 from Core.Definitions import Condition, DamageType
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class ToolsOfTheTrade(Feature):
@@ -24,7 +24,7 @@ class ToolsOfTheTrade(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Tool Proficiency. You gain proficiency with Alchemist's Supplies and the Herbalism Kit. If you already have one of these proficiencies, you gain proficiency with one other type of Artisan's Tools of your choice (or with two other types if you have both).\n"
@@ -37,7 +37,7 @@ class Spells(Feature):
     def __init__(self):
         super().__init__(name="Alchemist Spells", origin="Alchemist Artificer Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach an Artificer level specified in the Alchemist Spells table, you thereafter always have the listed spells prepared.\n"
             "Alchemist Spells\n"
@@ -60,7 +60,7 @@ class ExperimentalElixir(Feature):
             usage_tags=["heal", "buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you finish a Long Rest while holding Alchemist's Supplies, you can use that tool to magically produce two elixirs. For each elixir, roll on the Experimental Elixir table for the elixir's effect, which is triggered when someone drinks the elixir. The elixir appears in a vial, and the vial vanishes when the elixir is drunk or poured out. If any elixir remains when you finish a Long Rest, the elixir and its vial vanish.\n"
             "Drinking an Elixir. As a Bonus Action, a creature can drink the elixir or administer it to another creature within 5 feet of itself.\n"
@@ -77,10 +77,10 @@ class ExperimentalElixir(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -92,7 +92,7 @@ class AlchemicalSavant(Feature):
             usage_tags=["damage", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1)."
         return description
 
@@ -110,14 +110,14 @@ class RestorativeReagents(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
 
@@ -139,7 +139,7 @@ class ChemicalMastery(Feature):
             resistance.apply(effects)
         self._immunity.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Alchemical Eruption. When you cast an Artificer spell that deals Acid, Fire, or Poison damage to a target, you can also deal 2d8 Force damage to that target. You can use this benefit only once on each of your turns.\n"
@@ -148,7 +148,7 @@ class ChemicalMastery(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Alchemical Eruption",

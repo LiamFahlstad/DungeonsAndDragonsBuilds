@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class BalmOfTheSummerCourt(Feature):
@@ -27,7 +27,7 @@ class BalmOfTheSummerCourt(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 2nd level, you become imbued with the blessings of the Summer Court. You are a font of energy that offers respite from injuries. You have a pool of fey energy represented by a number of d6s equal to your druid level.\n"
             "\n"
@@ -37,16 +37,16 @@ class BalmOfTheSummerCourt(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_class_level(Definitions.CharacterClass.DRUID)
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         druid_level = character.get_class_level(Definitions.CharacterClass.DRUID)
         half_druid_level = max(1, druid_level // 2)
         return [
@@ -73,7 +73,7 @@ class HearthOfMoonlightAndShadow(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 6th level, home can be wherever you are. During a short or long rest, you can invoke the shadowy power of the Gloaming Court to help guard your respite. At the start of the rest, you touch a point in space, and an invisible, 30-foot-radius sphere of magic appears, centered on that point. Total cover blocks the sphere.\n"
             "\n"
@@ -93,7 +93,7 @@ class HiddenPaths(Feature):
             activation=FeatureActivation(action_type="bonus_action"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
         uses = max(1, wisdom_mod)
         description = (
@@ -103,7 +103,7 @@ class HiddenPaths(Feature):
         )
         return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
         uses = max(1, wisdom_mod)
         return [
@@ -120,7 +120,7 @@ class WalkerInDreams(Feature):
             name="Walker in Dreams", origin="Circle of Dreams Druid Level 14"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 14th level, the magic of the Feywild grants you the ability to travel mentally or physically through dreamlands.\n"
             "\n"

@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.SorcererBase import (
     SorcererMulticlassBuilder,
     SorcererCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import SorcererSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Sorcerer import (

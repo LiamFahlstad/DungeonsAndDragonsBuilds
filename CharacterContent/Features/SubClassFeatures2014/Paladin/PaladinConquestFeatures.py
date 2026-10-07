@@ -7,8 +7,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     FeatureTarget,
 )
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class ConquestSpells(Feature):
@@ -17,7 +17,7 @@ class ConquestSpells(Feature):
             name="Oath of Conquest Spells", origin="Oath of Conquest Paladin Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain oath spells at the Paladin levels listed. When you reach a Paladin level specified in the Oath of Conquest Spells table, you thereafter always have the listed spells prepared.\n"
             "Oath of Conquest Spells\n"
@@ -42,14 +42,14 @@ class ConqueringPresence(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to exude a terrifying presence. As an action, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("What", "Exude terrifying presence"),
             ("Action", "Action"),
@@ -67,14 +67,14 @@ class GuidedStrike(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("What", "Gain accuracy bonus to attack roll"),
             ("Effect", "+10 to attack roll"),
@@ -91,7 +91,7 @@ class AuraOfConquest(Feature):
             usage_tags=["damage", "control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 7th level, you constantly emanate a menacing aura while you're not incapacitated. The aura extends 10 feet from you in every direction, but not through total cover.\n"
             "\n"
@@ -101,10 +101,10 @@ class AuraOfConquest(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         half_paladin_level = character.get_class_level(CharacterClass.PALADIN) // 2
         range_text = "10 feet (30 at 18th level)"
         return [
@@ -122,7 +122,7 @@ class AuraOfConquestExpansion(Feature):
             origin="Oath of Conquest Paladin Level 18",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The range of your Aura of Conquest increases to 30 feet."
         return description
 
@@ -135,11 +135,11 @@ class ScornfulRebuke(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1 hp) if you're not incapacitated."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -155,13 +155,13 @@ class InvincibleConqueror(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 20th level, you gain the ability to harness extraordinary martial prowess. As an action, you can magically become an avatar of conquest, gaining the following benefits for 1 minute:\n"
             "    * You have resistance to all damage.\n"

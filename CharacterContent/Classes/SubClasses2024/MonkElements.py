@@ -2,7 +2,6 @@ from typing import Optional
 
 import attr
 
-from Model.Character import Character
 from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.MonkBase import (

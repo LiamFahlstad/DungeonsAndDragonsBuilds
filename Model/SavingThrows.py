@@ -2,7 +2,7 @@ import attr
 
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -87,7 +87,7 @@ class SavingThrows(Recorder):
     def add_bonus(self, ability: Ability, bonus: Value) -> None:
         self._bonuses_for(ability).add(bonus)
 
-    def get_total_bonus(self, ability: Ability, view: StatView) -> int:
+    def get_total_bonus(self, ability: Ability, view: CharacterView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against
         `view` (not the ability modifier or proficiency bonus - see
         modifier())."""
@@ -96,7 +96,7 @@ class SavingThrows(Recorder):
 
     # -- Resolvers: final values, worked out against the finished character --
 
-    def modifier(self, ability: Ability, view: StatView) -> int:
+    def modifier(self, ability: Ability, view: CharacterView) -> int:
         """Ability modifier, plus the proficiency bonus if proficient, plus
         every bonus."""
         proficiency = view.get_proficiency_bonus() if self.is_proficient(ability) else 0
@@ -106,7 +106,9 @@ class SavingThrows(Recorder):
             + self.get_total_bonus(ability, view)
         )
 
-    def roll_condition(self, ability: Ability, view: StatView) -> DiceRollCondition:
+    def roll_condition(
+        self, ability: Ability, view: CharacterView
+    ) -> DiceRollCondition:
         """Advantage from any grant, Disadvantage from untrained armor
         (Strength and Dexterity saves); both cancel out."""
         conditions = set()

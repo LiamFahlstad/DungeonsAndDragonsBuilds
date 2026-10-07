@@ -1,5 +1,5 @@
 from Model.Bonuses import Bonuses
-from Model.Contracts import StatView, Value
+from Model.View import CharacterView, Value
 from Model.Recorder import Recorder, records
 
 
@@ -17,5 +17,5 @@ class Speed(Recorder):
     def add_bonus(self, bonus: Value) -> None:
         self.bonuses.add(bonus)
 
-    def total(self, view: StatView) -> int:
+    def total(self, view: CharacterView) -> int:
         return view.get_base_speed() + self.bonuses.total(view)

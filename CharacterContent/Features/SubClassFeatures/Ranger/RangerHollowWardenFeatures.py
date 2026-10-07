@@ -9,8 +9,7 @@ from CharacterContent.Features.Core.Improvements import (
     ConditionImmunity,
     SavingThrowBonus,
 )
-from Model.Character import Character
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Effects import Effects
 
 
@@ -20,7 +19,7 @@ class HollowWardenSpells(Feature):
             name="Hollow Warden Spells", origin="Hollow Warden Ranger Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach a Ranger level specified in the Hollow Warden Spells table, you thereafter always have the listed spell prepared.\n"
             "Hollow Warden Spells\n"
@@ -47,10 +46,10 @@ class WrathOfTheWild(Feature):
             usage_tags=["buff", "control"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You draw power from the strange and ancient horrors of the land, causing you to sprout unnatural growths, such as bloody antlers or putrid fangs, or causing your shadow to lengthen or twist around you. As a Bonus Action, you can expend a use of Favored Enemy to transform into a ghastly form, gaining the following benefits for 1 minute or until you have the Incapacitated condition, die, or end the transformation (no action required).\n"
             "Ancient Armor. You gain a +1 bonus to AC, as your body is wreathed in rotten bark and beastly bristles. This bonus increases to +2 when you reach Ranger level 11.\n"
@@ -59,7 +58,7 @@ class WrathOfTheWild(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -72,19 +71,19 @@ class HungeringMight(Feature):
         )
 
     def apply(self, effects: Effects):
-        def bonus(cs: StatView) -> int:
+        def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
         SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a bonus to Constitution saving throws equal to your Wisdom modifier (minimum of +1).\n"
             "In addition, once per turn when you hit a creature with an attack roll while you are transformed using Wrath of the Wild, you regain a number of Hit Points equal to 1d10 plus your Wisdom modifier, provided you are Bloodied when you hit."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -96,7 +95,7 @@ class RotAndViolence(Feature):
             usage_tags=["control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your dedication to wild eldritch beings alters you further. When transformed using Wrath of the Wild, you gain the following additional benefits.\n"
             "Menacing Aura. When a creature fails its saving throw against your Unnerving Aura, it also can’t regain Hit Points or take Reactions until the start of your next turn.\n"
@@ -117,7 +116,7 @@ class AncientMight(Feature):
     def apply(self, effects: Effects):
         self._immunity.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You become wholly suffused with the wild’s ancient and terrible power, granting you the following benefits.\n"
             "Ominous Strikes. When you hit a creature that has the Frightened condition with an attack roll, that attack deals extra damage equal to your Wisdom modifier.\n"

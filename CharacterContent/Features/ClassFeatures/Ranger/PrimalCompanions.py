@@ -6,7 +6,7 @@ from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, Monster
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
-from Model.Character import Character
+from Model.View import CharacterView
 
 _PRIMAL_BOND_TRAIT = MonsterAbility(
     name="Primal Bond",
@@ -250,7 +250,7 @@ class BeastOfTheSky(ExtendedCombatantData):
 
 def build_primal_companion(
     companion_type: CompanionType,
-    character: Character,
+    character: CharacterView,
     damage_type: Optional[DamageType] = None,
 ) -> ExtendedCombatantData:
     ranger_level = character.get_class_level(CharacterClass.RANGER)
@@ -296,17 +296,15 @@ def build_primal_companion(
 
 def format_primal_companion(
     companion_type: CompanionType,
-    character: Character,
+    character: CharacterView,
     damage_type: Optional[DamageType] = None,
 ) -> str:
     companion = build_primal_companion(companion_type, character, damage_type)
-    return format_creature_stat_block(
-        companion, character, retain_mental_abilities=False
-    )
+    return format_creature_stat_block(companion, retain_mental_abilities=False)
 
 
 def format_all_primal_companions(
-    character: Character,
+    character: CharacterView,
     selected_type: Optional[CompanionType] = None,
     selected_damage_type: Optional[DamageType] = None,
 ) -> str:
@@ -320,8 +318,6 @@ def format_all_primal_companions(
         if is_selected:
             companion.combatant_type += " (Currently Summoned)"
         blocks.append(
-            format_creature_stat_block(
-                companion, character, retain_mental_abilities=False
-            )
+            format_creature_stat_block(companion, retain_mental_abilities=False)
         )
     return "".join(blocks)

@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.WarlockBase import (
     WarlockMulticlassBuilder,
     WarlockCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import WarlockSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Warlock import (

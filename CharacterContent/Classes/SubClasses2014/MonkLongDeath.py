@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkMulticlassBuilder,
     MonkCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Monk import MonkLongDeathFeatures

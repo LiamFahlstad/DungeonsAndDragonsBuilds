@@ -1,4 +1,3 @@
-from Model.Character import Character
 from Model.Grants import Grants
 import Core.Definitions as Definitions
 from CharacterContent.Features.CharacterFeats import OriginFeats

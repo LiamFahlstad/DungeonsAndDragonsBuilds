@@ -9,9 +9,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import GrantLanguage
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class SpeechOfTheWoods(Feature):
@@ -26,7 +26,7 @@ class SpeechOfTheWoods(Feature):
     def apply(self, effects: Effects):
         self._language.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 2nd level, you gain the ability to converse with beasts and many fey.\n"
             "\n"
@@ -49,7 +49,7 @@ class SpiritTotem(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 2nd level, you gain the ability to call forth nature spirits and use them to influence the world around you.\n"
             "\n"
@@ -65,10 +65,10 @@ class SpiritTotem(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -80,7 +80,7 @@ class MightySummoner(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Beasts and fey that you conjure are more resilient than normal. Any beast or fey summoned or created by a spell that you cast gains two benefits:\n"
             "\n"
@@ -98,7 +98,7 @@ class GuardianSpirit(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."
         return description
 
@@ -112,7 +112,7 @@ class FaithfulSummons(Feature):
             activation=FeatureActivation(duration="1 Hour", range="20 Feet"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The nature spirits you commune with protect you when you are the most defenseless. If you are reduced to 0 hit points or are incapacitated against your will, you can immediately gain the benefits of Conjure Animals as if it were cast with a 9th-level spell slot. It summons four beasts of your choice that are challenge rating 2 or lower. The conjured beasts appear within 20 feet of you. If they receive no commands from you, they protect you from harm and attack your foes. The spell lasts for 1 hour, requiring no concentration, or until you dismiss it (no action required).\n"
             "\n"
@@ -120,7 +120,7 @@ class FaithfulSummons(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Reduced to 0 HP or incapacitated against your will"),
             (

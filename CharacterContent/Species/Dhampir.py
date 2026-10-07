@@ -1,4 +1,3 @@
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import CreatureSize
 from CharacterContent.Features.SpeciesFeatures import DhampirFeatures

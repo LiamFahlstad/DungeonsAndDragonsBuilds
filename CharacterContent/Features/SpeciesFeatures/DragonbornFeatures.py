@@ -13,9 +13,9 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance as DamageResistanceImprovement,
 )
 from Core.Definitions import CreatureSize
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -49,7 +49,7 @@ class DamageResistance(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."
 
 
@@ -68,7 +68,7 @@ class BreathWeapon(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = (
             "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus).\n"
             f"On a failed save, a creature takes {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon. The damage increases as you gain levels, as shown in the Breath Weapon column of the Dragonborn Features table. On a successful save, a creature takes half as much damage.\n"
@@ -76,21 +76,21 @@ class BreathWeapon(Feature):
         )
         return text
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         constitution_modifier = character.get_constitution_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
 
         if character.character_level < 5:
@@ -125,14 +125,14 @@ class DraconicFlight(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = "When you reach character level 5, you can channel draconic magic to give yourself temporary flight. As a Bonus Action, you sprout spectral wings on your back that last for 10 minutes or until you retract the wings (no action required) or have the Incapacitated condition. During that time, you have a Fly Speed equal to your Speed. Your wings appear to be made of the same energy as your Breath Weapon. Once you use this trait, you can't use it again until you finish a Long Rest."
         return text
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 

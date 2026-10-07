@@ -8,9 +8,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import GrantSense
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -24,7 +24,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 120 feet."
 
 
@@ -41,20 +41,20 @@ class AdrenalineRush(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = (
             "You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus.\n"
             "You can use this trait, and you regain all expended uses when you finish a Short or Long Rest."
         )
         return text
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -66,6 +66,6 @@ class RelentlessEndurance(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = "When you are reduced to 0 Hit Points but not killed outright, you can drop to 1 Hit Point instead. Once you use this trait, you can't do so again until you finish a Long Rest."
         return text

@@ -1,4 +1,3 @@
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import Ability, CreatureSize, Skill
 from CharacterContent.Features.SpeciesFeatures import KhoravarFeatures

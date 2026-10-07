@@ -9,8 +9,8 @@ from CharacterContent.Features.Core.Improvements import (
     GrantLanguage,
     SkillProficiencyChoice,
 )
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class MoonsInspiration(Feature):
@@ -22,7 +22,7 @@ class MoonsInspiration(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The primal and ever-changing power of the moon flows through you, granting you the following benefits.\n"
             "Inspired Eclipse. When you take a Bonus Action to give a creature a Bardic Inspiration die, you can have the Invisible condition and teleport up to 30 feet to an unoccupied space you can see as part of that Bonus Action. This invisibility lasts until the start of your next turn and ends early immediately after you make an attack roll, deal damage, or cast a spell.\n"
@@ -30,7 +30,7 @@ class MoonsInspiration(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Inspired Eclipse",
@@ -67,7 +67,7 @@ class PrimalLore(Feature):
         self._proficiency_choice.apply(effects)
         self._language.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn Druidic and one cantrip from the Druid spell list. It counts as a Bard spell for you but doesn't count against the number of cantrips you know. Whenever you gain a Bard level, you can replace this cantrip with another cantrip of your choice from the Druid spell list.\n"
             f"Additionally, you have proficiency in {self._skill.value}."
@@ -84,7 +84,7 @@ class BlessingOfMoonlight(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have the Moonbeam spell prepared.\n"
             "When you cast Moonbeam, you can modify the spell so that you glow faintly while the spell is active. While glowing, you shed Dim Light out to 5 feet, and whenever a creature fails its saving throw against the effects of this Moonbeam, another creature of your choice that you can see within 60 feet of yourself regains 2d4 Hit Points.\n"
@@ -92,7 +92,7 @@ class BlessingOfMoonlight(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Always Prepared", "Moonbeam"),
             ("Trigger", "Cast Moonbeam"),
@@ -103,10 +103,10 @@ class BlessingOfMoonlight(Feature):
             ("Recharge", "Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -118,7 +118,7 @@ class EventidesSplendor(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You become suffused with the might of the moon, improving your Moon's Inspiration in the following ways.\n"
             "Shadow of the New Moon. When you use Inspired Eclipse, the creature who received the Bardic Inspiration die can also have the Invisible condition and immediately take a Reaction to teleport up to 30 feet to an unoccupied space it can see. The creature remains Invisible until the start of its next turn.\n"
@@ -126,7 +126,7 @@ class EventidesSplendor(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Shadow of the New Moon",

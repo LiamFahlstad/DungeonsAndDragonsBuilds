@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
     RegainedOn,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class ToolsOfTheTrade(Feature):
@@ -17,7 +17,7 @@ class ToolsOfTheTrade(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Armor Training. You gain training with Heavy armor.\n"
@@ -31,7 +31,7 @@ class Spells(Feature):
     def __init__(self):
         super().__init__(name="Armorer Spells", origin="Armorer Artificer Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach an Artificer level specified in the Armorer Spells table, you thereafter always have the listed spells prepared.\n"
             "Armorer Spells\n"
@@ -54,7 +54,7 @@ class ArcaneArmor(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Magic action while you have Smith's Tools in hand, you can turn a suit of armor you are wearing into Arcane Armor. The armor continues to be Arcane Armor until you don another suit of armor or you die.\n"
             "You gain the following benefits while wearing your Arcane Armor.\n"
@@ -64,7 +64,7 @@ class ArcaneArmor(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("No Strength Requirement", "Arcane Armor has no Strength requirement"),
             (
@@ -77,7 +77,7 @@ class ArcaneArmor(Feature):
             ),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -89,7 +89,7 @@ class ArmorModel(Feature):
             usage_tags=["damage", "buff", "control", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can customize your Arcane Armor. When you do so, choose one of the following armor models: Dreadnaught, Guardian, or Infiltrator. The model you choose gives you special benefits while you wear it.\n"
             "Each model includes a special weapon. When you attack with that weapon, you can add your Intelligence modifier, instead of your Strength or Dexterity modifier, to the attack and damage rolls.\n"
@@ -110,7 +110,7 @@ class ArmorModel(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -118,7 +118,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -131,7 +131,7 @@ class ImprovedArmorer(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Armor Replication. You learn an additional plan for your Replicate Magic Item feature, and it must be in the Armor category. If you replace that plan, you must replace it with another Armor plan.\n"
@@ -140,7 +140,7 @@ class ImprovedArmorer(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Armor Replication",
@@ -161,13 +161,13 @@ class PerfectedArmor(Feature):
             usage_tags=["damage", "control", "buff", "utility"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Arcane Armor gains additional benefits based on its model, as detailed below.\n"
             "Dreadnaught. The damage die of your Force Demolisher increases to 2d6 Force damage.\n"

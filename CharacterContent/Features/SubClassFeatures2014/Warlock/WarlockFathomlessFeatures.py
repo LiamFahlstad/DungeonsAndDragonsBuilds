@@ -7,9 +7,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 
 class ExpandedSpellList(Feature):
@@ -18,7 +18,7 @@ class ExpandedSpellList(Feature):
             name="Expanded Spell List", origin="The Fathomless Patron Warlock Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The Fathomless lets you choose from an expanded list of spells when you learn a Warlock spell. The following spells are added to the Warlock spell list for you.\n"
             "Fathomless Expanded Spells\n"
@@ -50,7 +50,7 @@ class TentacleOfTheDeep(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         damage = "2d8" if warlock_level >= 10 else "1d8"
         description = (
@@ -64,7 +64,7 @@ class TentacleOfTheDeep(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         proficiency_bonus = self.number_of_uses(character)
         damage = "2d8" if warlock_level >= 10 else "1d8"
@@ -78,10 +78,10 @@ class TentacleOfTheDeep(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -93,13 +93,13 @@ class GiftOfTheSea(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a swimming speed of 40 feet, and you can breathe underwater."
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -116,11 +116,11 @@ class OceanicSoul(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You are now even more at home in the depths. You gain resistance to cold damage. In addition, when you are fully submerged, any creature that is also fully submerged can understand your speech, and you can understand theirs."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -135,13 +135,13 @@ class GuardianCoil(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         damage = "2d8" if warlock_level >= 10 else "1d8"
         description = f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         damage = "2d8" if warlock_level >= 10 else "1d8"
         return [
@@ -150,7 +150,7 @@ class GuardianCoil(Feature):
             ("Effect", f"Reduce damage to chosen creature by {damage}"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -163,7 +163,7 @@ class GraspingTentacles(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn the spell Evard's Black Tentacles. It counts as a Warlock spell for you, but it doesn't count against the number of spells you know. You can also cast it once without using a spell slot, and you regain the ability to do so when you finish a long rest.\n"
             "\n"
@@ -171,7 +171,7 @@ class GraspingTentacles(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         return [
             ("Spell", "Evard's Black Tentacles"),
@@ -194,7 +194,7 @@ class FathomlessPlunge(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can magically open temporary conduits to watery destinations. As an action, you can teleport yourself and up to five other willing creatures that you can see within 30 feet of you. Amid a whirl of tentacles, you all vanish and then reappear up to 1 mile away in a body of water you've seen (pond size or larger) or within 30 feet of it, each of you appearing in an unoccupied space within 30 feet of the others.\n"
             "\n"
@@ -202,7 +202,7 @@ class FathomlessPlunge(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "See creatures within 30 feet"),
@@ -212,5 +212,5 @@ class FathomlessPlunge(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

@@ -11,9 +11,9 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     GrantSense,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 
@@ -26,7 +26,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -36,14 +36,14 @@ class FeralPounce(Feature):
             name="Feral Pounce", origin="Lupin Trait", usage_tags=["damage", "control"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Your Unarmed Strikes deal Slashing damage instead of Bludgeoning damage. "
             "In addition, when you hit a creature with an Unarmed Strike as part of the Attack action on your turn, "
             "you can use both the Damage and the Shove options. You can use this benefit only once per turn."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -64,7 +64,7 @@ class Howl(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you let out an unearthly howl. "
             "Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw "
@@ -74,18 +74,18 @@ class Howl(Feature):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         constitution_modifier = character.get_constitution_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + constitution_modifier + proficiency_bonus
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -102,5 +102,5 @@ class WerewolfInstincts(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

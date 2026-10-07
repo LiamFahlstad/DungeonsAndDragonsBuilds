@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.RangerBase import (
     RangerMulticlassBuilder,
     RangerCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import RangerSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Ranger import (

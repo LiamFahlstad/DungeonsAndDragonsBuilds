@@ -8,7 +8,6 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericMulticlassBuilder,
     ClericCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import ClericSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Cleric import ClericWarFeatures

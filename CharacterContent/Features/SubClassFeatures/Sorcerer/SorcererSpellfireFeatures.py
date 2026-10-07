@@ -4,14 +4,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureActivation,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class SpellfireSpells(Feature):
     def __init__(self):
         super().__init__(name="Spellfire Spells", origin="Spellfire Sorcerer Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach a Sorcerer level specified in the Spellfire Spells table, you thereafter always have the listed spells prepared.\n"
             "Spellfire Spells\n"
@@ -33,7 +33,7 @@ class SpellfireBurst(Feature):
             usage_tags=["heal", "damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you spend at least 1 Sorcery Point as part of a Magic action or a Bonus Action on your turn, you can unleash one of the following magical effects of your choice. You can do so only once per turn.\n"
             "Bolstering Flames. You or one creature you can see within 30 feet of yourself gains Temporary Hit Points equal to 1d4 plus your Charisma modifier.\n"
@@ -41,10 +41,10 @@ class SpellfireBurst(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         charisma_modifier = character.get_charisma_modifier()
         return [
             (
@@ -61,7 +61,7 @@ class AbsorbSpells(Feature):
     def __init__(self):
         super().__init__(name="Absorb Spells", origin="Spellfire Sorcerer Level 6")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have Counterspell prepared.\n"
             "Additionally, whenever a target fails the saving throw against a Counterspell you cast, you regain 1d4 Sorcery Points."
@@ -73,7 +73,7 @@ class HonedSpellfire(Feature):
     def __init__(self):
         super().__init__(name="Honed Spellfire", origin="Spellfire Sorcerer Level 14")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Your Spellfire Burst improves. You add your Sorcerer level to the Temporary Hit Points gained from Bolstering Flames, and the damage of your Radiant Fire increases to 1d8."
         return description
 
@@ -86,7 +86,7 @@ class CrownOfSpellfire(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use Innate Sorcery, you can alter it and infuse yourself with the essence of spellfire, gaining the following benefits while this use of Innate Sorcery is active. Once you use this feature to alter Innate Sorcery, you can’t use it again until you finish a Long Rest unless you spend 5 Sorcery Points (no action required) to restore your use of it.\n"
             "Burning Life Force. Once per turn when you are hit by an attack roll, you can expend a number of Hit Point Dice, up to a maximum equal to your Charisma modifier (minimum of one). Roll the expended dice, and reduce the amount of damage from that attack equal to the total rolled.\n"
@@ -95,10 +95,10 @@ class CrownOfSpellfire(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         charisma_modifier = character.get_charisma_modifier()
         return [
             ("Trigger", "Use Innate Sorcery"),

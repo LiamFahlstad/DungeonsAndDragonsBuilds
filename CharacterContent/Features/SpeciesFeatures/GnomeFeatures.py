@@ -6,9 +6,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
@@ -24,7 +24,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -43,7 +43,7 @@ class GnomishCunning(Feature):
     def apply(self, effects: Effects) -> None:
         self._advantage.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on Intelligence, Wisdom, and Charisma saving throws."
 
 
@@ -58,17 +58,17 @@ class ForestGnomeSpeakWithAnimals(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         text = "You also always have the Speak with Animals spell prepared. You can cast it without a spell slot, and you regain all expended uses when you finish a Long Rest. You can also use any spell slots you have to cast the spell."
         return text
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -79,14 +79,14 @@ class RockGnomePrestidigitation(Feature):
             origin="Gnomish Lineage Rock Gnome Trait",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "Prestidigitation to create a Tiny clockwork device (AC 5,1 HP), such as a toy, fire starter, or music box. When you create the device, you determine its function by choosing one effect from Prestidigitation; the device produces that effect whenever you or another creature takes a Bonus Action to activate it with a touch. If the chosen effect has options within it, you choose one of those options for the device when you create it. For example, if you choose the spell's ignite-extinguish effect, you determine whether the device ignites or extinguishes fire; the device doesn't do both. You can have three such devices in existence at a time, and each falls apart 8 hours after its creation or when you dismantle it with a touch as a Utilize action."
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "Create a Tiny clockwork device (AC 5, 1 HP) that mimics one Prestidigitation effect, activated by Bonus Action and touch. "
             "You can have 3 at a time; each lasts 8 hours or until dismantled."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT

@@ -6,9 +6,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from Model.Character import Character
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class ReanimatorSpells(Feature):
@@ -17,7 +17,7 @@ class ReanimatorSpells(Feature):
             name="Reanimator Spells", origin="Reanimator Artificer Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach an Artificer level specified in the Reanimator Spells table, you thereafter always have the listed spells prepared.\n"
             "Reanimator Spells\n"
@@ -45,16 +45,16 @@ class ReanimatorSkillSet(Feature):
             ),
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
             "Jolt to Life. When you cast Spare the Dying, you can modify the spell so that it sends a jolt of electricity through the target, reviving it. The target regains a number of Hit Points equal to your Artificer level, and each creature of your choice in a 10-foot Emanation originating from the target makes a Dexterity saving throw against your spell save DC, taking 2d4 Lightning damage on a failed save or half as much damage on a successful one.\n"
@@ -77,7 +77,7 @@ class ReanimatedCompanion(Feature):
             usage_tags=["summon"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Using Tinker's Tools or another type of Artisan's Tools with which you have proficiency, you can take a Magic action to create a Reanimated Companion (see the stat block) through the power of necromancy and science. The companion manifests in an unoccupied space within 5 feet of you. You determine the companion's appearance; your choices don't affect the companion's game statistics.\n"
             "The companion is Friendly to you and your allies and obeys you. It lasts until you finish a Long Rest or until you take a Magic action to dismiss it early, at which point it harmlessly collapses into a pile of viscera. It immediately drops to 0 Hit Points and dies (triggering its Death Burst trait) if you die.\n"
@@ -96,7 +96,7 @@ class StrangeModifications(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you create a Reanimated Companion, it gains one of the following options of your choice; choose when you create the companion.\n"
             "Arcane Conduit. You can cast spells as though you were in the companion's space, but you must use your own senses. Once per turn, when you cast an Artificer spell from the Evocation or Necromancy school and deal damage while your companion is within 120 feet of you, you can add your Intelligence modifier to one damage roll of that spell.\n"
@@ -104,7 +104,7 @@ class StrangeModifications(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Arcane Conduit",
@@ -122,7 +122,7 @@ class ImprovedReanimation(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The damage of your Reanimated Companion's Death Burst increases to 4d4. Necrotic damage dealt by your companion ignores Resistance."
         return description
 
@@ -135,10 +135,10 @@ class MacabreModifications(Feature):
             usage_tags=["control", "damage", "utility"],
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You experiment and alter your companion further. Whenever you create a Reanimated Companion, the companion now gains two options for Strange Modifications, instead of one. Additionally, when picking options for Strange Modifications, you can also choose from the following options.\n"
             "Bloated. The companion becomes Large. Whenever it hits a Large or smaller creature with its Dreadful Swipe action, that creature is pushed up to 10 feet away from the companion. Additionally, you can add your Intelligence modifier to the damage dealt by the companion's Death Burst.\n"
@@ -157,7 +157,7 @@ class RefinedReanimation(Feature):
             usage_tags=["heal", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You have mastered the science of revivification, granting you the following benefits.\n"
             "Facilitated Revival. You can cast Raise Dead once without expending a spell slot and without Material components, provided you use Tinker's Tools or another type of Artisan's Tools with which you have proficiency as the Spellcasting Focus. Once you use this feature, you can't use it again until you finish a Long Rest.\n"
@@ -166,7 +166,7 @@ class RefinedReanimation(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             (
                 "Facilitated Revival",

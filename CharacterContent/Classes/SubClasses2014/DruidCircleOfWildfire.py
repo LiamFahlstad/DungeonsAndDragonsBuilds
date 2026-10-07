@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.DruidBase import (
     DruidMulticlassBuilder,
     DruidCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import DruidSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Druid import DruidWildfireFeatures

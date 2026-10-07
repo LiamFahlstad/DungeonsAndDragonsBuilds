@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterMulticlassBuilder,
     FighterCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import Ability, FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures

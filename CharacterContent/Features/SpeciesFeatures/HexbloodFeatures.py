@@ -8,8 +8,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import GrantSense
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 
@@ -22,7 +22,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -40,7 +40,7 @@ class EerieToken(Feature):
             uses=FeatureUses(max_uses=1),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can create a magical token by harmlessly removing a lock of hair, detaching a nail, or using some other method. "
             "While the token exists, you gain the following benefits:\n"
@@ -52,7 +52,7 @@ class EerieToken(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
 
@@ -60,7 +60,7 @@ class HexMagic(Feature):
     def __init__(self):
         super().__init__(name="Hex Magic", origin="Hexblood Trait")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "You always have the Disguise Self and Hex spells prepared. "
             "You can cast each spell once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. "
@@ -68,5 +68,5 @@ class HexMagic(Feature):
             "Intelligence, Wisdom, or Charisma is your spellcasting ability for the spells you cast with this trait (choose the ability when you select this species)."
         )
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

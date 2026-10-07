@@ -1,4 +1,3 @@
-from Model.Character import Character
 from Model.Grants import Grants
 import Core.Definitions as Definitions
 from Core.Definitions import Ability

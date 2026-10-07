@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardMulticlassBuilder,
     BardCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardValorFeatures

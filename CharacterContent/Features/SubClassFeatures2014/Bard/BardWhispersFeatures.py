@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class PsychicBlades(Feature):
@@ -18,10 +18,10 @@ class PsychicBlades(Feature):
             usage_tags=["damage"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         if character.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
         elif character.get_class_level(CharacterClass.BARD) < 10:
@@ -40,7 +40,7 @@ class PsychicBlades(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         if character.get_class_level(CharacterClass.BARD) < 5:
             psychic_damage = "2d6"
         elif character.get_class_level(CharacterClass.BARD) < 10:
@@ -69,10 +69,10 @@ class WordsOfTerror(Feature):
             usage_tags=["control"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Requirement", "Speak to humanoid alone for 1+ minute"),
             ("Trigger", "End of conversation"),
@@ -85,7 +85,7 @@ class WordsOfTerror(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 3rd level, you learn to infuse innocent-seeming words with an insidious magic that can inspire terror.\n"
             "\n"
@@ -111,10 +111,10 @@ class MantleOfWhispers(Feature):
             usage_tags=["utility"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 6th level, you gain the ability to adopt a humanoid's persona. When a humanoid dies within 30 feet of you, you can magically capture its shadow using your reaction. You retain this shadow until you use it or you finish a long rest.\n"
             "\n"
@@ -142,10 +142,10 @@ class ShadowLore(Feature):
             usage_tags=["control"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 14th level, you gain the ability to weave dark magic into your words and tap into a creature's deepest fears.\n"
             "\n"
@@ -161,7 +161,7 @@ class ShadowLore(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "30 feet"),

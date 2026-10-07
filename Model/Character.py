@@ -263,6 +263,11 @@ class Character:
             self._extension_tree_version = self._version
         return self._extension_tree
 
+    def has_feature(self, feature_type: type) -> bool:
+        """Whether a feature of `feature_type` is granted plainly (not as an
+        extension)."""
+        return any(isinstance(f, feature_type) for f in self.features)
+
     def get_features_by_type(self, feature_type: type) -> list[Any]:
         return [
             feature for feature in self.features if isinstance(feature, feature_type)
@@ -614,7 +619,7 @@ class Character:
             raise ValueError("Character does not have a spell casting ability.")
         return self.spell_casting_ability
 
-    # ── Sources, read through StatView ───────────────────────────────────────
+    # ── Sources, read through CharacterView ───────────────────────────────────────
 
     def get_base_ability_score(self, ability: Ability) -> int:
         """The player's score before any increase."""

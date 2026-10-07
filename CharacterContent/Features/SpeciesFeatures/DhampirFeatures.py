@@ -6,9 +6,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
 from Core.Definitions import DamageType, Sense
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 SPEED = 35  # Given by your species
 
@@ -21,7 +21,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
 
 
@@ -32,7 +32,7 @@ class SpiderClimb(Feature):
             name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff", "utility"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         if self.character_level >= 3:
             return (
                 "You have a Climb Speed equal to your Speed. "
@@ -54,7 +54,7 @@ class TraceOfUndeath(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Necrotic damage."
 
 
@@ -70,7 +70,7 @@ class VampiricBite(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use your Unarmed Strike and deal damage, you can choose to bite with your fangs. "
             "You deal Piercing damage equal to 1d4 plus your Constitution modifier instead of the normal damage of an Unarmed Strike.\n"
@@ -81,11 +81,11 @@ class VampiricBite(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()

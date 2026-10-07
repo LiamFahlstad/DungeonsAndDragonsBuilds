@@ -3,7 +3,6 @@ from typing import Optional, TypeAlias
 import attr
 
 import Core.Definitions as Definitions
-from Model.Character import Character
 from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats

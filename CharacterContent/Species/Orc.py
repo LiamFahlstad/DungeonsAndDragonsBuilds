@@ -1,4 +1,3 @@
-from Model.Character import Character
 from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import OrcFeatures
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder

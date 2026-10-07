@@ -5,7 +5,7 @@ import attr
 import Core.Definitions as Definitions
 from Model.Creatures.Combatants import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
-from Model.Character import Character, SpellSource
+from Model.Character import SpellSource
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import EpicBoon, GeneralFeats
 from CharacterContent.Items import Armor, Weapons

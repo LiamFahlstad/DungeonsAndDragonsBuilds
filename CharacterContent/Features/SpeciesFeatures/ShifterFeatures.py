@@ -12,8 +12,8 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     GrantSense,
 )
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 
@@ -34,7 +34,7 @@ class Darkvision(Feature):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
 
 
@@ -50,7 +50,7 @@ class Shifting(Feature):
             usage_tags=["heal", "buff", "damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can shape-shift to assume a more bestial appearance. This transformation lasts for 1 minute or until you revert to your normal appearance as a Bonus Action. When you shift, you gain Temporary Hit Points equal to 2 times your Proficiency Bonus. You can shift a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
             "Whenever you shift, you gain the benefit of one of the following options (choose when you select this species):"
@@ -66,10 +66,10 @@ class Shifting(Feature):
             description += "\n- While shifted, you have Advantage on Wisdom checks. Additionally, no creature within 30 feet of you can have Advantage on an attack roll against you unless you have the Incapacitated condition."
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -91,5 +91,5 @@ class BestialInstincts(Feature):
     def apply(self, effects: Effects):
         self._choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

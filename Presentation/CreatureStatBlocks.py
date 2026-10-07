@@ -83,7 +83,6 @@ WILDSHAPE_CARD_CSS = """/* ── Wild Shape form cards ────────
         """
 from Model.Creatures.Combatants import ExtendedCombatantData
 from Core.Definitions import Ability
-from Model.Character import Character
 from Core.Rules import ability_modifier
 
 _MENTAL_ABILITIES = (
@@ -181,7 +180,6 @@ def _speed_text(monster: ExtendedCombatantData) -> str:
 
 def format_creature_stat_block(
     monster: ExtendedCombatantData,
-    character: Optional[Character] = None,
     retain_mental_abilities: bool = False,
     temp_hp_text: Optional[str] = None,
 ) -> str:

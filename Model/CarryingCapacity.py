@@ -1,7 +1,7 @@
 from Core.Definitions import Ability
 from Core.Rules import CARRYING_CAPACITY_BASE_SLOTS
 from Model.Bonuses import by_source
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Recorder import Recorder, records
 from Model.Records.SourcedValue import SourcedValue
 
@@ -25,7 +25,7 @@ class CarryingCapacity(Recorder):
     def add_bonus(self, source: str, bonus: int) -> None:
         self._bonus_sources.append(SourcedValue(bonus, source))
 
-    def sources(self, view: StatView) -> list[SourcedValue]:
+    def sources(self, view: CharacterView) -> list[SourcedValue]:
         """Every carrying capacity source, including the dynamic 'Person' base."""
         person_slots = CARRYING_CAPACITY_BASE_SLOTS + view.get_ability_modifier(
             Ability.STRENGTH
@@ -33,6 +33,6 @@ class CarryingCapacity(Recorder):
         person = SourcedValue(person_slots, PERSON_SOURCE)
         return [person] + sorted(self._bonus_sources, key=by_source)
 
-    def total(self, view: StatView) -> int:
+    def total(self, view: CharacterView) -> int:
         """Total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
         return sum(source.value for source in self.sources(view))

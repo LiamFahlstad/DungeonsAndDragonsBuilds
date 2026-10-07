@@ -13,17 +13,17 @@ from CharacterContent.Features.Core.Improvements import (
 )
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spell Casting", origin="Ranger Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Spellcasting:\n"
             "    * Whenever you finish a Long Rest, you can replace one spell on your list with another Ranger spell for which you have spell slots.\n"
@@ -32,14 +32,14 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Spell Replacement", "One spell each Long Rest"),
             ("Spell Slots", "Regain all on Long Rest"),
             ("Spellcasting Ability", "Wisdom"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -47,7 +47,7 @@ class ReplacingWeaponMasteries(Feature):
     def __init__(self):
         super().__init__(name="Replacing Weapon Masteries", origin="Ranger Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
         return description
 
@@ -64,7 +64,7 @@ class FavoredEnemy(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have the Hunter's Mark spell prepared.\n"
             "You regain all expended uses of this ability when you finish a Long Rest.\n"
@@ -72,7 +72,7 @@ class FavoredEnemy(Feature):
         return description
 
     def get_resource_tiles(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         uses_by_level = {}
         for level in ALL_LEVELS:
@@ -94,7 +94,7 @@ class FavoredEnemy(Feature):
         ]
         return [("Free Hunter's Mark Uses", steps)]
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         free_hunters_mark_uses = self.number_of_uses(character)
 
         return [
@@ -103,10 +103,10 @@ class FavoredEnemy(Feature):
             ("Regain", "Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         ranger_level = character.get_class_level(CharacterClass.RANGER)
         if ranger_level < 5:
             return 2
@@ -132,7 +132,7 @@ class DeftExplorerExpertise(Feature):
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill.value} skill."
 
     def apply(self, effects: Effects):
@@ -143,7 +143,7 @@ class DeftExplorerLanguages(Feature):
     def __init__(self):
         super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Languages.: You know two languages of your choice from the language tables in chapter 2."
         return description
 
@@ -152,7 +152,7 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Ranger Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
 
@@ -173,11 +173,11 @@ class Roving(Feature):
             lambda cs: (0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10)
         ).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -192,7 +192,7 @@ class Expertise(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill_1.value} and {self.skill_2.value} skills."
 
     def apply(self, effects: Effects):
@@ -213,7 +213,7 @@ class Tireless(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Primal forces now help fuel you on your journeys, granting you the following benefits.\n"
             "    * Temporary Hit Points: As a Magic Action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1).\n"
@@ -222,7 +222,7 @@ class Tireless(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wis_mod = character.get_wisdom_modifier()
         uses = max(1, wis_mod)
         return [
@@ -231,13 +231,13 @@ class Tireless(Feature):
             ("Exhaustion Reduction", "Decrease by 1 on Short Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_wisdom_modifier()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -245,7 +245,7 @@ class RelentlessHunter(Feature):
     def __init__(self):
         super().__init__(name="Relentless Hunter", origin="Ranger Level 13")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Taking damage can't break your Concentration on Hunter's Mark."
         return description
 
@@ -267,14 +267,14 @@ class NaturesVeil(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You invoke spirits of nature to magically hide yourself. As a Bonus Action you can give yourself the Invisible condition until the end of your next turn.\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wis_mod = character.get_wisdom_modifier()
         uses = max(1, wis_mod)
         return [
@@ -284,13 +284,13 @@ class NaturesVeil(Feature):
             ("Uses", f"{uses}, regain on Long Rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_wisdom_modifier()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -300,11 +300,11 @@ class PreciseHunter(Feature):
             name="Precise Hunter", origin="Ranger Level 17", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -320,11 +320,11 @@ class FeralSenses(Feature):
     def apply(self, effects: Effects):
         self._blindsight.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -334,6 +334,6 @@ class FoeSlayer(Feature):
             name="Foe Slayer", origin="Ranger Level 20", usage_tags=["damage"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."
         return description

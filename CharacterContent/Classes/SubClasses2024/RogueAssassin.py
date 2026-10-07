@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueMulticlassBuilder,
     RogueCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import RogueSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatures

@@ -6,8 +6,8 @@ from CharacterContent.Features.Core.Improvements import (
     CharacterImprovement,
     ItemImprovement,
 )
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 class ItemRarity(str, Enum):
@@ -100,7 +100,7 @@ class Item(Feature):
         for improvement in self.improvements:
             improvement.apply(effects)
 
-    def get_description(self, character: Character) -> str | None:
+    def get_description(self, character: CharacterView) -> str | None:
         """Return the item description. Subclasses can override for a description
         that depends on the character (e.g. scaling with level or ability scores)."""
         if self.description_text:

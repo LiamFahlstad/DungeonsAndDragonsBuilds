@@ -13,9 +13,9 @@ from CharacterContent.Features.Core.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class BonusProficiency(Feature):
@@ -40,7 +40,7 @@ class BonusProficiency(Feature):
         if self._proficiency_choice is not None:
             self._proficiency_choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in one of the following skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."
         if self._skill is not None:
             description += f"\nYou chose proficiency in {self._skill.value}."
@@ -62,10 +62,10 @@ class FightingSpirit(Feature):
             uses=FeatureUses(max_uses=3, regain_all_on="long rest"),
         )
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your intensity in battle can shield you and help you strike true. As a bonus action on your turn, you can give yourself advantage on all weapon attack rolls until the end of the current turn. When you do so, you also gain temporary hit points.\n"
             "The number of temporary hit points depends on your fighter level: 5 at 3rd level, 10 at 10th level, and 15 at 15th level.\n"
@@ -73,7 +73,7 @@ class FightingSpirit(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         fighter_level = character.get_class_level(CharacterClass.FIGHTER)
         temporary_hit_points = 5
         if fighter_level >= 15:
@@ -92,10 +92,10 @@ class FightingSpirit(Feature):
             ("Regain", "Long rest"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -122,7 +122,7 @@ class ElegantCourtier(Feature):
     def apply(self, effects: Effects):
         self._proficiency_choice.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your discipline and attention to detail allow you to excel in social situations. Whenever you make a Charisma (Persuasion) check, you gain a bonus to the check equal to your Wisdom modifier.\n"
             "Your self-control also causes you to gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
@@ -131,7 +131,7 @@ class ElegantCourtier(Feature):
             description += f"\nYou already had Wisdom saving throw proficiency, so you chose {self._alternate_saving_throw.value} instead."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -139,10 +139,10 @@ class TirelessSpirit(Feature):
     def __init__(self):
         super().__init__(name="Tireless Spirit", origin="Samurai Fighter Level 10")
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you roll initiative and have no uses of Fighting Spirit remaining, you regain one use."
         return description
 
@@ -155,11 +155,11 @@ class RapidStrike(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You learn to trade accuracy for swift strikes. If you take the Attack action on your turn and have advantage on an attack roll against one of the targets, you can forgo the advantage for that roll to make an additional weapon attack against that target, as part of the same action. You can do so no more than once per turn."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -171,14 +171,14 @@ class StrengthBeforeDeath(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your fighting spirit can delay the grasp of death. If you take damage that reduces you to 0 hit points, you can use your reaction to delay falling unconscious, and you can immediately take an extra turn. While you have 0 hit points during that extra turn, taking damage causes death saving throw failures as normal, and three death saving throw failures can still kill you. When the extra turn ends, you fall unconscious if you still have 0 hit points.\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Take damage reducing you to 0 HP"),
             ("Action", "Reaction"),
@@ -187,5 +187,5 @@ class StrengthBeforeDeath(Feature):
             ("Uses", "1 per long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

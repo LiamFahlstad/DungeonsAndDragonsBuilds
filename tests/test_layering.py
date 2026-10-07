@@ -92,6 +92,18 @@ TYPE_CHECKING_ALLOWLIST: set[str] = set()
 CAST_ALLOWLIST: set[str] = {"Model/Recorder.py"}
 AS_ALLOWLIST: set[str] = {"Presentation/CharacterSheetWriters.py"}
 
+# Content that reads a character (features, items, tools, invocations)
+# reads it through Model.View.CharacterView, never the concrete Character.
+CONTENT_READERS = (
+    "CharacterContent/Features/",
+    "CharacterContent/Items/",
+    "CharacterContent/ToolProficiencies/",
+    "CharacterContent/Invocations/",
+)
+# The weapon base reads character.ledger until Step 10 moves that math
+# to AttackProfile.
+CHARACTER_IMPORT_ALLOWLIST: set[str] = {"CharacterContent/Items/Weapons/Base.py"}
+
 
 def _project_files():
     for path in sorted(REPO.rglob("*.py")):
@@ -218,6 +230,21 @@ def _uses_type_checking(tree: ast.AST) -> bool:
         ):
             return True
     return False
+
+
+def test_content_reads_character_through_view():
+    offenders = set()
+    for name, path in _project_files():
+        if not name.startswith(CONTENT_READERS):
+            continue
+        imported = _imported_modules(
+            _parse(path), _module_name(name), is_package=name.endswith("__init__.py")
+        )
+        if "Model.Character" in imported:
+            offenders.add(name)
+    _check_allowlist(
+        offenders, CHARACTER_IMPORT_ALLOWLIST, "Model.Character in content"
+    )
 
 
 def test_no_cast():

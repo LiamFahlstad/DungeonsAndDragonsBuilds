@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class UndyingExpandedSpells(Feature):
@@ -15,7 +15,7 @@ class UndyingExpandedSpells(Feature):
             name="Expanded Spell List", origin="The Undying Patron Warlock Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The Undying lets you choose from an expanded list of spells when you learn a warlock spell. The following spells are added to the warlock spell list for you.\n"
             "Undying Expanded Spells\n"
@@ -38,7 +38,7 @@ class AmongTheDead(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 1st level, you learn the Spare the Dying cantrip, which counts as a warlock cantrip for you. You also have advantage on saving throws against any disease.\n"
             "\n"
@@ -46,7 +46,7 @@ class AmongTheDead(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -59,7 +59,7 @@ class DefyDeath(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 6th level, you can give yourself vitality when you cheat death or when you help someone else cheat it. You can regain hit points equal to 1d8 + your Constitution modifier (minimum of 1 hit point) when you succeed on a death saving throw or when you stabilize a creature with Spare the Dying.\n"
             "\n"
@@ -67,7 +67,7 @@ class DefyDeath(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         con_mod = character.get_constitution_modifier()
         return [
             (
@@ -78,7 +78,7 @@ class DefyDeath(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -90,7 +90,7 @@ class UndyingNature(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Beginning at 10th level, you can hold your breath indefinitely, and you don't require food, water, or sleep, although you still require rest to reduce exhaustion and still benefit from finishing short and long rests.\n"
             "\n"
@@ -109,7 +109,7 @@ class IndestructibleLife(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach 14th level, you partake of some of the true secrets of the Undying. On your turn, you can use a bonus action to regain hit points equal to 1d8 + your warlock level. Additionally, if you put a severed body part of yours back in place when you use this feature, the part reattaches.\n"
             "\n"
@@ -117,7 +117,7 @@ class IndestructibleLife(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         return [
             ("Action", "Bonus action on your turn"),
@@ -126,5 +126,5 @@ class IndestructibleLife(Feature):
             ("Recharge", "Short or long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

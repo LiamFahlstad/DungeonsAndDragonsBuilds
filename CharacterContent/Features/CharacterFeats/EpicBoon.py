@@ -1,6 +1,6 @@
 from CharacterContent.Features.Core.BaseFeatures import Feature
-from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
+from Model.View import CharacterView
 
 
 class EpicBoon(Feature):
@@ -15,5 +15,5 @@ class DummyEpicBoon(EpicBoon):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Epic Boon Feature")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "This is a dummy epic boon for testing purposes."

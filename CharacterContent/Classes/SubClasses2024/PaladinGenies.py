@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinMulticlassBuilder,
     PaladinCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import PaladinSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Paladin import PaladinGeniesFeatures

@@ -17,10 +17,10 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 
 class GeneralFeat(Feature):
@@ -30,7 +30,7 @@ class GeneralFeat(Feature):
 
     labeled_by_class_level = True
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         if self.uses is None or self.uses.regain_all_on is None:
             return None
         cadence = self.uses.regain_all_on.lower()
@@ -107,7 +107,7 @@ class AbilityScoreImprovement(GeneralFeat):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
             f"{ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
         )
@@ -122,7 +122,7 @@ class Actor(_AbilityScoreFeat):
     _NAME = "Actor"
     _ABILITIES = (Ability.CHARISMA,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Charisma 13+\n"
             "You gain the following benefits.\n"
@@ -131,7 +131,7 @@ class Actor(_AbilityScoreFeat):
             "Mimicry. You can mimic the sounds of other creatures, including speech. A creature that hears the mimicry must succeed on a Wisdom (Insight) check to determine the effect is faked (DC 8 plus your Charisma modifier and Proficiency Bonus).\n"
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         charisma_modifier = character.get_charisma_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + charisma_modifier + proficiency_bonus
@@ -163,7 +163,7 @@ class Athlete(_AbilityScoreFeat):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -173,7 +173,7 @@ class Athlete(_AbilityScoreFeat):
             "Jumping. You can make a running Long or High Jump after moving only 5 feet.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -181,7 +181,7 @@ class Charger(_AbilityScoreFeat):
     _NAME = "Charger"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -195,7 +195,7 @@ class Chef(_AbilityScoreFeat):
     _NAME = "Chef"
     _ABILITIES = (Ability.WISDOM, Ability.CONSTITUTION)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -210,7 +210,7 @@ class CrossbowExpert(_AbilityScoreFeat):
     _NAME = "Crossbow Expert"
     _ABILITIES = (Ability.DEXTERITY,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -225,7 +225,7 @@ class Crusher(_AbilityScoreFeat):
     _NAME = "Crusher"
     _ABILITIES = (Ability.STRENGTH, Ability.CONSTITUTION)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -234,7 +234,7 @@ class Crusher(_AbilityScoreFeat):
             "Enhanced Critical. When you score a Critical Hit that deals Bludgeoning damage to a creature, attack rolls against that creature have Advantage until the start of your next turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -242,7 +242,7 @@ class DefensiveDuelist(_AbilityScoreFeat):
     _NAME = "Defensive Duelist"
     _ABILITIES = (Ability.DEXTERITY,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -250,7 +250,7 @@ class DefensiveDuelist(_AbilityScoreFeat):
             "Parry. If you're holding a Finesse weapon and another creature hits you with a melee attack, you can take a Reaction to add your Proficiency Bonus to your Armor Class, potentially causing the attack to miss you. You gain this bonus to your AC against melee attacks until the start of your next turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -258,7 +258,7 @@ class DualWielder(_AbilityScoreFeat):
     _NAME = "Dual Wielder"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -272,7 +272,7 @@ class Durable(_AbilityScoreFeat):
     _NAME = "Durable"
     _ABILITIES = (Ability.CONSTITUTION,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -281,7 +281,7 @@ class Durable(_AbilityScoreFeat):
             "Speedy Recovery. As a Bonus Action, you can expend one of your Hit Point Dice, roll the die, and regain a number of Hit Points equal to the roll.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -292,7 +292,7 @@ class ElementalAdept(_AbilityScoreFeat):
     _NAME = "Elemental Adept"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Spellcasting or Pact Magic Feature\n"
             "You gain the following benefits.\n"
@@ -306,7 +306,7 @@ class FeyTouched(_AbilityScoreFeat):
     _NAME = "Fey Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "Your exposure to the Feywild's magic grants you the following benefits.\n"
@@ -319,7 +319,7 @@ class Grappler(_AbilityScoreFeat):
     _NAME = "Grappler"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -329,7 +329,7 @@ class Grappler(_AbilityScoreFeat):
             "Fast Wrestler. You don't have to spend extra movement to move a creature Grappled by you if the creature is your size or smaller.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -337,7 +337,7 @@ class GreatWeaponMaster(_AbilityScoreFeat):
     _NAME = "Great Weapon Master"
     _ABILITIES = (Ability.STRENGTH,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength 13+\n"
             "You gain the following benefits.\n"
@@ -346,7 +346,7 @@ class GreatWeaponMaster(_AbilityScoreFeat):
             "Hew. Immediately after you score a Critical Hit with a Melee weapon or reduce a creature to 0 Hit Points with one, you can make one attack with the same weapon as a Bonus Action.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -358,7 +358,7 @@ class HeavilyArmored(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Medium Armor Training\n"
             "You gain the following benefits.\n"
@@ -371,7 +371,7 @@ class HeavyArmorMaster(_AbilityScoreFeat):
     _NAME = "Heavy Armor Master"
     _ABILITIES = (Ability.CONSTITUTION, Ability.STRENGTH)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Heavy Armor Training\n"
             "You gain the following benefits.\n"
@@ -379,7 +379,7 @@ class HeavyArmorMaster(_AbilityScoreFeat):
             "Damage Reduction. When you're hit by an attack while you're wearing Heavy armor, any Bludgeoning, Piercing, and Slashing damage dealt to you by that attack is reduced by an amount equal to your Proficiency Bonus.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -387,7 +387,7 @@ class InspiringLeader(_AbilityScoreFeat):
     _NAME = "Inspiring Leader"
     _ABILITIES = (Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Wisdom or Charisma 13+\n"
             "You gain the following benefits.\n"
@@ -395,7 +395,7 @@ class InspiringLeader(_AbilityScoreFeat):
             "Bolstering Performance. When you finish a Short or Long Rest, you can give an inspiring performance: a speech, song, or dance. When you do so, choose up to six allies (which can include yourself) within 30 feet of yourself who witness the performance. The chosen creatures each gain Temporary Hit Points equal to your character level plus the modifier of the ability you increased with this feat.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -403,7 +403,7 @@ class KeenMind(_AbilityScoreFeat):
     _NAME = "Keen Mind"
     _ABILITIES = (Ability.INTELLIGENCE,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Intelligence 13+\n"
             "You gain the following benefits.\n"
@@ -421,7 +421,7 @@ class LightlyArmored(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -434,7 +434,7 @@ class MageSlayer(_AbilityScoreFeat):
     _NAME = "Mage Slayer"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -457,7 +457,7 @@ class MartialWeaponTraining(_AbilityScoreFeat):
         # "Weapon Proficiency. You gain proficiency with Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -470,7 +470,7 @@ class MediumArmorMaster(_AbilityScoreFeat):
     _NAME = "Medium Armor Master"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Medium Armor Training\n"
             "You gain the following benefits.\n"
@@ -487,7 +487,7 @@ class ModeratelyArmored(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Light Armor Training\n"
             "You gain the following benefits.\n"
@@ -500,7 +500,7 @@ class MountedCombatant(_AbilityScoreFeat):
     _NAME = "Mounted Combatant"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY, Ability.WISDOM)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -515,7 +515,7 @@ class Observant(_AbilityScoreFeat):
     _NAME = "Observant"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Intelligence or Wisdom 13+\n"
             "You gain the following benefits.\n"
@@ -529,7 +529,7 @@ class Piercer(_AbilityScoreFeat):
     _NAME = "Piercer"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -538,7 +538,7 @@ class Piercer(_AbilityScoreFeat):
             "Enhanced Critical. When you score a Critical Hit that deals Piercing damage to a creature, you can roll one additional damage die when determining the extra Piercing damage the target takes.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -568,12 +568,12 @@ class Poisoner(_AbilityScoreFeat):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         modifier = character.get_ability_modifier(self.ability)
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -582,7 +582,7 @@ class Poisoner(_AbilityScoreFeat):
             "Brew Poison. You gain proficiency with the Poisoner's Kit. With 1 hour of work using such a kit and expending 50 GP worth of materials, you can create a number of poison doses equal to your Proficiency Bonus. As a Bonus Action, you can apply a poison dose to a weapon or piece of ammunition. Once applied, the poison retains its potency for 1 minute or until you deal damage with the poisoned item, whichever is shorter. When a creature takes damage from the poisoned item, that creature must succeed on a Constitution saving throw (DC 8 plus the modifier of the ability increased by this feat and your Proficiency Bonus) or take 2d8 Poison damage and have the Poisoned condition until the end of your next turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -590,7 +590,7 @@ class PolearmMaster(_AbilityScoreFeat):
     _NAME = "Polearm Master"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -599,7 +599,7 @@ class PolearmMaster(_AbilityScoreFeat):
             "Reactive Strike. While you're holding a Quarterstaff, a Spear, or a weapon that has the Heavy and Reach properties, you can take a Reaction to make one melee attack against a creature that enters the reach you have with that weapon.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -615,7 +615,7 @@ class Resilient(_AbilityScoreFeat):
         super().apply(effects)
         SavingThrowProficiency([self.ability]).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -650,7 +650,7 @@ class RitualCaster(_AbilityScoreFeat):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Intelligence, Wisdom, or Charisma 13+\n"
             "You gain the following benefits.\n"
@@ -664,7 +664,7 @@ class Sentinel(_AbilityScoreFeat):
     _NAME = "Sentinel"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -673,7 +673,7 @@ class Sentinel(_AbilityScoreFeat):
             "Halt. When you hit a creature with an Opportunity Attack, the creature's Speed becomes 0 for the rest of the current turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -681,7 +681,7 @@ class ShadowTouched(_AbilityScoreFeat):
     _NAME = "Shadow Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "Your exposure to the Shadowfell's magic grants you the following benefits.\n"
@@ -694,7 +694,7 @@ class Sharpshooter(_AbilityScoreFeat):
     _NAME = "Sharpshooter"
     _ABILITIES = (Ability.DEXTERITY,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -709,7 +709,7 @@ class ShieldMaster(_AbilityScoreFeat):
     _NAME = "Shield Master"
     _ABILITIES = (Ability.STRENGTH,)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Shield Training\n"
             "You gain the following benefits.\n"
@@ -718,12 +718,12 @@ class ShieldMaster(_AbilityScoreFeat):
             "Interpose Shield. If you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you can take a Reaction to take no damage if you succeed on the saving throw and are holding a Shield.\n"
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         strength_modifier = character.get_strength_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + strength_modifier + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -749,7 +749,7 @@ class SkillExpert(_AbilityScoreFeat):
         self._proficiency.apply(effects)
         self._expertise.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -771,7 +771,7 @@ class Skulker(_AbilityScoreFeat):
         super().apply(effects)
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
             "You gain the following benefits.\n"
@@ -781,7 +781,7 @@ class Skulker(_AbilityScoreFeat):
             "Sniper. If you make an attack roll while hidden and the roll misses, making the attack roll doesn't reveal your location.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -789,7 +789,7 @@ class Slasher(_AbilityScoreFeat):
     _NAME = "Slasher"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -798,7 +798,7 @@ class Slasher(_AbilityScoreFeat):
             "Enhanced Critical. When you score a Critical Hit that deals Slashing damage to a creature, it has Disadvantage on attack rolls until the start of your next turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -811,7 +811,7 @@ class Speedy(_AbilityScoreFeat):
         # "Speed Increase. Your Speed increases by 10 feet."
         SpeedBonus(10).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity or Constitution 13+\n"
             "You gain the following benefits.\n"
@@ -821,7 +821,7 @@ class Speedy(_AbilityScoreFeat):
             "Agile Movement. Opportunity Attacks have Disadvantage against you.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -829,7 +829,7 @@ class SpellSniper(_AbilityScoreFeat):
     _NAME = "Spell Sniper"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Spellcasting or Pact Magic Feature\n"
             "You gain the following benefits.\n"
@@ -844,7 +844,7 @@ class Telekinetic(_AbilityScoreFeat):
     _NAME = "Telekinetic"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -853,12 +853,12 @@ class Telekinetic(_AbilityScoreFeat):
             "Telekinetic Shove. As a Bonus Action, you can telekinetically shove one creature you can see within 30 feet of yourself. When you do so, the target must succeed on a Strength saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or be moved 5 feet toward or away from you.\n"
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         modifier = character.get_ability_modifier(self.ability)
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -888,7 +888,7 @@ class Telepathic(_AbilityScoreFeat):
     def apply(self, effects: Effects):
         self._bonus.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -902,7 +902,7 @@ class WarCaster(_AbilityScoreFeat):
     _NAME = "War Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Spellcasting or Pact Magic Feature\n"
             "You gain the following benefits.\n"
@@ -917,7 +917,7 @@ class WeaponMaster(_AbilityScoreFeat):
     _NAME = "Weapon Master"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
             "You gain the following benefits.\n"
@@ -931,7 +931,7 @@ class ColdCaster(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -940,7 +940,7 @@ class ColdCaster(_AbilityScoreFeat):
             "Frostbite. Once per turn when you hit a creature with an attack roll and deal Cold damage, you can temporarily negate the creature's defenses. The creature subtracts 1d4 from the next saving throw it makes before the end of your next turn.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -949,7 +949,7 @@ class Dragonscarred(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.CONSTITUTION, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Cult of the Dragon Initiate Feat)\n"
             "You gain the following benefits.\n"
@@ -964,7 +964,7 @@ class EnclaveMAGIC(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Emerald Enclave Fledgling Feat)\n"
             "You gain the following benefits.\n"
@@ -973,7 +973,7 @@ class EnclaveMAGIC(_AbilityScoreFeat):
             "Two Hearts, One Mind. You always have the Beast Sense spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. When you cast it without a spell slot using this feature, it doesn't require Concentration. You can also cast the spell using any spell slots you have of the appropriate level. The spell's spellcasting ability is the ability increased by this feat.\n"
         )
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -987,7 +987,7 @@ class FairyTrickster(_AbilityScoreFeat):
         current_formula="Current amount: equal to your proficiency bonus.",
     )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -998,15 +998,15 @@ class FairyTrickster(_AbilityScoreFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         modifier = character.get_ability_modifier(self.ability)
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
@@ -1015,7 +1015,7 @@ class GenieMagic(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -1030,7 +1030,7 @@ class HarperTeamwork(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Harper Agent Feat)\n"
             "You gain the following benefits.\n"
@@ -1045,7 +1045,7 @@ class LordlyResolve(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Lords' Alliance Agent Feat)\n"
             "You gain the following benefits.\n"
@@ -1055,7 +1055,7 @@ class LordlyResolve(_AbilityScoreFeat):
             "Once you use this benefit, you can't do so again until you finish a Long Rest.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -1069,15 +1069,15 @@ class MythalTouched(_AbilityScoreFeat):
         current_formula="Current amount: equal to your proficiency bonus.",
     )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         modifier = character.get_ability_modifier(self.ability)
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + modifier + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -1101,7 +1101,7 @@ class OrdersResilience(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Tyro of the Gauntlet Feat)\n"
             "You gain the following benefits.\n"
@@ -1110,7 +1110,7 @@ class OrdersResilience(_AbilityScoreFeat):
             "Stronger Together. If you are within 5 feet of an ally that doesn't have the Incapacitated condition, you and that ally have Advantage on Strength saving throws. You can't use this benefit while you have the Incapacitated condition.\n"
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -1124,7 +1124,7 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
         current_formula="Current amount: equal to your proficiency bonus.",
     )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "General Feat (Prerequisite: Level 4+, Purple Dragon Rook Feat or Martial Weapon Proficiency)\n"
             "You gain the following benefits.\n"
@@ -1134,10 +1134,10 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
         )
         return description
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -1146,7 +1146,7 @@ class SpellfireAdept(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Spellfire Spark Feat or the Spellcasting or Pact Magic Feature)\n"
             "You gain the following benefits.\n"
@@ -1161,7 +1161,7 @@ class StreetJustice(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -1177,7 +1177,7 @@ class ZhentarimTactics(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Zhentarim Ruffian Feat)\n"
             "You gain the following benefits.\n"
@@ -1206,7 +1206,7 @@ class DarkGift(GeneralFeat):
     def apply(self, effects: Effects):
         self._sense.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Exposure to alien horrors like those of the Far Realm has warmed your physical form in supernatural ways. You gain the following features.\n"
             " * Breathless. You can hold your breath for 1 hour.\n"
@@ -1215,11 +1215,11 @@ class DarkGift(GeneralFeat):
             " * Warping Flesh. Immediately after you make a D20 Test and roll a 1 on the d20, the aberrant influence infecting your form flares, wrenching control of your flesh. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Stunned condition until the end of your next turn."
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1233,7 +1233,7 @@ class EchoingSoul(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "You experience echoes from a past or alternate life. You gain the following features.\n"
             " * Channelled Prowess. You have proficiency in two skills of your choice. In addition, choose one skill you have proficiency in. You gain Expertise in that skill. Whenever you finish a Long Rest you can change your choice of for this benefit.\n"
@@ -1241,11 +1241,11 @@ class EchoingSoul(GeneralFeat):
             " * Intrusive Echoes. Immediately after you make a D20 Test and roll a 1 on the d20, memories and sensations from your soul's other life threaten to overtake you. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Incapacitated condition until the end of your next turn. While you are Incapacitated in this way, your Speed is halved."
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1264,7 +1264,7 @@ class GatheredWhispers(GeneralFeat):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You are haunted by a cacophony of whispering spirits only you can hear. You gain the following features.\n"
             " * Spirit Whispers. You learn the Message spell and can cast it without Material components. Additionally, you always have the Augury spell prepared. You can cast it without a spell slot or spell components, and you must finish a Long Rest before you can cast it in this way again. You can also cast the spell using any spell slots you have.\n"
@@ -1274,14 +1274,14 @@ class GatheredWhispers(GeneralFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1300,7 +1300,7 @@ class LivingShadow(GeneralFeat):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The shadow you cast is animate and ever-present - sometimes it even acts according to its own will. You gain the following features.\n"
             " * Grasping Shadow. You learn the Mage Hand spell and can cast it without spell components. Intelligence, Wisdom or Charisma is your spellcasting ability for this spell (choose when you select this feat).\n"
@@ -1314,14 +1314,14 @@ class LivingShadow(GeneralFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1340,7 +1340,7 @@ class MistWalker(GeneralFeat):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You know how to slip through the Mists' grasp, but this freedom comes at a price: If you remain in one area for too long, the Mists find you and drain your life force. You gain the following features.\n"
             "Domain Traveler. When you enter the Mists intent on reaching a specific domain, you are treated as if you possess a Mist talisman keyed to that domain. To use this feature, you must know the name of the domain you have chosen as your destination, but you don't need to have previously visited that land. This trait doesn't allow you to bypass domain borders closed by a Darklord's will.\n"
@@ -1349,14 +1349,14 @@ class MistWalker(GeneralFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1375,7 +1375,7 @@ class SecondSkin(GeneralFeat):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your skin is toughened and hardened by the Mists, granting you unnatural resilience. You gain the following features.\n"
             " * Hardened Skin. Your base AC becomes 13 + your Dexterity modifier. You can use a shield and still gain this benefit.\n"
@@ -1393,14 +1393,14 @@ class SecondSkin(GeneralFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1419,7 +1419,7 @@ class SymbioticBeing(GeneralFeat):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "A second being resides within your body, offering knowledge and assistance while furthering its own agenda. You gain the following features.\n"
             "Entwined Existence. The symbiote can't be targeted. If you die, so does your symbiote. If you are returned to life, your symbiote also revives.\n"
@@ -1431,14 +1431,14 @@ class SymbioticBeing(GeneralFeat):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1452,14 +1452,14 @@ class TouchOfDeath(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Deathly power resides within you, bursting out at the slightest provocation. You gain the following features.\n"
             "Death Touch. You learn the Chill Touch spell and can cast it without spell components. Necrotic damage you deal with this spell ignores Resistance. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).\n"
             "Pull of the Grave. You have Disadvantage on Death Saving Throws."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1473,7 +1473,7 @@ class Watchers(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "Something unnatural is always watching you, taking the form of scurrying vermin and other eerie creatures. You gain the following features.\n"
             "Borrowed Eyes. You always have the Beast Sense and Speak with Animals spells prepared. You can cast each spell without a spell slot, and you must finish a Long Rest before you can cast it in this way again. You can also cast these spells using spell slots you have of the appropriate level.\n"
@@ -1482,11 +1482,11 @@ class Watchers(GeneralFeat):
             "In addition, immediately after you make a D20 Test and roll a 1 on the d20, paranoia threatens to overwhelm you. Make a Wisdom saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have Disadvantage on D20 Tests for 1 minute. You can repeat the save at the end of each of your turns, ending the effect early on a success."
         )
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         return 13 + proficiency_bonus
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -1521,7 +1521,7 @@ class ElementalFamiliar(_AbilityScoreFeat):
         super().apply(effects)
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             f"General Feat (Prerequisite: Level 4+, Familiar Friend Feat)\n"
             "You gain the following benefits.\n"
@@ -1531,7 +1531,7 @@ class ElementalFamiliar(_AbilityScoreFeat):
             f"Energy Pulse. As a Bonus Action, you command your familiar to unleash a burst of elemental energy. Your familiar must be within 120 feet of you and take a Reaction to unleash this burst. Each creature in a 5-foot Emanation originating from your familiar makes a Dexterity saving throw (DC 8 plus your spellcasting ability modifier for the Find Familiar spell and your Proficiency Bonus). On a failed save, a creature takes 2d4 damage of the chosen type, and if the creature is Medium or smaller, it has the Prone condition."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -1567,7 +1567,7 @@ class SpellResistant(_AbilityScoreFeat):
         super().apply(effects)
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "General Feat (Prerequisite: Level 4+)\n"
             "You gain the following benefits.\n"
@@ -1577,8 +1577,8 @@ class SpellResistant(_AbilityScoreFeat):
         )
         return description
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

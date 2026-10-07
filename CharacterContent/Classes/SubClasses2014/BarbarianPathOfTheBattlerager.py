@@ -7,7 +7,6 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianMulticlassBuilder,
     BarbarianCustomStarterClassArgs,
 )
-from Model.Character import Character
 from Model.Grants import Grants
 from Core.Definitions import BarbarianSubclass2014, Skill
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures

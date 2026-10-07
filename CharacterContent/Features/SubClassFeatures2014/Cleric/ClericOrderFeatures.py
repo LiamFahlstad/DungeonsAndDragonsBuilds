@@ -9,9 +9,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import GrantArmorTraining
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.View import CharacterView
 
 
 class BonusProficiencies(Feature):
@@ -24,7 +24,7 @@ class BonusProficiencies(Feature):
         # "You gain proficiency with heavy armor." (the skill choice isn't modelled)
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."
         return description
 
@@ -37,10 +37,10 @@ class VoiceOfAuthority(Feature):
             usage_tags=["utility"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can invoke the power of law to embolden an ally to attack. If you cast a spell with a spell slot of 1st level or higher and target an ally with the spell, that ally can use their reaction immediately after the spell to make one weapon attack against a creature of your choice that you can see.\n"
             "If the spell targets more than one ally, you choose the ally who can make the attack."
@@ -54,7 +54,7 @@ class OrderDomainSpells(Feature):
             name="Order Domain Spells", origin="Order Domain Cleric Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Order Domain Spells table, you thereafter always have the listed spells prepared.\n"
             "Order Domain Spells\n"
@@ -81,17 +81,17 @@ class OrdersDemandChannelDivinity(Feature):
             usage_tags=["control"],
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use your Channel Divinity to exert an intimidating presence over others.\n"
             "As an action, you present your holy symbol, and each creature of your choice that can see or hear you within 30 feet of you must succeed on a Wisdom saving throw or be charmed by you until the end of your next turn or until the charmed creature takes any damage. You can also cause any of the charmed creatures to drop what they are holding when they fail the saving throw."
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Action"),
             ("Range", "30 feet"),
@@ -115,7 +115,7 @@ class EmbodimentOfTheLaw(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You become remarkably adept at channeling magical energy to compel others.\n"
             "If you cast a spell of the enchantment school using a spell slot of 1st level or higher, you can change the spell's casting time to 1 bonus action for this casting, provided the spell's casting time is normally 1 action.\n"
@@ -123,13 +123,13 @@ class EmbodimentOfTheLaw(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_wisdom_modifier()
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wis_mod = character.get_ability_modifier(Ability.WISDOM)
         uses = max(1, wis_mod)
         return [
@@ -149,9 +149,9 @@ class OrdersWrath(Feature):
             activation=FeatureActivation(duration="Until Start of Your Next Turn"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "Enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn."
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return "When you deal Divine Strike damage, curse the target until start of your next turn. The next time an ally hits it, the target also takes 2d8 psychic damage and the curse ends (once per turn)."

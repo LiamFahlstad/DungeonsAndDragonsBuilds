@@ -7,9 +7,9 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureTarget,
 )
 from CharacterContent.Features.Core.Improvements import DamageResistance
-from Model.Character import Character
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DAO: "bludgeoning",
@@ -32,7 +32,7 @@ class GenieExpandedSpells(Feature):
         )
         self.kind = kind
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The Genie lets you choose from an expanded list of spells when you learn a Warlock spell. The Genie Expanded Spells table shows the genie spells that are added to the Warlock spell list for you, along with the spells associated in the table with your patron's kind: Dao, Djinni, Efreeti, or Marid.\n"
             "Genie Expanded Spells\n"
@@ -62,7 +62,7 @@ class GeniesVessel(Feature):
         )
         self.kind = kind
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         description = (
             "Also at 1st level, your patron gifts you a magical vessel that grants you a measure of the genie's power. The vessel is a Tiny object, and you can use it as a spellcasting focus for your Warlock spells. You decide what the object is (an oil lamp, an urn, a ring with a compartment, a stoppered bottle, a hollow statuette, an ornate lantern, or another vessel of your choice).\n"
@@ -106,7 +106,7 @@ class ElementalGift(Feature):
             effects
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         description = (
             "At 6th level, you begin to take on characteristics of your patron's kind. You now have resistance to a damage type determined by your patron's kind: bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid).\n"
@@ -117,7 +117,7 @@ class ElementalGift(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = self.number_of_uses(character)
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         return [
@@ -129,10 +129,10 @@ class ElementalGift(Feature):
             ("Recharge", "Long rest"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
 
@@ -147,7 +147,7 @@ class SanctuaryVessel(Feature):
             usage_tags=["utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 10th level, when you enter your Genie's Vessel via the Bottled Respite feature, you can now choose up to five willing creatures that you can see within 30 feet of you, and the chosen creatures are drawn into the vessel with you.\n"
             "\n"
@@ -157,7 +157,7 @@ class SanctuaryVessel(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -171,7 +171,7 @@ class LimitedWish(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="1d4 long rests"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 14th level, you entreat your patron to grant you a small wish. As an action, you can speak your desire to your Genie's Vessel, requesting the effect of one spell that is 6th level or lower and has a casting time of 1 action. The spell can be from any class's spell list, and you don't need to meet the requirements in that spell, including costly components: the spell simply takes effect as part of this action.\n"
             "\n"
@@ -179,7 +179,7 @@ class LimitedWish(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Action", "Action (speak to Genie's Vessel)"),
             ("Spell Level", "6th level or lower"),

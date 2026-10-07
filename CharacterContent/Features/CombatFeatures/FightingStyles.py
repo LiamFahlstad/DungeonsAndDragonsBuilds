@@ -11,7 +11,6 @@ from CharacterContent.Features.Core.Improvements import (
     WeaponAttackBonus,
     WeaponDamageBonus,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 
 

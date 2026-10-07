@@ -16,8 +16,8 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import CharacterClass, DamageType
-from Model.Character import Character
 from Presentation.CreatureStatBlocks import format_creature_stat_block
+from Model.View import CharacterView
 
 
 def _build_drake(
@@ -100,13 +100,13 @@ def _build_drake(
 
 
 def format_drake(
-    character: Character,
+    character: CharacterView,
     damage_type: Optional[DamageType] = None,
 ) -> str:
     ranger_level = character.get_class_level(CharacterClass.RANGER)
     proficiency_bonus = character.get_proficiency_bonus()
     drake = _build_drake(ranger_level, proficiency_bonus, damage_type)
-    return format_creature_stat_block(drake, character, retain_mental_abilities=False)
+    return format_creature_stat_block(drake, retain_mental_abilities=False)
 
 
 class DraconicGift(Feature):
@@ -118,7 +118,7 @@ class DraconicGift(Feature):
         )
         self._language = language
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The bond you share with your drake creates a connection to dragonkind, granting you understanding and empowering your presence. You gain the following benefits:\n"
             "    * Thaumaturgy. You learn the Thaumaturgy cantrip, which is a ranger spell for you.\n"
@@ -141,7 +141,7 @@ class DrakeCompanion(Feature):
         )
         self.damage_type = damage_type
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As an action, you can magically summon the drake that is bound to you. It appears in an unoccupied space of your choice within 30 feet of you.\n"
             "The drake is friendly to you and your companions, and it obeys your commands. Whenever you summon the drake, choose a damage type listed in its Draconic Essence trait. You can determine the cosmetic characteristics of the drake, such as its color, its scale texture, or any visible effect of its Draconic Essence; your choice has no effect on its game statistics.\n"
@@ -153,14 +153,14 @@ class DrakeCompanion(Feature):
         )
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "Summon a friendly drake within 30 feet as an action (choose a damage type for its Draconic Essence). "
             "The drake shares your initiative and acts after you, taking only the Dodge action unless you use a bonus action to command it. "
             "It remains until reduced to 0 HP, resummoned, or you die; recharge with long rest or by expending a 1st-level spell slot."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -172,7 +172,7 @@ class BondOfFangAndScale(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The bond you share with your drake intensifies, protecting you and stoking the drake's fury. When you summon your drake, it grows wings on its back and gains a flying speed equal to its walking speed.\n"
             "In addition, while your drake is summoned, you and the drake gain the following benefits:\n"
@@ -194,7 +194,7 @@ class DrakesBreath(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As an action, you can exhale a 30-foot cone of damaging breath or cause your drake to exhale it. Choose acid, cold, fire, lightning, or poison damage (your choice doesn't have to match your drake's Draconic Essence). "
             "Each creature in the cone must make a Dexterity saving throw against your spell save DC, taking 8d6 damage on a failed save, or half as much damage on a successful one.\n"
@@ -203,12 +203,12 @@ class DrakesBreath(Feature):
         )
         return description
 
-    def calculate_dc(self, character: Character) -> int:
+    def calculate_dc(self, character: CharacterView) -> int:
         proficiency_bonus = character.get_proficiency_bonus()
         wisdom_modifier = character.get_wisdom_modifier()
         return 8 + proficiency_bonus + wisdom_modifier
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         ranger_level = character.get_class_level(CharacterClass.RANGER)
         spell_save_dc = self.calculate_dc(character)
         damage = "10d6" if ranger_level >= 15 else "8d6"
@@ -221,7 +221,7 @@ class DrakesBreath(Feature):
             ("Recharge", "Long rest (or 3rd+ spell slot)"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
 
@@ -234,7 +234,7 @@ class PerfectedBond(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your bond to your drake reaches the pinnacle of its power. While your drake is summoned, you and the drake gain the following benefits:\n"
             "    * Empowered Bite. The drake's Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage).\n"
@@ -243,5 +243,5 @@ class PerfectedBond(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

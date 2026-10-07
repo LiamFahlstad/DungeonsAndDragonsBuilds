@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal
 
-from Model.Character import Character
 from Model.Effects import Effects
+from Model.View import CharacterView
 
 
 @dataclass
@@ -194,31 +194,31 @@ class Feature:
         armor is a formula evaluated on read (see Core.Improvements)."""
         pass
 
-    def get_description(self, character: Character) -> str | None:
+    def get_description(self, character: CharacterView) -> str | None:
         return None
 
     def get_table_description(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, str]] | None:
         """Override to provide a concise label/value table version of the description
         (e.g. [("What", "..."), ("Casting Time", "...")]), used when table descriptions
         are requested. Return None to fall back to get_description()."""
         return None
 
-    def get_concise_description(self, character: Character) -> str | None:
+    def get_concise_description(self, character: CharacterView) -> str | None:
         """Override to provide a short prose summary of the description (a sentence
         or two, same formatting rules as get_description), used when concise
         descriptions are requested. Return None to fall back to get_description()."""
         return None
 
-    def calculate_dc(self, character: Character) -> int | None:
+    def calculate_dc(self, character: CharacterView) -> int | None:
         """Override to return this feature's saving throw DC (e.g. 8 plus an
         ability modifier plus proficiency bonus), so the value can be reused
         anywhere it's needed instead of being recomputed inline. Return None
         (default) for features with no DC."""
         return None
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit
         points, etc.) is regained (e.g. a short rest, long rest, or an
         initiative roll), so the value can be reused anywhere it's needed
@@ -226,7 +226,7 @@ class Feature:
         features with nothing to regain."""
         return None
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         """Override to return what this feature's effect can be aimed at
         (e.g. self, an ally, a creature, an object), so the value can be
         reused anywhere it's needed instead of being re-parsed from prose.
@@ -234,7 +234,7 @@ class Feature:
         passive features or ones that affect the caster only implicitly)."""
         return None
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         """Override to return this feature's actual current number of uses,
         computed from the character's stats (e.g. equal to your proficiency
         bonus or level), for features whose real count is described only in
@@ -244,7 +244,7 @@ class Feature:
         return self.uses.max_uses if self.uses is not None else 0
 
     def get_resource_tiles(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]] | None:
         """Override to surface this feature's core numbers as small stat
         tiles at the top of its own feature card (visually the same idea as

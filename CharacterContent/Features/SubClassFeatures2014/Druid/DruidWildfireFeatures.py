@@ -16,10 +16,10 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from Model.Character import Character
 from Utils import StringUtils
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Core.Rules import MAX_PROFICIENCY_BONUS
+from Model.View import CharacterView
 
 
 def _build_wildfire_spirit(
@@ -86,7 +86,7 @@ def _build_wildfire_spirit(
     )
 
 
-def format_wildfire_spirit(character: Character) -> str:
+def format_wildfire_spirit(character: CharacterView) -> str:
     druid_level = character.get_class_level(CharacterClass.DRUID)
     proficiency_bonus = character.get_proficiency_bonus()
     wisdom_modifier = character.get_wisdom_modifier()
@@ -94,7 +94,7 @@ def format_wildfire_spirit(character: Character) -> str:
     spirit = _build_wildfire_spirit(
         druid_level, proficiency_bonus, spell_attack_modifier
     )
-    return format_creature_stat_block(spirit, character, retain_mental_abilities=False)
+    return format_creature_stat_block(spirit, retain_mental_abilities=False)
 
 
 class CircleSpells(Feature):
@@ -103,7 +103,7 @@ class CircleSpells(Feature):
             name="Circle Spells", origin="Circle of Wildfire Druid Level 3"
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "At 2nd level, you have formed a bond with a wildfire spirit, a primal being of creation and destruction. Your link with this spirit grants you access to some spells when you reach certain levels in this class, as shown on the Circle of Wildfire Spells table.\n"
             "\n"
@@ -131,7 +131,7 @@ class SummonWildfireSpirit(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can summon the primal spirit bound to your soul. As an action, you can expend one use of your Wild Shape feature to summon your wildfire spirit, rather than assuming a beast form.\n"
             "\n"
@@ -146,10 +146,10 @@ class SummonWildfireSpirit(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.OTHER
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
@@ -161,7 +161,7 @@ class EnhancedBond(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The bond with your wildfire spirit enhances your destructive and restorative spells. Whenever you cast a spell that deals fire damage or restores hit points while your wildfire spirit is summoned, roll a d8, and you gain a bonus equal to the number rolled to one damage or healing roll of the spell.\n"
             "\n"
@@ -181,7 +181,7 @@ class CauterizingFlames(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         proficiency_bonus = character.get_proficiency_bonus()
         wisdom_modifier = character.get_ability_modifier(Ability.WISDOM)
         description = (
@@ -197,7 +197,7 @@ class CauterizingFlames(Feature):
             current_formula="Current amount: equal to your proficiency bonus.",
         )
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
         wisdom_modifier = character.get_ability_modifier(Ability.WISDOM)
         return [
@@ -223,7 +223,7 @@ class BlazingRevival(Feature):
             activation=FeatureActivation(range="120 Feet"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "The bond with your wildfire spirit can save you from death. If the spirit is within 120 feet of you when you are reduced to 0 hit points and thereby fall unconscious, you can cause the spirit to drop to 0 hit points. You then regain half your hit points and immediately rise to your feet.\n"
             "\n"
@@ -231,7 +231,7 @@ class BlazingRevival(Feature):
         )
         return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Reduced to 0 HP and unconscious; spirit within 120 feet"),
             (

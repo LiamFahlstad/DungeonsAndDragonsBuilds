@@ -7,15 +7,15 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Sorcerer Level 1")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Spellcasting\n"
             "    * Replacing Cantrips: Change one when you gain a Sorcerer level.\n"
@@ -25,7 +25,7 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Replacing Cantrips", "Change one when you gain a Sorcerer level"),
             ("Replacing Spells", "Change one when you gain a Sorcerer level"),
@@ -33,7 +33,7 @@ class Spellcasting(Feature):
             ("Spellcasting Ability", "Charisma"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -49,7 +49,7 @@ class InnateSorcery(Feature):
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "An event in your past left an indelible mark on you, infusing you with simmering magic. As a Bonus Action, you can unleash that magic for 1 minute, during which you gain the following benefits:\n"
             "The spell save DC of your Sorcerer spells increases by 1.\n"
@@ -58,7 +58,7 @@ class InnateSorcery(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Activation", "Bonus Action"),
             ("Duration", "1 minute"),
@@ -66,10 +66,10 @@ class InnateSorcery(Feature):
             ("Effect", "Spell save DC +1; Advantage on Sorcerer spell attack rolls"),
         ]
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -85,7 +85,7 @@ class FontOfMagic(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Rules for Sorcery Points:\n"
             "    * You regain all expended Sorcery Points when you finish a Long Rest.\n"
@@ -102,10 +102,10 @@ class FontOfMagic(Feature):
         )
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def number_of_uses(self, character: Character) -> int:
+    def number_of_uses(self, character: CharacterView) -> int:
         return character.get_class_level(Definitions.CharacterClass.SORCERER)
 
 
@@ -113,7 +113,7 @@ class Metamagic(Feature):
     def __init__(self):
         super().__init__(name="Metamagic", origin="Sorcerer Level 2")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Because your magic flows from within, you can alter your spells to suit your needs; You have Metamagic options to temporarily modify spells you cast. To use an option, you must spend the number of Sorcery Points that it costs.\n"
             "You can use only one Metamagic option on a spell when you cast it unless otherwise noted in one of those options.\n"
@@ -122,7 +122,7 @@ class Metamagic(Feature):
         return description
 
     def get_resource_tiles(
-        self, character: Character
+        self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]]:
         options_by_level = {}
         for level in range(2, 21):
@@ -140,7 +140,7 @@ class Metamagic(Feature):
         ]
         return [("Metamagic Options Known", steps)]
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         sorcerer_level = character.get_class_level(Definitions.CharacterClass.SORCERER)
         if sorcerer_level < 10:
             metamagic_options = 2
@@ -159,11 +159,11 @@ class SorcerousRestoration(Feature):
     def __init__(self):
         super().__init__(name="Sorcerous Restoration", origin="Sorcerer Level 5")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "When you finish a Short Rest, you can regain expended Sorcery Points, but no more than a number equal to half your Sorcerer level (round down). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
-    def regained_on(self, character: Character) -> "RegainedOn | None":
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
 
@@ -173,7 +173,7 @@ class SorceryIncarnate(Feature):
             name="Sorcery Incarnate", origin="Sorcerer Level 7", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "If you have no uses of Innate Sorcery left, you can use it if you spend 2 Sorcery Points when you take the Bonus Action to activate it.\n"
             "In addition, while your Innate Sorcery feature is active, you can use up to two of your Metamagic options on each spell you cast."
@@ -187,6 +187,6 @@ class ArcaneApotheosis(Feature):
             name="Arcane Apotheosis", origin="Sorcerer Level 20", usage_tags=["buff"]
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points on it."
         return description

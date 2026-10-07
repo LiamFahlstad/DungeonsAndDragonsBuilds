@@ -5,8 +5,8 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
 from Utils import StringUtils
+from Model.View import CharacterView
 
 
 class RedemptionSpells(Feature):
@@ -16,7 +16,7 @@ class RedemptionSpells(Feature):
             origin="Oath of Redemption Paladin Level 3",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain oath spells at the Paladin levels listed. When you reach a Paladin level specified in the Oath of Redemption Spells table, you thereafter always have the listed spells prepared.\n"
             "Oath of Redemption Spells\n"
@@ -41,11 +41,11 @@ class EmissaryOfPeace(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to augment your presence with divine power. As a bonus action, you grant yourself a +5 bonus to Charisma (Persuasion) checks for the next 10 minutes."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -60,14 +60,14 @@ class RebukeTheViolent(Feature):
             usage_tags=["damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to rebuke those who use violence. Immediately after an attacker within 30 feet of you deals damage with an attack against a creature other than you, you can use your reaction to force the attacker to make a Wisdom saving throw. On a failed save, the attacker takes radiant damage equal to the damage it just dealt. On a successful save, it takes half as much damage."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Trigger", "Attacker within 30 feet hits another creature"),
             ("Action", "Reaction"),
@@ -87,14 +87,14 @@ class AuraOfTheGuardian(Feature):
             ),
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "You can shield your allies from harm at the cost of your own health. When a creature within 10 feet of you takes damage, you can use your reaction to magically take that damage, instead of that creature taking it. This feature doesn't transfer any other effects that might accompany the damage, and this damage can't be reduced in any way."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Range", "10 feet (30 at 18th level)"),
             ("Trigger", "Creature takes damage"),
@@ -111,7 +111,7 @@ class AuraOfTheGuardianExpansion(Feature):
             origin="Oath of Redemption Paladin Level 18",
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "The range of your Aura of the Guardian increases to 30 feet."
         return description
 
@@ -124,14 +124,14 @@ class ProtectiveSpirit(Feature):
             usage_tags=["heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = "A holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your Paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren't incapacitated."
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         half_level = character.get_class_level(CharacterClass.PALADIN) // 2
         return [
             ("Trigger", "End turn in combat with < half HP"),
@@ -148,7 +148,7 @@ class EmissaryOfRedemption(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You become an avatar of peace, which gives you two benefits:\n"
             "    * You have resistance to all damage dealt by other creatures (their attacks, spells, and other effects).\n"
@@ -158,10 +158,10 @@ class EmissaryOfRedemption(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("What", "Avatar of peace"),
             ("Resistance", "All damage from creatures"),

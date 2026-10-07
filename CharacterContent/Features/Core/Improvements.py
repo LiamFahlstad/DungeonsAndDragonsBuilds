@@ -49,7 +49,7 @@ from Core.Definitions import (
 )
 from Model.ArmorClass import ArmorClassFormula
 from Model.Bonuses import OTHER_SOURCE
-from Model.Contracts import Formula, StatView, Value
+from Model.View import Formula, CharacterView, Value
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
 
@@ -478,7 +478,7 @@ class JackOfAllTradesBonus(CharacterImprovement):
 
     @staticmethod
     def _bonus_for(skill: Skill) -> Formula:
-        def bonus(character: StatView) -> int:
+        def bonus(character: CharacterView) -> int:
             if character.is_proficient_in_skill(skill):
                 return 0
             return character.get_proficiency_bonus() // 2

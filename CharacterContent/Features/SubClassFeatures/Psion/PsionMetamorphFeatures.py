@@ -5,14 +5,14 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     FeatureTarget,
 )
-from Model.Character import Character
+from Model.View import CharacterView
 
 
 class MetamorphSpells(Feature):
     def __init__(self):
         super().__init__(name="Metamorph Spells", origin="Metamorph Psion Level 3")
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach a Psion level specified in the\n"
             "Metamorph Spells table, you thereafter always have\n"
@@ -32,7 +32,7 @@ class MutableForm(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can expend one Psionic\n"
             "Energy Die to psionically stretch your limbs for 1\n"
@@ -50,7 +50,7 @@ class MutableForm(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Activation", "Bonus Action"),
             ("Cost", "1 Psionic Energy Die"),
@@ -61,7 +61,7 @@ class MutableForm(Feature):
             ("Touch Range", "10 feet (for touch spells with action casting time)"),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -74,7 +74,7 @@ class OrganicWeapons(Feature):
             usage_tags=["damage", "buff", "control"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "You can shape your limbs into weapons. As a Magic\n"
             "action, you can reform your free hand into one of the\n"
@@ -116,7 +116,7 @@ class OrganicWeapons(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -128,7 +128,7 @@ class FleshWeaver(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use Mutable Form, you can expend an\n"
             "additional Psionic Energy Die to gain the following\n"
@@ -142,7 +142,7 @@ class FleshWeaver(Feature):
         )
         return description
 
-    def get_table_description(self, character: Character) -> list[tuple[str, str]]:
+    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [
             ("Activation", "When using Mutable Form"),
             ("Cost", "1 additional Psionic Energy Die"),
@@ -153,7 +153,7 @@ class FleshWeaver(Feature):
             ),
         ]
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -165,7 +165,7 @@ class ImprovedMutableForm(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use Mutable Form, the duration increases\n"
             "to 10 minutes and you gain one of the following\n"
@@ -192,7 +192,7 @@ class ImprovedMutableForm(Feature):
         )
         return description
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
 
@@ -205,7 +205,7 @@ class LifeBendingWeapons(Feature):
             usage_tags=["damage", "heal"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "Your weapon becomes wreathed in negative energy,\n"
             "and you radiate life-mending psionic energy. When\n"
@@ -225,7 +225,7 @@ class LifeBendingWeapons(Feature):
         )
         return description
 
-    def get_concise_description(self, character: Character) -> str:
+    def get_concise_description(self, character: CharacterView) -> str:
         return (
             "On hit with Organic Weapon, roll a Psionic Energy Die for extra Necrotic damage "
             "(no expend). Alternatively (once/turn), expend one die: deal extra Necrotic damage "

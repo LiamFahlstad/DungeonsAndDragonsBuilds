@@ -9,6 +9,7 @@ from CharacterContent.Features.Core.Improvements import (
 )
 from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
 from Model.Character import Character
+from Model.View import CharacterView
 from Core.Weapons import (
     WeaponMastery,
     WeaponProficiency,
@@ -286,7 +287,9 @@ class AbstractWeapon(Item, ABC):
         or a fixed override), plus any additive damage-roll bonuses."""
         return sum(part.value for part in self.get_damage_roll_breakdown(character))
 
-    def get_description(self, character: Character) -> Optional[str]:
+    def get_description(self, character: CharacterView) -> Optional[str]:
+        # Weapons render as weapon cards (Presentation/WeaponCards.py), not
+        # as feature cards.
         return None
 
     def calculate_hit_probabilities(

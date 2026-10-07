@@ -2,7 +2,7 @@ import attr
 
 from Core.Definitions import Ability
 from Core.Rules import MULTICLASS_MIN_SCORE
-from Model.Contracts import StatView
+from Model.View import CharacterView
 from Model.Recorder import Recorder, records
 
 
@@ -42,7 +42,7 @@ class AbilityRequirements(Recorder):
     ) -> None:
         self._minimums.append(AbilityMinimum(ability, min_score, reason))
 
-    def validate(self, view: StatView) -> None:
+    def validate(self, view: CharacterView) -> None:
         for minimum in sorted(self._minimums, key=AbilityMinimum.sort_key):
             if view.get_own_ability_score(minimum.ability) < minimum.min_score:
                 raise ValueError(
@@ -51,7 +51,7 @@ class AbilityRequirements(Recorder):
                 )
         self._validate_multiclass_prerequisites(view)
 
-    def _validate_multiclass_prerequisites(self, view: StatView) -> None:
+    def _validate_multiclass_prerequisites(self, view: CharacterView) -> None:
         """A multiclass character needs MULTICLASS_MIN_SCORE+ in the prerequisite abilities of
         every class it has. Checked on the character's own final scores
         (equipment bonuses don't count) - the engine has no per-level score

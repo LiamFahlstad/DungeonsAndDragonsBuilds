@@ -9,9 +9,9 @@ from CharacterContent.Features.Core.Improvements import (
     DamageResistance,
     SavingThrowAdvantage,
 )
-from Model.Character import Character
 from Model.Effects import Effects
 from Utils import StringUtils
+from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
 
@@ -29,7 +29,7 @@ class DualMind(Feature):
     def apply(self, effects: Effects):
         self._advantage.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on Wisdom and Charisma saving throws."
 
 
@@ -46,7 +46,7 @@ class MentalDiscipline(Feature):
     def apply(self, effects: Effects):
         self._resistance.apply(effects)
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Psychic damage."
 
 
@@ -63,7 +63,7 @@ class MindLink(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         character_level = character.character_level
         range_feet = 10 * character_level
         return (
@@ -73,7 +73,7 @@ class MindLink(Feature):
             "another Magic action to end this effect."
         )
 
-    def target(self, character: Character) -> "FeatureTarget | None":
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
 
@@ -86,7 +86,7 @@ class SeveredFromDreams(Feature):
             usage_tags=["buff"],
         )
 
-    def get_description(self, character: Character) -> str:
+    def get_description(self, character: CharacterView) -> str:
         return (
             "You can't be the target of the Dream spell. "
             "In addition, when you finish a Long Rest, you gain proficiency in one skill of your choice. "
