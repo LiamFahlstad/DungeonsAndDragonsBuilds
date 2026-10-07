@@ -3,12 +3,8 @@ from enum import Enum
 from typing import Iterable, NamedTuple, Optional
 from Utils import DamageCalculator
 from Core.Definitions import Ability, DiceRollCondition
-from CharacterContent.Features.Core.Improvements import (
-    ItemImprovement,
-    CharacterImprovement,
-)
-from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
-from Model.Character import Character
+from Model.Content.Improvements import ItemImprovement, CharacterImprovement
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 from Model.View import CharacterView
 from Core.Weapons import (
     WeaponMastery,
@@ -20,7 +16,7 @@ from Core.Weapons import (
     WeaponDamageTypes,
     weapon_matches_proficiency,
 )
-from .ExtraDamage import ExtraDamage
+from Model.Content.ExtraDamage import ExtraDamage
 
 
 class BonusPart(NamedTuple):
@@ -39,12 +35,12 @@ class AbstractWeapon(Item, ABC):
     improvements only apply while worn/wielded (is_wearing).
 
     Two independent ways to attach behavior to a weapon:
-    - `improvements=[...]` (list[CharacterImprovement], defined in CharacterContent.Features.Core.Improvements):
+    - `improvements=[...]` (list[CharacterImprovement], defined in Model.Content.Improvements):
       character-affecting effects, applied to the wielder's stat block while
       worn - e.g. FlameTongueSword granting +1 Strength, the same mechanism
       RingOfIntellect uses in CharacterContent.Items.Items.
     - `weapon_improvements=[...]` (list[ItemImprovement], defined below and in
-      CharacterContent.Features.Core.Improvements): typically a WeaponImprovement - a
+      Model.Content.Improvements): typically a WeaponImprovement - a
       weapon-only effect that modifies the weapon itself (damage die/type,
       properties, attack/damage bonuses, ...), not applicable to any other
       item type - but also accepts the generic ItemImprovements (Reskin,
@@ -145,7 +141,7 @@ class AbstractWeapon(Item, ABC):
         self.add_improvement(weapon_improvement)
 
     def _calculate_ability_modifier_bonus(
-        self, character: Character
+        self, character: CharacterView
     ) -> tuple[int, str]:
         if self._ability_override is not None:
             ability = self._ability_override
@@ -175,7 +171,7 @@ class AbstractWeapon(Item, ABC):
 
         return best_ability_modifier, best_ability
 
-    def calculate_ability_modifier_bonus(self, character: Character) -> str:
+    def calculate_ability_modifier_bonus(self, character: CharacterView) -> str:
         ability_modifier, ability = self._calculate_ability_modifier_bonus(character)
         return f"{ability_modifier} (ability mod: {ability})"
 
@@ -189,13 +185,13 @@ class AbstractWeapon(Item, ABC):
             is_unarmed_strike=self.is_unarmed_strike,
         )
 
-    def is_proficient(self, character: Character) -> bool:
+    def is_proficient(self, character: CharacterView) -> bool:
         """Whether the wielder is proficient with this weapon: an explicit
         player_is_proficient override (e.g. Unarmed Strike), or any weapon
         proficiency recorded on the stat block - worked out on read, so it
         doesn't matter when the proficiency or the weapon was added."""
-        return self.player_is_proficient or is_proficient_with(
-            self, character.ledger.equipment_training.weapon_proficiencies
+        return self.player_is_proficient or character.is_proficient_with_weapon(
+            self.traits
         )
 
     def has_mastery(self, weapon_masteries: "list[AbstractWeapon]") -> bool:
@@ -206,7 +202,7 @@ class AbstractWeapon(Item, ABC):
             type(self) is type(mastery) for mastery in weapon_masteries
         )
 
-    def attack_roll_condition(self, character: Character) -> DiceRollCondition:
+    def attack_roll_condition(self, character: CharacterView) -> DiceRollCondition:
         """Disadvantage when the attack uses Strength or Dexterity while
         wearing armor the wielder lacks training with (2024 PHB)."""
         _, ability_name = self._calculate_ability_modifier_bonus(character)
@@ -214,35 +210,37 @@ class AbstractWeapon(Item, ABC):
             return DiceRollCondition.DISADVANTAGE
         return DiceRollCondition.NEUTRAL
 
-    def _calculate_proficiency_damage_bonus(self, character: Character) -> int:
+    def _calculate_proficiency_damage_bonus(self, character: CharacterView) -> int:
         if self.is_proficient(character):
             proficiency_bonus = character.get_proficiency_bonus()
             return proficiency_bonus
         return 0
 
-    def calculate_proficiency_damage_bonus(self, character: Character) -> str:
+    def calculate_proficiency_damage_bonus(self, character: CharacterView) -> str:
         proficiency_bonus = self._calculate_proficiency_damage_bonus(character)
         if proficiency_bonus > 0:
             return f"{proficiency_bonus} (Proficient)"
         return "0 (Not Proficient)"
 
-    def get_attack_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
+    def get_attack_roll_bonuses(
+        self, character: CharacterView
+    ) -> list[tuple[int, str]]:
         """This weapon's own attack roll bonuses (e.g. a +1 weapon), then the
         wielder's that apply to it (e.g. the Archery fighting style) - those
         are recorded on the stat block, never written into the weapon."""
-        return (
-            self.attack_roll_bonuses
-            + character.ledger.weapon_bonuses.attack_bonuses(self.traits)
+        return self.attack_roll_bonuses + character.get_weapon_attack_bonuses(
+            self.traits
         )
 
-    def get_damage_roll_bonuses(self, character: Character) -> list[tuple[int, str]]:
+    def get_damage_roll_bonuses(
+        self, character: CharacterView
+    ) -> list[tuple[int, str]]:
         """Damage roll counterpart of get_attack_roll_bonuses."""
-        return (
-            self.damage_roll_bonuses
-            + character.ledger.weapon_bonuses.damage_bonuses(self.traits)
+        return self.damage_roll_bonuses + character.get_weapon_damage_bonuses(
+            self.traits
         )
 
-    def calculate_total_attack_roll_bonus(self, character: Character) -> str:
+    def calculate_total_attack_roll_bonus(self, character: CharacterView) -> str:
         if self._attack_roll_override is not None:
             return f"{self._attack_roll_override:+} (fixed)"
         attack_roll_bonus = self.calculate_ability_modifier_bonus(character)
@@ -261,12 +259,12 @@ class AbstractWeapon(Item, ABC):
             return label[len(prefix) : -1]
         return label
 
-    def _ability_modifier_part(self, character: Character) -> BonusPart:
+    def _ability_modifier_part(self, character: CharacterView) -> BonusPart:
         modifier, ability_name = self._calculate_ability_modifier_bonus(character)
         short_name = Ability(ability_name).short_name.title()
         return BonusPart(modifier, f"{short_name} Mod", from_stats=True)
 
-    def get_attack_roll_breakdown(self, character: Character) -> list[BonusPart]:
+    def get_attack_roll_breakdown(self, character: CharacterView) -> list[BonusPart]:
         """Each part of the attack roll bonus: ability modifier, proficiency
         bonus (when proficient), then every flat bonus. A fixed override is
         its single part. Sums to calculate_total_attack_roll_bonus_int."""
@@ -284,7 +282,7 @@ class AbstractWeapon(Item, ABC):
         ]
         return parts
 
-    def get_damage_roll_breakdown(self, character: Character) -> list[BonusPart]:
+    def get_damage_roll_breakdown(self, character: CharacterView) -> list[BonusPart]:
         """Each part of the flat bonus added to the damage die: ability
         modifier, then every flat bonus. A fixed override is its single
         part. Sums to calculate_damage_bonus_int."""
@@ -297,10 +295,10 @@ class AbstractWeapon(Item, ABC):
         ]
         return parts
 
-    def calculate_total_attack_roll_bonus_int(self, character: Character) -> int:
+    def calculate_total_attack_roll_bonus_int(self, character: CharacterView) -> int:
         return sum(part.value for part in self.get_attack_roll_breakdown(character))
 
-    def calculate_damage_bonus_int(self, character: Character) -> int:
+    def calculate_damage_bonus_int(self, character: CharacterView) -> int:
         """Flat bonus added to the damage die (ability modifier by default,
         or a fixed override), plus any additive damage-roll bonuses."""
         return sum(part.value for part in self.get_damage_roll_breakdown(character))
@@ -312,7 +310,7 @@ class AbstractWeapon(Item, ABC):
 
     def calculate_hit_probabilities(
         self,
-        character: Character,
+        character: CharacterView,
         condition: DamageCalculator.DiceRollCondition = DamageCalculator.DiceRollCondition.NEUTRAL,
     ) -> list[tuple[int, float]]:
         """Return hit probability for each AC from 10 to 25 (inclusive)."""
@@ -335,36 +333,3 @@ def is_proficient_with(
 ) -> bool:
     traits = weapon.traits
     return any(weapon_matches_proficiency(traits, p) for p in proficiencies)
-
-
-class UnarmedStrike(AbstractWeapon):
-    is_unarmed_strike = True
-
-    def __init__(
-        self,
-        ability: Optional[Ability] = None,
-        damage_roll: Optional[WeaponDamageRolls] = None,
-        **kwargs,
-    ):
-        if ability is not None and ability not in (
-            Ability.STRENGTH,
-            Ability.DEXTERITY,
-        ):
-            raise ValueError("Unarmed Strike ability must be STR or DEX.")
-        if kwargs.get("player_has_mastery"):
-            raise ValueError("Unarmed Strike cannot have weapon mastery.")
-        self._damage_roll_arg: Optional[WeaponDamageRolls] = damage_roll
-        super().__init__(ability=ability, **kwargs)
-
-    def base_stats(self) -> None:
-        self.name = "Unarmed Strike"
-        self.ability = self._ability_override or Ability.STRENGTH
-        self.properties = []
-        self.mastery = None
-        self.weapon_type = WeaponType.MARTIAL_MELEE
-        self.damage_type = WeaponDamageTypes.BLUDGEONING
-        self.damage_roll = self._damage_roll_arg or WeaponDamageRolls.D1
-        self.description_text = (
-            "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
-            "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
-        )

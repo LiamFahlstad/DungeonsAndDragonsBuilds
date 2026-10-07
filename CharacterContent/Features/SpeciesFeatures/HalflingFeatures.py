@@ -1,5 +1,5 @@
 from Core.Definitions import CreatureSize
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.Feature import Feature
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species

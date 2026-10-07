@@ -5,7 +5,7 @@ from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
     wild_shape_temp_hp_formula,
 )
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     ActionType,
     Feature,
     FeatureActivation,
@@ -13,7 +13,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     GrantLanguage,
     SkillBonus,
     GrantArmorTraining,

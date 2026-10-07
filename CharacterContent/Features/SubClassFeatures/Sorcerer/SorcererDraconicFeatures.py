@@ -1,13 +1,13 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, DamageType, SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     ActionType,
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     DamageResistance,
     HitPointsBonus,
     MultiAbilityArmorClass,

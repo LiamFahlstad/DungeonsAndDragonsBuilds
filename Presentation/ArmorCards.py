@@ -3,7 +3,7 @@ from typing import Optional, TextIO
 import Core.Definitions as Definitions
 from Presentation import Html
 
-from CharacterContent.Items.Armor.Base import AbstractArmor
+from Model.Content.Armor import AbstractArmor
 
 ARMOR_CARD_CSS = """/* ── Armor entries ────────────────────────────────────────────── */
         .armors {

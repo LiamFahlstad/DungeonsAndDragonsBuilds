@@ -1,5 +1,5 @@
 from Core.Definitions import Sense
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantSense
+from Model.Content.Improvements import GrantSense
 from Model.Effects import Effects
 from Model.View import CharacterView
 

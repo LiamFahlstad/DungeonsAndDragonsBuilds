@@ -1,6 +1,6 @@
 from Core.Definitions import CreatureSize, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import SkillProficiencyChoice
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Effects import Effects
 from Model.View import CharacterView
 

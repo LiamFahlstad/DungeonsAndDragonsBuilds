@@ -1,5 +1,5 @@
 from Core.Definitions import RANGER_HIT_DIE, Ability, Skill
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import SkillBonus
+from Model.Content.Improvements import SkillBonus
 from Model.View import CharacterView
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER

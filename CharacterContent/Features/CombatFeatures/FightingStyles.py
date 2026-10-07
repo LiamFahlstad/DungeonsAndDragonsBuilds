@@ -1,25 +1,13 @@
 from abc import ABC, abstractmethod
 
 from Core.Weapons import WeaponProperty, WeaponTraits
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     ArmorClassBonus,
     WeaponAttackBonus,
     WeaponDamageBonus,
 )
+from Model.Content.FightingStyle import FightingStyle
 from Model.Effects import Effects
-
-
-class FightingStyle(ABC):
-    """A fighting style is a feature that modifies a character's combat abilities."""
-
-    @abstractmethod
-    def description(self) -> str:
-        pass
-
-    def apply(self, effects: Effects) -> None:
-        """Most fighting styles only describe what they do at the table and
-        record nothing; FightStyleModifier is the kind with a computed
-        effect."""
 
 
 class FightStyleModifier(FightingStyle):

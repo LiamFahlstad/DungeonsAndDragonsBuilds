@@ -1,6 +1,6 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,

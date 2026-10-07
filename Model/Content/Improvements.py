@@ -51,17 +51,14 @@ from Core.Weapons import WeaponProficiency
 from Model.Bonuses import OTHER_SOURCE
 from Model.Records.Tools import ToolProficiency
 from Model.View import Formula, CharacterView, Value
+from Model.Content.Effect import Effect
 from Model.Effects import Effects
 from Model.WeaponBonuses import WeaponBonus, WeaponFilter
 
 
-class CharacterImprovement(ABC):
+class CharacterImprovement(Effect):
     """Base class for all CharacterImprovements. Override apply() to record
     this improvement's effects."""
-
-    @abstractmethod
-    def apply(self, effects: Effects):
-        pass
 
 
 def _validate_pool(items, pool, count: int, error_prefix: str):

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import SORCERER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,

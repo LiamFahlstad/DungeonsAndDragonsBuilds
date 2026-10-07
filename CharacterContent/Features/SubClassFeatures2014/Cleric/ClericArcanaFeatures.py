@@ -1,10 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import SkillProficiency
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Skill
 from Model.Effects import Effects
 from Model.View import CharacterView

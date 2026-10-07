@@ -14,7 +14,7 @@ from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
-from CharacterContent.Features.Core.Improvements import SkillProficiency
+from Model.Content.Improvements import SkillProficiency
 from CharacterContent.Items import Armor
 from Core.Definitions import (
     Ability,

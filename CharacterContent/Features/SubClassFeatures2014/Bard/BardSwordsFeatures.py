@@ -1,12 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import (
-    GrantArmorTraining,
-    GrantWeaponProficiency,
-)
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
+from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
 from Model.Effects import Effects

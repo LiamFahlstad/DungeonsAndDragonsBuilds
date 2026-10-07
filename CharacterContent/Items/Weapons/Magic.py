@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     AbilityScoreBonus,
     AddItemDescription,
     InitiativeRollCondition,
@@ -11,7 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
 from CharacterContent.Items.Items import ItemRarity
 from Core.Definitions import Ability, DiceRollCondition, Skill
 
-from .Base import AbstractWeapon
+from Model.Content.Weapon import AbstractWeapon
 from Core.Weapons import (
     WeaponDamageRolls,
     WeaponDamageTypes,

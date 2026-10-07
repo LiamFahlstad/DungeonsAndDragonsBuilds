@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, ArmorType
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -8,10 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
-    GrantArmorTraining,
-    GrantWeaponProficiency,
-)
+from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER

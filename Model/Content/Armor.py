@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     ArmorClassBonus,
     ItemImprovement,
     SetArmorClass,
@@ -10,7 +10,7 @@ from CharacterContent.Features.Core.Improvements import (
     StrengthRequirement,
     CharacterImprovement,
 )
-from CharacterContent.Items.Items import Item, ItemCategory, ItemRarity
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 from Model.Effects import Effects
 
 
@@ -19,12 +19,12 @@ class AbstractArmor(Item, ABC):
     and improvements) only apply while worn (is_wearing).
 
     Two independent ways to attach behavior to an armor:
-    - `improvements=[...]` (list[CharacterImprovement], defined in CharacterContent.Features.Core.Improvements):
+    - `improvements=[...]` (list[CharacterImprovement], defined in Model.Content.Improvements):
       character-affecting effects, applied to the wearer's stat block while
       worn - e.g. DragonscalePlate granting +1 Constitution, the same
       mechanism RingOfIntellect uses in CharacterContent.Items.Items.
     - `armor_improvements=[...]` (list[ItemImprovement], defined below and in
-      CharacterContent.Features.Core.Improvements): typically an ArmorImprovement - an
+      Model.Content.Improvements): typically an ArmorImprovement - an
       armor-only effect that modifies the armor itself (AC, ability used for
       AC, Strength requirement, Stealth disadvantage, ...), not applicable to
       any other item type - but also accepts the generic ItemImprovements
@@ -127,6 +127,8 @@ class AbstractArmor(Item, ABC):
             # The AC bonus only counts with Shield training (worked out on read).
             effects.add_shield(self.ac_bonus or 0)
         else:
+            if self.armor_type is None:
+                raise ValueError(f"{self.name} sets no armor_type in base_stats().")
             effects.set_worn_armor(self.armor_type, self.name)
             # Medium armor: "add your Dexterity modifier, to a maximum of
             # +2" - Light armor is uncapped and Heavy armor has no ability

@@ -1,6 +1,6 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Effects import Effects
 from Model.View import CharacterView
 

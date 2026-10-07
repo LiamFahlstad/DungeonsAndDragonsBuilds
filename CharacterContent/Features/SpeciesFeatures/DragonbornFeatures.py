@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -9,9 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
-    DamageResistance as DamageResistanceImprovement,
-)
+from Model.Content.Improvements import DamageResistance as DamageResistanceImprovement
 from Core.Definitions import CreatureSize
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS

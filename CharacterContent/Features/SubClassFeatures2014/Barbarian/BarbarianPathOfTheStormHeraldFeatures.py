@@ -1,11 +1,6 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import DamageResistance
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import DamageResistance
 from Model.Effects import Effects
 from Model.View import CharacterView
 

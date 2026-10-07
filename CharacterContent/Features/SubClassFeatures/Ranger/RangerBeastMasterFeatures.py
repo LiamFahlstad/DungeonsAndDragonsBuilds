@@ -5,11 +5,7 @@ from CharacterContent.Features.ClassFeatures.Ranger import PrimalCompanions
 from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
     CompanionType,
 )
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-)
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
 
 

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     FeatureUses,
     Feature,
     FeatureActivation,

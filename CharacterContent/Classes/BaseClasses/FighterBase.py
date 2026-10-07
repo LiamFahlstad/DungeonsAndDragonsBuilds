@@ -11,7 +11,7 @@ from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Items import Packs
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
-from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
+from Model.Content.FightingStyle import FightingStyle
 
 
 @attr.dataclass

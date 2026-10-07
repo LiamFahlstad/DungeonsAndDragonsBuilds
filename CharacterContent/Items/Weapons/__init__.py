@@ -19,11 +19,8 @@ from .Improvements import (
     AddExtraDamage,
     SetWeaponAbility,
 )
-from .Base import (
-    AbstractWeapon,
-    is_proficient_with,
-    UnarmedStrike,
-)
+from Model.Content.Weapon import AbstractWeapon, is_proficient_with
+from CharacterContent.Items.Weapons.Unarmed import UnarmedStrike
 from .WeaponFamilies import (
     SwordLight,
     SwordMedium,

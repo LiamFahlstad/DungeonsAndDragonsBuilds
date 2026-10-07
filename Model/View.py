@@ -19,6 +19,7 @@ holds a copy of a source.
 from typing import Callable, Optional, Protocol
 
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
+from Core.Weapons import WeaponTraits
 from Model.ClassLevels import ClassLevels
 
 
@@ -79,6 +80,18 @@ class CharacterView(Protocol):
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool: ...
 
     def has_feature(self, feature_type: type) -> bool: ...
+
+    # ── Weapons ──────────────────────────────────────────────────────────
+
+    def is_proficient_with_weapon(self, weapon: WeaponTraits) -> bool: ...
+
+    def get_weapon_attack_bonuses(
+        self, weapon: WeaponTraits
+    ) -> list[tuple[int, str]]: ...
+
+    def get_weapon_damage_bonuses(
+        self, weapon: WeaponTraits
+    ) -> list[tuple[int, str]]: ...
 
     # ── Spellcasting ─────────────────────────────────────────────────────
 

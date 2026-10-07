@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,11 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
-    DamageImmunity,
-    DamageResistance,
-    GrantLanguage,
-)
+from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLanguage
 from Core.Definitions import DamageType, Language
 from Model.Effects import Effects
 from Model.View import CharacterView

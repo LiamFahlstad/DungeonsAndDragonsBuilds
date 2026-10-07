@@ -1,15 +1,12 @@
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     ActionType,
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
-    SkillProficiencyChoice,
-    GrantWeaponProficiency,
-)
+from Model.Content.Improvements import SkillProficiencyChoice, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Effects import Effects
 from Model.View import CharacterView

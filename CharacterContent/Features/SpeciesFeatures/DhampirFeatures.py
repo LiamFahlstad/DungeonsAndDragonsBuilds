@@ -1,10 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureUses,
-    RegainedOn,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import DamageResistance, GrantSense
+from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
+from Model.Content.Improvements import DamageResistance, GrantSense
 from Core.Definitions import DamageType, Sense
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS

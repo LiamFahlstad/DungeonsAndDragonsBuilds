@@ -75,9 +75,11 @@ Rules of thumb:
 - `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields:
   grouping them into objects would rewrite ~40 builder lines to save two names.
 
-The `Model` package imports only point down: `Core` → `Model/View.py` (Protocols: `CharacterView`,
-`Formula`) → the parts → `Model/Effects.py` (`Ledger`, `Effects`) and `Model/Sources.py`
-(Protocols for features, fighting styles and gear) → `Model/Character.py` → `Model/Grants.py`. It
+The `Model` package imports only point down: `Core` → `Model/Records/` and `Model/View.py` (the
+one Protocol: `CharacterView`, plus `Formula`) → the parts → `Model/Effects.py` (`Ledger`,
+`Effects`) → `Model/Content/` (the base classes content subclasses: `Feature`, `Item`,
+`AbstractWeapon`, `AbstractArmor`, `FightingStyle`, `Improvements`) → `Model/Character.py` →
+`Model/Grants.py`. A `Character` holds those concrete classes, so nothing narrows them back. It
 never imports `CharacterContent`, not even for type hints, and nothing in the repo uses
 `if TYPE_CHECKING:` (`tests/test_layering.py`, which checks the layer of every import in the
 repo).

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.Feature import Feature
 from Model.Records.GrantStamp import GrantStamp
 from Model.View import CharacterView
 

@@ -5,11 +5,7 @@ everything here turns that into HTML."""
 import re
 from typing import Literal, Sequence, TextIO
 
-from CharacterContent.Features.Core.BaseFeatures import (
-    ActionType,
-    Feature,
-    FeatureUses,
-)
+from Model.Content.Feature import ActionType, Feature, FeatureUses
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html

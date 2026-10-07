@@ -1,6 +1,6 @@
-from CharacterContent.Features.Core.Improvements import CarryingCapacityBonus
+from Model.Content.Improvements import CarryingCapacityBonus
 
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 # Carrying gear is what holds the rest, so it takes up no item slots itself.
 

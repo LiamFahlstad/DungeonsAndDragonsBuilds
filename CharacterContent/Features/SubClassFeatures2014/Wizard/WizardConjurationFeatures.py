@@ -1,11 +1,6 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 
 

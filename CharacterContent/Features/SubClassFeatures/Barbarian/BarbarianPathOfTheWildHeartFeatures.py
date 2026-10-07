@@ -1,9 +1,5 @@
 from Core.Definitions import BARBARIAN_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-)
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
 
 

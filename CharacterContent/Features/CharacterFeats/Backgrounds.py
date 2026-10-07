@@ -1,9 +1,6 @@
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
-    AbilityScoreBonus,
-    SkillProficiencyChoice,
-)
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import AbilityScoreBonus, SkillProficiencyChoice
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_SCORE
 from Model.View import CharacterView

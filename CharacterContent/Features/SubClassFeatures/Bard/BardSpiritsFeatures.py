@@ -1,10 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-    RegainedOn,
-)
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, RegainedOn
 from Model.View import CharacterView
 
 

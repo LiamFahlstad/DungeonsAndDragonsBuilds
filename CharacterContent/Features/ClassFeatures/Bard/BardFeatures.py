@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     ActionType,
     Feature,
     FeatureActivation,
@@ -7,10 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import (
-    JackOfAllTradesBonus,
-    SkillExpertiseChoice,
-)
+from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from Core.Definitions import Skill
 from Model.Effects import Effects
 from Utils import StringUtils

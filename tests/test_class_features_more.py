@@ -37,8 +37,8 @@ from CharacterContent.Features.ClassFeatures.Rogue import RogueFeatures
 from CharacterContent.Features.ClassFeatures.Sorcerer import SorcererFeatures
 from CharacterContent.Features.ClassFeatures.Warlock import WarlockFeatures
 from CharacterContent.Features.ClassFeatures.Wizard import WizardFeatures
-from CharacterContent.Features.Core.BaseFeatures import RegainedOn
-from CharacterContent.Features.Core.Improvements import SkillProficiency
+from Model.Content.Feature import RegainedOn
+from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Ability, CharacterClass, Skill
 
 

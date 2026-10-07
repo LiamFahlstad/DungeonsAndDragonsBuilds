@@ -1,8 +1,4 @@
-from .Base import (
-    ItemRarity,
-    ItemCategory,
-    Item,
-)
+from Model.Content.Item import ItemRarity, ItemCategory, Item
 from .AdventuringGear import (
     Costume,
     Candle,

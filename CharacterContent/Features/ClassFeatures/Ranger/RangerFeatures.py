@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     ActionType,
     Feature,
     FeatureActivation,
@@ -6,11 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import (
-    GrantSense,
-    SkillExpertiseChoice,
-    SpeedBonus,
-)
+from Model.Content.Improvements import GrantSense, SkillExpertiseChoice, SpeedBonus
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill
 from Model.Effects import Effects

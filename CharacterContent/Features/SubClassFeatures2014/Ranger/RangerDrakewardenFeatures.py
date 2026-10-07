@@ -1,6 +1,6 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     ActionType,

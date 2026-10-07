@@ -13,7 +13,7 @@ from typing import Optional
 import attr
 
 from Model.Records.GrantStamp import GrantStamp
-from Model.Sources import GrantedFeature
+from Model.Content.Feature import Feature
 
 
 class IfParentMissing(Enum):
@@ -35,9 +35,9 @@ class FeatureGrant:
     it extends. A feature type (matched with isinstance against the plain
     grants: exactly one must match) or a granted feature instance."""
 
-    feature: GrantedFeature
+    feature: Feature
     stamp: GrantStamp = GrantStamp()
-    extends: type | GrantedFeature | None = None
+    extends: type | Feature | None = None
     if_missing: IfParentMissing = IfParentMissing.ERROR
 
 
@@ -46,8 +46,8 @@ class ExtensionTree:
 
     def __init__(
         self,
-        children: dict[int, list[GrantedFeature]],
-        standalone: list[GrantedFeature],
+        children: dict[int, list[Feature]],
+        standalone: list[Feature],
     ):
         # {id(parent): [extension, ...]}, in grant order.
         self._children = children
@@ -62,8 +62,8 @@ class ExtensionTree:
         grant."""
         plain_features = [g.feature for g in feature_grants if g.extends is None]
         granted_ids = {id(g.feature) for g in feature_grants}
-        children: dict[int, list[GrantedFeature]] = {}
-        standalone: list[GrantedFeature] = []
+        children: dict[int, list[Feature]] = {}
+        standalone: list[Feature] = []
         for grant in feature_grants:
             if grant.extends is None:
                 continue
@@ -74,16 +74,16 @@ class ExtensionTree:
                 standalone.append(grant.feature)
         return cls(children, standalone)
 
-    def children_of(self, feature: GrantedFeature) -> list[GrantedFeature]:
+    def children_of(self, feature: Feature) -> list[Feature]:
         """The extensions granted onto `feature`, in grant order."""
         return self._children.get(id(feature), [])
 
 
 def _find_parent(
     extension: FeatureGrant,
-    plain_features: list[GrantedFeature],
+    plain_features: list[Feature],
     granted_ids: set[int],
-) -> Optional[GrantedFeature]:
+) -> Optional[Feature]:
     """The granted feature `extension` extends, or None if it isn't granted
     and if_missing allows that."""
     parent = extension.extends

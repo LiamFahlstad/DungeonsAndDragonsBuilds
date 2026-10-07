@@ -1,11 +1,6 @@
 from Core.Definitions import ARTIFICER_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureUses,
-    FeatureActivation,
-    RegainedOn,
-)
-from CharacterContent.Features.Core.Improvements import GrantWeaponProficiency
+from Model.Content.Feature import Feature, FeatureUses, FeatureActivation, RegainedOn
+from Model.Content.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Effects import Effects
 from Utils import StringUtils

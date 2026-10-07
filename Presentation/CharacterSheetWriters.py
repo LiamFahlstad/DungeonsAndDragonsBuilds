@@ -1,12 +1,12 @@
 import html
 import pathlib
 from enum import Enum
-from typing import Collection, Literal, Optional, Sequence, TextIO, TypeVar
+from typing import Collection, Literal, Optional, Sequence, TextIO
 
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
-from CharacterContent.Features.CombatFeatures.FightingStyles import FightingStyle
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.FightingStyle import FightingStyle
+from Model.Content.Feature import Feature
 from CharacterContent.Invocations.InvocationFactory import InvocationFactory
 from CharacterContent.Items import Armor, Items
 from Presentation.ArmorCards import ARMOR_CARD_CSS, write_armors_to_file
@@ -42,18 +42,6 @@ from Presentation.FeatureCards import (
 )
 from Presentation.FeatureOrder import feature_sort_key, ordered_extensions
 from Utils import DamageCalculator
-
-T = TypeVar("T")
-
-
-def _as(value: object, kind: type[T]) -> T:
-    """`value`, checked to be a `kind`. The Model holds features and gear
-    only through the Protocols in Model/Sources.py, but the sheet renders
-    the concrete classes, so this is where it gets them back. Anything else
-    is a bug, hence raising rather than skipping."""
-    if not isinstance(value, kind):
-        raise TypeError(f"Expected a {kind.__name__}, got {type(value).__name__}")
-    return value
 
 
 def get_output_folder(
@@ -914,19 +902,15 @@ class HtmlCharacterSheetWriter:
         per category, each paired with the entry it came from and sorted by
         item type then name. Unarmed Strike and currency are left out."""
         armors = sorted(
-            (
-                (_as(armor, Armor.AbstractArmor), entry)
-                for entry in entries
-                for armor in entry.armors
-            ),
+            ((armor, entry) for entry in entries for armor in entry.armors),
             key=lambda x: (x[0].category.value, x[0].name),
         )
         weapons = sorted(
             (
-                (_as(weapon, AbstractWeapon), entry)
+                (weapon, entry)
                 for entry in entries
                 for weapon in entry.weapons
-                if not isinstance(weapon, UnarmedStrike)
+                if not weapon.is_unarmed_strike
             ),
             key=lambda x: (x[0].category.value, x[0].name),
         )
@@ -934,9 +918,8 @@ class HtmlCharacterSheetWriter:
             (
                 (item, quantity, entry)
                 for entry in entries
-                for gear, quantity in entry.items
-                if (item := _as(gear, Items.Item)).category
-                != Items.ItemCategory.CURRENCY
+                for item, quantity in entry.items
+                if item.category != Items.ItemCategory.CURRENCY
             ),
             key=lambda x: (x[0].category.value, x[0].name),
         )
@@ -1371,13 +1354,13 @@ class HtmlCharacterSheetWriter:
         character = data.validate()
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
-        armors = [_as(a, Armor.AbstractArmor) for a in data.armors]
+        armors = data.armors
         armor_proficiencies = character.ledger.equipment_training.armor_training
         weapon_proficiencies = character.ledger.equipment_training.weapon_proficiencies
-        features = [_as(f, Feature) for f in data.top_level_features()]
-        weapons = [_as(w, AbstractWeapon) for w in data.weapons]
-        weapon_masteries = [_as(w, AbstractWeapon) for w in data.weapon_masteries]
-        fighting_styles = [_as(s, FightingStyle) for s in data.fighting_styles]
+        features = data.top_level_features()
+        weapons = data.weapons
+        weapon_masteries = data.weapon_masteries
+        fighting_styles = data.fighting_styles
         invocations = data.invocations
         spells = data.spells
         equipment_entries = data.inventory.equipment_entries

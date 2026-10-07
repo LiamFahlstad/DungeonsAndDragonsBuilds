@@ -1,5 +1,5 @@
-"""Model/View.py and Model/Sources.py: the Protocols the Model is
-written against (Notes/model-refactor-plan.md, Steps 3 and 4).
+"""Model/View.py: the one Protocol the Model is written against
+(Notes/engine-simplification-plan.md, section 2b).
 
 CharacterView is everything a formula may read:
 
@@ -9,8 +9,8 @@ CharacterView is everything a formula may read:
   a stat in the middle of evaluation.
 - It exposes answers, never a part.
 
-The Sources Protocols are what the Model reads off features, fighting
-styles, armor, weapons and items; every build's content must satisfy them.
+Every build's content is the Model/Content base classes the Character's
+fields name (features, armor, weapons, items, fighting styles).
 """
 
 import inspect
@@ -21,10 +21,15 @@ import pytest
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.View import CharacterView
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.Feature import Feature
+from CharacterContent.Items.Weapons import Longsword
+from Core.Weapons import WeaponTraits
 from Model.Effects import Effects
 from Model.Recorder import Recorder
-from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
+from Model.Content.Armor import AbstractArmor
+from Model.Content.FightingStyle import FightingStyle
+from Model.Content.Item import Item
+from Model.Content.Weapon import AbstractWeapon
 from tests._snapshot_helpers import ALL_BUILDS
 
 MEMBERS = sorted(
@@ -38,6 +43,7 @@ SAMPLE_ARGUMENTS = {
     Skill: Skill.ARCANA,
     CharacterClass: CharacterClass.PALADIN,
     type: Feature,
+    WeaponTraits: Longsword().traits,
 }
 
 
@@ -89,37 +95,28 @@ def test_stat_view_exposes_answers_not_parts(name):
     ), name
 
 
-# ── Model/Sources.py: what the Model reads off content ───────────────────────
-
-
-def _protocol_members(protocol: type) -> set[str]:
-    members = set()
-    for cls in protocol.__mro__:
-        if cls is object or not getattr(cls, "_is_protocol", False):
-            continue
-        members |= set(getattr(cls, "__annotations__", {}))
-        members |= {
-            name
-            for name, value in vars(cls).items()
-            if callable(value) and not name.startswith("_")
-        }
-    return members
-
-
-def _missing(obj, protocol: type) -> list[str]:
-    return sorted(m for m in _protocol_members(protocol) if not hasattr(obj, m))
+# ── The content a Character holds: the Model/Content base classes ─────────────
 
 
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
-def test_content_satisfies_the_source_protocols(name):
+def test_content_is_the_model_content_classes(name):
+    """Python doesn't check annotations at runtime: every build must hand the
+    Character the Model/Content classes its fields name."""
     data = type(ALL_BUILDS[name])().build()
     problems = []
     for feature in data.iter_features_with_extensions():
-        problems += [(feature.name, m) for m in _missing(feature, GrantedFeature)]
+        if not isinstance(feature, Feature):
+            problems.append(("feature", type(feature).__name__))
     for armor in data.armors:
-        problems += [(armor.name, m) for m in _missing(armor, ArmorGear)]
-    for gear in [*data.weapons, *data.weapon_masteries, *(i for i, _ in data.items)]:
-        problems += [(gear.name, m) for m in _missing(gear, Gear)]
+        if not isinstance(armor, AbstractArmor):
+            problems.append(("armor", type(armor).__name__))
+    for weapon in [*data.weapons, *data.weapon_masteries]:
+        if not isinstance(weapon, AbstractWeapon):
+            problems.append(("weapon", type(weapon).__name__))
+    for item, _quantity in data.items:
+        if not isinstance(item, Item):
+            problems.append(("item", type(item).__name__))
     for style in data.fighting_styles:
-        problems += [(type(style).__name__, m) for m in _missing(style, Effect)]
+        if not isinstance(style, FightingStyle):
+            problems.append(("fighting style", type(style).__name__))
     assert not problems, problems

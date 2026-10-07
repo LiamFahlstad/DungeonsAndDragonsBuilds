@@ -25,7 +25,7 @@ from CharacterContent.Features.ClassFeatures.ClassProficiencies import (
 )
 from CharacterContent.Features.ClassFeatures.Druid import DruidFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     GrantArmorTraining,
     InitiativeRollCondition,
     SavingThrowAdvantage,

@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
-from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
+from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS

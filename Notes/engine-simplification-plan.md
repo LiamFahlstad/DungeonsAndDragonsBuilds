@@ -45,7 +45,7 @@ document has been changed in the code yet.
 | 7 | `CharacterView`: content reads the character through one interface | codemod | none | M |
 | 8 | Ledger parts record facts only (tools, weapon filters) | design | none | M |
 | 9 | Content base classes move below `Character`; `_as` is deleted | structure | none | L |
-| 10 | Attack math belongs to the character (`AttackProfile`) | design | none | M |
+| 10 | Attack math belongs to the character (`AttackProfile`) *(optional since Step 9)* | design | none | M |
 | 11 | Builder pattern: `CharacterSources` → immutable `Character` | design | none | L |
 | 12 | Builder cleanup | small items | none | M |
 | 13 | `Character` as the combat representation | design + fixes | combat values (reviewed) | M |
@@ -1040,7 +1040,65 @@ refers to the checks in section 4.
 - **Verify:** A, B, C, D, E, F. Check the dumps of builds with Archery, Dueling,
   Thrown Weapon Fighting and Bracers by name. **Output:** none.
 
-### Step 9: Content base classes move below `Character` *(structure)*
+### Step 9: Content base classes move below `Character` *(structure)* — done
+
+- **Result:**
+  - **`Model/Content/`** holds the base classes, all moved with `git mv`:
+    - `Feature.py` (was `Features/Core/BaseFeatures.py`), `Improvements.py`;
+    - `Item.py` (was `Items/Items/Base.py`), `Weapon.py` (was
+      `Items/Weapons/Base.py`), `Armor.py` (was `Items/Armor/Base.py`),
+      `ExtraDamage.py`;
+    - and, new: `FightingStyle.py` (the base, cut out of `FightingStyles.py`)
+      and `Effect.py`, a nominal ABC with `apply(effects)`. `Feature`,
+      `CharacterImprovement` and `FightingStyle` subclass it.
+
+    `UnarmedStrike` is concrete content, so it moved to
+    `CharacterContent/Items/Weapons/Unarmed.py`.
+  - **One change from the plan:** `AbstractWeapon` and `AbstractArmor` keep
+    their names. Renaming them `Weapon`/`Armor` would collide with the
+    `Weapons`/`Armor` content packages every build imports (`Armor.Armor`).
+  - **The weapon base no longer reads `character.ledger`.** `CharacterView`
+    gained three answers in `WeaponTraits` terms: `is_proficient_with_weapon`,
+    `get_weapon_attack_bonuses` and `get_weapon_damage_bonuses`
+    (`EquipmentTraining.is_proficient_with` backs the first). So the weapon
+    math moved below `Character` unchanged, typed `CharacterView`, and the
+    content-readers allowlist is empty.
+  - **The codemod.** An AST script routed every imported name to its new
+    module (227 files), including relative and in-function imports, and the
+    two split modules (`UnarmedStrike`, `FightingStyle`). The content
+    packages keep re-exporting the base names (Decision 5).
+  - **The Model is typed concretely:** `Character`, `Grants`, `Inventory`,
+    `FeatureGrants` and `StartingEquipment` name `Feature`,
+    `AbstractWeapon`, `AbstractArmor`, `Item`, `FightingStyle` and `Effect`,
+    and `get_features_by_type` is generic. **`Model/Sources.py` is deleted.**
+  - **Narrowing removed:** the writer's `_as` (9 sites), its `TypeVar`, and
+    the `isinstance` asserts in `FeatureOrder`. The gear collection lost a
+    walrus expression, and `isinstance(weapon, UnarmedStrike)` became
+    `weapon.is_unarmed_strike`. The `_as` and content-readers allowlists are
+    empty.
+  - **Done early from Step 15:** `Model/Content` is now under check D, which
+    surfaced the known Armor `Optional[ArmorType]` error. It's fixed: wearing
+    an armor whose `base_stats()` set no `armor_type` raises, and every
+    concrete armor sets one.
+  - **Tests:** `test_contracts` checks every build's content is the
+    `Model/Content` classes (Python doesn't check annotations at runtime),
+    replacing the Protocol conformance test.
+  - **Verified:**
+    - A, B (3352 passed), E (1096 slow passed), D: 0 errors, now including
+      `Model/Content`.
+    - F: all pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree: no new errors, 2 fixed
+      (`CharacterBuilder.get_starting_item`'s `Gear` return, and the Armor
+      one).
+    - C: the entry points run, the combat UI shows all 92 tooltips, and the
+      Creator loads a build with no problems.
+- **What this means for Step 10.** The weapon no longer reaches into the
+  Ledger, and its attack math already takes a `CharacterView`. So the attack
+  numbers are one call each (`weapon.calculate_total_attack_roll_bonus_int(character)`),
+  usable by combat as they are. Moving that math into an `AttackProfile`
+  would relocate it without making it simpler. Step 10 is downgraded to
+  optional: do it only if combat wants one object holding every number for a
+  weapon.
 
 - **Goal:** `Character` stores concrete types, and `_as`, `Model/Sources.py`
   and the `isinstance` asserts are deleted.

@@ -1,12 +1,7 @@
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureTarget,
-    FeatureUses,
-    RegainedOn,
-)
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Feature import Feature, FeatureTarget, FeatureUses, RegainedOn
+from Model.Content.Improvements import (
     HitPointsPerLevelBonus,
     InitiativeProficiency,
     SkillProficiencyChoice,

@@ -51,7 +51,7 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
-from CharacterContent.Features.Core.Improvements import SkillProficiency
+from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Ability, CharacterClass, Sense, Skill
 
 STR, DEX, CON, INT, WIS, CHA = (

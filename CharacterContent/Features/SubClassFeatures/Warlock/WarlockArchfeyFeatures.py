@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, Condition, WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -8,7 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import ConditionImmunity
+from Model.Content.Improvements import ConditionImmunity
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER

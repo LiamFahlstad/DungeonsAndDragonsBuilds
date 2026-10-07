@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.Feature import Feature
 from Core.SpellcastingRules import CasterType
 from Model.Effects import Effects
 from Model.View import CharacterView

@@ -1,10 +1,5 @@
 from Core.Definitions import PSION_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    RegainedOn,
-)
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, RegainedOn
 from Model.View import CharacterView
 
 

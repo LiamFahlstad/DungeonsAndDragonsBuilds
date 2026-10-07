@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import FeatureTarget
+from Model.Content.Feature import FeatureTarget
 from .Enums import CastingTimeType, School
 
 

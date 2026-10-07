@@ -1,14 +1,6 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-    RegainedOn,
-)
-from CharacterContent.Features.Core.Improvements import (
-    GrantLanguage,
-    SkillProficiencyChoice,
-)
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, RegainedOn
+from Model.Content.Improvements import GrantLanguage, SkillProficiencyChoice
 from Model.Effects import Effects
 from Model.View import CharacterView
 

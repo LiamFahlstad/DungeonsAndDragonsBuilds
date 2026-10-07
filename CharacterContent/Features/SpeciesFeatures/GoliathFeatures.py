@@ -1,7 +1,7 @@
 from enum import Enum
 
 from Core.Definitions import CreatureSize
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,

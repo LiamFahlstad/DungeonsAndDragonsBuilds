@@ -1,11 +1,11 @@
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import InitiativeProficiency
+from Model.Content.Improvements import InitiativeProficiency
 from Model.Effects import Effects
 from Model.View import CharacterView
 

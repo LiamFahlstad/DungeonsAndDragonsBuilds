@@ -1,14 +1,6 @@
 from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import (
-    ConditionImmunity,
-    SavingThrowBonus,
-)
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
 from Model.Effects import Effects
 

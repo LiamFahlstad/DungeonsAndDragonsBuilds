@@ -54,10 +54,7 @@ from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerF
 
 from CharacterContent.Classes.SubClasses2024 import ArtificerBattleSmith, DruidLand
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures
-from CharacterContent.Features.Core.Improvements import (
-    GrantSense,
-    SavingThrowProficiency,
-)
+from Model.Content.Improvements import GrantSense, SavingThrowProficiency
 from CharacterContent.Features.SubClassFeatures.Bard import BardDanceFeatures
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.SubClassFeatures.Paladin import (
@@ -505,7 +502,7 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
         data = BuildSelector.get_build(
             "Y2024_Wizard_Bladesinger_IlyanaBladesong"
         ).build()
-        from CharacterContent.Items.Weapons.Base import is_proficient_with
+        from Model.Content.Weapon import is_proficient_with
         from CharacterContent.Items.Weapons.MartialMelee import Scimitar
 
         # Scimitar: Martial Melee, Finesse + Light (no Two-Handed/Heavy), so a
@@ -638,7 +635,7 @@ class TestBladesingerWeaponProficiencyScope:
     )
     def test_martial_melee_not_heavy_or_two_handed(self, weapon_name, expected):
         from CharacterContent.Items.Weapons import MartialMelee
-        from CharacterContent.Items.Weapons.Base import weapon_matches_proficiency
+        from Model.Content.Weapon import weapon_matches_proficiency
         from Core.Weapons import WeaponProficiency
 
         weapon = getattr(MartialMelee, weapon_name)()
@@ -651,7 +648,7 @@ class TestBladesingerWeaponProficiencyScope:
 
     def test_does_not_cover_martial_ranged(self):
         from CharacterContent.Items.Weapons import Ranged
-        from CharacterContent.Items.Weapons.Base import weapon_matches_proficiency
+        from Model.Content.Weapon import weapon_matches_proficiency
         from Core.Weapons import WeaponProficiency
 
         # Hand Crossbow is Light, but ranged - not a Melee Martial weapon.

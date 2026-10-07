@@ -9,7 +9,9 @@ from typing import Optional, Sequence
 from CharacterContent.Items import Armor, Items, Packs, Weapons
 from Core.Definitions import CharacterClass
 from Model.Inventory import EquipmentEntry, Inventory
-from Model.Sources import ArmorGear, Gear
+from Model.Content.Weapon import AbstractWeapon
+from Model.Content.Armor import AbstractArmor
+from Model.Content.Item import Item
 
 
 def _entry_value(entry: EquipmentEntry) -> float:
@@ -36,9 +38,9 @@ def set_starting_equipment(
     if not any(isinstance(w, Weapons.UnarmedStrike) for w in default_equipment):
         unarmed_strike = Weapons.UnarmedStrike(player_is_proficient=True)
 
-    starting_armor: list[ArmorGear] = []
-    starting_weapons: list[Gear] = []
-    starting_items: list[tuple[Gear, int]] = []
+    starting_armor: list[AbstractArmor] = []
+    starting_weapons: list[AbstractWeapon] = []
+    starting_items: list[tuple[Item, int]] = []
 
     # Explicit body armor replaces the default one (a character can only
     # wear one armor at a time); default shields still apply.

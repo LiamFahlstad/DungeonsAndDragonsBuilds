@@ -31,8 +31,8 @@ from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Paladin import PaladinFeatures
 from CharacterContent.Features.ClassFeatures.SpellSlots import CasterType, SpellSlots
 from CharacterContent.Features.CombatFeatures.FightingStyles import Defense
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import (
     AbilityScoreBonus,
     GrantArmorTraining,
     GrantSense,

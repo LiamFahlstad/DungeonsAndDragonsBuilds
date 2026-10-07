@@ -5,11 +5,8 @@ from Model.Character import Character
 from Presentation import Html
 from Utils import DamageCalculator, ItemSheetSettings
 
-from CharacterContent.Items.Weapons.Base import (
-    AbstractWeapon,
-    BonusPart,
-    UnarmedStrike,
-)
+from Model.Content.Weapon import AbstractWeapon, BonusPart
+from CharacterContent.Items.Weapons.Unarmed import UnarmedStrike
 from Core.Weapons import WeaponDamageTypes, WeaponProperty
 
 _DAMAGE_TYPE_CSS_CLASS = {

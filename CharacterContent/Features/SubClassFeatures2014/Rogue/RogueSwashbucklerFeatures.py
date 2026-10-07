@@ -1,12 +1,12 @@
 from Core.Definitions import ROGUE_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     FeatureUses,
     Feature,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import InitiativeBonus
+from Model.Content.Improvements import InitiativeBonus
 from Model.Effects import Effects
 from Utils import StringUtils
 from Model.View import CharacterView

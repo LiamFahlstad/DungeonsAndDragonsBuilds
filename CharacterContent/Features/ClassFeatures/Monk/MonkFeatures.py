@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     FeatureTarget,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     ActionType,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     AbilityScoreBonus,
     MultiAbilityArmorClass,
     SavingThrowProficiency,

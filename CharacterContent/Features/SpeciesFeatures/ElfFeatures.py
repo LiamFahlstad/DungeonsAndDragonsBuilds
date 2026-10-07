@@ -1,9 +1,6 @@
 from Core.Definitions import CreatureSize, Skill, Sense
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
-    SkillProficiencyChoice,
-    GrantSense,
-)
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Effects import Effects
 from Model.View import CharacterView
 

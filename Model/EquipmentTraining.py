@@ -1,5 +1,5 @@
 from Core.Definitions import ArmorType
-from Core.Weapons import WeaponProficiency
+from Core.Weapons import WeaponProficiency, WeaponTraits, weapon_matches_proficiency
 from Model.Recorder import Recorder, records
 from Model.Records.Tools import ToolProficiency
 
@@ -24,6 +24,12 @@ class EquipmentTraining(Recorder):
     @property
     def has_shield_training(self) -> bool:
         return ArmorType.SHIELD in self.armor_training
+
+    def is_proficient_with(self, weapon: WeaponTraits) -> bool:
+        return any(
+            weapon_matches_proficiency(weapon, proficiency)
+            for proficiency in self.weapon_proficiencies
+        )
 
     @records
     def add_weapon_proficiency(self, weapon_proficiency: WeaponProficiency) -> None:

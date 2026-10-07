@@ -1,11 +1,6 @@
 from Core.Definitions import MONK_HIT_DIE, Sense
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import GrantOrExtendSense
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Effects import Effects
 from Model.View import CharacterView

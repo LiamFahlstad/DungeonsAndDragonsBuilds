@@ -1,8 +1,8 @@
 from abc import abstractmethod
 from typing import Optional
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import ItemImprovement
-from .Base import AbstractArmor
+from Model.Content.Improvements import ItemImprovement
+from Model.Content.Armor import AbstractArmor
 
 
 class ArmorImprovement(ItemImprovement):

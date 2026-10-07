@@ -1,11 +1,6 @@
 from Core.Definitions import BARD_HIT_DIE, Ability
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import MultiAbilityArmorClass
 from Model.Effects import Effects
 from Model.View import CharacterView
 

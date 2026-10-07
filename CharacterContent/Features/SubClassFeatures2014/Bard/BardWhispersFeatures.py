@@ -1,5 +1,5 @@
 from Core.Definitions import BARD_HIT_DIE, CharacterClass
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     FeatureUses,
     Feature,
     FeatureActivation,

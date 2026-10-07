@@ -1,6 +1,6 @@
 from Core.Definitions import CreatureSize, DamageType, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import (
     ArmorClassBonus,
     DamageResistance,
     SkillProficiencyChoice,

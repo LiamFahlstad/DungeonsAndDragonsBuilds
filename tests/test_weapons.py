@@ -9,7 +9,7 @@ marks=bug("...") (a strict xfail) until the data is fixed.
 import pytest
 
 from CharacterContent.Items import Weapons
-from CharacterContent.Items.Weapons.Base import is_proficient_with
+from Model.Content.Weapon import is_proficient_with
 from Core.Weapons import (
     WeaponDamageRolls as R,
     WeaponDamageTypes as T,

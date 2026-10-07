@@ -21,8 +21,8 @@ throws in its own sections.
 from typing import Callable, Sequence
 
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import (
     GrantArmorTraining,
     GrantToolProficiency,
     GrantWeaponProficiency,

@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, Condition
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import ConditionImmunity
+from Model.Content.Improvements import ConditionImmunity
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView

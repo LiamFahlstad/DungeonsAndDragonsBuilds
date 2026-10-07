@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     GrantWeaponProficiency,
     AbilityScoreBonus,
     ArmorClassBonus,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.Improvements import (
     WeaponDamageBonus,
 )
 from Core.Weapons import WeaponProficiency, WeaponTraits
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 
 class NightVisionGoggles(Item):

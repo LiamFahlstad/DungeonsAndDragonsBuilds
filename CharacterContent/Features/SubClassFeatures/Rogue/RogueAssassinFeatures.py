@@ -1,7 +1,7 @@
 from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
-from CharacterContent.Features.Core.Improvements import InitiativeRollCondition
+from Model.Content.Feature import Feature, FeatureTarget
+from Model.Content.Improvements import InitiativeRollCondition
 from Model.Effects import Effects
 from Model.View import CharacterView
 

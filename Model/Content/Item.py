@@ -1,11 +1,8 @@
 from enum import Enum
 from typing import Optional
 
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
-    CharacterImprovement,
-    ItemImprovement,
-)
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import CharacterImprovement, ItemImprovement
 from Model.Effects import Effects
 from Model.View import CharacterView
 

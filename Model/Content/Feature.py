@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Literal
 
+from Model.Content.Effect import Effect
 from Model.Effects import Effects
 from Model.View import CharacterView
 
@@ -135,7 +136,7 @@ class FeatureActivation:
         return self.duration
 
 
-class Feature:
+class Feature(Effect):
     """A single feature type. Override apply() to modify the stat block, get_description() to render a card, or both."""
 
     # Whether a character may be granted this feature more than once. Class

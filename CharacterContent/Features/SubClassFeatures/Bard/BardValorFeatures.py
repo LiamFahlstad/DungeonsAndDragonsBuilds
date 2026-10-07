@@ -1,14 +1,6 @@
 from Core.Definitions import BARD_HIT_DIE, ArmorType
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import (
-    GrantArmorTraining,
-    GrantWeaponProficiency,
-)
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Effects import Effects
 from Model.View import CharacterView

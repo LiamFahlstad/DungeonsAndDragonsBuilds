@@ -1,5 +1,5 @@
 from Core.Definitions import Ability
-from .Base import AbstractWeapon
+from Model.Content.Weapon import AbstractWeapon
 from Core.Weapons import (
     WeaponMastery,
     WeaponProperty,

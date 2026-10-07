@@ -56,7 +56,7 @@ def make_character():
     make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
     make_character(armor_training=[ArmorType.SHIELD])
     """
-    from CharacterContent.Features.Core.Improvements import GrantArmorTraining
+    from Model.Content.Improvements import GrantArmorTraining
     from Core.Definitions import CharacterClass, CreatureSize
     from Model.AbilityScores import AbilityScores
     from Model.Character import Character

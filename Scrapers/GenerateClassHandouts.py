@@ -21,7 +21,7 @@ from typing import Optional
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from CharacterContent.Features.Core.BaseFeatures import Feature
+from Model.Content.Feature import Feature
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.AbilityScores import AbilityScores
 from Model.Character import Character

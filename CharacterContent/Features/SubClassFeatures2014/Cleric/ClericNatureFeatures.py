@@ -1,10 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureActivation,
-    ActionType,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import GrantArmorTraining
+from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Improvements import GrantArmorTraining
 from Core.Definitions import ArmorType
 from Model.Effects import Effects
 from Model.View import CharacterView

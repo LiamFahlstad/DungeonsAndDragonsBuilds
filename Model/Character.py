@@ -9,14 +9,15 @@ it, seals it, then answers queries from it until the sources change again. A
 version counter decides when that is (see _get_ledger).
 
 The Model package imports nothing from CharacterContent, not even for type
-hints: features, fighting styles, armor, weapons and items are named through
-the Protocols in Model/Sources.py, so CharacterContent can import the Model
-without a cycle.
+hints: features, fighting styles, armor, weapons and items are the base
+classes in Model/Content/, which CharacterContent's concrete content
+subclasses - so a Character hands out concrete types and nothing has to
+narrow them back.
 """
 
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, Optional, Sequence
+from typing import Any, Callable, Iterator, Optional, Sequence, TypeVar
 
 import attr
 
@@ -24,6 +25,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
 from Core.Rules import MAX_ATTUNED_ITEMS, MAX_LEVEL, ability_modifier, proficiency_bonus
 from Core.SpellcastingRules import SlotProgression
+from Core.Weapons import WeaponTraits
 from Model.AbilityScores import AbilityScores
 from Model.ClassLevels import ClassLevels
 from Model.Effects import Effects, Ledger
@@ -32,8 +34,15 @@ from Model.Inventory import Inventory
 from Model.Records.GrantStamp import GrantStamp
 from Model.Records.SourcedValue import SourcedValue
 from Model.Senses import SenseGrant
-from Model.Sources import ArmorGear, Effect, Gear, GrantedFeature
+from Model.Content.Feature import Feature
+from Model.Content.Weapon import AbstractWeapon
+from Model.Content.Armor import AbstractArmor
+from Model.Content.Item import Item
+from Model.Content.FightingStyle import FightingStyle
+from Model.Content.Effect import Effect
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
+
+FeatureT = TypeVar("FeatureT", bound=Feature)
 
 
 def _in_given_order(effects: list[Effect]) -> list[Effect]:
@@ -84,8 +93,8 @@ class Character:
     # Spell slots set outright rather than worked out from caster levels.
     fixed_spell_slots: dict[int, int] = attr.Factory(dict)
 
-    weapon_masteries: list[Gear] = attr.Factory(list)
-    fighting_styles: list[Effect] = attr.Factory(list)
+    weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
+    fighting_styles: list[FightingStyle] = attr.Factory(list)
     # Armor, weapons and items, grouped into labeled entries (Starting
     # Equipment, then adventuring gear added later), plus starting and
     # current gold - see Model/Inventory.py. CharacterBuilder.build()
@@ -171,24 +180,24 @@ class Character:
         return self.class_levels.character_level
 
     @property
-    def armors(self) -> list[ArmorGear]:
+    def armors(self) -> list[AbstractArmor]:
         return self.inventory.armors
 
     @property
-    def weapons(self) -> list[Gear]:
+    def weapons(self) -> list[AbstractWeapon]:
         return self.inventory.weapons
 
     @property
-    def items(self) -> list[tuple[Gear, int]]:
+    def items(self) -> list[tuple[Item, int]]:
         """(item, quantity), with same-type stacks merged."""
         return self.inventory.items
 
     def add_feature(
         self,
-        feature: GrantedFeature,
+        feature: Feature,
         *,
         stamp: GrantStamp,
-        extends: type | GrantedFeature | None = None,
+        extends: type | Feature | None = None,
         if_missing: IfParentMissing = IfParentMissing.ERROR,
     ):
         """Grant `feature` - or, with `extends`, grant it as an extension of
@@ -201,14 +210,14 @@ class Character:
         self._changed()
 
     @property
-    def features(self) -> list[GrantedFeature]:
+    def features(self) -> list[Feature]:
         """Every feature granted plainly (not as an extension)."""
         return [g.feature for g in self.feature_grants if g.extends is None]
 
-    def has_granted(self, feature: GrantedFeature) -> bool:
+    def has_granted(self, feature: Feature) -> bool:
         return id(feature) in self._stamps()
 
-    def stamp_of(self, feature: GrantedFeature) -> GrantStamp:
+    def stamp_of(self, feature: Feature) -> GrantStamp:
         """Where `feature` was granted from (a default stamp if it wasn't)."""
         return self._stamps().get(id(feature), GrantStamp())
 
@@ -219,17 +228,17 @@ class Character:
             self._stamp_index_version = self._version
         return self._stamp_index
 
-    def top_level_features(self) -> list[GrantedFeature]:
+    def top_level_features(self) -> list[Feature]:
         """The features with a card of their own: every plain grant, then
         every "standalone" extension whose parent isn't granted."""
         return [*self.features, *self._extensions().standalone]
 
-    def extensions_of(self, feature: GrantedFeature) -> list[GrantedFeature]:
+    def extensions_of(self, feature: Feature) -> list[Feature]:
         """The extensions granted onto `feature`, by grant level, then name,
         then who granted them - never by the order they were granted in.
         (The sheet orders them its own way: Presentation/FeatureOrder.py.)"""
 
-        def canonical_order(extension: GrantedFeature) -> tuple:
+        def canonical_order(extension: Feature) -> tuple:
             stamp = self.stamp_of(extension)
             return (
                 stamp.level,
@@ -240,12 +249,12 @@ class Character:
 
         return sorted(self._extensions().children_of(feature), key=canonical_order)
 
-    def iter_features_with_extensions(self) -> Iterator[GrantedFeature]:
+    def iter_features_with_extensions(self) -> Iterator[Feature]:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
         tree = self._extensions()
 
-        def walk(features: Sequence[GrantedFeature]) -> Iterator[GrantedFeature]:
+        def walk(features: Sequence[Feature]) -> Iterator[Feature]:
             for feature in features:
                 yield feature
                 yield from walk(tree.children_of(feature))
@@ -263,12 +272,27 @@ class Character:
             self._extension_tree_version = self._version
         return self._extension_tree
 
+    def is_proficient_with_weapon(self, weapon: WeaponTraits) -> bool:
+        """Whether any weapon proficiency the character has covers a
+        weapon with these traits."""
+        return self.ledger.equipment_training.is_proficient_with(weapon)
+
+    def get_weapon_attack_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
+        """(value, label) for every attack roll bonus the wielder brings to
+        a weapon with these traits (e.g. the Archery fighting style)."""
+        return self.ledger.weapon_bonuses.attack_bonuses(weapon)
+
+    def get_weapon_damage_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
+        """(value, label) for every damage roll bonus the wielder brings to
+        a weapon with these traits (e.g. the Dueling fighting style)."""
+        return self.ledger.weapon_bonuses.damage_bonuses(weapon)
+
     def has_feature(self, feature_type: type) -> bool:
         """Whether a feature of `feature_type` is granted plainly (not as an
         extension)."""
         return any(isinstance(f, feature_type) for f in self.features)
 
-    def get_features_by_type(self, feature_type: type) -> list[Any]:
+    def get_features_by_type(self, feature_type: type[FeatureT]) -> list[FeatureT]:
         return [
             feature for feature in self.features if isinstance(feature, feature_type)
         ]
@@ -286,21 +310,21 @@ class Character:
         self._changed()
         self.class_levels.level_per_class[character_class] = level
 
-    def add_armor(self, armor: ArmorGear):
+    def add_armor(self, armor: AbstractArmor):
         """Add armor outside starting equipment and adventuring gear (see
         Inventory.add_armor)."""
         self.inventory.add_armor(armor)
 
-    def add_weapon(self, weapon: Gear):
+    def add_weapon(self, weapon: AbstractWeapon):
         # Proficiency isn't decided here: the weapon works it out on read
         # against every proficiency (AbstractWeapon.is_proficient).
         self.inventory.add_weapon(weapon)
 
-    def add_weapon_mastery(self, weapon: Gear):
+    def add_weapon_mastery(self, weapon: AbstractWeapon):
         self._changed()
         self.weapon_masteries.append(weapon)
 
-    def add_fighting_style(self, fighting_style: Effect):
+    def add_fighting_style(self, fighting_style: FightingStyle):
         self._changed()
         self.fighting_styles.append(fighting_style)
 
@@ -376,7 +400,7 @@ class Character:
         self._changed()
         self.invocations.append(invocation)
 
-    def add_item(self, item: Gear, quantity: int = 1):
+    def add_item(self, item: Item, quantity: int = 1):
         self.inventory.add_item(item, quantity)
 
     def add_effect(self, effect: Effect) -> None:
@@ -438,7 +462,7 @@ class Character:
         ledger = Ledger()
         effects = Effects(ledger)
         try:
-            # Ordering contract (see CharacterContent/Features/Core/Improvements.py):
+            # Ordering contract (see Model/Content/Improvements.py):
             # every effect only records facts - Effects is write-only - and
             # every value is worked out when it's read, so features, armor,
             # weapons, items and fighting styles may apply in any order.
@@ -504,7 +528,7 @@ class Character:
         """A feat that isn't Repeatable can be taken only once - from the
         background, the species and every Ability Score Improvement level
         together."""
-        grants_by_type: dict[type, list[GrantedFeature]] = {}
+        grants_by_type: dict[type, list[Feature]] = {}
         for feature in self.iter_features_with_extensions():
             if not feature.repeatable:
                 grants_by_type.setdefault(type(feature), []).append(feature)

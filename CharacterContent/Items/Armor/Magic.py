@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     AbilityScoreBonus,
     AddItemDescription,
     Reskin,
@@ -11,7 +11,7 @@ from CharacterContent.Features.Core.Improvements import (
     SkillBonus,
 )
 from CharacterContent.Items.Items import ItemRarity
-from .Base import AbstractArmor
+from Model.Content.Armor import AbstractArmor
 from .Improvements import (
     AddArmorClassBonus,
     SetArmorClassBase,

@@ -1,6 +1,6 @@
 from Core.Definitions import Ability, Skill
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus, SkillBonus
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Improvements import AbilityScoreBonus, SkillBonus
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 
 class FingerGunRing(Item):

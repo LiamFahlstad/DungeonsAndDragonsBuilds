@@ -1,9 +1,6 @@
 from Core.Definitions import DamageType, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, RegainedOn
-from CharacterContent.Features.Core.Improvements import (
-    DamageResistance,
-    SkillProficiencyChoice,
-)
+from Model.Content.Feature import Feature, RegainedOn
+from Model.Content.Improvements import DamageResistance, SkillProficiencyChoice
 from Model.Effects import Effects
 from Model.View import CharacterView
 

@@ -8,7 +8,7 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import CharacterClass, DamageType
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,

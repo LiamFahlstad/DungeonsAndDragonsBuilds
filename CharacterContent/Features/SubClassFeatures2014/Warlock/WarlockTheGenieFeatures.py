@@ -1,12 +1,12 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import DamageResistance
+from Model.Content.Improvements import DamageResistance
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView

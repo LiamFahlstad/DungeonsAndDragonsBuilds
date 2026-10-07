@@ -1,9 +1,6 @@
 from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import Feature, FeatureTarget
-from CharacterContent.Features.Core.Improvements import (
-    InitiativeRollCondition,
-    SkillRollCondition,
-)
+from Model.Content.Feature import Feature, FeatureTarget
+from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
 from Model.Effects import Effects
 from Model.View import CharacterView
 

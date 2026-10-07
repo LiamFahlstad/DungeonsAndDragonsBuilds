@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, RANGER_HIT_DIE, Sense
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     GrantOrExtendSense,
     InitiativeBonus,
     SavingThrowProficiencyOrAlternative,

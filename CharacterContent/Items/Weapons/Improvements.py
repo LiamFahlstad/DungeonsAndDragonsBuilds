@@ -2,15 +2,15 @@ from abc import abstractmethod
 from typing import Optional
 
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import ItemImprovement
-from .Base import AbstractWeapon
+from Model.Content.Improvements import ItemImprovement
+from Model.Content.Weapon import AbstractWeapon
 from Core.Weapons import WeaponProperty, WeaponDamageRolls, WeaponDamageTypes
-from .ExtraDamage import ExtraDamage  # re-exported: weapons are built with it
+from Model.Content.ExtraDamage import ExtraDamage
 
 # ──────────────────────────────────────────────────────────────────────────────
 # WeaponImprovement: composable modifiers applied to a weapon at construction
 # time (e.g. a magic weapon variant, or a homebrew reskin). Mirrors
-# CharacterContent.Features.Core.Improvements.CharacterImprovement, but its apply() mutates the weapon
+# Model.Content.Improvements.CharacterImprovement, but its apply() mutates the weapon
 # instance instead of the character stat block, since these improvements
 # (attack/damage bonuses, damage die/type, properties, flavor text) are
 # properties of the weapon itself, not of the wielder.

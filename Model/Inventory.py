@@ -2,8 +2,8 @@
 gear picked up over time, and dropping items.
 
 Part of the Character model (Model/Character.py), so it imports nothing
-from CharacterContent - armor, weapons and items are named through the
-Protocols in Model/Sources.py.
+from CharacterContent - armor, weapons and items are the base classes in
+Model/Content/.
 CharacterBuilder seeds an Inventory (Builds/StartingEquipment.py builds the
 Starting Equipment entry) and delegates add_adventuring_gear/drop_item/
 get_starting_item to it; build() hands each Character its own copy
@@ -17,12 +17,14 @@ from typing import Generic, Optional, Sequence, TypeVar
 
 import attr
 
-from Model.Sources import ArmorGear, Gear
+from Model.Content.Weapon import AbstractWeapon
+from Model.Content.Armor import AbstractArmor
+from Model.Content.Item import Item
 
-GearT = TypeVar("GearT", bound=Gear)
+ItemT = TypeVar("ItemT", bound=Item)
 
 
-class Bought(Generic[GearT]):
+class Bought(Generic[ItemT]):
     """Wrap an item passed to add_adventuring_gear() to mark it as
     purchased rather than found. Bought(item) pays the item's own catalog
     value; Bought(item, price=X) overrides the amount actually paid (e.g.
@@ -31,7 +33,7 @@ class Bought(Generic[GearT]):
 
     def __init__(
         self,
-        item: GearT,
+        item: ItemT,
         price: Optional[float] = None,
     ):
         self.item = item
@@ -45,12 +47,12 @@ class EquipmentEntry:
     items came from instead of one undifferentiated pile."""
 
     label: str
-    armors: list[ArmorGear] = attr.Factory(list)
-    weapons: list[Gear] = attr.Factory(list)
-    items: list[tuple[Gear, int]] = attr.Factory(list)
+    armors: list[AbstractArmor] = attr.Factory(list)
+    weapons: list[AbstractWeapon] = attr.Factory(list)
+    items: list[tuple[Item, int]] = attr.Factory(list)
     # (item, amount paid) for every item added via Bought(...); an item with
     # no entry here was found rather than purchased. Matched by identity.
-    purchases: list[tuple[Gear, float]] = attr.Factory(list)
+    purchases: list[tuple[Item, float]] = attr.Factory(list)
     # Net GP gained (positive - loot, quest reward, sold something off the
     # sheet) or spent on a non-item cost (negative - lodging, bribes,
     # training) recorded directly on this entry, on top of whatever
@@ -59,8 +61,8 @@ class EquipmentEntry:
 
 
 def _unwrap_bought(
-    maybe_bought: GearT | Bought[GearT],
-) -> tuple[GearT, Optional[float]]:
+    maybe_bought: ItemT | Bought[ItemT],
+) -> tuple[ItemT, Optional[float]]:
     if isinstance(maybe_bought, Bought):
         price = (
             maybe_bought.price
@@ -90,7 +92,7 @@ class Inventory:
         self._entries: list[EquipmentEntry] = []
         self._starting_entry: Optional[EquipmentEntry] = None
         self._starting_gold: Optional[float] = None
-        self._unarmed_strike: Optional[Gear] = None
+        self._unarmed_strike: Optional[AbstractWeapon] = None
         self._other_entry: Optional[EquipmentEntry] = None
 
     def copy(self) -> "Inventory":
@@ -124,15 +126,15 @@ class Inventory:
             self._entries.append(self._other_entry)
         return self._other_entry
 
-    def add_armor(self, armor: ArmorGear) -> None:
+    def add_armor(self, armor: AbstractArmor) -> None:
         self.version += 1
         self._get_other_entry().armors.append(armor)
 
-    def add_weapon(self, weapon: Gear) -> None:
+    def add_weapon(self, weapon: AbstractWeapon) -> None:
         self.version += 1
         self._get_other_entry().weapons.append(weapon)
 
-    def add_item(self, item: Gear, quantity: int = 1) -> None:
+    def add_item(self, item: Item, quantity: int = 1) -> None:
         self.version += 1
         self._get_other_entry().items.append((item, quantity))
 
@@ -140,7 +142,7 @@ class Inventory:
         self,
         entry: EquipmentEntry,
         starting_gold: float,
-        unarmed_strike: Optional[Gear],
+        unarmed_strike: Optional[AbstractWeapon],
     ) -> None:
         """Set the Starting Equipment entry, the gold left over after buying
         it, and the Unarmed Strike every character has unless its starting
@@ -158,9 +160,9 @@ class Inventory:
     def add_adventuring_gear(
         self,
         label: str,
-        armor: Optional[Sequence[ArmorGear | Bought[ArmorGear]]] = None,
-        weapons: Optional[Sequence[Gear | Bought[Gear]]] = None,
-        items: Optional[Sequence[tuple[Gear | Bought[Gear], int]]] = None,
+        armor: Optional[Sequence[AbstractArmor | Bought[AbstractArmor]]] = None,
+        weapons: Optional[Sequence[AbstractWeapon | Bought[AbstractWeapon]]] = None,
+        items: Optional[Sequence[tuple[Item | Bought[Item], int]]] = None,
         gold: float = 0,
     ) -> EquipmentEntry:
         """Record gear picked up after character creation as its own labeled
@@ -194,7 +196,7 @@ class Inventory:
         self._entries.append(entry)
         return entry
 
-    def get_starting_item(self, item_type: type) -> Gear:
+    def get_starting_item(self, item_type: type) -> Item:
         """Look up a single starting-equipment item by class, for a later
         drop_item() call. Stays unambiguous no matter how much later
         adventuring gear introduces more items of the same class, since it
@@ -215,7 +217,7 @@ class Inventory:
             )
         return matches[0]
 
-    def _find_item_by_type(self, item_type: type) -> Gear:
+    def _find_item_by_type(self, item_type: type) -> Item:
         """Resolve an item class to the single matching instance across
         everything (starting gear, all adventuring gear, and the unarmed
         strike)."""
@@ -231,7 +233,7 @@ class Inventory:
             )
         return matches[0]
 
-    def drop_item(self, item: Gear | type) -> None:
+    def drop_item(self, item: Item | type) -> None:
         """Remove a previously-added item so it no longer applies
         mechanically or shows on the sheet, while the code that added it
         stays in the build as a record of what the character used to carry.
@@ -253,10 +255,10 @@ class Inventory:
             entry.weapons = [w for w in entry.weapons if w is not item]
             entry.items = [(i, q) for i, q in entry.items if i is not item]
 
-    def _all_gear(self) -> list[Gear]:
+    def _all_gear(self) -> list[Item]:
         """Every armor, weapon and item instance in every entry, plus the
         Unarmed Strike (unstacked: one entry per instance added)."""
-        gear: list[Gear] = []
+        gear: list[Item] = []
         if self._unarmed_strike is not None:
             gear.append(self._unarmed_strike)
         for entry in self._entries:
@@ -303,22 +305,22 @@ class Inventory:
         return list(self._entries)
 
     @property
-    def armors(self) -> list[ArmorGear]:
+    def armors(self) -> list[AbstractArmor]:
         return [a for entry in self._entries for a in entry.armors]
 
     @property
-    def weapons(self) -> list[Gear]:
+    def weapons(self) -> list[AbstractWeapon]:
         weapons = [w for entry in self._entries for w in entry.weapons]
         if self._unarmed_strike is not None:
             weapons.insert(0, self._unarmed_strike)
         return weapons
 
     @property
-    def items(self) -> list[tuple[Gear, int]]:
+    def items(self) -> list[tuple[Item, int]]:
         """Same-type item stacks are merged across entries, since that's what
         carrying-capacity math expects: the first-seen instance of a type
         absorbs later same-type quantities."""
-        first_of_type: dict[type, Gear] = {}
+        first_of_type: dict[type, Item] = {}
         quantity_of_type: dict[type, int] = {}
         for entry in self._entries:
             for item, quantity in entry.items:

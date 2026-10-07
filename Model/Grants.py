@@ -19,7 +19,9 @@ from Core.Definitions import Ability
 from Model.Character import Character
 from Model.FeatureGrants import IfParentMissing
 from Model.Records.GrantStamp import GrantKind, GrantStamp
-from Model.Sources import Effect, Gear, GrantedFeature
+from Model.Content.Feature import Feature
+from Model.Content.Weapon import AbstractWeapon
+from Model.Content.FightingStyle import FightingStyle
 
 
 class Grants:
@@ -39,8 +41,8 @@ class Grants:
 
     def add_feature(
         self,
-        feature: GrantedFeature,
-        extends: type | GrantedFeature | None = None,
+        feature: Feature,
+        extends: type | Feature | None = None,
         if_missing: IfParentMissing = IfParentMissing.ERROR,
         kind: Optional[GrantKind] = None,
         granted_by: Optional[str] = None,
@@ -57,10 +59,10 @@ class Grants:
             if_missing=if_missing,
         )
 
-    def add_fighting_style(self, fighting_style: Effect) -> None:
+    def add_fighting_style(self, fighting_style: FightingStyle) -> None:
         self.character.add_fighting_style(fighting_style)
 
-    def add_weapon_mastery(self, weapon: Gear) -> None:
+    def add_weapon_mastery(self, weapon: AbstractWeapon) -> None:
         self.character.add_weapon_mastery(weapon)
 
     def add_invocation(self, invocation: str) -> None:

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -6,7 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import MultiAbilityArmorClass
+from Model.Content.Improvements import MultiAbilityArmorClass
 from Core.Definitions import Ability
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER

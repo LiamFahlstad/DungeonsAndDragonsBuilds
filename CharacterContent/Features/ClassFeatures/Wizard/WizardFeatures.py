@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import Feature, RegainedOn
-from CharacterContent.Features.Core.Improvements import SkillExpertiseChoice
+from Model.Content.Feature import Feature, RegainedOn
+from Model.Content.Improvements import SkillExpertiseChoice
 from Model.Effects import Effects
 from Model.View import CharacterView
 

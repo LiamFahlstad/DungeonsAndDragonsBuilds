@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import MONK_HIT_DIE, Skill
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -8,7 +8,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import SkillProficiency
+from Model.Content.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Effects import Effects
 from Utils import StringUtils

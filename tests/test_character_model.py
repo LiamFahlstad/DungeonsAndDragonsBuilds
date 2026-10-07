@@ -10,12 +10,8 @@ import pytest
 
 from Model.Character import Character
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
-from CharacterContent.Features.Core.BaseFeatures import Feature
-from CharacterContent.Features.Core.Improvements import (
-    AbilityScoreBonus,
-    SkillBonus,
-    SkillProficiency,
-)
+from Model.Content.Feature import Feature
+from Model.Content.Improvements import AbilityScoreBonus, SkillBonus, SkillProficiency
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Effects import Ledger

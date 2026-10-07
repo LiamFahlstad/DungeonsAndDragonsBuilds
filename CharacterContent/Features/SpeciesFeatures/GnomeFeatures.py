@@ -1,11 +1,6 @@
 from Core.Definitions import Ability, CreatureSize, Sense
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureUses,
-    RegainedOn,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import SavingThrowAdvantage, GrantSense
+from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
+from Model.Content.Improvements import SavingThrowAdvantage, GrantSense
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView

@@ -1,5 +1,5 @@
 from Core.Definitions import CreatureSize, Sense
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantSense
+from Model.Content.Improvements import GrantSense
 from Model.Effects import Effects
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView

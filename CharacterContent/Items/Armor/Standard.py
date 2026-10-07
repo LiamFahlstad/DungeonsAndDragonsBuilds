@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
 
-from .Base import AbstractArmor
+from Model.Content.Armor import AbstractArmor
 
 
 class PaddedArmor(AbstractArmor):

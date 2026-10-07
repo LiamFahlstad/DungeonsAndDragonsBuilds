@@ -89,7 +89,7 @@ from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
 )
 from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericArcanaFeatures
 from CharacterContent.Items.Weapons import MartialMelee
-from CharacterContent.Items.Weapons.Base import is_proficient_with
+from Model.Content.Weapon import is_proficient_with
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Items import Armor
 from Core.Weapons import WeaponProficiency

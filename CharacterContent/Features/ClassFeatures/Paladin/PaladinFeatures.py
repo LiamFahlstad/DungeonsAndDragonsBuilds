@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     ActionType,
     Feature,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import SavingThrowBonus
+from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 from Model.Effects import Effects

@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
-from CharacterContent.Features.Core.Improvements import AbilityScoreBonus
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Improvements import AbilityScoreBonus
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 
 class ButterflyKnife(Item):

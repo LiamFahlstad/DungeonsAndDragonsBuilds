@@ -5,7 +5,7 @@ from .Improvements import (
     SetStrengthRequirement,
     SetStealthDisadvantage,
 )
-from .Base import AbstractArmor
+from Model.Content.Armor import AbstractArmor
 from .Standard import (
     PaddedArmor,
     LeatherArmor,

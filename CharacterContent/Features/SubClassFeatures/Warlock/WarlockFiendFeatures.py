@@ -1,11 +1,6 @@
 from Core.Definitions import WARLOCK_HIT_DIE
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
-    Feature,
-    FeatureUses,
-    RegainedOn,
-    FeatureTarget,
-)
+from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView

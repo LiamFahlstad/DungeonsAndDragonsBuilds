@@ -1,5 +1,5 @@
 from Core.Definitions import Language
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     FeatureUses,
     Feature,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import GrantLanguage
+from Model.Content.Improvements import GrantLanguage
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS

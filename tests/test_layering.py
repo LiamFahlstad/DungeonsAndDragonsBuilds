@@ -90,7 +90,7 @@ TYPE_CHECKING_ALLOWLIST: set[str] = set()
 
 # Narrowing a value back to a concrete type (Steps 9 and 13 remove these).
 CAST_ALLOWLIST: set[str] = {"Model/Recorder.py"}
-AS_ALLOWLIST: set[str] = {"Presentation/CharacterSheetWriters.py"}
+AS_ALLOWLIST: set[str] = set()
 
 # Content that reads a character (features, items, tools, invocations)
 # reads it through Model.View.CharacterView, never the concrete Character.
@@ -100,9 +100,7 @@ CONTENT_READERS = (
     "CharacterContent/ToolProficiencies/",
     "CharacterContent/Invocations/",
 )
-# The weapon base reads character.ledger until Step 10 moves that math
-# to AttackProfile.
-CHARACTER_IMPORT_ALLOWLIST: set[str] = {"CharacterContent/Items/Weapons/Base.py"}
+CHARACTER_IMPORT_ALLOWLIST: set[str] = set()
 
 
 def _project_files():

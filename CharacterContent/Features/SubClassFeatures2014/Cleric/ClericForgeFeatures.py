@@ -1,13 +1,13 @@
 import Core.Definitions as Definitions
 from Core.Definitions import ArmorType, DamageType
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     ArmorClassBonus,
     DamageImmunity,
     DamageResistance,

@@ -1,13 +1,13 @@
 from Core.Definitions import WARLOCK_HIT_DIE, DamageType
 import Core.Definitions as Definitions
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     ActionType,
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import DamageResistance
+from Model.Content.Improvements import DamageResistance
 from Model.Effects import Effects
 from Model.View import CharacterView
 

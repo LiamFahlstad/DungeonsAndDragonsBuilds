@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Core.Definitions import Ability, CharacterClass, Skill
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     FeatureUses,
     Feature,
     FeatureActivation,
@@ -9,7 +9,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
 )

@@ -1,4 +1,4 @@
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     ActionType,
     Feature,
     FeatureActivation,
@@ -6,10 +6,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     FeatureUses,
     RegainedOn,
 )
-from CharacterContent.Features.Core.Improvements import (
-    ConditionImmunity,
-    DamageResistance,
-)
+from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Core.Definitions import Condition, DamageType
 from Model.Effects import Effects
 from Core.Rules import MAX_ABILITY_MODIFIER

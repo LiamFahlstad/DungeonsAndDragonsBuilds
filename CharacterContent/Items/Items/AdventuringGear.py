@@ -1,4 +1,4 @@
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 
 class Costume(Item):

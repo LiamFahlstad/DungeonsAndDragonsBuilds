@@ -1,17 +1,14 @@
 from enum import Enum
 
 from Core.Definitions import Skill, Sense
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureActivation,
     ActionType,
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import (
-    SkillProficiencyChoice,
-    GrantSense,
-)
+from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Effects import Effects
 from Model.View import CharacterView
 

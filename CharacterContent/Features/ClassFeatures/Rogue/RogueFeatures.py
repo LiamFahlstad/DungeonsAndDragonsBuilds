@@ -1,10 +1,5 @@
-from CharacterContent.Features.Core.BaseFeatures import (
-    ActionType,
-    Feature,
-    FeatureActivation,
-    FeatureTarget,
-)
-from CharacterContent.Features.Core.Improvements import (
+from Model.Content.Feature import ActionType, Feature, FeatureActivation, FeatureTarget
+from Model.Content.Improvements import (
     GrantLanguage,
     SavingThrowProficiencyChoice,
     SkillExpertiseChoice,

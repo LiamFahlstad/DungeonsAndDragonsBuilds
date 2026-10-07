@@ -1,6 +1,6 @@
 from CharacterContent.Spells.SpellFactory.Factory import SpellFactory
 
-from .Base import Item, ItemCategory, ItemRarity
+from Model.Content.Item import Item, ItemCategory, ItemRarity
 
 
 class SpellScroll(Item):

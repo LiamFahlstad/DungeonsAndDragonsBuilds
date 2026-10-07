@@ -128,7 +128,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
     # choosing a different one instead - a build shouldn't pick it twice.
     import inspect
 
-    from CharacterContent.Features.Core.BaseFeatures import Feature
+    from Model.Content.Feature import Feature
     from Model.Skills import Skills
 
     original = Skills.add_skill_proficiency

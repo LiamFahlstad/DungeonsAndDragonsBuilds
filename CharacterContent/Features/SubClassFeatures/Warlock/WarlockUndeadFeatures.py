@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DamageType, WARLOCK_HIT_DIE
-from CharacterContent.Features.Core.BaseFeatures import (
+from Model.Content.Feature import (
     Feature,
     FeatureUses,
     FeatureActivation,
@@ -7,7 +7,7 @@ from CharacterContent.Features.Core.BaseFeatures import (
     RegainedOn,
     FeatureTarget,
 )
-from CharacterContent.Features.Core.Improvements import DamageResistance
+from Model.Content.Improvements import DamageResistance
 from Model.Effects import Effects
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER

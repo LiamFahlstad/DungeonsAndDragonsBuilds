@@ -34,7 +34,7 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.Campaigns.CurseOfTheLich.Players as Players
-from CharacterContent.Features.Core.BaseFeatures import RegainedOn
+from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
 
 from .app import CombatAppQt
