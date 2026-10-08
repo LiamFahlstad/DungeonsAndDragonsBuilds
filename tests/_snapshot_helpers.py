@@ -131,18 +131,18 @@ class CapturingSheetWriter(HtmlCharacterSheetWriter):
 def render_and_hash(
     name: str,
     tmp_path: Path,
-    prepare: Optional[Callable[[Character], None]] = None,
+    prepare: Optional[Callable[[Character], Character]] = None,
     dump: bool = False,
 ) -> dict[str, dict[str, str]]:
     """Render `name` in full and concise mode and hash every page, per mode.
-    `prepare` gets each freshly built Character before it's rendered (the
-    order tests reorder it there). `dump` copies the pages to
+    `prepare` turns each freshly built Character into the one rendered
+    (the order tests rebuild it from reordered sources). `dump` copies the pages to
     SNAPSHOT_DUMP_DIR, when that's set."""
     result = {}
     for mode_key, description_mode in SHEET_MODES:
         data = build(name)
         if prepare is not None:
-            prepare(data)
+            data = prepare(data)
         folder_name = os.path.basename(get_output_folder(data, description_mode))
         output_folder = tmp_path / folder_name
         writer = CapturingSheetWriter(output_folder)

@@ -2,7 +2,7 @@
 Class features with mechanical effects (CharacterContent/Features/ClassFeatures),
 checked against the 2024 PHB feature text.
 
-apply_features() mirrors Character evaluation: every effect (feature or
+character = apply_features() mirrors Character evaluation: every effect (feature or
 armor) applies, in no particular order, then requirements are validated.
 """
 
@@ -24,41 +24,43 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector
+from Model.Character import Character
 
 
 def apply_features(character, features, armors=()):
+    """`character` with `features` (and `armors`) granted, validated."""
+    sources = character.sources
     # Armor first on purpose: effects may apply in any order.
     for effect in [*armors, *features]:
-        character.add_effect(effect)
-    character.validate()
-    return character
+        sources.add_effect(effect)
+    return Character(sources).validate()
 
 
 class TestUnarmoredDefense:
     def test_barbarian_dex_plus_con(self, make_character):
         character = make_character(dexterity=14, constitution=16)
-        apply_features(character, [BarbarianFeatures.UnarmoredDefense()])
+        character = apply_features(character, [BarbarianFeatures.UnarmoredDefense()])
         assert character.calculate_armor_class() == 10 + 2 + 3
 
     def test_barbarian_keeps_it_with_shield(self, make_character):
         character = make_character(
             dexterity=14, constitution=16, armor_training=[ArmorType.SHIELD]
         )
-        apply_features(
+        character = apply_features(
             character, [BarbarianFeatures.UnarmoredDefense()], [Armor.ShieldArmor()]
         )
         assert character.calculate_armor_class() == 10 + 2 + 3 + 2
 
     def test_armor_replaces_it(self, make_character):
         character = make_character(dexterity=14, constitution=16, strength=15)
-        apply_features(
+        character = apply_features(
             character, [BarbarianFeatures.UnarmoredDefense()], [Armor.PlateArmor()]
         )
         assert character.calculate_armor_class() == 18
 
     def test_monk_dex_plus_wis(self, make_character):
         character = make_character(dexterity=16, wisdom=14)
-        apply_features(character, [MonkFeatures.UnarmoredDefense()])
+        character = apply_features(character, [MonkFeatures.UnarmoredDefense()])
         assert character.calculate_armor_class() == 10 + 3 + 2
 
 
@@ -70,19 +72,19 @@ class TestUnarmoredMovement:
     @pytest.mark.parametrize("level,bonus", PHB_UNARMORED_MOVEMENT.items())
     def test_bonus_by_level(self, make_character, level, bonus):
         character = make_character(levels={CharacterClass.MONK: level})
-        apply_features(character, [MonkFeatures.UnarmoredMovement()])
+        character = apply_features(character, [MonkFeatures.UnarmoredMovement()])
         assert character.calculate_speed() == 30 + bonus
 
     def test_lost_in_armor(self, make_character):
         character = make_character(levels={CharacterClass.MONK: 10})
-        apply_features(
+        character = apply_features(
             character, [MonkFeatures.UnarmoredMovement()], [Armor.LeatherArmor()]
         )
         assert character.calculate_speed() == 30
 
     def test_lost_with_shield(self, make_character):
         character = make_character(levels={CharacterClass.MONK: 10})
-        apply_features(
+        character = apply_features(
             character, [MonkFeatures.UnarmoredMovement()], [Armor.ShieldArmor()]
         )
         assert character.calculate_speed() == 30
@@ -109,14 +111,14 @@ class TestHeavyArmorSpeedFeatures:
     ):
         character = make_character(strength=15)
         armors = [armor()] if armor else []
-        apply_features(character, [feature_class()], armors)
+        character = apply_features(character, [feature_class()], armors)
         assert character.calculate_speed() == expected
 
 
 class TestPrimalKnowledge:
     def test_grants_chosen_proficiency(self, make_character):
         character = make_character()
-        apply_features(
+        character = apply_features(
             character, [BarbarianFeatures.PrimalKnowledgeSkillProficiency(Skill.NATURE)]
         )
         assert character.is_proficient_in_skill(Skill.NATURE)
@@ -135,7 +137,7 @@ class TestPrimalKnowledge:
     ):
         # Strength substitution is only while raging - not on the sheet.
         character = make_character()
-        apply_features(
+        character = apply_features(
             character,
             [BarbarianFeatures.PrimalKnowledgeSkillProficiency(Skill.PERCEPTION)],
         )
@@ -147,17 +149,18 @@ class TestPrimalKnowledge:
 
 
 class TestOtherFeatures:
-    def test_jack_of_all_trades_half_pb_rounded_down(self, make_character):
-        character = make_character(levels={CharacterClass.BARD: 5})  # PB 3
-        character.add_effect(SkillProficiency([Skill.PERFORMANCE]))
-        apply_features(character, [BardFeatures.JackOfAllTrades()])
+    def test_jack_of_all_trades_half_pb_rounded_down(self, make_sources):
+        sources = make_sources(levels={CharacterClass.BARD: 5})  # PB 3
+        sources.add_effect(SkillProficiency([Skill.PERFORMANCE]))
+        character = Character(sources)
+        character = apply_features(character, [BardFeatures.JackOfAllTrades()])
         assert character.get_skill_modifier(Skill.ARCANA) == 1
         assert character.get_skill_modifier(Skill.PERFORMANCE) == 3
 
     @pytest.mark.parametrize("cha,bonus", [(16, 3), (10, 1), (8, 1)])
     def test_aura_of_protection_min_one(self, make_character, cha, bonus):
         character = make_character(charisma=cha)
-        apply_features(character, [PaladinFeatures.AuraOfProtection()])
+        character = apply_features(character, [PaladinFeatures.AuraOfProtection()])
         for ability in Ability:
             base = character.get_ability_modifier(ability)
             assert character.get_saving_throw_modifier(ability) == base + bonus
@@ -165,23 +168,27 @@ class TestOtherFeatures:
     @pytest.mark.parametrize("wis,bonus", [(16, 3), (8, 1)])
     def test_thaumaturge_arcana_and_religion(self, make_character, wis, bonus):
         character = make_character(wisdom=wis)
-        apply_features(character, [ClericFeatures.DivineOrderThaumaturge("Guidance")])
+        character = apply_features(
+            character, [ClericFeatures.DivineOrderThaumaturge("Guidance")]
+        )
         assert character.get_skill_modifier(Skill.ARCANA) == bonus
         assert character.get_skill_modifier(Skill.RELIGION) == bonus
         assert character.get_skill_modifier(Skill.HISTORY) == 0
 
     def test_danger_sense_dex_save_advantage(self, make_character):
         character = make_character()
-        apply_features(character, [BarbarianFeatures.DangerSense()])
+        character = apply_features(character, [BarbarianFeatures.DangerSense()])
         assert character.has_advantage_in_saving_throw(Ability.DEXTERITY)
         assert not character.has_advantage_in_saving_throw(Ability.WISDOM)
 
     def test_feral_instinct_initiative_advantage(self, make_character):
         character = make_character()
-        apply_features(character, [BarbarianFeatures.FeralInstinct()])
+        character = apply_features(character, [BarbarianFeatures.FeralInstinct()])
         assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
 
     def test_disciplined_survivor_all_saves(self, make_character):
         character = make_character()
-        apply_features(character, [MonkFeatures.DisciplinedSurvivorSavingThrows()])
+        character = apply_features(
+            character, [MonkFeatures.DisciplinedSurvivorSavingThrows()]
+        )
         assert all(character.is_proficient_in_saving_throw(a) for a in Ability)

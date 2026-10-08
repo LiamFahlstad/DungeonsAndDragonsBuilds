@@ -201,33 +201,34 @@ class TestRebuildIsIdempotent:
         second = builder.build().validate()
         assert {a: second.get_ability_score(a) for a in Ability} == first_scores
 
-    def test_setup_after_mutation(self):
+    def test_rebuilt_with_more_gear(self):
         data = SpellSlotTestPaladin5CharacterBuilder().build()
         before = data.validate().get_ability_score(Ability.STRENGTH)
-        data.add_item(Items.Torch(), 1)
-        after = data.validate().get_ability_score(Ability.STRENGTH)
+        sources = data.sources
+        sources.add_item(Items.Torch(), 1)
+        after = Character(sources).validate().get_ability_score(Ability.STRENGTH)
         assert after == before
 
     def test_built_sheet_has_its_own_inventory(self):
         # Gear dropped from the builder after a build, or added to a built
-        # sheet, never reaches the other.
+        # character's sources, never reaches the other.
         builder = SpellSlotTestPaladin5CharacterBuilder()
         torch = Items.Torch()
         builder.add_adventuring_gear("Loot", items=[(torch, 1)])
         first = builder.build()
         builder.drop_item(torch)
-        first.add_weapon(Weapons.Longbow())
+        first.sources.add_weapon(Weapons.Longbow())
         second = builder.build()
         assert any(item is torch for item, _ in first.items)
         assert not any(item is torch for item, _ in second.items)
         assert not any(isinstance(w, Weapons.Longbow) for w in second.weapons)
 
     def test_archery_does_not_stack_on_rebuild(self):
-        data = SpellSlotTestWizard5CharacterBuilder().build()
+        sources = SpellSlotTestWizard5CharacterBuilder().build().sources
         bow = Weapons.Longbow()
-        data.add_weapon(bow)
-        data.add_fighting_style(FightingStyles.Archery())
-        data.validate()
-        data.add_item(Items.Torch(), 1)
-        character = data.validate()
+        sources.add_weapon(bow)
+        sources.add_fighting_style(FightingStyles.Archery())
+        Character(sources).validate()
+        sources.add_item(Items.Torch(), 1)
+        character = Character(sources).validate()
         assert sum(b for b, _ in bow.get_attack_roll_bonuses(character)) == 2

@@ -5,6 +5,7 @@ sheet names its subclasses.
 
 import pytest
 
+from Model.Character import Character
 from Builds.Tests.MulticlassTest import MulticlassTestCharacterBuilder
 from Builds.Tests.SpellSlotTestPaladin4Wizard3 import (
     SpellSlotTestPaladin4Wizard3CharacterBuilder,
@@ -48,23 +49,23 @@ class TestPrerequisiteEnforced:
         data.validate()
 
     def test_low_charisma_warlock_rejected(self):
-        data = SpellSlotTestWizard3Warlock3CharacterBuilder().build()
+        sources = SpellSlotTestWizard3Warlock3CharacterBuilder().build().sources
         # raw score; background +1 -> 11
-        data.base_abilities = data.base_abilities.with_scores(charisma=10)
+        sources.base_abilities = sources.base_abilities.with_scores(charisma=10)
         with pytest.raises(ValueError, match="Warlock requires Charisma 13"):
-            data.validate()
+            Character(sources).validate()
 
     def test_starting_class_also_checked(self):
         # Paladin 4 / Wizard 3 needs Paladin's STR 13 too.
-        data = SpellSlotTestPaladin4Wizard3CharacterBuilder().build()
-        data.base_abilities = data.base_abilities.with_scores(strength=8)
+        sources = SpellSlotTestPaladin4Wizard3CharacterBuilder().build().sources
+        sources.base_abilities = sources.base_abilities.with_scores(strength=8)
         with pytest.raises(ValueError, match="Paladin requires Strength 13"):
-            data.validate()
+            Character(sources).validate()
 
     def test_single_class_not_checked(self):
-        data = SpellSlotTestWizard5CharacterBuilder().build()
-        data.base_abilities = data.base_abilities.with_scores(intelligence=8)
-        data.validate()
+        sources = SpellSlotTestWizard5CharacterBuilder().build().sources
+        sources.base_abilities = sources.base_abilities.with_scores(intelligence=8)
+        Character(sources).validate()
 
 
 class TestSubclassName:

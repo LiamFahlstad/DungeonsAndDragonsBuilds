@@ -25,6 +25,7 @@ from Model.Content.Feature import Feature
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.AbilityScores import AbilityScores
 from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Model.ClassLevels import ClassLevels
 from Presentation import Html
 from Presentation.FeatureCards import FEATURE_CARD_CSS, write_feature_card
@@ -1187,7 +1188,7 @@ _GENERIC_SKILLS = [
 def make_dummy_stat_block(
     character_class: CharacterClass, spell_ability: Ability, level: int = 20
 ) -> Character:
-    return Character(
+    sources = CharacterSources(
         class_levels=ClassLevels(
             base_class=character_class,
             level_per_class={character_class: level},
@@ -1200,6 +1201,7 @@ def make_dummy_stat_block(
         spell_casting_ability=spell_ability,
         fixed_spell_slots={1: 4, 2: 3, 3: 3, 4: 3, 5: 3, 6: 2, 7: 2, 8: 1, 9: 1},
     )
+    return Character(sources)
 
 
 def _auto_fill_args(cls: type, skill_overrides: Optional[dict] = None) -> dict:

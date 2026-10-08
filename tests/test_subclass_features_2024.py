@@ -66,14 +66,16 @@ from CharacterContent.Features.SubClassFeatures.Rogue import RogueAssassinFeatur
 from CharacterContent.Items import Armor
 from Core.Weapons import WeaponProficiency
 from tests._grants import apply_level, grant
+from Model.CharacterSources import CharacterSources
 
 
 def apply_features(character, features, armors=()):
+    """`character` with `features` (and `armors`) granted, validated."""
+    sources = character.sources
     # Armor first on purpose: effects may apply in any order.
     for effect in [*armors, *features]:
-        character.add_effect(effect)
-    character.validate()
-    return character
+        sources.add_effect(effect)
+    return Character(sources).validate()
 
 
 # ---------------------------------------------------------------------------
@@ -100,9 +102,9 @@ def _cleric_data_with_channel_divinity():
     # before subclass-level features.
     from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 
-    data = Character(spell_casting_ability=Ability.WISDOM)
-    grant(data).add_feature(ClericFeatures.ChannelDivinity())
-    return data
+    sources = CharacterSources(spell_casting_ability=Ability.WISDOM)
+    grant(sources).add_feature(ClericFeatures.ChannelDivinity())
+    return sources
 
 
 class TestClericDomainSpellLevels:
@@ -115,15 +117,15 @@ class TestClericDomainSpellLevels:
         # (no 13/17 tier for War Domain)
         from CharacterContent.Classes.SubClasses2024 import ClericWar
 
-        data = _cleric_data_with_channel_divinity()
-        apply_level(ClericWar.ClericWarLevel3(), data)
-        assert len(data.spells) == 4
-        apply_level(ClericWar.ClericWarLevel5(), data)
-        assert len(data.spells) == 4 + 2
-        apply_level(ClericWar.ClericWarLevel7(), data)
-        assert len(data.spells) == 4 + 2 + 2
-        apply_level(ClericWar.ClericWarLevel9(), data)
-        assert len(data.spells) == 4 + 2 + 2 + 2
+        sources = _cleric_data_with_channel_divinity()
+        apply_level(ClericWar.ClericWarLevel3(), sources)
+        assert len(Character(sources).spells) == 4
+        apply_level(ClericWar.ClericWarLevel5(), sources)
+        assert len(Character(sources).spells) == 4 + 2
+        apply_level(ClericWar.ClericWarLevel7(), sources)
+        assert len(Character(sources).spells) == 4 + 2 + 2
+        apply_level(ClericWar.ClericWarLevel9(), sources)
+        assert len(Character(sources).spells) == 4 + 2 + 2 + 2
 
     def test_knowledge_domain_spell_count_at_level_3_is_six(self):
         # SourceTexts/SubclassTexts2024/knowledge_domain.txt - Knowledge Domain
@@ -132,11 +134,11 @@ class TestClericDomainSpellLevels:
         # Spike) - twice as many as most other domains' level-3 row.
         from CharacterContent.Classes.SubClasses2024 import ClericKnowledge
 
-        data = _cleric_data_with_channel_divinity()
+        sources = _cleric_data_with_channel_divinity()
         apply_level(
-            ClericKnowledge.ClericKnowledgeLevel3(Skill.ARCANA, Skill.HISTORY), data
+            ClericKnowledge.ClericKnowledgeLevel3(Skill.ARCANA, Skill.HISTORY), sources
         )
-        assert len(data.spells) == 6
+        assert len(Character(sources).spells) == 6
 
     def test_life_domain_spell_count_by_level(self):
         # SourceTexts/SubclassTexts2024/life_domain.txt - Life Domain Spells table:
@@ -147,15 +149,15 @@ class TestClericDomainSpellLevels:
         # (no 13/17 tier for Life Domain)
         from CharacterContent.Classes.SubClasses2024 import ClericLife
 
-        data = _cleric_data_with_channel_divinity()
-        apply_level(ClericLife.ClericLifeLevel3(), data)
-        assert len(data.spells) == 4
-        apply_level(ClericLife.ClericLifeLevel5(), data)
-        assert len(data.spells) == 4 + 2
-        apply_level(ClericLife.ClericLifeLevel7(), data)
-        assert len(data.spells) == 4 + 2 + 2
-        apply_level(ClericLife.ClericLifeLevel9(), data)
-        assert len(data.spells) == 4 + 2 + 2 + 2
+        sources = _cleric_data_with_channel_divinity()
+        apply_level(ClericLife.ClericLifeLevel3(), sources)
+        assert len(Character(sources).spells) == 4
+        apply_level(ClericLife.ClericLifeLevel5(), sources)
+        assert len(Character(sources).spells) == 4 + 2
+        apply_level(ClericLife.ClericLifeLevel7(), sources)
+        assert len(Character(sources).spells) == 4 + 2 + 2
+        apply_level(ClericLife.ClericLifeLevel9(), sources)
+        assert len(Character(sources).spells) == 4 + 2 + 2 + 2
 
 
 class TestPaladinOathSpellGrantLevels:
@@ -233,15 +235,16 @@ class TestSorcererAndWarlockSpellGrantLevels:
         # character is Sorcerer level 5 - see bug note in the test report.
         from CharacterContent.Classes.SubClasses2024 import SorcererDraconic
 
-        data = Character(spell_casting_ability=Ability.CHARISMA)
+        sources = CharacterSources(spell_casting_ability=Ability.CHARISMA)
         # A Grants scope is what ClassBuilder.create() hands each level's
         # add_features(): it stamps every spell with that level.
         SorcererDraconic.SorcererDraconicLevel3().add_features(
-            Grants(data, 3, "Sorcerer")
+            Grants(sources, 3, "Sorcerer")
         )
         SorcererDraconic.SorcererDraconicLevel5().add_features(
-            Grants(data, 5, "Sorcerer")
+            Grants(sources, 5, "Sorcerer")
         )
+        data = Character(sources)
 
         by_level = {}
         for spell, level in _names_and_levels(data):
@@ -321,9 +324,10 @@ class TestDruidCircleOfTheLandSpells:
     @pytest.mark.parametrize("land_type", list(DruidLandType))
     @pytest.mark.parametrize("level", [3, 5, 7, 9])
     def test_land_spells_by_type_and_level(self, land_type, level):
-        data = Character(spell_casting_ability=Ability.WISDOM)
+        sources = CharacterSources(spell_casting_ability=Ability.WISDOM)
         builder_cls = self.LEVEL_BUILDERS[level]
-        apply_level(builder_cls(land_type=land_type), data)
+        apply_level(builder_cls(land_type=land_type), sources)
+        data = Character(sources)
         names = {s.name.value for s in data.spells}
         assert names == self.LAND_SPELLS[land_type][level]
 
@@ -339,36 +343,40 @@ class TestDruidCircleOfTheLandSpells:
 
 
 class TestResistanceAndImmunityGrants:
-    def test_psi_warrior_guarded_mind_grants_psychic_resistance(self, make_character):
+    def test_psi_warrior_guarded_mind_grants_psychic_resistance(self, make_sources):
         # SourceTexts/SubclassTexts2024/psi_warrior.txt, Fighter level 10:
         # "You have Resistance to Psychic damage."
-        character = make_character()
-        character.add_effect(FighterPsiWarriorFeatures.GuardedMind())
+        sources = make_sources()
+        sources.add_effect(FighterPsiWarriorFeatures.GuardedMind())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.PSYCHIC)
 
     def test_celestial_patron_radiant_soul_grants_radiant_resistance(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/celestial_patron.txt, Warlock level 6:
         # "You have Resistance to Radiant damage."
-        character = make_character()
-        character.add_effect(WarlockCelestialFeatures.RadiantSoul())
+        sources = make_sources()
+        sources.add_effect(WarlockCelestialFeatures.RadiantSoul())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.RADIANT)
 
-    def test_winter_walker_frigid_explorer_grants_cold_resistance(self, make_character):
+    def test_winter_walker_frigid_explorer_grants_cold_resistance(self, make_sources):
         # SourceTexts/SubclassTexts2024/winter_walker.txt, Ranger level 3:
         # "Frost Resistance. You have Resistance to Cold damage."
-        character = make_character()
-        character.add_effect(RangerWinterWalkerFeatures.FrigidExplorer())
+        sources = make_sources()
+        sources.add_effect(RangerWinterWalkerFeatures.FrigidExplorer())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.COLD)
 
     def test_war_domain_avatar_of_battle_grants_physical_resistances(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/war_domain.txt, Cleric level 17:
         # "You gain Resistance to Bludgeoning, Piercing, and Slashing damage."
-        character = make_character()
-        character.add_effect(ClericWarFeatures.AvatarOfBattle())
+        sources = make_sources()
+        sources.add_effect(ClericWarFeatures.AvatarOfBattle())
+        character = Character(sources)
         for damage_type in (
             DamageType.BLUDGEONING,
             DamageType.PIERCING,
@@ -377,19 +385,20 @@ class TestResistanceAndImmunityGrants:
             assert character.is_resistant_to_damage(damage_type)
 
     def test_archfey_patron_beguiling_defenses_grants_charmed_immunity(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/archfey_patron.txt, Warlock level 10:
         # "You are immune to the Charmed condition."
-        character = make_character()
-        character.add_effect(WarlockArchfeyFeatures.BeguilingDefenses())
+        sources = make_sources()
+        sources.add_effect(WarlockArchfeyFeatures.BeguilingDefenses())
+        character = Character(sources)
         assert character.is_immune_to_condition(Condition.CHARMED)
         assert not character.is_immune_to_condition(Condition.FRIGHTENED)
 
 
 class TestSorcererDraconicResilienceAndElementalAffinity:
     def test_draconic_resilience_hp_bonus_scales_with_sorcerer_level(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/draconic_sorcery.txt: "Your Hit Point
         # maximum increases by 3, and it increases by 1 whenever you gain
@@ -400,26 +409,27 @@ class TestSorcererDraconicResilienceAndElementalAffinity:
             (6, 3 + (6 - 3)),
             (12, 3 + (12 - 3)),
         ):
-            character = make_character(levels={CharacterClass.SORCERER: sorcerer_level})
-            character.add_effect(SorcererDraconicFeatures.DraconicResilience())
+            sources = make_sources(levels={CharacterClass.SORCERER: sorcerer_level})
+            sources.add_effect(SorcererDraconicFeatures.DraconicResilience())
+            character = Character(sources)
             assert (
                 character.ledger.hit_points.bonuses.total(character) == expected_bonus
             )
 
-    def test_draconic_resilience_ac_unarmored_formula(self, make_character):
+    def test_draconic_resilience_ac_unarmored_formula(self, make_sources):
         # "While you aren't wearing armor, your base Armor Class equals 10
         # plus your Dexterity and Charisma modifiers." DEX 14 (+2), CHA 16 (+3).
-        character = make_character(
+        sources = make_sources(
             dexterity=14, charisma=16, levels={CharacterClass.SORCERER: 3}
         )
-        character.add_effect(SorcererDraconicFeatures.DraconicResilience())
+        sources.add_effect(SorcererDraconicFeatures.DraconicResilience())
+        character = Character(sources)
         assert character.calculate_armor_class() == 10 + 2 + 3
 
-    def test_elemental_affinity_grants_a_resistance(self, make_character):
-        character = make_character(levels={CharacterClass.SORCERER: 6}, charisma=16)
-        character.add_effect(
-            SorcererDraconicFeatures.ElementalAffinity(DamageType.COLD)
-        )
+    def test_elemental_affinity_grants_a_resistance(self, make_sources):
+        sources = make_sources(levels={CharacterClass.SORCERER: 6}, charisma=16)
+        sources.add_effect(SorcererDraconicFeatures.ElementalAffinity(DamageType.COLD))
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.COLD)
         assert not character.is_resistant_to_damage(DamageType.FIRE)
 
@@ -474,11 +484,12 @@ class TestFighterBattleMasterSuperiorityDice:
         ],
     )
     def test_number_of_superiority_dice_by_level(
-        self, make_character, fighter_level, expected_dice
+        self, make_sources, fighter_level, expected_dice
     ):
-        character = make_character(levels={CharacterClass.FIGHTER: fighter_level})
+        sources = make_sources(levels={CharacterClass.FIGHTER: fighter_level})
         feature = FighterBattleMasterFeatures.SuperiorityDice()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert feature.number_of_uses(character) == expected_dice
 
     def test_die_size_uses_fighter_class_level_not_character_level(
@@ -520,31 +531,33 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
 
 class TestSkillAndSavingThrowGrants:
     def test_college_of_lore_bonus_proficiencies_grants_three_chosen_skills(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/college_of_lore.txt, Bard level 3:
         # "You gain proficiency with three skills of your choice."
-        character = make_character()
-        character.add_effect(
+        sources = make_sources()
+        sources.add_effect(
             BardLoreFeatures.BonusProficiencies(
                 Skill.ARCANA, Skill.PERSUASION, Skill.SURVIVAL
             )
         )
+        character = Character(sources)
         assert character.is_proficient_in_skill(Skill.ARCANA)
         assert character.is_proficient_in_skill(Skill.PERSUASION)
         assert character.is_proficient_in_skill(Skill.SURVIVAL)
         assert not character.is_proficient_in_skill(Skill.STEALTH)
 
     def test_knowledge_domain_blessings_grants_proficiency_and_expertise(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/knowledge_domain.txt, Cleric level 3:
         # "...in two of the following skills of your choice: Arcana, History,
         # Nature, or Religion. You have Expertise in those two skills."
-        character = make_character()
-        character.add_effect(
+        sources = make_sources()
+        sources.add_effect(
             ClericKnowledgeFeatures.BlessingsOfKnowledge(Skill.ARCANA, Skill.RELIGION)
         )
+        character = Character(sources)
         assert character.is_proficient_in_skill(Skill.ARCANA)
         assert character.is_proficient_in_skill(Skill.RELIGION)
         assert character.has_expertise_in_skill(Skill.ARCANA)
@@ -556,44 +569,46 @@ class TestSkillAndSavingThrowGrants:
         with pytest.raises(ValueError):
             ClericKnowledgeFeatures.BlessingsOfKnowledge(Skill.ARCANA, Skill.STEALTH)
 
-    def test_unfettered_mind_grants_intelligence_save_first(self, make_character):
+    def test_unfettered_mind_grants_intelligence_save_first(self, make_sources):
         # SourceTexts/SubclassTexts2024/knowledge_domain.txt, Cleric level 6:
         # "you gain proficiency in Intelligence saving throws."
-        character = make_character()
-        character.add_effect(ClericKnowledgeFeatures.UnfetteredMind())
+        sources = make_sources()
+        sources.add_effect(ClericKnowledgeFeatures.UnfetteredMind())
+        character = Character(sources)
         assert character.is_proficient_in_saving_throw(Ability.INTELLIGENCE)
 
-    def test_unfettered_mind_falls_back_when_int_already_proficient(
-        self, make_character
-    ):
+    def test_unfettered_mind_falls_back_when_int_already_proficient(self, make_sources):
         # "If you already have this proficiency, you instead gain saving
         # throw proficiency with one ability in which you lack it."
-        character = make_character()
-        character.add_effect(SavingThrowProficiency([Ability.INTELLIGENCE]))
-        character.add_effect(ClericKnowledgeFeatures.UnfetteredMind())
+        sources = make_sources()
+        sources.add_effect(SavingThrowProficiency([Ability.INTELLIGENCE]))
+        sources.add_effect(ClericKnowledgeFeatures.UnfetteredMind())
         # STRENGTH is first in the fallback list after INTELLIGENCE.
+        character = Character(sources)
         assert character.is_proficient_in_saving_throw(Ability.STRENGTH)
 
 
 class TestInitiativeAndSkillRollConditionGrants:
     def test_gloom_stalker_dread_ambusher_initiative_bonus_equals_wisdom_mod(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/gloom_stalker.txt, Ranger level 3:
         # "Initiative Bonus. When you roll Initiative, you can add your
         # Wisdom modifier to the roll." WIS 16 -> +3, DEX 10 -> +0.
-        character = make_character(wisdom=16)
-        character.add_effect(RangerGloomStalkerFeatures.DreadAmbusher())
+        sources = make_sources(wisdom=16)
+        sources.add_effect(RangerGloomStalkerFeatures.DreadAmbusher())
+        character = Character(sources)
         assert character.calculate_initiative() == 0 + 3
 
     def test_champion_remarkable_athlete_initiative_and_athletics_advantage(
-        self, make_character
+        self, make_sources
     ):
         # SourceTexts/SubclassTexts2024/champion.txt, Fighter level 3:
         # "you have Advantage on Initiative rolls and Strength (Athletics)
         # checks."
-        character = make_character()
-        character.add_effect(FighterChampionFeatures.RemarkableAthlete())
+        sources = make_sources()
+        sources.add_effect(FighterChampionFeatures.RemarkableAthlete())
+        character = Character(sources)
         assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
         assert character.get_skill_roll_condition(Skill.ATHLETICS) == (
             DiceRollCondition.ADVANTAGE
@@ -669,18 +684,22 @@ class TestPromisedPassiveBenefits:
         )
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
-    def test_umbral_sight_extends_existing_darkvision(self, make_character):
+    def test_umbral_sight_extends_existing_darkvision(self, make_sources):
         # "If you already have Darkvision when you gain this feature, its
         # range increases by 60 feet."
-        character = make_character()
-        character.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
-        apply_features(character, [RangerGloomStalkerFeatures.UmbralSight()])
+        sources = make_sources()
+        sources.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
+        character = Character(sources)
+        character = apply_features(
+            character, [RangerGloomStalkerFeatures.UmbralSight()]
+        )
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
-    def test_shadow_arts_extends_existing_darkvision(self, make_character):
-        character = make_character()
-        character.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
-        apply_features(character, [MonkShadowFeatures.ShadowArts()])
+    def test_shadow_arts_extends_existing_darkvision(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
+        character = Character(sources)
+        character = apply_features(character, [MonkShadowFeatures.ShadowArts()])
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
     def test_feral_senses_blindsight(self, make_character):
@@ -745,17 +764,21 @@ class TestPromisedPassiveBenefits:
             assert character.get_skill_bonus(skill) == expected
         assert character.get_skill_bonus(Skill.STEALTH) == 0
 
-    def test_battle_smith_martial_weapons(self, make_character):
+    def test_battle_smith_martial_weapons(self, make_sources):
         # battle_smith.txt: "Weapon Knowledge. You gain proficiency with
         # Martial weapons."
-        data = Character(
+        battle_smith_sources = CharacterSources(
             class_levels=ClassLevels(level_per_class={CharacterClass.ARTIFICER: 3}),
             spell_casting_ability=Ability.INTELLIGENCE,
         )
-        apply_level(ArtificerBattleSmith.ArtificerBattleSmithLevel3(), data)
-        character = make_character(levels={CharacterClass.ARTIFICER: 3})
+        apply_level(
+            ArtificerBattleSmith.ArtificerBattleSmithLevel3(), battle_smith_sources
+        )
+        data = Character(battle_smith_sources)
+        sources = make_sources(levels={CharacterClass.ARTIFICER: 3})
         for feature in data.iter_features_with_extensions():
-            character.add_effect(feature)
+            sources.add_effect(feature)
+        character = Character(sources)
         assert (
             WeaponProficiency.MARTIAL
             in character.ledger.equipment_training.weapon_proficiencies

@@ -8,11 +8,13 @@ import pytest
 
 from Builds.Tests.SpellSlotTestWizard5 import SpellSlotTestWizard5CharacterBuilder
 from CharacterContent.Items import Armor, Items
+from Model.Character import Character
 
 
 @pytest.fixture
 def wizard():
-    return SpellSlotTestWizard5CharacterBuilder().build()
+    """A built wizard's sources, to add gear to."""
+    return SpellSlotTestWizard5CharacterBuilder().build().sources
 
 
 def attunement_items(n, is_wearing=True):
@@ -30,33 +32,33 @@ class TestArmorRule:
         wizard.add_armor(Armor.LeatherArmor())
         wizard.add_armor(Armor.PaddedArmor())
         with pytest.raises(ValueError, match="multiple armors"):
-            wizard.validate()
+            Character(wizard).validate()
 
     def test_armor_plus_shield_allowed(self, wizard):
         wizard.add_armor(Armor.LeatherArmor())
         wizard.add_armor(Armor.ShieldArmor())
-        wizard.validate()
+        Character(wizard).validate()
 
     def test_unworn_second_armor_allowed(self, wizard):
         wizard.add_armor(Armor.LeatherArmor())
         wizard.add_armor(Armor.PaddedArmor(is_wearing=False))
-        wizard.validate()
+        Character(wizard).validate()
 
 
 class TestAttunementLimit:
     def test_three_allowed(self, wizard):
         for item in attunement_items(3):
             wizard.add_item(item)
-        wizard.validate()
+        Character(wizard).validate()
 
     def test_four_rejected(self, wizard):
         for item in attunement_items(4):
             wizard.add_item(item)
         with pytest.raises(ValueError, match="attune"):
-            wizard.validate()
+            Character(wizard).validate()
 
     def test_unworn_items_not_attuned(self, wizard):
         for item in attunement_items(3):
             wizard.add_item(item)
         wizard.add_item(Items.GauntletsOfStrength(is_wearing=False))
-        wizard.validate()
+        Character(wizard).validate()

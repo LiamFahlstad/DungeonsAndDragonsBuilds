@@ -6,6 +6,7 @@ from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     StarterClassBuilder,
 )
 from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Builds.StartingEquipment import set_starting_equipment
 from Model.Inventory import Bought, Inventory
 from CharacterContent.Items import Armor, Items, Weapons
@@ -90,8 +91,9 @@ class CharacterBuilder:
 
     def build(self) -> Character:
         # Every builder (starting class, multiclasses, species) grants
-        # straight into this one sheet.
-        character_sheet_data = Character()
+        # into these one set of sources; the Character is made from them
+        # at the end.
+        character_sheet_data = CharacterSources()
         applied_level_features = AppliedLevelFeatures()
 
         character_sheet_data = self.starter_class_builder.create(
@@ -130,4 +132,4 @@ class CharacterBuilder:
         # read, so the order this happens in doesn't matter.)
         character_sheet_data.inventory = self.inventory.copy()
 
-        return character_sheet_data
+        return Character(character_sheet_data)

@@ -103,6 +103,7 @@ from Core.Definitions import (
     Skill,
     WarlockGenieKind,
 )
+from Model.CharacterSources import CharacterSources
 
 
 def bug(reason):
@@ -116,7 +117,7 @@ def features_at(
     whose only fact is that `character_class` is at `class_level`, mirroring
     what BaseClassLevelFeatures.add_features does for a single level entry
     without needing a full StarterClassBuilder."""
-    data = Character(
+    sources = CharacterSources(
         class_levels=ClassLevels(level_per_class={character_class: class_level})
     )
     blf = ClassBuilder.BaseClassLevelFeatures(
@@ -125,17 +126,17 @@ def features_at(
             level_features_class().level: level_features_class()
         },
     )
-    blf.add_features(data, character_class, ClassBuilder.AppliedLevelFeatures())
-    return data
+    blf.add_features(sources, character_class, ClassBuilder.AppliedLevelFeatures())
+    return Character(sources)
 
 
 def granted(data, make_character):
     """A bare stat block with every feature of `data` applied - what the
     builder's features grant (proficiencies live on the stat block)."""
-    character = make_character(levels=dict(data.level_per_class))
+    sources = make_character(levels=dict(data.level_per_class)).sources
     for feature in data.iter_features_with_extensions():
-        character.add_effect(feature)
-    return character
+        sources.add_effect(feature)
+    return Character(sources)
 
 
 # ── Subclass-selection level: always 3 (house rule) ─────────────────────────
@@ -317,35 +318,39 @@ class TestLimitedUseResourcesNotWired:
 
 
 class TestPromisedPassiveBonusNeverApplied:
-    def test_soul_of_the_forge_ac_bonus_while_wearing_heavy_armor(self, make_character):
-        character = make_character(strength=15, levels={CharacterClass.CLERIC: 6})
+    def test_soul_of_the_forge_ac_bonus_while_wearing_heavy_armor(self, make_sources):
+        sources = make_sources(strength=15, levels={CharacterClass.CLERIC: 6})
         # Armor first: the bonus must not depend on which applies first.
-        character.add_effect(Armor.PlateArmor())
-        character.add_effect(ClericForgeFeatures.SoulOfTheForge())
+        sources.add_effect(Armor.PlateArmor())
+        sources.add_effect(ClericForgeFeatures.SoulOfTheForge())
+        character = Character(sources)
         assert character.calculate_armor_class() == 19  # Plate 18 + 1
 
-    def test_soul_of_the_forge_fire_resistance_is_applied(self, make_character):
+    def test_soul_of_the_forge_fire_resistance_is_applied(self, make_sources):
         # Control: the other half of the same feature IS wired correctly.
-        character = make_character(levels={CharacterClass.CLERIC: 6})
+        sources = make_sources(levels={CharacterClass.CLERIC: 6})
         feature = ClericForgeFeatures.SoulOfTheForge()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.FIRE)
 
-    def test_superior_mobility_speed_increase(self, make_character):
-        character = make_character(levels={CharacterClass.ROGUE: 9})
+    def test_superior_mobility_speed_increase(self, make_sources):
+        sources = make_sources(levels={CharacterClass.ROGUE: 9})
         feature = RogueScoutFeatures.SuperiorMobility()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert character.calculate_speed() == 40
 
-    def test_survivalist_proficiency_and_expertise_are_applied(self, make_character):
+    def test_survivalist_proficiency_and_expertise_are_applied(self, make_sources):
         # Control: the earlier Scout feature correctly wires both grants.
         from Core.Definitions import Skill
 
-        character = make_character(
+        sources = make_sources(
             intelligence=10, wisdom=10, levels={CharacterClass.ROGUE: 3}
         )  # PB +2
         feature = RogueScoutFeatures.Survivalist()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert character.is_proficient_in_skill(Skill.NATURE)
         assert character.is_proficient_in_skill(Skill.SURVIVAL)
         # Expertise doubles proficiency bonus: 0 (WIS/INT mod) + 2*PB(2) = 4.
@@ -406,7 +411,7 @@ class TestExtendFeatureWiring:
     Juggernaut yet."""
 
     def _build_up_to(self, fighter_level: int) -> Character:
-        data = Character(
+        sources = CharacterSources(
             class_levels=ClassLevels(
                 level_per_class={CharacterClass.FIGHTER: fighter_level}
             )
@@ -422,9 +427,9 @@ class TestExtendFeatureWiring:
             },
         )
         blf.add_features(
-            data, CharacterClass.FIGHTER, ClassBuilder.AppliedLevelFeatures()
+            sources, CharacterClass.FIGHTER, ClassBuilder.AppliedLevelFeatures()
         )
-        return data
+        return Character(sources)
 
     def test_giants_might_has_no_extensions_before_level_10(self):
         data = self._build_up_to(7)
@@ -473,25 +478,27 @@ class TestExtendFeatureWiring:
 
 class TestOtherCorrectlyWiredEffects:
     def test_heart_of_the_storm_grants_lightning_and_thunder_resistance(
-        self, make_character
+        self, make_sources
     ):
         # Storm Sorcery (Sorcerer 6) text: "You gain resistance to lightning
         # and thunder damage."
-        character = make_character(levels={CharacterClass.SORCERER: 6})
+        sources = make_sources(levels={CharacterClass.SORCERER: 6})
         feature = SorcererStormSorceryFeatures.HeartOfTheStorm()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.LIGHTNING)
         assert character.is_resistant_to_damage(DamageType.THUNDER)
         assert not character.is_resistant_to_damage(DamageType.FIRE)
 
-    def test_fungal_body_grants_condition_immunities(self, make_character):
+    def test_fungal_body_grants_condition_immunities(self, make_sources):
         # Circle of Spores (Druid 14) text: "you can't be blinded, deafened,
         # frightened, or poisoned".
         from Core.Definitions import Condition
 
-        character = make_character(levels={CharacterClass.DRUID: 14})
+        sources = make_sources(levels={CharacterClass.DRUID: 14})
         feature = DruidSporesFeatures.FungalBody()
-        character.add_effect(feature)
+        sources.add_effect(feature)
+        character = Character(sources)
         assert character.is_immune_to_condition(Condition.BLINDED)
         assert character.is_immune_to_condition(Condition.DEAFENED)
         assert character.is_immune_to_condition(Condition.FRIGHTENED)
@@ -518,47 +525,53 @@ class TestPromisedProficienciesGranted:
 
     def test_college_of_swords_bonus_proficiencies(self, make_character):
         # "...you gain proficiency with medium armor and the scimitar."
-        data = Character(
+        sources = CharacterSources(
             class_levels=ClassLevels(level_per_class={CharacterClass.BARD: 3})
         )
-        apply_level(BardSwordsLevel3(fighting_style=FightingStyles.Dueling()), data)
+        apply_level(BardSwordsLevel3(fighting_style=FightingStyles.Dueling()), sources)
+        data = Character(sources)
         character = granted(data, make_character)
         assert ArmorType.MEDIUM in character.ledger.equipment_training.armor_training
         assert MartialMelee.Scimitar().is_proficient(character)
         assert not MartialMelee.Longsword().is_proficient(character)
 
-    def test_arcana_domain_arcane_initiate(self, make_character):
+    def test_arcana_domain_arcane_initiate(self, make_sources):
         # "You gain proficiency in the Arcana skill..."
-        character = make_character()
-        character.add_effect(ClericArcanaFeatures.ArcaneInitiate())
+        sources = make_sources()
+        sources.add_effect(ClericArcanaFeatures.ArcaneInitiate())
+        character = Character(sources)
         assert character.is_proficient_in_skill(Skill.ARCANA)
 
 
 class TestPromisedPassiveBenefits:
     """Always-on benefits in the feature text that used to be description-only."""
 
-    def test_eyes_of_night_darkvision(self, make_character):
+    def test_eyes_of_night_darkvision(self, make_sources):
         # "You have darkvision out to a range of 300 feet."
-        character = make_character()
-        character.add_effect(ClericTwilightFeatures.EyesOfNight())
+        sources = make_sources()
+        sources.add_effect(ClericTwilightFeatures.EyesOfNight())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 300
 
-    def test_ambush_master_initiative_advantage(self, make_character):
+    def test_ambush_master_initiative_advantage(self, make_sources):
         # "You have advantage on initiative rolls."
-        character = make_character()
-        character.add_effect(RogueScoutFeatures.AmbushMaster())
+        sources = make_sources()
+        sources.add_effect(RogueScoutFeatures.AmbushMaster())
+        character = Character(sources)
         assert character.initiative_roll_condition == DiceRollCondition.ADVANTAGE
 
-    def test_oceanic_soul_cold_resistance(self, make_character):
+    def test_oceanic_soul_cold_resistance(self, make_sources):
         # "You gain resistance to cold damage."
-        character = make_character()
-        character.add_effect(WarlockFathomlessFeatures.OceanicSoul())
+        sources = make_sources()
+        sources.add_effect(WarlockFathomlessFeatures.OceanicSoul())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.COLD)
 
-    def test_inured_to_undeath_necrotic_resistance(self, make_character):
+    def test_inured_to_undeath_necrotic_resistance(self, make_sources):
         # "You have resistance to necrotic damage..."
-        character = make_character()
-        character.add_effect(WizardNecromancyFeatures.InuredToUndeath())
+        sources = make_sources()
+        sources.add_effect(WizardNecromancyFeatures.InuredToUndeath())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
 
     @pytest.mark.parametrize(
@@ -571,12 +584,13 @@ class TestPromisedPassiveBenefits:
         ],
     )
     def test_elemental_gift_resistance_by_patron_kind(
-        self, make_character, kind, damage_type
+        self, make_sources, kind, damage_type
     ):
         # "...resistance to a damage type determined by your patron's kind:
         # bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid)."
-        character = make_character()
-        character.add_effect(WarlockTheGenieFeatures.ElementalGift(kind))
+        sources = make_sources()
+        sources.add_effect(WarlockTheGenieFeatures.ElementalGift(kind))
+        character = Character(sources)
         assert list(character.ledger.defenses.damage_resistances) == [damage_type]
 
     @pytest.mark.parametrize(
@@ -588,12 +602,11 @@ class TestPromisedPassiveBenefits:
         ],
     )
     def test_storm_soul_resistance_by_environment(
-        self, make_character, environment, damage_type
+        self, make_sources, environment, damage_type
     ):
         # "Desert. You gain resistance to fire damage... Sea. ...lightning...
         # Tundra. ...cold"
-        character = make_character()
-        character.add_effect(
-            BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment)
-        )
+        sources = make_sources()
+        sources.add_effect(BarbarianPathOfTheStormHeraldFeatures.StormSoul(environment))
+        character = Character(sources)
         assert list(character.ledger.defenses.damage_resistances) == [damage_type]

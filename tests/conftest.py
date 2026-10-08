@@ -49,17 +49,20 @@ def basic_carrying_capacity():
 
 
 @pytest.fixture
-def make_character():
-    """Factory for a bare Character (no features applied). Grant it a single
-    feature or improvement with `character.add_effect(SomeFeature())`.
+def make_sources():
+    """Factory for the CharacterSources of a bare character (no features).
+    Grant it something, then build the character:
 
-    make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
-    make_character(armor_training=[ArmorType.SHIELD])
+        sources = make_sources(dexterity=16, levels={CharacterClass.FIGHTER: 5})
+        sources.add_effect(SomeFeature())
+        character = Character(sources)
+
+    make_sources(armor_training=[ArmorType.SHIELD]) adds that training.
     """
     from Model.Content.Improvements import GrantArmorTraining
     from Core.Definitions import CharacterClass, CreatureSize
     from Model.AbilityScores import AbilityScores
-    from Model.Character import Character
+    from Model.CharacterSources import CharacterSources
     from Model.ClassLevels import ClassLevels
 
     def _make(
@@ -73,7 +76,7 @@ def make_character():
         armor_training=(),
     ):
         levels = levels or {CharacterClass.FIGHTER: 1}
-        character = Character(
+        sources = CharacterSources(
             character_name="Test Character",
             class_levels=ClassLevels(
                 base_class=next(iter(levels)),
@@ -88,7 +91,19 @@ def make_character():
         )
         # Armor training (ArmorType values) - untrained armor has penalties.
         if armor_training:
-            character.add_effect(GrantArmorTraining(list(armor_training)))
-        return character
+            sources.add_effect(GrantArmorTraining(list(armor_training)))
+        return sources
+
+    return _make
+
+
+@pytest.fixture
+def make_character(make_sources):
+    """Factory for a bare, finished Character: make_sources(...) built as is.
+    To grant it something first, use make_sources."""
+    from Model.Character import Character
+
+    def _make(**kwargs):
+        return Character(make_sources(**kwargs))
 
     return _make

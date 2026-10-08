@@ -12,6 +12,8 @@ import sys
 
 import pytest
 
+from Model.Character import Character
+
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
 from RunCharacterCreator import BuildSelector, ExampleSelector
@@ -71,11 +73,11 @@ def test_rebuild_is_idempotent(name):
     first = builder.build()
     first_stats = _stats(first, first.validate())
 
-    # Same builder instance again, then a forced re-setup of the same sheet.
+    # Same builder instance again, then a character rebuilt from its sources.
     second = builder.build()
     assert _stats(second, second.validate()) == first_stats
-    second._changed()
-    assert _stats(second, second.validate()) == first_stats
+    rebuilt = Character(second.sources)
+    assert _stats(rebuilt, rebuilt.validate()) == first_stats
 
 
 # PHB spellcasting ability per class.

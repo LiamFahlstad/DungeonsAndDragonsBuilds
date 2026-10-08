@@ -4,7 +4,7 @@ from typing import Optional
 import attr
 
 import Core.Definitions as Definitions
-from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Model.Grants import Grants
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
@@ -245,15 +245,15 @@ class BaseClassLevelFeatures:
 
     def add_features(
         self,
-        data: Character,
+        data: CharacterSources,
         base_class: CharacterClass,
         applied_level_features: "AppliedLevelFeatures",
-    ) -> Character:
+    ) -> CharacterSources:
         """Apply this builder's per-level features to `data`, in ascending
         level order (all base-class levels first, then all subclass levels),
         skipping levels above the class's declared level and levels another
         builder already applied for the same class."""
-        class_level = data.get_level_for_class(base_class)
+        class_level = data.get_class_level(base_class)
 
         for features_by_level, applied_levels, kind in [
             (
@@ -312,7 +312,7 @@ class ClassBuilder(ABC):
         self.replace_spells = replace_spells
 
     @abstractmethod
-    def _grant_class(self, data: Character, is_resuming: bool) -> None:
+    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
         """Grant this builder's class-level contribution (class registration,
         spell slots, proficiencies, ...) straight into `data` - everything
         except per-level features, which create() applies afterwards.
@@ -323,9 +323,9 @@ class ClassBuilder(ABC):
 
     def create(
         self,
-        character_sheet_data: Optional[Character] = None,
+        character_sheet_data: Optional[CharacterSources] = None,
         applied_level_features: Optional["AppliedLevelFeatures"] = None,
-    ) -> Character:
+    ) -> CharacterSources:
         """Grant this class builder's contribution straight into
         `character_sheet_data` (a fresh one is created if not provided) and
         return it. Every builder writes into the same object, so a base class
@@ -338,11 +338,11 @@ class ClassBuilder(ABC):
         cumulative sheet, so it may also replace a spell added by an earlier
         builder."""
         if character_sheet_data is None:
-            character_sheet_data = Character()
+            character_sheet_data = CharacterSources()
         if applied_level_features is None:
             applied_level_features = AppliedLevelFeatures()
 
-        previously_declared_level = character_sheet_data.get_level_for_class(
+        previously_declared_level = character_sheet_data.get_class_level(
             self.base_class
         )
         if previously_declared_level > 0:
@@ -377,7 +377,7 @@ class ClassBuilder(ABC):
         character_sheet_data.replace_spells(self.replace_spells or {})
         return character_sheet_data
 
-    def _update_subclass_name(self, data: Character) -> None:
+    def _update_subclass_name(self, data: CharacterSources) -> None:
         """Show every class's subclass on a multiclass sheet ("Oath of Glory /
         Bladesinger") instead of only the last builder's. Classes that
         haven't reached their subclass level are left out; if none has, the
@@ -499,9 +499,9 @@ class StarterClassBuilder(ClassBuilder):
     def weapon_proficiencies(self) -> Optional[list[Weapons.WeaponProficiency]]:
         return self.non_generic_arguments.weapon_proficiencies
 
-    def _grant_class(self, data: Character, is_resuming: bool) -> None:
+    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
         # The starting class is always the first builder, so never resumed.
-        data.base_class = self.base_class
+        data.class_levels.base_class = self.base_class
         data.base_abilities = self.abilities
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
@@ -557,7 +557,7 @@ class MulticlassBuilder(ClassBuilder):
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
 
-    def _grant_class(self, data: Character, is_resuming: bool) -> None:
+    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
         if self.spell_casting_ability is not None:
             data.spell_casting_ability = self.spell_casting_ability
         if is_resuming:

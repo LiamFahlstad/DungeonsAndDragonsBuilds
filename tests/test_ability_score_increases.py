@@ -15,6 +15,7 @@ from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import 
 )
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import BodyAndMind
 from Core.Definitions import Ability
+from Model.Character import Character
 
 STR, DEX, CON, WIS, CHA = (
     Ability.STRENGTH,
@@ -26,30 +27,35 @@ STR, DEX, CON, WIS, CHA = (
 
 
 class TestAbilityScoreImprovement:
-    def test_plus_two_to_one(self, make_character):
-        character = make_character(strength=16)
-        character.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+    def test_plus_two_to_one(self, make_sources):
+        sources = make_sources(strength=16)
+        sources.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 18
 
-    def test_plus_one_to_two(self, make_character):
-        character = make_character(strength=15, constitution=13)
-        character.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 1), (CON, 1)]))
+    def test_plus_one_to_two(self, make_sources):
+        sources = make_sources(strength=15, constitution=13)
+        sources.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 1), (CON, 1)]))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 16
         assert character.get_ability_score(CON) == 14
 
-    def test_capped_at_20(self, make_character):
-        character = make_character(strength=19)
-        character.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+    def test_capped_at_20(self, make_sources):
+        sources = make_sources(strength=19)
+        sources.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 20
 
-    def test_no_effect_at_20(self, make_character):
-        character = make_character(strength=20)
-        character.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+    def test_no_effect_at_20(self, make_sources):
+        sources = make_sources(strength=20)
+        sources.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 20
 
-    def test_does_not_lower_score_already_above_20(self, make_character):
-        character = make_character(strength=22)
-        character.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+    def test_does_not_lower_score_already_above_20(self, make_sources):
+        sources = make_sources(strength=22)
+        sources.add_effect(GeneralFeats.AbilityScoreImprovement([(STR, 2)]))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 22
 
     @pytest.mark.parametrize(
@@ -68,14 +74,16 @@ class TestAbilityScoreImprovement:
 
 
 class TestHalfFeat:
-    def test_plus_one(self, make_character):
-        character = make_character(charisma=15)
-        character.add_effect(GeneralFeats.Actor(character_level=4, ability=CHA))
+    def test_plus_one(self, make_sources):
+        sources = make_sources(charisma=15)
+        sources.add_effect(GeneralFeats.Actor(character_level=4, ability=CHA))
+        character = Character(sources)
         assert character.get_ability_score(CHA) == 16
 
-    def test_capped_at_20(self, make_character):
-        character = make_character(charisma=20)
-        character.add_effect(GeneralFeats.Actor(character_level=4, ability=CHA))
+    def test_capped_at_20(self, make_sources):
+        sources = make_sources(charisma=20)
+        sources.add_effect(GeneralFeats.Actor(character_level=4, ability=CHA))
+        character = Character(sources)
         assert character.get_ability_score(CHA) == 20
 
     def test_level_prerequisite(self):
@@ -93,9 +101,10 @@ class TestBackgroundBonus:
         [[(STR, 2), (CON, 1)], [(STR, 1), (DEX, 1), (CON, 1)]],
         ids=["two_one", "one_one_one"],
     )
-    def test_valid_splits(self, make_character, bonuses):
-        character = make_character()
-        character.add_effect(Backgrounds.FreeBackgroundAbilityBonus(bonuses))
+    def test_valid_splits(self, make_sources, bonuses):
+        sources = make_sources()
+        sources.add_effect(Backgrounds.FreeBackgroundAbilityBonus(bonuses))
+        character = Character(sources)
         assert sum(character.get_ability_score(a) - 10 for a in Ability) == 3
 
     @pytest.mark.parametrize(
@@ -109,19 +118,22 @@ class TestBackgroundBonus:
 
 
 class TestCapstones:
-    def test_primal_champion_plus_four(self, make_character):
-        character = make_character(strength=20, constitution=18)
-        character.add_effect(PrimalChampion())
+    def test_primal_champion_plus_four(self, make_sources):
+        sources = make_sources(strength=20, constitution=18)
+        sources.add_effect(PrimalChampion())
+        character = Character(sources)
         assert character.get_ability_score(STR) == 24
         assert character.get_ability_score(CON) == 22
 
-    def test_primal_champion_max_25(self, make_character):
-        character = make_character(strength=23)
-        character.add_effect(PrimalChampion())
+    def test_primal_champion_max_25(self, make_sources):
+        sources = make_sources(strength=23)
+        sources.add_effect(PrimalChampion())
+        character = Character(sources)
         assert character.get_ability_score(STR) == 25
 
-    def test_body_and_mind_max_25(self, make_character):
-        character = make_character(dexterity=22, wisdom=20)
-        character.add_effect(BodyAndMind())
+    def test_body_and_mind_max_25(self, make_sources):
+        sources = make_sources(dexterity=22, wisdom=20)
+        sources.add_effect(BodyAndMind())
+        character = Character(sources)
         assert character.get_ability_score(DEX) == 25
         assert character.get_ability_score(WIS) == 24

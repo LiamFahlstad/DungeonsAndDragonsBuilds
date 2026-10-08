@@ -16,6 +16,7 @@ from Core.Definitions import CharacterClass
 from Core.SpellcastingRules import calculate_slot_progression
 from Model.AbilityScores import AbilityScores
 from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Model.ClassLevels import ClassLevels
 
 FULL, HALF, THIRD, WARLOCK = (
@@ -130,7 +131,7 @@ def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
     """Build a bare stat block with the given class levels and apply each
     class's SpellSlots feature in order, as Character does."""
     level_per_class = {cls: level for cls, level, _ in classes}
-    character = Character(
+    sources = CharacterSources(
         class_levels=ClassLevels(
             base_class=classes[0][0], level_per_class=level_per_class
         ),
@@ -138,8 +139,8 @@ def apply_casters(classes: list[tuple[CharacterClass, int, CasterType]]):
         base_speed=30,
     )
     for cls, _, caster_type in classes:
-        character.add_effect(SpellSlots(caster_type, cls))
-    return character
+        sources.add_effect(SpellSlots(caster_type, cls))
+    return Character(sources)
 
 
 class TestSingleClassTables:

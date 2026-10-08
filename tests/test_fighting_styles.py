@@ -8,6 +8,7 @@ import pytest
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from Core.Definitions import ArmorType, CharacterClass
+from Model.Character import Character
 
 
 def bug(reason):
@@ -15,106 +16,120 @@ def bug(reason):
 
 
 class TestArchery:
-    def test_plus_two_to_ranged_attack(self, make_character):
-        character = make_character(dexterity=16)
+    def test_plus_two_to_ranged_attack(self, make_sources):
+        sources = make_sources(dexterity=16)
         bow = Weapons.Longbow(player_is_proficient=True)
-        character.add_effect(FightingStyles.Archery())
+        sources.add_effect(FightingStyles.Archery())
+        character = Character(sources)
         assert bow.calculate_total_attack_roll_bonus_int(character) == 3 + 2 + 2
 
-    def test_includes_simple_ranged(self, make_character):
-        character = make_character()
+    def test_includes_simple_ranged(self, make_sources):
+        sources = make_sources()
         dart = Weapons.Dart()
-        character.add_effect(FightingStyles.Archery())
+        sources.add_effect(FightingStyles.Archery())
+        character = Character(sources)
         assert sum(b for b, _ in dart.get_attack_roll_bonuses(character)) == 2
 
-    def test_ignores_melee_and_thrown_melee(self, make_character):
-        character = make_character()
+    def test_ignores_melee_and_thrown_melee(self, make_sources):
+        sources = make_sources()
         sword, javelin = Weapons.Longsword(), Weapons.Javelin()
-        character.add_effect(FightingStyles.Archery())
+        sources.add_effect(FightingStyles.Archery())
+        character = Character(sources)
         assert sword.get_attack_roll_bonuses(character) == []
         assert javelin.get_attack_roll_bonuses(character) == []
 
-    def test_does_not_add_damage(self, make_character):
-        character = make_character(dexterity=16)
+    def test_does_not_add_damage(self, make_sources):
+        sources = make_sources(dexterity=16)
         bow = Weapons.Longbow()
-        character.add_effect(FightingStyles.Archery())
+        sources.add_effect(FightingStyles.Archery())
+        character = Character(sources)
         assert bow.calculate_damage_bonus_int(character) == 3
 
-    def test_does_not_change_the_weapon(self, make_character):
+    def test_does_not_change_the_weapon(self, make_sources):
         # The bonus is recorded on the stat block, so a weapon shared between
         # builds (or characters) never carries it.
-        character = make_character()
+        sources = make_sources()
         bow = Weapons.Longbow()
-        character.add_effect(FightingStyles.Archery())
+        sources.add_effect(FightingStyles.Archery())
         assert bow.attack_roll_bonuses == []
 
 
 class TestDefense:
-    def test_plus_one_ac_in_armor(self, make_character):
-        character = make_character(dexterity=14)
-        character.add_effect(Armor.LeatherArmor())
-        character.add_effect(FightingStyles.Defense())
+    def test_plus_one_ac_in_armor(self, make_sources):
+        sources = make_sources(dexterity=14)
+        sources.add_effect(Armor.LeatherArmor())
+        sources.add_effect(FightingStyles.Defense())
+        character = Character(sources)
         assert character.calculate_armor_class() == 11 + 2 + 1
 
-    def test_shield_alone_is_not_armor(self, make_character):
-        character = make_character(dexterity=14, armor_training=[ArmorType.SHIELD])
-        character.add_effect(Armor.ShieldArmor())
-        character.add_effect(FightingStyles.Defense())
+    def test_shield_alone_is_not_armor(self, make_sources):
+        sources = make_sources(dexterity=14, armor_training=[ArmorType.SHIELD])
+        sources.add_effect(Armor.ShieldArmor())
+        sources.add_effect(FightingStyles.Defense())
+        character = Character(sources)
         assert character.calculate_armor_class() == 10 + 2 + 2
 
-    def test_no_bonus_unarmored(self, make_character):
-        character = make_character(dexterity=14)
-        character.add_effect(FightingStyles.Defense())
+    def test_no_bonus_unarmored(self, make_sources):
+        sources = make_sources(dexterity=14)
+        sources.add_effect(FightingStyles.Defense())
+        character = Character(sources)
         assert character.calculate_armor_class() == 10 + 2
 
 
 class TestDueling:
-    def test_adds_damage_not_attack(self, make_character):
-        character = make_character(strength=16, levels={CharacterClass.FIGHTER: 1})
+    def test_adds_damage_not_attack(self, make_sources):
+        sources = make_sources(strength=16, levels={CharacterClass.FIGHTER: 1})
         sword = Weapons.Longsword(player_is_proficient=True)
-        character.add_effect(FightingStyles.Dueling())
+        sources.add_effect(FightingStyles.Dueling())
+        character = Character(sources)
         assert sword.calculate_total_attack_roll_bonus_int(character) == 3 + 2
         assert sword.calculate_damage_bonus_int(character) == 3 + 2
 
-    def test_not_applied_to_two_handed(self, make_character):
-        character = make_character()
+    def test_not_applied_to_two_handed(self, make_sources):
+        sources = make_sources()
         greatsword = Weapons.Greatsword()
-        character.add_effect(FightingStyles.Dueling())
+        sources.add_effect(FightingStyles.Dueling())
+        character = Character(sources)
         assert greatsword.get_attack_roll_bonuses(character) == []
         assert greatsword.get_damage_roll_bonuses(character) == []
 
-    def test_not_applied_to_unarmed_strike(self, make_character):
-        character = make_character()
+    def test_not_applied_to_unarmed_strike(self, make_sources):
+        sources = make_sources()
         strike = Weapons.UnarmedStrike(player_is_proficient=True)
-        character.add_effect(FightingStyles.Dueling())
+        sources.add_effect(FightingStyles.Dueling())
+        character = Character(sources)
         assert strike.get_damage_roll_bonuses(character) == []
 
-    def test_versatile_weapon_qualifies(self, make_character):
+    def test_versatile_weapon_qualifies(self, make_sources):
         # Longsword can be wielded one-handed.
-        character = make_character()
+        sources = make_sources()
         sword = Weapons.Longsword()
-        character.add_effect(FightingStyles.Dueling())
+        sources.add_effect(FightingStyles.Dueling())
+        character = Character(sources)
         assert sum(b for b, _ in sword.get_damage_roll_bonuses(character)) == 2
 
-    def test_ignores_ranged(self, make_character):
-        character = make_character()
+    def test_ignores_ranged(self, make_sources):
+        sources = make_sources()
         bow = Weapons.Longbow()
-        character.add_effect(FightingStyles.Dueling())
+        sources.add_effect(FightingStyles.Dueling())
+        character = Character(sources)
         assert bow.get_attack_roll_bonuses(character) == []
         assert bow.get_damage_roll_bonuses(character) == []
 
 
 class TestThrownWeaponFighting:
-    def test_adds_damage_not_attack(self, make_character):
-        character = make_character(strength=16)
+    def test_adds_damage_not_attack(self, make_sources):
+        sources = make_sources(strength=16)
         javelin = Weapons.Javelin()
-        character.add_effect(FightingStyles.ThrownWeaponFighting())
+        sources.add_effect(FightingStyles.ThrownWeaponFighting())
+        character = Character(sources)
         assert javelin.calculate_total_attack_roll_bonus_int(character) == 3
         assert javelin.calculate_damage_bonus_int(character) == 3 + 2
 
-    def test_only_thrown_weapons(self, make_character):
-        character = make_character()
+    def test_only_thrown_weapons(self, make_sources):
+        sources = make_sources()
         sword = Weapons.Longsword()
-        character.add_effect(FightingStyles.ThrownWeaponFighting())
+        sources.add_effect(FightingStyles.ThrownWeaponFighting())
+        character = Character(sources)
         assert sword.get_attack_roll_bonuses(character) == []
         assert sword.get_damage_roll_bonuses(character) == []

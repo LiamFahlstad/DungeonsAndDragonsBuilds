@@ -53,6 +53,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Ability, CharacterClass, Sense, Skill
+from Model.Character import Character
 
 STR, DEX, CON, INT, WIS, CHA = (
     Ability.STRENGTH,
@@ -99,10 +100,11 @@ def xfail_bug(reason: str):
 
 
 class TestSkilled:
-    def test_grants_three_skill_proficiencies(self, make_character):
-        character = make_character()
+    def test_grants_three_skill_proficiencies(self, make_sources):
+        sources = make_sources()
         chosen = [Skill.ATHLETICS, Skill.ARCANA, Skill.PERSUASION]
-        character.add_effect(OriginFeats.Skilled(chosen))
+        sources.add_effect(OriginFeats.Skilled(chosen))
+        character = Character(sources)
         for skill in chosen:
             assert character.is_proficient_in_skill(skill)
         assert not character.is_proficient_in_skill(Skill.STEALTH)
@@ -120,12 +122,13 @@ class TestAlert:
     @pytest.mark.parametrize(
         "level", [1, 4, 5, 8, 9, 12, 13, 16, 17, 20], ids=lambda l: f"level_{l}"
     )
-    def test_initiative_gains_proficiency_bonus(self, make_character, level):
+    def test_initiative_gains_proficiency_bonus(self, make_sources, level):
         # 2024 PHB Alert: "you can add your Proficiency Bonus to the roll."
-        character = make_character(dexterity=16, levels={CharacterClass.FIGHTER: level})
+        sources = make_sources(dexterity=16, levels={CharacterClass.FIGHTER: level})
         dex_modifier = 3  # DEX 16 -> +3
         expected_pb = PHB_PROFICIENCY_BONUS[level]
-        character.add_effect(OriginFeats.Alert())
+        sources.add_effect(OriginFeats.Alert())
+        character = Character(sources)
         assert character.calculate_initiative() == dex_modifier + expected_pb
 
     def test_no_initiative_bonus_without_the_feat(self, make_character):
@@ -140,43 +143,48 @@ class TestTough:
         ids=lambda v: str(v),
     )
     def test_hit_point_bonus_scales_with_level(
-        self, make_character, level, expected_bonus
+        self, make_sources, level, expected_bonus
     ):
         # "You gain 2 additional Hit Points for each level you have."
-        character = make_character(levels={CharacterClass.FIGHTER: level})
-        character.add_effect(OriginFeats.Tough())
+        sources = make_sources(levels={CharacterClass.FIGHTER: level})
+        sources.add_effect(OriginFeats.Tough())
+        character = Character(sources)
         assert character.ledger.hit_points.bonuses.total(character) == expected_bonus
 
     def test_hit_point_bonus_uses_total_character_level_when_multiclassed(
-        self, make_character
+        self, make_sources
     ):
         # Fighter 3 / Wizard 2 = character level 5, even though neither class
         # alone reached level 5: the feat scales off total level, "each level
         # you have", not levels in a single class.
-        character = make_character(
+        sources = make_sources(
             levels={CharacterClass.FIGHTER: 3, CharacterClass.WIZARD: 2}
         )
-        character.add_effect(OriginFeats.Tough())
+        sources.add_effect(OriginFeats.Tough())
+        character = Character(sources)
         assert character.ledger.hit_points.bonuses.total(character) == 10
 
-    def test_full_hit_points_level_1_fighter(self, make_character):
+    def test_full_hit_points_level_1_fighter(self, make_sources):
         # Fighter d10 hit die, CON 10 (+0): 10 + 0, then Tough's +2*1.
-        character = make_character(constitution=10, levels={CharacterClass.FIGHTER: 1})
-        character.add_effect(OriginFeats.Tough())
+        sources = make_sources(constitution=10, levels={CharacterClass.FIGHTER: 1})
+        sources.add_effect(OriginFeats.Tough())
+        character = Character(sources)
         assert character.calculate_hit_points() == 12
 
-    def test_full_hit_points_level_5_fighter(self, make_character):
+    def test_full_hit_points_level_5_fighter(self, make_sources):
         # Fighter d10 (avg 6), CON 14 (+2): 10+2, then 4*(6+2) = 32 -> 44,
         # then Tough's +2*5 = 10 -> 54.
-        character = make_character(constitution=14, levels={CharacterClass.FIGHTER: 5})
-        character.add_effect(OriginFeats.Tough())
+        sources = make_sources(constitution=14, levels={CharacterClass.FIGHTER: 5})
+        sources.add_effect(OriginFeats.Tough())
+        character = Character(sources)
         assert character.calculate_hit_points() == 54
 
-    def test_full_hit_points_level_20_fighter(self, make_character):
+    def test_full_hit_points_level_20_fighter(self, make_sources):
         # Fighter d10 (avg 6), CON 20 (+5): 10+5, then 19*(6+5) = 209 -> 224,
         # then Tough's +2*20 = 40 -> 264.
-        character = make_character(constitution=20, levels={CharacterClass.FIGHTER: 20})
-        character.add_effect(OriginFeats.Tough())
+        sources = make_sources(constitution=20, levels={CharacterClass.FIGHTER: 20})
+        sources.add_effect(OriginFeats.Tough())
+        character = Character(sources)
         assert character.calculate_hit_points() == 264
 
 
@@ -267,9 +275,10 @@ class TestFamiliarFriend:
 
 
 class TestPurpleDragonRook:
-    def test_grants_proficiency_in_chosen_skill(self, make_character):
-        character = make_character()
-        character.add_effect(OriginFeats.PurpleDragonRook(Skill.INSIGHT))
+    def test_grants_proficiency_in_chosen_skill(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(OriginFeats.PurpleDragonRook(Skill.INSIGHT))
+        character = Character(sources)
         assert character.is_proficient_in_skill(Skill.INSIGHT)
 
     def test_rejects_skill_outside_entreat_pool(self):
@@ -346,15 +355,17 @@ HALF_FEATS = [
 )
 class TestHalfFeatShape:
     def test_grants_plus_one_to_chosen_ability(
-        self, make_character, feat_class, ability, other_ability
+        self, make_sources, feat_class, ability, other_ability
     ):
-        character = make_character(**{ability.name.lower(): 14})
-        character.add_effect(feat_class(character_level=4, ability=ability))
+        sources = make_sources(**{ability.name.lower(): 14})
+        sources.add_effect(feat_class(character_level=4, ability=ability))
+        character = Character(sources)
         assert character.get_ability_score(ability) == 15
 
-    def test_capped_at_20(self, make_character, feat_class, ability, other_ability):
-        character = make_character(**{ability.name.lower(): 20})
-        character.add_effect(feat_class(character_level=4, ability=ability))
+    def test_capped_at_20(self, make_sources, feat_class, ability, other_ability):
+        sources = make_sources(**{ability.name.lower(): 20})
+        sources.add_effect(feat_class(character_level=4, ability=ability))
+        character = Character(sources)
         assert character.get_ability_score(ability) == 20
 
     def test_rejects_ability_not_on_its_list(self, feat_class, ability, other_ability):
@@ -367,61 +378,69 @@ class TestHalfFeatShape:
 
 
 class TestResilient:
-    def test_grants_ability_increase_and_save_proficiency(self, make_character):
-        character = make_character(wisdom=14)
+    def test_grants_ability_increase_and_save_proficiency(self, make_sources):
+        sources = make_sources(wisdom=14)
+        character = Character(sources)
         assert not character.is_proficient_in_saving_throw(WIS)
-        character.add_effect(GeneralFeats.Resilient(character_level=4, ability=WIS))
+        sources.add_effect(GeneralFeats.Resilient(character_level=4, ability=WIS))
+        character = Character(sources)
         assert character.get_ability_score(WIS) == 15
         assert character.is_proficient_in_saving_throw(WIS)
 
-    def test_save_proficiency_still_granted_when_score_already_20(self, make_character):
-        character = make_character(wisdom=20)
-        character.add_effect(GeneralFeats.Resilient(character_level=4, ability=WIS))
+    def test_save_proficiency_still_granted_when_score_already_20(self, make_sources):
+        sources = make_sources(wisdom=20)
+        sources.add_effect(GeneralFeats.Resilient(character_level=4, ability=WIS))
+        character = Character(sources)
         assert character.get_ability_score(WIS) == 20
         assert character.is_proficient_in_saving_throw(WIS)
 
-    def test_any_ability_is_a_valid_choice(self, make_character):
+    def test_any_ability_is_a_valid_choice(self, make_sources):
         # Unlike most half-feats, Resilient's ability list is "any ability".
-        character = make_character(strength=10)
-        character.add_effect(GeneralFeats.Resilient(character_level=4, ability=STR))
+        sources = make_sources(strength=10)
+        sources.add_effect(GeneralFeats.Resilient(character_level=4, ability=STR))
+        character = Character(sources)
         assert character.get_ability_score(STR) == 11
         assert character.is_proficient_in_saving_throw(STR)
 
 
 class TestSkillExpert:
-    def test_grants_ability_bonus_proficiency_and_expertise(self, make_character):
-        character = make_character(intelligence=14)
-        character.add_effect(
+    def test_grants_ability_bonus_proficiency_and_expertise(self, make_sources):
+        sources = make_sources(intelligence=14)
+        sources.add_effect(
             GeneralFeats.SkillExpert(character_level=4, ability=INT, skill=Skill.ARCANA)
         )
+        character = Character(sources)
         assert character.get_ability_score(INT) == 15
         assert character.is_proficient_in_skill(Skill.ARCANA)
         assert character.has_expertise_in_skill(Skill.ARCANA)
 
-    def test_does_not_double_grant_if_already_proficient(self, make_character):
-        character = make_character(intelligence=14)
-        character.add_effect(SkillProficiency([Skill.ARCANA]))
+    def test_does_not_double_grant_if_already_proficient(self, make_sources):
+        sources = make_sources(intelligence=14)
+        sources.add_effect(SkillProficiency([Skill.ARCANA]))
         # Should not raise, and should still add expertise on top of the
         # pre-existing proficiency.
-        character.add_effect(
+        sources.add_effect(
             GeneralFeats.SkillExpert(character_level=4, ability=INT, skill=Skill.ARCANA)
         )
+        character = Character(sources)
         assert character.has_expertise_in_skill(Skill.ARCANA)
 
-    def test_any_ability_is_a_valid_choice(self, make_character):
-        character = make_character(charisma=10)
-        character.add_effect(
+    def test_any_ability_is_a_valid_choice(self, make_sources):
+        sources = make_sources(charisma=10)
+        sources.add_effect(
             GeneralFeats.SkillExpert(
                 character_level=4, ability=CHA, skill=Skill.PERSUASION
             )
         )
+        character = Character(sources)
         assert character.get_ability_score(CHA) == 11
 
 
 class TestSkulker:
-    def test_grants_ten_foot_blindsight(self, make_character):
-        character = make_character(dexterity=14)
-        character.add_effect(GeneralFeats.Skulker(character_level=4, ability=DEX))
+    def test_grants_ten_foot_blindsight(self, make_sources):
+        sources = make_sources(dexterity=14)
+        sources.add_effect(GeneralFeats.Skulker(character_level=4, ability=DEX))
+        character = Character(sources)
         assert character.get_sense_range(Sense.BLINDSIGHT) == 10
 
     def test_rejects_ability_not_dexterity(self):
@@ -477,10 +496,11 @@ class TestSavingThrowDCFeats:
 
 
 class TestFreeBackgroundSkillProficiency:
-    def test_grants_two_skill_proficiencies(self, make_character):
-        character = make_character()
+    def test_grants_two_skill_proficiencies(self, make_sources):
+        sources = make_sources()
         chosen = [Skill.HISTORY, Skill.NATURE]
-        character.add_effect(Backgrounds.FreeBackgroundSkillProficiency(chosen))
+        sources.add_effect(Backgrounds.FreeBackgroundSkillProficiency(chosen))
+        character = Character(sources)
         for skill in chosen:
             assert character.is_proficient_in_skill(skill)
 
@@ -499,25 +519,27 @@ class TestFreeBackgroundSkillProficiency:
 
 
 class TestEpicBoon:
-    def test_dummy_epic_boon_is_a_harmless_placeholder(self, make_character):
+    def test_dummy_epic_boon_is_a_harmless_placeholder(self, make_sources):
         # No real Epic Boon (ability score increase to a cap of 30, etc.) is
         # implemented anywhere in this codebase - EpicBoon.py only contains
         # this placeholder. Documented here rather than encoded as a bug;
         # see the test report for the "needs content" note.
-        character = make_character(strength=20)
+        sources = make_sources(strength=20)
         boon = EpicBoon.DummyEpicBoon()
-        character.add_effect(boon)
+        sources.add_effect(boon)
+        character = Character(sources)
         assert character.get_ability_score(STR) == 20
         assert boon.name == "Epic Boon"
 
 
 class TestSpeedy:
-    def test_speed_and_ability_increase(self, make_character):
+    def test_speed_and_ability_increase(self, make_sources):
         # "Increase your Dexterity or Constitution score by 1... Your Speed
         # increases by 10 feet."
-        character = make_character(dexterity=14)
-        character.add_effect(
+        sources = make_sources(dexterity=14)
+        sources.add_effect(
             GeneralFeats.Speedy(character_level=4, ability=Ability.DEXTERITY)
         )
+        character = Character(sources)
         assert character.calculate_speed() == 40
         assert character.get_ability_score(Ability.DEXTERITY) == 15

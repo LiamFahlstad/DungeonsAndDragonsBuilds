@@ -18,6 +18,8 @@ TestSpeciesNeverChangeAbilityScores asserts that directly.
 
 import pytest
 
+from Model.Character import Character
+
 from CharacterContent.Features.CharacterFeats import OriginFeats
 from CharacterContent.Features.SpeciesFeatures import (
     AasimarFeatures,
@@ -67,6 +69,7 @@ from Core.Definitions import (
     Skill,
 )
 from tests._grants import grant
+from Model.CharacterSources import CharacterSources
 
 
 def bug(reason):
@@ -82,42 +85,53 @@ def spell_names(data) -> list[str]:
 
 FIXED_SIZE_SPECIES = [
     pytest.param(
-        lambda: DwarfSpeciesBuilder().build(), 30, CreatureSize.MEDIUM, id="dwarf"
+        lambda: Character(DwarfSpeciesBuilder().build()),
+        30,
+        CreatureSize.MEDIUM,
+        id="dwarf",
     ),
     pytest.param(
-        lambda: HalflingSpeciesBuilder().build(), 30, CreatureSize.SMALL, id="halfling"
+        lambda: Character(HalflingSpeciesBuilder().build()),
+        30,
+        CreatureSize.SMALL,
+        id="halfling",
     ),
     pytest.param(
-        lambda: OrcSpeciesBuilder().build(), 30, CreatureSize.MEDIUM, id="orc"
+        lambda: Character(OrcSpeciesBuilder().build()),
+        30,
+        CreatureSize.MEDIUM,
+        id="orc",
     ),
     pytest.param(
-        lambda: GoliathSpeciesBuilder(
-            GoliathFeatures.GiantAncestryType.HILL_GIANT
-        ).build(),
+        lambda: Character(
+            GoliathSpeciesBuilder(GoliathFeatures.GiantAncestryType.HILL_GIANT).build()
+        ),
         35,
         CreatureSize.MEDIUM,
         id="goliath",
     ),
     pytest.param(
-        lambda: KalashtarSpeciesBuilder().build(),
+        lambda: Character(KalashtarSpeciesBuilder().build()),
         30,
         CreatureSize.MEDIUM,
         id="kalashtar",
     ),
     pytest.param(
-        lambda: DragonbornSpeciesBuilder(DragonbornFeatures.DragonColor.RED).build(),
+        lambda: Character(
+            DragonbornSpeciesBuilder(DragonbornFeatures.DragonColor.RED).build()
+        ),
         30,
         CreatureSize.MEDIUM,
         id="dragonborn",
     ),
     pytest.param(
-        lambda: ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build(),
+        lambda: Character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build()),
         30,
         CreatureSize.SMALL,
         id="forest_gnome",
     ),
     pytest.param(
-        lambda: RockGnomeSpeciesBuilder().build(),
+        lambda: Character(RockGnomeSpeciesBuilder().build()),
         30,
         CreatureSize.SMALL,
         id="rock_gnome",
@@ -140,37 +154,45 @@ class TestChoosableSizeSpecies:
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_changeling_size_choice(self, size):
-        data = ChangelingSpeciesBuilder(
-            size=size, instinct_skills=[Skill.DECEPTION, Skill.INSIGHT]
-        ).build()
+        data = Character(
+            ChangelingSpeciesBuilder(
+                size=size, instinct_skills=[Skill.DECEPTION, Skill.INSIGHT]
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_khoravar_size_choice(self, size):
-        data = KhoravarSpeciesBuilder(
-            size=size,
-            skill_versatility=Skill.PERSUASION,
-            spell_casting_ability=Ability.CHARISMA,
-        ).build()
+        data = Character(
+            KhoravarSpeciesBuilder(
+                size=size,
+                skill_versatility=Skill.PERSUASION,
+                spell_casting_ability=Ability.CHARISMA,
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_shifter_size_choice(self, size):
-        data = ShifterSpeciesBuilder(
-            skill=Skill.ATHLETICS,
-            size=size,
-            shifter_form=ShifterFeatures.ShiftForm.SWIFTSTRIDE,
-        ).build()
+        data = Character(
+            ShifterSpeciesBuilder(
+                skill=Skill.ATHLETICS,
+                size=size,
+                shifter_form=ShifterFeatures.ShiftForm.SWIFTSTRIDE,
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_lupin_size_choice(self, size):
-        data = LupinSpeciesBuilder(
-            size=size, werewolf_instincts_skill=Skill.PERCEPTION
-        ).build()
+        data = Character(
+            LupinSpeciesBuilder(
+                size=size, werewolf_instincts_skill=Skill.PERCEPTION
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
@@ -179,25 +201,29 @@ class TestChoosableSizeSpecies:
         # Dhampir speed is a fixed 35 ft regardless of size (Ravenloft: The
         # Horrors Within), unlike most other species where speed never varies
         # with the size choice either.
-        data = DhampirSpeciesBuilder(character_level=1, size=size).build()
+        data = Character(DhampirSpeciesBuilder(character_level=1, size=size).build())
         assert data.size == size
         assert data.base_speed == 35
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_hexblood_size_choice(self, size):
-        data = HexbloodSpeciesBuilder(
-            size=size, spell_casting_ability=Ability.WISDOM
-        ).build()
+        data = Character(
+            HexbloodSpeciesBuilder(
+                size=size, spell_casting_ability=Ability.WISDOM
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_reborn_size_choice(self, size):
-        data = RebornSpeciesBuilder(
-            size=size,
-            knowledge_skill=Skill.HISTORY,
-            strange_endurance=DamageType.COLD,
-        ).build()
+        data = Character(
+            RebornSpeciesBuilder(
+                size=size,
+                knowledge_skill=Skill.HISTORY,
+                strange_endurance=DamageType.COLD,
+            ).build()
+        )
         assert data.size == size
         assert data.base_speed == 30
 
@@ -206,41 +232,48 @@ class TestChoosableSizeSpecies:
 
 
 class TestDarkvision:
-    def test_dwarf_darkvision_120(self, make_character):
-        character = make_character()
-        character.add_effect(DwarfFeatures.Darkvision())
+    def test_dwarf_darkvision_120(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(DwarfFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
-    def test_orc_darkvision_120(self, make_character):
+    def test_orc_darkvision_120(self, make_sources):
         from CharacterContent.Features.SpeciesFeatures import OrcFeatures
 
-        character = make_character()
-        character.add_effect(OrcFeatures.Darkvision())
+        sources = make_sources()
+        sources.add_effect(OrcFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 120
 
-    def test_gnome_darkvision_60(self, make_character):
-        character = make_character()
-        character.add_effect(GnomeFeatures.Darkvision())
+    def test_gnome_darkvision_60(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(GnomeFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
-    def test_aasimar_darkvision_60(self, make_character):
-        character = make_character()
-        character.add_effect(AasimarFeatures.Darkvision())
+    def test_aasimar_darkvision_60(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(AasimarFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
-    def test_tiefling_darkvision_60(self, make_character):
-        character = make_character()
-        character.add_effect(TieflingFeatures.Darkvision(60))
+    def test_tiefling_darkvision_60(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(TieflingFeatures.Darkvision(60))
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
-    def test_dhampir_darkvision_60(self, make_character):
-        character = make_character()
-        character.add_effect(DhampirFeatures.Darkvision())
+    def test_dhampir_darkvision_60(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(DhampirFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
-    def test_hexblood_darkvision_60(self, make_character):
-        character = make_character()
-        character.add_effect(HexbloodFeatures.Darkvision())
+    def test_hexblood_darkvision_60(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(HexbloodFeatures.Darkvision())
+        character = Character(sources)
         assert character.get_sense_range(Sense.DARKVISION) == 60
 
 
@@ -308,7 +341,7 @@ class TestElfLineages:
     def test_level_1_has_only_cantrip_and_correct_darkvision(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = _build_elf(lineage, 1).build()
+        data = Character(_build_elf(lineage, 1).build())
 
         assert data.base_speed == (35 if lineage == ElvenLineage.WOOD_ELF else 30)
         assert cantrip in spell_names(data)
@@ -328,7 +361,7 @@ class TestElfLineages:
     def test_level_3_adds_level_3_spell_only(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = _build_elf(lineage, 3).build()
+        data = Character(_build_elf(lineage, 3).build())
         assert level3_spell in spell_names(data)
         assert level5_spell not in spell_names(data)
 
@@ -339,7 +372,7 @@ class TestElfLineages:
     def test_level_5_adds_both_spells(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = _build_elf(lineage, 5).build()
+        data = Character(_build_elf(lineage, 5).build())
         assert level3_spell in spell_names(data)
         assert level5_spell in spell_names(data)
 
@@ -387,18 +420,19 @@ class TestTieflingLegacies:
         "lineage, resistance, cantrip, level3_spell, level5_spell", TIEFLING_LEGACIES
     )
     def test_level_1_grants_resistance_and_cantrips(
-        self, make_character, lineage, resistance, cantrip, level3_spell, level5_spell
+        self, make_sources, lineage, resistance, cantrip, level3_spell, level5_spell
     ):
-        data = _build_tiefling(lineage, 1).build()
+        data = Character(_build_tiefling(lineage, 1).build())
 
         assert cantrip in spell_names(data)
         assert "Thaumaturgy" in spell_names(data)
         assert level3_spell not in spell_names(data)
         assert level5_spell not in spell_names(data)
 
-        character = make_character()
+        sources = make_sources()
         for feature in data.features:
-            character.add_effect(feature)
+            sources.add_effect(feature)
+        character = Character(sources)
         assert character.is_resistant_to_damage(resistance)
 
     @pytest.mark.parametrize(
@@ -407,7 +441,7 @@ class TestTieflingLegacies:
     def test_level_5_grants_both_spells(
         self, lineage, resistance, cantrip, level3_spell, level5_spell
     ):
-        data = _build_tiefling(lineage, 5).build()
+        data = Character(_build_tiefling(lineage, 5).build())
         assert level3_spell in spell_names(data)
         assert level5_spell in spell_names(data)
 
@@ -436,10 +470,11 @@ class TestDragonbornAncestry:
         ids=[c.value for c, _ in DRACONIC_ANCESTRY_TABLE],
     )
     def test_damage_resistance_matches_ancestor(
-        self, make_character, color, expected_damage_type
+        self, make_sources, color, expected_damage_type
     ):
-        character = make_character()
-        character.add_effect(DragonbornFeatures.DamageResistance(color))
+        sources = make_sources()
+        sources.add_effect(DragonbornFeatures.DamageResistance(color))
+        character = Character(sources)
         assert character.is_resistant_to_damage(expected_damage_type)
         for other_type in DamageType:
             if other_type != expected_damage_type:
@@ -471,21 +506,24 @@ class TestDragonbornAncestry:
 
 
 class TestDamageResistanceMechanics:
-    def test_aasimar_celestial_resistance(self, make_character):
-        character = make_character()
-        character.add_effect(AasimarFeatures.CelestialResistance())
+    def test_aasimar_celestial_resistance(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(AasimarFeatures.CelestialResistance())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
         assert character.is_resistant_to_damage(DamageType.RADIANT)
 
-    def test_kalashtar_mental_discipline(self, make_character):
-        character = make_character()
-        character.add_effect(KalashtarFeatures.MentalDiscipline())
+    def test_kalashtar_mental_discipline(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(KalashtarFeatures.MentalDiscipline())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.PSYCHIC)
 
-    def test_warforged_construct_resilience_and_armor_bonus(self, make_character):
-        character = make_character(dexterity=14)  # +2 modifier
-        character.add_effect(WarForgedFeatures.ConstructResilience())
-        character.add_effect(WarForgedFeatures.IntegratedProtection())
+    def test_warforged_construct_resilience_and_armor_bonus(self, make_sources):
+        sources = make_sources(dexterity=14)  # +2 modifier
+        sources.add_effect(WarForgedFeatures.ConstructResilience())
+        sources.add_effect(WarForgedFeatures.IntegratedProtection())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.POISON)
         # PHB base 10 + Dex 2 + Integrated Protection's flat +1.
         assert character.calculate_armor_class() == 13
@@ -499,20 +537,23 @@ class TestDamageResistanceMechanics:
         ],
     )
     def test_tiefling_fiendish_resistance(
-        self, make_character, damage_type_text, expected
+        self, make_sources, damage_type_text, expected
     ):
-        character = make_character()
-        character.add_effect(TieflingFeatures.FiendishResistance(damage_type_text))
+        sources = make_sources()
+        sources.add_effect(TieflingFeatures.FiendishResistance(damage_type_text))
+        character = Character(sources)
         assert character.is_resistant_to_damage(expected)
 
-    def test_dwarven_resilience_grants_poison_resistance(self, make_character):
-        character = make_character()
-        character.add_effect(DwarfFeatures.DwarvenResilience())
+    def test_dwarven_resilience_grants_poison_resistance(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(DwarfFeatures.DwarvenResilience())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.POISON)
 
-    def test_trace_of_undeath_grants_necrotic_resistance(self, make_character):
-        character = make_character()
-        character.add_effect(DhampirFeatures.TraceOfUndeath())
+    def test_trace_of_undeath_grants_necrotic_resistance(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(DhampirFeatures.TraceOfUndeath())
+        character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.NECROTIC)
 
 
@@ -521,10 +562,11 @@ class TestDamageResistanceMechanics:
 
 class TestGnomishCunning:
     def test_gnomish_cunning_feature_grants_advantage_on_mental_saves(
-        self, make_character
+        self, make_sources
     ):
-        character = make_character()
-        character.add_effect(GnomeFeatures.GnomishCunning())
+        sources = make_sources()
+        sources.add_effect(GnomeFeatures.GnomishCunning())
+        character = Character(sources)
         assert character.ledger.saving_throws.is_advantaged(Ability.INTELLIGENCE)
         assert character.ledger.saving_throws.is_advantaged(Ability.WISDOM)
         assert character.ledger.saving_throws.is_advantaged(Ability.CHARISMA)
@@ -533,11 +575,11 @@ class TestGnomishCunning:
         assert not character.ledger.saving_throws.is_advantaged(Ability.CONSTITUTION)
 
     def test_forest_gnome_species_grants_gnomish_cunning(self):
-        data = ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build()
+        data = Character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build())
         assert data.get_features_by_type(GnomeFeatures.GnomishCunning)
 
     def test_rock_gnome_species_grants_gnomish_cunning(self):
-        data = RockGnomeSpeciesBuilder().build()
+        data = Character(RockGnomeSpeciesBuilder().build())
         assert data.get_features_by_type(GnomeFeatures.GnomishCunning)
 
 
@@ -546,51 +588,59 @@ class TestGnomishCunning:
 
 class TestGrantedSpellsAndCantrips:
     def test_forest_gnome_spells(self):
-        data = ForestGnomeSpeciesBuilder(Ability.WISDOM).build()
+        data = Character(ForestGnomeSpeciesBuilder(Ability.WISDOM).build())
         assert "Minor Illusion" in spell_names(data)
         assert "Speak with Animals" in spell_names(data)
 
     def test_rock_gnome_spells(self):
-        data = RockGnomeSpeciesBuilder().build()
+        data = Character(RockGnomeSpeciesBuilder().build())
         assert "Mending" in spell_names(data)
         assert "Prestidigitation" in spell_names(data)
 
     def test_species_writes_into_an_existing_sheet(self):
-        # Species grant straight into the character's sheet - and a species
+        # Species grant straight into the character's sources - and a species
         # spell the class already granted (Rock Gnome Prestidigitation on a
         # Wizard) is listed from both sources rather than failing the build.
-        from Model.Character import Character
         from CharacterContent.Spells.SpellLists import BardLevel0Spells
 
-        data = Character()
-        grant(data).add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
-        assert RockGnomeSpeciesBuilder().build(data) is data
+        sources = CharacterSources()
+        grant(sources).add_cantrip(
+            BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE
+        )
+        assert RockGnomeSpeciesBuilder().build(sources) is sources
+        data = Character(sources)
         assert spell_names(data).count("Prestidigitation") == 2
         assert data.base_speed == GnomeFeatures.SPEED
         # The same spell twice from one grant is an error, found on read.
-        grant(data).add_cantrip(BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE)
+        grant(sources).add_cantrip(
+            BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE
+        )
         with pytest.raises(ValueError, match="already added"):
-            data.spells
+            Character(sources).spells
 
     def test_aasimar_light_cantrip(self):
         builder = AasimarSpeciesBuilder(character_level=1)
         builder.set_character_level(1)
         builder.set_spell_casting_ability(Ability.CHARISMA)
-        data = builder.build()
+        data = Character(builder.build())
         assert "Light" in spell_names(data)
 
     def test_khoravar_knows_friends_cantrip(self):
-        data = KhoravarSpeciesBuilder(
-            size=CreatureSize.MEDIUM,
-            skill_versatility=Skill.PERSUASION,
-            spell_casting_ability=Ability.CHARISMA,
-        ).build()
+        data = Character(
+            KhoravarSpeciesBuilder(
+                size=CreatureSize.MEDIUM,
+                skill_versatility=Skill.PERSUASION,
+                spell_casting_ability=Ability.CHARISMA,
+            ).build()
+        )
         assert "Friends" in spell_names(data)
 
     def test_hexblood_knows_disguise_self_and_hex(self):
-        data = HexbloodSpeciesBuilder(
-            size=CreatureSize.MEDIUM, spell_casting_ability=Ability.WISDOM
-        ).build()
+        data = Character(
+            HexbloodSpeciesBuilder(
+                size=CreatureSize.MEDIUM, spell_casting_ability=Ability.WISDOM
+            ).build()
+        )
         names = spell_names(data)
         assert "Disguise Self" in names
         assert "Hex" in names
@@ -600,37 +650,42 @@ class TestGrantedSpellsAndCantrips:
 
 
 class TestReborn:
-    def test_reborn_grants_a_skill_proficiency(self, make_character):
-        data = RebornSpeciesBuilder(
-            size=CreatureSize.MEDIUM,
-            knowledge_skill=Skill.HISTORY,
-            strange_endurance=DamageType.COLD,
-        ).build()
-        character = make_character()
+    def test_reborn_grants_a_skill_proficiency(self, make_sources):
+        data = Character(
+            RebornSpeciesBuilder(
+                size=CreatureSize.MEDIUM,
+                knowledge_skill=Skill.HISTORY,
+                strange_endurance=DamageType.COLD,
+            ).build()
+        )
+        sources = make_sources()
         for feature in data.features:
-            character.add_effect(feature)
+            sources.add_effect(feature)
+        character = Character(sources)
         assert character.ledger.skills.is_proficient(Skill.HISTORY)
 
-    def test_reborn_grants_one_of_the_strange_endurance_resistances(
-        self, make_character
-    ):
-        data = RebornSpeciesBuilder(
-            size=CreatureSize.MEDIUM,
-            knowledge_skill=Skill.HISTORY,
-            strange_endurance=DamageType.COLD,
-        ).build()
-        character = make_character()
+    def test_reborn_grants_one_of_the_strange_endurance_resistances(self, make_sources):
+        data = Character(
+            RebornSpeciesBuilder(
+                size=CreatureSize.MEDIUM,
+                knowledge_skill=Skill.HISTORY,
+                strange_endurance=DamageType.COLD,
+            ).build()
+        )
+        sources = make_sources()
         for feature in data.features:
-            character.add_effect(feature)
+            sources.add_effect(feature)
+        character = Character(sources)
         assert any(
             character.is_resistant_to_damage(dt)
             for dt in (DamageType.COLD, DamageType.NECROTIC, DamageType.POISON)
         )
 
-    def test_reborn_knowledge_skill_feature_works_in_isolation(self, make_character):
+    def test_reborn_knowledge_skill_feature_works_in_isolation(self, make_sources):
         # The helper class itself is correct; only the builder's wiring is missing.
-        character = make_character()
-        character.add_effect(RebornFeatures.RebornKnowledgeSkill(Skill.ARCANA))
+        sources = make_sources()
+        sources.add_effect(RebornFeatures.RebornKnowledgeSkill(Skill.ARCANA))
+        character = Character(sources)
         assert character.ledger.skills.is_proficient(Skill.ARCANA)
 
 
@@ -642,10 +697,11 @@ class TestDwarvenToughness:
         "level, expected_bonus", [(1, 1), (5, 5), (11, 11), (20, 20)]
     )
     def test_hit_point_bonus_equals_character_level(
-        self, make_character, level, expected_bonus
+        self, make_sources, level, expected_bonus
     ):
-        character = make_character(levels={CharacterClass.FIGHTER: level})
-        character.add_effect(DwarfFeatures.DwarvenToughness())
+        sources = make_sources(levels={CharacterClass.FIGHTER: level})
+        sources.add_effect(DwarfFeatures.DwarvenToughness())
+        character = Character(sources)
         assert character.ledger.hit_points.bonuses.total(character) == expected_bonus
 
 
@@ -653,14 +709,16 @@ class TestDwarvenToughness:
 
 
 class TestGrantedProficiencies:
-    def test_human_skillful_grants_chosen_skill(self, make_character):
-        character = make_character()
-        character.add_effect(HumanFeatures.Skillful(Skill.STEALTH))
+    def test_human_skillful_grants_chosen_skill(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(HumanFeatures.Skillful(Skill.STEALTH))
+        character = Character(sources)
         assert character.ledger.skills.is_proficient(Skill.STEALTH)
 
-    def test_elf_keen_senses_restricted_to_pool(self, make_character):
-        character = make_character()
-        character.add_effect(ElfFeatures.KeenSenses(Skill.INSIGHT))
+    def test_elf_keen_senses_restricted_to_pool(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(ElfFeatures.KeenSenses(Skill.INSIGHT))
+        character = Character(sources)
         assert character.ledger.skills.is_proficient(Skill.INSIGHT)
         with pytest.raises(ValueError):
             ElfFeatures.KeenSenses(Skill.ATHLETICS)
@@ -669,9 +727,10 @@ class TestGrantedProficiencies:
         with pytest.raises(ValueError):
             ChangelingFeatures.ChangelingInstincts([Skill.DECEPTION])
 
-    def test_warforged_specialized_design_grants_chosen_skill(self, make_character):
-        character = make_character()
-        character.add_effect(WarForgedFeatures.SpecializedDesign(Skill.PERCEPTION))
+    def test_warforged_specialized_design_grants_chosen_skill(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(WarForgedFeatures.SpecializedDesign(Skill.PERCEPTION))
+        character = Character(sources)
         assert character.ledger.skills.is_proficient(Skill.PERCEPTION)
 
 
@@ -694,25 +753,23 @@ class TestSpeciesNeverChangeAbilityScores:
     ability score untouched."""
 
     def _dwarf_features(self):
-        return DwarfSpeciesBuilder().build().features
+        return Character(DwarfSpeciesBuilder().build()).features
 
     def _human_features(self):
-        return (
+        return Character(
             HumanSpeciesBuilder(
                 origin_feat=OriginFeats.Tough(), skill_proficiency=Skill.PERCEPTION
-            )
-            .build()
-            .features
-        )
+            ).build()
+        ).features
 
     def _elf_features(self):
-        return _build_elf(ElvenLineage.HIGH_ELF, 5).build().features
+        return Character(_build_elf(ElvenLineage.HIGH_ELF, 5).build()).features
 
     @pytest.mark.parametrize(
         "features_factory_name", ["_dwarf_features", "_human_features", "_elf_features"]
     )
-    def test_no_ability_score_change(self, make_character, features_factory_name):
-        character = make_character(
+    def test_no_ability_score_change(self, make_sources, features_factory_name):
+        sources = make_sources(
             strength=13,
             dexterity=13,
             constitution=13,
@@ -722,7 +779,8 @@ class TestSpeciesNeverChangeAbilityScores:
         )
         features = getattr(self, features_factory_name)()
         for feature in features:
-            character.add_effect(feature)
+            sources.add_effect(feature)
+        character = Character(sources)
         for ability in Ability:
             assert character.get_ability_score(ability) == 13
 
@@ -737,11 +795,12 @@ class TestSpeciesChoiceValidation:
         "dt", [DamageType.COLD, DamageType.NECROTIC, DamageType.POISON]
     )
     def test_strange_endurance_grants_only_the_chosen_resistance(
-        self, make_character, dt
+        self, make_sources, dt
     ):
-        character = make_character()
-        character.add_effect(RebornFeatures.StrangeEndurance(dt))
+        sources = make_sources()
+        sources.add_effect(RebornFeatures.StrangeEndurance(dt))
         options = {DamageType.COLD, DamageType.NECROTIC, DamageType.POISON}
+        character = Character(sources)
         assert character.is_resistant_to_damage(dt)
         for other in options - {dt}:
             assert not character.is_resistant_to_damage(other)

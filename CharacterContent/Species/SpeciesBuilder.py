@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Optional
 
 import Core.Definitions as Definitions
-from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Model.Grants import Grants
 from Model.Records.GrantStamp import GrantKind
 
@@ -14,11 +14,11 @@ class SpeciesBuilder:
     ):
         self.name = name
 
-    def build(self, data: Optional[Character] = None) -> Character:
+    def build(self, data: Optional[CharacterSources] = None) -> CharacterSources:
         """Grant this species' traits (speed, size, features, spells) straight
-        into `data` - a fresh sheet if none is given - and return it."""
+        into `data` - fresh sources if none are given - and return it."""
         if data is None:
-            data = Character()
+            data = CharacterSources()
         # Species spells aren't granted at a class level; they're stamped
         # level 1, like every other grant outside the per-level class flow,
         # and listed under the species - so a spell the class also grants

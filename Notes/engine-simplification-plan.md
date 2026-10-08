@@ -45,7 +45,7 @@ document has been changed in the code yet.
 | 7 | `CharacterView`: content reads the character through one interface | codemod | none | M |
 | 8 | Ledger parts record facts only (tools, weapon filters) | design | none | M |
 | 9 | Content base classes move below `Character`; `_as` is deleted | structure | none | L |
-| 10 | Attack math belongs to the character (`AttackProfile`) *(optional since Step 9)* | design | none | M |
+| 10 | Attack math belongs to the character (`AttackProfile`) *(skipped, see Step 10)* | design | none | M |
 | 11 | Builder pattern: `CharacterSources` → immutable `Character` | design | none | L |
 | 12 | Builder cleanup | small items | none | M |
 | 13 | `Character` as the combat representation | design + fixes | combat values (reviewed) | M |
@@ -1139,7 +1139,13 @@ refers to the checks in section 4.
 - **Verify:** A, B, C, D, E, F, plus the Creator UI starts, plus the Creator
   round trip. **Output:** none.
 
-### Step 10: Attack math belongs to the character *(design)*
+### Step 10: Attack math belongs to the character *(design)* — skipped
+
+- **Result:** not done. As Step 9 found, the attack numbers are already one
+  call each against a `CharacterView`, so an `AttackProfile` would move the
+  math without making it simpler. Revisit it in Step 13 only if combat wants
+  one object holding every number for a weapon.
+
 
 - **Goal:** "what's my attack bonus with this weapon" is a character query,
   and the weapon holds only its own facts.
@@ -1162,7 +1168,62 @@ refers to the checks in section 4.
   from the rules.
 - **Verify:** A, B, C, D, E, F. **Output:** none.
 
-### Step 11: Builder pattern, `CharacterSources` → immutable `Character` *(design-critical; Decision 1)*
+### Step 11: Builder pattern, `CharacterSources` → immutable `Character` *(design-critical; Decision 1)* — done
+
+- **Result:**
+  - **`Model/CharacterSources.py`** (new): an attrs class with the source
+    fields and every `add_*` / `replace_*` / `set_*` / `record_*` method. It's
+    mutable, with no evaluation and no version, and `copy()` copies its lists
+    and inventory. `SpellSource` moved here too. `Grants` wraps it
+    (`Grants.sources`). `ClassBuilder`, `SpeciesBuilder`, `DruidBase` and
+    `Scrapers/GenerateClassHandouts.py` write into it, and
+    `CharacterBuilder.build()` returns `Character(sources)`.
+  - **`Character(sources, *, apply_order=in_given_order)`** is a plain class:
+    - it keeps its own copy of the sources, and `character.sources` returns
+      another copy to change and build a variant from;
+    - every source is a read-only property;
+    - the stamp index, the extension tree, `spells` and `ledger` are
+      `functools.cached_property`, so each is worked out at most once;
+    - `base_abilities`, `base_speed` and `size` are no longer `Optional`.
+      Reading one that was never set raises "Character … must be set" through
+      a single `_required()` helper, which also replaces the repeated
+      `if … is None: raise` blocks in `ledger`, `validate()`,
+      `get_base_ability_score()` and `get_base_speed()`;
+    - `Character` has no `inventory`. It exposes the reads only: `armors`,
+      `weapons`, `items`, and, for the writers, `equipment_entries`,
+      `starting_equipment_entry` and `current_gold`.
+  - **Deleted:** the version machinery (`_version`, `_changed()`,
+    `on_setattr`, the version-keyed caches, `Inventory.version`) and every
+    mutator on `Character`.
+  - **One change from the plan:** the required fields are checked when read,
+    not in the constructor. Unit tests build characters from partial sources
+    (for example only a spellcasting ability, to count domain spells), and
+    `validate()` still needs to report every missing field on an incomplete
+    build.
+  - **Tests:**
+    - New fixture `make_sources` in `tests/conftest.py`. `make_character(...)`
+      is now `Character(make_sources(...))`. `tests/_grants.py` grants into
+      sources.
+    - About 250 test sites now change sources and then build a `Character`.
+      The `apply_features` helpers return a new `Character`. The order tests
+      pass `apply_order=`.
+    - The cache-invalidation tests are replaced by
+      `TestACharacterIsBuiltFromItsSources` (`tests/test_character_model.py`):
+      no mutators and no `inventory`, read-only fields, changing the sources
+      afterwards changes nothing, the inventory is copied, and an unset
+      required source raises when read.
+  - **Docs:** `Notes/feature-application-model.md`, and the agent files
+    `dnd-builds`, `dnd-builds-haiku`, `dnd-equipment` and `dnd-test-bughunter`.
+  - **Verified:**
+    - A, B: 3355 passed. E: 1096 slow passed. Both also pass with
+      `PYTHONHASHSEED` 1 and 2. D: 0 errors.
+    - F: all 3585 pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree: no new errors, 3 fixed.
+    - C: `RunCharacterCreator.py`, `RunBuildGroups.py` and `RunItemSheets.py`
+      run. Offscreen, the Creator loads 34 build files, with only the existing
+      multiclass warnings, and the combat window builds for its scenario with
+      the Players group.
+
 
 - **Goal:** the versioning machinery disappears. A `Character` is evaluated
   once and can never go stale.
@@ -1246,7 +1307,9 @@ refers to the checks in section 4.
      - AC without a shield is `calculate_armor_class(ignore_shield=True)`, and
        "with Shield" is shown only while wielding one;
      - feature names use `feature.name` (no `getattr`);
-     - weapons use `attack_profile`.
+     - weapons use the weapon's own queries against the character
+       (`calculate_total_attack_roll_bonus_int(character)` and so on; Step 10
+       was skipped).
 
      Regenerate the combatant snapshot, and review the diff: only speed and
      no-shield AC may change.
@@ -1254,7 +1317,7 @@ refers to the checks in section 4.
      `damage_immunities()`, `condition_immunities()`, `languages()`,
      `tool_proficiencies()`, `armor_training()`.
      - The writers stop reading `character.ledger` (12 reads; the weapons'
-       3 went in Step 10), and the ledger becomes private.
+       3 went in Step 9), and the ledger becomes private.
      - Delete `Recorder`, `@records` and `SealedError`: only `Effects` writes,
        only inside `Character`, so nothing is left to guard. If you keep the
        ledger public instead, keep `Recorder`, but make `seal()` list its
@@ -1413,7 +1476,7 @@ diff -r <scratchpad>/baseline <scratchpad>/after
    - *(Recommended.)* `Character` becomes the only read API for the sheet and
      combat; parts become an internal detail; `Recorder` and `SealedError` can
      go. Only 15 reads outside `Model/` use the ledger today: 3 in weapons,
-     which Step 10 removes, and 12 in the writers.
+     which Step 9 removed, and 12 in the writers.
    - Alternative: keep `character.ledger.<part>` public for breakdowns, and
      keep `Recorder`.
 3. **A root `pyrightconfig.json` in standard mode (Step 15).**

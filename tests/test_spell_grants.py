@@ -12,6 +12,7 @@ import pytest
 from Core.Definitions import Ability
 from Model.Character import Character
 from Model.Grants import Grants
+from Model.CharacterSources import CharacterSources
 
 INT = Ability.INTELLIGENCE
 WIS = Ability.WISDOM
@@ -23,49 +24,53 @@ def _names(character: Character) -> list[str]:
 
 class TestGrantsScope:
     def test_stamps_level_and_grant(self):
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 5, "Wizard").add_spell("Fireball")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 5, "Wizard").add_spell("Fireball")
+        character = Character(sources)
         (spell,) = character.spells
         assert (spell.grant_level, spell.granted_by) == (5, "Wizard")
 
     def test_granted_by_can_be_overridden(self):
         # An origin feat granted through a species lists its spells under
         # the feat.
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Human").add_spell(
-            "Bless", WIS, granted_by="Magic Initiate"
-        )
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Human").add_spell("Bless", WIS, granted_by="Magic Initiate")
+        character = Character(sources)
         assert character.spells[0].granted_by == "Magic Initiate"
 
     def test_keeps_the_free_text_source_label(self):
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Wizard").add_spell("Shield", source="Chosen spell")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Wizard").add_spell("Shield", source="Chosen spell")
+        character = Character(sources)
         assert character.spells[0].source == "Chosen spell"
 
 
 class TestDuplicates:
     def test_the_same_spell_from_two_grants_is_listed_for_each(self):
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Wizard").add_cantrip("Prestidigitation")
-        Grants(character, 1, "Rock Gnome").add_cantrip("Prestidigitation")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Wizard").add_cantrip("Prestidigitation")
+        Grants(sources, 1, "Rock Gnome").add_cantrip("Prestidigitation")
+        character = Character(sources)
         assert sorted(s.granted_by for s in character.spells) == [
             "Rock Gnome",
             "Wizard",
         ]
 
     def test_the_same_spell_twice_from_one_grant_fails(self):
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Wizard").add_spell("Shield")
-        Grants(character, 3, "Wizard").add_spell("Shield")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Wizard").add_spell("Shield")
+        Grants(sources, 3, "Wizard").add_spell("Shield")
+        character = Character(sources)
         with pytest.raises(ValueError, match="already added"):
             character.spells
 
 
 class TestReplacements:
     def test_a_replacement_keeps_level_grant_and_label(self):
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Wizard").add_spell("Sleep", source="Chosen spell")
-        character.replace_spell("Sleep", "Shield")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Wizard").add_spell("Sleep", source="Chosen spell")
+        sources.replace_spell("Sleep", "Shield")
+        character = Character(sources)
         (spell,) = character.spells
         assert (spell.name, spell.grant_level, spell.granted_by, spell.source) == (
             "Shield",
@@ -75,33 +80,37 @@ class TestReplacements:
         )
 
     def test_a_replacement_may_be_declared_before_its_target(self):
-        character = Character(spell_casting_ability=INT)
-        character.replace_spell("Sleep", "Shield")
-        Grants(character, 1, "Wizard").add_spell("Sleep")
+        sources = CharacterSources(spell_casting_ability=INT)
+        sources.replace_spell("Sleep", "Shield")
+        Grants(sources, 1, "Wizard").add_spell("Sleep")
+        character = Character(sources)
         assert _names(character) == ["Shield"]
 
     def test_replacing_a_spell_nobody_grants_fails(self):
-        character = Character(spell_casting_ability=INT)
-        character.replace_spell("Sleep", "Shield")
+        sources = CharacterSources(spell_casting_ability=INT)
+        sources.replace_spell("Sleep", "Shield")
+        character = Character(sources)
         with pytest.raises(ValueError, match="not found to replace"):
             character.spells
 
     def test_a_chain_fails(self):
         # Sleep -> Shield -> Mage Armor would depend on which resolves first.
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Wizard").add_spell("Sleep")
-        character.replace_spell("Sleep", "Shield")
-        character.replace_spell("Shield", "Mage Armor")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Wizard").add_spell("Sleep")
+        sources.replace_spell("Sleep", "Shield")
+        sources.replace_spell("Shield", "Mage Armor")
+        character = Character(sources)
         with pytest.raises(ValueError, match="chain"):
             character.spells
 
     def test_replacing_into_a_spell_already_known_fails(self):
         # The six builds this step fixed: swapping Sleep for a spell learned
         # at a later level listed that spell twice.
-        character = Character(spell_casting_ability=INT)
-        Grants(character, 1, "Bard").add_spell("Sleep")
-        Grants(character, 4, "Bard").add_spell("Enhance Ability")
-        character.replace_spell("Sleep", "Enhance Ability")
+        sources = CharacterSources(spell_casting_ability=INT)
+        Grants(sources, 1, "Bard").add_spell("Sleep")
+        Grants(sources, 4, "Bard").add_spell("Enhance Ability")
+        sources.replace_spell("Sleep", "Enhance Ability")
+        character = Character(sources)
         with pytest.raises(ValueError, match="already added"):
             character.spells
 
@@ -115,8 +124,8 @@ def test_grant_order_never_changes_the_spells():
     ]
     results = set()
     for ordered in itertools.permutations(calls):
-        character = Character(spell_casting_ability=INT)
+        sources = CharacterSources(spell_casting_ability=INT)
         for call in ordered:
-            call(character)
-        results.add(tuple(character.spells))
+            call(sources)
+        results.add(tuple(Character(sources).spells))
     assert len(results) == 1

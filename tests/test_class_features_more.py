@@ -40,13 +40,15 @@ from CharacterContent.Features.ClassFeatures.Wizard import WizardFeatures
 from Model.Content.Feature import RegainedOn
 from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Ability, CharacterClass, Skill
+from Model.Character import Character
 
 
 def apply_features(character, features):
+    """`character` with `features` granted, validated."""
+    sources = character.sources
     for feature in features:
-        character.add_effect(feature)
-    character.validate()
-    return character
+        sources.add_effect(feature)
+    return Character(sources).validate()
 
 
 def xfail_bug(reason):
@@ -185,13 +187,12 @@ class TestRogueSneakAttack:
 
 
 class TestRogueExpertise:
-    def test_doubles_proficiency_bonus_on_chosen_skills(self, make_character):
-        character = make_character(
-            levels={CharacterClass.ROGUE: 5}
-        )  # proficiency bonus +3
-        character.add_effect(SkillProficiency([Skill.STEALTH]))
-        character.add_effect(SkillProficiency([Skill.PERCEPTION]))
-        apply_features(
+    def test_doubles_proficiency_bonus_on_chosen_skills(self, make_sources):
+        sources = make_sources(levels={CharacterClass.ROGUE: 5})  # proficiency bonus +3
+        sources.add_effect(SkillProficiency([Skill.STEALTH]))
+        sources.add_effect(SkillProficiency([Skill.PERCEPTION]))
+        character = Character(sources)
+        character = apply_features(
             character, [RogueFeatures.Expertise(Skill.STEALTH, Skill.PERCEPTION)]
         )
         dex_mod = character.get_ability_modifier(Ability.DEXTERITY)
@@ -223,7 +224,7 @@ class TestRogueCunningStrike:
 class TestRogueSlipperyMind:
     def test_grants_wisdom_and_charisma_saving_throws(self, make_character):
         character = make_character(levels={CharacterClass.ROGUE: 15})
-        apply_features(character, [RogueFeatures.SlipperyMind()])
+        character = apply_features(character, [RogueFeatures.SlipperyMind()])
         assert character.is_proficient_in_saving_throw(Ability.WISDOM)
         assert character.is_proficient_in_saving_throw(Ability.CHARISMA)
         assert not character.is_proficient_in_saving_throw(Ability.STRENGTH)
@@ -348,10 +349,11 @@ class TestArcaneRecovery:
 
 
 class TestWizardScholar:
-    def test_grants_expertise_in_chosen_intelligence_skill(self, make_character):
-        character = make_character(levels={CharacterClass.WIZARD: 2})
-        character.add_effect(SkillProficiency([Skill.ARCANA]))
-        apply_features(character, [WizardFeatures.Scholar(Skill.ARCANA)])
+    def test_grants_expertise_in_chosen_intelligence_skill(self, make_sources):
+        sources = make_sources(levels={CharacterClass.WIZARD: 2})
+        sources.add_effect(SkillProficiency([Skill.ARCANA]))
+        character = Character(sources)
+        character = apply_features(character, [WizardFeatures.Scholar(Skill.ARCANA)])
         int_mod = character.get_ability_modifier(Ability.INTELLIGENCE)
         proficiency_bonus = character.get_proficiency_bonus()
         assert (
@@ -411,7 +413,7 @@ class TestPrimalOrderMagician:
         character = make_character(
             wisdom=16, intelligence=10, levels={CharacterClass.DRUID: 1}
         )  # WIS mod +3, INT mod +0
-        apply_features(
+        character = apply_features(
             character,
             [DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN)],
         )

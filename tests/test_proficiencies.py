@@ -44,6 +44,7 @@ from Core.Definitions import (
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
 from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
+from Model.Character import Character
 
 ALL_BUILDS = {**BuildSelector.builds(), **ExampleSelector.builds()}
 
@@ -70,10 +71,11 @@ MULTICLASS_TEXT = {
 
 
 @pytest.mark.parametrize("character_class", list(CharacterClass))
-def test_multiclass_proficiencies_match_class_text(character_class, make_character):
+def test_multiclass_proficiencies_match_class_text(character_class, make_sources):
     armor, weapons, tools = MULTICLASS_TEXT[character_class]
-    character = make_character()
-    character.add_effect(MulticlassProficiencies(character_class))
+    sources = make_sources()
+    sources.add_effect(MulticlassProficiencies(character_class))
+    character = Character(sources)
     assert character.ledger.equipment_training.armor_training == armor
     assert character.ledger.equipment_training.weapon_proficiencies == weapons
     assert {
@@ -101,9 +103,12 @@ class TestMulticlassing:
 
     def test_resuming_a_class_does_not_grant_its_proficiencies_again(self):
         applied = AppliedLevelFeatures()
-        data = _multiclass_builder(CharacterClass.WARLOCK, 1).create(None, applied)
-        data = _multiclass_builder(CharacterClass.WARLOCK, 3).create(data, applied)
-        bundles = [f for f in data.features if isinstance(f, ClassProficiencies)]
+        sources = _multiclass_builder(CharacterClass.WARLOCK, 1).create(None, applied)
+        sources = _multiclass_builder(CharacterClass.WARLOCK, 3).create(
+            sources, applied
+        )
+        features = Character(sources).features
+        bundles = [f for f in features if isinstance(f, ClassProficiencies)]
         assert [type(f) for f in bundles] == [MulticlassProficiencies]
 
     def test_starting_class_keeps_its_full_proficiencies(self):
@@ -116,42 +121,47 @@ class TestMulticlassing:
 
 
 class TestFeaturesGrantProficiencies:
-    def test_martial_weapon_training_feat(self, make_character):
+    def test_martial_weapon_training_feat(self, make_sources):
         # "Weapon Proficiency. You gain proficiency with Martial weapons."
-        character = make_character(strength=14)
+        sources = make_sources(strength=14)
         longsword = Weapons.Longsword()
+        character = Character(sources)
         assert not longsword.is_proficient(character)
-        character.add_effect(
+        sources.add_effect(
             GeneralFeats.MartialWeaponTraining(
                 character_level=4, ability=Ability.STRENGTH
             )
         )
+        character = Character(sources)
         assert longsword.is_proficient(character)
         assert character.get_ability_score(Ability.STRENGTH) == 15
 
-    def test_druid_warden(self, make_character):
+    def test_druid_warden(self, make_sources):
         # "Warden. Trained for battle, you gain proficiency with Martial
         # weapons and training with Medium armor." (only Medium armor used to
         # be granted)
-        character = make_character()
-        character.add_effect(
+        sources = make_sources()
+        sources.add_effect(
             DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN)
         )
+        character = Character(sources)
         assert MARTIAL in character.ledger.equipment_training.weapon_proficiencies
         assert MEDIUM in character.ledger.equipment_training.armor_training
 
-    def test_druid_magician_grants_no_proficiencies(self, make_character):
-        character = make_character()
-        character.add_effect(
+    def test_druid_magician_grants_no_proficiencies(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(
             DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN)
         )
+        character = Character(sources)
         assert not character.ledger.equipment_training.weapon_proficiencies
         assert not character.ledger.equipment_training.armor_training
 
-    def test_forge_domain_smiths_tools(self, make_character):
+    def test_forge_domain_smiths_tools(self, make_sources):
         # "You gain proficiency with heavy armor and smith's tools."
-        character = make_character()
-        character.add_effect(ClericForgeFeatures.BonusProficiencies())
+        sources = make_sources()
+        sources.add_effect(ClericForgeFeatures.BonusProficiencies())
+        character = Character(sources)
         assert ArmorType.HEAVY in character.ledger.equipment_training.armor_training
         assert [
             t.name for t in character.ledger.equipment_training.tool_proficiencies
@@ -186,24 +196,25 @@ DIS, ADV, NEUTRAL = (
 
 
 class TestArmorTraining:
-    def test_untrained_shield_grants_no_ac(self, make_character):
-        untrained = make_character(dexterity=14)
-        untrained.add_effect(Armor.ShieldArmor())
+    def test_untrained_shield_grants_no_ac(self, make_sources):
+        untrained_sources = make_sources(dexterity=14)
+        untrained_sources.add_effect(Armor.ShieldArmor())
+        untrained = Character(untrained_sources)
         assert untrained.calculate_armor_class() == 12
         assert untrained.warnings == [
             "Wielding a Shield without Shield training: it grants no AC bonus."
         ]
-        trained = make_character(dexterity=14, armor_training=[SHIELD])
-        trained.add_effect(Armor.ShieldArmor())
+        trained_sources = make_sources(dexterity=14, armor_training=[SHIELD])
+        trained_sources.add_effect(Armor.ShieldArmor())
+        trained = Character(trained_sources)
         assert trained.calculate_armor_class() == 14
         assert trained.warnings == []
 
-    def test_untrained_armor_disadvantage_on_strength_and_dexterity(
-        self, make_character
-    ):
-        character = make_character(dexterity=14)
-        character.add_effect(Armor.LeatherArmor())
+    def test_untrained_armor_disadvantage_on_strength_and_dexterity(self, make_sources):
+        sources = make_sources(dexterity=14)
+        sources.add_effect(Armor.LeatherArmor())
         # AC itself is unaffected.
+        character = Character(sources)
         assert character.calculate_armor_class() == 11 + 2
         for skill in (Skill.ATHLETICS, Skill.ACROBATICS, Skill.STEALTH):
             assert character.get_skill_roll_condition(skill) == DIS
@@ -229,49 +240,53 @@ class TestArmorTraining:
             "cast spells."
         ]
 
-    def test_skill_uses_its_actual_ability(self, make_character):
+    def test_skill_uses_its_actual_ability(self, make_sources):
         # Athletics rolled with Wisdom isn't a Strength test.
-        character = make_character(wisdom=14)
-        character.add_effect(SkillToAbilityOverride([Skill.ATHLETICS], Ability.WISDOM))
-        character.add_effect(Armor.LeatherArmor())
+        sources = make_sources(wisdom=14)
+        sources.add_effect(SkillToAbilityOverride([Skill.ATHLETICS], Ability.WISDOM))
+        sources.add_effect(Armor.LeatherArmor())
+        character = Character(sources)
         assert character.get_skill_roll_condition(Skill.ATHLETICS) == NEUTRAL
 
-    def test_cancels_with_advantage(self, make_character):
-        character = make_character()
-        character.add_effect(Armor.LeatherArmor())
-        character.add_effect(InitiativeRollCondition(ADV))
-        character.add_effect(SavingThrowAdvantage([Ability.DEXTERITY]))
+    def test_cancels_with_advantage(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(Armor.LeatherArmor())
+        sources.add_effect(InitiativeRollCondition(ADV))
+        sources.add_effect(SavingThrowAdvantage([Ability.DEXTERITY]))
+        character = Character(sources)
         assert character.initiative_roll_condition == NEUTRAL
         assert character.get_saving_throw_roll_condition(Ability.DEXTERITY) == NEUTRAL
 
-    def test_training_granted_after_the_armor_counts(self, make_character):
+    def test_training_granted_after_the_armor_counts(self, make_sources):
         effects = [
             Armor.LeatherArmor(),
             Armor.ShieldArmor(),
             GrantArmorTraining([LIGHT, SHIELD]),
         ]
         for ordered in itertools.permutations(effects):
-            character = make_character(dexterity=14)
+            sources = make_sources(dexterity=14)
             for effect in ordered:
-                character.add_effect(effect)
+                sources.add_effect(effect)
+            character = Character(sources)
             assert character.warnings == []
             assert character.get_skill_roll_condition(Skill.STEALTH) == NEUTRAL
             assert character.calculate_armor_class() == 11 + 2 + 2
 
-    def test_armor_class_without_the_shield(self, make_character):
+    def test_armor_class_without_the_shield(self, make_sources):
         # A Monk's Unarmored Defense stops working with a Shield; setting the
         # Shield aside brings it back (the sheet's "w/o Shield" figure).
-        character = make_character(dexterity=14, wisdom=16, armor_training=[SHIELD])
-        character.add_effect(MonkFeatures.UnarmoredDefense())
-        character.add_effect(Armor.ShieldArmor())
+        sources = make_sources(dexterity=14, wisdom=16, armor_training=[SHIELD])
+        sources.add_effect(MonkFeatures.UnarmoredDefense())
+        sources.add_effect(Armor.ShieldArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 10 + 2 + 2
         assert character.calculate_armor_class(ignore_shield=True) == 10 + 2 + 3
 
     def test_sheet_shows_the_warning(self, tmp_path):
-        data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()  # no armor training
-        data.add_armor(Armor.LeatherArmor())
+        sources = type(ALL_BUILDS["SpellSlotTestWizard5"])().build().sources
+        sources.add_armor(Armor.LeatherArmor())  # without armor training
         HtmlCharacterSheetWriter().write_character_sheet(
-            data, output_folder=str(tmp_path)
+            Character(sources), output_folder=str(tmp_path)
         )
         page = (tmp_path / "character.html").read_text(encoding="utf-8")
         assert "class='sheet-warning'" in page

@@ -29,11 +29,18 @@ then evaluated once in the rules' own dependency order. Here `Effects` is the le
 
 ## The pipeline
 
-There is one object, `Character` (`Model/Character.py`). It holds the player's decisions and
-the sources they grant (features, spells, fighting styles, `inventory`, base ability scores and
-speed), and answers every query (`calculate_armor_class()`, `get_skill_modifier()`, ...).
+Two objects, built in that order:
 
-Evaluation is internal and lazy. The first query after a change builds a fresh, empty `Ledger`
+- **`CharacterSources`** (`Model/CharacterSources.py`) is what builders fill in: the player's
+  decisions and the sources they grant (features, spells, fighting styles, `inventory`, base
+  ability scores and speed). It is mutable and answers no rules questions.
+- **`Character`** (`Model/Character.py`) is built from them (`Character(sources)`) and never
+  changes. It takes its own copy of the sources, exposes them read-only, and answers every query
+  (`calculate_armor_class()`, `get_skill_modifier()`, ...). `CharacterBuilder.build()` returns
+  one. To try a change, take `character.sources` (a copy), change it, and build a new
+  `Character`.
+
+Evaluation is internal and lazy. The first query builds a fresh, empty `Ledger`
 (`Model/Effects.py`: one part per concern, see below) - no part starts from a copy of a source -
 then:
 
@@ -48,11 +55,9 @@ bows) is recorded as a `WeaponAttackBonus` / `WeaponDamageBonus` improvement wit
 weapons it covers, and each weapon combines it with its own bonuses on read. So a builder's weapon
 objects are shared by every sheet it builds, with no copies and no idempotence guards.
 
-The evaluation is cached under a version key: the character's own version (bumped by every
-`add_*`/`set_*` call and, through an attrs `on_setattr` hook, by assigning any public field), the
-inventory's version (bumped by every gear change), and the effect order (`_apply_order`, a
-test seam). Extensions are sources on the character like any other grant, so declaring one
-re-evaluates too.
+The evaluation is a `cached_property`: a `Character` never changes, so it is evaluated at most
+once and needs no version bookkeeping. The effect order is a constructor argument
+(`Character(sources, apply_order=...)`, a test seam).
 
 ## Where things live
 
@@ -60,7 +65,7 @@ re-evaluates too.
 
 | Kind | Question it answers | Where it lives | Example |
 |---|---|---|---|
-| **Source** | What did the player choose, or what were they granted? | A field on `Character`, set by a builder (`add_*` / `set_*`, or through a `Grants` scope) | `class_levels`, `base_abilities`, `base_speed`, `size`, `spell_casting_ability`, `fixed_spell_slots`, `feature_grants`, `spell_grants`, `inventory` |
+| **Source** | What did the player choose, or what were they granted? | A field on `CharacterSources`, set by a builder (`add_*` / `set_*`, or through a `Grants` scope); `Character` exposes each read-only | `class_levels`, `base_abilities`, `base_speed`, `size`, `spell_casting_ability`, `fixed_spell_slots`, `feature_grants`, `spell_grants`, `inventory` |
 | **Ledger** | What did the effects record? | `character.ledger.<part>`: evaluated on demand, sealed, read-only. A part holds only what effects recorded - never a copy of a source, never a final value | `character.ledger.skills`, `character.ledger.senses` |
 | **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `CharacterView`) to a part's resolver | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features` |
 
@@ -68,8 +73,8 @@ Rules of thumb:
 
 - Anything derived is not stored on `Character`; a source is never copied into a part.
 - Builder bookkeeping (the level being granted, who grants it) lives in the builder's `Grants`
-  scope (`Model/Grants.py`), never on `Character`. `Character.add_feature` / `add_spell` require a
-  `stamp`, so every grant goes through a scope (tests use `tests/_grants.py`).
+  scope (`Model/Grants.py`), never on `Character`. `CharacterSources.add_feature` / `add_spell`
+  require a `stamp`, so every grant goes through a scope (tests use `tests/_grants.py`).
 - A feature is never changed after it's granted: a later level's addition is its own grant
   (an extension, a spell).
 - `size`, `base_speed`, `spell_casting_ability` and `fixed_spell_slots` stay flat source fields:
@@ -226,10 +231,10 @@ Every part is read through `character.ledger`. Recording goes through
 `Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
 each write one part; `Character` has none of them, and once the `Ledger` is evaluated it is
 sealed (`Model/Recorder.py`): every part mutator raises `SealedError`, so nothing can record onto
-an evaluation that the next change would discard. A test or tool applying one feature to a bare
-character grants it with `character.add_effect(feature)`, a real source like any other.
+an evaluation after the fact. A test or tool applying one feature to a bare character grants it
+with `sources.add_effect(feature)`, a real source like any other, and builds `Character(sources)`.
 No part holds a copy of a source. The player's scores before any increase are `base_abilities`,
-an immutable `AbilityScores` (change one by assigning `base_abilities.with_scores(...)`); the final
+an immutable `AbilityScores` (change one by assigning `sources.base_abilities.with_scores(...)`); the final
 scores are the `get_ability_score()` / `get_own_ability_score()` queries. Likewise
 `character.ledger.speed` is the `Speed` part (bonuses only), and the species' walking speed is
 `base_speed`.

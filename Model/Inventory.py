@@ -6,9 +6,9 @@ from CharacterContent - armor, weapons and items are the base classes in
 Model/Content/.
 CharacterBuilder seeds an Inventory (Builds/StartingEquipment.py builds the
 Starting Equipment entry) and delegates add_adventuring_gear/drop_item/
-get_starting_item to it; build() hands each Character its own copy
-(Character.inventory), whose armors/weapons/items are what AC, attacks and
-carrying capacity read.
+get_starting_item to it; build() hands each Character its own copy (in its
+CharacterSources), whose armors/weapons/items are what AC, attacks and
+carrying capacity read. A Character exposes only the reads.
 """
 
 from __future__ import annotations
@@ -86,9 +86,6 @@ class Inventory:
     OTHER_EQUIPMENT_LABEL = "Other Equipment"
 
     def __init__(self):
-        # Goes up on every change, so a Character knows when its cached
-        # evaluation is out of date (see Character._get_effects).
-        self.version = 0
         self._entries: list[EquipmentEntry] = []
         self._starting_entry: Optional[EquipmentEntry] = None
         self._starting_gold: Optional[float] = None
@@ -117,7 +114,6 @@ class Inventory:
                 copied._other_entry = entry_copy
         copied._starting_gold = self._starting_gold
         copied._unarmed_strike = self._unarmed_strike
-        copied.version = self.version
         return copied
 
     def _get_other_entry(self) -> EquipmentEntry:
@@ -127,15 +123,12 @@ class Inventory:
         return self._other_entry
 
     def add_armor(self, armor: AbstractArmor) -> None:
-        self.version += 1
         self._get_other_entry().armors.append(armor)
 
     def add_weapon(self, weapon: AbstractWeapon) -> None:
-        self.version += 1
         self._get_other_entry().weapons.append(weapon)
 
     def add_item(self, item: Item, quantity: int = 1) -> None:
-        self.version += 1
         self._get_other_entry().items.append((item, quantity))
 
     def set_starting_equipment(
@@ -150,7 +143,6 @@ class Inventory:
         all three out). Call once."""
         if self._starting_entry is not None:
             raise ValueError("set_starting_equipment() was already called.")
-        self.version += 1
         self._unarmed_strike = unarmed_strike
         self._starting_entry = entry
         self._entries.append(entry)
@@ -172,7 +164,6 @@ class Inventory:
         amount paid - to mark it as purchased instead. Pass gold=X for a
         net GP change from this entry that isn't tied to a specific item
         (loot found, a cost paid) - positive gains, negative spends."""
-        self.version += 1
         entry = EquipmentEntry(label=label, gold=gold)
         for a in armor or []:
             unwrapped, price = _unwrap_bought(a)
@@ -247,7 +238,6 @@ class Inventory:
                 f"Cannot drop {item.name!r}: it isn't in this "
                 "character's equipment (already dropped, or never added?)."
             )
-        self.version += 1
         if self._unarmed_strike is item:
             self._unarmed_strike = None
         for entry in self._entries:
@@ -280,7 +270,6 @@ class Inventory:
             raise ValueError(
                 f"Only {total_owned} {item_type.__name__} owned, cannot consume {quantity}."
             )
-        self.version += 1
         remaining = quantity
         for entry in self._entries:
             if remaining <= 0:

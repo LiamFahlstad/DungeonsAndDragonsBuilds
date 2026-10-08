@@ -1,12 +1,17 @@
-"""The one object a character is: the player's decisions and the sources they
-grant (features, spells, fighting styles, inventory), plus every stat worked
-out from them.
+"""The one object a character is: the sources it was built from (the player's
+choices and every feature, spell, fighting style and item granted - see
+Model/CharacterSources.py) plus every stat worked out from them.
 
-Evaluation is internal and lazy. The first query after any change builds a
-fresh Ledger (Model/Effects.py) by applying every feature, armor, weapon,
-item and fighting style in iter_stat_effects() to a write-only Effects view of
-it, seals it, then answers queries from it until the sources change again. A
-version counter decides when that is (see _get_ledger).
+A Character is finished and read-only. Builders fill in a CharacterSources
+and hand it over: `Character(sources)` keeps its own copy, so nothing can
+change it afterwards. Every derived value (the extension tree, the stamps, the
+resolved spells and the Ledger) is worked out once, on first use. To get a
+variant, build a new one from changed sources:
+`Character(attr.evolve(character.sources, ...))`.
+
+Evaluation applies every feature, armor, weapon, item and fighting style in
+iter_stat_effects() to a write-only Effects view of a fresh Ledger
+(Model/Effects.py) and seals it; queries then answer from it.
 
 The Model package imports nothing from CharacterContent, not even for type
 hints: features, fighting styles, armor, weapons and items are the base
@@ -17,9 +22,8 @@ narrow them back.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Iterator, Optional, Sequence, TypeVar
-
-import attr
+import functools
+from typing import Callable, Iterator, Optional, Sequence, TypeVar
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
@@ -27,187 +31,174 @@ from Core.Rules import MAX_ATTUNED_ITEMS, MAX_LEVEL, ability_modifier, proficien
 from Core.SpellcastingRules import SlotProgression
 from Core.Weapons import WeaponTraits
 from Model.AbilityScores import AbilityScores
+from Model.CharacterSources import CharacterSources
 from Model.ClassLevels import ClassLevels
+from Model.Content.Armor import AbstractArmor
+from Model.Content.Effect import Effect
+from Model.Content.Feature import Feature
+from Model.Content.FightingStyle import FightingStyle
+from Model.Content.Item import Item
+from Model.Content.Weapon import AbstractWeapon
 from Model.Effects import Effects, Ledger
-from Model.FeatureGrants import ExtensionTree, FeatureGrant, IfParentMissing
-from Model.Inventory import Inventory
+from Model.FeatureGrants import ExtensionTree, FeatureGrant
+from Model.Inventory import EquipmentEntry
 from Model.Records.GrantStamp import GrantStamp
 from Model.Records.SourcedValue import SourcedValue
 from Model.Senses import SenseGrant
-from Model.Content.Feature import Feature
-from Model.Content.Weapon import AbstractWeapon
-from Model.Content.Armor import AbstractArmor
-from Model.Content.Item import Item
-from Model.Content.FightingStyle import FightingStyle
-from Model.Content.Effect import Effect
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
 
 FeatureT = TypeVar("FeatureT", bound=Feature)
+T = TypeVar("T")
+ApplyOrder = Callable[[list[Effect]], list[Effect]]
 
 
-def _in_given_order(effects: list[Effect]) -> list[Effect]:
+def in_given_order(effects: list[Effect]) -> list[Effect]:
     return effects
 
 
-def _count_change(character: "Character", attribute: Any, value: Any) -> Any:
-    """attrs on_setattr hook: assigning any public field is a change to the
-    character's sources."""
-    if not attribute.name.startswith("_"):
-        object.__setattr__(character, "_version", character._version + 1)
+def _required(value: Optional[T], name: str) -> T:
+    """A source every finished character has; builders fill them in
+    piecemeal, so CharacterSources holds them as Optional."""
+    if value is None:
+        raise ValueError(f"Character {name} must be set.")
     return value
 
 
-class SpellSource:
-    """Shared `source=` labels for add_spell/add_cantrip (any free text works)."""
-
-    CHOSEN = "Chosen spell"
-
-
-@attr.s(auto_attribs=True, on_setattr=_count_change)
 class Character:
-    character_name: Optional[str] = None
-    is_example: bool = False
-    # Levels, level-by-level history, base class and subclasses - see
-    # Model/ClassLevels.py. character_subclass/base_class/
-    # level_per_class/class_by_character_level below are thin delegating
-    # properties kept for the many existing readers of those names.
-    class_levels: ClassLevels = attr.Factory(ClassLevels)
-    # The player's ability scores before any increase - immutable; the final
-    # scores are get_ability_score() (see Model/AbilityIncreases.py).
-    base_abilities: Optional[AbilityScores] = None
-    # Walking speed given by the species, before any bonus (see
-    # calculate_speed).
-    base_speed: Optional[int] = None
-    size: Optional[Definitions.CreatureSize] = None
+    def __init__(
+        self, sources: CharacterSources, *, apply_order: ApplyOrder = in_given_order
+    ):
+        """`apply_order`: the order iter_stat_effects() applies in - as listed,
+        unless a test reorders them to prove the order doesn't matter
+        (tests/test_feature_apply_order.py, tests/test_order_invariance.py)."""
+        self._sources = sources.copy()
+        self._apply_order = apply_order
 
-    # Every feature granted, plain or as an extension, each with its stamp.
-    # Their order decides nothing: the sheet sorts them (Presentation/FeatureOrder.py), and no
-    # stat depends on it (see _get_ledger). `features` lists the plain ones.
-    feature_grants: list[FeatureGrant] = attr.Factory(list)
-    invocations: list[str] = attr.Factory(list)
-    # Every spell and cantrip granted, and every declared replacement - see
-    # Model/Spells.py. `spells` is the resolved list.
-    spell_grants: list[SpellGrant] = attr.Factory(list)
-    spell_replacements: list[SpellReplacement] = attr.Factory(list)
-    spell_casting_ability: Optional[Ability] = None
-    # Spell slots set outright rather than worked out from caster levels.
-    fixed_spell_slots: dict[int, int] = attr.Factory(dict)
+    @property
+    def sources(self) -> CharacterSources:
+        """A copy of the sources this character was built from. Changing it
+        changes nothing here: build a new Character from it for a variant."""
+        return self._sources.copy()
 
-    weapon_masteries: list[AbstractWeapon] = attr.Factory(list)
-    fighting_styles: list[FightingStyle] = attr.Factory(list)
-    # Armor, weapons and items, grouped into labeled entries (Starting
-    # Equipment, then adventuring gear added later), plus starting and
-    # current gold - see Model/Inventory.py. CharacterBuilder.build()
-    # gives each character its own copy of the builder's inventory.
-    # armors/weapons/items below are its flat views, which AC, attacks and
-    # carrying capacity read.
-    inventory: Inventory = attr.Factory(Inventory)
-    experience_points: int = 0
-    # Effects granted on their own rather than by a feature or gear: a test
-    # or tool recording one improvement on a bare character (add_effect).
-    extra_effects: list[Effect] = attr.Factory(list)
-
-    # Goes up on every change to the sources above (every add_*/set_* call,
-    # and any field assignment - see _count_change). Together with the
-    # inventory's own version and _apply_order it
-    # decides when the cached evaluation is out of date.
-    _version: int = attr.ib(default=0, init=False, eq=False, repr=False)
-    _ledger: Optional[Ledger] = attr.ib(default=None, init=False, eq=False, repr=False)
-    _ledger_key: Optional[tuple[Any, ...]] = attr.ib(
-        default=None, init=False, eq=False, repr=False
-    )
-    # Resolved from feature_grants and cached under the version it was
-    # resolved at - see _extensions.
-    _extension_tree: Optional[ExtensionTree] = attr.ib(
-        default=None, init=False, eq=False, repr=False
-    )
-    _extension_tree_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
-    # {id(feature): stamp} - see _stamps.
-    _stamp_index: dict[int, GrantStamp] = attr.ib(
-        factory=dict, init=False, eq=False, repr=False
-    )
-    _stamp_index_version: int = attr.ib(default=-1, init=False, eq=False, repr=False)
-    # The order iter_stat_effects() applies in: as listed, unless a test
-    # reorders it to prove the order doesn't matter (tests/
-    # test_feature_apply_order.py, tests/test_order_invariance.py).
-    _apply_order: Callable[[list[Effect]], list[Effect]] = attr.ib(
-        default=_in_given_order, init=False, eq=False, repr=False
-    )
     # ── Sources: what the character has ──────────────────────────────────────
 
-    def _changed(self) -> None:
-        """Record a change to the sources, so the next query re-evaluates."""
-        self._version += 1
+    @property
+    def character_name(self) -> Optional[str]:
+        return self._sources.character_name
+
+    @property
+    def is_example(self) -> bool:
+        return self._sources.is_example
+
+    @property
+    def class_levels(self) -> ClassLevels:
+        return self._sources.class_levels
+
+    @property
+    def base_abilities(self) -> AbilityScores:
+        """The player's ability scores before any increase."""
+        return _required(self._sources.base_abilities, "abilities")
+
+    @property
+    def base_speed(self) -> int:
+        """Walking speed given by the species, before any bonus."""
+        return _required(self._sources.base_speed, "speed")
+
+    @property
+    def size(self) -> Definitions.CreatureSize:
+        return _required(self._sources.size, "size")
+
+    @property
+    def feature_grants(self) -> list[FeatureGrant]:
+        return self._sources.feature_grants
+
+    @property
+    def invocations(self) -> list[str]:
+        return self._sources.invocations
+
+    @property
+    def spell_grants(self) -> list[SpellGrant]:
+        return self._sources.spell_grants
+
+    @property
+    def spell_replacements(self) -> list[SpellReplacement]:
+        return self._sources.spell_replacements
+
+    @property
+    def spell_casting_ability(self) -> Optional[Ability]:
+        return self._sources.spell_casting_ability
+
+    @property
+    def fixed_spell_slots(self) -> dict[int, int]:
+        """Spell slots set outright rather than worked out from caster levels."""
+        return self._sources.fixed_spell_slots
+
+    @property
+    def weapon_masteries(self) -> list[AbstractWeapon]:
+        return self._sources.weapon_masteries
+
+    @property
+    def fighting_styles(self) -> list[FightingStyle]:
+        return self._sources.fighting_styles
+
+    @property
+    def experience_points(self) -> int:
+        return self._sources.experience_points
+
+    @property
+    def extra_effects(self) -> list[Effect]:
+        return self._sources.extra_effects
 
     @property
     def character_subclass(self) -> Optional[str]:
         return self.class_levels.character_subclass
 
-    @character_subclass.setter
-    def character_subclass(self, value: Optional[str]) -> None:
-        self._changed()
-        self.class_levels.character_subclass = value
-
     @property
     def base_class(self) -> Optional[CharacterClass]:
         return self.class_levels.base_class
-
-    @base_class.setter
-    def base_class(self, value: Optional[CharacterClass]) -> None:
-        self._changed()
-        self.class_levels.base_class = value
 
     @property
     def level_per_class(self) -> dict[CharacterClass, int]:
         return self.class_levels.level_per_class
 
-    @level_per_class.setter
-    def level_per_class(self, value: dict[CharacterClass, int]) -> None:
-        self._changed()
-        self.class_levels.level_per_class = value
-
     @property
     def class_by_character_level(self) -> dict[int, CharacterClass]:
         return self.class_levels.class_by_character_level
-
-    @class_by_character_level.setter
-    def class_by_character_level(self, value: dict[int, CharacterClass]) -> None:
-        self._changed()
-        self.class_levels.class_by_character_level = value
 
     @property
     def character_level(self) -> int:
         return self.class_levels.character_level
 
+    # The inventory is read through these, never handed out: gear added to it
+    # after the Ledger was worked out would never reach the stats.
+
     @property
     def armors(self) -> list[AbstractArmor]:
-        return self.inventory.armors
+        return self._sources.inventory.armors
 
     @property
     def weapons(self) -> list[AbstractWeapon]:
-        return self.inventory.weapons
+        return self._sources.inventory.weapons
 
     @property
     def items(self) -> list[tuple[Item, int]]:
         """(item, quantity), with same-type stacks merged."""
-        return self.inventory.items
+        return self._sources.inventory.items
 
-    def add_feature(
-        self,
-        feature: Feature,
-        *,
-        stamp: GrantStamp,
-        extends: type | Feature | None = None,
-        if_missing: IfParentMissing = IfParentMissing.ERROR,
-    ):
-        """Grant `feature` - or, with `extends`, grant it as an extension of
-        that feature (a type, or a feature instance): see FeatureGrant.
-        `stamp` says where it's granted from; builders grant through a Grants
-        scope (Model/Grants.py), which stamps it."""
-        if extends is None and if_missing != IfParentMissing.ERROR:
-            raise ValueError("if_missing only applies with extends=.")
-        self.feature_grants.append(FeatureGrant(feature, stamp, extends, if_missing))
-        self._changed()
+    @property
+    def equipment_entries(self) -> list[EquipmentEntry]:
+        """Armor, weapons, items and gold in labeled entries, as acquired."""
+        return self._sources.inventory.equipment_entries
+
+    @property
+    def starting_equipment_entry(self) -> Optional[EquipmentEntry]:
+        return self._sources.inventory.starting_equipment_entry
+
+    @property
+    def current_gold(self) -> Optional[float]:
+        return self._sources.inventory.current_gold
+
+    # ── Features ─────────────────────────────────────────────────────────────
 
     @property
     def features(self) -> list[Feature]:
@@ -215,23 +206,21 @@ class Character:
         return [g.feature for g in self.feature_grants if g.extends is None]
 
     def has_granted(self, feature: Feature) -> bool:
-        return id(feature) in self._stamps()
+        return id(feature) in self._stamps
 
     def stamp_of(self, feature: Feature) -> GrantStamp:
         """Where `feature` was granted from (a default stamp if it wasn't)."""
-        return self._stamps().get(id(feature), GrantStamp())
+        return self._stamps.get(id(feature), GrantStamp())
 
+    @functools.cached_property
     def _stamps(self) -> dict[int, GrantStamp]:
-        """{id(feature): stamp}, cached under the version it was built at."""
-        if self._stamp_index_version != self._version:
-            self._stamp_index = {id(g.feature): g.stamp for g in self.feature_grants}
-            self._stamp_index_version = self._version
-        return self._stamp_index
+        """{id(feature): stamp}."""
+        return {id(g.feature): g.stamp for g in self.feature_grants}
 
     def top_level_features(self) -> list[Feature]:
         """The features with a card of their own: every plain grant, then
         every "standalone" extension whose parent isn't granted."""
-        return [*self.features, *self._extensions().standalone]
+        return [*self.features, *self._extensions.standalone]
 
     def extensions_of(self, feature: Feature) -> list[Feature]:
         """The extensions granted onto `feature`, by grant level, then name,
@@ -247,12 +236,12 @@ class Character:
                 stamp.granted_by,
             )
 
-        return sorted(self._extensions().children_of(feature), key=canonical_order)
+        return sorted(self._extensions.children_of(feature), key=canonical_order)
 
     def iter_features_with_extensions(self) -> Iterator[Feature]:
         """Every granted feature followed by its extensions (depth-first).
         Extensions are real features: their apply() runs like any other's."""
-        tree = self._extensions()
+        tree = self._extensions
 
         def walk(features: Sequence[Feature]) -> Iterator[Feature]:
             for feature in features:
@@ -261,16 +250,33 @@ class Character:
 
         return walk(self.top_level_features())
 
+    @functools.cached_property
     def _extensions(self) -> ExtensionTree:
-        """The extension tree (Model/FeatureGrants.py), cached under the
-        version it was resolved at."""
-        if (
-            self._extension_tree is None
-            or self._extension_tree_version != self._version
-        ):
-            self._extension_tree = ExtensionTree.resolve(self.feature_grants)
-            self._extension_tree_version = self._version
-        return self._extension_tree
+        """The extension tree (Model/FeatureGrants.py)."""
+        return ExtensionTree.resolve(self.feature_grants)
+
+    def has_feature(self, feature_type: type) -> bool:
+        """Whether a feature of `feature_type` is granted plainly (not as an
+        extension)."""
+        return any(isinstance(f, feature_type) for f in self.features)
+
+    def get_features_by_type(self, feature_type: type[FeatureT]) -> list[FeatureT]:
+        return [
+            feature for feature in self.features if isinstance(feature, feature_type)
+        ]
+
+    def get_level_for_class(self, character_class: CharacterClass) -> int:
+        return self.class_levels.get_class_level(character_class)
+
+    # ── Spells ───────────────────────────────────────────────────────────────
+
+    @functools.cached_property
+    def spells(self) -> list[SpellGrant]:
+        """Every spell known, replacements applied, in canonical order (grant
+        level, name, granted_by) - see Model/Spells.py."""
+        return resolve_spells(self.spell_grants, self.spell_replacements)
+
+    # ── Weapons ──────────────────────────────────────────────────────────────
 
     def is_proficient_with_weapon(self, weapon: WeaponTraits) -> bool:
         """Whether any weapon proficiency the character has covers a
@@ -287,149 +293,16 @@ class Character:
         a weapon with these traits (e.g. the Dueling fighting style)."""
         return self.ledger.weapon_bonuses.damage_bonuses(weapon)
 
-    def has_feature(self, feature_type: type) -> bool:
-        """Whether a feature of `feature_type` is granted plainly (not as an
-        extension)."""
-        return any(isinstance(f, feature_type) for f in self.features)
-
-    def get_features_by_type(self, feature_type: type[FeatureT]) -> list[FeatureT]:
-        return [
-            feature for feature in self.features if isinstance(feature, feature_type)
-        ]
-
-    def get_level_for_class(self, character_class: CharacterClass) -> int:
-        return self.class_levels.get_class_level(character_class)
-
-    def record_class_level(self, character_level: int, character_class: CharacterClass):
-        self._changed()
-        self.class_levels.record_class_level(character_level, character_class)
-
-    def set_class_level(self, character_class: CharacterClass, level: int) -> None:
-        """Set the character's total level in `character_class` (a builder
-        resuming a class states the class's final total level)."""
-        self._changed()
-        self.class_levels.level_per_class[character_class] = level
-
-    def add_armor(self, armor: AbstractArmor):
-        """Add armor outside starting equipment and adventuring gear (see
-        Inventory.add_armor)."""
-        self.inventory.add_armor(armor)
-
-    def add_weapon(self, weapon: AbstractWeapon):
-        # Proficiency isn't decided here: the weapon works it out on read
-        # against every proficiency (AbstractWeapon.is_proficient).
-        self.inventory.add_weapon(weapon)
-
-    def add_weapon_mastery(self, weapon: AbstractWeapon):
-        self._changed()
-        self.weapon_masteries.append(weapon)
-
-    def add_fighting_style(self, fighting_style: FightingStyle):
-        self._changed()
-        self.fighting_styles.append(fighting_style)
-
-    def add_spell(
-        self,
-        spell: str,
-        spell_casting_ability: Optional[Ability] = None,
-        additional_ruling: Optional[str] = None,
-        source: Optional[str] = None,
-        *,
-        stamp: GrantStamp,
-    ):
-        """Grant a spell. `source` is a free-text label for the sheet ("Chosen
-        spell"); `stamp` says where it's granted from (builders grant through
-        a Grants scope, Model/Grants.py). The same spell from two different
-        grants is listed for each; twice from one grant fails validate()."""
-        self._changed()
-        self.spell_grants.append(
-            SpellGrant(
-                name=spell,
-                ability=self._resolve_spell_casting_ability(spell_casting_ability),
-                ruling=additional_ruling,
-                grant_level=stamp.level,
-                granted_by=stamp.granted_by,
-                source=source,
-            )
-        )
-
-    def add_cantrip(
-        self,
-        cantrip: str,
-        spell_casting_ability: Optional[Ability] = None,
-        additional_ruling: Optional[str] = None,
-        source: Optional[str] = None,
-        *,
-        stamp: GrantStamp,
-    ):
-        self.add_spell(
-            cantrip, spell_casting_ability, additional_ruling, source, stamp=stamp
-        )
-
-    @property
-    def spells(self) -> list[SpellGrant]:
-        """Every spell known, replacements applied, in canonical order (grant
-        level, name, granted_by) - see Model/Spells.py."""
-        return resolve_spells(self.spell_grants, self.spell_replacements)
-
-    def replace_spells(self, replace_spells: dict[str, str]):
-        for old_spell, new_spell in replace_spells.items():
-            self.replace_spell(old_spell, new_spell)
-
-    def replace_spell(
-        self,
-        old_spell: str,
-        new_spell: str,
-        new_spell_ability: Optional[Ability] = None,
-        new_additional_ruling: Optional[str] = None,
-    ):
-        """Declare that every grant of `old_spell` is `new_spell` instead
-        (resolved when the spells are read, so it may be declared before the
-        old spell is granted). It keeps the old grant's level and label."""
-        self._changed()
-        self.spell_replacements.append(
-            SpellReplacement(
-                old=old_spell,
-                new=new_spell,
-                ability=new_spell_ability,
-                ruling=new_additional_ruling,
-            )
-        )
-
-    def add_invocation(self, invocation: str):
-        self._changed()
-        self.invocations.append(invocation)
-
-    def add_item(self, item: Item, quantity: int = 1):
-        self.inventory.add_item(item, quantity)
-
-    def add_effect(self, effect: Effect) -> None:
-        """Grant an effect on its own (anything with apply(effects)), for a
-        test or tool recording one improvement on a bare character."""
-        self._changed()
-        self.extra_effects.append(effect)
-
-    def _resolve_spell_casting_ability(
-        self, spell_casting_ability: Optional[Ability]
-    ) -> Ability:
-        if spell_casting_ability is not None:
-            return spell_casting_ability
-        if self.spell_casting_ability is None:
-            raise ValueError(
-                "Spell casting ability must be provided if not already set."
-            )
-        return self.spell_casting_ability
-
     # ── Evaluation ───────────────────────────────────────────────────────────
 
     def iter_stat_effects(self) -> list[Effect]:
         """Everything that records effects: features and their extensions,
         armor, weapons, items, fighting styles (only those with a computed
         effect - Defense, Archery, Dueling, ... - record anything) and extra
-        effects. Each has apply(effects);
-        the order is irrelevant. (Proficiencies come from features too - e.g.
-        ClassProficiencies.) Weapons are never changed: bonuses the wielder
-        brings to them are recorded in weapon_bonuses."""
+        effects. Each has apply(effects); the order is irrelevant.
+        (Proficiencies come from features too - e.g. ClassProficiencies.)
+        Weapons are never changed: bonuses the wielder brings to them are
+        recorded in weapon_bonuses."""
         return [
             *self.iter_features_with_extensions(),
             *self.armors,
@@ -439,42 +312,26 @@ class Character:
             *self.extra_effects,
         ]
 
-    def _get_ledger(self) -> Ledger:
-        """The evaluated, sealed Ledger: cached, and rebuilt from the sources
-        on the first query after any change to them. Requirements aren't
-        checked here - validate() does that, against the complete set of
-        effects."""
-        key = (
-            self._version,
-            self.inventory.version,
-            self._apply_order,
-        )
-        if self._ledger is not None and self._ledger_key == key:
-            return self._ledger
-
-        if self.base_abilities is None:
-            raise ValueError("Character abilities must be set.")
-        if self.base_speed is None:
-            raise ValueError("Character speed must be set.")
-        if self.base_class is None:
-            raise ValueError("Character base class must be set.")
+    @functools.cached_property
+    def ledger(self) -> Ledger:
+        """What every effect recorded, one part per concern (Model/Effects.py):
+        worked out on first use and sealed, so it can be read but never
+        written. Final values are the queries below, which hand this
+        character to the parts' resolvers. Requirements aren't checked here -
+        validate() does that, against the complete set of effects."""
+        _required(self._sources.base_abilities, "abilities")
+        _required(self._sources.base_speed, "speed")
+        _required(self.base_class, "base class")
 
         ledger = Ledger()
         effects = Effects(ledger)
-        try:
-            # Ordering contract (see Model/Content/Improvements.py):
-            # every effect only records facts - Effects is write-only - and
-            # every value is worked out when it's read, so features, armor,
-            # weapons, items and fighting styles may apply in any order.
-            # tests/test_feature_apply_order.py reorders them (_apply_order)
-            # to prove it.
-            for effect in self._apply_order(self.iter_stat_effects()):
-                effect.apply(effects)
-        except BaseException:
-            self._ledger = None
-            raise
+        # Ordering contract (see Model/Content/Improvements.py): every effect
+        # only records facts - Effects is write-only - and every value is
+        # worked out when it's read, so features, armor, weapons, items and
+        # fighting styles may apply in any order.
+        for effect in self._apply_order(self.iter_stat_effects()):
+            effect.apply(effects)
         ledger.seal()
-        self._ledger, self._ledger_key = ledger, key
         return ledger
 
     def _validate_sources(self) -> None:
@@ -483,21 +340,15 @@ class Character:
         while a build is in progress), at most one worn body armor, the
         attunement limit, that every extension's parent is granted, and that
         the spells resolve (see Model/Spells.py)."""
-        self._extensions()
+        self._extensions
         self.spells
         self._validate_feats_taken_once()
-        if self.character_name is None:
-            raise ValueError("Character name must be set.")
-        if self.character_subclass is None:
-            raise ValueError("Character subclass must be set.")
-        if self.base_abilities is None:
-            raise ValueError("Character abilities must be set.")
-        if self.base_speed is None:
-            raise ValueError("Character speed must be set.")
-        if self.size is None:
-            raise ValueError("Character size must be set.")
-        if self.base_class is None:
-            raise ValueError("Character base class must be set.")
+        _required(self.character_name, "name")
+        _required(self.character_subclass, "subclass")
+        _required(self._sources.base_abilities, "abilities")
+        _required(self._sources.base_speed, "speed")
+        _required(self._sources.size, "size")
+        _required(self.base_class, "base class")
 
         # Validate one-armor rule: at most one worn non-shield armor
         worn_body_armors = [
@@ -546,18 +397,8 @@ class Character:
         Strength, multiclass ability minimums). Returns the character, so a
         build can be checked inline: `builder.build().validate()`."""
         self._validate_sources()
-        self._get_ledger().validate(self)
+        self.ledger.validate(self)
         return self
-
-    # ── The evaluated record ─────────────────────────────────────────────────
-
-    @property
-    def ledger(self) -> Ledger:
-        """What every effect recorded, one part per concern (Model/Effects.py):
-        evaluated on demand and sealed, so it can be read but never written.
-        Final values are the queries below, which hand this character to the
-        parts' resolvers."""
-        return self._get_ledger()
 
     # ── Queries ──────────────────────────────────────────────────────────────
 
@@ -609,20 +450,20 @@ class Character:
 
     @property
     def is_wearing_untrained_armor(self) -> bool:
-        return self._get_ledger().is_wearing_untrained_armor()
+        return self.ledger.is_wearing_untrained_armor()
 
     @property
     def has_shield_training(self) -> bool:
-        return self._get_ledger().has_shield_training()
+        return self.ledger.has_shield_training()
 
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
         """Disadvantage on D20 Tests with `ability` from untrained armor."""
-        return self._get_ledger().has_untrained_armor_disadvantage(ability)
+        return self.ledger.has_untrained_armor_disadvantage(ability)
 
     @property
     def warnings(self) -> list[str]:
         """Legal but bad choices the player should know about."""
-        return self._get_ledger().armor_warnings()
+        return self.ledger.armor_warnings()
 
     def calculate_initiative(self) -> int:
         return self.ledger.initiative.total(self)
@@ -647,13 +488,9 @@ class Character:
 
     def get_base_ability_score(self, ability: Ability) -> int:
         """The player's score before any increase."""
-        if self.base_abilities is None:
-            raise ValueError("Character abilities must be set.")
         return self.base_abilities.get_score(ability)
 
     def get_base_speed(self) -> int:
-        if self.base_speed is None:
-            raise ValueError("Character speed must be set.")
         return self.base_speed
 
     def get_class_level(self, character_class: CharacterClass) -> int:
@@ -672,12 +509,12 @@ class Character:
 
     def get_ability_score(self, ability: Ability) -> int:
         """The final score: base, every capped increase and equipment bonuses."""
-        return self._get_ledger().ability_increases.score(ability, self)
+        return self.ledger.ability_increases.score(ability, self)
 
     def get_own_ability_score(self, ability: Ability) -> int:
         """The score without equipment bonuses - what an armor's Strength
         requirement or a multiclass minimum checks."""
-        return self._get_ledger().ability_increases.own_score(ability, self)
+        return self.ledger.ability_increases.own_score(ability, self)
 
     def get_ability_modifier(self, ability: Ability) -> int:
         return ability_modifier(self.get_ability_score(ability))

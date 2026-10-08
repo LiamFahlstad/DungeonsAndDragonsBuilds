@@ -8,6 +8,7 @@ import pytest
 
 from CharacterContent.Items import Armor
 from Core.Definitions import ArmorType, DiceRollCondition, Skill
+from Model.Character import Character
 
 L, M, H = ArmorType.LIGHT, ArmorType.MEDIUM, ArmorType.HEAVY
 
@@ -59,38 +60,44 @@ class TestArmorClass:
         character = make_character(dexterity=16)
         assert character.calculate_armor_class() == 13
 
-    def test_light_armor_adds_full_dex(self, make_character):
-        character = make_character(dexterity=20)
-        character.add_effect(Armor.StuddedLeatherArmor())
+    def test_light_armor_adds_full_dex(self, make_sources):
+        sources = make_sources(dexterity=20)
+        sources.add_effect(Armor.StuddedLeatherArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 12 + 5
 
-    def test_medium_armor_caps_dex_at_2(self, make_character):
-        character = make_character(dexterity=20)
-        character.add_effect(Armor.BreastplateArmor())
+    def test_medium_armor_caps_dex_at_2(self, make_sources):
+        sources = make_sources(dexterity=20)
+        sources.add_effect(Armor.BreastplateArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 14 + 2
 
-    def test_medium_armor_below_cap(self, make_character):
-        character = make_character(dexterity=12)
-        character.add_effect(Armor.HalfPlateArmor())
+    def test_medium_armor_below_cap(self, make_sources):
+        sources = make_sources(dexterity=12)
+        sources.add_effect(Armor.HalfPlateArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 15 + 1
 
-    def test_medium_armor_negative_dex_applies(self, make_character):
-        character = make_character(dexterity=8, strength=15)
-        character.add_effect(Armor.HideArmor())
+    def test_medium_armor_negative_dex_applies(self, make_sources):
+        sources = make_sources(dexterity=8, strength=15)
+        sources.add_effect(Armor.HideArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 12 - 1
 
-    def test_heavy_armor_ignores_dex(self, make_character):
-        character = make_character(dexterity=20, strength=15)
-        character.add_effect(Armor.PlateArmor())
+    def test_heavy_armor_ignores_dex(self, make_sources):
+        sources = make_sources(dexterity=20, strength=15)
+        sources.add_effect(Armor.PlateArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 18
 
-    def test_heavy_armor_ignores_negative_dex(self, make_character):
-        character = make_character(dexterity=6, strength=15)
-        character.add_effect(Armor.PlateArmor())
+    def test_heavy_armor_ignores_negative_dex(self, make_sources):
+        sources = make_sources(dexterity=6, strength=15)
+        sources.add_effect(Armor.PlateArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 18
 
-    def test_shield_stacks_with_armor(self, make_character):
-        character = make_character(
+    def test_shield_stacks_with_armor(self, make_sources):
+        sources = make_sources(
             dexterity=14,
             strength=13,
             armor_training=[
@@ -100,31 +107,36 @@ class TestArmorClass:
                 ArmorType.SHIELD,
             ],
         )
-        character.add_effect(Armor.ChainMailArmor())
-        character.add_effect(Armor.ShieldArmor())
+        sources.add_effect(Armor.ChainMailArmor())
+        sources.add_effect(Armor.ShieldArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 16 + 2
 
-    def test_shield_alone_adds_to_unarmored(self, make_character):
-        character = make_character(dexterity=14, armor_training=[ArmorType.SHIELD])
-        character.add_effect(Armor.ShieldArmor())
+    def test_shield_alone_adds_to_unarmored(self, make_sources):
+        sources = make_sources(dexterity=14, armor_training=[ArmorType.SHIELD])
+        sources.add_effect(Armor.ShieldArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 10 + 2 + 2
 
-    def test_unworn_armor_has_no_effect(self, make_character):
-        character = make_character(dexterity=14)
-        character.add_effect(Armor.PlateArmor(is_wearing=False))
+    def test_unworn_armor_has_no_effect(self, make_sources):
+        sources = make_sources(dexterity=14)
+        sources.add_effect(Armor.PlateArmor(is_wearing=False))
+        character = Character(sources)
         assert character.calculate_armor_class() == 12
 
-    def test_stealth_disadvantage_applied(self, make_character):
-        character = make_character(strength=15)
-        character.add_effect(Armor.PlateArmor())
+    def test_stealth_disadvantage_applied(self, make_sources):
+        sources = make_sources(strength=15)
+        sources.add_effect(Armor.PlateArmor())
+        character = Character(sources)
         assert (
             character.get_skill_roll_condition(Skill.STEALTH)
             == DiceRollCondition.DISADVANTAGE
         )
 
-    def test_no_stealth_disadvantage_for_leather(self, make_character):
-        character = make_character(armor_training=[ArmorType.LIGHT])
-        character.add_effect(Armor.LeatherArmor())
+    def test_no_stealth_disadvantage_for_leather(self, make_sources):
+        sources = make_sources(armor_training=[ArmorType.LIGHT])
+        sources.add_effect(Armor.LeatherArmor())
+        character = Character(sources)
         assert (
             character.get_skill_roll_condition(Skill.STEALTH)
             == DiceRollCondition.NEUTRAL
@@ -134,13 +146,15 @@ class TestArmorClass:
 class TestStrengthRequirement:
     # House rule, documented in Improvements.StrengthRequirement: the engine
     # rejects the build outright. (PHB: speed -10 ft instead.)
-    def test_below_requirement_rejected(self, make_character):
-        character = make_character(strength=14)
-        character.add_effect(Armor.PlateArmor())
+    def test_below_requirement_rejected(self, make_sources):
+        sources = make_sources(strength=14)
+        sources.add_effect(Armor.PlateArmor())
+        character = Character(sources)
         with pytest.raises(ValueError, match="Strength"):
             character.validate()
 
-    def test_exactly_meets_requirement(self, make_character):
-        character = make_character(strength=15)
-        character.add_effect(Armor.PlateArmor())
+    def test_exactly_meets_requirement(self, make_sources):
+        sources = make_sources(strength=15)
+        sources.add_effect(Armor.PlateArmor())
+        character = Character(sources)
         assert character.calculate_armor_class() == 18

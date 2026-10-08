@@ -78,8 +78,8 @@ def _assert_sheet_unchanged(name: str, sheets: dict, what: str) -> None:
 def test_apply_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     reorder = _orders(name)[order]
 
-    def reorder_effects(data: Character) -> None:
-        data._apply_order = reorder
+    def reorder_effects(data: Character) -> Character:
+        return Character(data.sources, apply_order=reorder)
 
     sheets = render_and_hash(name, tmp_path, prepare=reorder_effects)
     _assert_sheet_unchanged(name, sheets, f"effect apply order ({order})")
@@ -89,10 +89,12 @@ def test_apply_order_keeps_sheet(name: str, order: str, tmp_path: Path):
 def test_grant_order_keeps_sheet(name: str, order: str, tmp_path: Path):
     reorder = _orders(name)[order]
 
-    def regrant(data: Character) -> None:
-        data.feature_grants = reorder(data.feature_grants)
-        data.spell_grants = reorder(data.spell_grants)
-        data.spell_replacements = reorder(data.spell_replacements)
+    def regrant(data: Character) -> Character:
+        sources = data.sources
+        sources.feature_grants = reorder(sources.feature_grants)
+        sources.spell_grants = reorder(sources.spell_grants)
+        sources.spell_replacements = reorder(sources.spell_replacements)
+        return Character(sources)
 
     sheets = render_and_hash(name, tmp_path, prepare=regrant)
     _assert_sheet_unchanged(name, sheets, f"grant order ({order})")

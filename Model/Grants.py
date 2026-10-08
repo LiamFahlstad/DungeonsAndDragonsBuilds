@@ -1,7 +1,7 @@
 """Grants: what a builder grants through.
 
-A class level or a species doesn't hand its grants to the Character directly:
-it gets a Grants scope wrapping the Character, which stamps every feature
+A class level or a species doesn't write its grants into the CharacterSources
+directly: it gets a Grants scope wrapping them, which stamps every feature
 and spell with where the builder is - the class-relative level it's granted
 at, the kind of source (species, background, class, ...) and which one
 ("Wizard", "Rock Gnome"). So that bookkeeping lives with the
@@ -16,7 +16,7 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from Core.Definitions import Ability
-from Model.Character import Character
+from Model.CharacterSources import CharacterSources
 from Model.FeatureGrants import IfParentMissing
 from Model.Records.GrantStamp import GrantKind, GrantStamp
 from Model.Content.Feature import Feature
@@ -27,12 +27,12 @@ from Model.Content.FightingStyle import FightingStyle
 class Grants:
     def __init__(
         self,
-        character: Character,
+        sources: CharacterSources,
         level: int,
         granted_by: str,
         kind: GrantKind = GrantKind.OTHER,
     ):
-        self.character = character
+        self.sources = sources
         self.level = level
         self.granted_by = granted_by
         self.kind: GrantKind = kind
@@ -50,7 +50,7 @@ class Grants:
         """Stamped with this scope's level, kind and grant; `kind` and
         `granted_by` override them (an origin feat a species grants is still
         an origin feat)."""
-        self.character.add_feature(
+        self.sources.add_feature(
             feature,
             stamp=GrantStamp(
                 self.level, kind or self.kind, granted_by or self.granted_by
@@ -60,13 +60,13 @@ class Grants:
         )
 
     def add_fighting_style(self, fighting_style: FightingStyle) -> None:
-        self.character.add_fighting_style(fighting_style)
+        self.sources.add_fighting_style(fighting_style)
 
     def add_weapon_mastery(self, weapon: AbstractWeapon) -> None:
-        self.character.add_weapon_mastery(weapon)
+        self.sources.add_weapon_mastery(weapon)
 
     def add_invocation(self, invocation: str) -> None:
-        self.character.add_invocation(invocation)
+        self.sources.add_invocation(invocation)
 
     # -- Spells: stamped with this scope's level and grant -------------------------
 
@@ -80,7 +80,7 @@ class Grants:
     ) -> None:
         """`granted_by` overrides this scope's (an origin feat granted by a
         species lists its spells under the feat)."""
-        self.character.add_spell(
+        self.sources.add_spell(
             spell,
             spell_casting_ability,
             additional_ruling,
@@ -108,16 +108,16 @@ class Grants:
 
     @property
     def base_speed(self) -> Optional[int]:
-        return self.character.base_speed
+        return self.sources.base_speed
 
     @base_speed.setter
     def base_speed(self, value: int) -> None:
-        self.character.base_speed = value
+        self.sources.base_speed = value
 
     @property
     def size(self) -> Optional[Definitions.CreatureSize]:
-        return self.character.size
+        return self.sources.size
 
     @size.setter
     def size(self, value: Definitions.CreatureSize) -> None:
-        self.character.size = value
+        self.sources.size = value

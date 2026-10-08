@@ -1363,15 +1363,15 @@ class HtmlCharacterSheetWriter:
         fighting_styles = data.fighting_styles
         invocations = data.invocations
         spells = data.spells
-        equipment_entries = data.inventory.equipment_entries
-        starting_equipment_entry = data.inventory.starting_equipment_entry
+        equipment_entries = data.equipment_entries
+        starting_equipment_entry = data.starting_equipment_entry
         tool_proficiencies = character.ledger.equipment_training.tool_proficiencies
         # Identity, gold and size live on the sheet data, not the stat block -
         # see Model/ClassLevels.py.
         character_name = data.character_name
         character_subclass = data.character_subclass
         base_class = data.base_class
-        current_gold = data.inventory.current_gold
+        current_gold = data.current_gold
         size = data.size
         assert character_name is not None and base_class is not None
         assert size is not None

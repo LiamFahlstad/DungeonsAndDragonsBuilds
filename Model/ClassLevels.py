@@ -34,6 +34,14 @@ class ClassLevels:
     # in the order gained - character_subclass shows them joined with " / ".
     active_subclasses: dict[CharacterClass, str] = attr.Factory(dict)
 
+    def copy(self) -> "ClassLevels":
+        return attr.evolve(
+            self,
+            level_per_class=dict(self.level_per_class),
+            class_by_character_level=dict(self.class_by_character_level),
+            active_subclasses=dict(self.active_subclasses),
+        )
+
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
