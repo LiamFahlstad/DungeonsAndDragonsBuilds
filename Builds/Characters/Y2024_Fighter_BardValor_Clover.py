@@ -76,7 +76,7 @@ def get_fighter_starter_class_builder():
             # Fighter subclass (chosen at Fighter level 3) is never actually
             # reached here - this placeholder is immediately overwritten by
             # BardValorMulticlassBuilder's "Valor" subclass once it's granted
-            # (see ClassBuilder._update_subclass_name).
+            # (see ClassLevels.character_subclass).
             subclass=FighterSubclass.CHAMPION.value,
             # Nature and Performance aren't on Fighter's skill list, unlike
             # Bard's - see module docstring. Persuasion survives; Athletics

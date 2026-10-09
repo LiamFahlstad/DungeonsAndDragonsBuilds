@@ -203,5 +203,5 @@ class Y2024BardGlamourIselleMoonweaveCharacterBuilder(
         super().__init__(
             name="Iselle Moonweave",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Aasimar.AasimarSpeciesBuilder(character_level=3),
+            species_builder=Aasimar.AasimarSpeciesBuilder(),
         )

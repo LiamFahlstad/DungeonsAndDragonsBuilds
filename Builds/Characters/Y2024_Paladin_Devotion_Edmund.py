@@ -115,7 +115,6 @@ class Y2024PaladinDevotionEdmundCharacterBuilder(CharacterBuilder):
             # Thaumaturgy cantrip (from Otherworldly Presence), plus the
             # Chill Touch cantrip and False Life spell from Fiendish Legacy.
             species_builder=Tiefling.TieflingSpeciesBuilder(
-                character_level=3,
                 fiendish_lineage=Tiefling.FiendishLineage.CHTHONIC,
             ),
         )

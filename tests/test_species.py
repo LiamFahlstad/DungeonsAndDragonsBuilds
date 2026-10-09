@@ -58,6 +58,7 @@ from CharacterContent.Species.Lupin import LupinSpeciesBuilder
 from CharacterContent.Species.Orc import OrcSpeciesBuilder
 from CharacterContent.Species.Reborn import RebornSpeciesBuilder
 from CharacterContent.Species.Shifter import ShifterSpeciesBuilder
+from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 from CharacterContent.Species.Tiefling import FiendishLineage, TieflingSpeciesBuilder
 from CharacterContent.Species.Warforged import WarforgedSpeciesBuilder
 from Core.Definitions import (
@@ -70,6 +71,7 @@ from Core.Definitions import (
 )
 from tests._grants import grant
 from Model.CharacterSources import CharacterSources
+from Model.ClassLevels import ClassLevels
 
 
 def bug(reason):
@@ -80,58 +82,72 @@ def spell_names(data) -> list[str]:
     return [s.name for s in data.spells]
 
 
+def species_character(
+    builder: SpeciesBuilder,
+    level: int = 1,
+    spell_casting_ability: Ability = Ability.INTELLIGENCE,
+) -> Character:
+    """A level `level` character with only `builder`'s species granted.
+    `spell_casting_ability` is for the species spells whose ability the
+    builder doesn't choose itself (Elf, Tiefling)."""
+    sources = CharacterSources(
+        class_levels=ClassLevels(level_per_class={CharacterClass.WIZARD: level})
+    )
+    return Character(builder.build(sources, spell_casting_ability))
+
+
 # ── Speed & size (fixed-size species) ───────────────────────────────────────
 
 
 FIXED_SIZE_SPECIES = [
     pytest.param(
-        lambda: Character(DwarfSpeciesBuilder().build()),
+        lambda: species_character(DwarfSpeciesBuilder()),
         30,
         CreatureSize.MEDIUM,
         id="dwarf",
     ),
     pytest.param(
-        lambda: Character(HalflingSpeciesBuilder().build()),
+        lambda: species_character(HalflingSpeciesBuilder()),
         30,
         CreatureSize.SMALL,
         id="halfling",
     ),
     pytest.param(
-        lambda: Character(OrcSpeciesBuilder().build()),
+        lambda: species_character(OrcSpeciesBuilder()),
         30,
         CreatureSize.MEDIUM,
         id="orc",
     ),
     pytest.param(
-        lambda: Character(
-            GoliathSpeciesBuilder(GoliathFeatures.GiantAncestryType.HILL_GIANT).build()
+        lambda: species_character(
+            GoliathSpeciesBuilder(GoliathFeatures.GiantAncestryType.HILL_GIANT)
         ),
         35,
         CreatureSize.MEDIUM,
         id="goliath",
     ),
     pytest.param(
-        lambda: Character(KalashtarSpeciesBuilder().build()),
+        lambda: species_character(KalashtarSpeciesBuilder()),
         30,
         CreatureSize.MEDIUM,
         id="kalashtar",
     ),
     pytest.param(
-        lambda: Character(
-            DragonbornSpeciesBuilder(DragonbornFeatures.DragonColor.RED).build()
+        lambda: species_character(
+            DragonbornSpeciesBuilder(DragonbornFeatures.DragonColor.RED)
         ),
         30,
         CreatureSize.MEDIUM,
         id="dragonborn",
     ),
     pytest.param(
-        lambda: Character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build()),
+        lambda: species_character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE)),
         30,
         CreatureSize.SMALL,
         id="forest_gnome",
     ),
     pytest.param(
-        lambda: Character(RockGnomeSpeciesBuilder().build()),
+        lambda: species_character(RockGnomeSpeciesBuilder()),
         30,
         CreatureSize.SMALL,
         id="rock_gnome",
@@ -154,44 +170,42 @@ class TestChoosableSizeSpecies:
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_changeling_size_choice(self, size):
-        data = Character(
+        data = species_character(
             ChangelingSpeciesBuilder(
                 size=size, instinct_skills=[Skill.DECEPTION, Skill.INSIGHT]
-            ).build()
+            )
         )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_khoravar_size_choice(self, size):
-        data = Character(
+        data = species_character(
             KhoravarSpeciesBuilder(
                 size=size,
                 skill_versatility=Skill.PERSUASION,
                 spell_casting_ability=Ability.CHARISMA,
-            ).build()
+            )
         )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_shifter_size_choice(self, size):
-        data = Character(
+        data = species_character(
             ShifterSpeciesBuilder(
                 skill=Skill.ATHLETICS,
                 size=size,
                 shifter_form=ShifterFeatures.ShiftForm.SWIFTSTRIDE,
-            ).build()
+            )
         )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_lupin_size_choice(self, size):
-        data = Character(
-            LupinSpeciesBuilder(
-                size=size, werewolf_instincts_skill=Skill.PERCEPTION
-            ).build()
+        data = species_character(
+            LupinSpeciesBuilder(size=size, werewolf_instincts_skill=Skill.PERCEPTION)
         )
         assert data.size == size
         assert data.base_speed == 30
@@ -201,28 +215,26 @@ class TestChoosableSizeSpecies:
         # Dhampir speed is a fixed 35 ft regardless of size (Ravenloft: The
         # Horrors Within), unlike most other species where speed never varies
         # with the size choice either.
-        data = Character(DhampirSpeciesBuilder(character_level=1, size=size).build())
+        data = species_character(DhampirSpeciesBuilder(size=size))
         assert data.size == size
         assert data.base_speed == 35
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_hexblood_size_choice(self, size):
-        data = Character(
-            HexbloodSpeciesBuilder(
-                size=size, spell_casting_ability=Ability.WISDOM
-            ).build()
+        data = species_character(
+            HexbloodSpeciesBuilder(size=size, spell_casting_ability=Ability.WISDOM)
         )
         assert data.size == size
         assert data.base_speed == 30
 
     @pytest.mark.parametrize("size", [CreatureSize.SMALL, CreatureSize.MEDIUM])
     def test_reborn_size_choice(self, size):
-        data = Character(
+        data = species_character(
             RebornSpeciesBuilder(
                 size=size,
                 knowledge_skill=Skill.HISTORY,
                 strange_endurance=DamageType.COLD,
-            ).build()
+            )
         )
         assert data.size == size
         assert data.base_speed == 30
@@ -324,15 +336,6 @@ ELF_LINEAGES = [
 ]
 
 
-def _build_elf(lineage: ElvenLineage, level: int) -> ElfSpeciesBuilder:
-    builder = ElfSpeciesBuilder(
-        elven_lineage=lineage, skill_proficiency=Skill.PERCEPTION
-    )
-    builder.set_character_level(level)
-    builder.set_spell_casting_ability(Ability.INTELLIGENCE)
-    return builder
-
-
 class TestElfLineages:
     @pytest.mark.parametrize(
         "lineage, expected_darkvision, cantrip, level3_spell, level5_spell",
@@ -341,7 +344,7 @@ class TestElfLineages:
     def test_level_1_has_only_cantrip_and_correct_darkvision(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = Character(_build_elf(lineage, 1).build())
+        data = species_character(ElfSpeciesBuilder(lineage, Skill.PERCEPTION), level=1)
 
         assert data.base_speed == (35 if lineage == ElvenLineage.WOOD_ELF else 30)
         assert cantrip in spell_names(data)
@@ -361,7 +364,7 @@ class TestElfLineages:
     def test_level_3_adds_level_3_spell_only(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = Character(_build_elf(lineage, 3).build())
+        data = species_character(ElfSpeciesBuilder(lineage, Skill.PERCEPTION), level=3)
         assert level3_spell in spell_names(data)
         assert level5_spell not in spell_names(data)
 
@@ -372,7 +375,7 @@ class TestElfLineages:
     def test_level_5_adds_both_spells(
         self, lineage, expected_darkvision, cantrip, level3_spell, level5_spell
     ):
-        data = Character(_build_elf(lineage, 5).build())
+        data = species_character(ElfSpeciesBuilder(lineage, Skill.PERCEPTION), level=5)
         assert level3_spell in spell_names(data)
         assert level5_spell in spell_names(data)
 
@@ -408,13 +411,6 @@ TIEFLING_LEGACIES = [
 ]
 
 
-def _build_tiefling(lineage: FiendishLineage, level: int) -> TieflingSpeciesBuilder:
-    builder = TieflingSpeciesBuilder(character_level=level, fiendish_lineage=lineage)
-    builder.set_character_level(level)
-    builder.set_spell_casting_ability(Ability.CHARISMA)
-    return builder
-
-
 class TestTieflingLegacies:
     @pytest.mark.parametrize(
         "lineage, resistance, cantrip, level3_spell, level5_spell", TIEFLING_LEGACIES
@@ -422,7 +418,11 @@ class TestTieflingLegacies:
     def test_level_1_grants_resistance_and_cantrips(
         self, make_sources, lineage, resistance, cantrip, level3_spell, level5_spell
     ):
-        data = Character(_build_tiefling(lineage, 1).build())
+        data = species_character(
+            TieflingSpeciesBuilder(lineage),
+            level=1,
+            spell_casting_ability=Ability.CHARISMA,
+        )
 
         assert cantrip in spell_names(data)
         assert "Thaumaturgy" in spell_names(data)
@@ -441,7 +441,11 @@ class TestTieflingLegacies:
     def test_level_5_grants_both_spells(
         self, lineage, resistance, cantrip, level3_spell, level5_spell
     ):
-        data = Character(_build_tiefling(lineage, 5).build())
+        data = species_character(
+            TieflingSpeciesBuilder(lineage),
+            level=5,
+            spell_casting_ability=Ability.CHARISMA,
+        )
         assert level3_spell in spell_names(data)
         assert level5_spell in spell_names(data)
 
@@ -575,11 +579,11 @@ class TestGnomishCunning:
         assert not character.ledger.saving_throws.is_advantaged(Ability.CONSTITUTION)
 
     def test_forest_gnome_species_grants_gnomish_cunning(self):
-        data = Character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE).build())
+        data = species_character(ForestGnomeSpeciesBuilder(Ability.INTELLIGENCE))
         assert data.get_features_by_type(GnomeFeatures.GnomishCunning)
 
     def test_rock_gnome_species_grants_gnomish_cunning(self):
-        data = Character(RockGnomeSpeciesBuilder().build())
+        data = species_character(RockGnomeSpeciesBuilder())
         assert data.get_features_by_type(GnomeFeatures.GnomishCunning)
 
 
@@ -588,12 +592,12 @@ class TestGnomishCunning:
 
 class TestGrantedSpellsAndCantrips:
     def test_forest_gnome_spells(self):
-        data = Character(ForestGnomeSpeciesBuilder(Ability.WISDOM).build())
+        data = species_character(ForestGnomeSpeciesBuilder(Ability.WISDOM))
         assert "Minor Illusion" in spell_names(data)
         assert "Speak with Animals" in spell_names(data)
 
     def test_rock_gnome_spells(self):
-        data = Character(RockGnomeSpeciesBuilder().build())
+        data = species_character(RockGnomeSpeciesBuilder())
         assert "Mending" in spell_names(data)
         assert "Prestidigitation" in spell_names(data)
 
@@ -607,7 +611,7 @@ class TestGrantedSpellsAndCantrips:
         grant(sources).add_cantrip(
             BardLevel0Spells.PRESTIDIGITATION, Ability.INTELLIGENCE
         )
-        assert RockGnomeSpeciesBuilder().build(sources) is sources
+        assert RockGnomeSpeciesBuilder().build(sources, Ability.INTELLIGENCE) is sources
         data = Character(sources)
         assert spell_names(data).count("Prestidigitation") == 2
         assert data.base_speed == GnomeFeatures.SPEED
@@ -619,27 +623,26 @@ class TestGrantedSpellsAndCantrips:
             Character(sources).spells
 
     def test_aasimar_light_cantrip(self):
-        builder = AasimarSpeciesBuilder(character_level=1)
-        builder.set_character_level(1)
-        builder.set_spell_casting_ability(Ability.CHARISMA)
-        data = Character(builder.build())
+        data = species_character(
+            AasimarSpeciesBuilder(), spell_casting_ability=Ability.CHARISMA
+        )
         assert "Light" in spell_names(data)
 
     def test_khoravar_knows_friends_cantrip(self):
-        data = Character(
+        data = species_character(
             KhoravarSpeciesBuilder(
                 size=CreatureSize.MEDIUM,
                 skill_versatility=Skill.PERSUASION,
                 spell_casting_ability=Ability.CHARISMA,
-            ).build()
+            )
         )
         assert "Friends" in spell_names(data)
 
     def test_hexblood_knows_disguise_self_and_hex(self):
-        data = Character(
+        data = species_character(
             HexbloodSpeciesBuilder(
                 size=CreatureSize.MEDIUM, spell_casting_ability=Ability.WISDOM
-            ).build()
+            )
         )
         names = spell_names(data)
         assert "Disguise Self" in names
@@ -651,12 +654,12 @@ class TestGrantedSpellsAndCantrips:
 
 class TestReborn:
     def test_reborn_grants_a_skill_proficiency(self, make_sources):
-        data = Character(
+        data = species_character(
             RebornSpeciesBuilder(
                 size=CreatureSize.MEDIUM,
                 knowledge_skill=Skill.HISTORY,
                 strange_endurance=DamageType.COLD,
-            ).build()
+            )
         )
         sources = make_sources()
         for feature in data.features:
@@ -665,12 +668,12 @@ class TestReborn:
         assert character.ledger.skills.is_proficient(Skill.HISTORY)
 
     def test_reborn_grants_one_of_the_strange_endurance_resistances(self, make_sources):
-        data = Character(
+        data = species_character(
             RebornSpeciesBuilder(
                 size=CreatureSize.MEDIUM,
                 knowledge_skill=Skill.HISTORY,
                 strange_endurance=DamageType.COLD,
-            ).build()
+            )
         )
         sources = make_sources()
         for feature in data.features:
@@ -753,17 +756,19 @@ class TestSpeciesNeverChangeAbilityScores:
     ability score untouched."""
 
     def _dwarf_features(self):
-        return Character(DwarfSpeciesBuilder().build()).features
+        return species_character(DwarfSpeciesBuilder()).features
 
     def _human_features(self):
-        return Character(
+        return species_character(
             HumanSpeciesBuilder(
                 origin_feat=OriginFeats.Tough(), skill_proficiency=Skill.PERCEPTION
-            ).build()
+            )
         ).features
 
     def _elf_features(self):
-        return Character(_build_elf(ElvenLineage.HIGH_ELF, 5).build()).features
+        return species_character(
+            ElfSpeciesBuilder(ElvenLineage.HIGH_ELF, Skill.PERCEPTION), level=5
+        ).features
 
     @pytest.mark.parametrize(
         "features_factory_name", ["_dwarf_features", "_human_features", "_elf_features"]

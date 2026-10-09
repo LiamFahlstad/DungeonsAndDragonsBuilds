@@ -9,10 +9,13 @@ import itertools
 
 import pytest
 
+from CharacterContent.Features.CharacterFeats import OriginFeats
+from CharacterContent.Spells.SpellLists import ClericLevel0Spells, ClericLevel1Spells
 from Core.Definitions import Ability
 from Model.Character import Character
 from Model.Grants import Grants
 from Model.CharacterSources import CharacterSources
+from Model.Records.GrantStamp import GrantKind, GrantStamp
 
 INT = Ability.INTELLIGENCE
 WIS = Ability.WISDOM
@@ -30,13 +33,22 @@ class TestGrantsScope:
         (spell,) = character.spells
         assert (spell.grant_level, spell.granted_by) == (5, "Wizard")
 
-    def test_granted_by_can_be_overridden(self):
-        # An origin feat granted through a species lists its spells under
-        # the feat.
+    def test_an_origin_feat_lists_its_grants_under_the_feat(self):
+        # An origin feat granted through a species (a Human's Versatile) is
+        # still an origin feat, and its spells are listed under it.
         sources = CharacterSources(spell_casting_ability=INT)
-        Grants(sources, 1, "Human").add_spell("Bless", WIS, granted_by="Magic Initiate")
+        feat = OriginFeats.MagicInitiateCleric(
+            ClericLevel0Spells.GUIDANCE,
+            ClericLevel0Spells.LIGHT,
+            ClericLevel1Spells.BLESS,
+            WIS,
+        )
+        feat.grant_to(Grants(sources, 1, "Human", GrantKind.SPECIES))
         character = Character(sources)
-        assert character.spells[0].granted_by == "Magic Initiate"
+        assert character.stamp_of(feat) == GrantStamp(
+            1, GrantKind.ORIGIN_FEAT, feat.name
+        )
+        assert {spell.granted_by for spell in character.spells} == {feat.name}
 
     def test_keeps_the_free_text_source_label(self):
         sources = CharacterSources(spell_casting_ability=INT)

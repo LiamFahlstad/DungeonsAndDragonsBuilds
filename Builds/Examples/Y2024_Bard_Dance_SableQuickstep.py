@@ -206,5 +206,5 @@ class Y2024BardDanceSableQuickstepCharacterBuilder(CharacterBuilder.CharacterBui
         super().__init__(
             name="Sable Quickstep",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Aasimar.AasimarSpeciesBuilder(character_level=3),
+            species_builder=Aasimar.AasimarSpeciesBuilder(),
         )

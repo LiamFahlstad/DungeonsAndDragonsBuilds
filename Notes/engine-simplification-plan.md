@@ -1264,7 +1264,59 @@ refers to the checks in section 4.
 - **Verify:** A, B, C, D, E, F, `-m slow`, plus the Creator UI and combat UI
   start. **Output:** none.
 
-### Step 12: Builder cleanup *(small items)*
+### Step 12: Builder cleanup *(small items)* — done
+
+- **Result:**
+  - **Origin feats:** `Grants.for_origin_feat(feat)` returns the feat's own
+    scope (kind `ORIGIN_FEAT`, granted by the feat, same level).
+    `OriginFeat.grant_to` grants the feat and its spells through it. The
+    `kind=` / `granted_by=` overrides on `add_feature`, `add_spell` and
+    `add_cantrip` are deleted.
+  - **Species:** `SpeciesBuilder.build(sources, spell_casting_ability)`
+    replaces `set_character_level` and `set_spell_casting_ability`.
+    - **One change from the plan:** the two values travel on the species'
+      scope, not as `_grant` arguments. `SpeciesGrants(Grants)` (in
+      `SpeciesBuilder.py`) carries `character_level` (read from
+      `sources.class_levels`) and `spell_casting_ability`. Only the 4 species
+      that use them (Aasimar, Dhampir, Elf, Tiefling) changed; the other 16
+      keep `_grant(self, data: Grants)`.
+    - **Found on the way:** the setters overwrote values the species already
+      had. Aasimar, Dhampir and Tiefling took a `character_level` constructor
+      argument that was always replaced by the real level (4 builds passed 3
+      at level 4). Gnome, Hexblood and Khoravar took the player's chosen
+      `spell_casting_ability`, which was always replaced by the best mental
+      ability. The dead `character_level` parameters are deleted (5 build
+      files changed). Gnome, Hexblood and Khoravar now use their own ability,
+      as the rules say. Every existing build passes the same value the setter
+      wrote, so no output changes.
+  - **Subclasses:** `ClassBuilder.__init__` takes `subclass` (so the
+    `getattr` goes). `ClassLevels.add_subclass(cls, name, reached=...)`
+    records it. `character_subclass` is now a property: the active subclasses
+    joined with " / ", or else the first one named. The stored display
+    string and `_update_subclass_name` are gone.
+  - **`_grant_levels(...)`** is a module function, called once for class
+    levels and once for subclass levels.
+  - **`StarterClassBuilder`:** the 8 forwarding properties are gone.
+    `_grant_class` reads `self.non_generic_arguments`, and so does
+    `CharacterBuilder` (for `default_equipment` and `default_pack`).
+  - **Skipped (optional):** `is_example` as a class attribute. The one-line
+    module-path check works, and a 104-file codemod isn't worth it.
+  - **Tests:**
+    - `tests/test_species.py` builds through a `species_character(builder,
+      level, spell_casting_ability)` helper.
+    - New: an origin feat granted through a species is stamped as an origin
+      feat and lists its spells under the feat; and `character_subclass`
+      shows the first subclass named until one is reached.
+  - **Docs:** `dnd-builds` and `dnd-builds-haiku` (`SpeciesGrants`).
+  - **Verified:**
+    - A, B: 3356 passed. E: 1096 slow passed (`PYTHONHASHSEED=1`). D: 0
+      errors.
+    - F: all pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree: no new errors.
+    - C: the three runners run. Offscreen, the Creator loads all 34 character
+      files, with only the existing warnings, and the combat window builds.
+      The Creator round-trip tests pass.
+
 
 - **Goal:** builders hand data over through arguments and declared fields, not
   through setters, overrides and reflection.

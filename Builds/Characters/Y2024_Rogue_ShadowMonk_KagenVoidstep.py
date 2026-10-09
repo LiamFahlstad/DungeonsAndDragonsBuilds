@@ -54,7 +54,7 @@ def get_starter_class_builder():
             # at Rogue level 3) is never actually reached. The value below is
             # therefore a placeholder - it's immediately overwritten by the
             # Monk multiclass builder's "Warrior of Shadow" subclass once it's
-            # granted (see ClassBuilder._update_subclass_name).
+            # granted (see ClassLevels.character_subclass).
             subclass=RogueSubclass.THIEF.value,
             skills=[
                 Skill.ACROBATICS,

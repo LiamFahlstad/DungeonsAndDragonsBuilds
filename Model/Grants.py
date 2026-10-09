@@ -37,6 +37,12 @@ class Grants:
         self.granted_by = granted_by
         self.kind: GrantKind = kind
 
+    def for_origin_feat(self, feat: Feature) -> "Grants":
+        """The scope an origin feat grants through, at this scope's level: the
+        feat and its spells are listed under the feat, whether a background or
+        a species (a Human's Versatile) grants it."""
+        return Grants(self.sources, self.level, feat.name, GrantKind.ORIGIN_FEAT)
+
     # -- Features ---------------------------------------------------------------
 
     def add_feature(
@@ -44,17 +50,11 @@ class Grants:
         feature: Feature,
         extends: type | Feature | None = None,
         if_missing: IfParentMissing = IfParentMissing.ERROR,
-        kind: Optional[GrantKind] = None,
-        granted_by: Optional[str] = None,
     ) -> None:
-        """Stamped with this scope's level, kind and grant; `kind` and
-        `granted_by` override them (an origin feat a species grants is still
-        an origin feat)."""
+        """Stamped with this scope's level, kind and grant."""
         self.sources.add_feature(
             feature,
-            stamp=GrantStamp(
-                self.level, kind or self.kind, granted_by or self.granted_by
-            ),
+            stamp=GrantStamp(self.level, self.kind, self.granted_by),
             extends=extends,
             if_missing=if_missing,
         )
@@ -76,16 +76,13 @@ class Grants:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
-        granted_by: Optional[str] = None,
     ) -> None:
-        """`granted_by` overrides this scope's (an origin feat granted by a
-        species lists its spells under the feat)."""
         self.sources.add_spell(
             spell,
             spell_casting_ability,
             additional_ruling,
             source,
-            stamp=GrantStamp(self.level, self.kind, granted_by or self.granted_by),
+            stamp=GrantStamp(self.level, self.kind, self.granted_by),
         )
 
     def add_cantrip(
@@ -94,15 +91,8 @@ class Grants:
         spell_casting_ability: Optional[Ability] = None,
         additional_ruling: Optional[str] = None,
         source: Optional[str] = None,
-        granted_by: Optional[str] = None,
     ) -> None:
-        self.add_spell(
-            cantrip,
-            spell_casting_ability,
-            additional_ruling,
-            source=source,
-            granted_by=granted_by,
-        )
+        self.add_spell(cantrip, spell_casting_ability, additional_ruling, source)
 
     # -- What a species sets -----------------------------------------------------
 

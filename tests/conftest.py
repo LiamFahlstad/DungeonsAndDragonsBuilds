@@ -81,7 +81,7 @@ def make_sources():
             class_levels=ClassLevels(
                 base_class=next(iter(levels)),
                 level_per_class=levels,
-                character_subclass="Test Subclass",
+                first_subclass="Test Subclass",
             ),
             base_abilities=AbilityScores(
                 strength, dexterity, constitution, intelligence, wisdom, charisma

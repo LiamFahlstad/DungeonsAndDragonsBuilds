@@ -253,43 +253,50 @@ class BaseClassLevelFeatures:
         level order (all base-class levels first, then all subclass levels),
         skipping levels above the class's declared level and levels another
         builder already applied for the same class."""
-        class_level = data.get_class_level(base_class)
-
-        for features_by_level, applied_levels, kind in [
-            (
-                self.base_class_features_by_level,
-                applied_level_features.base_class_levels,
-                GrantKind.CLASS,
-            ),
-            (
-                self.subclass_features_by_level,
-                applied_level_features.subclass_levels,
-                GrantKind.SUBCLASS,
-            ),
-        ]:
-            for level in sorted(features_by_level):
-                features = features_by_level[level]
-                if features is None:
-                    raise ValueError(
-                        f"{base_class.value} level {level}: features cannot be None."
-                    )
-                if features.level != level:
-                    raise ValueError(
-                        f"{base_class.value} level {level} is mapped to features "
-                        f"declared for level {features.level} "
-                        f"({type(features).__name__})."
-                    )
-
-                if class_level < level:
-                    continue
-
-                key = (base_class, level)
-                if key in applied_levels:
-                    continue
-                applied_levels.add(key)
-
-                features.add_features(Grants(data, level, base_class.value, kind))
+        _grant_levels(
+            data,
+            base_class,
+            self.base_class_features_by_level,
+            applied_level_features.base_class_levels,
+            GrantKind.CLASS,
+        )
+        _grant_levels(
+            data,
+            base_class,
+            self.subclass_features_by_level,
+            applied_level_features.subclass_levels,
+            GrantKind.SUBCLASS,
+        )
         return data
+
+
+def _grant_levels(
+    data: CharacterSources,
+    base_class: CharacterClass,
+    features_by_level: dict[int, LevelFeatures],
+    applied_levels: set[tuple[CharacterClass, int]],
+    kind: GrantKind,
+) -> None:
+    """Grant each level's features up to the class's level, lowest first,
+    skipping the levels another builder already granted (recorded in
+    `applied_levels`)."""
+    class_level = data.get_class_level(base_class)
+    for level in sorted(features_by_level):
+        features = features_by_level[level]
+        if features is None:
+            raise ValueError(
+                f"{base_class.value} level {level}: features cannot be None."
+            )
+        if features.level != level:
+            raise ValueError(
+                f"{base_class.value} level {level} is mapped to features "
+                f"declared for level {features.level} "
+                f"({type(features).__name__})."
+            )
+        if class_level < level or (base_class, level) in applied_levels:
+            continue
+        applied_levels.add((base_class, level))
+        features.add_features(Grants(data, level, base_class.value, kind))
 
 
 class ClassBuilder(ABC):
@@ -299,6 +306,7 @@ class ClassBuilder(ABC):
         base_class: CharacterClass,
         base_class_level_features: BaseClassLevelFeatures,
         base_class_level: int,
+        subclass: Optional[str] = None,
         replace_spells: Optional[dict[str, str]] = None,
     ):
         if not MIN_LEVEL <= base_class_level <= MAX_LEVEL:
@@ -309,6 +317,7 @@ class ClassBuilder(ABC):
         self.base_class = base_class
         self.base_class_level_features = base_class_level_features
         self.base_class_level = base_class_level
+        self.subclass = subclass
         self.replace_spells = replace_spells
 
     @abstractmethod
@@ -370,35 +379,21 @@ class ClassBuilder(ABC):
         self._grant_class(
             character_sheet_data, is_resuming=previously_declared_level > 0
         )
-        self._update_subclass_name(character_sheet_data)
+        if self.subclass:
+            character_sheet_data.class_levels.add_subclass(
+                self.base_class, self.subclass, reached=self._has_reached_subclass()
+            )
         character_sheet_data = self.base_class_level_features.add_features(
             character_sheet_data, self.base_class, applied_level_features
         )
         character_sheet_data.replace_spells(self.replace_spells or {})
         return character_sheet_data
 
-    def _update_subclass_name(self, data: CharacterSources) -> None:
-        """Show every class's subclass on a multiclass sheet ("Oath of Glory /
-        Bladesinger") instead of only the last builder's. Classes that
-        haven't reached their subclass level are left out; if none has, the
-        first declared subclass is kept."""
-        subclass = getattr(self, "subclass", None)
-        class_levels = data.class_levels
-        if subclass and _subclass_reached(self):
-            class_levels.active_subclasses[self.base_class] = subclass
-        if class_levels.active_subclasses:
-            class_levels.character_subclass = " / ".join(
-                class_levels.active_subclasses.values()
-            )
-        elif class_levels.character_subclass is None:
-            class_levels.character_subclass = subclass or None
-
-
-def _subclass_reached(builder: "ClassBuilder") -> bool:
-    """A class has a subclass once its level reaches the first level that
-    grants subclass features (e.g. a Fighter 1 dip has none yet)."""
-    subclass_levels = builder.base_class_level_features.subclass_features_by_level
-    return any(level <= builder.base_class_level for level in subclass_levels)
+    def _has_reached_subclass(self) -> bool:
+        """A class has a subclass once its level reaches the first level that
+        grants subclass features (e.g. a Fighter 1 dip has none yet)."""
+        subclass_levels = self.base_class_level_features.subclass_features_by_level
+        return any(level <= self.base_class_level for level in subclass_levels)
 
 
 class CustomStarterClassArgs:
@@ -464,47 +459,17 @@ class StarterClassBuilder(ClassBuilder):
             base_class=non_generic_arguments.base_class,
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
+            subclass=non_generic_arguments.subclass,
             replace_spells=replace_spells,
         )
 
-    @property
-    def subclass(self) -> str:
-        return self.non_generic_arguments.subclass
-
-    @property
-    def skills(self) -> list[Skill]:
-        return self.non_generic_arguments.skills
-
-    @property
-    def default_equipment(self) -> list[Weapons.AbstractWeapon | Armor.AbstractArmor]:
-        return self.non_generic_arguments.default_equipment
-
-    @property
-    def default_pack(self) -> Optional[Packs.Pack]:
-        return self.non_generic_arguments.default_pack
-
-    @property
-    def spell_casting_ability(self) -> Optional[Ability]:
-        return self.non_generic_arguments.spell_casting_ability
-
-    @property
-    def caster_type(self) -> Optional[SpellSlots.CasterType]:
-        return self.non_generic_arguments.caster_type
-
-    @property
-    def armor_proficiencies(self) -> Optional[list[Definitions.ArmorType]]:
-        return self.non_generic_arguments.armor_proficiencies
-
-    @property
-    def weapon_proficiencies(self) -> Optional[list[Weapons.WeaponProficiency]]:
-        return self.non_generic_arguments.weapon_proficiencies
-
     def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
         # The starting class is always the first builder, so never resumed.
+        args = self.non_generic_arguments
         data.class_levels.base_class = self.base_class
         data.base_abilities = self.abilities
-        if self.spell_casting_ability is not None:
-            data.spell_casting_ability = self.spell_casting_ability
+        if args.spell_casting_ability is not None:
+            data.spell_casting_ability = args.spell_casting_ability
 
         background = Grants(data, 1, "Background", GrantKind.BACKGROUND)
         background.add_feature(self.background_ability_bonuses)
@@ -512,27 +477,26 @@ class StarterClassBuilder(ClassBuilder):
         self.origin_feat.grant_to(background)
 
         grants = Grants(data, 1, self.base_class.value, GrantKind.CLASS)
-        if self.caster_type is not None:
-            grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
+        if args.caster_type is not None:
+            grants.add_feature(SpellSlots.SpellSlots(args.caster_type, self.base_class))
         grants.add_feature(
             ClassProficiencies.ClassProficiencies(
                 self.base_class,
-                armor=list(self.armor_proficiencies or []),
-                weapons=list(self.weapon_proficiencies or []),
+                armor=list(args.armor_proficiencies or []),
+                weapons=list(args.weapon_proficiencies or []),
                 tools=list(self.tool_proficiencies or []),
             )
         )
         pool, count = ClassProficiencies.CLASS_SKILL_CHOICES[self.base_class]
         grants.add_feature(
-            ClassProficiencies.ClassSkillChoice(pool, count, self.skills)
+            ClassProficiencies.ClassSkillChoice(pool, count, args.skills)
         )
 
         # Equipment (default_equipment/default_pack/add_default_equipment/
         # armor/weapons/items, plus starting_gold) is handled by
         # CharacterBuilder via an Inventory (see Builds/StartingEquipment.py), not
-        # here - this builder only stores those values (see properties above
-        # and __init__) for CharacterBuilder to read when it constructs the
-        # inventory.
+        # here - this builder only stores those values for CharacterBuilder
+        # to read when it constructs the inventory.
 
 
 class MulticlassBuilder(ClassBuilder):
@@ -547,11 +511,11 @@ class MulticlassBuilder(ClassBuilder):
         spell_casting_ability: Optional[Definitions.Ability] = None,
         caster_type: Optional[SpellSlots.CasterType] = None,
     ):
-        self.subclass = subclass
         super().__init__(
             base_class=base_class,
             base_class_level_features=base_class_level_features,
             base_class_level=base_class_level,
+            subclass=subclass,
             replace_spells=replace_spells,
         )
         self.spell_casting_ability = spell_casting_ability

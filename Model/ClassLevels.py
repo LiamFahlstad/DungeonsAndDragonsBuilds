@@ -13,10 +13,8 @@ class ClassLevels:
     ClassProficiencies) and the subclass chosen for each class that has
     reached its subclass level.
 
-    Built up by ClassBuilder.create() as each class builder grants straight
-    into the character's one Character, and shared - not copied -
-    with the Character built from that sheet, so both read the same
-    levels, history and subclasses no matter which changed first.
+    Built up by ClassBuilder.create() as each class builder grants into the
+    character's CharacterSources.
     """
 
     base_class: Optional[CharacterClass] = None
@@ -26,13 +24,12 @@ class ClassLevels:
     # pick history (including dips and resumed classes), not just the final
     # per-class totals in level_per_class.
     class_by_character_level: dict[int, CharacterClass] = attr.Factory(dict)
-    # The sheet's current subclass display string, e.g. "Oath of Glory /
-    # Bladesinger" once every multiclassed class that has one has reached its
-    # subclass level - see ClassBuilder._update_subclass_name.
-    character_subclass: Optional[str] = None
     # {class: subclass} for every class that has reached its subclass level,
     # in the order gained - character_subclass shows them joined with " / ".
     active_subclasses: dict[CharacterClass, str] = attr.Factory(dict)
+    # The first subclass a class builder names, shown while no class has
+    # reached its subclass level yet (a Fighter 1 already says "Champion").
+    first_subclass: Optional[str] = None
 
     def copy(self) -> "ClassLevels":
         return attr.evolve(
@@ -45,6 +42,26 @@ class ClassLevels:
     @property
     def character_level(self) -> int:
         return sum(self.level_per_class.values())
+
+    @property
+    def character_subclass(self) -> Optional[str]:
+        """Every class's subclass on a multiclass sheet ("Oath of Glory /
+        Bladesinger"), not only the last builder's. Classes that haven't
+        reached their subclass level are left out; if none has, the first
+        subclass named is shown."""
+        if self.active_subclasses:
+            return " / ".join(self.active_subclasses.values())
+        return self.first_subclass
+
+    def add_subclass(
+        self, character_class: CharacterClass, subclass: str, *, reached: bool
+    ) -> None:
+        """`reached`: the class's level grants subclass features (a Fighter 1
+        dip has named its subclass but doesn't have it yet)."""
+        if self.first_subclass is None:
+            self.first_subclass = subclass
+        if reached:
+            self.active_subclasses[character_class] = subclass
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.level_per_class.get(character_class, 0)

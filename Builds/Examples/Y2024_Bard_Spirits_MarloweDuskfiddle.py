@@ -204,5 +204,5 @@ class Y2024BardSpiritsMarloweDuskfiddleCharacterBuilder(
         super().__init__(
             name="Marlowe Duskfiddle",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Aasimar.AasimarSpeciesBuilder(character_level=3),
+            species_builder=Aasimar.AasimarSpeciesBuilder(),
         )

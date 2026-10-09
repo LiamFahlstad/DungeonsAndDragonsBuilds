@@ -435,8 +435,8 @@ class TestFeatsTakenOnce:
         from CharacterContent.Features.CharacterFeats import OriginFeats
 
         sources = make_sources()
-        grant(sources).add_feature(OriginFeats.Tough(), kind=GrantKind.BACKGROUND)
-        grant(sources).add_feature(OriginFeats.Tough(), kind=GrantKind.SPECIES)
+        grant(sources, kind=GrantKind.BACKGROUND).add_feature(OriginFeats.Tough())
+        grant(sources, kind=GrantKind.SPECIES).add_feature(OriginFeats.Tough())
         character = Character(sources)
         with pytest.raises(ValueError, match="Tough is granted 2 times"):
             character.validate()

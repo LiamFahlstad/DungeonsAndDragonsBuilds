@@ -1,8 +1,7 @@
 from enum import Enum
 
-from Model.Grants import Grants
 from CharacterContent.Features.SpeciesFeatures import TieflingFeatures
-from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
+from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder, SpeciesGrants
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel2Spells,
@@ -22,22 +21,20 @@ class FiendishLineage(str, Enum):
 class TieflingSpeciesBuilder(SpeciesBuilder):
     def __init__(
         self,
-        character_level: int,
         fiendish_lineage: FiendishLineage,
     ):
-        self.character_level = character_level
         self.fiendish_lineage = fiendish_lineage
         super().__init__(
             name="Tiefling",
         )
 
-    def _grant(self, data: Grants) -> None:
+    def _grant(self, data: SpeciesGrants) -> None:
         data.base_speed = TieflingFeatures.SPEED  # Given by your species
         data.size = TieflingFeatures.SIZE  # Given by your species
 
         data.add_feature(TieflingFeatures.Darkvision(60))
         data.add_feature(TieflingFeatures.OtherworldlyPresence())
-        data.add_cantrip(ClericLevel0Spells.THAUMATURGY, self.spell_casting_ability)
+        data.add_cantrip(ClericLevel0Spells.THAUMATURGY, data.spell_casting_ability)
 
         spell_1 = None
         spell_2 = None
@@ -45,35 +42,35 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
         if self.fiendish_lineage == FiendishLineage.ABYSSAL:
             cantrip = SorcererLevel0Spells.POISON_SPRAY
             data.add_feature(TieflingFeatures.FiendishResistance("Poison"))
-            if self.character_level >= 3:
+            if data.character_level >= 3:
                 spell_1 = SorcererLevel1Spells.RAY_OF_SICKNESS
-            if self.character_level >= 5:
+            if data.character_level >= 5:
                 spell_2 = ClericLevel2Spells.HOLD_PERSON
 
         elif self.fiendish_lineage == FiendishLineage.CHTHONIC:
             cantrip = SorcererLevel0Spells.CHILL_TOUCH
             data.add_feature(TieflingFeatures.FiendishResistance("Necrotic"))
-            if self.character_level >= 3:
+            if data.character_level >= 3:
                 spell_1 = SorcererLevel1Spells.FALSE_LIFE
-            if self.character_level >= 5:
+            if data.character_level >= 5:
                 spell_2 = WizardLevel2Spells.RAY_OF_ENFEEBLEMENT
 
         elif self.fiendish_lineage == FiendishLineage.Infernal:
             cantrip = SorcererLevel0Spells.FIRE_BOLT
             data.add_feature(TieflingFeatures.FiendishResistance("Fire"))
-            if self.character_level >= 3:
+            if data.character_level >= 3:
                 spell_1 = WarlockLevel1Spells.HELLISH_REBUKE
-            if self.character_level >= 5:
+            if data.character_level >= 5:
                 spell_2 = WizardLevel2Spells.DARKNESS
 
         else:
             raise ValueError(f"Invalid fiendish lineage: {self.fiendish_lineage}")
 
-        data.add_cantrip(cantrip, self.spell_casting_ability)
+        data.add_cantrip(cantrip, data.spell_casting_ability)
         if spell_1 is not None:
-            data.add_spell(spell_1, self.spell_casting_ability)
+            data.add_spell(spell_1, data.spell_casting_ability)
         if spell_2 is not None:
-            data.add_spell(spell_2, self.spell_casting_ability)
+            data.add_spell(spell_2, data.spell_casting_ability)
         data.add_feature(
             TieflingFeatures.FiendishLegacy(
                 cantrip=cantrip, spell_1=spell_1, spell_2=spell_2

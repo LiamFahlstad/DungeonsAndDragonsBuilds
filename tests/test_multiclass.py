@@ -15,6 +15,7 @@ from Builds.Tests.SpellSlotTestWizard3Warlock3 import (
 )
 from Builds.Tests.SpellSlotTestWizard5 import SpellSlotTestWizard5CharacterBuilder
 from Core.Definitions import Ability, CharacterClass
+from Model.ClassLevels import ClassLevels
 from Presentation.CharacterSheetWriters import get_output_folder
 
 A = Ability
@@ -77,6 +78,13 @@ class TestSubclassName:
         # Fighter 1 hasn't chosen a subclass yet.
         data = MulticlassTestCharacterBuilder().build()
         assert data.character_subclass == "Bladesinger"
+
+    def test_a_subclass_not_yet_reached_is_shown_until_one_is(self):
+        levels = ClassLevels()
+        levels.add_subclass(CharacterClass.FIGHTER, "Champion", reached=False)
+        assert levels.character_subclass == "Champion"
+        levels.add_subclass(CharacterClass.WIZARD, "Bladesinger", reached=True)
+        assert levels.character_subclass == "Bladesinger"
 
     def test_output_folder_has_no_slash(self):
         data = SpellSlotTestPaladin4Wizard3CharacterBuilder().build()

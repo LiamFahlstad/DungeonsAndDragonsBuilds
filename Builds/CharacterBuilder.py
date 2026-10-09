@@ -29,9 +29,9 @@ class CharacterBuilder:
         set_starting_equipment(
             self.inventory,
             base_class=starter_class_builder.base_class,
-            default_equipment=starter_class_builder.default_equipment,
+            default_equipment=starter_class_builder.non_generic_arguments.default_equipment,
             add_default_equipment=starter_class_builder.add_default_equipment,
-            default_pack=starter_class_builder.default_pack,
+            default_pack=starter_class_builder.non_generic_arguments.default_pack,
             armor=starter_class_builder.armor,
             weapons=starter_class_builder.weapons,
             items=starter_class_builder.items,
@@ -117,9 +117,7 @@ class CharacterBuilder:
         if character_sheet_data.spell_casting_ability is None:
             character_sheet_data.spell_casting_ability = ability_with_highest_modifier
 
-        self.species_builder.set_character_level(character_sheet_data.character_level)
-        self.species_builder.set_spell_casting_ability(ability_with_highest_modifier)
-        self.species_builder.build(character_sheet_data)
+        self.species_builder.build(character_sheet_data, ability_with_highest_modifier)
 
         character_sheet_data.character_name = self.name
         character_sheet_data.is_example = type(self).__module__.startswith(
