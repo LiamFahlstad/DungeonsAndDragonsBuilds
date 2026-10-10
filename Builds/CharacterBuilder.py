@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Callable, Optional, TypeGuard
 
 from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     AppliedLevelFeatures,
@@ -125,3 +125,19 @@ class CharacterBuilder:
         sources.inventory = self.inventory.copy()
 
         return Character(sources)
+
+
+# A build file's class: it takes no arguments, since it hands CharacterBuilder
+# its own name, class builders and species builder. Call it for a fresh build.
+BuildClass = Callable[[], CharacterBuilder]
+
+
+def is_build_class(value: object, module_name: str) -> TypeGuard[BuildClass]:
+    """Whether `value` is a build class defined in the module `module_name` (not
+    CharacterBuilder itself, nor one a build file imports)."""
+    return (
+        isinstance(value, type)
+        and issubclass(value, CharacterBuilder)
+        and value is not CharacterBuilder
+        and value.__module__ == module_name
+    )

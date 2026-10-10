@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-# Type-check the Model package with pyright (basic mode, dev-only).
-# Usage: ./typecheck.sh
+# Type-check the repo with pyright (standard mode), using the same
+# pyrightconfig.json the editor's Pylance reads, so both report the same.
+# Usage: ./typecheck.sh            # the whole repo
+#        ./typecheck.sh Model      # one folder
 #
-# The config lives in pyright-model.json, not pyrightconfig.json, so it
-# doesn't change what Pylance reports in the editor. Install the checker
-# with: pip install pyright
+# Excluded (see pyrightconfig.json): web scrapers run by hand (Scrapers/,
+# Combat/Tools/scrape_monsters.py), whose BeautifulSoup lookups the stubs type
+# as Optional at every step, and generated scratch output. Install the
+# checker with: pip install pyright
 
 set -euo pipefail
 
@@ -24,4 +27,4 @@ if [ -z "$PYTHON" ]; then
     exit 1
 fi
 
-"$PYTHON" -m pyright -p pyright-model.json "$@"
+"$PYTHON" -m pyright "$@"

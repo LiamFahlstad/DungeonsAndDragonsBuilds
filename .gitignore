@@ -223,3 +223,5 @@ Combat/CombatLogs/*.json
 !Combat/CombatLogs/curse_of_the_lich_black_tongues_ritual.json
 !Combat/CombatLogs/curse_of_the_lich_yellow_capes_last_stand.json
 !Combat/CombatLogs/curse_of_the_lich_mouth_that_walks.json
+# Scratch output of CharacterContent/Features/FeatureGeneration/GenerateFeatures.py
+CharacterContent/Features/FeatureGeneration/Output.py

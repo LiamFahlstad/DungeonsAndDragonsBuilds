@@ -1,9 +1,10 @@
 """d20 roll mixin for CombatAppQt (advantage/neutral/disadvantage)."""
 
 import random
+from .state import CombatWindowState
 
 
-class RollsMixin:
+class RollsMixin(CombatWindowState):
     """Mixin for ad-hoc d20 rolls with advantage/disadvantage support."""
 
     def _roll_d20(self):

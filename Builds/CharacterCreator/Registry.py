@@ -70,9 +70,10 @@ def _classes_defined_in(module):
 
 def _level_of(cls) -> int:
     field = attr.fields_dict(cls).get("level")
-    if field is None or field.default is attr.NOTHING:
+    default = field.default if field is not None else None
+    if not isinstance(default, int):
         raise ValueError(f"{cls.__name__} has no level default")
-    return field.default
+    return default
 
 
 def _collect_level_classes(module, base) -> dict:
@@ -584,7 +585,7 @@ class EditorKind:
 
 
 class ResolvedAnnotation:
-    def __init__(self, kind, payload=None, optional=False):
+    def __init__(self, kind, payload: typing.Any = None, optional=False):
         self.kind = kind
         self.payload = payload
         self.optional = optional

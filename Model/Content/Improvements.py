@@ -758,10 +758,13 @@ class ItemImprovement(ABC):
     Expects the target item to already have its base (pre-improvement)
     attributes set - name, description_text, value, is_homebrew - since
     apply() mutates them directly (see AbstractWeapon.__init__ /
-    AbstractArmor.__init__: base_stats() runs first, improvements after)."""
+    AbstractArmor.__init__: base_stats() runs first, improvements after).
+
+    `item` is positional-only, so a subclass may name it for what it modifies
+    (`armor`, `weapon`)."""
 
     @abstractmethod
-    def apply(self, item) -> None:
+    def apply(self, item, /) -> None:
         pass
 
 

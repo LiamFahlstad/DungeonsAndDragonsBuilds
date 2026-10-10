@@ -73,7 +73,7 @@ class CombatAppQt(
         self.selected_character: dict | None = None
         self.target_characters: list[dict] = []
         self.round_number = 1
-        self.history: list[tuple] = []
+        self.history = []
 
         # --- Phase / initiative state ---
         self.phase: str = "INITIATIVE"
@@ -178,7 +178,10 @@ class CombatAppQt(
         self.characters.append(char)
 
     def run(self):
-        app = QApplication.instance() or QApplication(sys.argv)
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication(sys.argv)
+        assert isinstance(app, QApplication)
         app.setStyleSheet(QSS)
 
         self._build_window()

@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Type
 
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
@@ -19,7 +18,7 @@ from Model.Content.Improvements import (
     GrantArmorTraining,
     GrantWeaponProficiency,
 )
-from Model.Creatures.Combatants import ExtendedCombatantData
+from Model.Creatures.Combatants import CreatureForm
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.View import CharacterView
@@ -109,7 +108,7 @@ class PrimalOrder(Feature):
 
 
 class WildShape(Feature):
-    def __init__(self, known_forms: list[Type[ExtendedCombatantData]]):
+    def __init__(self, known_forms: list[CreatureForm]):
         super().__init__(
             name="Wild Shape",
             origin="Druid Level 2",
@@ -244,7 +243,7 @@ class WildShape(Feature):
 
 
 class AdditionalWildShapeForms(Feature):
-    def __init__(self, known_forms: list[Type[ExtendedCombatantData]], origin: str):
+    def __init__(self, known_forms: list[CreatureForm], origin: str):
         super().__init__(name="Additional Known Forms", origin=origin)
         self.known_forms = known_forms
 

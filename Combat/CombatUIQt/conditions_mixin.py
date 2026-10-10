@@ -2,6 +2,7 @@
 
 from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat
+from .state import CombatWindowState
 
 # Conditions that incapacitate a creature and break concentration per 2024 D&D rules
 INCAPACITATING_CONDITIONS = {
@@ -13,7 +14,7 @@ INCAPACITATING_CONDITIONS = {
 }
 
 
-class ConditionsMixin:
+class ConditionsMixin(CombatWindowState):
     """Mixin for condition and visibility management."""
 
     def _add_condition_to(self, char: dict, cond: str, source: dict | None = None):

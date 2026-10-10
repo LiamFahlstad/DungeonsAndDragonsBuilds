@@ -1,0 +1,14 @@
+{
+  "typeCheckingMode": "standard",
+  "pythonVersion": "3.11",
+  "exclude": [
+    ".git",
+    ".claude",
+    "**/__pycache__",
+    "Output",
+    "SourceTexts",
+    "Scrapers",
+    "Combat/Tools/scrape_monsters.py",
+    "CharacterContent/Features/FeatureGeneration/Output.py"
+  ]
+}

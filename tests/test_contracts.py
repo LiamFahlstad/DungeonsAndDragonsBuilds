@@ -51,7 +51,7 @@ SAMPLE_ARGUMENTS = {
 def _return_annotation(name: str):
     member = vars(CharacterView)[name]
     function = member.fget if isinstance(member, property) else member
-    return typing.get_type_hints(function).get("return")
+    return typing.get_type_hints(function)["return"]
 
 
 @pytest.fixture(scope="module")
@@ -74,6 +74,7 @@ def test_character_satisfies_stat_view(character, name):
         value = getattr(character, name)(*arguments)
     expected = _return_annotation(name)
     origin = typing.get_origin(expected)
+    allowed: tuple[type, ...]
     if origin is typing.Union:  # Optional[...]
         allowed = typing.get_args(expected)
     elif origin is not None:  # dict[int, int], ...
@@ -105,7 +106,7 @@ def test_stat_view_exposes_answers_not_parts(name):
 def test_content_is_the_model_content_classes(name):
     """Python doesn't check annotations at runtime: every build must hand the
     Character the Model/Content classes its fields name."""
-    data = type(ALL_BUILDS[name])().build()
+    data = ALL_BUILDS[name]().build()
     problems = []
     for feature in data.iter_features_with_extensions():
         if not isinstance(feature, Feature):

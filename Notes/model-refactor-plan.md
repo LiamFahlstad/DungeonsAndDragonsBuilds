@@ -1,5 +1,11 @@
 # Plan: Character, Effects, parts and Features, second pass
 
+> **Superseded** where they conflict by `Notes/engine-simplification-plan.md`
+> (sections 2b-2d), and described as it is now in
+> `Notes/feature-application-model.md` and `Notes/engine-explained.md`. Names
+> here are historical: `Effects` is now `LedgerWriter`, and the parts live in
+> `Model/Ledger/`.
+
 Follow-up to `CharacterContent/temp.plan.md`, whose steps 0–10 are done. That
 pass made `apply()` write-only and every value resolve when it is read. This
 pass fixes what is still unclear or still depends on order:

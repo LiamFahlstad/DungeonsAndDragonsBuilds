@@ -234,7 +234,7 @@ class TestClericDomainBonusProficiencies:
 
 def _example_build(file_stem: str):
     builder_name = file_stem.replace("_", "") + "CharacterBuilder"
-    return ExampleSelector.builds()[builder_name]
+    return ExampleSelector.builds()[builder_name]()
 
 
 class TestBlessedStrikesComesFromBaseClassOnly:

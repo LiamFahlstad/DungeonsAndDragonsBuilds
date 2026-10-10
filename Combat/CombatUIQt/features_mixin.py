@@ -19,9 +19,10 @@ from Combat.Definitions import Action
 from Presentation.FeatureCards import feature_label
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
+from .state import CombatWindowState
 
 
-class FeaturesMixin:
+class FeaturesMixin(CombatWindowState):
     """Mixin for feature-related methods."""
 
     def _feature_uses_text(self, char: dict, feature, sb) -> str:
@@ -106,9 +107,11 @@ class FeaturesMixin:
         """Search the feature list for the selected combatant and enable a feature."""
         if not self.selected_character:
             return
+        # Modal dialog: the selection can't change while it's open.
+        character = self.selected_character
 
-        features = self.selected_character.get("_feature_objects", [])
-        stat_block = self.selected_character.get("_stat_block")
+        features = character.get("_feature_objects", [])
+        stat_block = character.get("_stat_block")
 
         def origin_of(feature) -> str:
             if stat_block is None:
@@ -116,7 +119,7 @@ class FeaturesMixin:
             return feature_label(feature, stat_block)
 
         dlg = QDialog(self._window)
-        dlg.setWindowTitle(f"Enable Feature — {self.selected_character['name']}")
+        dlg.setWindowTitle(f"Enable Feature — {character['name']}")
         dlg.setMinimumSize(760, 560)
         dlg.setStyleSheet(QSS)
 
@@ -167,7 +170,7 @@ class FeaturesMixin:
         selected_feature: dict[str, object] = {"feature": None}
 
         def show_feature(feature):
-            sb = self.selected_character.get("_stat_block")
+            sb = character.get("_stat_block")
             feature_target = feature.target(sb) if sb is not None else None
             regained_on = feature.regained_on(sb) if sb is not None else None
             description = None
@@ -194,7 +197,7 @@ class FeaturesMixin:
                 if regained_on is not None
                 else "None"
             )
-            uses_text = self._feature_uses_text(self.selected_character, feature, sb)
+            uses_text = self._feature_uses_text(character, feature, sb)
 
             html_content = (
                 f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
@@ -221,9 +224,7 @@ class FeaturesMixin:
 
             if feature_target is None or feature_target == FeatureTarget.SELF:
                 apply_btn.setEnabled(True)
-                apply_btn.setToolTip(
-                    f"Apply to {self.selected_character['name']} (self-applied)"
-                )
+                apply_btn.setToolTip(f"Apply to {character['name']} (self-applied)")
             elif self.target_characters:
                 apply_btn.setEnabled(True)
                 target_names = ", ".join(t["name"] for t in self.target_characters)
@@ -253,6 +254,7 @@ class FeaturesMixin:
                 any_visible = False
                 for i in range(cat_item.childCount()):
                     child = cat_item.child(i)
+                    assert child is not None, i
                     feature = child.data(0, Qt.ItemDataRole.UserRole)
                     visible = query in feature.name.lower()
                     child.setHidden(not visible)

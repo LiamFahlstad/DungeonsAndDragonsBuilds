@@ -314,10 +314,11 @@ from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
 
 class BuildSelector:
     @staticmethod
-    def builds() -> dict[str, CharacterBuilder]:
+    def builds() -> dict[str, BuildClass]:
         return {
             # ... existing builds ...
-            "MyCustomBarbarian": MyCustomBarbarianCharacterBuilder(),
+            # The class itself: callers make a fresh build with ().
+            "MyCustomBarbarian": MyCustomBarbarianCharacterBuilder,
         }
 ```
 
@@ -335,7 +336,7 @@ This generates HTML character sheets in the `Output/` directory for all register
 
 ```bash
 python -c "
-import Definitions
+import Core.Definitions as Definitions
 from Builds.Characters.MyNewBuild import MyCustomBarbarianCharacterBuilder
 from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
 HtmlCharacterSheetWriter().write_character_sheet(

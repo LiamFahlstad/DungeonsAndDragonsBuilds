@@ -3,6 +3,8 @@ Model/Inventory.py and Builds/StartingEquipment.py: starting gear,
 starting/current gold, adventuring gear, dropping and consuming items.
 """
 
+from typing import Any
+
 import pytest
 
 from Builds.StartingEquipment import set_starting_equipment
@@ -13,7 +15,7 @@ from Core.Definitions import CharacterClass
 
 def fighter_inventory(**kwargs):
     inventory = Inventory()
-    defaults = dict(
+    defaults: dict[str, Any] = dict(
         base_class=CharacterClass.FIGHTER,
         default_equipment=[],
         add_default_equipment=False,
@@ -135,16 +137,18 @@ class TestDropAndConsume:
     def test_get_starting_item_ignores_later_gear(self):
         inventory = fighter_inventory(weapons=[Weapons.Dagger()])
         inventory.add_adventuring_gear("Loot", weapons=[Weapons.Dagger()])
-        assert inventory.get_starting_item(Weapons.Dagger) is (
-            inventory.starting_equipment_entry.weapons[0]
-        )
+        starting = inventory.starting_equipment_entry
+        assert starting is not None
+        assert inventory.get_starting_item(Weapons.Dagger) is starting.weapons[0]
 
     def test_consume_across_entries(self):
         inventory = fighter_inventory(items=[(Items.PotionOfHealing(), 2)])
         inventory.add_adventuring_gear("Loot", items=[(Items.PotionOfHealing(), 3)])
         inventory.consume_item(Items.PotionOfHealing, 3)
         assert [q for _, q in inventory.items] == [2]
-        assert inventory.starting_equipment_entry.items == []
+        starting = inventory.starting_equipment_entry
+        assert starting is not None
+        assert starting.items == []
 
     def test_consume_more_than_owned_raises(self):
         inventory = fighter_inventory(items=[(Items.PotionOfHealing(), 1)])

@@ -64,7 +64,7 @@ class TestACharacterIsBuiltFromItsSources:
         data = SpellSlotTestPaladin5CharacterBuilder().build()
         before = data.calculate_speed()
         sources = data.sources
-        sources.base_speed = sources.base_speed + 10
+        sources.base_speed = data.base_speed + 10
         assert data.calculate_speed() == before
         assert Character(sources).calculate_speed() == before + 10
 

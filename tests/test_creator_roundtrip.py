@@ -21,7 +21,7 @@ from pathlib import Path
 
 import pytest
 
-from Builds.CharacterBuilder import CharacterBuilder
+from Builds.CharacterBuilder import BuildClass, is_build_class
 from Builds.CharacterCreator.CodeGen import generate
 from Builds.CharacterCreator.Loader import load_build_file
 from tests._snapshot_helpers import ALL_BUILDS, BUILD_PARAMS, STATS_PATH, compute_stats
@@ -79,13 +79,11 @@ def _import_generated(source: str, folder: Path, module_name: str):
     return module
 
 
-def _builder_class(module) -> type[CharacterBuilder]:
+def _builder_class(module) -> BuildClass:
     builders = [
         value
         for value in vars(module).values()
-        if isinstance(value, type)
-        and issubclass(value, CharacterBuilder)
-        and value.__module__ == module.__name__
+        if is_build_class(value, module.__name__)
     ]
     assert len(builders) == 1, f"Expected one CharacterBuilder, found {builders}"
     return builders[0]
@@ -98,7 +96,7 @@ def test_every_not_reproduced_build_exists():
 
 @pytest.mark.parametrize("name", list(_params()))
 def test_creator_reproduces_build(name: str, tmp_path: Path):
-    build_file = inspect.getfile(type(ALL_BUILDS[name]))
+    build_file = inspect.getfile(ALL_BUILDS[name])
     spec, _warnings = load_build_file(build_file)
     source = generate(spec)
     module = _import_generated(source, tmp_path, f"creator_roundtrip_{name}")

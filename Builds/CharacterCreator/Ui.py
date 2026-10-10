@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -543,6 +544,7 @@ class EnumEditor(Editor):
         ) == len(list(enum_classes))
         self.description_label = None
 
+        outer = None
         if self._is_spell_enum:
             outer = QVBoxLayout(self.widget)
             outer.setContentsMargins(0, 0, 0, 0)
@@ -570,7 +572,7 @@ class EnumEditor(Editor):
 
         layout.addWidget(self.combo)
 
-        if self._is_spell_enum:
+        if outer is not None:
             self.description_label = QLabel()
             self.description_label.setObjectName("description")
             self.description_label.setWordWrap(True)
@@ -1124,9 +1126,12 @@ class ExprListEditor(Editor):
         try:
             node = ast.parse(expr, mode="eval").body
             if self.make_value is not None:
-                if not isinstance(node, ast.Dict) or None in node.keys:
+                if not isinstance(node, ast.Dict):
                     raise ValueError("not a plain dict")
-                for key, value in zip(node.keys, node.values):
+                keys = [key for key in node.keys if key is not None]
+                if len(keys) != len(node.keys):
+                    raise ValueError("not a plain dict")
+                for key, value in zip(keys, node.values):
                     key_editor, value_editor = self.add_row()
                     _lossless_set(key_editor, ast.unparse(key))
                     _lossless_set(value_editor, ast.unparse(value))
@@ -1489,11 +1494,17 @@ class CreatorApp(QMainWindow):
 
         root_layout.addWidget(self._build_header())
         root_layout.addWidget(self._build_notebook(), stretch=1)
-        self.statusBar().showMessage(f"Builds are generated into {GENERATED_DIR}")
+        self._show_status(f"Builds are generated into {GENERATED_DIR}")
 
         self.on_class_changed(initial=True)
 
     # ---------------------------------------------------------------- header
+
+    def _show_status(self, message: str) -> None:
+        # statusBar() creates the bar on first use, so it's never None here.
+        status_bar = self.statusBar()
+        assert status_bar is not None
+        status_bar.showMessage(message)
 
     def _build_header(self):
         header = QWidget()
@@ -2339,7 +2350,7 @@ class CreatorApp(QMainWindow):
             QMessageBox.critical(self, "Load failed", str(error))
             return
         self.apply_spec(spec)
-        self.statusBar().showMessage(f"Loaded {Path(path).name}")
+        self._show_status(f"Loaded {Path(path).name}")
         if warnings:
             QMessageBox.warning(
                 self,
@@ -2417,7 +2428,7 @@ class CreatorApp(QMainWindow):
                 return
         path.write_text(text, encoding="utf-8")
 
-        self.statusBar().showMessage(f"Wrote {path} — verifying…")
+        self._show_status(f"Wrote {path} — verifying…")
         QApplication.processEvents()
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         try:
@@ -2425,14 +2436,14 @@ class CreatorApp(QMainWindow):
         finally:
             QApplication.restoreOverrideCursor()
         if ok:
-            self.statusBar().showMessage(f"Generated and verified {path}")
+            self._show_status(f"Generated and verified {path}")
             QMessageBox.information(
                 self,
                 "Build generated",
                 f"Wrote {path}\n\nVerified: the build imports and .build() runs.",
             )
         else:
-            self.statusBar().showMessage(f"Generated {path}, but verification FAILED")
+            self._show_status(f"Generated {path}, but verification FAILED")
             tail = "\n".join(output.splitlines()[-15:])
             QMessageBox.warning(
                 self,
@@ -2466,11 +2477,13 @@ class EquipmentList:
         buttons.addStretch()
         layout.addLayout(buttons)
 
+    def _row(self, index: int) -> QListWidgetItem:
+        item = self.list_widget.item(index)
+        assert item is not None, index
+        return item
+
     def get_exprs(self):
-        return [
-            self.list_widget.item(index).text()
-            for index in range(self.list_widget.count())
-        ]
+        return [self._row(index).text() for index in range(self.list_widget.count())]
 
     def set_exprs(self, exprs):
         self.list_widget.clear()
@@ -2499,7 +2512,7 @@ class EquipmentList:
         layout.addWidget(editor.widget)
         layout.addStretch()
         if row is not None:
-            editor.set_expr(self.list_widget.item(row).text())
+            editor.set_expr(self._row(row).text())
 
         buttons = QHBoxLayout()
         ok_btn = QPushButton("OK")
@@ -2516,7 +2529,7 @@ class EquipmentList:
                 if row is None:
                     self.list_widget.addItem(expr)
                 else:
-                    self.list_widget.item(row).setText(expr)
+                    self._row(row).setText(expr)
             dialog.accept()
 
         ok_btn.clicked.connect(confirm)

@@ -2,6 +2,8 @@
 Tests for the Model package parts - core data structures for character attributes.
 """
 
+from typing import Any
+
 import pytest
 
 from Core.Definitions import (
@@ -433,5 +435,6 @@ class TestAbilityIncreases:
         assert increases.own_score(Ability.STRENGTH, view) == 20
 
     def test_rejects_non_integer_bonus(self):
+        not_an_int: Any = "2"  # the wrong type is the point of the test
         with pytest.raises(ValueError, match="Bonus must be an integer"):
-            AbilityIncreases().add(Ability.STRENGTH, "2")
+            AbilityIncreases().add(Ability.STRENGTH, not_an_int)

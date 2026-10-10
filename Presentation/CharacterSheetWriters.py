@@ -1201,14 +1201,14 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _write_scroll_body(file: TextIO, scroll: Items.Item):
-        spell = getattr(scroll, "spell", None)
-        if spell is None:
+        if not isinstance(scroll, Items.Scroll):
             # A generic Spell Scroll, with no one spell to lay out.
             Html.write_gear_meta_line(file, *Html.item_type_rarity_price(scroll))
             if scroll.description_text:
                 file.write(f"<div class='gear-desc'>{scroll.description_text}</div>\n")
             return
 
+        spell = scroll.spell
         # The meta line leads with the spell's level and school in place of
         # a "Scroll" type label the section heading already gives.
         level = "Cantrip" if spell.level == 0 else f"Level {spell.level}"

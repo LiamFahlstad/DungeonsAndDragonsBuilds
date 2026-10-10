@@ -21,7 +21,7 @@ class CompanionType(str, Enum):
 
 
 # Damage types the player may choose from when summoning each companion stat block.
-ALLOWED_STRIKE_DAMAGE_TYPES = {
+ALLOWED_STRIKE_DAMAGE_TYPES: dict[CompanionType, tuple[DamageType, ...]] = {
     CompanionType.BEAST_OF_THE_LAND: (
         DamageType.BLUDGEONING,
         DamageType.PIERCING,

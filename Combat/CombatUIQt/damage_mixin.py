@@ -17,6 +17,7 @@ from Combat.Definitions import Action
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .styles import QSS
 from Core.Rules import ability_modifier
+from .state import CombatWindowState
 
 
 def _damage_type_value(t) -> str:
@@ -29,7 +30,7 @@ def _entry_damage_types(entry) -> list:
     return getattr(entry, "damage_types", [])
 
 
-class DamageMixin:
+class DamageMixin(CombatWindowState):
     """Mixin for damage and healing related methods."""
 
     def _damage_type_modifier(self, target: dict, dmg: int, damage_type: str):

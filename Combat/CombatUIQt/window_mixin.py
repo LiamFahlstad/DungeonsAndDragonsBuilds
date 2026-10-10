@@ -22,9 +22,10 @@ from PyQt6.QtWidgets import (
 from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
 from .styles import QSS
+from .state import CombatWindowState
 
 
-class WindowMixin:
+class WindowMixin(CombatWindowState):
     """Mixin for window building and selection logic."""
 
     def _select_character(self, char: dict):
@@ -608,9 +609,9 @@ class WindowMixin:
 
         # Keep the shortcuts above disabled while focus is on a combo box, and
         # restored the instant it moves elsewhere (see the method docstring).
-        QApplication.instance().focusChanged.connect(
-            self._update_combo_sensitive_shortcuts
-        )
+        app = QApplication.instance()
+        assert isinstance(app, QApplication)  # the window runs inside one
+        app.focusChanged.connect(self._update_combo_sensitive_shortcuts)
         self._update_combo_sensitive_shortcuts(None, QApplication.focusWidget())
 
     @staticmethod

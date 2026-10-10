@@ -96,7 +96,7 @@ class TestMulticlassing:
     def test_a_later_class_grants_its_multiclass_proficiencies(self):
         # Regression: multiclass builders granted no proficiencies at all, so
         # a Wizard 3 / Warlock 3 never got the Warlock's Light armor training.
-        data = type(ALL_BUILDS["SpellSlotTestWizard3Warlock3"])().build()
+        data = ALL_BUILDS["SpellSlotTestWizard3Warlock3"]().build()
         assert LIGHT in data.validate().armor_training()
 
     def test_resuming_a_class_does_not_grant_its_proficiencies_again(self):
@@ -112,7 +112,7 @@ class TestMulticlassing:
     def test_starting_class_keeps_its_full_proficiencies(self):
         # Fighter 1 / Warlock 5: the Fighter's Heavy armor comes from its full
         # Core Traits, not the (Heavy-less) multiclass subset.
-        data = type(ALL_BUILDS["Y2024_Warlock_Archfey_CaelumBladefey"])().build()
+        data = ALL_BUILDS["Y2024_Warlock_Archfey_CaelumBladefey"]().build()
         character = data.validate()
         assert ArmorType.HEAVY in character.armor_training()
         assert MARTIAL in character.weapon_proficiencies()
@@ -281,7 +281,7 @@ class TestArmorTraining:
         assert character.calculate_armor_class(ignore_shield=True) == 10 + 2 + 3
 
     def test_sheet_shows_the_warning(self, tmp_path):
-        sources = type(ALL_BUILDS["SpellSlotTestWizard5"])().build().sources
+        sources = ALL_BUILDS["SpellSlotTestWizard5"]().build().sources
         sources.add_armor(Armor.LeatherArmor())  # without armor training
         HtmlCharacterSheetWriter().write_character_sheet(
             Character(sources), output_folder=str(tmp_path)

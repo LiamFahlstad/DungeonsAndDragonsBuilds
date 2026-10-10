@@ -8,9 +8,10 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from .state import CombatWindowState
 
 
-class TimerMixin:
+class TimerMixin(CombatWindowState):
     """Mixin for session and player timer widgets."""
 
     _COMPACT_BTN_STYLE = "padding: 2px 6px; min-height: 18px; font-size: 10px;"

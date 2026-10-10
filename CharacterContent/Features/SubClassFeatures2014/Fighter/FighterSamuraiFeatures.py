@@ -62,9 +62,6 @@ class FightingSpirit(Feature):
             uses=FeatureUses(max_uses=3, regain_all_on="long rest"),
         )
 
-    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
-        return RegainedOn.LONG_REST
-
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your intensity in battle can shield you and help you strike true. As a bonus action on your turn, you can give yourself advantage on all weapon attack rolls until the end of the current turn. When you do so, you also gain temporary hit points.\n"

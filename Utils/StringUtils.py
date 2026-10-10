@@ -71,8 +71,8 @@ def compress_level_progression(
 def add_boxes(
     description: str,
     box_count: int,
-    regain_all_on: str = None,
-    regain_x_on: tuple = None,
+    regain_all_on: str | None = None,
+    regain_x_on: tuple | None = None,
     current_formula: str | None = None,
 ) -> str:
     """Append box symbols to *description*.

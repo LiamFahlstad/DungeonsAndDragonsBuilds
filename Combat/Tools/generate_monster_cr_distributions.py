@@ -201,7 +201,8 @@ def extract_module(cr_folder: Path, filename: str, errors: list[str]) -> list[di
         if not issubclass(obj, ExtendedCombatantData):
             continue
         try:
-            instance = obj()
+            # Catalog monsters take no arguments; one that does is reported below.
+            instance = obj()  # pyright: ignore[reportCallIssue]
         except Exception as e:
             errors.append(f"{module_name}.{name}: instantiation failed: {e}")
             continue

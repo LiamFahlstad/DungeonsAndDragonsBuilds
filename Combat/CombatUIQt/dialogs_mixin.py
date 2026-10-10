@@ -35,6 +35,7 @@ from .stats import (
 )
 from .styles import QSS
 from Core.Rules import ability_modifier
+from .state import CombatWindowState
 
 
 def _display(value) -> str:
@@ -214,7 +215,7 @@ def _ability_probability_table_html(ab) -> str | None:
     return None
 
 
-class DialogsMixin:
+class DialogsMixin(CombatWindowState):
     """Mixin for dialog windows."""
 
     def _show_add_combatant_dialog(self):
@@ -1012,6 +1013,7 @@ class DialogsMixin:
                 any_visible = False
                 for i in range(cat_item.childCount()):
                     child = cat_item.child(i)
+                    assert child is not None, i
                     rule = child.data(0, Qt.ItemDataRole.UserRole)
                     visible = rule.matches(query)
                     child.setHidden(not visible)

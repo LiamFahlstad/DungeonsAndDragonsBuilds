@@ -7,7 +7,7 @@ class Maneuver(Feature):
         self,
         name: str,
         activation: "FeatureActivation | None" = None,
-        usage_tags: list = None,
+        usage_tags: list | None = None,
     ):
         super().__init__(
             name=name,

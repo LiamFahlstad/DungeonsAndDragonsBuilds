@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Callable, Optional, TextIO
 
 from Core.Definitions import Ability, Skill
+from Presentation.FeatureCards import DescriptionMode
 from Model.Character import Character
 from RunCharacterCreator import BuildSelector, ExampleSelector
 from Presentation.CharacterSheetWriters import (
@@ -38,12 +39,15 @@ HASHES_PATH = SNAPSHOT_DIR / "sheet_hashes.json"
 UPDATE_SNAPSHOTS = os.environ.get("UPDATE_SNAPSHOTS") == "1"
 SNAPSHOT_DUMP_DIR = os.environ.get("SNAPSHOT_DUMP_DIR")
 
-SHEET_MODES = (("full", None), ("concise", "concise"))
+SHEET_MODES: tuple[tuple[str, DescriptionMode], ...] = (
+    ("full", None),
+    ("concise", "concise"),
+)
 
 
 def build(name: str) -> Character:
     """A fresh Character for the build registered as `name`."""
-    return type(ALL_BUILDS[name])().build()
+    return ALL_BUILDS[name]().build()
 
 
 def compute_stats(data: Character) -> dict:

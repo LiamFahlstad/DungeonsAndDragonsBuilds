@@ -267,8 +267,8 @@ class YourCharacterNameCharacterBuilder(CharacterBuilder):
 # Option 1: Add to RunCharacterCreator.py
 #   1. Import your builder in RunCharacterCreator.py:
 #      from Builds.Characters.MyBuild import YourCharacterNameCharacterBuilder
-#   2. Add to BuildSelector.builds() dict:
-#      "MyBuild": YourCharacterNameCharacterBuilder(),
+#   2. Add the class (not an instance) to the BuildSelector.builds() dict:
+#      "MyBuild": YourCharacterNameCharacterBuilder,
 #   3. Run: python RunCharacterCreator.py
 #
 # Option 2: Test just your build

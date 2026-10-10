@@ -24,7 +24,11 @@ def _offset_index(text: str) -> list[int]:
     return offsets
 
 
-def _node_span(node: ast.AST, line_starts: list[int]) -> tuple[int, int]:
+def _node_span(
+    node: ast.expr | ast.stmt | ast.keyword, line_starts: list[int]
+) -> tuple[int, int]:
+    # ast.parse always sets the end position; the stubs allow None.
+    assert node.end_lineno is not None and node.end_col_offset is not None
     start = line_starts[node.lineno - 1] + node.col_offset
     end = line_starts[node.end_lineno - 1] + node.end_col_offset
     return start, end

@@ -5,7 +5,7 @@ wild shapes (CharacterContent) and the combat engine."""
 
 from dataclasses import dataclass as dataclass_decorator
 from enum import Enum
-from typing import Optional
+from typing import Callable, Optional
 
 from attr import dataclass
 
@@ -206,3 +206,8 @@ class ExtendedCombatantData(BasicCombatantData):
                 setattr(self, field, [])
         if self.legendary_resistances is None:
             self.legendary_resistances = 0
+
+
+# A stat block class from the monster catalog, built with no arguments
+# (BrownBear()) - what a Druid's known Wild Shape forms are.
+CreatureForm = Callable[[], ExtendedCombatantData]

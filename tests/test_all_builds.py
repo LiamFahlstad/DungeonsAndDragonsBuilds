@@ -55,7 +55,7 @@ def _stats(data, character):
 
 @pytest.mark.parametrize("name", BUILD_PARAMS)
 def test_build_and_invariants(name):
-    data = type(ALL_BUILDS[name])().build()
+    data = ALL_BUILDS[name]().build()
     character = data.validate()
 
     level = data.character_level
@@ -69,7 +69,7 @@ def test_build_and_invariants(name):
 
 @pytest.mark.parametrize("name", BUILD_PARAMS)
 def test_rebuild_is_idempotent(name):
-    builder = type(ALL_BUILDS[name])()
+    builder = ALL_BUILDS[name]()
     first = builder.build()
     first_stats = _stats(first, first.validate())
 
@@ -98,19 +98,22 @@ PHB_SPELLCASTING_ABILITY = {
 def test_single_class_caster_uses_class_ability(name):
     # Regression: build() used to overwrite the class's ability with the
     # highest raw mental score (7 Paladins ended up casting with Wisdom).
-    data = type(ALL_BUILDS[name])().build()
-    if len(data.level_per_class) != 1 or data.base_class not in (
-        PHB_SPELLCASTING_ABILITY
+    data = ALL_BUILDS[name]().build()
+    base_class = data.base_class
+    if (
+        len(data.level_per_class) != 1
+        or base_class is None
+        or base_class not in PHB_SPELLCASTING_ABILITY
     ):
         return
-    assert data.spell_casting_ability == PHB_SPELLCASTING_ABILITY[data.base_class]
+    assert data.spell_casting_ability == PHB_SPELLCASTING_ABILITY[base_class]
 
 
 @pytest.mark.parametrize("name", BUILD_PARAMS)
 def test_every_feature_renders(name):
     # Descriptions are only evaluated when a sheet is written, so a broken
     # get_description (missing import, deleted helper) otherwise goes unseen.
-    data = type(ALL_BUILDS[name])().build()
+    data = ALL_BUILDS[name]().build()
     character = data.validate()
     for feature in data.iter_features_with_extensions():
         description = feature.get_description(character)
@@ -151,7 +154,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
         return original(self, skill)
 
     monkeypatch.setattr(Skills, "add_skill_proficiency", recording)
-    type(ALL_BUILDS[name])().build().validate()
+    ALL_BUILDS[name]().build().validate()
     assert wasted == []
 
 
@@ -184,7 +187,7 @@ def test_no_subclass_level_is_skipped(name):
     # A subclass level missing from subclass_features_by_level is silently
     # skipped by BaseClassLevelFeatures.add_features, so the character loses
     # that level's features and always-prepared spells without any error.
-    for class_builder in _class_builders(ALL_BUILDS[name]):
+    for class_builder in _class_builders(ALL_BUILDS[name]()):
         subclass_levels = (
             class_builder.base_class_level_features.subclass_features_by_level
         )

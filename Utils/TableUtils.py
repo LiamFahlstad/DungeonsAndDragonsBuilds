@@ -8,7 +8,7 @@ def _expand_multiline_rows(
 
     for row in rows:
         multiline_index = None
-        split_values = None
+        split_values: list[str] = []
 
         for index, value in enumerate(row):
             if isinstance(value, str) and "\n" in value:

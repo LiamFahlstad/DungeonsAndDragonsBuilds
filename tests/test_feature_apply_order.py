@@ -67,6 +67,7 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
+from Model.Content.Effect import Effect
 from Model.Ledger.LedgerWriter import LedgerWriter
 from tests._grants import grant
 from Model.Character import Character
@@ -197,7 +198,7 @@ _WISDOM_SKILL_BONUS_FEATURES = {
 def test_wisdom_skill_bonuses_use_final_wisdom(name):
     # Regression: four example Druids printed Primal Order's Arcana bonus
     # from their level-1 Wisdom (+3) instead of their final Wisdom (+5).
-    data = type(ALL_BUILDS[name])().build()
+    data = ALL_BUILDS[name]().build()
     character = data.validate()
     expected = max(1, character.get_ability_modifier(Ability.WISDOM))
     for feature in data.features:
@@ -257,8 +258,8 @@ def _stats(data):
 def test_effect_order_does_not_change_stats(name):
     # Every effect - features, extensions, armor, weapons, items and fighting
     # styles - applied in shuffled orders, with no exceptions.
-    expected = _stats(type(ALL_BUILDS[name])().build())
-    built = type(ALL_BUILDS[name])().build()
+    expected = _stats(ALL_BUILDS[name]().build())
+    built = ALL_BUILDS[name]().build()
     for seed in range(3):
 
         def shuffled(effects, seed=seed):
@@ -472,9 +473,7 @@ class _GrantProficiency(Feature):
 
 class TestExpertiseRequirement:
     def _sources_and_unproficient_skill(self):
-        builder = type(
-            ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"]
-        )()
+        builder = ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"]()
         character = builder.build().validate()
         skill = next(s for s in Skill if not character.is_proficient_in_skill(s))
         return character.sources, skill
@@ -500,12 +499,12 @@ class TestExtensionsApply:
         # Regression: Saint of Forge and Fire (Forge Cleric 17) is wired as
         # an extension of Soul of the Forge, and extensions were render-only,
         # so its fire immunity silently never applied.
-        data = type(ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"])()
+        data = ALL_BUILDS["Y2014ClericForgeBrennaHearthforgeCharacterBuilder"]()
         character = data.build().validate()
         assert character.is_immune_to_damage(DamageType.FIRE)
 
     def test_extending_a_built_character(self):
-        data = type(ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"])()
+        data = ALL_BUILDS["Y2014DruidDreamsSomnaDriftwillowCharacterBuilder"]()
         data = data.build()
         assert not data.validate().is_immune_to_damage(DamageType.FIRE)
         # An extension is a source like any other.
@@ -521,9 +520,7 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
     # to the bow after the bracers were dropped and the character rebuilt.
     # Weapons are now shared between a builder and every sheet it builds, so
     # this also proves nothing writes into them.
-    builder = type(
-        ALL_BUILDS["Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder"]
-    )()
+    builder = ALL_BUILDS["Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder"]()
     bracers = BracersOfArchery()
     builder.add_adventuring_gear("Loot", items=[(bracers, 1)])
 
@@ -562,13 +559,13 @@ def test_effects_can_only_record():
 def test_evaluation_passes_apply_the_write_only_record(name):
     received = []
 
-    class _Spy:
+    class _Spy(Effect):
         name = "Spy"
 
-        def apply(self, ledger_writer):
+        def apply(self, ledger_writer: LedgerWriter) -> None:
             received.append(ledger_writer)
 
-    sources = type(ALL_BUILDS[name])().build().sources
+    sources = ALL_BUILDS[name]().build().sources
     sources.add_effect(_Spy())
     Character(sources).validate()
     assert received and all(type(r) is LedgerWriter for r in received)
@@ -621,7 +618,7 @@ class TestProficienciesResolveOnRead:
 
     def test_grant_added_after_the_weapon_reaches_the_sheet(self):
         # A Bladesinger: trained with some martial melee weapons, not bows.
-        sources = type(ALL_BUILDS["SpellSlotTestWizard5"])().build().sources
+        sources = ALL_BUILDS["SpellSlotTestWizard5"]().build().sources
         longbow = Weapons.Longbow()
         sources.add_weapon(longbow)
         assert not longbow.is_proficient(Character(sources).validate())
@@ -634,7 +631,7 @@ class TestProficienciesResolveOnRead:
     def test_class_proficiencies_reach_the_stat_block(self):
         # Wizard's Core Traits: Simple weapons, no armor. Its Bladesinger
         # subclass adds Melee Martial weapons without Two-Handed or Heavy.
-        data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
+        data = ALL_BUILDS["SpellSlotTestWizard5"]().build()
         character = data.validate()
         assert character.weapon_proficiencies() == {
             WeaponProficiency.SIMPLE,

@@ -60,19 +60,18 @@ from CharacterContent.Items import Armor
 from CharacterContent.Items import Items
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
+    DruidLevel9Spells,
+    DruidLevel8Spells,
+    DruidLevel7Spells,
     AbjurationLevel0Spells,
     AbjurationLevel1Spells,
-    DivinationLevel9Spells,
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,
     DruidLevel3Spells,
     DruidLevel4Spells,
     DruidLevel5Spells,
-    EnchantmentLevel8Spells,
     EvocationLevel0Spells,
-    IllusionLevel7Spells,
-    TransmutationLevel9Spells,
 )
 from Model.AbilityScores import AbilityScores
 from CharacterContent.ToolProficiencies.Proficiencies import HerbalismKit
@@ -218,11 +217,11 @@ def get_starter_class_builder():
                     ),
                 ),
                 13: DruidLevel13(
-                    spell=IllusionLevel7Spells.MIRAGE_ARCANE,
+                    spell=DruidLevel7Spells.MIRAGE_ARCANE,
                 ),
                 14: DruidLevel14(),
                 15: DruidLevel15(
-                    spell=EnchantmentLevel8Spells.ANTIPATHY_SYMPATHY,
+                    spell=DruidLevel8Spells.ANTIPATHY_SYMPATHY,
                 ),
                 16: DruidLevel16(
                     # +2 WIS (18 -> 20).
@@ -233,10 +232,10 @@ def get_starter_class_builder():
                     ),
                 ),
                 17: DruidLevel17(
-                    spell=TransmutationLevel9Spells.SHAPECHANGE,
+                    spell=DruidLevel9Spells.SHAPECHANGE,
                 ),
                 18: DruidLevel18(
-                    spell=DivinationLevel9Spells.FORESIGHT,
+                    spell=DruidLevel9Spells.FORESIGHT,
                 ),
                 19: DruidLevel19(
                     # NOTE: "Boon of Recovery" isn't implemented in this codebase (only

@@ -83,7 +83,8 @@ def apply_features(character, features, armors=()):
 
 
 def _names_and_levels(data):
-    """(spell, grant level) for every spell known."""
+    """(spell, grant level) for every spell known. Spell names are str enums,
+    so each compares (and hashes) equal to its own text: {"Command"} matches."""
     return [(s.name, s.grant_level) for s in data.spells]
 
 
@@ -194,7 +195,7 @@ class TestPaladinOathSpellGrantLevels:
         assert data.level_per_class[CharacterClass.PALADIN] == 20
         by_level = {}
         for spell, level in _names_and_levels(data):
-            by_level.setdefault(level, set()).add(spell.value)
+            by_level.setdefault(level, set()).add(spell)
         # Subset checks (not equality): the level tag is also shared by
         # non-subclass spells granted at the same character level (e.g. feats
         # or class spells known), so extra entries at a level don't indicate
@@ -248,7 +249,7 @@ class TestSorcererAndWarlockSpellGrantLevels:
 
         by_level = {}
         for spell, level in _names_and_levels(data):
-            by_level.setdefault(level, set()).add(spell.value)
+            by_level.setdefault(level, set()).add(spell)
         assert by_level[3] == {
             "Alter Self",
             "Chromatic Orb",
@@ -271,7 +272,7 @@ class TestSorcererAndWarlockSpellGrantLevels:
         # Calm Emotions, Faerie Fire, Misty Step, Phantasmal Force, Sleep (5).
         data = BuildSelector.get_build("Y2024_Warlock_Archfey_WrennaThornpact").build()
         level_3_spells = {
-            spell.value for spell, level in _names_and_levels(data) if level == 3
+            spell for spell, level in _names_and_levels(data) if level == 3
         }
         # Subset: cantrips/level-1 spells known also tag as grant level 3 for
         # a level-3 Warlock, alongside the always-prepared Archfey Spells.
@@ -328,7 +329,7 @@ class TestDruidCircleOfTheLandSpells:
         builder_cls = self.LEVEL_BUILDERS[level]
         apply_level(builder_cls(land_type=land_type), sources)
         data = Character(sources)
-        names = {s.name.value for s in data.spells}
+        names = {s.name for s in data.spells}
         assert names == self.LAND_SPELLS[land_type][level]
 
 
@@ -666,7 +667,7 @@ class TestBladesingerWeaponProficiencyScope:
 
         # Hand Crossbow is Light, but ranged - not a Melee Martial weapon.
         assert not weapon_matches_proficiency(
-            Ranged.HandCrossbow(),
+            Ranged.HandCrossbow().traits,
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         )
 

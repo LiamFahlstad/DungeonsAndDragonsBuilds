@@ -1,9 +1,7 @@
-from typing import Type
-
 from CharacterContent.Features.SubClassFeatures.Druid.DruidMoonFeatures import (
     CircleForms,
 )
-from Model.Creatures.Combatants import ExtendedCombatantData
+from Model.Creatures.Combatants import CreatureForm
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
 
@@ -16,7 +14,7 @@ def wild_shape_temp_hp_formula(character: CharacterView) -> str:
 
 
 def format_wild_shape_form(
-    monster_cls: Type[ExtendedCombatantData],
+    monster_cls: CreatureForm,
     character: CharacterView,
 ) -> str:
     return format_creature_stat_block(

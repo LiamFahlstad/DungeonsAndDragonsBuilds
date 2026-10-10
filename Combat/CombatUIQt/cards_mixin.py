@@ -1,6 +1,9 @@
 """Cards/rendering mixin for CombatAppQt."""
 
+from typing import Callable
+
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QMouseEvent
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -15,17 +18,43 @@ from PyQt6.QtWidgets import (
 from Combat.Definitions import ConditionRule
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
+from .state import CombatWindowState
 
 
-class CardsMixin:
+class _CombatantCard(QFrame):
+    """A combatant's card. A left click selects it as the source; a right
+    click as the target (Shift + right click adds it to the targets)."""
+
+    def __init__(
+        self,
+        on_left_click: Callable[[], None],
+        on_right_click: Callable[[bool], None],
+    ):
+        super().__init__()
+        self._on_left_click = on_left_click
+        self._on_right_click = on_right_click
+
+    def mousePressEvent(self, a0: QMouseEvent | None) -> None:
+        # `a0` is PyQt6's name for the event; an override must keep it.
+        if a0 is None:
+            return
+        if a0.button() == Qt.MouseButton.RightButton:
+            shift = bool(a0.modifiers() & Qt.KeyboardModifier.ShiftModifier)
+            self._on_right_click(shift)
+        else:
+            self._on_left_click()
+
+
+class CardsMixin(CombatWindowState):
     """Mixin for card rendering and display."""
 
     def _rebuild_cards(self):
         """Remove all card widgets and recreate them from self.characters."""
         while self._grid_layout.count():
             item = self._grid_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            widget = item.widget() if item is not None else None
+            if widget is not None:
+                widget.deleteLater()
         self._card_widgets.clear()
 
         for index, char in enumerate(self.characters):
@@ -42,7 +71,7 @@ class CardsMixin:
         is_source = char is self.selected_character
         is_active = (
             self.phase == "COMBAT"
-            and self.initiative_order
+            and bool(self.initiative_order)
             and self.initiative_order[self.current_turn_idx] is char
         )
         is_target = any(char is t for t in self.target_characters)
@@ -158,7 +187,12 @@ class CardsMixin:
         is_dying = death_state == "dying"
         is_stabilized = death_state == "stabilized"
 
-        card = QFrame()
+        card = _CombatantCard(
+            on_left_click=lambda: self._select_character(char),
+            on_right_click=lambda additive: self._select_target_character(
+                char, additive=additive
+            ),
+        )
         card.setObjectName("combatantCard")
         self._apply_card_state_properties(card, char, death_state)
         card.setFixedWidth(220)
@@ -286,22 +320,19 @@ class CardsMixin:
                     # ally/enemy target) — search every loaded character for the
                     # owner, not just this one, and build the tooltip (incl. "Uses
                     # Left") from that owner's own state.
-                    feature = owner = None
-                    for candidate in self.characters:
+                    for owner in self.characters:
                         feature = next(
                             (
                                 f
-                                for f in candidate.get("_feature_objects", [])
+                                for f in owner.get("_feature_objects", [])
                                 if f.name == cond
                             ),
                             None,
                         )
                         if feature is not None:
-                            owner = candidate
+                            spell_desc = self._feature_condition_tooltip(owner, feature)
+                            spell_color = spell_color or "#4c7ac9"
                             break
-                    if feature is not None:
-                        spell_desc = self._feature_condition_tooltip(owner, feature)
-                        spell_color = spell_color or "#4c7ac9"
                 badge_color = spell_color or self._CONDITION_COLORS.get(cond, "#7a5c00")
                 has_rule = ConditionRule.from_name(cond) is not None
                 if has_rule or spell_desc:
@@ -318,7 +349,7 @@ class CardsMixin:
                         badge.clicked.connect(
                             lambda _=False, c=cond: self._show_condition_info(c)
                         )
-                    else:
+                    elif spell_desc:
                         badge.clicked.connect(
                             lambda _=False, c=cond, d=spell_desc: self._show_rule_popup(
                                 c, c, d
@@ -566,14 +597,7 @@ class CardsMixin:
                     )
                     layout.addWidget(row_lbl)
 
-        # --- Click to select: left = source, right = target ---
-        card.mousePressEvent = lambda event, c=char: (
-            self._select_target_character(
-                c, additive=bool(event.modifiers() & Qt.KeyboardModifier.ShiftModifier)
-            )
-            if event.button() == Qt.MouseButton.RightButton
-            else self._select_character(c)
-        )
+        # Clicks select (see _CombatantCard): children let them through.
         for child in card.findChildren(QWidget):
             if not isinstance(child, QPushButton):
                 child.setAttribute(

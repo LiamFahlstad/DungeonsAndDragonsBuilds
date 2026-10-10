@@ -18,9 +18,10 @@ from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
+from .state import CombatWindowState
 
 
-class SpellsMixin:
+class SpellsMixin(CombatWindowState):
     """Mixin for spell-related methods."""
 
     def _cast_spell_slot_level(self, level: int):
@@ -127,6 +128,8 @@ class SpellsMixin:
         """Search the spell list (like Rules) and cast a spell on the selected combatant."""
         if not self.selected_character:
             return
+        # Modal dialog: the selection can't change while it's open.
+        character = self.selected_character
 
         from CharacterContent.Spells.SpellFactory import SpellFactory
 
@@ -137,7 +140,7 @@ class SpellsMixin:
         spells = self._spells_cache
 
         dlg = QDialog(self._window)
-        dlg.setWindowTitle(f"Cast Spell — {self.selected_character['name']}")
+        dlg.setWindowTitle(f"Cast Spell — {character['name']}")
         dlg.setMinimumSize(760, 560)
         dlg.setStyleSheet(QSS)
 
@@ -218,9 +221,7 @@ class SpellsMixin:
 
             if spell.target is None or spell.target == FeatureTarget.SELF:
                 cast_btn.setEnabled(True)
-                cast_btn.setToolTip(
-                    f"Cast on {self.selected_character['name']} (self-applied)"
-                )
+                cast_btn.setToolTip(f"Cast on {character['name']} (self-applied)")
             elif self.target_characters:
                 cast_btn.setEnabled(True)
                 target_names = ", ".join(t["name"] for t in self.target_characters)
@@ -250,6 +251,7 @@ class SpellsMixin:
                 any_visible = False
                 for i in range(cat_item.childCount()):
                     child = cat_item.child(i)
+                    assert child is not None, i
                     spell = child.data(0, Qt.ItemDataRole.UserRole)
                     visible = query in spell.name.lower()
                     child.setHidden(not visible)

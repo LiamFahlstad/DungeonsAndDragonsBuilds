@@ -19,9 +19,10 @@ from PyQt6.QtWidgets import (
 from .stats import _default_stats
 from .styles import QSS
 from Core.Rules import ability_modifier
+from .state import CombatWindowState
 
 
-class TurnsMixin:
+class TurnsMixin(CombatWindowState):
     """Mixin for turn and initiative management."""
 
     def _advance_turn(self):
@@ -312,7 +313,9 @@ class TurnsMixin:
         for start, end, lw in list_widgets:
             init_val = result[start][0]
             for i in range(lw.count()):
-                char = lw.item(i).data(Qt.ItemDataRole.UserRole)
+                item = lw.item(i)
+                assert item is not None, i
+                char = item.data(Qt.ItemDataRole.UserRole)
                 result[start + i] = (init_val, char)
 
         return result

@@ -113,7 +113,10 @@ def run_short_rest(player_log_path: str):
     for char in players:
         _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
 
-    qapp = QApplication.instance() or QApplication(sys.argv)
+    qapp = QApplication.instance()
+    if qapp is None:
+        qapp = QApplication(sys.argv)
+    assert isinstance(qapp, QApplication)
     qapp.setStyleSheet(QSS)
 
     dlg = QDialog()

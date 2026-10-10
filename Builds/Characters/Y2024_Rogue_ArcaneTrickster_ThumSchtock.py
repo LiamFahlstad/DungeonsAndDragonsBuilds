@@ -17,7 +17,6 @@ from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Items.Weapons.SimpleMelee import Dagger
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
-    EvocationLevel0Spells,
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
@@ -94,7 +93,7 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: RogueArcaneTricksterLevel3(
                     cantrip_2=WizardLevel0Spells.MINOR_ILLUSION,
-                    cantrip_3=EvocationLevel0Spells.BOOMING_BLADE,
+                    cantrip_3=WizardLevel0Spells.BOOMING_BLADE,
                     spell_1=WizardLevel1Spells.SLEEP,
                     spell_2=WizardLevel1Spells.SILENT_IMAGE,
                     spell_3=WizardLevel1Spells.FOG_CLOUD,

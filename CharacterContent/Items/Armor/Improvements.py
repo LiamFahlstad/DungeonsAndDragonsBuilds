@@ -9,14 +9,7 @@ class ArmorImprovement(ItemImprovement):
     """Base class for armor improvements. Override apply() to modify the armor."""
 
     @abstractmethod
-    def apply(
-        self, armor: "AbstractArmor"
-    ) -> None:  # pyright: ignore[reportIncompatibleMethodOverride]
-        # Renaming ItemImprovement.apply's generic `item` param to `armor`
-        # here (and to `weapon` in WeaponImprovement) is intentional - it's
-        # far more readable in every armor-specific apply() below than a
-        # generic `item` would be. Pyright's override check wants the exact
-        # same parameter name, so it's silenced just for this one rule.
+    def apply(self, armor: "AbstractArmor", /) -> None:
         pass
 
 

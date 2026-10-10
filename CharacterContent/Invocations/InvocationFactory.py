@@ -6,7 +6,7 @@ def replace_last(text, old, new):
     return new.join(parts)
 
 
-def inject_newline(text):
+def inject_newline(text: str) -> str:
     while True:
         try:
             index = text.index(" . ")
@@ -39,9 +39,8 @@ class Invocation:
         return self._data.get("prerequisite")
 
     @property
-    def description(self):
-        text = self._data.get("description")
-        return inject_newline(text)
+    def description(self) -> str:
+        return inject_newline(self._data["description"])
 
     @property
     def source(self):

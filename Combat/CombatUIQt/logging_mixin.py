@@ -20,6 +20,7 @@ from .stats import (
     increment_named_stat,
     spell_slots_used_key,
 )
+from .state import CombatWindowState
 
 
 class _CombatJSONEncoder(json.JSONEncoder):
@@ -32,7 +33,7 @@ class _CombatJSONEncoder(json.JSONEncoder):
         return super().default(o)
 
 
-class LoggingMixin:
+class LoggingMixin(CombatWindowState):
     """Mixin for logging-related methods."""
 
     def _write_log(self, data: dict):
@@ -74,7 +75,7 @@ class LoggingMixin:
         entry = f"[{turn_name}'s turn] {text}" if turn_name else text
         data.setdefault(key, []).append(entry)
         if self.player_log_file:
-            player_entry = {"text": entry}
+            player_entry: dict[str, object] = {"text": entry}
             if action is not None:
                 player_entry["character"] = character
                 player_entry["action"] = action
@@ -206,6 +207,7 @@ class LoggingMixin:
             if cond not in char["conditions"]:
                 char["conditions"].append(cond)
         elif action == Action.REMOVE_SPELL_SLOT:
+            assert isinstance(value, int)  # the slot level (_cast_spell_slot_level)
             char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
             char.setdefault("stats", _default_stats())
             char["stats"]["spell_slots_used"] = max(
@@ -320,9 +322,11 @@ class LoggingMixin:
         """Load (or create) the persistent player log, reconstruct current player
         state by replaying every recorded action onto the freshly-built default
         characters, and start a new session entry for this run."""
-        self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
-        if self.player_log_file.exists():
-            self.player_log_data = json.loads(self.player_log_file.read_text())
+        player_log_file = self.player_log_file
+        assert player_log_file is not None  # only called when there is one
+        player_log_file.parent.mkdir(parents=True, exist_ok=True)
+        if player_log_file.exists():
+            self.player_log_data = json.loads(player_log_file.read_text())
         else:
             self.player_log_data = {"sessions": []}
 

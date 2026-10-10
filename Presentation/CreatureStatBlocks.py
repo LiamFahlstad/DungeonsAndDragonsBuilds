@@ -216,7 +216,7 @@ def format_creature_stat_block(
         Ability.DEXTERITY.short_name,
         Ability.CONSTITUTION.short_name,
     ):
-        score = monster.ability_scores.get(abbr, 10)
+        score = (monster.ability_scores or {}).get(abbr, 10)
         modifier = ability_modifier(score)
         physical_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
     rows.append(_row("Str / Dex / Con", ", ".join(physical_parts)))
@@ -247,7 +247,7 @@ def format_creature_stat_block(
     else:
         mental_parts = []
         for abbr in _MENTAL_ABILITIES:
-            score = monster.ability_scores.get(abbr, 10)
+            score = (monster.ability_scores or {}).get(abbr, 10)
             modifier = ability_modifier(score)
             mental_parts.append(f"{abbr} {score} ({_fmt_mod(modifier)})")
         rows.append(_row("Int / Wis / Cha", ", ".join(mental_parts)))
