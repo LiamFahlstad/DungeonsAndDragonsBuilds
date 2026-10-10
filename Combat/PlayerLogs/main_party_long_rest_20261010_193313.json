@@ -1,0 +1,773 @@
+{
+  "sessions": [
+    {
+      "type": "encounter",
+      "scenario": "ashelm_church",
+      "started_at": "2026-09-08T19:28:25",
+      "round_number": 5,
+      "round_1": [
+        {
+          "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) takes 9 Slashing damage from Accursed Group of 3 (Accursed Group (3))",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -9,
+            "temp_delta": 0,
+            "dmg": 9,
+            "damage_type": "Slashing",
+            "source_name": "Accursed Group of 3 (Accursed Group (3))",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Piercing damage from Thum Schtock",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Piercing",
+            "source_name": "Thum Schtock",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) gains Bloodied from Thum Schtock",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Thum Schtock",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))"
+          }
+        },
+        {
+          "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] Edmund takes 7 Bludgeoning damage from (3) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Edmund",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Bludgeoning",
+            "source_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Edmund",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Obmar St\u00e5lsk\u00e4gg's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Bludgeoning damage from Obmar St\u00e5lsk\u00e4gg",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Bludgeoning",
+            "source_name": "Obmar St\u00e5lsk\u00e4gg",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Obmar St\u00e5lsk\u00e4gg's turn] Accursed Group of 3 (Accursed Group (3)) takes 3 Piercing damage from Obmar St\u00e5lsk\u00e4gg",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -3,
+            "temp_delta": 0,
+            "dmg": 3,
+            "damage_type": "Piercing",
+            "source_name": "Obmar St\u00e5lsk\u00e4gg",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Slashing damage from Clover",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Slashing",
+            "source_name": "Clover",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) loses Bloodied from Clover",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Clover",
+            "target_name": "Accursed Group of 3 (Accursed Group (3))"
+          }
+        },
+        {
+          "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) fails a death save (1/3 fails)",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) fails a death save (2/3 fails)",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) has died (3 failed death saves)",
+          "character": "Accursed Group of 3 (Accursed Group (3))",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Gabriel Greybeard casts Bless",
+          "character": "Gabriel Greybeard",
+          "action": "cast_spell",
+          "value": {
+            "spell_name": "Bless"
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Gabriel Greybeard gains Concentrating",
+          "character": "Gabriel Greybeard",
+          "action": "add_condition",
+          "value": {
+            "condition": "Concentrating",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "Gabriel Greybeard"
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Gabriel Greybeard uses Action"
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Kivi J\u00e4tti gains Bless from Gabriel Greybeard",
+          "character": "Kivi J\u00e4tti",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "Kivi J\u00e4tti"
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Gabriel Greybeard gains Bless",
+          "character": "Gabriel Greybeard",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "Gabriel Greybeard"
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] Clover gains Bless from Gabriel Greybeard",
+          "character": "Clover",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Clover takes 13 Bludgeoning damage from (2) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Clover",
+          "action": "damage",
+          "value": {
+            "hp_delta": -13,
+            "temp_delta": 0,
+            "dmg": 13,
+            "damage_type": "Bludgeoning",
+            "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Clover",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Clover gains Bloodied from (2) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Clover",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 10 Slashing damage from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -10,
+            "temp_delta": 0,
+            "dmg": 10,
+            "damage_type": "Slashing",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Clover takes 15 Bludgeoning damage from (1) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Clover",
+          "action": "damage",
+          "value": {
+            "hp_delta": -15,
+            "temp_delta": 0,
+            "dmg": 15,
+            "damage_type": "Bludgeoning",
+            "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Clover",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Clover loses Bloodied from (1) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Clover",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Clover"
+          }
+        }
+      ],
+      "round_2": [
+        {
+          "text": "--- Round 2 ---"
+        },
+        {
+          "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] Edmund takes 8 Bludgeoning damage from (3) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Edmund",
+          "action": "damage",
+          "value": {
+            "hp_delta": -8,
+            "temp_delta": 0,
+            "dmg": 8,
+            "damage_type": "Bludgeoning",
+            "source_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Edmund",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] Clover is resurrected with 5 HP from Obmar St\u00e5lsk\u00e4gg",
+          "character": "Clover",
+          "action": "heal",
+          "value": {
+            "heal": 9,
+            "source_name": "Obmar St\u00e5lsk\u00e4gg",
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[Clover's turn] Clover gains Bloodied from Obmar St\u00e5lsk\u00e4gg",
+          "character": "Clover",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Obmar St\u00e5lsk\u00e4gg",
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[Clover's turn] Clover heals 4 HP from Obmar St\u00e5lsk\u00e4gg",
+          "character": "Clover",
+          "action": "heal",
+          "value": {
+            "heal": 4,
+            "source_name": "Obmar St\u00e5lsk\u00e4gg",
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 4 Fire damage from Gabriel Greybeard",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -4,
+            "temp_delta": 0,
+            "dmg": 4,
+            "damage_type": "Fire",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 4 Fire damage from Gabriel Greybeard",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -4,
+            "temp_delta": 0,
+            "dmg": 4,
+            "damage_type": "Fire",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 14 Radiant damage from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -14,
+            "temp_delta": 0,
+            "dmg": 14,
+            "damage_type": "Radiant",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 8 Radiant damage from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -8,
+            "temp_delta": 0,
+            "dmg": 8,
+            "damage_type": "Radiant",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))"
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 16 Bludgeoning damage from Kivi J\u00e4tti",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -16,
+            "temp_delta": 0,
+            "dmg": 16,
+            "damage_type": "Bludgeoning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ],
+      "round_3": [
+        {
+          "text": "--- Round 3 ---"
+        },
+        {
+          "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 11 Piercing damage from Thum Schtock",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -11,
+            "temp_delta": 0,
+            "dmg": 11,
+            "damage_type": "Piercing",
+            "source_name": "Thum Schtock",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 1 Psychic damage from Clover",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -1,
+            "temp_delta": 0,
+            "dmg": 1,
+            "damage_type": "Psychic",
+            "source_name": "Clover",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 6 Fire damage from Gabriel Greybeard",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -6,
+            "temp_delta": 0,
+            "dmg": 6,
+            "damage_type": "Fire",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 11 Fire damage from Gabriel Greybeard",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -11,
+            "temp_delta": 0,
+            "dmg": 11,
+            "damage_type": "Fire",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Gabriel Greybeard",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))"
+          }
+        },
+        {
+          "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Gabriel Greybeard takes 6 Bludgeoning damage from (2) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Gabriel Greybeard",
+          "action": "damage",
+          "value": {
+            "hp_delta": -6,
+            "temp_delta": 0,
+            "dmg": 6,
+            "damage_type": "Bludgeoning",
+            "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Gabriel Greybeard",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "Gabriel Greybeard's Bless ends (concentration lost)"
+        },
+        {
+          "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Gabriel Greybeard loses concentration (DC 10, rolled 3)",
+          "character": "Gabriel Greybeard",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Concentrating",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "Gabriel Greybeard"
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 11 Slashing damage from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -11,
+            "temp_delta": 0,
+            "dmg": 11,
+            "damage_type": "Slashing",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Edmund",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Edmund",
+            "target_name": "(3) Accursed Group of 5 (Accursed Group (5))"
+          }
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+          "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Edmund's turn] Kivi J\u00e4tti loses Bless",
+          "character": "Kivi J\u00e4tti",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": null,
+            "target_name": "Kivi J\u00e4tti"
+          }
+        },
+        {
+          "text": "[Edmund's turn] Gabriel Greybeard loses Bless",
+          "character": "Gabriel Greybeard",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": null,
+            "target_name": "Gabriel Greybeard"
+          }
+        },
+        {
+          "text": "[Edmund's turn] Clover loses Bless",
+          "character": "Clover",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bless",
+            "source_name": null,
+            "target_name": "Clover"
+          }
+        },
+        {
+          "text": "[Edmund's turn] Edmund heals 15 HP from Edmund",
+          "character": "Edmund",
+          "action": "heal",
+          "value": {
+            "heal": 15,
+            "source_name": "Edmund",
+            "target_name": "Edmund"
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi J\u00e4tti",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -9,
+            "temp_delta": 0,
+            "dmg": 9,
+            "damage_type": "Bludgeoning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ],
+      "round_4": [
+        {
+          "text": "--- Round 4 ---"
+        },
+        {
+          "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 17 Slashing damage from Thum Schtock",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -17,
+            "temp_delta": 0,
+            "dmg": 17,
+            "damage_type": "Slashing",
+            "source_name": "Thum Schtock",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Thum Schtock",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Thum Schtock",
+            "target_name": "(2) Accursed Group of 5 (Accursed Group (5))"
+          }
+        },
+        {
+          "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+          "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 5 Psychic damage from Clover",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -5,
+            "temp_delta": 0,
+            "dmg": 5,
+            "damage_type": "Psychic",
+            "source_name": "Clover",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 3 Radiant damage from Gabriel Greybeard",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -3,
+            "temp_delta": 0,
+            "dmg": 3,
+            "damage_type": "Radiant",
+            "source_name": "Gabriel Greybeard",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Thum Schtock takes 5 Bludgeoning damage from (1) Accursed Group of 5 (Accursed Group (5))",
+          "character": "Thum Schtock",
+          "action": "damage",
+          "value": {
+            "hp_delta": -5,
+            "temp_delta": 0,
+            "dmg": 5,
+            "damage_type": "Bludgeoning",
+            "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "target_name": "Thum Schtock",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi J\u00e4tti",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -9,
+            "temp_delta": 0,
+            "dmg": 9,
+            "damage_type": "Bludgeoning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Kivi J\u00e4tti",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))"
+          }
+        }
+      ],
+      "round_5": [
+        {
+          "text": "--- Round 5 ---"
+        },
+        {
+          "text": "[Thum Schtock's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 12 Piercing damage from Thum Schtock",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -12,
+            "temp_delta": 0,
+            "dmg": 12,
+            "damage_type": "Piercing",
+            "source_name": "Thum Schtock",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 8 Psychic damage from Clover",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -8,
+            "temp_delta": 0,
+            "dmg": 8,
+            "damage_type": "Psychic",
+            "source_name": "Clover",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Clover",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Clover",
+            "target_name": "(1) Accursed Group of 5 (Accursed Group (5))"
+          }
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+          "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+          "action": "death_save_fail",
+          "value": true
+        }
+      ]
+    }
+  ]
+}
