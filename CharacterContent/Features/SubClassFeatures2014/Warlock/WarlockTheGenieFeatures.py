@@ -99,10 +99,10 @@ class ElementalGift(Feature):
         )
         self.kind = kind
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You now have resistance to a damage type determined by your
         # patron's kind" (the flight is the activated part).
-        DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind]).apply(effects)
+        DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]

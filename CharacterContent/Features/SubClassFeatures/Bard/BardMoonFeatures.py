@@ -55,9 +55,9 @@ class PrimalLore(Feature):
         )
         self._language = GrantLanguage(Language.DRUIDIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency_choice.apply(effects)
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency_choice.apply(ledger_writer)
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

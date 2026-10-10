@@ -14,6 +14,6 @@ class Effect(ABC):
     name: str
 
     @abstractmethod
-    def apply(self, effects: LedgerWriter) -> None:
+    def apply(self, ledger_writer: LedgerWriter) -> None:
         """Record this effect's facts. Effects apply in no particular order, so
         only record - never read a stat (see Model/Ledger/LedgerWriter.py)."""

@@ -131,8 +131,8 @@ class DeftExplorerExpertise(Feature):
     def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill.value} skill."
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
 
 class DeftExplorerLanguages(Feature):
@@ -162,12 +162,12 @@ class Roving(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...while you aren't wearing Heavy Armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
             lambda cs: (0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10)
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
@@ -191,8 +191,8 @@ class Expertise(Feature):
     def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill_1.value} and {self.skill_2.value} skills."
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
 
 class Tireless(Feature):
@@ -313,8 +313,8 @@ class FeralSenses(Feature):
         )
         self._blindsight = GrantSense(Definitions.Sense.BLINDSIGHT, 30)
 
-    def apply(self, effects: LedgerWriter):
-        self._blindsight.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._blindsight.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."

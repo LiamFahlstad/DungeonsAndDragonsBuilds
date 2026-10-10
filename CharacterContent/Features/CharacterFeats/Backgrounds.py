@@ -24,8 +24,8 @@ class FreeBackgroundAbilityBonus(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
@@ -54,8 +54,8 @@ class FreeBackgroundSkillProficiency(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)

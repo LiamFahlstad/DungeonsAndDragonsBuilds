@@ -188,7 +188,7 @@ class Feature(Effect):
         # current uses based on character stats.
         self.uses = uses
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         """Record this feature's effects on the stat block. Features, armor
         and items apply in no particular order, so only record facts - never
         read a stat here. Anything that depends on other stats or on worn

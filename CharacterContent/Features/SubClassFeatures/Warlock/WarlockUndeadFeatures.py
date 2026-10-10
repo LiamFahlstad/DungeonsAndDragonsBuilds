@@ -100,8 +100,8 @@ class NecroticHusk(Feature):
         # prose-only.
         self._resistance = DamageResistance(DamageType.NECROTIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()

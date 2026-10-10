@@ -457,8 +457,8 @@ class _GrantExpertise(Feature):
         super().__init__(name="Test Expertise")
         self._expertise = SkillExpertise([skill])
 
-    def apply(self, effects):
-        self._expertise.apply(effects)
+    def apply(self, ledger_writer):
+        self._expertise.apply(ledger_writer)
 
 
 class _GrantProficiency(Feature):
@@ -466,8 +466,8 @@ class _GrantProficiency(Feature):
         super().__init__(name="Test Proficiency")
         self._proficiency = SkillProficiency([skill])
 
-    def apply(self, effects):
-        self._proficiency.apply(effects)
+    def apply(self, ledger_writer):
+        self._proficiency.apply(ledger_writer)
 
 
 class TestExpertiseRequirement:
@@ -565,8 +565,8 @@ def test_evaluation_passes_apply_the_write_only_record(name):
     class _Spy:
         name = "Spy"
 
-        def apply(self, effects):
-            received.append(effects)
+        def apply(self, ledger_writer):
+            received.append(ledger_writer)
 
     sources = type(ALL_BUILDS[name])().build().sources
     sources.add_effect(_Spy())
@@ -603,8 +603,8 @@ class _GrantMartialWeapons(Feature):
     def __init__(self):
         super().__init__(name="Test Martial Weapon Training")
 
-    def apply(self, effects):
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+    def apply(self, ledger_writer):
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
 
 
 class TestProficienciesResolveOnRead:

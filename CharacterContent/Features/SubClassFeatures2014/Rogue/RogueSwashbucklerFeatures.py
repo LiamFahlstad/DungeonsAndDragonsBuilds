@@ -42,8 +42,8 @@ class RakishAudacity(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
-        InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

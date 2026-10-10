@@ -298,7 +298,7 @@ class Character:
         """Everything that records effects: features and their extensions,
         armor, weapons, items, fighting styles (only those with a computed
         effect - Defense, Archery, Dueling, ... - record anything) and extra
-        effects. Each has apply(effects); the order is irrelevant.
+        effects. Each has apply(ledger_writer); the order is irrelevant.
         (Proficiencies come from features too - e.g. ClassProficiencies.)
         Weapons are never changed: bonuses the wielder brings to them are
         recorded in weapon_bonuses."""

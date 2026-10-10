@@ -121,8 +121,8 @@ class ImplementsOfMercy(Feature):
         )
         self._skill_proficiencies = SkillProficiency([Skill.INSIGHT, Skill.MEDICINE])
 
-    def apply(self, effects: LedgerWriter):
-        self._skill_proficiencies.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._skill_proficiencies.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."

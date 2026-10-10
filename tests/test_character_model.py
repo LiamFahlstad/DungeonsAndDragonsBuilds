@@ -181,7 +181,7 @@ def test_apply_order_sets_the_order_effects_apply_in(make_sources):
         def __init__(self, name):
             self.name = name
 
-        def apply(self, effects):
+        def apply(self, ledger_writer):
             applied.append(self.name)
 
     sources = make_sources()

@@ -62,11 +62,11 @@ class HungeringMight(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(effects)
+        SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -105,8 +105,8 @@ class AncientMight(Feature):
         )
         self._immunity = ConditionImmunity(Condition.EXHAUSTION)
 
-    def apply(self, effects: LedgerWriter):
-        self._immunity.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

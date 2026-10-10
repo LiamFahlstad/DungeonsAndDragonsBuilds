@@ -112,24 +112,24 @@ class AbstractArmor(Item, ABC):
         wearer instead."""
         self.add_improvement(armor_improvement)
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)  # CharacterImprovements (gated on is_wearing)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)  # CharacterImprovements (gated on is_wearing)
         if self.is_wearing:
-            self.apply_worn_effects(effects)
+            self.apply_worn_effects(ledger_writer)
 
-    def apply_worn_effects(self, effects: LedgerWriter):
+    def apply_worn_effects(self, ledger_writer: LedgerWriter):
         """Apply this armor's AC and ability-based effects to the character."""
         if self.strength_requirement is not None:
-            StrengthRequirement(self.strength_requirement).apply(effects)
+            StrengthRequirement(self.strength_requirement).apply(ledger_writer)
         if self.stealth_disadvantage:
-            StealthDisadvantage().apply(effects)
+            StealthDisadvantage().apply(ledger_writer)
         if self.is_shield:
             # The AC bonus only counts with Shield training (worked out on read).
-            effects.add_shield(self.ac_bonus or 0)
+            ledger_writer.add_shield(self.ac_bonus or 0)
         else:
             if self.armor_type is None:
                 raise ValueError(f"{self.name} sets no armor_type in base_stats().")
-            effects.set_worn_armor(self.armor_type, self.name)
+            ledger_writer.set_worn_armor(self.armor_type, self.name)
             # Medium armor: "add your Dexterity modifier, to a maximum of
             # +2" - Light armor is uncapped and Heavy armor has no ability
             # modifier at all, so the cap only ever applies here.
@@ -137,7 +137,7 @@ class AbstractArmor(Item, ABC):
                 2 if self.armor_type == Definitions.ArmorType.MEDIUM else None
             )
             SetArmorClass(self.base_ac, self.ac_ability, ability_modifier_cap).apply(
-                effects
+                ledger_writer
             )
             if self.ac_bonus:
-                ArmorClassBonus(self.ac_bonus).apply(effects)
+                ArmorClassBonus(self.ac_bonus).apply(ledger_writer)

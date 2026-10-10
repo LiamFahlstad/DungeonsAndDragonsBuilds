@@ -27,8 +27,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 120)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 120 feet."
@@ -41,8 +41,8 @@ class DwarvenResilience(Feature):
         )
         self._resistance = DamageResistance(DamageType.POISON)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
@@ -58,8 +58,8 @@ class DwarvenToughness(Feature):
         )
         self._hp = HitPointsPerLevelBonus(1)
 
-    def apply(self, effects: LedgerWriter):
-        self._hp.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._hp.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You gain an additional Hit Point for each level you gain."

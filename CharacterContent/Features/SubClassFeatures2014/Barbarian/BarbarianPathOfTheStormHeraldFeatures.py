@@ -80,10 +80,10 @@ class StormSoul(Feature):
         )
         self.environment = environment
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Desert: fire, Sea: lightning, Tundra: cold resistance - always on,
         # "even when your aura isn't active".
-        DamageResistance(_STORM_SOUL_RESISTANCE[self.environment]).apply(effects)
+        DamageResistance(_STORM_SOUL_RESISTANCE[self.environment]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

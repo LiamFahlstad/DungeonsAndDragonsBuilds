@@ -1,7 +1,7 @@
 # The character engine, explained simply
 
 Part 1 explains how the engine works. Part 2 lists the simplifications made so
-far and the one still open.
+far, and one that was considered and rejected.
 
 ---
 
@@ -23,7 +23,7 @@ about each one.
 | `CharacterSources` | **the bag** | Everything the character has: name, ability scores, class levels, features, spells, gear. You can add to it while building. In builders it's called `sources`. | [Model/CharacterSources.py](../Model/CharacterSources.py) |
 | `Grants` | **the label gun** | What level and species builders put features and spells into the bag through. It sticks a label on each one: "Wizard, level 3" or "Elf, species". In builders it's called `data`. | [Model/Grants.py](../Model/Grants.py) |
 | `GrantStamp` | **the label** | Level, kind (species/class/...), and who granted it. | [Model/Records/GrantStamp.py](../Model/Records/GrantStamp.py) |
-| `Effect` | **anything that changes stats** | A feature, armor, weapon, item or fighting style. It has a `name` and one method: `apply(effects)`. | [Model/Content/Effect.py](../Model/Content/Effect.py) |
+| `Effect` | **anything that changes stats** | A feature, armor, weapon, item or fighting style. It has a `name` and one method: `apply(ledger_writer)`. | [Model/Content/Effect.py](../Model/Content/Effect.py) |
 | `LedgerWriter` | **the pen** | A **write-only** pen given to each `Effect`, labeled with that effect's name. It can only write things down ("+10 speed", "proficient in Stealth"). It can't read anything back. | [Model/Ledger/LedgerWriter.py](../Model/Ledger/LedgerWriter.py) |
 | `Ledger` | **the notebook** | What the pens wrote, split into sections: `skills`, `speed`, `armor_class`, `senses`, and so on. Each section is a small class in `Model/Ledger/`. **Private to `Character`**: nobody else sees it. | [Model/Ledger/Ledger.py](../Model/Ledger/Ledger.py) |
 | `Character` | **the clerk** | Holds the bag and the notebook. It answers every question ("what's my AC?"). Read-only once it's made. | [Model/Character.py](../Model/Character.py) |
@@ -106,9 +106,9 @@ That's the first question, so the ledger gets built, and each feature's
 hops:
 
 ```
-Darkvision.apply(effects)                         # the feature; its pen is labeled "Darkvision"
-  └─ GrantSense(DARKVISION, 60).apply(effects)    # an Improvement
-       └─ effects.add_sense(DARKVISION, 60)       # the pen adds the label
+Darkvision.apply(ledger_writer)                         # the feature; its pen is labeled "Darkvision"
+  └─ GrantSense(DARKVISION, 60).apply(ledger_writer)    # an Improvement
+       └─ ledger_writer.add_sense(DARKVISION, 60)       # the pen adds the label
             └─ ledger.senses.add_sense(DARKVISION, 60, "Darkvision")   # the notebook section
 ```
 
@@ -138,10 +138,10 @@ So the engine makes that impossible:
 
   ```python
   # BarbarianFeatures.FastMovementBonus
-  SpeedBonus(lambda cs: 0 if cs.worn_armor_type == ArmorType.HEAVY else 10).apply(effects)
+  SpeedBonus(lambda cs: 0 if cs.worn_armor_type == ArmorType.HEAVY else 10).apply(ledger_writer)
 
   # SorcererDraconicFeatures.DraconicResilience: +1 HP per Sorcerer level
-  HitPointsBonus(lambda character: character.get_class_level(CharacterClass.SORCERER)).apply(effects)
+  HitPointsBonus(lambda character: character.get_class_level(CharacterClass.SORCERER)).apply(ledger_writer)
   ```
 
 - **The `lambda` gets a `CharacterView`**, which is the finished character's
@@ -198,7 +198,7 @@ Almost every "why is it built like this?" question comes back to this rule:
 
 | I want to... | Do this |
 |---|---|
-| add a feature with a fixed effect | Override `apply(self, effects)` and use an Improvement: `GrantSense(Sense.DARKVISION, 60).apply(effects)`. It's listed under the feature's `name` automatically |
+| add a feature with a fixed effect | Override `apply(self, ledger_writer)` and use an Improvement: `GrantSense(Sense.DARKVISION, 60).apply(ledger_writer)`. It's listed under the feature's `name` automatically |
 | add a bonus that depends on another stat | Pass a `lambda character: ...` instead of an `int` |
 | show a number in a feature's text | Override `get_description(self, character)`. `character` is a `CharacterView`, so you can read anything there |
 | add a rider to an existing feature | `data.add_feature(Child(), extends=Parent)` |
@@ -233,66 +233,31 @@ them:
 | S1: clear names | `Effects` → `LedgerWriter`, so `Effect` and the pen are no longer one letter apart. `Ledger` and `LedgerWriter` each have their own file. Builders call a `CharacterSources` `sources`, so `data` always means a `Grants`. |
 | S3: automatic labels | Each effect gets its own `LedgerWriter`, labeled with `effect.name`. The `source`/`reason` parameters are gone from the pen and from the Improvements (87 call sites). `add_carrying_capacity_bonus` no longer has its arguments backwards. Speed, AC, HP, initiative and saving-throw bonuses are now labeled too. Fighting styles got a `name`. Every rendered page is byte-identical to before. |
 | S5: `Model/Ledger/` | The 17 notebook sections, `Bonuses`, `Ledger` and `LedgerWriter` moved into `Model/Ledger/`. The layering rule for sections now finds them from the folder, so a new section is checked automatically. |
+| Parameter name | `apply(self, effects: LedgerWriter)` became `apply(self, ledger_writer: LedgerWriter)` everywhere (189 methods), so the name says what it is. Lists of effects (the tests' `_in_every_order`, `apply_order`) keep the name `effects`. |
 
-## Still open: S4, record through the pen directly *(large; decide first)*
+## Considered and rejected: S4, record through the pen directly
 
-Today a feature that grants one fact goes through four hops: feature →
-Improvement → pen → ledger section. The measured numbers:
+The idea was to let features call the pen directly
+(`ledger_writer.add_sense(Sense.DARKVISION, 60)`) and delete the 33
+Improvements whose `apply` is a single call to the pen, removing one of the
+four hops (feature → Improvement → pen → ledger section).
 
-- There are **53 `CharacterImprovement` classes**:
-  - **33** whose `apply` is a single call to the pen (`SpeedBonus`,
-    `DamageResistance`, `GrantSense`, ...);
-  - **19** that only add validation or a docstring on top of another
-    (`SkillProficiencyChoice`, the `InformationalImprovement` markers, ...);
-  - **1**, `AbilityScoreBonus`, with real validation logic of its own.
-- **Content uses them in about 165 places:**
-  - 108 store one in `__init__` and call `self._x.apply(effects)` (86 of those
-    use it nowhere else);
-  - 48 build one inline;
-  - 9 apply them in a loop.
+We dropped it, because Improvements do more than wrap a pen call:
 
-Now that labels are automatic, the direct call is as short as the
-Improvement:
+- **They're how items declare their effects as data.** 26 item declarations
+  list them: `improvements=[CarryingCapacityBonus(8)]`, or
+  `add_character_improvement(...)` in `setup_improvements()`. A pen call can't
+  sit in a list, so each of those items would need its own `apply()`.
+- **Keeping them for items but not features gives two ways to record a fact.**
+  Today content follows exactly one rule: it records through Improvements.
+  Only one call in `CharacterContent` uses the pen directly.
+- **Several take a list.** 6 grants pass two or more skills, saves or
+  proficiencies at once; with the pen they'd become loops.
+- **They're readable values.** 10 features read a stored Improvement back for
+  their description, and tests use them as a ready-made vocabulary.
 
-```python
-# today
-class Darkvision(Feature):
-    def __init__(self, distance):
-        self.distance = distance
-        super().__init__(name="Darkvision", ...)
-        self._sense = GrantSense(Sense.DARKVISION, self.distance)
-
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
-
-# with S4
-class Darkvision(Feature):
-    def __init__(self, distance):
-        self.distance = distance
-        super().__init__(name="Darkvision", ...)
-
-    def apply(self, effects: LedgerWriter):
-        effects.add_sense(Sense.DARKVISION, self.distance)
-```
-
-**The catch.** Today content follows exactly **one** rule: it records through
-Improvements. A half-finished migration would leave **two** ways to record the
-same fact, which is worse than today. So it's all or nothing:
-
-- **Done completely:**
-  - Delete the 33 one-call Improvements.
-  - Keep only the helpers that do more than forward:
-    - `AbilityScoreBonus` and the three `...Choice` classes, which validate at
-      build time;
-    - `SetArmorClass` and `MultiAbilityArmorClass`, which assemble an
-      `ArmorClassFormula`;
-    - `JackOfAllTradesBonus`, which builds a formula per skill;
-    - the `InformationalImprovement` markers.
-  - Migrate the tests that build one-call Improvements as well.
-  - Go one folder at a time, running the apply-order and snapshot tests after
-    each folder.
-- **Not done:** nothing is broken. The four hops are plain to follow once you
-  know the cast, and Improvements give tests a ready-made vocabulary.
+With the automatic labels (S3), the Improvements have also become as short as
+the pen calls they wrap, so the extra hop costs very little.
 
 ## Don't simplify these
 

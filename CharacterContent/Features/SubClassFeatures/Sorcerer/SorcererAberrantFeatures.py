@@ -78,8 +78,8 @@ class PsychicDefenses(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."

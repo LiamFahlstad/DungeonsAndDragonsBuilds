@@ -23,8 +23,8 @@ class BonusProficiencies(Feature):
         )
         self._language = GrantLanguage(Language.GIANT)
 
-    def apply(self, effects: LedgerWriter):
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with smith's tools, and you learn to speak, read, and write Giant."

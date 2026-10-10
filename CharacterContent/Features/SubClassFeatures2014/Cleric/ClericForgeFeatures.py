@@ -26,10 +26,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You gain proficiency with heavy armor and smith's tools."
-        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
-        GrantToolProficiency([SmithsTools()]).apply(effects)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
+        GrantToolProficiency([SmithsTools()]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with heavy armor and smith's tools."
@@ -121,12 +121,12 @@ class SoulOfTheForge(Feature):
         )
         self._resistance = DamageResistance(DamageType.FIRE)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
         # "While wearing heavy armor, you gain a +1 bonus to AC."
         ArmorClassBonus(
             lambda cs: 1 if cs.worn_armor_type == ArmorType.HEAVY else 0
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -151,8 +151,8 @@ class SaintOfForgeAndFire(Feature):
         # exists on DamageResistance), so it stays prose-only.
         self._immunity = DamageImmunity(DamageType.FIRE)
 
-    def apply(self, effects: LedgerWriter):
-        self._immunity.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -49,9 +49,9 @@ class BattleReady(Feature):
     def __init__(self):
         super().__init__(name="Battle Ready", origin="Battle Smith Artificer Level 3")
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "Weapon Knowledge. You gain proficiency with Martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -57,8 +57,8 @@ class ShadowArts(Feature):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
         self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._darkvision.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._darkvision.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

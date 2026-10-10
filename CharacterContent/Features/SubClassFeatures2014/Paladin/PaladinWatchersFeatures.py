@@ -89,8 +89,8 @@ class AuraOfTheSentinel(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
-        InitiativeProficiency().apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        InitiativeProficiency().apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

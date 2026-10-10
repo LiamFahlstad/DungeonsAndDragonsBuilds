@@ -110,8 +110,8 @@ class ThoughtShield(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your thoughts can't be read by telepathy or other means unless you allow it. You also have Resistance to Psychic damage, and whenever a creature deals Psychic damage to you, that creature takes the same amount of damage that you take."

@@ -115,8 +115,8 @@ class UnarmoredDefense(Feature):
             allows_shield=False,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._ac.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._ac.apply(ledger_writer)
 
 
 class MonksFocus(Feature):
@@ -232,7 +232,7 @@ class UnarmoredMovement(Feature):
             name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
         def bonus(cs: CharacterView) -> int:
@@ -241,7 +241,7 @@ class UnarmoredMovement(Feature):
             monk_level = cs.get_class_level(Definitions.CharacterClass.MONK)
             return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
 
-        SpeedBonus(bonus).apply(effects)
+        SpeedBonus(bonus).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
@@ -474,8 +474,8 @@ class DisciplinedSurvivorSavingThrows(Feature):
             ]
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiencies.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiencies.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
@@ -539,8 +539,8 @@ class BodyAndMind(Feature):
             max_score=25,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonuses.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonuses.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."

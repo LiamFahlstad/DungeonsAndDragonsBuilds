@@ -16,8 +16,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -35,8 +35,8 @@ class GnomishCunning(Feature):
             [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]
         )
 
-    def apply(self, effects: LedgerWriter) -> None:
-        self._advantage.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter) -> None:
+        self._advantage.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on Intelligence, Wisdom, and Charisma saving throws."

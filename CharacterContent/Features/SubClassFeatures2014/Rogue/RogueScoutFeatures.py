@@ -37,9 +37,9 @@ class Survivalist(Feature):
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency.apply(effects)
-        self._expertise.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency.apply(ledger_writer)
+        self._expertise.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
@@ -55,8 +55,8 @@ class SuperiorMobility(Feature):
         )
         self._speed = SpeedBonus(10)
 
-    def apply(self, effects: LedgerWriter):
-        self._speed.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._speed.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
@@ -75,9 +75,9 @@ class AmbushMaster(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You have advantage on initiative rolls."
-        InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(effects)
+        InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

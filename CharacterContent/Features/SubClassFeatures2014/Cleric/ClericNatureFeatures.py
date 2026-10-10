@@ -22,9 +22,9 @@ class BonusProficiency(Feature):
             name="Bonus Proficiency", origin="Nature Domain Cleric Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You gain proficiency with heavy armor."
-        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with heavy armor."

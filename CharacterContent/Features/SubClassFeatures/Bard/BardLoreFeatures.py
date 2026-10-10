@@ -16,8 +16,8 @@ class BonusProficiencies(Feature):
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with three skills of your choice."

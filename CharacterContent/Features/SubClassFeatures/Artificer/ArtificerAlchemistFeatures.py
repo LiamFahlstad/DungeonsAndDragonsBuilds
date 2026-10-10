@@ -131,10 +131,10 @@ class ChemicalMastery(Feature):
         ]
         self._immunity = ConditionImmunity(Condition.POISONED)
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for resistance in self._resistances:
-            resistance.apply(effects)
-        self._immunity.apply(effects)
+            resistance.apply(ledger_writer)
+        self._immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -22,8 +22,8 @@ class FrigidExplorer(Feature):
         )
         self._resistance = DamageResistance(DamageType.COLD)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

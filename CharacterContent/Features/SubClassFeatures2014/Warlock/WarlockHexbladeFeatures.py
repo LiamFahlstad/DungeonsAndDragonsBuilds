@@ -84,10 +84,10 @@ class HexWarrior(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
-        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

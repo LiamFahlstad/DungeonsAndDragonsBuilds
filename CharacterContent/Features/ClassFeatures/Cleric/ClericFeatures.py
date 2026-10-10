@@ -48,10 +48,10 @@ class DivineOrderProtector(Feature):
     def __init__(self):
         super().__init__(name="Divine Order: Protector", origin="Cleric Level 1")
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...proficiency with Martial weapons and training with Heavy armor."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
@@ -67,12 +67,12 @@ class DivineOrderThaumaturge(Feature):
         )
         self.extra_cantrip = extra_cantrip
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SkillBonus(Skill.ARCANA, bonus).apply(effects)
-        SkillBonus(Skill.RELIGION, bonus).apply(effects)
+        SkillBonus(Skill.ARCANA, bonus).apply(ledger_writer)
+        SkillBonus(Skill.RELIGION, bonus).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (minimum bonus of +1)."

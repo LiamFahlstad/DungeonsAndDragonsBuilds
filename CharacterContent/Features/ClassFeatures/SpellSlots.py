@@ -29,8 +29,8 @@ class SpellSlots(Feature):
         )
         return f"{self.character_class.value} Spellcasting.\n{description}"
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # The slots themselves are worked out on read from every registered
         # caster (Core.SpellcastingRules.calculate_spell_slots), so it doesn't
         # matter which class's Spell Slots feature applies first.
-        effects.register_caster(self.character_class, self.caster_type)
+        ledger_writer.register_caster(self.character_class, self.caster_type)

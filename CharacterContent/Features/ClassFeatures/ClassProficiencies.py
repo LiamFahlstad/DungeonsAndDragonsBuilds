@@ -231,9 +231,9 @@ class ClassProficiencies(Feature):
             if saving_throws is not None:
                 self._grants.append(SavingThrowProficiency(list(saving_throws)))
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for grant in self._grants:
-            grant.apply(effects)
+            grant.apply(ledger_writer)
 
 
 # Fixed multiclass grants. The skill (Artificer, Bard, Ranger, Rogue) and
@@ -316,5 +316,5 @@ class ClassSkillChoice(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)

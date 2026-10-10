@@ -134,7 +134,7 @@ class CharacterSources:
         self.invocations.append(invocation)
 
     def add_effect(self, effect: Effect) -> None:
-        """Grant an effect on its own (anything with apply(effects)), for a
+        """Grant an effect on its own (anything with apply(ledger_writer)), for a
         test or tool recording one improvement on a bare character."""
         self.extra_effects.append(effect)
 

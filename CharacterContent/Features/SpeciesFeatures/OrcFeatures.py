@@ -21,8 +21,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Orc Trait")
         self._sense = GrantSense(Sense.DARKVISION, 120)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 120 feet."

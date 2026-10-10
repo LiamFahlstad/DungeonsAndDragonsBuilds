@@ -22,8 +22,8 @@ class WindSpeaker(Feature):
         )
         self._language = GrantLanguage(Language.PRIMORDIAL)
 
-    def apply(self, effects: LedgerWriter):
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran."
@@ -60,9 +60,9 @@ class HeartOfTheStorm(Feature):
             DamageResistance(DamageType.THUNDER),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for resistance in self._resistances:
-            resistance.apply(effects)
+            resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
@@ -140,9 +140,9 @@ class WindSoul(Feature):
             DamageImmunity(DamageType.THUNDER),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
-            immunity.apply(effects)
+            immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

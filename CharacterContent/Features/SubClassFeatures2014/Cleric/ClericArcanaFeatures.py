@@ -10,8 +10,8 @@ class ArcaneInitiate(Feature):
         super().__init__(name="Arcane Initiate", origin="Arcana Domain Cleric Level 3")
         self._proficiency = SkillProficiency([Skill.ARCANA])
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips."

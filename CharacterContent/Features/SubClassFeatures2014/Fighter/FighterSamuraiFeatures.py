@@ -36,9 +36,9 @@ class BonusProficiency(Feature):
                 error_prefix="Samurai Bonus Proficiency",
             )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         if self._proficiency_choice is not None:
-            self._proficiency_choice.apply(effects)
+            self._proficiency_choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in one of the following skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."
@@ -119,8 +119,8 @@ class ElegantCourtier(Feature):
             error_prefix="Elegant Courtier",
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency_choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency_choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

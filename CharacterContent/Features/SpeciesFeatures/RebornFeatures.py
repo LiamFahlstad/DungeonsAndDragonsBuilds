@@ -56,8 +56,8 @@ class RebornKnowledgeSkill(Feature):
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
@@ -78,8 +78,8 @@ class StrangeEndurance(Feature):
         )
         self._resistance = DamageResistance(damage_type)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance to {self.damage_type.value} damage."

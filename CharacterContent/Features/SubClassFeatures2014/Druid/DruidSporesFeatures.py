@@ -167,9 +167,9 @@ class FungalBody(Feature):
             ConditionImmunity(Condition.POISONED),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
-            immunity.apply(effects)
+            immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "The fungal spores in your body alter you: you can't be blinded, deafened, frightened, or poisoned, and any critical hit against you counts as a normal hit instead, unless you're incapacitated."

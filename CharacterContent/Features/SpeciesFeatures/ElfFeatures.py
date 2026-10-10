@@ -16,8 +16,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
@@ -44,8 +44,8 @@ class KeenSenses(Feature):
             error_prefix="KeenSenses",
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have proficiency in the {self._choice.skills[0].value} skill."

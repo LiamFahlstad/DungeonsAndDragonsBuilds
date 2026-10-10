@@ -22,8 +22,8 @@ class ConstructResilience(Feature):
         )
         self._resistance = DamageResistance(DamageType.POISON)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition."
@@ -55,8 +55,8 @@ class IntegratedProtection(Feature):
         )
         self._bonus = ArmorClassBonus(1)
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "Your Armor Class increases by 1."
@@ -74,8 +74,8 @@ class SpecializedDesign(Feature):
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

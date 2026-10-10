@@ -15,7 +15,7 @@ class FightingStyle(Effect):
     def description(self) -> str:
         pass
 
-    def apply(self, effects: LedgerWriter) -> None:
+    def apply(self, ledger_writer: LedgerWriter) -> None:
         """Most fighting styles only describe what they do at the table and
         record nothing; FightStyleModifier is the kind with a computed
         effect."""

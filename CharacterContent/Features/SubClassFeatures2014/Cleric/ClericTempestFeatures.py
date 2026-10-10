@@ -21,10 +21,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Tempest Domain Cleric Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "You gain proficiency with martial weapons and heavy armor."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
-        GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+        GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."

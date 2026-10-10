@@ -27,9 +27,9 @@ class CelestialResistance(Feature):
             DamageResistance(DamageType.RADIANT),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for resistance in self._resistances:
-            resistance.apply(effects)
+            resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Necrotic damage and Radiant damage."
@@ -42,8 +42,8 @@ class Darkvision(Feature):
         )
         self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."

@@ -20,8 +20,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Lupin Trait")
         self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -96,8 +96,8 @@ class WerewolfInstincts(Feature):
             [skill], self.VALID_SKILLS, count=1, error_prefix="Werewolf Instincts"
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

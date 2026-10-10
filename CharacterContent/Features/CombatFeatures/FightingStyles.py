@@ -16,7 +16,7 @@ class FightStyleModifier(FightingStyle):
     to the Ledger's weapon_bonuses instead of into the weapons."""
 
     @abstractmethod
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         pass
 
 
@@ -27,8 +27,10 @@ def _is_ranged_weapon(weapon: WeaponTraits) -> bool:
 class Archery(FightStyleModifier):
     name = "Archery"
 
-    def apply(self, effects: LedgerWriter):
-        WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(
+            ledger_writer
+        )
 
     def description(self):
         return "Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)"
@@ -44,9 +46,9 @@ class BlindFighting(FightingStyle):
 class Defense(FightStyleModifier):
     name = "Defense"
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # A formula, so the armor is checked once everything has applied.
-        ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
+        ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(ledger_writer)
 
     def description(self):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
@@ -64,12 +66,12 @@ def _is_one_handed_melee_weapon(weapon: WeaponTraits) -> bool:
 class Dueling(FightStyleModifier):
     name = "Dueling"
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         WeaponDamageBonus(
             _is_one_handed_melee_weapon,
             2,
             "Dueling Fighting Style - Applied if one-handed weapon and no other weapons",
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def description(self):
         return "Dueling: When you're holding a Melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon. (calculated automatically)"
@@ -103,10 +105,10 @@ def _is_thrown_weapon(weapon: WeaponTraits) -> bool:
 class ThrownWeaponFighting(FightStyleModifier):
     name = "Thrown Weapon Fighting"
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         WeaponDamageBonus(
             _is_thrown_weapon, 2, "Thrown Weapon Fighting Style - ranged attacks only"
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def description(self):
         return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (calculate manually)"

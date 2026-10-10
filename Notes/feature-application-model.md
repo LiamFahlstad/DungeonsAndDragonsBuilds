@@ -46,7 +46,7 @@ then:
 
 | # | Stage | What runs |
 |---|---|---|
-| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `LedgerWriter` around a fresh, private `Ledger` |
+| 1 | **Record** | `apply(ledger_writer)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Each call gets its own write-only `LedgerWriter`, labeled with the effect's `name`, around one fresh, private `Ledger` |
 | 2 | **Validate** | Only in `validate()`, the single entry point (the writers and the combat UI call it first): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Ledger.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
@@ -160,10 +160,10 @@ hook is gone. The effect is a formula reading the armor state on read:
 # Roving / Fast Movement
 SpeedBonus(
     lambda cs: 0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10
-).apply(effects)
+).apply(ledger_writer)
 
 # Defense fighting style, Soul of the Forge
-ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
+ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(ledger_writer)
 ```
 
 ## Writing a new feature effect
@@ -184,7 +184,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 | "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `WeaponTraits -> bool` filter (`Core/Weapons.py`: the weapon's type, properties and, for the Scimitar, Longbow and Shortbow, its `kind`). Never write into the weapon, and never match class names |
 | An upgrade to an earlier feature | `data.add_feature(Upgrade(), extends=Parent)`. Its `apply()` runs too, so don't also grant it plainly |
 
-**`apply(self, effects: LedgerWriter)` can only record.** `LedgerWriter` offers `add_*`/`set_*`/
+**`apply(self, ledger_writer: LedgerWriter)` can only record.** `LedgerWriter` offers `add_*`/`set_*`/
 `register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
 no levels either. If a value depends on anything, pass a formula (`lambda character: ...`); it gets
 the finished `Character` when the value is read. Every bonus (skills, saving throws, AC, HP,

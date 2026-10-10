@@ -30,8 +30,8 @@ class DreadAmbusher(Feature):
             ),
         )
 
-    def apply(self, effects: LedgerWriter):
-        InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -70,8 +70,8 @@ class UmbralSight(Feature):
         )
         self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._darkvision.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._darkvision.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -93,7 +93,7 @@ class IronMind(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Wisdom, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.WISDOM,
@@ -104,7 +104,7 @@ class IronMind(Feature):
                 Ability.DEXTERITY,
                 Ability.CONSTITUTION,
             ],
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."

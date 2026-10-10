@@ -66,8 +66,8 @@ class Scholar(Feature):
     def get_description(self, character: CharacterView) -> str:
         return f"While studying magic, you specialized in {self._expertise.skills[0].value}. You have Expertise in it."
 
-    def apply(self, effects: LedgerWriter):
-        self._expertise.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._expertise.apply(ledger_writer)
 
 
 class MemorizeSpell(Feature):

@@ -12,10 +12,10 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="College of Swords Bard Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...proficiency with medium armor and the scimitar."
-        GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(effects)
-        GrantArmorTraining([ArmorType.MEDIUM]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(ledger_writer)
+        GrantArmorTraining([ArmorType.MEDIUM]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

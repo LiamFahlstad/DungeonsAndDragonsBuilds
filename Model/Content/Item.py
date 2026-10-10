@@ -89,13 +89,13 @@ class Item(Feature):
         self.is_wearing = is_wearing
         self.is_consumable = is_consumable
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         """Apply all improvements to the character - unless this is a
         wearable item currently not being worn."""
         if self.is_wearing is False:
             return
         for improvement in self.improvements:
-            improvement.apply(effects)
+            improvement.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str | None:
         """Return the item description. Subclasses can override for a description

@@ -19,8 +19,8 @@ class DazzlingFootwork(Feature):
             10, [Ability.DEXTERITY, Ability.CHARISMA], allows_shield=False
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._ac.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._ac.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -55,8 +55,8 @@ class Skilled(OriginFeat):
             name="Skilled", origin="Origin Feat", skippable_in_concise=True
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)
@@ -71,8 +71,8 @@ class Alert(OriginFeat):
         super().__init__(name="Alert", origin="Origin Feat")
         self._proficiency = InitiativeProficiency()
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -357,8 +357,8 @@ class Tough(OriginFeat):
         self._hp = HitPointsPerLevelBonus(2)
         super().__init__(name="Tough", origin="Origin Feat", skippable_in_concise=True)
 
-    def apply(self, effects: LedgerWriter):
-        self._hp.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._hp.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -502,8 +502,8 @@ class PurpleDragonRook(OriginFeat):
         )
         super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"

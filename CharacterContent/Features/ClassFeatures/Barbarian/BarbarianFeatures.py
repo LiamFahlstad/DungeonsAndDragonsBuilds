@@ -137,8 +137,8 @@ class UnarmoredDefense(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
 
-    def apply(self, effects: LedgerWriter):
-        self._ac.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._ac.apply(ledger_writer)
 
 
 class WeaponMastery(Feature):
@@ -174,8 +174,8 @@ class DangerSense(Feature):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
-    def apply(self, effects: LedgerWriter):
-        self._advantage.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._advantage.apply(ledger_writer)
 
 
 class RecklessAttack(Feature):
@@ -226,12 +226,12 @@ class PrimalKnowledgeSkillProficiency(Feature):
             error_prefix="Invalid skill for Primal Knowledge",
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Only the proficiency is permanent. Making Acrobatics, Intimidation,
         # Perception, Stealth or Survival checks with Strength is a
         # while-raging option (see PrimalKnowledge), so the sheet keeps each
         # skill's normal ability.
-        self._proficiency.apply(effects)
+        self._proficiency.apply(ledger_writer)
 
 
 class PrimalKnowledge(Feature):
@@ -276,12 +276,12 @@ class FastMovementBonus(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...while you aren't wearing Heavy armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
             lambda cs: (0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10)
-        ).apply(effects)
+        ).apply(ledger_writer)
 
 
 class FeralInstinct(Feature):
@@ -293,8 +293,10 @@ class FeralInstinct(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
-        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
+            ledger_writer
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -454,8 +456,8 @@ class PrimalChampion(Feature):
             max_score=25,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonuses.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonuses.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You embody primal power. Your Strength and Constitution scores increase by 4, to a maximum of 25."

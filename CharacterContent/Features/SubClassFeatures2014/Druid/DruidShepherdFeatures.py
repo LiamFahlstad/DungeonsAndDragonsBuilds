@@ -23,8 +23,8 @@ class SpeechOfTheWoods(Feature):
         )
         self._language = GrantLanguage(Language.SYLVAN)
 
-    def apply(self, effects: LedgerWriter):
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

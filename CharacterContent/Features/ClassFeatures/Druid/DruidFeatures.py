@@ -63,8 +63,8 @@ class Druidic(Feature):
         super().__init__(name="Druidic", origin="Druid Level 1")
         self._language = GrantLanguage(Language.DRUIDIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -81,19 +81,19 @@ class PrimalOrder(Feature):
         )
         self.order = order
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Warden: "...proficiency with Martial weapons and training with Medium armor."
         if self.order == PrimalOrderType.WARDEN:
-            GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
-            GrantArmorTraining([ArmorType.MEDIUM]).apply(effects)
+            GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+            GrantArmorTraining([ArmorType.MEDIUM]).apply(ledger_writer)
         if self.order != PrimalOrderType.MAGICIAN:
             return
 
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SkillBonus(Skill.ARCANA, bonus).apply(effects)
-        SkillBonus(Skill.NATURE, bonus).apply(effects)
+        SkillBonus(Skill.ARCANA, bonus).apply(ledger_writer)
+        SkillBonus(Skill.NATURE, bonus).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         if self.order == PrimalOrderType.WARDEN:

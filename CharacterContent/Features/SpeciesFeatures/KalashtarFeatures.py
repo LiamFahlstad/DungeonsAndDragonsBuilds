@@ -18,8 +18,8 @@ class DualMind(Feature):
         )
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
 
-    def apply(self, effects: LedgerWriter):
-        self._advantage.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._advantage.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on Wisdom and Charisma saving throws."
@@ -35,8 +35,8 @@ class MentalDiscipline(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Psychic damage."

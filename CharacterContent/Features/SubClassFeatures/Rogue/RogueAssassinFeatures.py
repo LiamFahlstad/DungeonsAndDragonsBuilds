@@ -14,9 +14,11 @@ class Assassinate(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "Initiative. You have Advantage on Initiative rolls."
-        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
+        InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
+            ledger_writer
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (

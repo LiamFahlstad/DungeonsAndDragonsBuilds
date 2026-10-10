@@ -26,8 +26,8 @@ class ChangelingInstincts(Feature):
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         if len(self._choice.skills) == 2:

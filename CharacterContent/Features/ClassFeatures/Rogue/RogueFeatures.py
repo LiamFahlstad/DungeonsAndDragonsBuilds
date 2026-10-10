@@ -20,8 +20,8 @@ class Expertise(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         skill_names = " and ".join(skill.value for skill in self._choice.skills)
@@ -70,8 +70,8 @@ class ThievesCant(Feature):
         # anywhere in this class.
         self._language = GrantLanguage(Language.THIEVES_CANT)
 
-    def apply(self, effects: LedgerWriter):
-        self._language.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._language.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = "You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2."
@@ -271,8 +271,8 @@ class SlipperyMind(Feature):
             error_prefix="Slippery Mind",
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."

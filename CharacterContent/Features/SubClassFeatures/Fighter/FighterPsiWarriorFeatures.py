@@ -82,8 +82,8 @@ class GuardedMind(Feature):
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

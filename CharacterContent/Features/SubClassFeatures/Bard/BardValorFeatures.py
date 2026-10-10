@@ -44,10 +44,10 @@ class MartialTraining(Feature):
             name="Martial Training", origin="College of Valor Bard Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...proficiency with Martial weapons and training with Medium armor and Shields."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
-        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+        GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

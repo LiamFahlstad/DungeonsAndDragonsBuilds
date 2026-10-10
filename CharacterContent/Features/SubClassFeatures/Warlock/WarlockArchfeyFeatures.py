@@ -94,8 +94,8 @@ class BeguilingDefenses(Feature):
         )
         self._immunity = ConditionImmunity(Condition.CHARMED)
 
-    def apply(self, effects: LedgerWriter):
-        self._immunity.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._immunity.apply(ledger_writer)
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()

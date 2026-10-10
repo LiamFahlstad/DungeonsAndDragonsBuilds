@@ -13,8 +13,8 @@ class Darkvision(Feature):
         super().__init__(name="Darkvision", origin="Dhampir Trait")
         self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 60 feet."
@@ -46,8 +46,8 @@ class TraceOfUndeath(Feature):
         )
         self._resistance = DamageResistance(DamageType.NECROTIC)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Necrotic damage."

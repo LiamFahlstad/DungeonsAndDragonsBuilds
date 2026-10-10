@@ -111,9 +111,9 @@ class NaturesWard(Feature):
             DamageType(_LAND_TYPE_RESISTANCE[self.land_type])
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._condition_immunity.apply(effects)
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._condition_immunity.apply(ledger_writer)
+        self._resistance.apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

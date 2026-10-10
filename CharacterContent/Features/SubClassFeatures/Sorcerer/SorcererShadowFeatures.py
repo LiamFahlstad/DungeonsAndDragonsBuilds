@@ -34,9 +34,9 @@ class PowerOfShadow(Feature):
             GrantSense(Sense.BLINDSIGHT, 10),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for sense in self._senses:
-            sense.apply(effects)
+            sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -136,9 +136,9 @@ class InspiringCommander(Feature):
             ConditionImmunity(Condition.FRIGHTENED),
         ]
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
-            immunity.apply(effects)
+            immunity.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

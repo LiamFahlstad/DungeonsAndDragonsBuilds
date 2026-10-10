@@ -43,14 +43,14 @@ class DraconicResilience(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # +1 HP per Sorcerer level: a formula, since effects can't read levels.
         HitPointsBonus(
             lambda character: character.get_class_level(
                 Definitions.CharacterClass.SORCERER
             )
-        ).apply(effects)
-        self._ac.apply(effects)
+        ).apply(ledger_writer)
+        self._ac.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -83,8 +83,8 @@ class ElementalAffinity(Feature):
         )
         self._resistance = DamageResistance(damage_type)
 
-    def apply(self, effects: LedgerWriter):
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

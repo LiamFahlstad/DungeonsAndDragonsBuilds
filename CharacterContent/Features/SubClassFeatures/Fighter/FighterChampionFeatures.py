@@ -29,9 +29,9 @@ class RemarkableAthlete(Feature):
             Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
         )
 
-    def apply(self, effects: LedgerWriter) -> None:
-        self._initiative.apply(effects)
-        self._athletics.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter) -> None:
+        self._initiative.apply(ledger_writer)
+        self._athletics.apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

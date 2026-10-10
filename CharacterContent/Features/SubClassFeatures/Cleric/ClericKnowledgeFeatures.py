@@ -37,9 +37,9 @@ class BlessingsOfKnowledge(Feature):
             error_prefix="Blessings of Knowledge",
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency_choice.apply(effects)
-        self._expertise_choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency_choice.apply(ledger_writer)
+        self._expertise_choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = f"You gain proficiency with one type of Artisan's Tools of your choice and in {self._skill_1.value} and {self._skill_2.value}. You have Expertise in those two skills."
@@ -89,7 +89,7 @@ class UnfetteredMind(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Intelligence, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.INTELLIGENCE,
@@ -100,7 +100,7 @@ class UnfetteredMind(Feature):
                 Ability.WISDOM,
                 Ability.CHARISMA,
             ],
-        ).apply(effects)
+        ).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -76,13 +76,13 @@ class TrainingInWarAndSong(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "...proficiency with all Melee Martial weapons that don't have the
         # Two-Handed or Heavy property."
         GrantWeaponProficiency(
             [WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED]
-        ).apply(effects)
-        self._choice.apply(effects)
+        ).apply(ledger_writer)
+        self._choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

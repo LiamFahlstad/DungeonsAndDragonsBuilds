@@ -75,8 +75,8 @@ class _AbilityScoreFeat(GeneralFeat):
         )
         super().__init__(name=self._NAME, origin=self._ORIGIN, uses=self._USES)
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
 
 class AbilityScoreImprovement(GeneralFeat):
@@ -99,8 +99,8 @@ class AbilityScoreImprovement(GeneralFeat):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
@@ -155,8 +155,8 @@ class Athlete(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -447,10 +447,10 @@ class MartialWeaponTraining(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
         # "Weapon Proficiency. You gain proficiency with Martial weapons."
-        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
+        GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -560,8 +560,8 @@ class Poisoner(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def calculate_dc(self, character: CharacterView) -> int:
         modifier = character.get_ability_modifier(self.ability)
@@ -606,9 +606,9 @@ class Resilient(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
-        SavingThrowProficiency([self.ability]).apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        SavingThrowProficiency([self.ability]).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -642,8 +642,8 @@ class RitualCaster(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -736,13 +736,13 @@ class SkillExpert(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.skippable_in_concise = True
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # Both grants are idempotent flags, and expertise's proficiency
         # requirement is validated once everything has applied - so there's
         # nothing to check against what was granted before this feat.
-        super().apply(effects)
-        self._proficiency.apply(effects)
-        self._expertise.apply(effects)
+        super().apply(ledger_writer)
+        self._proficiency.apply(ledger_writer)
+        self._expertise.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -762,9 +762,9 @@ class Skulker(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self._sense = GrantSense(Sense.BLINDSIGHT, 10)
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -801,10 +801,10 @@ class Speedy(_AbilityScoreFeat):
     _NAME = "Speedy"
     _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
         # "Speed Increase. Your Speed increases by 10 feet."
-        SpeedBonus(10).apply(effects)
+        SpeedBonus(10).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -880,8 +880,8 @@ class Telepathic(_AbilityScoreFeat):
             self, name=self._NAME, origin=self._ORIGIN, usage_tags=["utility"]
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._bonus.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._bonus.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1198,8 +1198,8 @@ class DarkGift(GeneralFeat):
         )
         self._sense = GrantSense(Sense.BLINDSIGHT, 15)
 
-    def apply(self, effects: LedgerWriter):
-        self._sense.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._sense.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1512,9 +1512,9 @@ class ElementalFamiliar(_AbilityScoreFeat):
         self._resistance = ElementalResistance(damage_type)
         super().__init__(character_level, ability)
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1558,9 +1558,9 @@ class SpellResistant(_AbilityScoreFeat):
         self._resistance = DamageResistance(resistance_damage_type)
         super().__init__(character_level, ability)
 
-    def apply(self, effects: LedgerWriter):
-        super().apply(effects)
-        self._resistance.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        self._resistance.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

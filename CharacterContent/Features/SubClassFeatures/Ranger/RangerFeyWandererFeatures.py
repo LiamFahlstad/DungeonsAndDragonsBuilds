@@ -63,12 +63,12 @@ class OtherworldlyGlamour(Feature):
             name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "Whenever you make a Charisma check, you gain a bonus to the check
         # equal to your Wisdom modifier (Minimum of +1)." A formula per skill,
         # so both the Wisdom modifier and the skill's ability are final.
         for skill in Skill:
-            SkillBonus(skill, self._charisma_check_bonus(skill)).apply(effects)
+            SkillBonus(skill, self._charisma_check_bonus(skill)).apply(ledger_writer)
 
     @staticmethod
     def _charisma_check_bonus(skill: Skill):

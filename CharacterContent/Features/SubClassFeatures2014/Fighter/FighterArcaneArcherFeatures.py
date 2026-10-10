@@ -29,8 +29,8 @@ class ArcaneArcherLore(Feature):
             error_prefix="Arcane Archer Lore",
         )
 
-    def apply(self, effects: LedgerWriter):
-        self._proficiency_choice.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._proficiency_choice.apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

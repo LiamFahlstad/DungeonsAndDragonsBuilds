@@ -90,9 +90,9 @@ class AuraOfAlacrity(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: LedgerWriter):
+    def apply(self, ledger_writer: LedgerWriter):
         # "Your Speed increases by 10 feet." (the allies' boost is situational)
-        SpeedBonus(10).apply(effects)
+        SpeedBonus(10).apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

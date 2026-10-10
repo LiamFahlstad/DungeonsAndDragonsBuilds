@@ -89,8 +89,8 @@ class GeniesSplendor(Feature):
         # plus your Dexterity and Charisma modifiers. You can use a Shield..."
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, effects: LedgerWriter):
-        self._ac.apply(effects)
+    def apply(self, ledger_writer: LedgerWriter):
+        self._ac.apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
