@@ -1,7 +1,7 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
 from Model.Content.Feature import Feature
 from Model.Content.Improvements import DamageResistance, GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -14,9 +14,9 @@ class FiendishResistance(Feature):
         super().__init__(
             name="Fiendish Resistance", origin="Tiefling Trait", usage_tags=["buff"]
         )
-        self._resistance = DamageResistance(DamageType(damage_type), self.name)
+        self._resistance = DamageResistance(DamageType(damage_type))
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -27,9 +27,9 @@ class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Tiefling Trait")
-        self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

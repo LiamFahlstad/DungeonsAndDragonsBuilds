@@ -2,7 +2,7 @@ from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -12,7 +12,7 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="College of Swords Bard Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "...proficiency with medium armor and the scimitar."
         GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(effects)
         GrantArmorTraining([ArmorType.MEDIUM]).apply(effects)

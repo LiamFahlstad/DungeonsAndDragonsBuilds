@@ -5,7 +5,7 @@ from Model.Content.Improvements import (
     DamageResistance,
     SkillProficiencyChoice,
 )
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -20,9 +20,9 @@ class ConstructResilience(Feature):
             skippable_in_concise=True,
             usage_tags=["buff"],
         )
-        self._resistance = DamageResistance(DamageType.POISON, self.name)
+        self._resistance = DamageResistance(DamageType.POISON)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -55,7 +55,7 @@ class IntegratedProtection(Feature):
         )
         self._bonus = ArmorClassBonus(1)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._bonus.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -74,7 +74,7 @@ class SpecializedDesign(Feature):
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

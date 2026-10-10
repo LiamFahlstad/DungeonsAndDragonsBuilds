@@ -4,9 +4,9 @@ from a character (Notes/engine-simplification-plan.md, section 2b).
 Parts and content name this instead of Character, so they never import the
 class that holds them. A bonus "equal to your Wisdom modifier" is a Formula,
 evaluated against the finished character when it's read (see
-Model/Bonuses.py); a feature's description reads its numbers the same way.
-Character satisfies it structurally; Effects - the write-only record apply()
-gets - deliberately does not, so a formula can never read a stat in the
+Model/Ledger/Bonuses.py); a feature's description reads its numbers the same way.
+Character satisfies it structurally; LedgerWriter - the write-only record
+apply() gets - deliberately does not, so a formula can never read a stat in the
 middle of evaluation.
 
 Keep CharacterView minimal: answers and sources only, never a part. A new
@@ -34,7 +34,8 @@ class CharacterView(Protocol):
 
     def get_base_ability_score(self, ability: Ability) -> int: ...
 
-    def get_base_speed(self) -> int: ...
+    @property
+    def base_speed(self) -> int: ...
 
     # ── Answers ──────────────────────────────────────────────────────────
 

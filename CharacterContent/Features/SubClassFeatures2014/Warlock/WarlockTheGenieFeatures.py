@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -99,12 +99,10 @@ class ElementalGift(Feature):
         )
         self.kind = kind
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You now have resistance to a damage type determined by your
         # patron's kind" (the flight is the activated part).
-        DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind], self.name).apply(
-            effects
-        )
+        DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind]).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]

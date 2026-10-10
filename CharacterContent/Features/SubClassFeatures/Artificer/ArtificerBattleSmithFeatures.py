@@ -2,7 +2,7 @@ from Core.Definitions import ARTIFICER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureUses, FeatureActivation, RegainedOn
 from Model.Content.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -49,7 +49,7 @@ class BattleReady(Feature):
     def __init__(self):
         super().__init__(name="Battle Ready", origin="Battle Smith Artificer Level 3")
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "Weapon Knowledge. You gain proficiency with Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 

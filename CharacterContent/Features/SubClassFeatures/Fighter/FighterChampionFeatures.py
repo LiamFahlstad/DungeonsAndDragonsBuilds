@@ -1,7 +1,7 @@
 from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -26,10 +26,10 @@ class RemarkableAthlete(Feature):
         )
         self._initiative = InitiativeRollCondition(DiceRollCondition.ADVANTAGE)
         self._athletics = SkillRollCondition(
-            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE, reason="Remarkable Athlete"
+            Skill.ATHLETICS, DiceRollCondition.ADVANTAGE
         )
 
-    def apply(self, effects: Effects) -> None:
+    def apply(self, effects: LedgerWriter) -> None:
         self._initiative.apply(effects)
         self._athletics.apply(effects)
 

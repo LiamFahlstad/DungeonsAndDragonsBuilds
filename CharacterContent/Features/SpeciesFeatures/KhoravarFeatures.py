@@ -1,7 +1,7 @@
 from Core.Definitions import CreatureSize, Skill, Sense
 from Model.Content.Feature import Feature
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -12,9 +12,9 @@ class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
         super().__init__(name="Darkvision", origin="Khoravar Trait")
-        self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -51,7 +51,7 @@ class SkillVersatility(Feature):
             [skill], list(Skill), count=1, error_prefix="SkillVersatility"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

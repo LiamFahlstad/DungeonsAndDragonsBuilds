@@ -1,7 +1,7 @@
 from Core.Definitions import Ability, CreatureSize, Sense
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Model.Content.Improvements import SavingThrowAdvantage, GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -14,9 +14,9 @@ class Darkvision(Feature):
         super().__init__(
             name="Darkvision", origin="Gnome Trait", skippable_in_concise=True
         )
-        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -35,7 +35,7 @@ class GnomishCunning(Feature):
             [Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA]
         )
 
-    def apply(self, effects: Effects) -> None:
+    def apply(self, effects: LedgerWriter) -> None:
         self._advantage.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -80,9 +80,9 @@ class GuardedMind(Feature):
             origin="Psi Warrior Fighter Level 10",
             usage_tags=["buff"],
         )
-        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+        self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

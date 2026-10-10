@@ -10,8 +10,8 @@ variant, build a new one from changed sources:
 `Character(attr.evolve(character.sources, ...))`.
 
 Evaluation applies every feature, armor, weapon, item and fighting style in
-iter_stat_effects() to a write-only Effects view of a fresh Ledger
-(Model/Effects.py) and seals it; queries then answer from it.
+iter_stat_effects() to a write-only LedgerWriter around a fresh Ledger
+(Model/Ledger/) once; queries then answer from it.
 
 The Model package imports nothing from CharacterContent, not even for type
 hints: features, fighting styles, armor, weapons and items are the base
@@ -39,13 +39,14 @@ from Model.Content.Feature import Feature
 from Model.Content.FightingStyle import FightingStyle
 from Model.Content.Item import Item
 from Model.Content.Weapon import AbstractWeapon
-from Model.Effects import Effects, Ledger
+from Model.Ledger.Ledger import Ledger
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.FeatureGrants import ExtensionTree, FeatureGrant
 from Model.Inventory import EquipmentEntry
 from Model.Records.GrantStamp import GrantStamp
 from Model.Records.SourcedValue import SourcedValue
 from Model.Records.Tools import ToolProficiency
-from Model.Senses import SenseGrant
+from Model.Ledger.Senses import SenseGrant
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
 
 FeatureT = TypeVar("FeatureT", bound=Feature)
@@ -312,7 +313,7 @@ class Character:
 
     @functools.cached_property
     def _ledger(self) -> Ledger:
-        """What every effect recorded, one part per concern (Model/Effects.py),
+        """What every effect recorded, one part per concern (Model/Ledger/),
         worked out on first use. Private: everything is read through the
         queries below, which hand this character to the parts' resolvers.
         Requirements aren't checked here - validate() does that, against the
@@ -322,13 +323,13 @@ class Character:
         _required(self.base_class, "base class")
 
         ledger = Ledger()
-        effects = Effects(ledger)
         # Ordering contract (see Model/Content/Improvements.py): every effect
-        # only records facts - Effects is write-only - and every value is
+        # only records facts - LedgerWriter is write-only - and every value is
         # worked out when it's read, so features, armor, weapons, items and
-        # fighting styles may apply in any order.
+        # fighting styles may apply in any order. Each gets its own writer,
+        # labeled with its name.
         for effect in self._apply_order(self.iter_stat_effects()):
-            effect.apply(effects)
+            effect.apply(LedgerWriter(ledger, effect.name))
         return ledger
 
     def _validate_sources(self) -> None:
@@ -486,9 +487,6 @@ class Character:
     def get_base_ability_score(self, ability: Ability) -> int:
         """The player's score before any increase."""
         return self.base_abilities.get_score(ability)
-
-    def get_base_speed(self) -> int:
-        return self.base_speed
 
     def get_class_level(self, character_class: CharacterClass) -> int:
         return self.class_levels.get_class_level(character_class)

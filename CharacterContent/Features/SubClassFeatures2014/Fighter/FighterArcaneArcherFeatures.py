@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -29,7 +29,7 @@ class ArcaneArcherLore(Feature):
             error_prefix="Arcane Archer Lore",
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency_choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

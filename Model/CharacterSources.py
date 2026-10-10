@@ -39,7 +39,7 @@ class CharacterSources:
     # Model/ClassLevels.py.
     class_levels: ClassLevels = attr.Factory(ClassLevels)
     # The player's ability scores before any increase - immutable; the final
-    # scores are Character.get_ability_score() (see Model/AbilityIncreases.py).
+    # scores are Character.get_ability_score() (see Model/Ledger/AbilityIncreases.py).
     base_abilities: Optional[AbilityScores] = None
     # Walking speed given by the species, before any bonus.
     base_speed: Optional[int] = None

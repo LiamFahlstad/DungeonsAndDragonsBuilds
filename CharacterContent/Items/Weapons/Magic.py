@@ -428,9 +428,7 @@ class SkirmishersShortsword(Shortsword):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self.add_character_improvement(
-            SkillBonus(Skill.ACROBATICS, 2, source="Skirmisher's Shortsword")
-        )
+        self.add_character_improvement(SkillBonus(Skill.ACROBATICS, 2))
 
     def setup_improvements(self) -> None:
         self.add_weapon_improvement(

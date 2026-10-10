@@ -1,7 +1,7 @@
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Core.Definitions import DamageType, Sense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -11,9 +11,9 @@ SPEED = 35  # Given by your species
 class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Dhampir Trait")
-        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -44,9 +44,9 @@ class TraceOfUndeath(Feature):
         super().__init__(
             name="Trace of Undeath", origin="Dhampir Trait", usage_tags=["buff"]
         )
-        self._resistance = DamageResistance(DamageType.NECROTIC, self.name)
+        self._resistance = DamageResistance(DamageType.NECROTIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

@@ -7,16 +7,16 @@ from Model.Content.Improvements import (
     WeaponDamageBonus,
 )
 from Model.Content.FightingStyle import FightingStyle
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 
 class FightStyleModifier(FightingStyle):
     """A fighting style with a computed effect. Like any other effect, apply()
     only records facts on the stat block - weapon bonuses included, which go
-    to character.ledger.weapon_bonuses instead of into the weapons."""
+    to the Ledger's weapon_bonuses instead of into the weapons."""
 
     @abstractmethod
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         pass
 
 
@@ -25,7 +25,9 @@ def _is_ranged_weapon(weapon: WeaponTraits) -> bool:
 
 
 class Archery(FightStyleModifier):
-    def apply(self, effects: Effects):
+    name = "Archery"
+
+    def apply(self, effects: LedgerWriter):
         WeaponAttackBonus(_is_ranged_weapon, 2, "Archery Fighting Style").apply(effects)
 
     def description(self):
@@ -33,12 +35,16 @@ class Archery(FightStyleModifier):
 
 
 class BlindFighting(FightingStyle):
+    name = "Blind Fighting"
+
     def description(self):
         return "Blind Fighting: You have Blindsight with a range of 10 feet."
 
 
 class Defense(FightStyleModifier):
-    def apply(self, effects: Effects):
+    name = "Defense"
+
+    def apply(self, effects: LedgerWriter):
         # A formula, so the armor is checked once everything has applied.
         ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 
@@ -56,7 +62,9 @@ def _is_one_handed_melee_weapon(weapon: WeaponTraits) -> bool:
 
 
 class Dueling(FightStyleModifier):
-    def apply(self, effects: Effects):
+    name = "Dueling"
+
+    def apply(self, effects: LedgerWriter):
         WeaponDamageBonus(
             _is_one_handed_melee_weapon,
             2,
@@ -68,16 +76,22 @@ class Dueling(FightStyleModifier):
 
 
 class GreatWeaponFighting(FightingStyle):
+    name = "Great Weapon Fighting"
+
     def description(self):
         return "Great Weapon Fighting: When you roll damage for an attack you make with a Melee weapon that you are holding with two hands, you can treat any 1 or 2 on a damage die as a 3. The weapon must have the Two-Handed or Versatile property to gain this benefit."
 
 
 class Interception(FightingStyle):
+    name = "Interception"
+
     def description(self):
         return "Interception: When a creature you can see hits another creature within 5 feet of you with an attack roll, you can take a Reaction to reduce the damage dealt to the target by 1d10 plus your Proficiency Bonus. You must be holding a Shield or a Simple or Martial weapon to use this Reaction. (calculate manually)"
 
 
 class Protection(FightingStyle):
+    name = "Protection"
+
     def description(self):
         return "Protection: When a creature you can see attacks a target other than you that is within 5 feet of you, you can take a Reaction to interpose your Shield if you're holding one. You impose Disadvantage on the triggering attack roll and all other attack rolls against the target until the start of your next turn if you remain within 5 feet of the target. (calculate manually)"
 
@@ -87,7 +101,9 @@ def _is_thrown_weapon(weapon: WeaponTraits) -> bool:
 
 
 class ThrownWeaponFighting(FightStyleModifier):
-    def apply(self, effects: Effects):
+    name = "Thrown Weapon Fighting"
+
+    def apply(self, effects: LedgerWriter):
         WeaponDamageBonus(
             _is_thrown_weapon, 2, "Thrown Weapon Fighting Style - ranged attacks only"
         ).apply(effects)
@@ -97,11 +113,15 @@ class ThrownWeaponFighting(FightStyleModifier):
 
 
 class TwoWeaponFighting(FightingStyle):
+    name = "Two-Weapon Fighting"
+
     def description(self):
         return "Two-Weapon Fighting: When you make an extra attack as a result of using a weapon that has the Light property, you can add your ability modifier to the damage of that attack if you aren't already adding it to the damage. (calculate manually)\n"
 
 
 class UnarmedFighting(FightingStyle):
+    name = "Unarmed Fighting"
+
     def description(self):
         return (
             "Unarmed Fighting: When you hit with your Unarmed Strike and deal damage,"

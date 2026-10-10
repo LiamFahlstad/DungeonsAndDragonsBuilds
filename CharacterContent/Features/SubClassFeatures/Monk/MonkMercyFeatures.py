@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -121,7 +121,7 @@ class ImplementsOfMercy(Feature):
         )
         self._skill_proficiencies = SkillProficiency([Skill.INSIGHT, Skill.MEDICINE])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._skill_proficiencies.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

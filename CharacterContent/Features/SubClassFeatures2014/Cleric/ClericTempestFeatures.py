@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -21,7 +21,7 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Tempest Domain Cleric Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with martial weapons and heavy armor."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)

@@ -2,7 +2,7 @@ from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 
 class HollowWardenSpells(Feature):
@@ -62,7 +62,7 @@ class HungeringMight(Feature):
             usage_tags=["buff", "heal"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
@@ -103,9 +103,9 @@ class AncientMight(Feature):
             origin="Hollow Warden Ranger Level 15",
             usage_tags=["damage", "heal", "buff"],
         )
-        self._immunity = ConditionImmunity(Condition.EXHAUSTION, self.name)
+        self._immunity = ConditionImmunity(Condition.EXHAUSTION)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._immunity.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

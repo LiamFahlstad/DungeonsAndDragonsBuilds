@@ -16,7 +16,7 @@ from Model.Content.Improvements import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import Ability
 from Model.View import CharacterView
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_LEVEL
 
@@ -115,7 +115,7 @@ class UnarmoredDefense(Feature):
             allows_shield=False,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._ac.apply(effects)
 
 
@@ -232,7 +232,7 @@ class UnarmoredMovement(Feature):
             name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
         # so the armor is checked once everything (armor included) has applied.
         def bonus(cs: CharacterView) -> int:
@@ -474,7 +474,7 @@ class DisciplinedSurvivorSavingThrows(Feature):
             ]
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiencies.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -539,7 +539,7 @@ class BodyAndMind(Feature):
             max_score=25,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._bonuses.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

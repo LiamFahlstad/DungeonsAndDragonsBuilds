@@ -1,7 +1,7 @@
 from Core.Definitions import BARD_HIT_DIE, Skill
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -16,7 +16,7 @@ class BonusProficiencies(Feature):
             [skill_1, skill_2, skill_3], list(Skill), count=3
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

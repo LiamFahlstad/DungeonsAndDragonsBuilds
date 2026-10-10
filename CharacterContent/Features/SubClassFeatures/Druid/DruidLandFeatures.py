@@ -2,7 +2,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
@@ -106,12 +106,12 @@ class NaturesWard(Feature):
             usage_tags=["buff"],
         )
         self.land_type = land_type
-        self._condition_immunity = ConditionImmunity(Condition.POISONED, self.name)
+        self._condition_immunity = ConditionImmunity(Condition.POISONED)
         self._resistance = DamageResistance(
-            DamageType(_LAND_TYPE_RESISTANCE[self.land_type]), self.name
+            DamageType(_LAND_TYPE_RESISTANCE[self.land_type])
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._condition_immunity.apply(effects)
         self._resistance.apply(effects)
 

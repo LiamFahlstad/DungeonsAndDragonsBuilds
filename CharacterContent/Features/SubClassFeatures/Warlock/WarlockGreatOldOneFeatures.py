@@ -1,7 +1,7 @@
 from Core.Definitions import DamageType, WARLOCK_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -108,9 +108,9 @@ class ThoughtShield(Feature):
             origin="Great Old One Patron Warlock Level 10",
             usage_tags=["buff", "damage"],
         )
-        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+        self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

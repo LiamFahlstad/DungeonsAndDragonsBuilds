@@ -2,7 +2,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Skill, WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, RegainedOn
 from Model.Content.Improvements import SkillExpertiseChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -66,7 +66,7 @@ class Scholar(Feature):
     def get_description(self, character: CharacterView) -> str:
         return f"While studying magic, you specialized in {self._expertise.skills[0].value}. You have Expertise in it."
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._expertise.apply(effects)
 
 

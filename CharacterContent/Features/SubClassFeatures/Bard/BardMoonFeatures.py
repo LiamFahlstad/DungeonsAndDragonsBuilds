@@ -1,7 +1,7 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, RegainedOn
 from Model.Content.Improvements import GrantLanguage, SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -53,9 +53,9 @@ class PrimalLore(Feature):
             count=1,
             error_prefix="Primal Lore",
         )
-        self._language = GrantLanguage(Language.DRUIDIC, self.name)
+        self._language = GrantLanguage(Language.DRUIDIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency_choice.apply(effects)
         self._language.apply(effects)
 

@@ -5,9 +5,9 @@ subclasses - see CharacterContent.Items.Weapons/Armor).
 
 Ordering contract
 -----------------
-apply() only RECORDS a fact, on the write-only Effects record
-(Model/Effects.py); the Character works every value out when it's read.
-Effects has no way to read anything back, so features, extensions, armor,
+apply() only RECORDS a fact, on the write-only LedgerWriter
+(Model/Ledger/LedgerWriter.py); the Character works every value out when it's
+read. LedgerWriter has no way to read anything back, so features, extensions, armor,
 weapons, items and fighting styles can apply in any order and give the same
 character:
 
@@ -46,19 +46,23 @@ from Core.Definitions import (
     Sense,
     Skill,
 )
-from Model.ArmorClass import ArmorClassFormula
+from Model.Ledger.ArmorClass import ArmorClassFormula
 from Core.Weapons import WeaponProficiency
-from Model.Bonuses import OTHER_SOURCE
+from Model.Ledger.Bonuses import OTHER_SOURCE
 from Model.Records.Tools import ToolProficiency
 from Model.View import Formula, CharacterView, Value
 from Model.Content.Effect import Effect
-from Model.Effects import Effects
-from Model.WeaponBonuses import WeaponBonus, WeaponFilter
+from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Ledger.WeaponBonuses import WeaponBonus, WeaponFilter
 
 
 class CharacterImprovement(Effect):
     """Base class for all CharacterImprovements. Override apply() to record
-    this improvement's effects."""
+    this improvement's effects. Inside a feature or item, what it records is
+    labeled with that feature's or item's name; granted on its own (a test's
+    add_effect), with OTHER_SOURCE."""
+
+    name = OTHER_SOURCE
 
 
 def _validate_pool(items, pool, count: int, error_prefix: str):
@@ -78,7 +82,7 @@ class SkillProficiency(CharacterImprovement):
     def __init__(self, skills: list[Skill]):
         self.skills = skills
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for skill in self.skills:
             effects.add_skill_proficiency(skill)
 
@@ -107,7 +111,7 @@ class SkillExpertise(CharacterImprovement):
     def __init__(self, skills: list[Skill]):
         self.skills = skills
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for skill in self.skills:
             effects.add_skill_expertise(skill)
 
@@ -132,7 +136,7 @@ class SavingThrowProficiency(CharacterImprovement):
     def __init__(self, abilities: list[Ability]):
         self.abilities = abilities
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for ability in self.abilities:
             effects.add_saving_throw_proficiency(ability)
 
@@ -163,7 +167,7 @@ class SavingThrowProficiencyOrAlternative(CharacterImprovement):
         self.ability = ability
         self.alternatives = alternatives
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_saving_throw_proficiency_or_alternative(
             self.ability, self.alternatives
         )
@@ -178,7 +182,7 @@ class GrantWeaponProficiency(CharacterImprovement):
     def __init__(self, weapon_proficiencies: Sequence[WeaponProficiency]):
         self.weapon_proficiencies = list(weapon_proficiencies)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for weapon_proficiency in self.weapon_proficiencies:
             effects.add_weapon_proficiency(weapon_proficiency)
 
@@ -189,7 +193,7 @@ class GrantArmorTraining(CharacterImprovement):
     def __init__(self, armor_types: list[ArmorType]):
         self.armor_types = armor_types
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for armor_type in self.armor_types:
             effects.add_armor_training(armor_type)
 
@@ -200,7 +204,7 @@ class GrantToolProficiency(CharacterImprovement):
     def __init__(self, tool_proficiencies: list[ToolProficiency]):
         self.tool_proficiencies = tool_proficiencies
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for tool_proficiency in self.tool_proficiencies:
             effects.add_tool_proficiency(tool_proficiency)
 
@@ -211,7 +215,7 @@ class SavingThrowAdvantage(CharacterImprovement):
     def __init__(self, abilities: list[Ability]):
         self.abilities = abilities
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for ability in self.abilities:
             effects.add_saving_throw_advantage(ability)
 
@@ -224,7 +228,7 @@ class SavingThrowBonus(CharacterImprovement):
         self.abilities = abilities
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for ability in self.abilities:
             effects.add_saving_throw_bonus(ability, self.bonus)
 
@@ -266,7 +270,7 @@ class AbilityScoreBonus(CharacterImprovement):
         self.bonuses = bonuses
         self.max_score = max_score
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for ability, bonus in self.bonuses:
             effects.add_ability_bonus(ability, bonus, max_score=self.max_score)
 
@@ -291,7 +295,7 @@ class SetArmorClass(CharacterImprovement):
         # +2". None means uncapped (Light armor, or no ability at all).
         self.ability_modifier_cap = ability_modifier_cap
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
@@ -316,7 +320,7 @@ class MultiAbilityArmorClass(CharacterImprovement):
         self.abilities = abilities
         self.allows_shield = allows_shield
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_armor_class_formula(
             ArmorClassFormula(
                 base=self.base,
@@ -333,7 +337,7 @@ class ArmorClassBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_armor_class_bonus(self.bonus)
 
 
@@ -348,7 +352,7 @@ class WeaponAttackBonus(CharacterImprovement):
     def __init__(self, applies_to: WeaponFilter, value: int, source: str):
         self.bonus = WeaponBonus(applies_to, value, source)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_weapon_attack_bonus(self.bonus)
 
 
@@ -359,7 +363,7 @@ class WeaponDamageBonus(CharacterImprovement):
     def __init__(self, applies_to: WeaponFilter, value: int, source: str):
         self.bonus = WeaponBonus(applies_to, value, source)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_weapon_damage_bonus(self.bonus)
 
 
@@ -367,32 +371,28 @@ class WeaponDamageBonus(CharacterImprovement):
 
 
 class SkillRollCondition(CharacterImprovement):
-    """Applies a roll condition (advantage/disadvantage/neutral) to a specific skill.
-    `reason` names where the condition comes from (e.g. the item or feature name)
-    on the character sheet."""
+    """Applies a roll condition (advantage/disadvantage/neutral) to a specific
+    skill. The sheet lists it under the name of the feature or item granting it."""
 
-    def __init__(
-        self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
-    ):
+    def __init__(self, skill: Skill, condition: DiceRollCondition):
         self.skill = skill
         self.condition = condition
-        self.reason = reason
 
-    def apply(self, effects: Effects):
-        effects.set_skill_roll_condition(self.skill, self.condition, self.reason)
+    def apply(self, effects: LedgerWriter):
+        effects.set_skill_roll_condition(self.skill, self.condition)
 
 
 class StealthDisadvantage(SkillRollCondition):
     """Imposes disadvantage on Stealth checks."""
 
-    def __init__(self, reason: Optional[str] = None):
-        super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE, reason)
+    def __init__(self):
+        super().__init__(Skill.STEALTH, DiceRollCondition.DISADVANTAGE)
 
 
 class InitiativeProficiency(CharacterImprovement):
     """Grants proficiency bonus to initiative rolls."""
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_initiative_proficiency()
 
 
@@ -402,7 +402,7 @@ class InitiativeRollCondition(CharacterImprovement):
     def __init__(self, condition: DiceRollCondition):
         self.condition = condition
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_initiative_roll_condition(self.condition)
 
 
@@ -414,7 +414,7 @@ class InitiativeBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_initiative_bonus(self.bonus)
 
 
@@ -425,7 +425,7 @@ class HitPointsBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_hit_points_bonus(self.bonus)
 
 
@@ -439,16 +439,15 @@ class HitPointsPerLevelBonus(HitPointsBonus):
 
 class SkillBonus(CharacterImprovement):
     """Adds a bonus to a specific skill - flat, or a formula evaluated at read
-    time (e.g. "equal to your Wisdom modifier"). `source` names where the
-    bonus comes from (e.g. the item or feature name) on the character sheet."""
+    time (e.g. "equal to your Wisdom modifier"). The sheet lists it under the
+    name of the feature or item granting it."""
 
-    def __init__(self, skill: Skill, bonus: Value, source: str = OTHER_SOURCE):
+    def __init__(self, skill: Skill, bonus: Value):
         self.skill = skill
         self.bonus = bonus
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_skill_bonus(self.skill, self.bonus, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_skill_bonus(self.skill, self.bonus)
 
 
 class SkillToAbilityOverride(CharacterImprovement):
@@ -458,7 +457,7 @@ class SkillToAbilityOverride(CharacterImprovement):
         self.skills = skills
         self.ability = ability
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for skill in self.skills:
             effects.add_skill_ability(skill, self.ability)
 
@@ -470,9 +469,9 @@ class JackOfAllTradesBonus(CharacterImprovement):
     at read time, so a proficiency granted later (by any builder, the
     species, or an item) correctly switches the bonus off for that skill."""
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for skill in Skill:
-            effects.add_skill_bonus(skill, self._bonus_for(skill), "Jack of All Trades")
+            effects.add_skill_bonus(skill, self._bonus_for(skill))
 
     @staticmethod
     def _bonus_for(skill: Skill) -> Formula:
@@ -492,23 +491,20 @@ class SpeedBonus(CharacterImprovement):
     def __init__(self, bonus: Value):
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_speed_bonus(self.bonus)
 
 
 class CarryingCapacityBonus(CharacterImprovement):
-    """Increases the character's carrying capacity (in item slots).
+    """Increases the character's carrying capacity (in item slots). The sheet
+    lists the extra slots under the name of the item granting them
+    (e.g. "Backpack")."""
 
-    The source label identifies where the extra slots come from
-    (e.g. "Backpack") so the character sheet can group them.
-    """
-
-    def __init__(self, bonus: int, source: str = "Item"):
+    def __init__(self, bonus: int):
         self.bonus = bonus
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_carrying_capacity_bonus(self.source, self.bonus)
+    def apply(self, effects: LedgerWriter):
+        effects.add_carrying_capacity_bonus(self.bonus)
 
 
 class SpellSaveDCBonus(CharacterImprovement):
@@ -517,7 +513,7 @@ class SpellSaveDCBonus(CharacterImprovement):
     def __init__(self, bonus: int):
         self.bonus = bonus
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         effects.add_spell_save_dc_bonus(self.bonus)
 
 
@@ -528,67 +524,62 @@ class StrengthRequirement(CharacterImprovement):
     Recorded, then checked by Character.validate() once everything
     has applied - so every feat/background/ASI increase counts wherever it
     lands in the order. It checks the character's own score: a Strength bonus
-    from an item cannot satisfy an armor requirement."""
+    from an item cannot satisfy an armor requirement. A build that fails it
+    names the armor (or feature) granting it."""
 
-    def __init__(self, min_score: int, reason: str = "armor requirement"):
+    def __init__(self, min_score: int):
         self.min_score = min_score
-        self.reason = reason
 
-    def apply(self, effects: Effects):
-        effects.add_ability_requirement(Ability.STRENGTH, self.min_score, self.reason)
+    def apply(self, effects: LedgerWriter):
+        effects.add_ability_requirement(Ability.STRENGTH, self.min_score)
 
 
 # ── Resistances, immunities, senses, and languages ────────────────────────────
 
 
 class DamageResistance(CharacterImprovement):
-    """Grants resistance to a damage type. `source` names where the
-    resistance comes from (e.g. the feature or item name) on the character
-    sheet."""
+    """Grants resistance to a damage type. The sheet lists it under the name
+    of the feature or item granting it."""
 
-    def __init__(self, damage_type: DamageType, source: str):
+    def __init__(self, damage_type: DamageType):
         self.damage_type = damage_type
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_damage_resistance(self.damage_type, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_damage_resistance(self.damage_type)
 
 
 class DamageImmunity(CharacterImprovement):
-    """Grants immunity to a damage type. `source` names where the immunity
-    comes from on the character sheet."""
+    """Grants immunity to a damage type. The sheet lists it under the name of
+    the feature or item granting it."""
 
-    def __init__(self, damage_type: DamageType, source: str):
+    def __init__(self, damage_type: DamageType):
         self.damage_type = damage_type
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_damage_immunity(self.damage_type, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_damage_immunity(self.damage_type)
 
 
 class ConditionImmunity(CharacterImprovement):
-    """Grants immunity to a condition. `source` names where the immunity
-    comes from on the character sheet."""
+    """Grants immunity to a condition. The sheet lists it under the name of
+    the feature or item granting it."""
 
-    def __init__(self, condition: Condition, source: str):
+    def __init__(self, condition: Condition):
         self.condition = condition
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_condition_immunity(self.condition, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_condition_immunity(self.condition)
 
 
 class GrantSense(CharacterImprovement):
     """Grants a special sense (e.g. Darkvision) out to `range_feet`. Granting
     the same sense again from a different source keeps the larger range."""
 
-    def __init__(self, sense: Sense, range_feet: int, source: str):
+    def __init__(self, sense: Sense, range_feet: int):
         self.sense = sense
         self.range_feet = range_feet
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_sense(self.sense, self.range_feet, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_sense(self.sense, self.range_feet)
 
 
 class GrantOrExtendSense(CharacterImprovement):
@@ -597,25 +588,23 @@ class GrantOrExtendSense(CharacterImprovement):
     is the best other grant of the sense plus `range_feet`, whether those
     grants applied before or after this one."""
 
-    def __init__(self, sense: Sense, range_feet: int, source: str):
+    def __init__(self, sense: Sense, range_feet: int):
         self.sense = sense
         self.range_feet = range_feet
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_sense_or_extension(self.sense, self.range_feet, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_sense_or_extension(self.sense, self.range_feet)
 
 
 class GrantLanguage(CharacterImprovement):
-    """Grants knowledge of a language. `source` names where the language
-    comes from (e.g. species or feat name) on the character sheet."""
+    """Grants knowledge of a language. The sheet lists it under the name of
+    the species, feature or feat granting it."""
 
-    def __init__(self, language: Language, source: str):
+    def __init__(self, language: Language):
         self.language = language
-        self.source = source
 
-    def apply(self, effects: Effects):
-        effects.add_language(self.language, self.source)
+    def apply(self, effects: LedgerWriter):
+        effects.add_language(self.language)
 
 
 # ── Informational-only item improvements ─────────────────────────────────────
@@ -647,7 +636,7 @@ class InformationalImprovement(CharacterImprovement):
     """Base class for CharacterImprovements with no automated mechanical hook in this
     engine. apply() is intentionally a no-op; track the effect manually."""
 
-    def apply(self, effects: Effects) -> None:
+    def apply(self, effects: LedgerWriter) -> None:
         pass
 
 

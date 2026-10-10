@@ -1,7 +1,7 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiency
 from Core.Definitions import Skill
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -10,7 +10,7 @@ class ArcaneInitiate(Feature):
         super().__init__(name="Arcane Initiate", origin="Arcana Domain Cleric Level 3")
         self._proficiency = SkillProficiency([Skill.ARCANA])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

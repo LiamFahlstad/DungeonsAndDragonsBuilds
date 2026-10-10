@@ -4,11 +4,16 @@ item, a fighting style, or one improvement granted on its own
 
 from abc import ABC, abstractmethod
 
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 
 class Effect(ABC):
+    # What everything this effect records is listed under ("Darkvision",
+    # "Ring of Investigation"): the Character hands apply() a LedgerWriter
+    # labeled with it.
+    name: str
+
     @abstractmethod
-    def apply(self, effects: Effects) -> None:
+    def apply(self, effects: LedgerWriter) -> None:
         """Record this effect's facts. Effects apply in no particular order, so
-        only record - never read a stat (see Model/Effects.py)."""
+        only record - never read a stat (see Model/Ledger/LedgerWriter.py)."""

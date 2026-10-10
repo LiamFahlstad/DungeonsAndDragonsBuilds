@@ -31,7 +31,7 @@ from Model.Content.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from CharacterContent.ToolProficiencies import Proficiencies as Tools
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 # Every class's two saving throw proficiencies, granted by ClassProficiencies
 # only for the starting class (multiclassing grants none - PHB "Multiclassing").
@@ -231,7 +231,7 @@ class ClassProficiencies(Feature):
             if saving_throws is not None:
                 self._grants.append(SavingThrowProficiency(list(saving_throws)))
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for grant in self._grants:
             grant.apply(effects)
 
@@ -316,5 +316,5 @@ class ClassSkillChoice(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)

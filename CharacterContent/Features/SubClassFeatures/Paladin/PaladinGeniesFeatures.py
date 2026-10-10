@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import MultiAbilityArmorClass
 from Core.Definitions import Ability
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -89,7 +89,7 @@ class GeniesSplendor(Feature):
         # plus your Dexterity and Charisma modifiers. You can use a Shield..."
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._ac.apply(effects)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

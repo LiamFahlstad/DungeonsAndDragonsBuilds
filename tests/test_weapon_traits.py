@@ -24,15 +24,15 @@ from CharacterContent.ToolProficiencies.Proficiencies import (
     tool_item,
 )
 from Core.Weapons import WeaponProficiency, weapon_matches_proficiency
-from Model.EquipmentTraining import EquipmentTraining
-from Model.Effects import Effects, Ledger
+from Model.Ledger.EquipmentTraining import EquipmentTraining
+from Model.Ledger.Ledger import Ledger
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 
 def _ledger_with(*sources) -> Ledger:
     ledger = Ledger()
-    effects = Effects(ledger)
     for source in sources:
-        source.apply(effects)
+        source.apply(LedgerWriter(ledger, source.name))
     return ledger
 
 

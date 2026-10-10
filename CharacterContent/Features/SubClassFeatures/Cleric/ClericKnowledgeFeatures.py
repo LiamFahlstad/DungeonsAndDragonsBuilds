@@ -5,7 +5,7 @@ from Model.Content.Improvements import (
     SkillProficiencyChoice,
 )
 from Core.Definitions import Ability, Skill
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -37,7 +37,7 @@ class BlessingsOfKnowledge(Feature):
             error_prefix="Blessings of Knowledge",
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency_choice.apply(effects)
         self._expertise_choice.apply(effects)
 
@@ -89,7 +89,7 @@ class UnfetteredMind(Feature):
             usage_tags=["buff", "utility"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # Intelligence, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.INTELLIGENCE,

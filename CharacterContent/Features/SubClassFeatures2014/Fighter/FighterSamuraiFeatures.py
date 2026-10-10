@@ -13,7 +13,7 @@ from Model.Content.Improvements import (
     SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
 )
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -36,7 +36,7 @@ class BonusProficiency(Feature):
                 error_prefix="Samurai Bonus Proficiency",
             )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         if self._proficiency_choice is not None:
             self._proficiency_choice.apply(effects)
 
@@ -119,7 +119,7 @@ class ElegantCourtier(Feature):
             error_prefix="Elegant Courtier",
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency_choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

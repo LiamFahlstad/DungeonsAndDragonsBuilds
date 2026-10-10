@@ -2,7 +2,7 @@ from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -14,7 +14,7 @@ class Assassinate(Feature):
             usage_tags=["buff", "damage"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "Initiative. You have Advantage on Initiative rolls."
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 

@@ -1,7 +1,7 @@
 from Core.Definitions import BARD_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import MultiAbilityArmorClass
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -19,7 +19,7 @@ class DazzlingFootwork(Feature):
             10, [Ability.DEXTERITY, Ability.CHARISMA], allows_shield=False
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._ac.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

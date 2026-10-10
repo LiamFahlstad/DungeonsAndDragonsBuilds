@@ -18,7 +18,7 @@ _SPELLCASTING_ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISM
 class AbilityScores:
     """The player's ability scores before any increase: a source, and
     immutable. A Character works out the final scores from these plus every
-    increase its effects record (Model/AbilityIncreases.py) whenever they're
+    increase its effects record (Model/Ledger/AbilityIncreases.py) whenever they're
     read, so nothing ever writes into these. To change a score, assign a new
     one: `character.base_abilities = character.base_abilities.with_scores(
     strength=16)`."""

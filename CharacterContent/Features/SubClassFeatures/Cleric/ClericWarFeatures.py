@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -121,12 +121,12 @@ class AvatarOfBattle(Feature):
             usage_tags=["buff"],
         )
         self._resistances = [
-            DamageResistance(DamageType.BLUDGEONING, self.name),
-            DamageResistance(DamageType.PIERCING, self.name),
-            DamageResistance(DamageType.SLASHING, self.name),
+            DamageResistance(DamageType.BLUDGEONING),
+            DamageResistance(DamageType.PIERCING),
+            DamageResistance(DamageType.SLASHING),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for resistance in self._resistances:
             resistance.apply(effects)
 

@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance, GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -23,11 +23,11 @@ class CelestialResistance(Feature):
             usage_tags=["buff"],
         )
         self._resistances = [
-            DamageResistance(DamageType.NECROTIC, self.name),
-            DamageResistance(DamageType.RADIANT, self.name),
+            DamageResistance(DamageType.NECROTIC),
+            DamageResistance(DamageType.RADIANT),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for resistance in self._resistances:
             resistance.apply(effects)
 
@@ -40,9 +40,9 @@ class Darkvision(Feature):
         super().__init__(
             name="Darkvision", origin="Aasimar Trait", skippable_in_concise=True
         )
-        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

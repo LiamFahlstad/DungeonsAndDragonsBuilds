@@ -686,7 +686,7 @@ class TestPromisedPassiveBenefits:
         # "If you already have Darkvision when you gain this feature, its
         # range increases by 60 feet."
         sources = make_sources()
-        sources.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
+        sources.add_effect(GrantSense(Sense.DARKVISION, 60))
         character = Character(sources)
         character = apply_features(
             character, [RangerGloomStalkerFeatures.UmbralSight()]
@@ -695,7 +695,7 @@ class TestPromisedPassiveBenefits:
 
     def test_shadow_arts_extends_existing_darkvision(self, make_sources):
         sources = make_sources()
-        sources.add_effect(GrantSense(Sense.DARKVISION, 60, "Species"))
+        sources.add_effect(GrantSense(Sense.DARKVISION, 60))
         character = Character(sources)
         character = apply_features(character, [MonkShadowFeatures.ShadowArts()])
         assert character.get_sense_range(Sense.DARKVISION) == 120

@@ -1,4 +1,4 @@
-from Model.Bonuses import Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.View import CharacterView, Value
 
 
@@ -12,8 +12,8 @@ class HitPoints:
     def __init__(self):
         self.bonuses = Bonuses()
 
-    def add_bonus(self, amount: Value) -> None:
-        self.bonuses.add(amount)
+    def add_bonus(self, amount: Value, source: str = OTHER_SOURCE) -> None:
+        self.bonuses.add(amount, source)
 
     def total(self, view: CharacterView) -> int:
         class_levels = view.class_levels

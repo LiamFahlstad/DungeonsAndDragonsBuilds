@@ -11,7 +11,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageResistance as DamageResistanceImprovement
 from Core.Definitions import CreatureSize
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -42,9 +42,9 @@ class DamageResistance(Feature):
             skippable_in_concise=True,
             usage_tags=["buff"],
         )
-        self._resistance = DamageResistanceImprovement(self.damage_type, self.name)
+        self._resistance = DamageResistanceImprovement(self.damage_type)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

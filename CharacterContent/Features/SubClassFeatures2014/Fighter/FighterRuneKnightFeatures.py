@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import GrantLanguage
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
@@ -21,9 +21,9 @@ class BonusProficiencies(Feature):
             origin="Rune Knight Fighter Level 3",
             skippable_in_concise=True,
         )
-        self._language = GrantLanguage(Language.GIANT, self.name)
+        self._language = GrantLanguage(Language.GIANT)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._language.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

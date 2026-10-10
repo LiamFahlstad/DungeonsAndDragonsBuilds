@@ -245,33 +245,33 @@ class BaseClassLevelFeatures:
 
     def add_features(
         self,
-        data: CharacterSources,
+        sources: CharacterSources,
         base_class: CharacterClass,
         applied_level_features: "AppliedLevelFeatures",
     ) -> CharacterSources:
-        """Apply this builder's per-level features to `data`, in ascending
+        """Apply this builder's per-level features to `sources`, in ascending
         level order (all base-class levels first, then all subclass levels),
         skipping levels above the class's declared level and levels another
         builder already applied for the same class."""
         _grant_levels(
-            data,
+            sources,
             base_class,
             self.base_class_features_by_level,
             applied_level_features.base_class_levels,
             GrantKind.CLASS,
         )
         _grant_levels(
-            data,
+            sources,
             base_class,
             self.subclass_features_by_level,
             applied_level_features.subclass_levels,
             GrantKind.SUBCLASS,
         )
-        return data
+        return sources
 
 
 def _grant_levels(
-    data: CharacterSources,
+    sources: CharacterSources,
     base_class: CharacterClass,
     features_by_level: dict[int, LevelFeatures],
     applied_levels: set[tuple[CharacterClass, int]],
@@ -280,7 +280,7 @@ def _grant_levels(
     """Grant each level's features up to the class's level, lowest first,
     skipping the levels another builder already granted (recorded in
     `applied_levels`)."""
-    class_level = data.get_class_level(base_class)
+    class_level = sources.get_class_level(base_class)
     for level in sorted(features_by_level):
         features = features_by_level[level]
         if features is None:
@@ -296,7 +296,7 @@ def _grant_levels(
         if class_level < level or (base_class, level) in applied_levels:
             continue
         applied_levels.add((base_class, level))
-        features.add_features(Grants(data, level, base_class.value, kind))
+        features.add_features(Grants(sources, level, base_class.value, kind))
 
 
 class ClassBuilder(ABC):
@@ -321,9 +321,9 @@ class ClassBuilder(ABC):
         self.replace_spells = replace_spells
 
     @abstractmethod
-    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
+    def _grant_class(self, sources: CharacterSources, is_resuming: bool) -> None:
         """Grant this builder's class-level contribution (class registration,
-        spell slots, proficiencies, ...) straight into `data` - everything
+        spell slots, proficiencies, ...) straight into `sources` - everything
         except per-level features, which create() applies afterwards.
         `is_resuming` means an earlier builder already introduced this class
         (a class resumed after a dip into another), so the grants that come
@@ -332,11 +332,11 @@ class ClassBuilder(ABC):
 
     def create(
         self,
-        character_sheet_data: Optional[CharacterSources] = None,
+        sources: Optional[CharacterSources] = None,
         applied_level_features: Optional["AppliedLevelFeatures"] = None,
     ) -> CharacterSources:
         """Grant this class builder's contribution straight into
-        `character_sheet_data` (a fresh one is created if not provided) and
+        `sources` (a fresh one is created if not provided) and
         return it. Every builder writes into the same object, so a base class
         split across multiple builders - e.g. a starter class resumed later
         via a multiclass builder after a dip into another class - sees
@@ -346,14 +346,12 @@ class ClassBuilder(ABC):
         the class's final total level. `replace_spells` operates on the
         cumulative sheet, so it may also replace a spell added by an earlier
         builder."""
-        if character_sheet_data is None:
-            character_sheet_data = CharacterSources()
+        if sources is None:
+            sources = CharacterSources()
         if applied_level_features is None:
             applied_level_features = AppliedLevelFeatures()
 
-        previously_declared_level = character_sheet_data.get_class_level(
-            self.base_class
-        )
+        previously_declared_level = sources.get_class_level(self.base_class)
         if previously_declared_level > 0:
             if self.base_class_level < previously_declared_level:
                 raise ValueError(
@@ -366,28 +364,26 @@ class ClassBuilder(ABC):
 
         # Record which total character level each newly-gained class level
         # corresponds to, before this builder's level count is added to
-        # character_sheet_data.character_level.
-        starting_character_level = character_sheet_data.character_level + 1
+        # sources.character_level.
+        starting_character_level = sources.character_level + 1
         new_class_level_count = self.base_class_level - previously_declared_level
         for offset in range(new_class_level_count):
-            character_sheet_data.record_class_level(
+            sources.record_class_level(
                 starting_character_level + offset, self.base_class
             )
 
         # A builder resuming a class states the class's final total level.
-        character_sheet_data.set_class_level(self.base_class, self.base_class_level)
-        self._grant_class(
-            character_sheet_data, is_resuming=previously_declared_level > 0
-        )
+        sources.set_class_level(self.base_class, self.base_class_level)
+        self._grant_class(sources, is_resuming=previously_declared_level > 0)
         if self.subclass:
-            character_sheet_data.class_levels.add_subclass(
+            sources.class_levels.add_subclass(
                 self.base_class, self.subclass, reached=self._has_reached_subclass()
             )
-        character_sheet_data = self.base_class_level_features.add_features(
-            character_sheet_data, self.base_class, applied_level_features
+        sources = self.base_class_level_features.add_features(
+            sources, self.base_class, applied_level_features
         )
-        character_sheet_data.replace_spells(self.replace_spells or {})
-        return character_sheet_data
+        sources.replace_spells(self.replace_spells or {})
+        return sources
 
     def _has_reached_subclass(self) -> bool:
         """A class has a subclass once its level reaches the first level that
@@ -463,20 +459,20 @@ class StarterClassBuilder(ClassBuilder):
             replace_spells=replace_spells,
         )
 
-    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
+    def _grant_class(self, sources: CharacterSources, is_resuming: bool) -> None:
         # The starting class is always the first builder, so never resumed.
         args = self.non_generic_arguments
-        data.class_levels.base_class = self.base_class
-        data.base_abilities = self.abilities
+        sources.class_levels.base_class = self.base_class
+        sources.base_abilities = self.abilities
         if args.spell_casting_ability is not None:
-            data.spell_casting_ability = args.spell_casting_ability
+            sources.spell_casting_ability = args.spell_casting_ability
 
-        background = Grants(data, 1, "Background", GrantKind.BACKGROUND)
+        background = Grants(sources, 1, "Background", GrantKind.BACKGROUND)
         background.add_feature(self.background_ability_bonuses)
         background.add_feature(self.background_skill_proficiencies)
         self.origin_feat.grant_to(background)
 
-        grants = Grants(data, 1, self.base_class.value, GrantKind.CLASS)
+        grants = Grants(sources, 1, self.base_class.value, GrantKind.CLASS)
         if args.caster_type is not None:
             grants.add_feature(SpellSlots.SpellSlots(args.caster_type, self.base_class))
         grants.add_feature(
@@ -521,14 +517,14 @@ class MulticlassBuilder(ClassBuilder):
         self.spell_casting_ability = spell_casting_ability
         self.caster_type = caster_type
 
-    def _grant_class(self, data: CharacterSources, is_resuming: bool) -> None:
+    def _grant_class(self, sources: CharacterSources, is_resuming: bool) -> None:
         if self.spell_casting_ability is not None:
-            data.spell_casting_ability = self.spell_casting_ability
+            sources.spell_casting_ability = self.spell_casting_ability
         if is_resuming:
             # The builder that introduced the class already registered its
             # SpellSlots feature and granted its proficiencies.
             return
-        grants = Grants(data, 1, self.base_class.value, GrantKind.CLASS)
+        grants = Grants(sources, 1, self.base_class.value, GrantKind.CLASS)
         if self.caster_type is not None:
             grants.add_feature(SpellSlots.SpellSlots(self.caster_type, self.base_class))
         # Only part of the class's proficiencies.

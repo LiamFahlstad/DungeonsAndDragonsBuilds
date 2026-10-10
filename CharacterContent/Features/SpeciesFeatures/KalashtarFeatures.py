@@ -1,7 +1,7 @@
 from Core.Definitions import Ability, DamageType, Skill
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import DamageResistance, SavingThrowAdvantage
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -18,7 +18,7 @@ class DualMind(Feature):
         )
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._advantage.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -33,9 +33,9 @@ class MentalDiscipline(Feature):
             skippable_in_concise=True,
             usage_tags=["buff"],
         )
-        self._resistance = DamageResistance(DamageType.PSYCHIC, self.name)
+        self._resistance = DamageResistance(DamageType.PSYCHIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

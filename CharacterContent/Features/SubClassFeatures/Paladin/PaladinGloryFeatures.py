@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import SpeedBonus
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -90,7 +90,7 @@ class AuraOfAlacrity(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "Your Speed increases by 10 feet." (the allies' boost is situational)
         SpeedBonus(10).apply(effects)
 

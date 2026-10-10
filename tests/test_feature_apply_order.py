@@ -67,7 +67,7 @@ from Core.Definitions import (
     Skill,
 )
 from RunCharacterCreator import BuildSelector, ExampleSelector
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from tests._grants import grant
 from Model.Character import Character
 
@@ -356,7 +356,7 @@ class TestPreviouslyChronologicalEffects:
         effects = [
             RangerGloomStalkerFeatures.UmbralSight(),
             MonkShadowFeatures.ShadowArts(),
-            GrantSense(Sense.DARKVISION, 60, "Species"),
+            GrantSense(Sense.DARKVISION, 60),
         ]
         for character in _in_every_order(make_sources, effects):
             assert character.get_sense_range(Sense.DARKVISION) == 180
@@ -411,7 +411,7 @@ class TestCompetingEffectsNeverOverwrite:
 
     def test_roll_conditions_cancel_in_any_order(self, make_sources):
         effects = [
-            SkillRollCondition(Skill.STEALTH, DiceRollCondition.ADVANTAGE, "A"),
+            SkillRollCondition(Skill.STEALTH, DiceRollCondition.ADVANTAGE),
             Armor.PlateArmor(),  # Stealth Disadvantage
             InitiativeRollCondition(DiceRollCondition.ADVANTAGE),
             InitiativeRollCondition(DiceRollCondition.DISADVANTAGE),
@@ -540,7 +540,7 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
 
 # ── Guard: apply() gets a write-only record ──────────────────────────────────
 # An effect can't read a stat that other effects may still change, because
-# apply() never sees one: it gets Effects (Model/Effects.py), which can
+# apply() never sees one: it gets a LedgerWriter (Model/Ledger/LedgerWriter.py), which can
 # only record. A read inside any apply() fails every build that uses it
 # (tests/test_all_builds.py builds them all), so there is nothing to allow-list
 # and nothing to instrument - only the shape of the record to pin down.
@@ -549,12 +549,13 @@ _RECORDING_PREFIXES = ("add_", "set_", "register_")
 
 
 def test_effects_can_only_record():
-    public = [name for name in dir(Effects) if not name.startswith("_")]
-    assert public, "Effects has no recording methods"
+    public = [name for name in dir(LedgerWriter) if not name.startswith("_")]
+    assert public, "LedgerWriter has no recording methods"
     readers = [name for name in public if not name.startswith(_RECORDING_PREFIXES)]
-    assert not readers, f"Effects must be write-only, but exposes {readers}"
-    # No instance attributes beyond the private record it writes into.
-    assert Effects.__slots__ == ("_ledger",)
+    assert not readers, f"LedgerWriter must be write-only, but exposes {readers}"
+    # No instance attributes beyond the private record it writes into and
+    # the label of the effect it was handed to.
+    assert LedgerWriter.__slots__ == ("_ledger", "_source")
 
 
 @pytest.mark.parametrize("name", sorted(ALL_BUILDS))
@@ -562,26 +563,36 @@ def test_evaluation_passes_apply_the_write_only_record(name):
     received = []
 
     class _Spy:
+        name = "Spy"
+
         def apply(self, effects):
             received.append(effects)
 
     sources = type(ALL_BUILDS[name])().build().sources
     sources.add_effect(_Spy())
     Character(sources).validate()
-    assert received and all(type(r) is Effects for r in received)
+    assert received and all(type(r) is LedgerWriter for r in received)
 
 
-def test_content_never_reaches_into_the_record():
-    # Effects._ledger and Character._ledger are the record the Character
-    # answers from; content that
-    # reached it could read stats mid-evaluation again.
-    root = pathlib.Path(__file__).resolve().parent.parent / "CharacterContent"
-    offenders = [
-        f"{path.relative_to(root)}:{node.lineno}"
-        for path in root.rglob("*.py")
-        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8")))
-        if isinstance(node, ast.Attribute) and node.attr == "_ledger"
-    ]
+# Folders that may name `_ledger`: the Model owns it, and tests may inspect it.
+# The rest aren't project code.
+_LEDGER_OWNERS = {"Model", "tests", ".claude", "Output", "SourceTexts"}
+
+
+def test_nothing_outside_the_model_reaches_into_the_record():
+    # LedgerWriter._ledger and Character._ledger are the record the Character
+    # answers from. Content that reached it could read stats mid-evaluation
+    # again; the sheet, combat or a build that reached it would bypass the
+    # Character's queries.
+    root = pathlib.Path(__file__).resolve().parent.parent
+    offenders = []
+    for path in root.rglob("*.py"):
+        relative = path.relative_to(root)
+        if relative.parts[0] in _LEDGER_OWNERS:
+            continue
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Attribute) and node.attr == "_ledger":
+                offenders.append(f"{relative}:{node.lineno}")
     assert not offenders, offenders
 
 

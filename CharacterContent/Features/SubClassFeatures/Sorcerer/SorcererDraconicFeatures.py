@@ -12,7 +12,7 @@ from Model.Content.Improvements import (
     HitPointsBonus,
     MultiAbilityArmorClass,
 )
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -43,7 +43,7 @@ class DraconicResilience(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # +1 HP per Sorcerer level: a formula, since effects can't read levels.
         HitPointsBonus(
             lambda character: character.get_class_level(
@@ -81,9 +81,9 @@ class ElementalAffinity(Feature):
             origin="Draconic Sorcerer Level 6",
             usage_tags=["buff", "damage"],
         )
-        self._resistance = DamageResistance(damage_type, self.name)
+        self._resistance = DamageResistance(damage_type)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

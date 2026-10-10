@@ -147,9 +147,9 @@ if __name__ == "__main__":
     builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
     writer = HtmlCharacterSheetWriter()
     for build_class in builds.values():
-        character_sheet_data = build_class.build()
+        character = build_class.build()
         writer.write_character_sheet(
-            character_sheet_data,
+            character,
             skill_config=skill_config,
             description_mode=args.concise,
             include_probability_tables=args.probability_tables,

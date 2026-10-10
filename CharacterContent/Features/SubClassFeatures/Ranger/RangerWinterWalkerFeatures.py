@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -20,9 +20,9 @@ class FrigidExplorer(Feature):
             origin="Winter Walker Ranger Level 3",
             usage_tags=["buff", "damage"],
         )
-        self._resistance = DamageResistance(DamageType.COLD, self.name)
+        self._resistance = DamageResistance(DamageType.COLD)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

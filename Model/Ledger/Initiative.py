@@ -1,5 +1,5 @@
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
-from Model.Bonuses import Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.View import CharacterView, Value
 
 
@@ -23,8 +23,8 @@ class Initiative:
     def add_roll_condition(self, condition: DiceRollCondition) -> None:
         self._roll_conditions.add(condition)
 
-    def add_bonus(self, bonus: Value) -> None:
-        self.bonuses.add(bonus)
+    def add_bonus(self, bonus: Value, source: str = OTHER_SOURCE) -> None:
+        self.bonuses.add(bonus, source)
 
     def total(self, view: CharacterView) -> int:
         """The Dexterity modifier, plus the full proficiency bonus if

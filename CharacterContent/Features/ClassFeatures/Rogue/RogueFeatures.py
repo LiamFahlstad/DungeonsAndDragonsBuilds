@@ -5,7 +5,7 @@ from Model.Content.Improvements import (
     SkillExpertiseChoice,
 )
 from Core.Definitions import Ability, Language, Skill
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
 from Model.View import CharacterView
@@ -20,7 +20,7 @@ class Expertise(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -68,9 +68,9 @@ class ThievesCant(Feature):
         # Only the fixed Thieves' Cant grant is wired; the "one other
         # language of your choice" half is a player choice not recorded
         # anywhere in this class.
-        self._language = GrantLanguage(Language.THIEVES_CANT, self.name)
+        self._language = GrantLanguage(Language.THIEVES_CANT)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._language.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -271,7 +271,7 @@ class SlipperyMind(Feature):
             error_prefix="Slippery Mind",
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

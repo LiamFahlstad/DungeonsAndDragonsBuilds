@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 _STORM_SOUL_RESISTANCE = {
@@ -80,12 +80,10 @@ class StormSoul(Feature):
         )
         self.environment = environment
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # Desert: fire, Sea: lightning, Tundra: cold resistance - always on,
         # "even when your aura isn't active".
-        DamageResistance(_STORM_SOUL_RESISTANCE[self.environment], self.name).apply(
-            effects
-        )
+        DamageResistance(_STORM_SOUL_RESISTANCE[self.environment]).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -1,7 +1,7 @@
 import Core.Definitions as Definitions
 from Model.Content.Feature import Feature
 from Core.SpellcastingRules import CasterType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -29,7 +29,7 @@ class SpellSlots(Feature):
         )
         return f"{self.character_class.value} Spellcasting.\n{description}"
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # The slots themselves are worked out on read from every registered
         # caster (Core.SpellcastingRules.calculate_spell_slots), so it doesn't
         # matter which class's Spell Slots feature applies first.

@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import ConditionImmunity
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -161,13 +161,13 @@ class FungalBody(Feature):
             usage_tags=["buff"],
         )
         self._immunities = [
-            ConditionImmunity(Condition.BLINDED, self.name),
-            ConditionImmunity(Condition.DEAFENED, self.name),
-            ConditionImmunity(Condition.FRIGHTENED, self.name),
-            ConditionImmunity(Condition.POISONED, self.name),
+            ConditionImmunity(Condition.BLINDED),
+            ConditionImmunity(Condition.DEAFENED),
+            ConditionImmunity(Condition.FRIGHTENED),
+            ConditionImmunity(Condition.POISONED),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(effects)
 

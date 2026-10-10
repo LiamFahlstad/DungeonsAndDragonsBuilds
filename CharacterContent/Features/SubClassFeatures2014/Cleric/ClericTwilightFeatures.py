@@ -14,7 +14,7 @@ from Model.Content.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
@@ -26,7 +26,7 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Twilight Domain Cleric Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with martial weapons and heavy armor."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
@@ -68,9 +68,9 @@ class EyesOfNight(Feature):
         )
         # "You have darkvision out to a range of 300 feet." (sharing it is
         # the activated part)
-        self._darkvision = GrantSense(Definitions.Sense.DARKVISION, 300, self.name)
+        self._darkvision = GrantSense(Definitions.Sense.DARKVISION, 300)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._darkvision.apply(effects)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

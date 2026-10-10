@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SkillProficiencyChoice, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -76,7 +76,7 @@ class TrainingInWarAndSong(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "...proficiency with all Melee Martial weapons that don't have the
         # Two-Handed or Heavy property."
         GrantWeaponProficiency(

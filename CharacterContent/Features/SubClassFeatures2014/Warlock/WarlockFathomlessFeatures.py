@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -111,9 +111,9 @@ class OceanicSoul(Feature):
             usage_tags=["buff", "utility"],
         )
         # "You gain resistance to cold damage."
-        self._resistance = DamageResistance(Definitions.DamageType.COLD, self.name)
+        self._resistance = DamageResistance(Definitions.DamageType.COLD)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

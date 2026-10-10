@@ -16,7 +16,7 @@ from Model.Content.Improvements import (
     SpeedBonus,
 )
 from Core.Definitions import Ability, Skill
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
 from Model.View import CharacterView
@@ -137,7 +137,7 @@ class UnarmoredDefense(Feature):
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._ac.apply(effects)
 
 
@@ -174,7 +174,7 @@ class DangerSense(Feature):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._advantage.apply(effects)
 
 
@@ -226,7 +226,7 @@ class PrimalKnowledgeSkillProficiency(Feature):
             error_prefix="Invalid skill for Primal Knowledge",
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # Only the proficiency is permanent. Making Acrobatics, Intimidation,
         # Perception, Stealth or Survival checks with Strength is a
         # while-raging option (see PrimalKnowledge), so the sheet keeps each
@@ -276,7 +276,7 @@ class FastMovementBonus(Feature):
     def __init__(self):
         super().__init__(skippable_in_concise=True, usage_tags=["buff"])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "...while you aren't wearing Heavy armor." A formula, so the armor
         # is checked once everything (armor included) has applied.
         SpeedBonus(
@@ -293,7 +293,7 @@ class FeralInstinct(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -454,7 +454,7 @@ class PrimalChampion(Feature):
             max_score=25,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._bonuses.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

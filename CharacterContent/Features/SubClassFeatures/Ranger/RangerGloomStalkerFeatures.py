@@ -12,7 +12,7 @@ from Model.Content.Improvements import (
     InitiativeBonus,
     SavingThrowProficiencyOrAlternative,
 )
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -30,7 +30,7 @@ class DreadAmbusher(Feature):
             ),
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -68,9 +68,9 @@ class UmbralSight(Feature):
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["buff"],
         )
-        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
+        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._darkvision.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -93,7 +93,7 @@ class IronMind(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # Wisdom, or - if already proficient - the first ability that isn't.
         SavingThrowProficiencyOrAlternative(
             Ability.WISDOM,

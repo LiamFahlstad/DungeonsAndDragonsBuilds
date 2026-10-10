@@ -23,7 +23,7 @@ from Model.Creatures.Combatants import ExtendedCombatantData
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.View import CharacterView
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 
 
@@ -61,9 +61,9 @@ class Spellcasting(Feature):
 class Druidic(Feature):
     def __init__(self):
         super().__init__(name="Druidic", origin="Druid Level 1")
-        self._language = GrantLanguage(Language.DRUIDIC, self.name)
+        self._language = GrantLanguage(Language.DRUIDIC)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._language.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -81,7 +81,7 @@ class PrimalOrder(Feature):
         )
         self.order = order
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # Warden: "...proficiency with Martial weapons and training with Medium armor."
         if self.order == PrimalOrderType.WARDEN:
             GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
@@ -92,8 +92,8 @@ class PrimalOrder(Feature):
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_wisdom_modifier())
 
-        SkillBonus(Skill.ARCANA, bonus, source=self.name).apply(effects)
-        SkillBonus(Skill.NATURE, bonus, source=self.name).apply(effects)
+        SkillBonus(Skill.ARCANA, bonus).apply(effects)
+        SkillBonus(Skill.NATURE, bonus).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
         if self.order == PrimalOrderType.WARDEN:

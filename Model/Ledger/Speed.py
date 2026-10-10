@@ -1,4 +1,4 @@
-from Model.Bonuses import Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.View import CharacterView, Value
 
 
@@ -12,8 +12,8 @@ class Speed:
     def __init__(self):
         self.bonuses = Bonuses()
 
-    def add_bonus(self, bonus: Value) -> None:
-        self.bonuses.add(bonus)
+    def add_bonus(self, bonus: Value, source: str = OTHER_SOURCE) -> None:
+        self.bonuses.add(bonus, source)
 
     def total(self, view: CharacterView) -> int:
-        return view.get_base_speed() + self.bonuses.total(view)
+        return view.base_speed + self.bonuses.total(view)

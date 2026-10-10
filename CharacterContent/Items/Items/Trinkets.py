@@ -56,9 +56,7 @@ class RingOfInvestigation(Item):
                 "A slender copper band set with a tiny magnifying lens that focuses the wearer's attention on overlooked details."
             ),
             is_wearing=is_wearing,
-            improvements=[
-                SkillBonus(Skill.INVESTIGATION, 1, source="Ring of Investigation")
-            ],
+            improvements=[SkillBonus(Skill.INVESTIGATION, 1)],
         )
 
 

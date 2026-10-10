@@ -9,7 +9,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import ConditionImmunity
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -92,9 +92,9 @@ class BeguilingDefenses(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff", "damage"],
         )
-        self._immunity = ConditionImmunity(Condition.CHARMED, self.name)
+        self._immunity = ConditionImmunity(Condition.CHARMED)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._immunity.apply(effects)
 
     def calculate_dc(self, character: CharacterView) -> int:

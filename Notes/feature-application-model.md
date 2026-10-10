@@ -11,7 +11,7 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
 ## The short version
 
 1. **`apply()` only records facts.** A proficiency, a +1, "add WIS to AC", "+10 speed unless in
-   Heavy armor", "+2 STR to a maximum of 20". It gets `Effects` (`Model/Effects.py`), a
+   Heavy armor", "+2 STR to a maximum of 20". It gets a `LedgerWriter` (`Model/Ledger/LedgerWriter.py`), a
    write-only record, so it *can't* read a stat: not a score, not a proficiency, not a level.
 2. **The stat block works every value out when it's read**, from everything recorded. So nothing
    can depend on what happened to apply first.
@@ -24,7 +24,7 @@ grant order, with a few deliberately chronological exceptions". Neither exists a
    the tests police.
 
 This follows the design of `~/Scripts/DungeonsAndDragons`: effects are recorded on a ledger,
-then evaluated once in the rules' own dependency order. Here `Effects` is the ledger, and
+then evaluated once in the rules' own dependency order. Here the `Ledger` is the ledger, `LedgerWriter` the only way to write it, and
 `Character`'s getters are the evaluation.
 
 ## The pipeline
@@ -41,13 +41,13 @@ Two objects, built in that order:
   `Character`.
 
 Evaluation is internal and lazy. The first query builds a fresh, empty `Ledger`
-(`Model/Effects.py`: one part per concern, see below) - no part starts from a copy of a source -
+(`Model/Ledger/`: one part per concern, see below) - no part starts from a copy of a source -
 then:
 
 | # | Stage | What runs |
 |---|---|---|
-| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `Effects` view of a fresh `Ledger`, which is sealed afterwards |
-| 2 | **Validate** | Only in `validate()`, the single entry point (the writers and the combat UI call it first): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Effects.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
+| 1 | **Record** | `apply(effects)` of everything in `iter_stat_effects()`: features and their extensions, armor, weapons, items, and fighting styles with a computed effect (Defense, Archery, Dueling, Thrown Weapon Fighting). **Any order.** Every call gets the same write-only `LedgerWriter` around a fresh, private `Ledger` |
+| 2 | **Validate** | Only in `validate()`, the single entry point (the writers and the combat UI call it first): first the sources (name, subclass, abilities, speed, size and base class set, at most one worn body armor, the attunement limit), then `Ledger.validate()`: expertise needs proficiency, ability requirements such as an armor's Strength, and multiclass ability minimums |
 
 Weapons are never changed while a character is evaluated. A bonus the wielder brings to their
 weapons (Archery's +2 to attack rolls with Ranged weapons, Bracers of Archery's +2 damage with
@@ -82,8 +82,7 @@ Rules of thumb:
   grouping them into objects would rewrite ~40 builder lines to save two names.
 
 The `Model` package imports only point down: `Core` → `Model/Records/` and `Model/View.py` (the
-one Protocol: `CharacterView`, plus `Formula`) → the parts → `Model/Effects.py` (`Ledger`,
-`Effects`) → `Model/Content/` (the base classes content subclasses: `Feature`, `Item`,
+one Protocol: `CharacterView`, plus `Formula`) → the parts and `Model/Ledger/Ledger.py` → `Model/Ledger/LedgerWriter.py` → `Model/Content/` (the base classes content subclasses: `Feature`, `Item`,
 `AbstractWeapon`, `AbstractArmor`, `FightingStyle`, `Improvements`) → `Model/Character.py` →
 `Model/Grants.py`. A `Character` holds those concrete classes, so nothing narrows them back. It
 never imports `CharacterContent`, not even for type hints, and nothing in the repo uses
@@ -173,29 +172,29 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 |---|---|
 | "You gain proficiency in X" | `SkillProficiency([X])` / `SavingThrowProficiency([...])` |
 | "…if you already have it, choose another" | `SavingThrowProficiencyOrAlternative(X, [alternatives])` |
-| "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
+| "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
 | "a bonus equal to your *ability* modifier" / "half your proficiency bonus" / "+1 per Sorcerer level" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus`, `HitPointsBonus` |
 | "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor_type`, `cs.is_wearing_armor`, `cs.is_wielding_shield` |
 | "Your AC equals 10 + DEX + WIS" | `MultiAbilityArmorClass(10, [DEX, WIS])`, plus `allows_shield=False` if a Shield disables it |
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
-| "Your Strength must be at least N" | `StrengthRequirement(N, reason)` (checked in validation) |
+| "Your Strength must be at least N" | `StrengthRequirement(N)` (checked in validation) |
 | "You gain proficiency with Martial weapons / Heavy armor / Smith's Tools" | `GrantWeaponProficiency([...])`, `GrantArmorTraining([...])`, `GrantToolProficiency([...])` |
 | "+2 to attack rolls with Ranged weapons" / "+2 to damage rolls with the Longbow" | `WeaponAttackBonus(applies_to, 2, source)` / `WeaponDamageBonus(...)`, where `applies_to` is a `WeaponTraits -> bool` filter (`Core/Weapons.py`: the weapon's type, properties and, for the Scimitar, Longbow and Shortbow, its `kind`). Never write into the weapon, and never match class names |
 | An upgrade to an earlier feature | `data.add_feature(Upgrade(), extends=Parent)`. Its `apply()` runs too, so don't also grant it plainly |
 
-**`apply(self, effects: Effects)` can only record.** `Effects` offers `add_*`/`set_*`/
+**`apply(self, effects: LedgerWriter)` can only record.** `LedgerWriter` offers `add_*`/`set_*`/
 `register_*` methods and nothing else - no scores, no proficiency flags, no AC or armor state, and
 no levels either. If a value depends on anything, pass a formula (`lambda character: ...`); it gets
 the finished `Character` when the value is read. Every bonus (skills, saving throws, AC, HP,
 speed, initiative) is a `Value` (`Model/View.py`): a flat `int` or a formula, recorded by the
-same `add_*_bonus` method on `Effects`. `Bonuses.add` is the one place that tells them apart. `get_description()` and the
+same `add_*_bonus` method on `LedgerWriter`. `Bonuses.add` is the one place that tells them apart. Nothing takes a source label: every effect gets its own `LedgerWriter`, labeled with the effect's `name`, so everything it records is listed under it (a Tiefling's resistance under "Fiendish Resistance", a Backpack's slots under "Backpack"). A `WeaponBonus` is the exception: it carries its own descriptive label. `get_description()` and the
 other rendering methods still get the `Character`, and may read anything.
 
 ## The parts
 
-The `Ledger` (`Model/Effects.py`) holds one part per concern (`Model/*.py`), plus the rules that
+The `Ledger` (`Model/Ledger/Ledger.py`) holds one part per concern (`Model/Ledger/*.py`), plus the rules that
 combine two parts (untrained armor, Shield training, `armor_warnings()`). Each part owns its own
 state *and* works out its own final values: every resolver takes one argument, a `CharacterView`
 (`Model/View.py`) of the finished character, e.g. `HitPoints.total(view)`,
@@ -204,7 +203,7 @@ be unit-tested against a fake view (`tests/_fake_view.py`, `tests/test_part_reso
 query on `Character` is one line that hands itself to a resolver. No part imports
 `CharacterContent`.
 
-`Bonuses` (`Model/Bonuses.py`) is a small value object - flat values and formulas
+`Bonuses` (`Model/Ledger/Bonuses.py`) is a small value object - flat values and formulas
 (`Formula`, from `Model/View.py`), each with a source label - shared by every part that is "a bonus total plus
 sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `SavingThrows` each hold
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
@@ -229,8 +228,8 @@ flat-list/formula-list/source-list shape themselves.
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon.traits)` / `damage_bonuses(weapon.traits)` return the ones that apply |
 
 Only `Character` reads its parts, and only through its queries. Recording goes through
-`Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
-each write one part; `Character` has none of them, and `Effects` is handed out only while the
+`LedgerWriter`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
+each write one part; `Character` has none of them, and a `LedgerWriter` is handed out only while the
 `Character` fills its ledger, so nothing can record onto it afterwards. A test or tool applying
 one feature to a bare character grants it with `sources.add_effect(feature)`, a real source like
 any other, and builds `Character(sources)`.
@@ -304,11 +303,11 @@ The whole model:
 | `test_order_invariance.py` | Every build's rendered sheet (full and concise) is identical when its effects apply in another order, and when its features, extensions, spells and replacements are granted in another order (`-m slow` adds reversed order and three more shuffles) |
 | `test_part_merge_rules.py` | Every part gives the same answer for the same contributions in every permutation, including the order of listed sources; conflicting grants raise |
 | `test_part_resolvers.py` | Every part works out its final values from a fake `CharacterView`, with no builder and no `Character` |
-| `test_contracts.py` | `Character` really satisfies `CharacterView` (every member called), `Effects` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
+| `test_contracts.py` | `Character` really satisfies `CharacterView` (every member called), `LedgerWriter` has none of it, no member returns a part, and every build's content satisfies the `Sources` Protocols |
 | `test_layering.py` | Every import points down the layers (`Core` → `Utils` helpers → `Model` → `CharacterContent` → `Builds`/presentation → `Combat`), with an allowlist of today's offenders; no `TYPE_CHECKING`, `typing.cast` or `_as(...)` narrowing |
 | `test_creator_roundtrip.py` | The Character Creator loads every build file and generates one that builds to the same stats (builds it can't reproduce yet are strict xfails, with the reason) |
 | `test_spell_grants.py` | Spell stamping, duplicate and replacement rules, and order-free spell grants |
-| `test_character_model.py` | The sealed `Ledger`, `add_effect`, immutable base scores, declared extensions (either order, `if_missing`, errors) and grant stamps |
+| `test_character_model.py` | The private `Ledger`, `add_effect`, immutable base scores, declared extensions (either order, `if_missing`, errors) and grant stamps |
 | `test_build_snapshots.py` | Every build's stats and every rendered page against golden snapshots |
 
 The feature pipeline in particular, in `tests/test_feature_apply_order.py`:
@@ -318,9 +317,9 @@ The feature pipeline in particular, in `tests/test_feature_apply_order.py`:
 | `test_effect_order_does_not_change_stats` | Shuffles all of every build's effects (features, extensions, armor, weapons, items, fighting styles), with no exceptions, and requires identical scores, AC, HP, initiative, speed, skills, proficiencies, roll conditions, saves, spell slots, resistances, immunities and senses |
 | `TestPreviouslyChronologicalEffects` | Ability caps, item bonuses, Strength requirements, Iron Mind / Unfettered Mind and Skill Expert give one answer in every permutation |
 | `TestCompetingEffectsNeverOverwrite` | Unarmored Defenses don't stack, armor and Shield interactions, Defense, roll-condition cancelling, skill-ability overrides and multiclass spell slots, in every permutation |
-| `test_effects_can_only_record` | `Effects` exposes only `add_*`/`set_*`/`register_*` methods and holds nothing but its private record |
-| `test_evaluation_passes_apply_the_write_only_record` | Every build's evaluation hands `apply()` an `Effects`, never the `Character` |
-| `test_content_never_reaches_into_the_record` | **Static:** no code in `CharacterContent` touches `Effects._ledger` |
+| `test_effects_can_only_record` | `LedgerWriter` exposes only `add_*`/`set_*`/`register_*` methods and holds nothing but its private record |
+| `test_evaluation_passes_apply_the_write_only_record` | Every build's evaluation hands `apply()` a `LedgerWriter`, never the `Character` |
+| `test_nothing_outside_the_model_reaches_into_the_record` | **Static:** no code outside `Model/` (and `tests/`) touches `LedgerWriter._ledger` or `Character._ledger` |
 | `TestModifierBonusesTrackLaterScoreIncreases`, `TestJackOfAllTrades`, `TestExpertiseRequirement`, `TestExtensionsApply`, `test_dropped_gear_does_not_leave_bonuses_on_weapons` | Formula features, validation, extensions and equipment isolation |
 
 The shuffle test was checked by mutation: resolving capped increases in grant order fails many

@@ -28,23 +28,23 @@ from Core.Definitions import (
     Skill,
 )
 from Core.SpellcastingRules import CasterType
-from Model.AbilityRequirements import AbilityRequirements
-from Model.AbilityIncreases import AbilityIncreases
-from Model.ArmorClass import ArmorClass, ArmorClassFormula
-from Model.Bonuses import Bonuses
-from Model.CarryingCapacity import CarryingCapacity
+from Model.Ledger.AbilityRequirements import AbilityRequirements
+from Model.Ledger.AbilityIncreases import AbilityIncreases
+from Model.Ledger.ArmorClass import ArmorClass, ArmorClassFormula
+from Model.Ledger.Bonuses import Bonuses
+from Model.Ledger.CarryingCapacity import CarryingCapacity
 from Model.ClassLevels import ClassLevels
-from Model.Defenses import Defenses
-from Model.EquipmentTraining import EquipmentTraining
-from Model.Initiative import Initiative
-from Model.Languages import Languages
-from Model.SavingThrows import SavingThrows
-from Model.Senses import Senses
-from Model.Skills import Skills
-from Model.Speed import Speed
-from Model.Spellcasting import Spellcasting
-from Model.WeaponBonuses import WeaponBonus, WeaponBonuses
-from Model.WornArmor import WornArmor
+from Model.Ledger.Defenses import Defenses
+from Model.Ledger.EquipmentTraining import EquipmentTraining
+from Model.Ledger.Initiative import Initiative
+from Model.Ledger.Languages import Languages
+from Model.Ledger.SavingThrows import SavingThrows
+from Model.Ledger.Senses import Senses
+from Model.Ledger.Skills import Skills
+from Model.Ledger.Speed import Speed
+from Model.Ledger.Spellcasting import Spellcasting
+from Model.Ledger.WeaponBonuses import WeaponBonus, WeaponBonuses
+from Model.Ledger.WornArmor import WornArmor
 from tests._fake_view import FakeView
 from Model.Records.SourcedValue import SourcedValue
 
@@ -247,9 +247,9 @@ def test_carrying_capacity():
     result = _same_in_every_order(
         CarryingCapacity,
         [
-            lambda c: c.add_bonus("Pack Mule", 2),
-            lambda c: c.add_bonus("Bag of Holding", 5),
-            lambda c: c.add_bonus("Backpack", 1),
+            lambda c: c.add_bonus(2, "Pack Mule"),
+            lambda c: c.add_bonus(5, "Bag of Holding"),
+            lambda c: c.add_bonus(1, "Backpack"),
         ],
         lambda c: (
             c.sources(FakeView({Ability.STRENGTH: 12})),

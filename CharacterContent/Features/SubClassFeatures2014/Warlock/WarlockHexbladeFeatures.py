@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -84,7 +84,7 @@ class HexWarrior(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with Medium Armor, Shields, and Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
         GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(effects)

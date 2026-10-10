@@ -3,7 +3,7 @@ from typing import Optional
 
 from Model.Content.Feature import Feature
 from Model.Content.Improvements import CharacterImprovement, ItemImprovement
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -89,7 +89,7 @@ class Item(Feature):
         self.is_wearing = is_wearing
         self.is_consumable = is_consumable
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         """Apply all improvements to the character - unless this is a
         wearable item currently not being worn."""
         if self.is_wearing is False:

@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 
 
@@ -225,7 +225,7 @@ class AuraOfProtection(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         def bonus(cs: CharacterView) -> int:
             return max(1, cs.get_charisma_modifier())
 

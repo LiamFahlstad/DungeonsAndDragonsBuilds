@@ -11,7 +11,7 @@ from Model.Content.Improvements import (
     CharacterImprovement,
 )
 from Model.Content.Item import Item, ItemCategory, ItemRarity
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 
 
 class AbstractArmor(Item, ABC):
@@ -112,17 +112,17 @@ class AbstractArmor(Item, ABC):
         wearer instead."""
         self.add_improvement(armor_improvement)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         super().apply(effects)  # CharacterImprovements (gated on is_wearing)
         if self.is_wearing:
             self.apply_worn_effects(effects)
 
-    def apply_worn_effects(self, effects: Effects):
+    def apply_worn_effects(self, effects: LedgerWriter):
         """Apply this armor's AC and ability-based effects to the character."""
         if self.strength_requirement is not None:
-            StrengthRequirement(self.strength_requirement, self.name).apply(effects)
+            StrengthRequirement(self.strength_requirement).apply(effects)
         if self.stealth_disadvantage:
-            StealthDisadvantage(reason=self.name).apply(effects)
+            StealthDisadvantage().apply(effects)
         if self.is_shield:
             # The AC bonus only counts with Shield training (worked out on read).
             effects.add_shield(self.ac_bonus or 0)

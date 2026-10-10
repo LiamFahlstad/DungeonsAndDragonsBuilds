@@ -10,17 +10,17 @@ from Core.Definitions import (
     CharacterClass,
     DiceRollCondition,
 )
-from Model.AbilityIncreases import AbilityIncreases
+from Model.Ledger.AbilityIncreases import AbilityIncreases
 from Model.AbilityScores import (
     AbilityScores,
     StandardArrayAbilityScores,
     PointBuyAbilityScores,
 )
-from Model.Skills import Skills
-from Model.SavingThrows import SavingThrows
-from Model.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
+from Model.Ledger.Skills import Skills
+from Model.Ledger.SavingThrows import SavingThrows
+from Model.Ledger.ArmorClass import UNARMORED_ARMOR_CLASS, ArmorClass, ArmorClassFormula
 from Model.ClassLevels import ClassLevels
-from Model.HitPoints import HitPoints
+from Model.Ledger.HitPoints import HitPoints
 from tests._fake_view import FakeView
 from Model.Records.SourcedValue import SourcedValue
 
@@ -332,7 +332,7 @@ class TestCarryingCapacity:
     """Test CarryingCapacity sources and totals."""
 
     def test_carrying_capacity_sources(self, basic_carrying_capacity):
-        basic_carrying_capacity.add_bonus("Backpack", 2)
+        basic_carrying_capacity.add_bonus(2, "Backpack")
         view = FakeView({Ability.STRENGTH: 12})
         assert basic_carrying_capacity.sources(view) == [
             SourcedValue(4, "Person"),

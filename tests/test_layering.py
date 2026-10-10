@@ -115,7 +115,7 @@ def _parse(path: Path) -> ast.AST:
 
 
 def _module_name(relative_path: str) -> str:
-    """The dotted name of a project file: Model/Skills.py is Model.Skills,
+    """The dotted name of a project file: Model/Ledger/Skills.py is Model.Ledger.Skills,
     and a package's __init__.py is the package itself."""
     parts = relative_path.removesuffix(".py").split("/")
     if parts[-1] == "__init__":
@@ -246,38 +246,33 @@ def test_content_reads_character_through_view():
 
 
 # The Ledger's parts record facts typed with Core and Model.Records types
-# only - never a content object - so they need no content type to name.
-LEDGER_PARTS = (
-    "AbilityIncreases",
-    "AbilityRequirements",
-    "ArmorClass",
-    "Bonuses",
-    "CarryingCapacity",
-    "Defenses",
-    "EquipmentTraining",
-    "HitPoints",
-    "Initiative",
-    "Languages",
-    "SavingThrows",
-    "Senses",
-    "Skills",
-    "Speed",
-    "Spellcasting",
-    "WeaponBonuses",
-    "WornArmor",
-)
+# only - never a content object - so they need no content type to name. Every
+# module in Model/Ledger/ is a part, except the Ledger that holds them and the
+# LedgerWriter that writes into it.
+LEDGER_DIR = REPO / "Model" / "Ledger"
+NOT_LEDGER_PARTS = {"Ledger", "LedgerWriter"}
 LEDGER_PART_MAY_IMPORT = (
     "Core",
     "Model.Records",
     "Model.View",
-    "Model.Bonuses",
+    "Model.Ledger.Bonuses",
 )
+
+
+def _ledger_parts() -> list[str]:
+    return sorted(
+        path.stem
+        for path in LEDGER_DIR.glob("*.py")
+        if path.stem not in NOT_LEDGER_PARTS
+    )
 
 
 def test_ledger_parts_record_facts_only():
     offenders = []
-    for part in LEDGER_PARTS:
-        name = f"Model/{part}.py"
+    parts = _ledger_parts()
+    assert "Skills" in parts and "Bonuses" in parts, parts
+    for part in parts:
+        name = f"Model/Ledger/{part}.py"
         path = REPO / name
         imported = _imported_modules(_parse(path), _module_name(name), is_package=False)
         for module in imported:

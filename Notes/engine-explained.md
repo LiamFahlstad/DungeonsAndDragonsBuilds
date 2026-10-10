@@ -1,7 +1,7 @@
 # The character engine, explained simply
 
-Part 1 explains how the engine works. Part 2 suggests how to make it simpler
-without giving up what makes it correct.
+Part 1 explains how the engine works. Part 2 lists the simplifications made so
+far and the one still open.
 
 ---
 
@@ -20,53 +20,72 @@ about each one.
 
 | Engine name | Plain name | What it is | File |
 |---|---|---|---|
-| `CharacterSources` | **the bag** | Everything the character has: name, ability scores, class levels, features, spells, gear. You can add to it while building. | [Model/CharacterSources.py](../Model/CharacterSources.py) |
-| `Grants` (the `data` in builders) | **the label gun** | What builders put things into the bag through. It sticks a label on each thing: "Wizard, level 3" or "Elf, species". | [Model/Grants.py](../Model/Grants.py) |
+| `CharacterSources` | **the bag** | Everything the character has: name, ability scores, class levels, features, spells, gear. You can add to it while building. In builders it's called `sources`. | [Model/CharacterSources.py](../Model/CharacterSources.py) |
+| `Grants` | **the label gun** | What level and species builders put features and spells into the bag through. It sticks a label on each one: "Wizard, level 3" or "Elf, species". In builders it's called `data`. | [Model/Grants.py](../Model/Grants.py) |
 | `GrantStamp` | **the label** | Level, kind (species/class/...), and who granted it. | [Model/Records/GrantStamp.py](../Model/Records/GrantStamp.py) |
-| `Effect` *(singular)* | **anything that changes stats** | A feature, armor, weapon, item or fighting style. It has one method: `apply(effects)`. | [Model/Content/Effect.py](../Model/Content/Effect.py) |
-| `Effects` *(plural)* | **the pen** | A **write-only** notepad given to each `Effect`. It can only write things down ("+10 speed", "proficient in Stealth"). It can't read anything back. | [Model/Effects.py](../Model/Effects.py) |
-| `Ledger` | **the notebook** | What the pen wrote, split into sections: `skills`, `speed`, `armor_class`, `senses`, and so on. Each section is a small class in `Model/<Thing>.py`. It's sealed when it's done. | [Model/Effects.py](../Model/Effects.py) + `Model/Skills.py`, `Model/Speed.py`, ... |
+| `Effect` | **anything that changes stats** | A feature, armor, weapon, item or fighting style. It has a `name` and one method: `apply(effects)`. | [Model/Content/Effect.py](../Model/Content/Effect.py) |
+| `LedgerWriter` | **the pen** | A **write-only** pen given to each `Effect`, labeled with that effect's name. It can only write things down ("+10 speed", "proficient in Stealth"). It can't read anything back. | [Model/Ledger/LedgerWriter.py](../Model/Ledger/LedgerWriter.py) |
+| `Ledger` | **the notebook** | What the pens wrote, split into sections: `skills`, `speed`, `armor_class`, `senses`, and so on. Each section is a small class in `Model/Ledger/`. **Private to `Character`**: nobody else sees it. | [Model/Ledger/Ledger.py](../Model/Ledger/Ledger.py) |
 | `Character` | **the clerk** | Holds the bag and the notebook. It answers every question ("what's my AC?"). Read-only once it's made. | [Model/Character.py](../Model/Character.py) |
 | `Formula` | **a "work it out later" note** | `lambda character: ...`, written into the notebook and worked out when someone asks. | [Model/View.py](../Model/View.py) |
 | `CharacterView` | **the questions you may ask the clerk** | The read-only interface that formulas and feature descriptions get. | [Model/View.py](../Model/View.py) |
-| `CharacterImprovement` | **a reusable "write this down" snippet** | Small ready-made effects (`SkillProficiency`, `GrantSense`, `SpeedBonus`, ...) that features are put together from. | [Model/Content/Improvements.py](../Model/Content/Improvements.py) |
+| `CharacterImprovement` | **a reusable "write this down" snippet** | Small ready-made effects (`SkillProficiency`, `GrantSense`, `SpeedBonus`, ...) that features are put together from. Content records almost everything through these, not through the pen directly. | [Model/Content/Improvements.py](../Model/Content/Improvements.py) |
+
+The `Model/` folder shows the three phases below:
+
+```
+Model/
+  CharacterSources.py, Grants.py, FeatureGrants.py,     1. build: the bag and how things go in
+  ClassLevels.py, Spells.py, Inventory.py, AbilityScores.py
+  Ledger/                                                2. evaluate: the notebook, its sections, the pen
+  Character.py, View.py                                  3. ask: the clerk and its questions
+  Content/                                               base classes content is made of (Effect, Feature, ...)
+  Records/                                               small shared records (GrantStamp, SourcedValue, ...)
+  Creatures/                                             stat blocks for companions and wild shapes
+```
 
 ## The three phases
 
 Everything happens in three phases, always in this order:
 
 ```
- ┌──────────────── 1. BUILD ────────────────┐   ┌──── 2. EVALUATE ────┐   ┌────── 3. ASK ──────┐
- │  (mutable, done by builders)             │   │ (once, automatic)   │   │ (read-only)        │
- │                                          │   │                     │   │                    │
- │  CharacterBuilder.build()                │   │  The first time any │   │  sheet writer,     │
- │    class builders ─┐                     │   │  stat is asked for: │   │  combat, tests ask │
- │    species builder ├─► Grants ─► the bag │   │                     │   │                    │
- │    gear ───────────┘    (label   (Char-  │   │  for each thing in  │   │  character.        │
- │                          gun)   acter-   │   │  the bag:           │   │   calculate_       │
- │                                 Sources) │   │    thing.apply(pen) │   │   armor_class()    │
- │                                    │     │   │  pen ─► notebook    │   │      │             │
- │           Character(sources) ◄─────┘     │   │  seal the notebook  │   │  notebook + any    │
- │           (copies the bag, read-only)    │   │                     │   │  formulas worked   │
- └──────────────────────────────────────────┘   └─────────────────────┘   │  out now ─► answer │
-                                                                          └────────────────────┘
+ ┌──────────────────── 1. BUILD ────────────────────┐   ┌──── 2. EVALUATE ────┐   ┌────── 3. ASK ──────┐
+ │  (mutable, done by CharacterBuilder.build())     │   │ (once, automatic)   │   │ (read-only)        │
+ │                                                  │   │                     │   │                    │
+ │  class builder:                                  │   │  The first time any │   │  sheet writer,     │
+ │    levels, subclass, scores ──────────► the bag  │   │  stat is asked for: │   │  combat, tests ask │
+ │    each level's features ─► Grants ──► (Char-    │   │                     │   │                    │
+ │  species builder ─────────► Grants ──►  acter-   │   │  for each feature,  │   │  character.        │
+ │  name, inventory ───────────────────►  Sources)  │   │  armor, weapon,     │   │   calculate_       │
+ │                                          │       │   │  item and fighting  │   │   armor_class()    │
+ │      Character(sources) ◄────────────────┘       │   │  style:             │   │      │             │
+ │      (copies the bag; read-only from now on)     │   │    thing.apply(pen) │   │  notebook + any    │
+ │                                                  │   │  pen ─► notebook    │   │  formulas worked   │
+ └──────────────────────────────────────────────────┘   └─────────────────────┘   │  out now ─► answer │
+                                                                                  └────────────────────┘
 ```
 
 1. **Build.** `CharacterBuilder.build()` makes an empty bag (`CharacterSources`).
-   The class builders, then the species builder, put things into it through a
-   `Grants` (that's the `data` parameter in every builder). Then the gear goes
-   in. At the end, `Character(sources)` takes a copy of the bag. From then on
-   nothing can change it.
-2. **Evaluate.** It's lazy: it happens the first time anyone asks for a stat
-   (`Character.ledger`). The engine makes an empty `Ledger`, wraps it in an
-   `Effects` pen, and calls `apply(effects)` on every feature, extension,
-   armor, weapon, item and fighting style. Then it seals the ledger.
+   - Each class builder writes its bookkeeping straight into the bag: class
+     levels, subclass, ability scores, spell replacements. It grants each
+     level's features and spells through a `Grants`, which labels them.
+   - The species builder grants through a `Grants` the same way.
+   - `CharacterBuilder` sets the name and copies in the inventory.
+   - At the end, `Character(sources)` takes a copy of the bag. From then on
+     nothing can change it.
+2. **Evaluate.** It's lazy: it happens the first time anyone asks for a stat,
+   or calls `validate()`. The work is done in the private `Character._ledger`
+   property. The engine makes an empty `Ledger`, and for every feature,
+   extension, armor, weapon, item and fighting style it calls
+   `apply(LedgerWriter(ledger, effect.name))`: each effect gets its own pen,
+   labeled with its own name.
 3. **Ask.** Every query on `Character` reads the ledger. When a note is a
    formula, it's worked out right then, against the finished character.
 
-Spells, the class levels and the inventory never go through the pen. They're
-just lists in the bag that `Character` reads directly. Only things that
-change **numbers and proficiencies** go through `apply()`.
+**What goes through the pen, and what doesn't.** Features, armor, weapons,
+items and fighting styles go through `apply()`, because they change numbers
+and proficiencies. Spells, class levels, invocations, weapon masteries and
+gold never do: they're plain lists in the bag that `Character` reads directly.
 
 ## One feature, start to finish: an Elf's Darkvision
 
@@ -83,20 +102,21 @@ the bag.
 
 **Evaluate.** Later, the sheet asks `character.get_sense_range(Sense.DARKVISION)`.
 That's the first question, so the ledger gets built, and each feature's
-`apply()` runs. For Darkvision, the write goes through four hops:
+`apply()` runs with its own pen. For Darkvision, the write goes through four
+hops:
 
 ```
-Darkvision.apply(effects)                       # the feature
-  └─ GrantSense(DARKVISION, 60, "Darkvision").apply(effects)   # an Improvement
-       └─ effects.add_sense(DARKVISION, 60, "Darkvision")      # the pen
-            └─ ledger.senses.add_sense(...)                    # the notebook section
+Darkvision.apply(effects)                         # the feature; its pen is labeled "Darkvision"
+  └─ GrantSense(DARKVISION, 60).apply(effects)    # an Improvement
+       └─ effects.add_sense(DARKVISION, 60)       # the pen adds the label
+            └─ ledger.senses.add_sense(DARKVISION, 60, "Darkvision")   # the notebook section
 ```
 
 **Ask.** The read goes through two hops:
 
 ```
 character.get_sense_range(DARKVISION)
-  └─ ledger.senses.get_sense_range(DARKVISION)  ─►  60
+  └─ self._ledger.senses.get_sense_range(DARKVISION)  ─►  60
 ```
 
 ## The one rule that explains the whole design
@@ -112,7 +132,7 @@ bugs.
 
 So the engine makes that impossible:
 
-- **The pen (`Effects`) can only write.** It has no getters at all.
+- **The pen (`LedgerWriter`) can only write.** It has no getters at all.
 - **Anything that depends on another stat is written as a formula**, and
   worked out only when someone asks, after everything has been applied:
 
@@ -130,17 +150,24 @@ So the engine makes that impossible:
   "expertise needs proficiency" and "this armor needs Strength 15" are checked
   in `character.validate()`, once everything has been applied.
 
-`tests/test_feature_apply_order.py` enforces the rule: it applies every
-build's effects in shuffled orders and requires the same result every time.
+Tests enforce this, all in
+[tests/test_feature_apply_order.py](../tests/test_feature_apply_order.py):
+
+- `test_effect_order_does_not_change_stats` applies every build's effects in
+  three shuffled orders and requires the same stats each time.
+- `test_effects_can_only_record` fails if `LedgerWriter` gets any method that
+  isn't `add_`/`set_`/`register_`.
+- `test_nothing_outside_the_model_reaches_into_the_record` fails if any code
+  outside `Model/` (and `tests/`) touches `_ledger`.
 
 Almost every "why is it built like this?" question comes back to this rule:
 
 | Question | Answer |
 |---|---|
-| Why is `Effects` separate from `Ledger`? | So `apply()` gets something it can only write to. |
+| Why is `LedgerWriter` separate from `Ledger`? | So `apply()` gets something it can only write to. |
 | Why do bonuses take `int` *or* a `lambda`? | The `lambda` is the "work it out later" case. |
 | Why is `Character` read-only? | The notebook is filled once. If the bag could still change, the notes would be stale. |
-| Why seal the ledger? | So nothing can write to the notebook after the fact. |
+| Why is the ledger private? | So the only way to write is the pen, during evaluation, and the only way to read is a `Character` query, afterwards. |
 | Why do ability-score caps ("to a max of 20") resolve on read? | The cap must not depend on which increase applied first. |
 | Why are extensions *declared* (`extends=Parent`) instead of attached? | So the parent can be granted before or after its extension. |
 
@@ -152,204 +179,120 @@ Almost every "why is it built like this?" question comes back to this rule:
 | `SpellGrant` / `resolve_spells` | Spells are a separate list in the bag. "Replace spell X with Y" is recorded as a note and applied when the spells are read. | [Model/Spells.py](../Model/Spells.py) |
 | `ClassLevels` | Levels per class, which class was taken at each character level, and the subclasses. | [Model/ClassLevels.py](../Model/ClassLevels.py) |
 | `Inventory` | Armor, weapons, items and gold, in labeled entries. | [Model/Inventory.py](../Model/Inventory.py) |
-| `Recorder` / `@records` | The base class of every notebook section. `@records` marks a write method, and after sealing that method raises `SealedError`. | [Model/Recorder.py](../Model/Recorder.py) |
-| `Bonuses` | A shared helper: a list of flat bonuses plus formula bonuses, each with a label. Speed, AC, HP, initiative, skills and saves all use it. | [Model/Bonuses.py](../Model/Bonuses.py) |
+| `Bonuses` | A shared helper: a list of flat bonuses plus formula bonuses, each with a label. Speed, AC, HP, initiative, skills and saves all use it. | [Model/Ledger/Bonuses.py](../Model/Ledger/Bonuses.py) |
 
-## Names that trip people up
+## Names that still need care
 
-- **`Effect` and `Effects` are unrelated.** `Effect` is *a thing that changes
-  stats* (a feature, an item). `Effects` is *the pen*. One letter apart, two
-  completely different jobs.
-- **`Recorder` doesn't record anything.** It's the base class of the notebook
-  sections, and its only job is the seal.
-- **"Source" means at least four things:**
+- **"Source" means a few things:**
   1. `CharacterSources`: the bag;
-  2. the `source=` label on a bonus, resistance or sense, usually the feature's
-     name;
+  2. the label on a bonus, resistance, sense or language, which is always the
+     name of the effect that recorded it;
   3. the `source=` label on a spell, like "Chosen spell";
   4. related to these, `GrantStamp.granted_by` and `Feature.origin` ("Elf
      Trait"), which are two more "where did this come from" labels.
-- **`data` in builders** is a `Grants` (the label gun), not the bag itself.
+- **Weapon bonuses carry their own label.** A `WeaponBonus` is a record with a
+  descriptive label ("Dueling Fighting Style - Applied if one-handed weapon and
+  no other weapons"), so it doesn't take the pen's label.
 
 ## Cheat sheet: "I want to..."
 
 | I want to... | Do this |
 |---|---|
-| add a feature with a fixed effect | Override `apply(self, effects)` and use an Improvement (`GrantSense(...).apply(effects)`) or call `effects.add_...` |
+| add a feature with a fixed effect | Override `apply(self, effects)` and use an Improvement: `GrantSense(Sense.DARKVISION, 60).apply(effects)`. It's listed under the feature's `name` automatically |
 | add a bonus that depends on another stat | Pass a `lambda character: ...` instead of an `int` |
 | show a number in a feature's text | Override `get_description(self, character)`. `character` is a `CharacterView`, so you can read anything there |
 | add a rider to an existing feature | `data.add_feature(Child(), extends=Parent)` |
-| track a brand-new kind of stat | Add a new notebook section (`Model/<Thing>.py`), then an `Effects.add_...` method, a `Character` query, and a `CharacterView` entry if content needs to read it |
-| test a single effect | `sources.add_effect(SkillBonus(...))`, then `Character(sources).get_skill_bonus(...)` |
+| add a fighting style | Subclass `FightingStyle` and set `name = "..."`, matching the start of its description |
+| track a brand-new kind of stat | 1. Add a notebook section in `Model/Ledger/`. 2. Add it in `Ledger.__init__`. 3. Add a `LedgerWriter.add_...` method. 4. Add a `Character` query. 5. Add a `CharacterView` entry if content needs to read it. 6. Usually add an Improvement too. The layering test checks the new section automatically |
+| test a single effect | Use the `make_sources` fixture: `sources = make_sources(dexterity=16)`, then `sources.add_effect(SkillBonus(...))`, then `Character(sources).get_skill_bonus(...)`. A bare Improvement is listed under "Other" |
 
 ---
 
-# Part 2: How to simplify it
+# Part 2: Simplifying it
 
-## Keep these (they're the quality, not the complexity)
+## What we kept
 
-These ideas *are* the engine's correctness. Every suggestion below keeps them:
+These ideas *are* the engine's correctness, and none of the changes touched
+them:
 
 1. **The three phases:** build, then evaluate, then ask.
 2. **A write-only pen during `apply()`**, with formulas worked out when they're
    read. This is what makes the order of application not matter.
-3. **An immutable `Character`.**
+3. **An immutable `Character` with a private ledger.**
 4. **Grant stamps**, so every grant knows where it came from.
 5. **`CharacterView`**, the one read interface. It's what keeps imports
    pointing downward.
 
-Most of what's confusing comes from **names** and **extra hops**, not from
-these concepts. The suggestions are ranked by clarity gained per unit of
-effort.
+## Done
 
-## S1. Rename the confusing names *(small, mechanical, biggest clarity win)*
+| What | Change |
+|---|---|
+| Private ledger, no seal *(part 12)* | `ledger` became `_ledger`. `Recorder`, `@records` and `SealedError` are gone, and `Character` gained the listing queries the sheet needed. |
+| Duplicate methods *(part 12 + after)* | `get_level_for_class`, `get_spell_slots`, `get_spell_casting_ability` and `get_base_speed` are gone. `CharacterView` reads the `base_speed` property. |
+| Privacy test covers everything *(after part 12)* | `test_nothing_outside_the_model_reaches_into_the_record` scans every folder except `Model/` and `tests/`, not just `CharacterContent/`. |
+| S1: clear names | `Effects` → `LedgerWriter`, so `Effect` and the pen are no longer one letter apart. `Ledger` and `LedgerWriter` each have their own file. Builders call a `CharacterSources` `sources`, so `data` always means a `Grants`. |
+| S3: automatic labels | Each effect gets its own `LedgerWriter`, labeled with `effect.name`. The `source`/`reason` parameters are gone from the pen and from the Improvements (87 call sites). `add_carrying_capacity_bonus` no longer has its arguments backwards. Speed, AC, HP, initiative and saving-throw bonuses are now labeled too. Fighting styles got a `name`. Every rendered page is byte-identical to before. |
+| S5: `Model/Ledger/` | The 17 notebook sections, `Bonuses`, `Ledger` and `LedgerWriter` moved into `Model/Ledger/`. The layering rule for sections now finds them from the folder, so a new section is checked automatically. |
 
-| Today | Suggested | Why |
-|---|---|---|
-| `Effects` (the pen) | `LedgerWriter` | It says what it is: the write side of the `Ledger`. No more `Effect`/`Effects` mix-up. |
-| `Recorder` | `LedgerPart` | It's the base class of a ledger section. |
-| `apply(self, effects: Effects)` | `apply(self, ledger: LedgerWriter)` | It reads as "write into the ledger". |
+## Still open: S4, record through the pen directly *(large; decide first)*
 
-`Effect`, `Ledger`, `Character` and `CharacterSources` can keep their names.
-Once the pen has a different name, `Effect` on its own is clear.
+Today a feature that grants one fact goes through four hops: feature →
+Improvement → pen → ledger section. The measured numbers:
 
-- **Cost:** about 190 `apply` signatures plus the imports. It's a pure
-  find-and-replace, and the snapshot and apply-order tests prove nothing
-  changed.
-- **Watch out:** exclude `.claude/worktrees/` from any scripted rewrite.
+- There are **53 `CharacterImprovement` classes**:
+  - **33** whose `apply` is a single call to the pen (`SpeedBonus`,
+    `DamageResistance`, `GrantSense`, ...);
+  - **19** that only add validation or a docstring on top of another
+    (`SkillProficiencyChoice`, the `InformationalImprovement` markers, ...);
+  - **1**, `AbilityScoreBonus`, with real validation logic of its own.
+- **Content uses them in about 165 places:**
+  - 108 store one in `__init__` and call `self._x.apply(effects)` (86 of those
+    use it nowhere else);
+  - 48 build one inline;
+  - 9 apply them in a loop.
 
-## S2. Remove duplicate methods on `Character` *(small)*
-
-`Character` has several pairs of methods that do the same thing:
-
-| Duplicate | Keep | Notes |
-|---|---|---|
-| `get_level_for_class` (1 use) / `get_class_level` (85 uses) | `get_class_level` | |
-| `base_speed` / `get_base_speed` | one of them | `CharacterView` uses `get_base_speed` |
-| `spell_casting_ability` / `get_spell_casting_ability` | both, with clearer names | One returns `None`, the other raises. Name that difference, e.g. `spell_casting_ability` and `require_spell_casting_ability()` |
-| `spell_slots` / `get_spell_slots` | both, with clearer names | Same `None`-versus-raise split |
-
-Each pair is one more "which one do I call?" question for the reader.
-
-## S3. Fill in the source label automatically *(medium)*
-
-Today, about 10 `Effects` methods take a `source`/`reason` label, and content
-nearly always passes `self.name`. Two things are inconsistent:
-
-- the argument order: `add_carrying_capacity_bonus(source, bonus)` versus
-  `add_damage_resistance(type, source)`;
-- the coverage: speed, AC, HP and initiative bonuses have no label at all.
-
-The evaluation loop in `Character.ledger` already knows which effect it's
-applying, so it could give each one a pen that knows the label:
+Now that labels are automatic, the direct call is as short as the
+Improvement:
 
 ```python
-for effect in self._apply_order(self.iter_stat_effects()):
-    effect.apply(LedgerWriter(ledger, source=effect.name))
-```
-
-- **What you gain:**
-  - every recorded fact gets traced back to its feature for free (a quality
-    gain: the sheet could list sources for *every* bonus);
-  - the `source` parameter disappears from the pen's methods;
-  - the inconsistencies above go away.
-- **Cost:**
-  - `name` has to move up to the `Effect` base class (features, armor,
-    weapons, items and fighting styles already have it);
-  - the few places that want a different label need an optional override;
-  - about 60 call sites drop an argument.
-
-## S4. Stop wrapping one-line Improvements *(large, but where feature authors spend their time)*
-
-Today, a feature that grants one fact goes through **four hops**: feature →
-Improvement → pen → ledger section. There are 172 lines in content that only
-pass the pen along (`self._x.apply(effects)`). Many of the 61 Improvement
-classes are a single line:
-
-```python
-class SpeedBonus(CharacterImprovement):
-    def __init__(self, bonus): self.bonus = bonus
-    def apply(self, effects): effects.add_speed_bonus(self.bonus)
-```
-
-With S1 and S3 in place, a feature can call the pen directly:
-
-```python
-# before
+# today
 class Darkvision(Feature):
     def __init__(self, distance):
         self.distance = distance
         super().__init__(name="Darkvision", ...)
-        self._sense = GrantSense(Sense.DARKVISION, self.distance, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
-# after
+# with S4
 class Darkvision(Feature):
     def __init__(self, distance):
         self.distance = distance
         super().__init__(name="Darkvision", ...)
 
-    def apply(self, ledger: LedgerWriter):
-        ledger.add_sense(Sense.DARKVISION, self.distance)
+    def apply(self, effects: LedgerWriter):
+        effects.add_sense(Sense.DARKVISION, self.distance)
 ```
 
-**Keep** the Improvements that actually contain logic:
+**The catch.** Today content follows exactly **one** rule: it records through
+Improvements. A half-finished migration would leave **two** ways to record the
+same fact, which is worse than today. So it's all or nothing:
 
-- choice validation (`SkillProficiencyChoice`, or a plain
-  `validate_choice(skills, pool, count)` function);
-- the AC formulas (`SetArmorClass`, `MultiAbilityArmorClass`);
-- `JackOfAllTradesBonus`;
-- `StrengthRequirement`;
-- the `InformationalImprovement` family.
-
-The pen is already the typed, documented API, so nothing is lost, and order
-independence is untouched because the pen is still write-only.
-
-- **Cost:** a codemod over about 170 sites. Do it one folder at a time, and
-  run the apply-order and snapshot tests after each folder.
-- **Tests:** tests that use `sources.add_effect(SkillBonus(...))` can keep
-  using whichever Improvements remain.
-
-## S5. Group `Model/` by phase *(medium, mechanical)*
-
-Today about 20 ledger-section files (`Skills.py`, `Speed.py`, `Senses.py`, ...)
-sit flat next to `Character.py`, so you can't see the three phases in the
-folder. Plan section 2b already proposed this, and it hasn't been done yet:
-
-```
-Model/
-  Build:     CharacterSources.py, Grants.py, FeatureGrants.py, ClassLevels.py, Spells.py, Inventory.py
-  Ledger/    Ledger.py, LedgerWriter.py, LedgerPart.py, Bonuses.py, Skills.py, Speed.py, ... (every section)
-  Answer:    Character.py, View.py
-  Records/, Content/   (unchanged)
-```
-
-Then the folder itself explains the engine. The Creator round-trip test
-catches any broken import that the codegen emits.
-
-## S6. Make the ledger private and drop the seal *(optional, medium)*
-
-There are two locks today:
-
-- the pen can't read during evaluation (the important one);
-- the seal stops writes after evaluation.
-
-The seal exists only because `character.ledger` is public. The presentation
-code reads it in 13 places (known languages, sense ranges, the defense lists),
-and the tests in 62.
-
-The alternative:
-
-1. Add the 4–5 missing queries to `Character`.
-2. Rename the attribute to `_ledger`.
-3. Add a rule to `test_layering.py` that forbids `._ledger` outside
-   `Character.py`.
-
-Then `Recorder.py`, the `@records` decorator on every write method, and
-`SealedError` can all go. The same protection moves from runtime reflection
-into a test. Do this only if the seal bothers you: it's cheap where it is.
+- **Done completely:**
+  - Delete the 33 one-call Improvements.
+  - Keep only the helpers that do more than forward:
+    - `AbilityScoreBonus` and the three `...Choice` classes, which validate at
+      build time;
+    - `SetArmorClass` and `MultiAbilityArmorClass`, which assemble an
+      `ArmorClassFormula`;
+    - `JackOfAllTradesBonus`, which builds a formula per skill;
+    - the `InformationalImprovement` markers.
+  - Migrate the tests that build one-call Improvements as well.
+  - Go one folder at a time, running the apply-order and snapshot tests after
+    each folder.
+- **Not done:** nothing is broken. The four hops are plain to follow once you
+  know the cast, and Improvements give tests a ready-made vocabulary.
 
 ## Don't simplify these
 
@@ -357,20 +300,6 @@ into a test. Do this only if the seal bothers you: it's cheap where it is.
 |---|---|
 | Let features write ledger sections directly (drop the pen) | That removes the write-only guarantee, and order bugs come back. |
 | Replace formulas with "apply in priority order" | That's the exact design the order-free engine replaced. |
-| Remove `Character`'s query methods and have callers use `character.ledger.skills.modifier(skill, character)` | Every caller would have to pass the character back in, and you'd lose the single read API. |
+| Remove `Character`'s query methods and let callers reach into the ledger | Every caller would have to pass the character back in for formulas, and the ledger would stop being private. |
 | Drop `CharacterView` and type everything as `Character` | That brings back the import cycles (and `TYPE_CHECKING`). |
 | Remove `ExtensionTree` / `IfParentMissing` | The three modes are real cases: a build error, an upgrade to an option that wasn't chosen, and a feature that stands alone. |
-
-## Suggested order
-
-| # | Step | Size | Risk |
-|---|---|---|---|
-| 1 | S1: renames | S | none (mechanical) |
-| 2 | S2: duplicate methods | S | none |
-| 3 | S3: automatic source labels | M | low; snapshot-checked |
-| 4 | S5: group `Model/` by phase | M | low; round-trip test |
-| 5 | S4: remove one-line Improvements | L | low per folder; apply-order test |
-| 6 | S6: private ledger, no seal | M | optional |
-
-S1 and S2 alone remove most of the "which thing is this?" confusion. S3 and S4
-remove most of the "why are there so many hops?" confusion.

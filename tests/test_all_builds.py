@@ -131,7 +131,7 @@ def test_no_wasted_skill_proficiency(name, monkeypatch):
     import inspect
 
     from Model.Content.Feature import Feature
-    from Model.Skills import Skills
+    from Model.Ledger.Skills import Skills
 
     original = Skills.add_skill_proficiency
     wasted = []

@@ -42,10 +42,7 @@ def write_build_group_pages(
     output_folder_obj.mkdir(parents=True, exist_ok=True)
 
     writer = HtmlCharacterSheetWriter()
-    prepared = [
-        (character_sheet_data, character_sheet_data.validate())
-        for character_sheet_data in characters
-    ]
+    prepared = [(character, character.validate()) for character in characters]
 
     _write_features_page(
         writer,
@@ -89,10 +86,10 @@ def _write_features_page(
             f"<h1>{group_name} - Features{_level_label(min_level, max_level)}</h1>\n"
         )
         file.write("<div class='features'>\n")
-        for character_sheet_data, stat_block in prepared:
+        for character, stat_block in prepared:
             text_features = [
                 f
-                for f in character_sheet_data.top_level_features()
+                for f in character.top_level_features()
                 if render_feature_description(f, stat_block, description_mode)
                 is not None
                 and (
@@ -107,7 +104,7 @@ def _write_features_page(
             if not text_features:
                 continue
             file.write(
-                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+                f"<div class='build-group-owner'>{character.character_name}</div>\n"
             )
             sorted_features = sorted(
                 text_features, key=lambda f: writer._sort_features_key(stat_block, f)
@@ -135,17 +132,17 @@ def _write_spells_page(
         file.write(
             f"<h1>{group_name} - Spells{_level_label(min_level, max_level)}</h1>\n"
         )
-        for character_sheet_data, stat_block in prepared:
+        for character, stat_block in prepared:
             level_filtered_spells = [
                 spell
-                for spell in character_sheet_data.spells
+                for spell in character.spells
                 if (min_level is None or writer._spell_level(spell) >= min_level)
                 and (max_level is None or writer._spell_level(spell) <= max_level)
             ]
             if not level_filtered_spells:
                 continue
             file.write(
-                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+                f"<div class='build-group-owner'>{character.character_name}</div>\n"
             )
             writer._write_spell_cards(stat_block, file, level_filtered_spells)
 
@@ -160,18 +157,18 @@ def _write_weapons_page(
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
         file.write(f"<h1>{group_name} - Weapons</h1>\n")
-        for character_sheet_data, stat_block in prepared:
-            if not character_sheet_data.weapons:
+        for character, stat_block in prepared:
+            if not character.weapons:
                 continue
             file.write(
-                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+                f"<div class='build-group-owner'>{character.character_name}</div>\n"
             )
             file.write("<div class='items-section'>\n")
             writer._write_weapons(
                 stat_block,
                 file,
-                character_sheet_data.weapons,
-                character_sheet_data.weapon_masteries,
+                character.weapons,
+                character.weapon_masteries,
                 include_probability_tables,
             )
             file.write("</div>\n")
@@ -186,10 +183,10 @@ def _write_items_page(
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
         file.write(f"<h1>{group_name} - Items</h1>\n")
-        for character_sheet_data, stat_block in prepared:
+        for character, stat_block in prepared:
             non_empty_entries = [
                 entry
-                for entry in character_sheet_data.equipment_entries
+                for entry in character.equipment_entries
                 if entry.armors or entry.weapons or entry.items or entry.gold
             ]
             if not non_empty_entries:
@@ -197,7 +194,7 @@ def _write_items_page(
             combined_rows = []
             sections = writer._build_item_sections(
                 non_empty_entries,
-                character_sheet_data.starting_equipment_entry,
+                character.starting_equipment_entry,
             )
             for title, rows in sections:
                 if title == "Weapons":
@@ -206,7 +203,7 @@ def _write_items_page(
             if not combined_rows:
                 continue
             file.write(
-                f"<div class='build-group-owner'>{character_sheet_data.character_name}</div>\n"
+                f"<div class='build-group-owner'>{character.character_name}</div>\n"
             )
             file.write("<div class='items-section'>\n")
             Html.write_item_cards(file, None, combined_rows)

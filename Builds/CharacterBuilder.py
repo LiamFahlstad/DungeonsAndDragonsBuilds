@@ -93,19 +93,15 @@ class CharacterBuilder:
         # Every builder (starting class, multiclasses, species) grants
         # into these one set of sources; the Character is made from them
         # at the end.
-        character_sheet_data = CharacterSources()
+        sources = CharacterSources()
         applied_level_features = AppliedLevelFeatures()
 
-        character_sheet_data = self.starter_class_builder.create(
-            character_sheet_data, applied_level_features
-        )
+        sources = self.starter_class_builder.create(sources, applied_level_features)
 
         for multiclass_builder in self.multiclass_builders:
-            character_sheet_data = multiclass_builder.create(
-                character_sheet_data, applied_level_features
-            )
+            sources = multiclass_builder.create(sources, applied_level_features)
 
-        abilities = character_sheet_data.base_abilities
+        abilities = sources.base_abilities
         if abilities is None:
             raise ValueError("AbilityScores is None.")
         ability_with_highest_modifier = (
@@ -114,20 +110,18 @@ class CharacterBuilder:
         # A spellcasting class states its own ability (Paladin: Charisma, ...);
         # only a character with no class spellcasting falls back to their best
         # mental score (e.g. for species/feat spells).
-        if character_sheet_data.spell_casting_ability is None:
-            character_sheet_data.spell_casting_ability = ability_with_highest_modifier
+        if sources.spell_casting_ability is None:
+            sources.spell_casting_ability = ability_with_highest_modifier
 
-        self.species_builder.build(character_sheet_data, ability_with_highest_modifier)
+        self.species_builder.build(sources, ability_with_highest_modifier)
 
-        character_sheet_data.character_name = self.name
-        character_sheet_data.is_example = type(self).__module__.startswith(
-            "Builds.Examples"
-        )
+        sources.character_name = self.name
+        sources.is_example = type(self).__module__.startswith("Builds.Examples")
 
         # Equipment: starting gear plus everything since added/dropped via
         # self.inventory. A copy, so gear added to or dropped from either one
         # later never changes the other. (Weapon proficiency is worked out on
         # read, so the order this happens in doesn't matter.)
-        character_sheet_data.inventory = self.inventory.copy()
+        sources.inventory = self.inventory.copy()
 
-        return Character(character_sheet_data)
+        return Character(sources)

@@ -1,7 +1,7 @@
 from Core.Definitions import Skill
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -26,7 +26,7 @@ class ChangelingInstincts(Feature):
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

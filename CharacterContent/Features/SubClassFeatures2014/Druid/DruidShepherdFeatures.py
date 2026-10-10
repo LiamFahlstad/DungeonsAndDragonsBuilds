@@ -9,7 +9,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import GrantLanguage
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -21,9 +21,9 @@ class SpeechOfTheWoods(Feature):
             origin="Circle of the Shepherd Druid Level 3",
             usage_tags=["utility"],
         )
-        self._language = GrantLanguage(Language.SYLVAN, self.name)
+        self._language = GrantLanguage(Language.SYLVAN)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._language.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

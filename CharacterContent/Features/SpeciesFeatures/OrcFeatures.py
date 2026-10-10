@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -19,9 +19,9 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Orc Trait")
-        self._sense = GrantSense(Sense.DARKVISION, 120, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 120)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

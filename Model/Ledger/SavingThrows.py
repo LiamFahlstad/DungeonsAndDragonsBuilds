@@ -1,7 +1,7 @@
 import attr
 
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
-from Model.Bonuses import Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.View import CharacterView, Value
 
 
@@ -35,7 +35,7 @@ class SavingThrows:
         self._proficiencies: set[Ability] = set()
         self._advantages: set[Ability] = set()
         # Per-ability flat and formula-valued bonuses, each with a source
-        # (see Model/Bonuses.py).
+        # (see Model/Ledger/Bonuses.py).
         self._bonuses: dict[Ability, Bonuses] = {}
         # "Proficiency in X; if you already have it, in Y instead" grants,
         # resolved on read - see _resolved_proficiencies.
@@ -79,8 +79,10 @@ class SavingThrows:
     def _bonuses_for(self, ability: Ability) -> Bonuses:
         return self._bonuses.setdefault(ability, Bonuses())
 
-    def add_bonus(self, ability: Ability, bonus: Value) -> None:
-        self._bonuses_for(ability).add(bonus)
+    def add_bonus(
+        self, ability: Ability, bonus: Value, source: str = OTHER_SOURCE
+    ) -> None:
+        self._bonuses_for(ability).add(bonus, source)
 
     def get_total_bonus(self, ability: Ability, view: CharacterView) -> int:
         """The flat bonus plus every formula-valued bonus, resolved against

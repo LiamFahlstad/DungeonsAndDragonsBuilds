@@ -1,7 +1,7 @@
 from Core.Definitions import DamageType, Skill
 from Model.Content.Feature import Feature, RegainedOn
 from Model.Content.Improvements import DamageResistance, SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -56,7 +56,7 @@ class RebornKnowledgeSkill(Feature):
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -76,9 +76,9 @@ class StrangeEndurance(Feature):
         super().__init__(
             name="Strange Endurance", origin="Reborn Trait", usage_tags=["buff"]
         )
-        self._resistance = DamageResistance(damage_type, self.name)
+        self._resistance = DamageResistance(damage_type)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

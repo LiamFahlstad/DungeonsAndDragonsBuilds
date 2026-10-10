@@ -15,7 +15,7 @@ from Model.Content.Feature import Feature
 from Model.Content.Improvements import AbilityScoreBonus, SkillBonus, SkillProficiency
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass, Skill
-from Model.Effects import Ledger
+from Model.Ledger.Ledger import Ledger
 from tests._fake_view import FakeView
 from tests._grants import grant
 from Model.FeatureGrants import IfParentMissing
@@ -106,7 +106,7 @@ def test_requirements_are_checked_by_validate_not_by_queries(make_character):
 
 
 def test_model_package_imports_nothing_from_character_content():
-    # CharacterContent imports the model (for Character and Effects), so the
+    # CharacterContent imports the model (for Character and LedgerWriter), so the
     # model importing CharacterContent at load time would be an import cycle.
     code = (
         "import sys, pathlib, importlib; "
@@ -178,11 +178,11 @@ def test_apply_order_sets_the_order_effects_apply_in(make_sources):
     applied = []
 
     class _Recording:
-        def __init__(self, label):
-            self.label = label
+        def __init__(self, name):
+            self.name = name
 
         def apply(self, effects):
-            applied.append(self.label)
+            applied.append(self.name)
 
     sources = make_sources()
     sources.add_effect(_Recording("a"))

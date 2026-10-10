@@ -15,7 +15,7 @@ from Model.Content.Improvements import (
     GrantToolProficiency,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -26,7 +26,7 @@ class BonusProficiencies(Feature):
             name="Bonus Proficiencies", origin="Forge Domain Cleric Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with heavy armor and smith's tools."
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
         GrantToolProficiency([SmithsTools()]).apply(effects)
@@ -119,9 +119,9 @@ class SoulOfTheForge(Feature):
             skippable_in_concise=True,
             usage_tags=["buff"],
         )
-        self._resistance = DamageResistance(DamageType.FIRE, self.name)
+        self._resistance = DamageResistance(DamageType.FIRE)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
         # "While wearing heavy armor, you gain a +1 bonus to AC."
         ArmorClassBonus(
@@ -149,9 +149,9 @@ class SaintOfForgeAndFire(Feature):
         # slashing resistance is gated on wearing heavy armor AND only
         # applies to nonmagical attacks (no magical/nonmagical qualifier
         # exists on DamageResistance), so it stays prose-only.
-        self._immunity = DamageImmunity(DamageType.FIRE, self.name)
+        self._immunity = DamageImmunity(DamageType.FIRE)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._immunity.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

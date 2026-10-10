@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Literal
 
 from Model.Content.Effect import Effect
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -188,7 +188,7 @@ class Feature(Effect):
         # current uses based on character stats.
         self.uses = uses
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         """Record this feature's effects on the stat block. Features, armor
         and items apply in no particular order, so only record facts - never
         read a stat here. Anything that depends on other stats or on worn

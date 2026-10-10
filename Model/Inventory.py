@@ -97,7 +97,7 @@ class Inventory:
         or consuming on either one never changes the other. The item objects
         themselves are shared - nothing changes an item once it's made
         (weapon bonuses are recorded on the stat block, see
-        Model/WeaponBonuses.py)."""
+        Model/Ledger/WeaponBonuses.py)."""
         copied = Inventory()
         for entry in self._entries:
             entry_copy = attr.evolve(

@@ -16,7 +16,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Grants import Grants
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -55,7 +55,7 @@ class Skilled(OriginFeat):
             name="Skilled", origin="Origin Feat", skippable_in_concise=True
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -71,7 +71,7 @@ class Alert(OriginFeat):
         super().__init__(name="Alert", origin="Origin Feat")
         self._proficiency = InitiativeProficiency()
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -357,7 +357,7 @@ class Tough(OriginFeat):
         self._hp = HitPointsPerLevelBonus(2)
         super().__init__(name="Tough", origin="Origin Feat", skippable_in_concise=True)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._hp.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -502,7 +502,7 @@ class PurpleDragonRook(OriginFeat):
         )
         super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

@@ -1,7 +1,7 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import GrantArmorTraining
 from Core.Definitions import ArmorType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -22,7 +22,7 @@ class BonusProficiency(Feature):
             name="Bonus Proficiency", origin="Nature Domain Cleric Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with heavy armor."
         GrantArmorTraining([ArmorType.HEAVY]).apply(effects)
 

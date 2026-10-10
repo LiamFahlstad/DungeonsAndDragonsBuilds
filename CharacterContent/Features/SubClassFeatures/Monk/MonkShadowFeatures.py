@@ -2,7 +2,7 @@ from Core.Definitions import MONK_HIT_DIE, Sense
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -55,9 +55,9 @@ LEVEL_TO_FOCUS_POINTS = {
 class ShadowArts(Feature):
     def __init__(self):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
-        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60, self.name)
+        self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._darkvision.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

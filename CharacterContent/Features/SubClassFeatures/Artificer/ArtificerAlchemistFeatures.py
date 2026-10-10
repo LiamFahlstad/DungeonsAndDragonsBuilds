@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Core.Definitions import Condition, DamageType
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
@@ -126,12 +126,12 @@ class ChemicalMastery(Feature):
             usage_tags=["damage", "buff", "utility"],
         )
         self._resistances = [
-            DamageResistance(DamageType.ACID, self.name),
-            DamageResistance(DamageType.POISON, self.name),
+            DamageResistance(DamageType.ACID),
+            DamageResistance(DamageType.POISON),
         ]
-        self._immunity = ConditionImmunity(Condition.POISONED, self.name)
+        self._immunity = ConditionImmunity(Condition.POISONED)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for resistance in self._resistances:
             resistance.apply(effects)
         self._immunity.apply(effects)

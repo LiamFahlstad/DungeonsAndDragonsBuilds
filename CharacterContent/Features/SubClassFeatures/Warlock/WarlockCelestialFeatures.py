@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageResistance
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -69,9 +69,9 @@ class RadiantSoul(Feature):
             origin="Celestial Patron Warlock Level 6",
             usage_tags=["buff", "damage"],
         )
-        self._resistance = DamageResistance(DamageType.RADIANT, self.name)
+        self._resistance = DamageResistance(DamageType.RADIANT)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

@@ -2,7 +2,7 @@ import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -10,7 +10,7 @@ class BonusProficiency(Feature):
     def __init__(self):
         super().__init__(name="Bonus Proficiency", origin="Death Domain Cleric Level 3")
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You gain proficiency with martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(effects)
 

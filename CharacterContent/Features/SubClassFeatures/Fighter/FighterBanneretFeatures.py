@@ -1,7 +1,7 @@
 from Core.Definitions import FIGHTER_HIT_DIE, Condition
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import ConditionImmunity
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -132,11 +132,11 @@ class InspiringCommander(Feature):
             usage_tags=["buff"],
         )
         self._immunities = [
-            ConditionImmunity(Condition.CHARMED, self.name),
-            ConditionImmunity(Condition.FRIGHTENED, self.name),
+            ConditionImmunity(Condition.CHARMED),
+            ConditionImmunity(Condition.FRIGHTENED),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(effects)
 

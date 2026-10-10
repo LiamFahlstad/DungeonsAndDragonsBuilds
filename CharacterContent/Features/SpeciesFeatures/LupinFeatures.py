@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -18,9 +18,9 @@ SPEED = 30  # Given by your species
 class Darkvision(Feature):
     def __init__(self):
         super().__init__(name="Darkvision", origin="Lupin Trait")
-        self._sense = GrantSense(Sense.DARKVISION, 60, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 60)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -96,7 +96,7 @@ class WerewolfInstincts(Feature):
             [skill], self.VALID_SKILLS, count=1, error_prefix="Werewolf Instincts"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

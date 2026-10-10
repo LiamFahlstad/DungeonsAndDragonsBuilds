@@ -76,9 +76,7 @@ class SentinelsWatchArmor(ChainShirtArmor):
     def base_stats(self) -> None:
         super().base_stats()
         self.rarity = ItemRarity.UNCOMMON
-        self.add_character_improvement(
-            SkillBonus(Skill.PERCEPTION, 2, source="Sentinel's Watch Armor")
-        )
+        self.add_character_improvement(SkillBonus(Skill.PERCEPTION, 2))
 
     def setup_improvements(self) -> None:
         self.add_armor_improvement(

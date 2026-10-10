@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from Core.Definitions import Skill
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -121,7 +121,7 @@ class ExpertiseLevel1(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -138,7 +138,7 @@ class ExpertiseLevel9(Feature):
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -156,7 +156,7 @@ class JackOfAllTrades(Feature):
         )
         self._bonus = JackOfAllTradesBonus()
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._bonus.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

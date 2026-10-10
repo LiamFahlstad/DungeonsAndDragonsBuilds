@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SkillBonus
 from Model.View import CharacterView
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 
 
@@ -63,14 +63,12 @@ class OtherworldlyGlamour(Feature):
             name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "Whenever you make a Charisma check, you gain a bonus to the check
         # equal to your Wisdom modifier (Minimum of +1)." A formula per skill,
         # so both the Wisdom modifier and the skill's ability are final.
         for skill in Skill:
-            SkillBonus(skill, self._charisma_check_bonus(skill), self.name).apply(
-                effects
-            )
+            SkillBonus(skill, self._charisma_check_bonus(skill)).apply(effects)
 
     @staticmethod
     def _charisma_check_bonus(skill: Skill):

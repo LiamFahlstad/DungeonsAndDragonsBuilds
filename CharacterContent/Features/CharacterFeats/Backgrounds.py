@@ -1,7 +1,7 @@
 from Core.Definitions import Ability, Skill
 from Model.Content.Feature import Feature
 from Model.Content.Improvements import AbilityScoreBonus, SkillProficiencyChoice
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_SCORE
 from Model.View import CharacterView
 
@@ -24,7 +24,7 @@ class FreeBackgroundAbilityBonus(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._bonus.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -54,7 +54,7 @@ class FreeBackgroundSkillProficiency(Feature):
             skippable_in_concise=True,
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._choice.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

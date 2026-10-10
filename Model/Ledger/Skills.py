@@ -2,7 +2,7 @@ from typing import Optional
 
 from Core.Definitions import Ability, DiceRollCondition, Skill, combine_roll_conditions
 from Core.Rules import EXPERTISE_MULTIPLIER
-from Model.Bonuses import OTHER_SOURCE, Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.Records.SourcedValue import SourcedValue
 from Model.View import CharacterView, Value
 
@@ -19,7 +19,7 @@ class Skills:
         self._proficiencies: set[Skill] = set()
         self._expertise: set[Skill] = set()
         # Per-skill flat and formula-valued bonuses, each with a source (see
-        # Model/Bonuses.py).
+        # Model/Ledger/Bonuses.py).
         self._bonuses: dict[Skill, Bonuses] = {}
         # Per-skill {condition: [reasons]} for every source of Advantage or
         # Disadvantage, so the effective condition can be worked out on read

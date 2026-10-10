@@ -1,6 +1,6 @@
 from Core.Definitions import Ability
 from Core.Rules import CARRYING_CAPACITY_BASE_SLOTS
-from Model.Bonuses import by_source
+from Model.Ledger.Bonuses import by_source
 from Model.View import CharacterView
 from Model.Records.SourcedValue import SourcedValue
 
@@ -20,7 +20,7 @@ class CarryingCapacity:
         # Bonus sources only (Person is computed dynamically in sources()).
         self._bonus_sources: list[SourcedValue] = []
 
-    def add_bonus(self, source: str, bonus: int) -> None:
+    def add_bonus(self, bonus: int, source: str) -> None:
         self._bonus_sources.append(SourcedValue(bonus, source))
 
     def sources(self, view: CharacterView) -> list[SourcedValue]:

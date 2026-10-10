@@ -5,7 +5,7 @@ CharacterView is everything a formula may read:
 
 - Character really satisfies it: every member is called, not just looked up
   (typing's runtime_checkable only checks that the names exist).
-- Effects - what apply() gets - has none of it, so a formula can never read
+- LedgerWriter - what apply() gets - has none of it, so a formula can never read
   a stat in the middle of evaluation.
 - It exposes answers, never a part.
 
@@ -24,8 +24,9 @@ from Model.View import CharacterView
 from Model.Content.Feature import Feature
 from CharacterContent.Items.Weapons import Longsword
 from Core.Weapons import WeaponTraits
-from Model.Bonuses import Bonuses
-from Model.Effects import Effects, Ledger
+from Model.Ledger.Bonuses import Bonuses
+from Model.Ledger.Ledger import Ledger
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.Armor import AbstractArmor
 from Model.Content.FightingStyle import FightingStyle
 from Model.Content.Item import Item
@@ -83,7 +84,7 @@ def test_character_satisfies_stat_view(character, name):
 
 
 def test_effects_cannot_read_anything_a_formula_reads():
-    assert not [name for name in MEMBERS if hasattr(Effects, name)]
+    assert not [name for name in MEMBERS if hasattr(LedgerWriter, name)]
 
 
 # Every Ledger part, and the Bonuses they share.

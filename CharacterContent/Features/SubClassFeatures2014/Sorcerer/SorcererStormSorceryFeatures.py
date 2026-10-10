@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLanguage
 from Core.Definitions import DamageType, Language
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -20,9 +20,9 @@ class WindSpeaker(Feature):
             origin="Storm Sorcery Sorcerer Level 3",
             skippable_in_concise=True,
         )
-        self._language = GrantLanguage(Language.PRIMORDIAL, self.name)
+        self._language = GrantLanguage(Language.PRIMORDIAL)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._language.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -56,11 +56,11 @@ class HeartOfTheStorm(Feature):
             usage_tags=["damage", "buff"],
         )
         self._resistances = [
-            DamageResistance(DamageType.LIGHTNING, self.name),
-            DamageResistance(DamageType.THUNDER, self.name),
+            DamageResistance(DamageType.LIGHTNING),
+            DamageResistance(DamageType.THUNDER),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for resistance in self._resistances:
             resistance.apply(effects)
 
@@ -136,11 +136,11 @@ class WindSoul(Feature):
             usage_tags=["utility", "buff"],
         )
         self._immunities = [
-            DamageImmunity(DamageType.LIGHTNING, self.name),
-            DamageImmunity(DamageType.THUNDER, self.name),
+            DamageImmunity(DamageType.LIGHTNING),
+            DamageImmunity(DamageType.THUNDER),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(effects)
 

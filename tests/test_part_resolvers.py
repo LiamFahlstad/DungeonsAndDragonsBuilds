@@ -10,12 +10,12 @@ from Core.Definitions import (
     DiceRollCondition,
 )
 from Core.SpellcastingRules import CasterType
-from Model.ArmorClass import ArmorClass, ArmorClassFormula
+from Model.Ledger.ArmorClass import ArmorClass, ArmorClassFormula
 from Model.ClassLevels import ClassLevels
-from Model.Effects import Ledger
-from Model.Initiative import Initiative
-from Model.SavingThrows import SavingThrows
-from Model.Spellcasting import Spellcasting
+from Model.Ledger.Ledger import Ledger
+from Model.Ledger.Initiative import Initiative
+from Model.Ledger.SavingThrows import SavingThrows
+from Model.Ledger.Spellcasting import Spellcasting
 from tests._fake_view import FakeView
 
 ADV = DiceRollCondition.ADVANTAGE

@@ -1,7 +1,7 @@
 from Core.Definitions import SORCERER_HIT_DIE, Sense
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import GrantSense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -30,11 +30,11 @@ class PowerOfShadow(Feature):
             usage_tags=["buff", "utility"],
         )
         self._senses = [
-            GrantSense(Sense.DARKVISION, 120, self.name),
-            GrantSense(Sense.BLINDSIGHT, 10, self.name),
+            GrantSense(Sense.DARKVISION, 120),
+            GrantSense(Sense.BLINDSIGHT, 10),
         ]
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         for sense in self._senses:
             sense.apply(effects)
 

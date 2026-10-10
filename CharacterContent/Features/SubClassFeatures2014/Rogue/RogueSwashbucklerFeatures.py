@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import InitiativeBonus
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -42,7 +42,7 @@ class RakishAudacity(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

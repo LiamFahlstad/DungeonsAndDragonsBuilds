@@ -13,7 +13,7 @@ class Pouch(Item):
             category=ItemCategory.CARRYING_GEAR,
             slots=0,
             description_text="A small belt pouch holding up to 6 pounds within one-fifth of a cubic foot.",
-            improvements=[CarryingCapacityBonus(2, source="Pouch")],
+            improvements=[CarryingCapacityBonus(2)],
             is_wearing=is_wearing,
             is_homebrew=False,
             value=0.5,
@@ -31,7 +31,7 @@ class Satchel(Item):
             description_text=(
                 "A shoulder-slung bag with a few compartments, holding up to 15 pounds of gear."
             ),
-            improvements=[CarryingCapacityBonus(3, source="Satchel")],
+            improvements=[CarryingCapacityBonus(3)],
             is_wearing=is_wearing,
             is_homebrew=False,
             value=2,
@@ -50,7 +50,7 @@ class SidePack(Item):
                 "A reinforced pack that straps to your hip or thigh, holding up to 20 pounds of gear. "
                 "Smaller than a full Backpack, but quicker to reach into mid-combat."
             ),
-            improvements=[CarryingCapacityBonus(4, source="Side Pack")],
+            improvements=[CarryingCapacityBonus(4)],
             is_wearing=is_wearing,
             is_homebrew=False,
             value=3,
@@ -68,7 +68,7 @@ class Backpack(Item):
                 "A backpack that can hold up to 30 pounds of gear within 1 cubic foot. "
                 "It can also be strapped to a mount as a saddlebag."
             ),
-            improvements=[CarryingCapacityBonus(8, source="Backpack")],
+            improvements=[CarryingCapacityBonus(8)],
             is_wearing=is_wearing,
             is_homebrew=False,
             value=2,

@@ -12,7 +12,7 @@ from Model.Content.Improvements import (
     HitPointsPerLevelBonus,
 )
 from Core.Definitions import CreatureSize, DamageType, Sense
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
@@ -25,9 +25,9 @@ class Darkvision(Feature):
         super().__init__(
             name="Darkvision", origin="Dwarf Trait", skippable_in_concise=True
         )
-        self._sense = GrantSense(Sense.DARKVISION, 120, self.name)
+        self._sense = GrantSense(Sense.DARKVISION, 120)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._sense.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -39,9 +39,9 @@ class DwarvenResilience(Feature):
         super().__init__(
             name="Dwarven Resilience", origin="Dwarf Trait", usage_tags=["buff"]
         )
-        self._resistance = DamageResistance(DamageType.POISON, self.name)
+        self._resistance = DamageResistance(DamageType.POISON)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._resistance.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -58,7 +58,7 @@ class DwarvenToughness(Feature):
         )
         self._hp = HitPointsPerLevelBonus(1)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._hp.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:

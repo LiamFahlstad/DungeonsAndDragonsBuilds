@@ -6,7 +6,7 @@ from Model.Content.Improvements import (
     SkillExpertise,
     SpeedBonus,
 )
-from Model.Effects import Effects
+from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
 
@@ -37,7 +37,7 @@ class Survivalist(Feature):
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._proficiency.apply(effects)
         self._expertise.apply(effects)
 
@@ -55,7 +55,7 @@ class SuperiorMobility(Feature):
         )
         self._speed = SpeedBonus(10)
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         self._speed.apply(effects)
 
     def get_description(self, character: CharacterView) -> str:
@@ -75,7 +75,7 @@ class AmbushMaster(Feature):
             usage_tags=["buff"],
         )
 
-    def apply(self, effects: Effects):
+    def apply(self, effects: LedgerWriter):
         # "You have advantage on initiative rolls."
         InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(effects)
 

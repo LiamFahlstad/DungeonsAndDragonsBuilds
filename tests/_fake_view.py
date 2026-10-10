@@ -46,7 +46,8 @@ class FakeView:
     def get_constitution_modifier(self) -> int:
         return self.get_ability_modifier(Ability.CONSTITUTION)
 
-    def get_base_speed(self) -> int:
+    @property
+    def base_speed(self) -> int:
         return self._base_speed
 
     def get_proficiency_bonus(self) -> int:

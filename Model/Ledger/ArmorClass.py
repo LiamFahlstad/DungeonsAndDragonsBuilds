@@ -3,7 +3,7 @@ from typing import Optional
 
 from Core.Definitions import Ability
 from Core.Rules import UNARMORED_AC_BASE
-from Model.Bonuses import Bonuses
+from Model.Ledger.Bonuses import OTHER_SOURCE, Bonuses
 from Model.View import CharacterView, Value
 
 
@@ -51,8 +51,8 @@ class ArmorClass:
     def add_armor_class_formula(self, formula: ArmorClassFormula) -> None:
         self.armor_class_formulas.append(formula)
 
-    def add_bonus(self, bonus: Value) -> None:
-        self.bonuses.add(bonus)
+    def add_bonus(self, bonus: Value, source: str = OTHER_SOURCE) -> None:
+        self.bonuses.add(bonus, source)
 
     def add_shield_bonus(self, armor_class_bonus: int) -> None:
         """A wielded Shield's AC bonus (only counts with Shield training)."""

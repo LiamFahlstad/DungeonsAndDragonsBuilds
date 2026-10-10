@@ -31,7 +31,7 @@ from Core.Definitions import Ability, DiceRollCondition, Die
 from Model.Character import Character
 from Model.Records.SourcedValue import SourcedValue
 from Model.Spells import SpellGrant
-from Model.Skills import Skills
+from Model.Ledger.Skills import Skills
 from Presentation import Html
 from Presentation.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 from Presentation.FeatureCards import (
