@@ -24,8 +24,8 @@ from Model.View import CharacterView
 from Model.Content.Feature import Feature
 from CharacterContent.Items.Weapons import Longsword
 from Core.Weapons import WeaponTraits
-from Model.Effects import Effects
-from Model.Recorder import Recorder
+from Model.Bonuses import Bonuses
+from Model.Effects import Effects, Ledger
 from Model.Content.Armor import AbstractArmor
 from Model.Content.FightingStyle import FightingStyle
 from Model.Content.Item import Item
@@ -86,13 +86,15 @@ def test_effects_cannot_read_anything_a_formula_reads():
     assert not [name for name in MEMBERS if hasattr(Effects, name)]
 
 
+# Every Ledger part, and the Bonuses they share.
+PART_TYPES = {type(part) for part in vars(Ledger()).values()} | {Bonuses}
+
+
 @pytest.mark.parametrize("name", MEMBERS)
 def test_stat_view_exposes_answers_not_parts(name):
     expected = _return_annotation(name)
     candidates = typing.get_args(expected) or (expected,)
-    assert not any(
-        isinstance(t, type) and issubclass(t, Recorder) for t in candidates
-    ), name
+    assert not any(t in PART_TYPES for t in candidates), name
 
 
 # ── The content a Character holds: the Model/Content base classes ─────────────

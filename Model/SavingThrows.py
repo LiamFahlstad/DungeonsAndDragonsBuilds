@@ -3,7 +3,6 @@ import attr
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses
 from Model.View import CharacterView, Value
-from Model.Recorder import Recorder, records
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -25,7 +24,7 @@ class ConditionalProficiency:
         return [ability_order.index(choice) for choice in self.choices]
 
 
-class SavingThrows(Recorder):
+class SavingThrows:
     """Saving throw proficiencies, Advantage and bonuses.
 
     Merge rule: proficiency and Advantage are set unions ("or another one if
@@ -45,11 +44,9 @@ class SavingThrows(Recorder):
     def is_proficient(self, ability: Ability) -> bool:
         return ability in self._resolved_proficiencies()
 
-    @records
     def add_proficiency(self, ability: Ability) -> None:
         self._proficiencies.add(ability)
 
-    @records
     def add_proficiency_or_alternative(
         self, ability: Ability, alternatives: list[Ability]
     ) -> None:
@@ -76,14 +73,12 @@ class SavingThrows(Recorder):
     def is_advantaged(self, ability: Ability) -> bool:
         return ability in self._advantages
 
-    @records
     def add_advantage(self, ability: Ability) -> None:
         self._advantages.add(ability)
 
     def _bonuses_for(self, ability: Ability) -> Bonuses:
         return self._bonuses.setdefault(ability, Bonuses())
 
-    @records
     def add_bonus(self, ability: Ability, bonus: Value) -> None:
         self._bonuses_for(ability).add(bonus)
 

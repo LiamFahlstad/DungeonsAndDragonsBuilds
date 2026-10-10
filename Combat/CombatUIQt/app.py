@@ -6,9 +6,8 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
 
-import Core.Definitions as Definitions
-from CharacterContent.Items import Armor
 from Combat.Definitions import tracked_condition_names
+from Combat.PlayerCombatant import combatant_from_character
 from Model.Creatures.Combatants import (
     BasicCombatantData,
     ExtendedCombatantData,
@@ -110,79 +109,9 @@ class CombatAppQt(
         self._init_timers()
 
     def _add_from_character_sheet(self, character_sheet):
-        from CharacterContent.Spells.SpellFactory import SpellFactory
-
-        character = character_sheet.validate()
-        ac = character.calculate_armor_class()
-        if Armor.ShieldArmor in [type(a) for a in character_sheet.armors]:
-            ac = f"{ac} (with Shield) and {ac - 2} (without Shield)"
-        else:
-            ac = f"{ac} (no Shield)"
-        try:
-            spell_slots = character.get_spell_slots()
-        except ValueError:
-            spell_slots = {}
-        hp = character.calculate_hit_points()
-
-        weapons = list(character_sheet.weapons)
-
-        # Pre-compute spell levels (display_name, level, Ability enum)
-        spells_with_level = []
-        spell_objects: dict[str, object] = {}
-        for spell in character_sheet.spells:
-            spell_name, ability, ruling = spell.name, spell.ability, spell.ruling
-            display_name = getattr(spell_name, "value", str(spell_name))
-            try:
-                spell_obj = SpellFactory.create(spell_name, ability, ruling)
-                spells_with_level.append((display_name, spell_obj.level, ability))
-                spell_objects[display_name] = spell_obj
-            except Exception:
-                spells_with_level.append((display_name, 0, ability))
-
-        self.characters.append(
-            {
-                "name": character_sheet.character_name,
-                "create_name": character_sheet.character_name,
-                "hp": hp,
-                "max_hp": hp,
-                "ac": ac,
-                "temp_hp": 0,
-                "conditions": [],
-                "visibility_states": [],
-                "death_saves_fail": 0,
-                "death_saves_success": 0,
-                "stats": _default_stats(),
-                "spell_slots": spell_slots,
-                "Ability Scores": {
-                    ability.short_name: character.get_ability_score(ability)
-                    for ability in Definitions.Ability
-                },
-                "Saving Throws": {
-                    ability.short_name: character.get_saving_throw_modifier(ability)
-                    for ability in Definitions.Ability
-                },
-                "_is_player": True,
-                "_stat_block": character,
-                "_weapons_objects": weapons,
-                "_weapon_masteries": list(character_sheet.weapon_masteries),
-                "class_levels": {
-                    cls.value: lvl
-                    for cls, lvl in character_sheet.level_per_class.items()
-                },
-                "subclass": character_sheet.character_subclass or "",
-                "proficiency_bonus": character.get_proficiency_bonus(),
-                "speed": character_sheet.base_speed or "",
-                "size": character_sheet.size.value if character_sheet.size else "",
-                "spells_with_level": spells_with_level,
-                "_spell_objects": spell_objects,
-                "features": [
-                    getattr(f, "name", type(f).__name__)
-                    for f in character_sheet.features
-                ],
-                "_feature_objects": list(character_sheet.features),
-                "invocations": list(character_sheet.invocations),
-            }
-        )
+        char = combatant_from_character(character_sheet)
+        char["stats"] = _default_stats()
+        self.characters.append(char)
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
         # Compute display name: use custom name with type in parentheses if different, else just type

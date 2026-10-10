@@ -1,8 +1,7 @@
 from Core.Definitions import Language
-from Model.Recorder import Recorder, records
 
 
-class Languages(Recorder):
+class Languages:
     """Known languages, each with the sources that granted it.
 
     Merge rule: set union per language, keeping every source. Reads list
@@ -19,7 +18,6 @@ class Languages(Recorder):
             if language in self._known
         }
 
-    @records
     def add(self, language: Language, source: str) -> None:
         self._known.setdefault(language, []).append(source)
 

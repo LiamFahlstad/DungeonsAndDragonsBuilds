@@ -3,7 +3,6 @@ import attr
 from Core.Definitions import Ability
 from Core.Rules import MULTICLASS_MIN_SCORE
 from Model.View import CharacterView
-from Model.Recorder import Recorder, records
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -19,7 +18,7 @@ class AbilityMinimum:
         return list(Ability).index(self.ability), self.min_score, self.reason
 
 
-class AbilityRequirements(Recorder):
+class AbilityRequirements:
     """Ability score minimums recorded by features (e.g. an armor's Strength
     requirement) and checked once everything has applied - so what meets a
     requirement may be granted before or after the one that imposes it. Also
@@ -36,7 +35,6 @@ class AbilityRequirements(Recorder):
         # character's own score.
         self._minimums: list[AbilityMinimum] = []
 
-    @records
     def add_ability_requirement(
         self, ability: Ability, min_score: int, reason: str
     ) -> None:

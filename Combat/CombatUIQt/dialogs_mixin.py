@@ -23,6 +23,7 @@ from Combat.Definitions import ConditionRule
 from Core.Definitions import DamageType
 from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_text
 from Combat.Rules import Rule, group_by_category, load_rules
+from Combat.PlayerCombatant import weapon_summary
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
@@ -546,10 +547,7 @@ class DialogsMixin:
                 add_divider()
                 add_header("Weapons")
                 for weapon in weapons_objs:
-                    to_hit = weapon.calculate_total_attack_roll_bonus_int(sb)
-                    ab_mod, ab_name = weapon._calculate_ability_modifier_bonus(sb)
-                    dmg = f"{weapon.damage_roll.value} {ab_mod:+} ({ab_name})"
-                    header_text = f"{weapon.name}  1d20{to_hit:+}  dmg {dmg}"
+                    header_text = weapon_summary(weapon, sb)
 
                     ww = QWidget()
                     wwl = QVBoxLayout(ww)
@@ -613,11 +611,10 @@ class DialogsMixin:
                 add_divider()
                 add_header("Features")
                 for feat in feat_objs:
-                    feat_name = getattr(feat, "name", type(feat).__name__)
-                    get_desc = getattr(feat, "get_description", None)
-                    if get_desc is not None and sb:
+                    feat_name = feat.name
+                    if sb:
                         try:
-                            desc_text = get_desc(sb)
+                            desc_text = feat.get_description(sb)
                             if desc_text is None:
                                 lay.addWidget(QLabel(f"• {feat_name}"))
                                 continue
@@ -625,7 +622,7 @@ class DialogsMixin:
                             fwl = QVBoxLayout(fw)
                             fwl.setContentsMargins(16, 2, 0, 4)
                             fwl.setSpacing(2)
-                            origin = getattr(feat, "origin", "")
+                            origin = feat.origin
                             if origin:
                                 orig_lbl = QLabel(
                                     f"<i style='color:#a0a0b0'>{origin}</i>"

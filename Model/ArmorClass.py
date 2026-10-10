@@ -5,7 +5,6 @@ from Core.Definitions import Ability
 from Core.Rules import UNARMORED_AC_BASE
 from Model.Bonuses import Bonuses
 from Model.View import CharacterView, Value
-from Model.Recorder import Recorder, records
 
 
 @dataclass(frozen=True)
@@ -34,7 +33,7 @@ UNARMORED_ARMOR_CLASS = ArmorClassFormula(
 )
 
 
-class ArmorClass(Recorder):
+class ArmorClass:
     """Every AC formula and AC bonus. What's worn (Model.WornArmor) and
     the wielder's ability modifiers and Shield training aren't this part's
     concern, so total() reads them through the view.
@@ -49,15 +48,12 @@ class ArmorClass(Recorder):
         # A wielded Shield's AC bonus; only counts with Shield training.
         self._shield_bonuses: list[int] = []
 
-    @records
     def add_armor_class_formula(self, formula: ArmorClassFormula) -> None:
         self.armor_class_formulas.append(formula)
 
-    @records
     def add_bonus(self, bonus: Value) -> None:
         self.bonuses.add(bonus)
 
-    @records
     def add_shield_bonus(self, armor_class_bonus: int) -> None:
         """A wielded Shield's AC bonus (only counts with Shield training)."""
         self._shield_bonuses.append(armor_class_bonus)

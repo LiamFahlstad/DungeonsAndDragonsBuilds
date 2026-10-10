@@ -1,9 +1,8 @@
 from Model.Bonuses import Bonuses
 from Model.View import CharacterView, Value
-from Model.Recorder import Recorder, records
 
 
-class HitPoints(Recorder):
+class HitPoints:
     """The hit point bonus granted by features (e.g. Tough, Draconic
     Resilience) - flat or formula-valued (see Bonuses) - on top of the roll
     worked out from class levels and Constitution. See total().
@@ -13,7 +12,6 @@ class HitPoints(Recorder):
     def __init__(self):
         self.bonuses = Bonuses()
 
-    @records
     def add_bonus(self, amount: Value) -> None:
         self.bonuses.add(amount)
 

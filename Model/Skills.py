@@ -5,10 +5,9 @@ from Core.Rules import EXPERTISE_MULTIPLIER
 from Model.Bonuses import OTHER_SOURCE, Bonuses
 from Model.Records.SourcedValue import SourcedValue
 from Model.View import CharacterView, Value
-from Model.Recorder import Recorder, records
 
 
-class Skills(Recorder):
+class Skills:
     """Skill proficiencies, expertise, bonuses, roll conditions and ability
     overrides.
 
@@ -32,14 +31,12 @@ class Skills(Recorder):
         # for Arcana"). See get_skill_abilities.
         self._skill_ability_overrides: dict[Skill, set[Ability]] = {}
 
-    @records
     def add_skill_proficiency(self, skill: Skill):
         self._proficiencies.add(skill)
 
     def _bonuses_for(self, skill: Skill) -> Bonuses:
         return self._bonuses.setdefault(skill, Bonuses())
 
-    @records
     def add_skill_bonus(self, skill: Skill, bonus: Value, source: str = OTHER_SOURCE):
         self._bonuses_for(skill).add(bonus, source)
 
@@ -56,7 +53,6 @@ class Skills(Recorder):
         bonuses = self._bonuses.get(skill)
         return bonuses.sources(view) if bonuses is not None else []
 
-    @records
     def add_skill_expertise(self, skill: Skill):
         """Expertise requires proficiency, but that proficiency may come from
         a feature applied later (another class builder, the species), so the
@@ -87,7 +83,6 @@ class Skills(Recorder):
             if condition in recorded
         }
 
-    @records
     def set_roll_condition(
         self, skill: Skill, condition: DiceRollCondition, reason: Optional[str] = None
     ):
@@ -152,7 +147,6 @@ class Skills(Recorder):
         condition = self.roll_condition(skill, view)
         return self.roll_condition_sources(skill, view).get(condition, [])
 
-    @records
     def update_skill_to_ability(self, skill: Skill, ability: Ability):
         self._skill_ability_overrides.setdefault(skill, set()).add(ability)
 

@@ -2,14 +2,13 @@ from Core.Definitions import Ability
 from Core.Rules import CARRYING_CAPACITY_BASE_SLOTS
 from Model.Bonuses import by_source
 from Model.View import CharacterView
-from Model.Recorder import Recorder, records
 from Model.Records.SourcedValue import SourcedValue
 
 # The label of the base slots every person has, listed first.
 PERSON_SOURCE = "Person"
 
 
-class CarryingCapacity(Recorder):
+class CarryingCapacity:
     """Carrying capacity sources, in item slots. The dynamic "Person" base
     (CARRYING_CAPACITY_BASE_SLOTS + Strength modifier) isn't stored here - it depends on the character's
     final Strength score, read through the view.
@@ -21,7 +20,6 @@ class CarryingCapacity(Recorder):
         # Bonus sources only (Person is computed dynamically in sources()).
         self._bonus_sources: list[SourcedValue] = []
 
-    @records
     def add_bonus(self, source: str, bonus: int) -> None:
         self._bonus_sources.append(SourcedValue(bonus, source))
 

@@ -1345,7 +1345,68 @@ refers to the checks in section 4.
     codegen.
 - **Verify:** A, B, C, D, E, plus the Creator round trip. **Output:** none.
 
-### Step 13: `Character` as the combat representation *(design + bug fixes; Decision 2)*
+### Step 13: `Character` as the combat representation *(design + bug fixes; Decision 2)* — done
+
+- **Result:**
+  1. **Extracted.** `Combat/PlayerCombatant.py` (no Qt) has
+     `combatant_from_character(character)` and `weapon_summary(weapon,
+     character)`.
+     - The app adds its own battle `stats` to the dict, and the info dialog
+       uses `weapon_summary`.
+     - `tests/test_combatant_snapshots.py` snapshots the dict's plain values
+       and every weapon line for all 138 builds, in
+       `tests/snapshots/combatants.json`.
+  2. **Fixed, reviewed against the snapshot taken before the fix.** Only
+     these fields changed:
+     - **Speed** (27 builds) is `calculate_speed()`, not the species' base:
+       Barbarian/Ranger 30 → 40, Monks up to 60, Scout 35 → 45, and so on.
+     - **AC** (1 build): the Shield check now looks for a wielded shield,
+       not the exact `ShieldArmor` type. Garrick's +1 Shield was missed, so
+       "21 (no Shield)" becomes "21 (with Shield) and 18 (without Shield)".
+       The AC without a shield is `calculate_armor_class(ignore_shield=True)`,
+       not "minus 2".
+     - **Weapon damage** (18 weapons) adds every damage bonus (Dueling,
+       magic weapons, ...), not only the ability modifier. Every new number
+       equals the sheet's weapon card in `build_stats.json` (for example
+       Skullcrusher +4 → +10, Perrin's Rapier +4 → +6). The line no longer
+       names the ability.
+     - Feature names are `feature.name`, and the dialog no longer uses
+       `getattr` on features.
+  3. **Ledger private.** `Character.ledger` became `Character._ledger`.
+     - New listing queries: `languages()`, `senses()`,
+       `damage_resistances()`, `damage_immunities()`,
+       `condition_immunities()`, `armor_training()` and
+       `weapon_proficiencies()` (both frozensets), and
+       `tool_proficiencies()`.
+     - The sheet writer and every test read through queries. The Hit Point
+       bonus tests compare `calculate_hit_points()` with and without the
+       feature.
+     - **Deleted:** `Model/Recorder.py` (`Recorder`, `@records`,
+       `SealedError`, and the repo's last `cast`), and `Ledger.seal()`.
+       `CAST_ALLOWLIST` is empty.
+     - The contract test "the view exposes answers, not parts" now checks
+       against the Ledger's own part types.
+  4. **One way to ask:**
+     - `spell_slots` is always a dict (the part never returned `None`), and
+       `get_spell_slots()` is deleted.
+     - `get_spell_casting_ability()` and `get_level_for_class()` had no
+       callers and are deleted. `spell_casting_ability` and
+       `get_class_level` remain.
+  - **Documented:** combat state stays in the UI's dict, never on the
+    Character (docstring of `Combat/PlayerCombatant.py`).
+  - **Docs:** `Notes/feature-application-model.md`, and the agent files
+    `dnd-builds`, `dnd-builds-haiku`, `dnd-equipment` and
+    `dnd-test-bughunter`.
+  - **Verified:**
+    - A: sheet snapshots unchanged, plus the new combatant snapshot. B:
+      3493 passed, also with `PYTHONHASHSEED=1`. E: 1096 slow passed
+      (`PYTHONHASHSEED=2`). D: 0 errors.
+    - F: all 3585 pages byte-identical to the baseline.
+    - Pyright against a clean HEAD worktree: no new errors.
+    - C: the three runners run. Offscreen, the Creator loads all 34
+      character files, and the combat window builds. The combat info dialog
+      opens with no errors for all 137 combatants built from the 138 builds.
+
 
 - **Goal:** combat reads the character as it is, and the two combat bugs are
   fixed.

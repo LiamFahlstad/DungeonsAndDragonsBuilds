@@ -4,7 +4,6 @@ import attr
 
 from Core.Definitions import Ability
 from Model.View import CharacterView
-from Model.Recorder import Recorder, records
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -16,7 +15,7 @@ class CappedIncrease:
     max_score: int
 
 
-class AbilityIncreases(Recorder):
+class AbilityIncreases:
     """Every increase granted on top of the base scores (Model/AbilityScores.py).
 
     Increases are recorded, never summed as they arrive, and resolved on every
@@ -39,7 +38,6 @@ class AbilityIncreases(Recorder):
         # Uncapped (equipment) bonuses, summed per ability.
         self._equipment_bonus: dict[Ability, int] = {}
 
-    @records
     def add(self, ability: Ability, bonus: int, max_score: Optional[int] = None):
         if not isinstance(bonus, int):
             raise ValueError("Bonus must be an integer.")

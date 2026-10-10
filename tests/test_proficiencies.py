@@ -76,11 +76,9 @@ def test_multiclass_proficiencies_match_class_text(character_class, make_sources
     sources = make_sources()
     sources.add_effect(MulticlassProficiencies(character_class))
     character = Character(sources)
-    assert character.ledger.equipment_training.armor_training == armor
-    assert character.ledger.equipment_training.weapon_proficiencies == weapons
-    assert {
-        t.name for t in character.ledger.equipment_training.tool_proficiencies
-    } == tools
+    assert character.armor_training() == armor
+    assert character.weapon_proficiencies() == weapons
+    assert {t.name for t in character.tool_proficiencies()} == tools
 
 
 def _multiclass_builder(character_class, level):
@@ -99,7 +97,7 @@ class TestMulticlassing:
         # Regression: multiclass builders granted no proficiencies at all, so
         # a Wizard 3 / Warlock 3 never got the Warlock's Light armor training.
         data = type(ALL_BUILDS["SpellSlotTestWizard3Warlock3"])().build()
-        assert LIGHT in data.validate().ledger.equipment_training.armor_training
+        assert LIGHT in data.validate().armor_training()
 
     def test_resuming_a_class_does_not_grant_its_proficiencies_again(self):
         applied = AppliedLevelFeatures()
@@ -116,8 +114,8 @@ class TestMulticlassing:
         # Core Traits, not the (Heavy-less) multiclass subset.
         data = type(ALL_BUILDS["Y2024_Warlock_Archfey_CaelumBladefey"])().build()
         character = data.validate()
-        assert ArmorType.HEAVY in character.ledger.equipment_training.armor_training
-        assert MARTIAL in character.ledger.equipment_training.weapon_proficiencies
+        assert ArmorType.HEAVY in character.armor_training()
+        assert MARTIAL in character.weapon_proficiencies()
 
 
 class TestFeaturesGrantProficiencies:
@@ -145,8 +143,8 @@ class TestFeaturesGrantProficiencies:
             DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.WARDEN)
         )
         character = Character(sources)
-        assert MARTIAL in character.ledger.equipment_training.weapon_proficiencies
-        assert MEDIUM in character.ledger.equipment_training.armor_training
+        assert MARTIAL in character.weapon_proficiencies()
+        assert MEDIUM in character.armor_training()
 
     def test_druid_magician_grants_no_proficiencies(self, make_sources):
         sources = make_sources()
@@ -154,18 +152,18 @@ class TestFeaturesGrantProficiencies:
             DruidFeatures.PrimalOrder(DruidFeatures.PrimalOrderType.MAGICIAN)
         )
         character = Character(sources)
-        assert not character.ledger.equipment_training.weapon_proficiencies
-        assert not character.ledger.equipment_training.armor_training
+        assert not character.weapon_proficiencies()
+        assert not character.armor_training()
 
     def test_forge_domain_smiths_tools(self, make_sources):
         # "You gain proficiency with heavy armor and smith's tools."
         sources = make_sources()
         sources.add_effect(ClericForgeFeatures.BonusProficiencies())
         character = Character(sources)
-        assert ArmorType.HEAVY in character.ledger.equipment_training.armor_training
-        assert [
-            t.name for t in character.ledger.equipment_training.tool_proficiencies
-        ] == [Tools.SmithsTools().name]
+        assert ArmorType.HEAVY in character.armor_training()
+        assert [t.name for t in character.tool_proficiencies()] == [
+            Tools.SmithsTools().name
+        ]
 
 
 def test_builders_grant_proficiencies_only_through_features():

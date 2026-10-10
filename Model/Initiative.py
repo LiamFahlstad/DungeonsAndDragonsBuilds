@@ -1,10 +1,9 @@
 from Core.Definitions import Ability, DiceRollCondition, combine_roll_conditions
 from Model.Bonuses import Bonuses
 from Model.View import CharacterView, Value
-from Model.Recorder import Recorder, records
 
 
-class Initiative(Recorder):
+class Initiative:
     """Every source of an initiative bonus or roll condition. Initiative is
     a Dexterity check, so total() adds the Dexterity modifier and
     roll_condition() adds untrained-armor Disadvantage, both read through
@@ -18,15 +17,12 @@ class Initiative(Recorder):
         self.bonuses = Bonuses()
         self._roll_conditions: set[DiceRollCondition] = set()
 
-    @records
     def add_proficiency(self) -> None:
         self.proficiency = True
 
-    @records
     def add_roll_condition(self, condition: DiceRollCondition) -> None:
         self._roll_conditions.add(condition)
 
-    @records
     def add_bonus(self, bonus: Value) -> None:
         self.bonuses.add(bonus)
 

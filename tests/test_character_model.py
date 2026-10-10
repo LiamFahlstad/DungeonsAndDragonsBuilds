@@ -16,7 +16,6 @@ from Model.Content.Improvements import AbilityScoreBonus, SkillBonus, SkillProfi
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Effects import Ledger
-from Model.Recorder import SealedError
 from tests._fake_view import FakeView
 from tests._grants import grant
 from Model.FeatureGrants import IfParentMissing
@@ -44,6 +43,11 @@ class TestACharacterIsBuiltFromItsSources:
         assert not mutators
         # Nor a way to reach one: the inventory is read through properties.
         assert not hasattr(Character, "inventory")
+
+    def test_its_record_is_private(self, make_character):
+        # Everything is asked of the Character; its Ledger is how it answers.
+        assert not hasattr(Character, "ledger")
+        assert isinstance(make_character().armor_training(), frozenset)
 
     def test_a_required_source_left_unset_raises_on_read(self):
         character = Character(CharacterSources())
@@ -112,28 +116,6 @@ def test_model_package_imports_nothing_from_character_content():
         "assert not loaded, loaded"
     )
     subprocess.run([sys.executable, "-c", code], check=True)
-
-
-class TestTheEvaluatedLedgerIsSealed:
-    """Everything the Character answers comes from a Ledger it rebuilds from
-    its sources, so a write into an evaluated part would be lost at the next
-    rebuild. It raises instead."""
-
-    def test_a_part_rejects_writes_after_evaluation(self, make_character):
-        character = make_character()
-        character.validate()
-        with pytest.raises(SealedError):
-            character.ledger.skills.add_skill_proficiency(Skill.STEALTH)
-        with pytest.raises(SealedError):
-            character.ledger.ability_increases.add(Ability.WISDOM, 2)
-
-    def test_a_part_inside_a_part_is_sealed_too(self, make_sources):
-        sources = make_sources()
-        sources.add_effect(SkillBonus(Skill.ARCANA, 1, source="Test"))
-        character = Character(sources)
-        bonuses = character.ledger.skills._bonuses[Skill.ARCANA]
-        with pytest.raises(SealedError):
-            bonuses.add(1, "Test")
 
 
 class TestBaseAbilitiesAreASource:

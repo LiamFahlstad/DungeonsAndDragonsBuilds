@@ -235,13 +235,11 @@ def _stats(data):
         "save_proficiency": [cs.is_proficient_in_saving_throw(a) for a in Ability],
         "spell_slots": cs.spell_slots,
         "pact_magic_slots": cs.pact_magic_slots,
-        "resistances": sorted(map(str, cs.ledger.defenses.damage_resistances)),
-        "immunities": sorted(map(str, cs.ledger.defenses.damage_immunities)),
-        "condition_immunities": sorted(
-            map(str, cs.ledger.defenses.condition_immunities)
-        ),
-        "senses": sorted((str(k), v) for k, v in cs.ledger.senses.ranges.items()),
-        "spell_save_dc_bonus": cs.ledger.spellcasting.spell_save_dc_bonus,
+        "resistances": sorted(map(str, cs.damage_resistances())),
+        "immunities": sorted(map(str, cs.damage_immunities())),
+        "condition_immunities": sorted(map(str, cs.condition_immunities())),
+        "senses": sorted((str(k), v) for k, v in cs.senses().items()),
+        "spell_save_dc_bonus": cs.spell_save_dc_bonus,
         "weapons_proficient": [w.is_proficient(cs) for w in data.weapons],
         "weapon_attack_bonuses": [
             sorted(w.get_attack_roll_bonuses(cs)) for w in data.weapons
@@ -249,13 +247,9 @@ def _stats(data):
         "weapon_damage_bonuses": [
             sorted(w.get_damage_roll_bonuses(cs)) for w in data.weapons
         ],
-        "armor_training": sorted(map(str, cs.ledger.equipment_training.armor_training)),
-        "weapon_proficiencies": sorted(
-            map(str, cs.ledger.equipment_training.weapon_proficiencies)
-        ),
-        "tool_proficiencies": sorted(
-            t.name for t in cs.ledger.equipment_training.tool_proficiencies
-        ),
+        "armor_training": sorted(map(str, cs.armor_training())),
+        "weapon_proficiencies": sorted(map(str, cs.weapon_proficiencies())),
+        "tool_proficiencies": sorted(t.name for t in cs.tool_proficiencies()),
     }
 
 
@@ -578,7 +572,8 @@ def test_evaluation_passes_apply_the_write_only_record(name):
 
 
 def test_content_never_reaches_into_the_record():
-    # Effects._ledger is the evaluated record the Character reads; content that
+    # Effects._ledger and Character._ledger are the record the Character
+    # answers from; content that
     # reached it could read stats mid-evaluation again.
     root = pathlib.Path(__file__).resolve().parent.parent / "CharacterContent"
     offenders = [
@@ -623,21 +618,18 @@ class TestProficienciesResolveOnRead:
         grant(sources).add_feature(_GrantMartialWeapons())
         character = Character(sources).validate()
         assert longbow.is_proficient(character)
-        assert (
-            WeaponProficiency.MARTIAL
-            in character.ledger.equipment_training.weapon_proficiencies
-        )
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies()
 
     def test_class_proficiencies_reach_the_stat_block(self):
         # Wizard's Core Traits: Simple weapons, no armor. Its Bladesinger
         # subclass adds Melee Martial weapons without Two-Handed or Heavy.
         data = type(ALL_BUILDS["SpellSlotTestWizard5"])().build()
         character = data.validate()
-        assert character.ledger.equipment_training.weapon_proficiencies == {
+        assert character.weapon_proficiencies() == {
             WeaponProficiency.SIMPLE,
             WeaponProficiency.MARTIAL_MELEE_NOT_HEAVY_OR_TWO_HANDED,
         }
-        assert character.ledger.equipment_training.armor_training == set()
+        assert character.armor_training() == set()
 
     def test_bracers_of_archery_grant_bow_proficiency_while_worn(self, make_sources):
         longbow, longsword = Weapons.Longbow(), Weapons.Longsword()
@@ -660,9 +652,7 @@ class TestProficienciesResolveOnRead:
             GrantToolProficiency([SmithsTools()]),  # same tool, second source
         ]
         for character in _in_every_order(make_sources, effects):
-            assert character.ledger.equipment_training.armor_training == {
-                ArmorType.HEAVY
-            }
-            assert [
-                t.name for t in character.ledger.equipment_training.tool_proficiencies
-            ] == [SmithsTools().name]
+            assert character.armor_training() == {ArmorType.HEAVY}
+            assert [t.name for t in character.tool_proficiencies()] == [
+                SmithsTools().name
+            ]

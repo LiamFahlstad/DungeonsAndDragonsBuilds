@@ -2,7 +2,6 @@ from enum import Enum
 from typing import TypeVar
 
 from Core.Definitions import Condition, DamageType
-from Model.Recorder import Recorder, records
 
 Key = TypeVar("Key", bound=Enum)
 
@@ -13,7 +12,7 @@ def _canonical(granted: dict[Key, list[str]], keys: type[Key]) -> dict[Key, list
     return {key: sorted(granted[key]) for key in keys if key in granted}
 
 
-class Defenses(Recorder):
+class Defenses:
     """Resistance/immunity to damage types and immunity to conditions, each
     with the sources that granted it (several sources of the same resistance
     are listed, not deduplicated into a bool).
@@ -38,11 +37,9 @@ class Defenses(Recorder):
     def condition_immunities(self) -> dict[Condition, list[str]]:
         return _canonical(self._condition_immunities, Condition)
 
-    @records
     def add_damage_resistance(self, damage_type: DamageType, source: str) -> None:
         self._damage_resistances.setdefault(damage_type, []).append(source)
 
-    @records
     def add_damage_immunity(self, damage_type: DamageType, source: str) -> None:
         self._damage_immunities.setdefault(damage_type, []).append(source)
 
@@ -58,7 +55,6 @@ class Defenses(Recorder):
     def get_damage_immunity_sources(self, damage_type: DamageType) -> list[str]:
         return sorted(self._damage_immunities.get(damage_type, []))
 
-    @records
     def add_condition_immunity(self, condition: Condition, source: str) -> None:
         self._condition_immunities.setdefault(condition, []).append(source)
 

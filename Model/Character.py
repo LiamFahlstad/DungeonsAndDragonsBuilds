@@ -29,7 +29,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
 from Core.Rules import MAX_ATTUNED_ITEMS, MAX_LEVEL, ability_modifier, proficiency_bonus
 from Core.SpellcastingRules import SlotProgression
-from Core.Weapons import WeaponTraits
+from Core.Weapons import WeaponProficiency, WeaponTraits
 from Model.AbilityScores import AbilityScores
 from Model.CharacterSources import CharacterSources
 from Model.ClassLevels import ClassLevels
@@ -44,6 +44,7 @@ from Model.FeatureGrants import ExtensionTree, FeatureGrant
 from Model.Inventory import EquipmentEntry
 from Model.Records.GrantStamp import GrantStamp
 from Model.Records.SourcedValue import SourcedValue
+from Model.Records.Tools import ToolProficiency
 from Model.Senses import SenseGrant
 from Model.Spells import SpellGrant, SpellReplacement, resolve_spells
 
@@ -265,9 +266,6 @@ class Character:
             feature for feature in self.features if isinstance(feature, feature_type)
         ]
 
-    def get_level_for_class(self, character_class: CharacterClass) -> int:
-        return self.class_levels.get_class_level(character_class)
-
     # ── Spells ───────────────────────────────────────────────────────────────
 
     @functools.cached_property
@@ -281,17 +279,17 @@ class Character:
     def is_proficient_with_weapon(self, weapon: WeaponTraits) -> bool:
         """Whether any weapon proficiency the character has covers a
         weapon with these traits."""
-        return self.ledger.equipment_training.is_proficient_with(weapon)
+        return self._ledger.equipment_training.is_proficient_with(weapon)
 
     def get_weapon_attack_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
         """(value, label) for every attack roll bonus the wielder brings to
         a weapon with these traits (e.g. the Archery fighting style)."""
-        return self.ledger.weapon_bonuses.attack_bonuses(weapon)
+        return self._ledger.weapon_bonuses.attack_bonuses(weapon)
 
     def get_weapon_damage_bonuses(self, weapon: WeaponTraits) -> list[tuple[int, str]]:
         """(value, label) for every damage roll bonus the wielder brings to
         a weapon with these traits (e.g. the Dueling fighting style)."""
-        return self.ledger.weapon_bonuses.damage_bonuses(weapon)
+        return self._ledger.weapon_bonuses.damage_bonuses(weapon)
 
     # ── Evaluation ───────────────────────────────────────────────────────────
 
@@ -313,12 +311,12 @@ class Character:
         ]
 
     @functools.cached_property
-    def ledger(self) -> Ledger:
-        """What every effect recorded, one part per concern (Model/Effects.py):
-        worked out on first use and sealed, so it can be read but never
-        written. Final values are the queries below, which hand this
-        character to the parts' resolvers. Requirements aren't checked here -
-        validate() does that, against the complete set of effects."""
+    def _ledger(self) -> Ledger:
+        """What every effect recorded, one part per concern (Model/Effects.py),
+        worked out on first use. Private: everything is read through the
+        queries below, which hand this character to the parts' resolvers.
+        Requirements aren't checked here - validate() does that, against the
+        complete set of effects."""
         _required(self._sources.base_abilities, "abilities")
         _required(self._sources.base_speed, "speed")
         _required(self.base_class, "base class")
@@ -331,7 +329,6 @@ class Character:
         # fighting styles may apply in any order.
         for effect in self._apply_order(self.iter_stat_effects()):
             effect.apply(effects)
-        ledger.seal()
         return ledger
 
     def _validate_sources(self) -> None:
@@ -397,7 +394,7 @@ class Character:
         Strength, multiclass ability minimums). Returns the character, so a
         build can be checked inline: `builder.build().validate()`."""
         self._validate_sources()
-        self.ledger.validate(self)
+        self._ledger.validate(self)
         return self
 
     # ── Queries ──────────────────────────────────────────────────────────────
@@ -405,24 +402,24 @@ class Character:
     @property
     def is_wearing_armor(self) -> bool:
         """Wearing Light, Medium or Heavy armor (a shield alone doesn't count)."""
-        return self.ledger.worn_armor.is_wearing_armor
+        return self._ledger.worn_armor.is_wearing_armor
 
     @property
     def worn_armor_type(self) -> Optional[Definitions.ArmorType]:
         """The worn body armor's type (None without body armor)."""
-        return self.ledger.worn_armor.body_armor_type
+        return self._ledger.worn_armor.body_armor_type
 
     @property
     def is_wielding_shield(self) -> bool:
-        return self.ledger.worn_armor.shield_wielded
+        return self._ledger.worn_armor.shield_wielded
 
     @property
-    def spell_slots(self) -> Optional[dict[int, int]]:
-        return self.ledger.spellcasting.spell_slots(self)
+    def spell_slots(self) -> dict[int, int]:
+        return self._ledger.spellcasting.spell_slots(self)
 
     @property
     def pact_magic_slots(self) -> dict[int, int]:
-        return self.ledger.spellcasting.pact_magic_slots(self)
+        return self._ledger.spellcasting.pact_magic_slots(self)
 
     def get_slot_progression(
         self, max_level: int = MAX_LEVEL
@@ -440,44 +437,44 @@ class Character:
         if not taken:
             return None
         class_path = taken + [taken[-1]] * (max_level - len(taken))
-        return self.ledger.spellcasting.slot_progression(class_path)
+        return self._ledger.spellcasting.slot_progression(class_path)
 
     @property
     def initiative_roll_condition(self) -> Definitions.DiceRollCondition:
-        return self.ledger.initiative.roll_condition(self)
+        return self._ledger.initiative.roll_condition(self)
 
     # -- Armor training (2024 PHB) - see Ledger ---------------------------------
 
     @property
     def is_wearing_untrained_armor(self) -> bool:
-        return self.ledger.is_wearing_untrained_armor()
+        return self._ledger.is_wearing_untrained_armor()
 
     @property
     def has_shield_training(self) -> bool:
-        return self.ledger.has_shield_training()
+        return self._ledger.has_shield_training()
 
     def has_untrained_armor_disadvantage(self, ability: Ability) -> bool:
         """Disadvantage on D20 Tests with `ability` from untrained armor."""
-        return self.ledger.has_untrained_armor_disadvantage(ability)
+        return self._ledger.has_untrained_armor_disadvantage(ability)
 
     @property
     def warnings(self) -> list[str]:
         """Legal but bad choices the player should know about."""
-        return self.ledger.armor_warnings()
+        return self._ledger.armor_warnings()
 
     def calculate_initiative(self) -> int:
-        return self.ledger.initiative.total(self)
+        return self._ledger.initiative.total(self)
 
     def calculate_speed(self) -> int:
-        return self.ledger.speed.total(self)
+        return self._ledger.speed.total(self)
 
     def get_carrying_capacity_sources(self) -> list[SourcedValue]:
         """Returns all carrying capacity sources, including the dynamic 'Person' base."""
-        return self.ledger.carrying_capacity.sources(self)
+        return self._ledger.carrying_capacity.sources(self)
 
     def get_carrying_capacity(self) -> int:
         """Returns the total carrying capacity in item slots (base 3 + STR mod + bonuses)."""
-        return self.ledger.carrying_capacity.total(self)
+        return self._ledger.carrying_capacity.total(self)
 
     def _require_spell_casting_ability(self) -> Ability:
         if self.spell_casting_ability is None:
@@ -509,12 +506,12 @@ class Character:
 
     def get_ability_score(self, ability: Ability) -> int:
         """The final score: base, every capped increase and equipment bonuses."""
-        return self.ledger.ability_increases.score(ability, self)
+        return self._ledger.ability_increases.score(ability, self)
 
     def get_own_ability_score(self, ability: Ability) -> int:
         """The score without equipment bonuses - what an armor's Strength
         requirement or a multiclass minimum checks."""
-        return self.ledger.ability_increases.own_score(ability, self)
+        return self._ledger.ability_increases.own_score(ability, self)
 
     def get_ability_modifier(self, ability: Ability) -> int:
         return ability_modifier(self.get_ability_score(ability))
@@ -538,54 +535,51 @@ class Character:
         return self.get_ability_modifier(Ability.CHARISMA)
 
     def is_proficient_in_skill(self, skill: Skill) -> bool:
-        return self.ledger.skills.is_proficient(skill)
+        return self._ledger.skills.is_proficient(skill)
 
     def has_expertise_in_skill(self, skill: Skill) -> bool:
-        return self.ledger.skills.has_expertise(skill)
+        return self._ledger.skills.has_expertise(skill)
 
     def get_skill_ability(self, skill: Skill) -> Ability:
-        return self.ledger.skills.ability(skill, self)
+        return self._ledger.skills.ability(skill, self)
 
     def get_skill_modifier(self, skill: Skill) -> int:
-        return self.ledger.skills.modifier(skill, self)
+        return self._ledger.skills.modifier(skill, self)
 
     def get_skill_bonus(self, skill: Skill) -> int:
-        return self.ledger.skills.get_total_bonus(skill, self)
+        return self._ledger.skills.get_total_bonus(skill, self)
 
     def get_skill_bonus_sources(self, skill: Skill) -> list[SourcedValue]:
-        return self.ledger.skills.get_all_bonus_sources(skill, self)
+        return self._ledger.skills.get_all_bonus_sources(skill, self)
 
     def is_proficient_in_saving_throw(self, ability: Ability) -> bool:
-        return self.ledger.saving_throws.is_proficient(ability)
+        return self._ledger.saving_throws.is_proficient(ability)
 
     def has_advantage_in_saving_throw(self, ability: Ability) -> bool:
-        return self.ledger.saving_throws.is_advantaged(ability)
+        return self._ledger.saving_throws.is_advantaged(ability)
 
     def get_saving_throw_roll_condition(
         self, ability: Ability
     ) -> Definitions.DiceRollCondition:
-        return self.ledger.saving_throws.roll_condition(ability, self)
+        return self._ledger.saving_throws.roll_condition(ability, self)
 
     def get_skill_roll_condition(self, skill: Skill) -> Definitions.DiceRollCondition:
-        return self.ledger.skills.roll_condition(skill, self)
+        return self._ledger.skills.roll_condition(skill, self)
 
     def get_skill_roll_condition_reasons(self, skill: Skill) -> list[str]:
-        return self.ledger.skills.roll_condition_reasons(skill, self)
+        return self._ledger.skills.roll_condition_reasons(skill, self)
 
     def get_saving_throw_modifier(self, ability: Ability) -> int:
-        return self.ledger.saving_throws.modifier(ability, self)
+        return self._ledger.saving_throws.modifier(ability, self)
 
     def calculate_hit_points(self) -> int:
-        return self.ledger.hit_points.total(self)
+        return self._ledger.hit_points.total(self)
 
     def calculate_armor_class(self, ignore_shield: bool = False) -> int:
         """The best applicable AC formula plus every AC bonus. ignore_shield:
         the AC with the Shield set aside (its bonus gone, and formulas it
         disables - Monk's Unarmored Defense - available again)."""
-        return self.ledger.armor_class.total(self, ignore_shield)
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self._require_spell_casting_ability()
+        return self._ledger.armor_class.total(self, ignore_shield)
 
     def calculate_difficulty_class(self) -> int:
         return self.calculate_difficulty_class_for_ability(
@@ -593,13 +587,13 @@ class Character:
         )
 
     def calculate_difficulty_class_for_ability(self, ability: Ability) -> int:
-        return self.ledger.spellcasting.difficulty_class(ability, self)
+        return self._ledger.spellcasting.difficulty_class(ability, self)
 
     @property
     def spell_save_dc_bonus(self) -> int:
         """Flat bonus to the spell save DC on top of 8 + ability modifier +
         proficiency bonus (e.g. from an item)."""
-        return self.ledger.spellcasting.spell_save_dc_bonus
+        return self._ledger.spellcasting.spell_save_dc_bonus
 
     def calculate_attack_bonus(self) -> int:
         return self.calculate_attack_bonus_for_ability(
@@ -607,46 +601,67 @@ class Character:
         )
 
     def calculate_attack_bonus_for_ability(self, ability: Ability) -> int:
-        return self.ledger.spellcasting.attack_bonus(ability, self)
-
-    def get_spell_slots(self) -> dict[int, int]:
-        spell_slots = self.spell_slots
-        if spell_slots is None:
-            raise ValueError("Character does not have spell slots.")
-        return spell_slots
+        return self._ledger.spellcasting.attack_bonus(ability, self)
 
     def is_resistant_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return self.ledger.defenses.is_resistant_to_damage(damage_type)
+        return self._ledger.defenses.is_resistant_to_damage(damage_type)
 
     def is_immune_to_damage(self, damage_type: Definitions.DamageType) -> bool:
-        return self.ledger.defenses.is_immune_to_damage(damage_type)
+        return self._ledger.defenses.is_immune_to_damage(damage_type)
 
     def get_damage_resistance_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.ledger.defenses.get_damage_resistance_sources(damage_type)
+        return self._ledger.defenses.get_damage_resistance_sources(damage_type)
 
     def get_damage_immunity_sources(
         self, damage_type: Definitions.DamageType
     ) -> list[str]:
-        return self.ledger.defenses.get_damage_immunity_sources(damage_type)
+        return self._ledger.defenses.get_damage_immunity_sources(damage_type)
 
     def is_immune_to_condition(self, condition: Definitions.Condition) -> bool:
-        return self.ledger.defenses.is_immune_to_condition(condition)
+        return self._ledger.defenses.is_immune_to_condition(condition)
 
     def get_condition_immunity_sources(
         self, condition: Definitions.Condition
     ) -> list[str]:
-        return self.ledger.defenses.get_condition_immunity_sources(condition)
+        return self._ledger.defenses.get_condition_immunity_sources(condition)
 
     def get_sense_range(self, sense: Definitions.Sense) -> int:
-        return self.ledger.senses.get_sense_range(sense)
+        return self._ledger.senses.get_sense_range(sense)
 
     def get_sense_sources(self, sense: Definitions.Sense) -> list[SenseGrant]:
-        return self.ledger.senses.get_sense_sources(sense)
+        return self._ledger.senses.get_sense_sources(sense)
 
     def knows_language(self, language: Definitions.Language) -> bool:
-        return self.ledger.languages.knows(language)
+        return self._ledger.languages.knows(language)
+
+    # ── Listings: everything of a kind, each with the sources that granted it ──
+
+    def languages(self) -> dict[Definitions.Language, list[str]]:
+        return self._ledger.languages.known
+
+    def senses(self) -> dict[Definitions.Sense, int]:
+        """The range in feet of every sense the character has."""
+        return self._ledger.senses.ranges
+
+    def damage_resistances(self) -> dict[Definitions.DamageType, list[str]]:
+        return self._ledger.defenses.damage_resistances
+
+    def damage_immunities(self) -> dict[Definitions.DamageType, list[str]]:
+        return self._ledger.defenses.damage_immunities
+
+    def condition_immunities(self) -> dict[Definitions.Condition, list[str]]:
+        return self._ledger.defenses.condition_immunities
+
+    def armor_training(self) -> frozenset[Definitions.ArmorType]:
+        return frozenset(self._ledger.equipment_training.armor_training)
+
+    def weapon_proficiencies(self) -> frozenset[WeaponProficiency]:
+        return frozenset(self._ledger.equipment_training.weapon_proficiencies)
+
+    def tool_proficiencies(self) -> list[ToolProficiency]:
+        return self._ledger.equipment_training.tool_proficiencies
 
     def get_language_sources(self, language: Definitions.Language) -> list[str]:
-        return self.ledger.languages.sources(language)
+        return self._ledger.languages.sources(language)

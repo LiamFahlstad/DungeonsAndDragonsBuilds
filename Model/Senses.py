@@ -1,7 +1,6 @@
 import attr
 
 from Core.Definitions import Sense
-from Model.Recorder import Recorder, records
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -16,7 +15,7 @@ def _by_source(grant: SenseGrant) -> tuple[str, int]:
     return grant.source, grant.range_feet
 
 
-class Senses(Recorder):
+class Senses:
     """Special senses (Darkvision, Blindsight, ...), each granted at a range
     by one or more sources. "Gain it, or +N if you already have it" grants
     (add_sense_or_extension) are kept separately and added on top of the best
@@ -32,13 +31,11 @@ class Senses(Recorder):
         # "...or if you already have it, its range increases by N" grants.
         self._sense_extensions: dict[Sense, list[SenseGrant]] = {}
 
-    @records
     def add_sense(self, sense: Sense, range_feet: int, source: str) -> None:
         """Grant a sense. The same sense from several sources keeps the best range."""
         grant = SenseGrant(range_feet, source)
         self._sense_sources.setdefault(sense, []).append(grant)
 
-    @records
     def add_sense_or_extension(
         self, sense: Sense, range_feet: int, source: str
     ) -> None:

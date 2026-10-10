@@ -129,7 +129,7 @@ class TestSpellSlots:
     )
     def test_spell_slots(self, built, builder_class, expected_slots):
         _, character = built[builder_class]
-        assert character.get_spell_slots() == expected_slots
+        assert character.spell_slots == expected_slots
 
     def test_warlock_pact_magic_slots_separate(self, built):
         _, character = built[SpellSlotTestWizard3Warlock3CharacterBuilder]

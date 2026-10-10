@@ -61,13 +61,14 @@ once and needs no version bookkeeping. The effect order is a constructor argumen
 
 ## Where things live
 
-`Character` has exactly three kinds of public member, and the name says which:
+`Character` has two kinds of public member, sources and queries, and answers both from a
+private third, the ledger:
 
 | Kind | Question it answers | Where it lives | Example |
 |---|---|---|---|
 | **Source** | What did the player choose, or what were they granted? | A field on `CharacterSources`, set by a builder (`add_*` / `set_*`, or through a `Grants` scope); `Character` exposes each read-only | `class_levels`, `base_abilities`, `base_speed`, `size`, `spell_casting_ability`, `fixed_spell_slots`, `feature_grants`, `spell_grants`, `inventory` |
-| **Ledger** | What did the effects record? | `character.ledger.<part>`: evaluated on demand, sealed, read-only. A part holds only what effects recorded - never a copy of a source, never a final value | `character.ledger.skills`, `character.ledger.senses` |
-| **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `CharacterView`) to a part's resolver | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features` |
+| **Ledger** (private) | What did the effects record? | `Character._ledger`, one part per concern, worked out on first use. Nothing outside `Character` reads it. A part holds only what effects recorded - never a copy of a source, never a final value | `_ledger.skills`, `_ledger.senses` |
+| **Query** | What is the final number or answer? | A method on `Character`, one line that hands the character (as a `CharacterView`) to a part's resolver. Listings return everything of a kind with its sources | `get_skill_modifier(skill)`, `calculate_armor_class()`, `spells`, `features`; listings `senses()`, `languages()`, `damage_resistances()`, `damage_immunities()`, `condition_immunities()`, `armor_training()`, `weapon_proficiencies()`, `tool_proficiencies()` |
 
 Rules of thumb:
 
@@ -159,7 +160,7 @@ hook is gone. The effect is a formula reading the armor state on read:
 ```python
 # Roving / Fast Movement
 SpeedBonus(
-    lambda cs: 0 if cs.ledger.worn_armor.body_armor_type == Definitions.ArmorType.HEAVY else 10
+    lambda cs: 0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10
 ).apply(effects)
 
 # Defense fighting style, Soul of the Forge
@@ -175,7 +176,7 @@ ArmorClassBonus(lambda cs: 1 if cs.is_wearing_armor else 0).apply(effects)
 | "You gain Darkvision 60 ft. If you already have it, its range increases by 60 ft." | `GrantOrExtendSense(Sense.DARKVISION, 60, name)`. Resolved on read as the best other grant + 60 |
 | "+N to …" (a fixed number) | `SkillBonus(skill, N)`, `SavingThrowBonus(..., N)`, `ArmorClassBonus(N)`, `SpeedBonus(N)`, … |
 | "a bonus equal to your *ability* modifier" / "half your proficiency bonus" / "+1 per Sorcerer level" | A **formula**: `SkillBonus(skill, lambda cs: ...)`, `SavingThrowBonus`, `InitiativeBonus`, `HitPointsBonus` |
-| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.ledger.worn_armor.body_armor_type`, `cs.is_wearing_armor`, `cs.ledger.worn_armor.shield_wielded` |
+| "…while (not) wearing armor / wielding a Shield" | A **formula** on `SpeedBonus` / `ArmorClassBonus` reading `cs.worn_armor_type`, `cs.is_wearing_armor`, `cs.is_wielding_shield` |
 | "Your AC equals 10 + DEX + WIS" | `MultiAbilityArmorClass(10, [DEX, WIS])`, plus `allows_shield=False` if a Shield disables it |
 | "You gain Expertise in X" | `SkillExpertise([X])`. The proficiency may come from anywhere; validation checks the pair |
 | "Increase STR by 2, to a maximum of 20" | `AbilityScoreBonus([...], total=2, max_score=20)` |
@@ -209,7 +210,7 @@ sources": `Initiative`, `ArmorClass`, `HitPoints`, `Speed`, `Skills` and `Saving
 one (or a `dict[..., Bonuses]` for the per-skill/per-ability ones) instead of reimplementing the
 flat-list/formula-list/source-list shape themselves.
 
-| Part (`character.ledger.<attr>`) | Owns |
+| Part (`Character._ledger.<attr>`) | Owns |
 |---|---|
 | `equipment_training` (`EquipmentTraining`) | `weapon_proficiencies`, `armor_training`, `tool_proficiencies`, `has_shield_training` |
 | `languages` (`Languages`) | Known languages, each with sources (`knows`, `sources`, `add`) |
@@ -227,22 +228,17 @@ flat-list/formula-list/source-list shape themselves.
 | `skills` / `saving_throws` (`Skills` / `SavingThrows`) | Proficiency/expertise/advantage flags and a `Bonuses` per skill/ability; `modifier(_, view)`, `roll_condition(_, view)`, and for skills `ability(skill, view)` and `roll_condition_reasons(skill, view)` |
 | `weapon_bonuses` (`WeaponBonuses`) | Attack and damage roll bonuses the wielder brings to their weapons, each a `WeaponBonus(applies_to, value, source)`; `attack_bonuses(weapon.traits)` / `damage_bonuses(weapon.traits)` return the ones that apply |
 
-Every part is read through `character.ledger`. Recording goes through
+Only `Character` reads its parts, and only through its queries. Recording goes through
 `Effects`, whose methods (`add_damage_resistance`, `add_skill_proficiency`, `register_caster`, …)
-each write one part; `Character` has none of them, and once the `Ledger` is evaluated it is
-sealed (`Model/Recorder.py`): every part mutator raises `SealedError`, so nothing can record onto
-an evaluation after the fact. A test or tool applying one feature to a bare character grants it
-with `sources.add_effect(feature)`, a real source like any other, and builds `Character(sources)`.
+each write one part; `Character` has none of them, and `Effects` is handed out only while the
+`Character` fills its ledger, so nothing can record onto it afterwards. A test or tool applying
+one feature to a bare character grants it with `sources.add_effect(feature)`, a real source like
+any other, and builds `Character(sources)`.
 No part holds a copy of a source. The player's scores before any increase are `base_abilities`,
 an immutable `AbilityScores` (change one by assigning `sources.base_abilities.with_scores(...)`); the final
 scores are the `get_ability_score()` / `get_own_ability_score()` queries. Likewise
-`character.ledger.speed` is the `Speed` part (bonuses only), and the species' walking speed is
-`base_speed`.
-`character.ledger.initiative` and `.speed` are the parts themselves - the *int* versions are
-the `calculate_initiative()` / `calculate_speed()` methods, named after the existing
-`calculate_armor_class()` / `calculate_hit_points()` convention so the name doesn't collide with
-the part. `character.ledger.senses.ranges` is the resolved `dict[Sense, int]` (`senses` itself
-is the `Senses` part).
+the `Speed` part holds bonuses only, the species' walking speed is `base_speed`, and the
+total is `calculate_speed()`. `senses()` is the resolved `dict[Sense, int]`.
 
 ## Extensions
 

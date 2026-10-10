@@ -40,7 +40,7 @@ def _stats(data, character):
         character.calculate_hit_points(),
         character.calculate_armor_class(),
         character.calculate_initiative(),
-        dict(character.spell_slots or {}),
+        dict(character.spell_slots),
         dict(character.pact_magic_slots),
         [
             (

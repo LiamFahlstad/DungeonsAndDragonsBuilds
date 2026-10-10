@@ -3,7 +3,6 @@ from typing import Optional
 import attr
 
 from Core.Definitions import ArmorType
-from Model.Recorder import Recorder, records
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -14,7 +13,7 @@ class BodyArmor:
     name: str
 
 
-class WornArmor(Recorder):
+class WornArmor:
     """What's worn: the body armor's type and display name, and whether a
     Shield is wielded. Untrained-armor Disadvantage, spellcasting warnings,
     the Defense fighting style, Unarmored Movement and Fast Movement, and
@@ -45,7 +44,6 @@ class WornArmor(Recorder):
         """Wearing Light, Medium or Heavy armor (a Shield alone doesn't count)."""
         return self.body_armor_type is not None
 
-    @records
     def set_body_armor(self, armor_type: ArmorType, name: str) -> None:
         if self._body_armor is not None:
             raise ValueError(
@@ -54,6 +52,5 @@ class WornArmor(Recorder):
             )
         self._body_armor = BodyArmor(armor_type, name)
 
-    @records
     def wield_shield(self) -> None:
         self.shield_wielded = True

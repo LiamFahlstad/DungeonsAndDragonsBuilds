@@ -410,11 +410,11 @@ class TestSorcererDraconicResilienceAndElementalAffinity:
             (12, 3 + (12 - 3)),
         ):
             sources = make_sources(levels={CharacterClass.SORCERER: sorcerer_level})
+            without = Character(sources)
             sources.add_effect(SorcererDraconicFeatures.DraconicResilience())
             character = Character(sources)
-            assert (
-                character.ledger.hit_points.bonuses.total(character) == expected_bonus
-            )
+            bonus = character.calculate_hit_points() - without.calculate_hit_points()
+            assert bonus == expected_bonus
 
     def test_draconic_resilience_ac_unarmored_formula(self, make_sources):
         # "While you aren't wearing armor, your base Armor Class equals 10
@@ -519,9 +519,7 @@ class TestBladesingerTrainingInWarAndSongWeaponProficiency:
         # Scimitar: Martial Melee, Finesse + Light (no Two-Handed/Heavy), so a
         # Bladesinger with Training in War and Song should be proficient.
         character = data.validate()
-        assert is_proficient_with(
-            Scimitar(), character.ledger.equipment_training.weapon_proficiencies
-        )
+        assert is_proficient_with(Scimitar(), character.weapon_proficiencies())
 
 
 # ---------------------------------------------------------------------------
@@ -779,7 +777,4 @@ class TestPromisedPassiveBenefits:
         for feature in data.iter_features_with_extensions():
             sources.add_effect(feature)
         character = Character(sources)
-        assert (
-            WeaponProficiency.MARTIAL
-            in character.ledger.equipment_training.weapon_proficiencies
-        )
+        assert WeaponProficiency.MARTIAL in character.weapon_proficiencies()

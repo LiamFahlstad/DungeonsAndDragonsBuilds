@@ -25,7 +25,6 @@ from Model.EquipmentTraining import EquipmentTraining
 from Model.HitPoints import HitPoints
 from Model.Initiative import Initiative
 from Model.Languages import Languages
-from Model.Recorder import Recorder
 from Model.Records.Tools import ToolProficiency
 from Model.SavingThrows import SavingThrows
 from Model.Senses import Senses
@@ -36,13 +35,12 @@ from Model.WeaponBonuses import WeaponBonus, WeaponBonuses
 from Model.WornArmor import WornArmor
 
 
-class Ledger(Recorder):
+class Ledger:
     """Everything a Character's features, armor, weapons, items and fighting
-    styles record, one part per concern (Model/*.py). Internal to
-    Character: it builds a fresh one from its sources whenever they change
-    (Character._get_ledger), seals it, and answers every query from it.
-    Effects record into it through the write-only Effects view below; once
-    it's sealed, every part raises SealedError on a write (Model/Recorder.py).
+    styles record, one part per concern (Model/*.py). Private to
+    Character: it fills one once (Character._ledger) and answers every query
+    from it. Effects record into it only through the write-only Effects view
+    below, and only while the Character fills it.
 
     Each part owns its own state and the queries on it; see
     Notes/feature-application-model.md. Every part is always present, and

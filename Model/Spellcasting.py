@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 
 from Core.Definitions import Ability, CharacterClass
 from Core.Rules import SPELL_SAVE_DC_BASE
@@ -9,10 +9,9 @@ from Core.SpellcastingRules import (
     calculate_spell_slots,
 )
 from Model.View import CharacterView
-from Model.Recorder import Recorder, records
 
 
-class Spellcasting(Recorder):
+class Spellcasting:
     """The spell save DC bonus and every registered caster class (used to
     work out spell slots and Pact Magic slots together - see spell_slots).
     The spellcasting ability and a fixed table of slots (for a character with
@@ -26,7 +25,6 @@ class Spellcasting(Recorder):
         self._casters: dict[CharacterClass, CasterType] = {}
         self.spell_save_dc_bonus = 0
 
-    @records
     def register_caster(
         self, character_class: CharacterClass, caster_type: CasterType
     ) -> None:
@@ -38,11 +36,10 @@ class Spellcasting(Recorder):
             )
         self._casters[character_class] = caster_type
 
-    @records
     def add_spell_save_dc_bonus(self, bonus: int) -> None:
         self.spell_save_dc_bonus += bonus
 
-    def spell_slots(self, view: CharacterView) -> Optional[dict[int, int]]:
+    def spell_slots(self, view: CharacterView) -> dict[int, int]:
         """Worked out from the registered casters - or, with none, the
         character's fixed table of slots (e.g. a companion's)."""
         if not self._casters:

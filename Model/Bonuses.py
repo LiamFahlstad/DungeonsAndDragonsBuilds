@@ -1,7 +1,6 @@
 import attr
 
 from Model.View import Formula, CharacterView, Value
-from Model.Recorder import Recorder, records
 from Model.Records.SourcedValue import SourcedValue
 
 # The source label of a bonus granted without one.
@@ -16,7 +15,7 @@ class SourcedFormula:
     source: str
 
 
-class Bonuses(Recorder):
+class Bonuses:
     """Flat values and formula values (a Formula - see Model/View.py),
     each with a source label - the "a flat bonus, plus formula bonuses, each
     with a source"
@@ -32,7 +31,6 @@ class Bonuses(Recorder):
         self._flat: list[SourcedValue] = []
         self._formulas: list[SourcedFormula] = []
 
-    @records
     def add(self, value: Value, source: str = OTHER_SOURCE) -> None:
         """A flat bonus, or a formula worked out on every read."""
         if callable(value):

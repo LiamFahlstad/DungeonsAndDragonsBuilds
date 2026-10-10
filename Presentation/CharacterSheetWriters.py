@@ -215,7 +215,7 @@ class HtmlCharacterSheetWriter:
         character: Character,
         file: TextIO,
         armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
+        armor_proficiencies: Collection[Definitions.ArmorType],
         weapon_proficiencies: Collection[Enum],
         character_subclass: Optional[str],
         size: Definitions.CreatureSize,
@@ -263,45 +263,43 @@ class HtmlCharacterSheetWriter:
 
         languages = ", ".join(
             language.value
-            for language in sorted(
-                character.ledger.languages.known, key=lambda lang: lang.value
-            )
+            for language in sorted(character.languages(), key=lambda lang: lang.value)
         )
         senses = ", ".join(
-            f"{sense.value} {character.ledger.senses.ranges[sense]} ft."
-            for sense in sorted(character.ledger.senses.ranges, key=lambda s: s.value)
+            f"{sense.value} {character.senses()[sense]} ft."
+            for sense in sorted(character.senses(), key=lambda s: s.value)
         )
 
         resistance_immunity_groups = []
-        if character.ledger.defenses.damage_resistances:
+        if character.damage_resistances():
             resistance_immunity_groups.append(
                 "Resistant: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.ledger.defenses.damage_resistances,
+                        character.damage_resistances(),
                         key=lambda d: d.value,
                     )
                 )
             )
-        if character.ledger.defenses.damage_immunities:
+        if character.damage_immunities():
             resistance_immunity_groups.append(
                 "Immune: "
                 + ", ".join(
                     damage_type.value
                     for damage_type in sorted(
-                        character.ledger.defenses.damage_immunities,
+                        character.damage_immunities(),
                         key=lambda d: d.value,
                     )
                 )
             )
-        if character.ledger.defenses.condition_immunities:
+        if character.condition_immunities():
             resistance_immunity_groups.append(
                 "Condition Immune: "
                 + ", ".join(
                     condition.value
                     for condition in sorted(
-                        character.ledger.defenses.condition_immunities,
+                        character.condition_immunities(),
                         key=lambda c: c.value,
                     )
                 )
@@ -797,7 +795,7 @@ class HtmlCharacterSheetWriter:
                 progression.spell_slots, file, reset_label
             )
         else:
-            Html.write_slot_table(character.get_spell_slots(), file, reset_label)
+            Html.write_slot_table(character.spell_slots, file, reset_label)
         file.write("<br class='section-gap'>\n")
 
     def _write_spell_cards(
@@ -1355,8 +1353,8 @@ class HtmlCharacterSheetWriter:
         if output_folder is None:
             output_folder = get_output_folder(data, description_mode)
         armors = data.armors
-        armor_proficiencies = character.ledger.equipment_training.armor_training
-        weapon_proficiencies = character.ledger.equipment_training.weapon_proficiencies
+        armor_proficiencies = character.armor_training()
+        weapon_proficiencies = character.weapon_proficiencies()
         features = data.top_level_features()
         weapons = data.weapons
         weapon_masteries = data.weapon_masteries
@@ -1365,7 +1363,7 @@ class HtmlCharacterSheetWriter:
         spells = data.spells
         equipment_entries = data.equipment_entries
         starting_equipment_entry = data.starting_equipment_entry
-        tool_proficiencies = character.ledger.equipment_training.tool_proficiencies
+        tool_proficiencies = character.tool_proficiencies()
         # Identity, gold and size live on the sheet data, not the stat block -
         # see Model/ClassLevels.py.
         character_name = data.character_name
@@ -1550,7 +1548,7 @@ class HtmlCharacterSheetWriter:
         character_subclass: Optional[str],
         size: Definitions.CreatureSize,
         armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
+        armor_proficiencies: Collection[Definitions.ArmorType],
         weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         invocations: list[str],
@@ -1747,7 +1745,7 @@ class HtmlCharacterSheetWriter:
         size: Definitions.CreatureSize,
         current_gold: Optional[float],
         armors: list[Armor.AbstractArmor],
-        armor_proficiencies: set[Definitions.ArmorType],
+        armor_proficiencies: Collection[Definitions.ArmorType],
         weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         text_features: list[Feature],

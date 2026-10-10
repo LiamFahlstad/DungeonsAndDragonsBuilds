@@ -89,7 +89,7 @@ LAYER_ALLOWLIST: set[tuple[str, str]] = {
 TYPE_CHECKING_ALLOWLIST: set[str] = set()
 
 # Narrowing a value back to a concrete type (Steps 9 and 13 remove these).
-CAST_ALLOWLIST: set[str] = {"Model/Recorder.py"}
+CAST_ALLOWLIST: set[str] = set()
 AS_ALLOWLIST: set[str] = set()
 
 # Content that reads a character (features, items, tools, invocations)
@@ -258,7 +258,6 @@ LEDGER_PARTS = (
     "HitPoints",
     "Initiative",
     "Languages",
-    "Recorder",
     "SavingThrows",
     "Senses",
     "Skills",
@@ -272,7 +271,6 @@ LEDGER_PART_MAY_IMPORT = (
     "Model.Records",
     "Model.View",
     "Model.Bonuses",
-    "Model.Recorder",
 )
 
 
