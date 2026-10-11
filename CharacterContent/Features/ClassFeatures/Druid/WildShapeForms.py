@@ -13,12 +13,25 @@ def wild_shape_temp_hp_formula(character: CharacterView) -> str:
     return "+ Druid level"
 
 
+def wild_shape_ac_override(character: CharacterView) -> int | None:
+    """Circle Forms AC (13 + WIS mod), used when higher than the Beast's AC."""
+    if not character.has_feature(CircleForms):
+        return None
+    wisdom_modifier = character.get_wisdom_modifier()
+    return 13 + wisdom_modifier
+
+
 def format_wild_shape_form(
     monster_cls: CreatureForm,
     character: CharacterView,
 ) -> str:
+    monster = monster_cls()
+    ac_override = wild_shape_ac_override(character)
+    if ac_override is not None and ac_override > monster.ac:
+        monster.ac = ac_override
+        monster.ac_note = "13 + Wisdom modifier, Circle Forms"
     return format_creature_stat_block(
-        monster_cls(),
+        monster,
         retain_mental_abilities=True,
         temp_hp_text=wild_shape_temp_hp_formula(character),
     )

@@ -206,6 +206,13 @@ def format_creature_stat_block(
     ac_text = f"{monster.ac}" + (f" ({monster.ac_note})" if monster.ac_note else "")
     rows.append(_row("Armor Class", ac_text))
 
+    initiative = monster.initiative_bonus
+    if initiative is None:
+        initiative = ability_modifier(
+            (monster.ability_scores or {}).get(Ability.DEXTERITY.short_name, 10)
+        )
+    rows.append(_row("Initiative", f"{_fmt_mod(initiative)} ({10 + initiative})"))
+
     speed = _speed_text(monster)
     if speed:
         rows.append(_row("Speed", speed))

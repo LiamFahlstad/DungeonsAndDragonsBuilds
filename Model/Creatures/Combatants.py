@@ -154,6 +154,7 @@ class ExtendedCombatantData(BasicCombatantData):
     size: Optional[CreatureSize] = None
     ac_note: str = ""  # e.g. "natural armor"
     hp_formula: str = ""  # e.g. "8d10+8"
+    initiative_bonus: Optional[int] = None  # None = DEX modifier
     speed_ground_ft: Optional[int] = None
     speed_fly_ft: Optional[int] = None
     speed_climb_ft: Optional[int] = None

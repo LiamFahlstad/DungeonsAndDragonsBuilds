@@ -45,7 +45,8 @@ def _build_drake(
         f"Hit: 1d6 + {proficiency_bonus} Piercing damage"
     )
     if has_wings:
-        bite_description += f", plus {bite_extra_dice} {chosen_type.value} damage (Magic Fang/Empowered Bite)"
+        fang_label = "Magic Fang + Empowered Bite" if is_large else "Magic Fang"
+        bite_description += f", plus {bite_extra_dice} {chosen_type.value} damage ({fang_label})"
 
     traits = [
         MonsterAbility(
@@ -74,8 +75,8 @@ def _build_drake(
         ac=14 + proficiency_bonus,
         temp_hp=0,
         conditions=[],
-        ability_scores={"Str": 16, "Dex": 12, "Con": 15, "Int": 8, "Wis": 14, "Cha": 8},
-        saving_throws={"Dex": 1 + proficiency_bonus, "Wis": 2 + proficiency_bonus},
+        ability_scores={"STR": 16, "DEX": 12, "CON": 15, "INT": 8, "WIS": 14, "CHA": 8},
+        saving_throws={"DEX": 1 + proficiency_bonus, "WIS": 2 + proficiency_bonus},
         spell_slots={},
         cr=str(proficiency_bonus),
         monster_type=MonsterType.DRAGON,
