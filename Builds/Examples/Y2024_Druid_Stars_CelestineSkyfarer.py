@@ -33,7 +33,7 @@ from CharacterContent.Classes.SubClasses2024.DruidStars import (
     DruidStarsLevel10,
     DruidStarsLevel14,
 )
-from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider, Tiger
+from Combat.Monsters.CR_0.monsters import Rat, RidingHorse, Spider, Wolf
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,
@@ -104,7 +104,7 @@ def get_starter_class_builder():
                 ),
                 2: DruidLevel2(
                     spell=DruidLevel1Spells.HEALING_WORD,
-                    known_forms=[BrownBear, DireWolf, GiantSpider, Tiger],
+                    known_forms=[Rat, RidingHorse, Spider, Wolf],
                 ),
                 3: DruidLevel3(
                     spell=DruidLevel2Spells.AID,

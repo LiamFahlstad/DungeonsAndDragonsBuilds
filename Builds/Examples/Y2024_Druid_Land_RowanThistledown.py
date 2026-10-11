@@ -41,7 +41,6 @@ from CharacterContent.Classes.SubClasses2024.DruidLand import (
 from Combat.Monsters.CR_0.monsters import (
     Deer,
     GiantBadger,
-    GiantSeahorse,
     GiantWolfSpider,
     Owl,
     Pteranodon,
@@ -162,7 +161,6 @@ def get_starter_class_builder():
                         RidingHorse,
                         GiantWolfSpider,
                         GiantBadger,
-                        GiantSeahorse,
                         GiantSpider,
                         Owl,
                         Pteranodon,

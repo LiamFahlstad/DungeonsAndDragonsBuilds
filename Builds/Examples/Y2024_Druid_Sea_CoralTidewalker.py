@@ -36,7 +36,7 @@ from CharacterContent.Classes.SubClasses2024.DruidSea import (
     DruidSeaLevel10,
     DruidSeaLevel14,
 )
-from Combat.Monsters.CR_0.monsters import Crab, GiantSeahorse, Octopus, ReefShark
+from Combat.Monsters.CR_0.monsters import ConstrictorSnake, Crab, GiantFrog, Octopus
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,
@@ -107,7 +107,7 @@ def get_starter_class_builder():
                 ),
                 2: DruidLevel2(
                     spell=DruidLevel1Spells.HEALING_WORD,
-                    known_forms=[Crab, Octopus, ReefShark, GiantSeahorse],
+                    known_forms=[Crab, Octopus, ConstrictorSnake, GiantFrog],
                 ),
                 3: DruidLevel3(
                     spell=DruidLevel2Spells.SPIKE_GROWTH,
