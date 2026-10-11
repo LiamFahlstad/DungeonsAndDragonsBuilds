@@ -12,6 +12,7 @@ from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardMoonFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells, DruidLevel2Spells
+from Model.CharacterSources import SpellSource
 
 
 @attr.dataclass
@@ -27,7 +28,7 @@ class BardMoonLevel3(ClassBuilder.SubclassLevel3):
             BardMoonFeatures.MoonsInspiration(), extends=BardFeatures.BardicInspiration
         )
         data.add_feature(BardMoonFeatures.PrimalLore(skill=self.skill_proficiency))
-        data.add_cantrip(self.cantrip)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass

@@ -28,6 +28,8 @@ from Model.Spells import SpellGrant, SpellReplacement
 class SpellSource:
     """Shared `source=` labels for add_spell/add_cantrip (any free text works)."""
 
+    # A spell the player picked (from a spell list, or a feat's/feature's
+    # options). Spells without a label are shown as granted by their source.
     CHOSEN = "Chosen spell"
 
 
@@ -161,6 +163,7 @@ class CharacterSources:
                 grant_level=stamp.level,
                 granted_by=stamp.granted_by,
                 source=source,
+                kind=stamp.kind,
             )
         )
 

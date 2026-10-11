@@ -1,8 +1,57 @@
-from typing import TextIO
+from typing import Optional, TextIO
 
 from Presentation import Html
+from Presentation.FeatureCards import _LEVEL_LABEL
 
 from CharacterContent.Spells.SpellFactory.Spell import Spell
+from Core.Definitions import CharacterClass
+from Model.Character import Character
+from Model.CharacterSources import SpellSource
+from Model.Records.GrantStamp import GrantKind
+from Model.Spells import SpellGrant
+
+
+def spell_source_label(grant: SpellGrant, character: Character) -> str:
+    """Where the character got a spell, for its card: "Chosen at Wizard
+    Level 1", "Granted by Light Domain Cleric Level 3", "Granted by Rock
+    Gnome", or a grant's own label ("Circle of the Moon Spells table (Circle
+    of the Moon Druid Level 3)")."""
+    where = _grant_origin(grant, character)
+    if grant.source == SpellSource.CHOSEN:
+        preposition = "at" if grant.kind.is_class_level else "via"
+        return f"Chosen {preposition} {where}"
+    if grant.source:
+        return f"{grant.source} ({where})"
+    return f"Granted by {where}"
+
+
+def _grant_origin(grant: SpellGrant, character: Character) -> str:
+    if not grant.kind.is_class_level:
+        return grant.granted_by
+    if grant.kind is GrantKind.SUBCLASS:
+        subclass = _subclass_label(character, grant.granted_by)
+        if subclass:
+            return f"{subclass} Level {grant.grant_level}"
+    return f"{grant.granted_by} Level {grant.grant_level}"
+
+
+def _subclass_label(character: Character, class_name: str) -> Optional[str]:
+    """ "Light Domain Cleric": read from the character's subclass feature
+    labels, so spell cards name the subclass the way its feature cards do.
+    Falls back to the subclass's short name ("Light Cleric")."""
+    for feature in character.features:
+        stamp = character.stamp_of(feature)
+        if stamp.kind is not GrantKind.SUBCLASS or stamp.granted_by != class_name:
+            continue
+        match = _LEVEL_LABEL.match(feature.origin or "")
+        if match and match.group(1).endswith(class_name) and match.group(1) != class_name:
+            return match.group(1)
+    try:
+        character_class = CharacterClass(class_name)
+    except ValueError:
+        return None
+    subclass = character.class_levels.active_subclasses.get(character_class)
+    return f"{subclass} {class_name}" if subclass else None
 
 SPELL_CARD_CSS = """/* ── Spell entries ────────────────────────────────────────────────── */
         .spells {

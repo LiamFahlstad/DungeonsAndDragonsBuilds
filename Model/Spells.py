@@ -14,6 +14,7 @@ from typing import Optional
 import attr
 
 from Core.Definitions import Ability
+from Model.Records.GrantStamp import GrantKind
 
 
 @attr.s(frozen=True, auto_attribs=True)
@@ -24,6 +25,9 @@ class SpellGrant:
     grant_level: int
     granted_by: str
     source: Optional[str] = None
+    # What kind of grant it came from (class level, subclass level, species,
+    # ...), so the sheet can say "Light Domain Cleric Level 3" not "Cleric".
+    kind: GrantKind = GrantKind.OTHER
 
 
 @attr.s(frozen=True, auto_attribs=True)

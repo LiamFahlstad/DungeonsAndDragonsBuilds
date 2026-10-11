@@ -23,6 +23,7 @@ from Presentation.WeaponCards import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Presentation.SpellCards import (
     SPELL_CARD_CSS,
+    spell_source_label,
     write_spell_to_file,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import tool_item
@@ -817,7 +818,10 @@ class HtmlCharacterSheetWriter:
         for entry in spells:
             created_spells.append(
                 SpellFactory.create(
-                    entry.name, entry.ability, entry.ruling, entry.source
+                    entry.name,
+                    entry.ability,
+                    entry.ruling,
+                    spell_source_label(entry, character),
                 )
             )
         sorted_spells = sorted(created_spells, key=lambda s: (s.level, s.name))

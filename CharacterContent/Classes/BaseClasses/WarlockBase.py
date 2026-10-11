@@ -32,6 +32,7 @@ from CharacterContent.Spells.SpellLists import (
     WarlockLevel8Spells,
     WarlockLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 WarlockSpellsUpTo2: TypeAlias = WarlockLevel1Spells | WarlockLevel2Spells
 
@@ -74,10 +75,10 @@ class WarlockLevel1(ClassBuilder.BaseClassLevel1):
         data.add_feature(WarlockFeatures.ReplacingEldritchInvocations())
         data.add_feature(WarlockFeatures.ReplacingCantripsAndSpells())
         data.add_feature(WarlockFeatures.RegainingSpellSlots())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation)
 
 
@@ -92,7 +93,7 @@ class WarlockLevel2(ClassBuilder.BaseClassLevel2):
         data: Grants,
     ) -> None:
         data.add_feature(WarlockFeatures.MagicalCunning())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation_1)
         data.add_invocation(self.eldritch_invocation_2)
 
@@ -105,7 +106,7 @@ class WarlockLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -119,8 +120,8 @@ class WarlockLevel4(ClassBuilder.BaseClassLevel4):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -133,7 +134,7 @@ class WarlockLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation_1)
         data.add_invocation(self.eldritch_invocation_2)
 
@@ -146,7 +147,7 @@ class WarlockLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -158,7 +159,7 @@ class WarlockLevel7(ClassBuilder.BaseClassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation)
 
 
@@ -172,7 +173,7 @@ class WarlockLevel8(ClassBuilder.BaseClassLevel8):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -186,7 +187,7 @@ class WarlockLevel9(ClassBuilder.BaseClassLevel9):
     ) -> None:
         data.add_feature(WarlockFeatures.ContactPatron())
         data.add_spell(WarlockLevel5Spells.CONTACT_OTHER_PLANE)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation)
 
 
@@ -198,7 +199,7 @@ class WarlockLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Grants,
     ) -> None:
-        data.add_cantrip(self.cantrip)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -210,7 +211,7 @@ class WarlockLevel11(ClassBuilder.BaseClassLevel11):
         data: Grants,
     ) -> None:
         data.add_feature(WarlockFeatures.MysticArcanum())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -237,7 +238,7 @@ class WarlockLevel13(ClassBuilder.BaseClassLevel13):
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -262,7 +263,7 @@ class WarlockLevel15(ClassBuilder.BaseClassLevel15):
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_invocation(self.eldritch_invocation)
 
 
@@ -285,7 +286,7 @@ class WarlockLevel17(ClassBuilder.BaseClassLevel17):
         data.add_feature(
             WarlockFeatures.MysticArcanum(), extends=WarlockFeatures.MysticArcanum
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -309,7 +310,7 @@ class WarlockLevel19(ClassBuilder.BaseClassLevel19):
         data: Grants,
     ) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass

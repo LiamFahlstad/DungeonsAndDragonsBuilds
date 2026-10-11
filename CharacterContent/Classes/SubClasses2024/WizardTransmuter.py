@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     TransmutationLevel8Spells,
     TransmutationLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 TransmutationSpellsUpTo2: TypeAlias = (
     TransmutationLevel1Spells | TransmutationLevel2Spells
@@ -71,8 +72,8 @@ class WizardTransmuterLevel3(ClassBuilder.SubclassLevel3):
             TransmutationLevel2Spells.ALTER_SELF,
             additional_ruling="Always prepared; cast once without a spell slot per Long Rest",
         )
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -83,7 +84,7 @@ class WizardTransmuterLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -104,7 +105,7 @@ class WizardTransmuterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -115,7 +116,7 @@ class WizardTransmuterLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -144,7 +145,7 @@ class WizardTransmuterLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -155,7 +156,7 @@ class WizardTransmuterLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -179,7 +180,7 @@ class WizardTransmuterLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -190,7 +191,7 @@ class WizardTransmuterLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class WizardTransmuterCustomStarterClassArgs(WizardCustomStarterClassArgs):

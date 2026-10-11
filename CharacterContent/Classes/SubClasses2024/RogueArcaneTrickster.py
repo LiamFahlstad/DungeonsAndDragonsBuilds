@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel4Spells,
 )
+from Model.CharacterSources import SpellSource
 
 # 2024 rules dropped the 2014 Enchantment/Illusion school restriction: prepared
 # spells can be any Wizard spell of a level for which the Arcane Trickster has
@@ -49,11 +50,11 @@ class RogueArcaneTricksterLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(RogueArcaneTricksterFeatures.Spellcasting())
         data.add_feature(RogueArcaneTricksterFeatures.MageHandLegerdemain())
         data.add_cantrip(WizardLevel0Spells.MAGE_HAND)
-        data.add_cantrip(self.cantrip_2)
-        data.add_cantrip(self.cantrip_3)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_3, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_3, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -64,7 +65,7 @@ class RogueArcaneTricksterLevel4(ClassBuilder.SubclassLevel4):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -75,7 +76,7 @@ class RogueArcaneTricksterLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -86,7 +87,7 @@ class RogueArcaneTricksterLevel8(ClassBuilder.SubclassLevel8):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -108,8 +109,8 @@ class RogueArcaneTricksterLevel10(ClassBuilder.SubclassLevel10):
         self,
         data: Grants,
     ) -> None:
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -120,7 +121,7 @@ class RogueArcaneTricksterLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -135,7 +136,7 @@ class RogueArcaneTricksterLevel13(ClassBuilder.SubclassLevel13):
             RogueArcaneTricksterFeatures.VersatileTrickster(),
             extends=RogueFeatures.SneakAttack,
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -146,7 +147,7 @@ class RogueArcaneTricksterLevel14(ClassBuilder.SubclassLevel14):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -157,7 +158,7 @@ class RogueArcaneTricksterLevel16(ClassBuilder.SubclassLevel16):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -178,7 +179,7 @@ class RogueArcaneTricksterLevel19(ClassBuilder.SubclassLevel19):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -189,7 +190,7 @@ class RogueArcaneTricksterLevel20(ClassBuilder.SubclassLevel20):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class RogueArcaneTricksterCustomStarterClassArgs(RogueCustomStarterClassArgs):

@@ -12,6 +12,7 @@ from Model.Grants import Grants
 from Core.Definitions import BardSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Bard import BardLoreFeatures
 from CharacterContent.Features.ClassFeatures.Bard import BardFeatures
+from Model.CharacterSources import SpellSource
 
 
 @attr.dataclass
@@ -65,8 +66,8 @@ class BardLoreLevel6(ClassBuilder.SubclassLevel6):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         data.add_feature(BardLoreFeatures.MagicalDiscoveries())
 
 

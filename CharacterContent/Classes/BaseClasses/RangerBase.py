@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellLists import (
     RangerLevel4Spells,
     RangerLevel5Spells,
 )
+from Model.CharacterSources import SpellSource
 
 
 @attr.dataclass
@@ -41,8 +42,8 @@ class RangerLevel1(ClassBuilder.BaseClassLevel1):
 
         # Add/Change prepared spells:
         data.add_spell(RangerLevel1Spells.HUNTERS_MARK)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -55,7 +56,7 @@ class RangerLevel2(ClassBuilder.BaseClassLevel2):
         data.add_feature(RangerFeatures.DeftExplorerLanguages())
         data.add_feature(RangerFeatures.DeftExplorerExpertise(self.skill_expertise))
         data.add_fighting_style(self.fighting_style)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -63,7 +64,7 @@ class RangerLevel3(ClassBuilder.BaseClassLevel3):
     spell: RangerLevel1Spells
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -74,7 +75,7 @@ class RangerLevel4(ClassBuilder.BaseClassLevel4):
     def add_features(self, data: Grants) -> None:
 
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -83,7 +84,7 @@ class RangerLevel5(ClassBuilder.BaseClassLevel5):
 
     def add_features(self, data: Grants) -> None:
         data.add_feature(RangerFeatures.ExtraAttack())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -98,7 +99,7 @@ class RangerLevel7(ClassBuilder.BaseClassLevel7):
     spell: RangerLevel1Spells | RangerLevel2Spells
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -120,8 +121,8 @@ class RangerLevel9(ClassBuilder.BaseClassLevel9):
         data.add_feature(
             RangerFeatures.Expertise(self.skill_expertise_1, self.skill_expertise_2)
         )
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -142,7 +143,7 @@ class RangerLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -166,7 +167,7 @@ class RangerLevel13(ClassBuilder.BaseClassLevel13):
         data.add_feature(
             RangerFeatures.RelentlessHunter(), extends=RangerFeatures.FavoredEnemy
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -189,7 +190,7 @@ class RangerLevel15(ClassBuilder.BaseClassLevel15):
     )
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -218,8 +219,8 @@ class RangerLevel17(ClassBuilder.BaseClassLevel17):
     )
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         data.add_feature(
             RangerFeatures.PreciseHunter(), extends=RangerFeatures.FavoredEnemy
         )
@@ -248,7 +249,7 @@ class RangerLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(self, data: Grants) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass

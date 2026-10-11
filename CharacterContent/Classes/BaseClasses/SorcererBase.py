@@ -22,6 +22,7 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel8Spells,
     SorcererLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 SorcererSpellsUpTo2: TypeAlias = SorcererLevel1Spells | SorcererLevel2Spells
 
@@ -55,12 +56,12 @@ class SorcererLevel1(ClassBuilder.BaseClassLevel1):
     ) -> None:
         data.add_feature(SorcererFeatures.Spellcasting())
         data.add_feature(SorcererFeatures.InnateSorcery())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_cantrip(self.cantrip_3)
-        data.add_cantrip(self.cantrip_4)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_3, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_4, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -74,8 +75,8 @@ class SorcererLevel2(ClassBuilder.BaseClassLevel2):
     ) -> None:
         data.add_feature(SorcererFeatures.FontOfMagic())
         data.add_feature(SorcererFeatures.Metamagic())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -87,8 +88,8 @@ class SorcererLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -102,8 +103,8 @@ class SorcererLevel4(ClassBuilder.BaseClassLevel4):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -119,8 +120,8 @@ class SorcererLevel5(ClassBuilder.BaseClassLevel5):
             SorcererFeatures.SorcerousRestoration(),
             extends=SorcererFeatures.FontOfMagic,
         )
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -131,7 +132,7 @@ class SorcererLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -145,7 +146,7 @@ class SorcererLevel7(ClassBuilder.BaseClassLevel7):
         data.add_feature(
             SorcererFeatures.SorceryIncarnate(), extends=SorcererFeatures.InnateSorcery
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -158,7 +159,7 @@ class SorcererLevel8(ClassBuilder.BaseClassLevel8):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -170,8 +171,8 @@ class SorcererLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -183,8 +184,8 @@ class SorcererLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Grants,
     ) -> None:
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -195,7 +196,7 @@ class SorcererLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -217,7 +218,7 @@ class SorcererLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -238,7 +239,7 @@ class SorcererLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -257,7 +258,7 @@ class SorcererLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -268,7 +269,7 @@ class SorcererLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -281,7 +282,7 @@ class SorcererLevel19(ClassBuilder.BaseClassLevel19):
         data: Grants,
     ) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -292,7 +293,7 @@ class SorcererLevel20(ClassBuilder.BaseClassLevel20):
         data.add_feature(
             SorcererFeatures.ArcaneApotheosis(), extends=SorcererFeatures.InnateSorcery
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class SorcererCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

@@ -24,6 +24,7 @@ from CharacterContent.Spells.SpellLists import (
     ArtificerLevel4Spells,
     ArtificerLevel5Spells,
 )
+from Model.CharacterSources import SpellSource
 
 # Artificer is a half-caster whose spell slots never exceed 5th level.
 ArtificerSpellsUpTo2: TypeAlias = ArtificerLevel1Spells | ArtificerLevel2Spells
@@ -48,10 +49,10 @@ class ArtificerLevel1(ClassBuilder.BaseClassLevel1):
     ) -> None:
         data.add_feature(ArtificerFeatures.Spellcasting())
         data.add_feature(ArtificerFeatures.TinkersMagic())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -63,7 +64,7 @@ class ArtificerLevel2(ClassBuilder.BaseClassLevel2):
         data: Grants,
     ) -> None:
         data.add_feature(ArtificerFeatures.ReplicateMagicItem())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -74,7 +75,7 @@ class ArtificerLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -87,7 +88,7 @@ class ArtificerLevel4(ClassBuilder.BaseClassLevel4):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -98,7 +99,7 @@ class ArtificerLevel5(ClassBuilder.BaseClassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -123,7 +124,7 @@ class ArtificerLevel7(ClassBuilder.BaseClassLevel7):
         data: Grants,
     ) -> None:
         data.add_feature(ArtificerFeatures.FlashofGenius())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -146,8 +147,8 @@ class ArtificerLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -159,7 +160,7 @@ class ArtificerLevel10(ClassBuilder.BaseClassLevel10):
         data: Grants,
     ) -> None:
         data.add_feature(ArtificerFeatures.MagicItemAdept())
-        data.add_cantrip(self.cantrip)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -171,7 +172,7 @@ class ArtificerLevel11(ClassBuilder.BaseClassLevel11):
         data: Grants,
     ) -> None:
         data.add_feature(ArtificerFeatures.SpellStoringItem())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -193,7 +194,7 @@ class ArtificerLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -208,7 +209,7 @@ class ArtificerLevel14(ClassBuilder.BaseClassLevel14):
             ArtificerFeatures.AdvancedArtifice(),
             extends=ArtificerFeatures.FlashofGenius,
         )
-        data.add_cantrip(self.cantrip)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -219,7 +220,7 @@ class ArtificerLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -239,8 +240,8 @@ class ArtificerLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -263,7 +264,7 @@ class ArtificerLevel19(ClassBuilder.BaseClassLevel19):
         data: Grants,
     ) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass

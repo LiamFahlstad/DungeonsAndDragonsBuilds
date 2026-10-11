@@ -23,6 +23,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel8Spells,
     BardLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 BardSpellsUpTo2: TypeAlias = BardLevel1Spells | BardLevel2Spells
 
@@ -56,12 +57,12 @@ class BardLevel1(ClassBuilder.BaseClassLevel1):
     ) -> None:
         data.add_feature(BardFeatures.Spellcasting())
         data.add_feature(BardFeatures.BardicInspiration())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_3, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_4, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -75,7 +76,7 @@ class BardLevel2(ClassBuilder.BaseClassLevel2):
         data: Grants,
     ) -> None:
         data.add_feature(BardFeatures.JackOfAllTrades())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_feature(
             BardFeatures.ExpertiseLevel1(
                 skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2
@@ -91,7 +92,7 @@ class BardLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -105,8 +106,8 @@ class BardLevel4(ClassBuilder.BaseClassLevel4):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -121,8 +122,8 @@ class BardLevel5(ClassBuilder.BaseClassLevel5):
         data.add_feature(
             BardFeatures.FontOfInspiration(), extends=BardFeatures.BardicInspiration
         )
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -133,7 +134,7 @@ class BardLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -145,7 +146,7 @@ class BardLevel7(ClassBuilder.BaseClassLevel7):
         data: Grants,
     ) -> None:
         data.add_feature(BardFeatures.Countercharm())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -158,7 +159,7 @@ class BardLevel8(ClassBuilder.BaseClassLevel8):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -172,8 +173,8 @@ class BardLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         data.add_feature(
             BardFeatures.ExpertiseLevel1(
                 skill_1=self.skill_expertise_1, skill_2=self.skill_expertise_2
@@ -190,8 +191,8 @@ class BardLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Grants,
     ) -> None:
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_feature(BardFeatures.MagicalSecrets())
 
 
@@ -203,7 +204,7 @@ class BardLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -225,7 +226,7 @@ class BardLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -246,7 +247,7 @@ class BardLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -265,7 +266,7 @@ class BardLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -280,7 +281,7 @@ class BardLevel18(ClassBuilder.BaseClassLevel18):
             BardFeatures.SuperiorInspiration(), extends=BardFeatures.BardicInspiration
         )
 
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -293,7 +294,7 @@ class BardLevel19(ClassBuilder.BaseClassLevel19):
         data: Grants,
     ) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -302,7 +303,7 @@ class BardLevel20(ClassBuilder.BaseClassLevel20):
 
     def add_features(self, data: Grants) -> None:
         data.add_feature(BardFeatures.WordsOfCreation())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_spell(BardLevel9Spells.POWER_WORD_HEAL)
         data.add_spell(BardLevel9Spells.POWER_WORD_KILL)
 

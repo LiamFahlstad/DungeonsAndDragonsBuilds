@@ -23,6 +23,7 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.FeatureGrants import IfParentMissing
+from Model.CharacterSources import SpellSource
 
 ClericSpellsUpTo2: TypeAlias = ClericLevel1Spells | ClericLevel2Spells
 
@@ -83,16 +84,16 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
                     extra_cantrip=self.divine_order.extra_cantrip
                 )
             )
-            data.add_cantrip(self.divine_order.extra_cantrip)
+            data.add_cantrip(self.divine_order.extra_cantrip, source=SpellSource.CHOSEN)
         else:
             data.add_feature(ClericFeatures.DivineOrderProtector())
-        data.add_cantrip(self.cantrip_1)
-        data.add_cantrip(self.cantrip_2)
-        data.add_cantrip(self.cantrip_3)
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
-        data.add_spell(self.spell_3)
-        data.add_spell(self.spell_4)
+        data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)
+        data.add_cantrip(self.cantrip_3, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_3, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_4, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -104,7 +105,7 @@ class ClericLevel2(ClassBuilder.BaseClassLevel2):
         data: Grants,
     ) -> None:
         data.add_feature(ClericFeatures.ChannelDivinity())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -115,7 +116,7 @@ class ClericLevel3(ClassBuilder.BaseClassLevel3):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -129,8 +130,8 @@ class ClericLevel4(ClassBuilder.BaseClassLevel4):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -145,8 +146,8 @@ class ClericLevel5(ClassBuilder.BaseClassLevel5):
         data.add_feature(
             ClericFeatures.SearUndead(), extends=ClericFeatures.ChannelDivinity
         )
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -157,7 +158,7 @@ class ClericLevel6(ClassBuilder.BaseClassLevel6):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -173,7 +174,7 @@ class ClericLevel7(ClassBuilder.BaseClassLevel7):
             data.add_feature(ClericFeatures.PotentSpellcasting())
         else:
             data.add_feature(ClericFeatures.DivineStrike())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -186,7 +187,7 @@ class ClericLevel8(ClassBuilder.BaseClassLevel8):
         data: Grants,
     ) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -198,8 +199,8 @@ class ClericLevel9(ClassBuilder.BaseClassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -211,8 +212,8 @@ class ClericLevel10(ClassBuilder.BaseClassLevel10):
         self,
         data: Grants,
     ) -> None:
-        data.add_cantrip(self.cantrip)
-        data.add_spell(self.spell)
+        data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
         data.add_feature(ClericFeatures.DivineIntervention())
 
 
@@ -224,7 +225,7 @@ class ClericLevel11(ClassBuilder.BaseClassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -246,7 +247,7 @@ class ClericLevel13(ClassBuilder.BaseClassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -277,7 +278,7 @@ class ClericLevel15(ClassBuilder.BaseClassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -296,7 +297,7 @@ class ClericLevel17(ClassBuilder.BaseClassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -307,7 +308,7 @@ class ClericLevel18(ClassBuilder.BaseClassLevel18):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -320,7 +321,7 @@ class ClericLevel19(ClassBuilder.BaseClassLevel19):
         data: Grants,
     ) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -332,7 +333,7 @@ class ClericLevel20(ClassBuilder.BaseClassLevel20):
             ClericFeatures.GreaterDivineIntervention(),
             extends=ClericFeatures.DivineIntervention,
         )
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class ClericCustomStarterClassArgs(ClassBuilder.CustomStarterClassArgs):

@@ -32,6 +32,7 @@ from Model.Grants import Grants
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.CharacterSources import SpellSource
 
 
 class OriginFeat(Feature):
@@ -45,6 +46,11 @@ class OriginFeat(Feature):
     def get_spells(self) -> list[str]:
         return []
 
+    def get_spell_source(self) -> Optional[str]:
+        """The sheet label for get_spells(): SpellSource.CHOSEN when the
+        player picks them, None when the feat names them."""
+        return None
+
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return regained_on_from_uses(self.uses)
 
@@ -54,7 +60,9 @@ class OriginFeat(Feature):
         feat = data.for_origin_feat(self)
         feat.add_feature(self)
         for spell in self.get_spells():
-            feat.add_spell(spell, self.get_spell_casting_ability())
+            feat.add_spell(
+                spell, self.get_spell_casting_ability(), source=self.get_spell_source()
+            )
 
 
 class Skilled(OriginFeat):
@@ -247,6 +255,9 @@ class MagicInitiate(OriginFeat):
 
     def get_spells(self) -> list[str]:
         return [self.cantrip_1, self.cantrip_2, self.spell]
+
+    def get_spell_source(self) -> Optional[str]:
+        return SpellSource.CHOSEN
 
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
@@ -792,6 +803,9 @@ class ArcaneUndertaker(_SpellcastingOriginFeat):
 
     def get_spells(self) -> list[str]:
         return [self.necromancy_cantrip]
+
+    def get_spell_source(self) -> Optional[str]:
+        return SpellSource.CHOSEN
 
     def get_description(self, character: CharacterView) -> str:
         return (

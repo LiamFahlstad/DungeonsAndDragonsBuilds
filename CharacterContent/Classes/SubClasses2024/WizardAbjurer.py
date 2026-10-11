@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     AbjurationLevel8Spells,
     AbjurationLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 AbjurationSpellsUpTo2: TypeAlias = AbjurationLevel1Spells | AbjurationLevel2Spells
 
@@ -50,8 +51,8 @@ class AbjurerWizardLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(WizardAbjurerFeatures.AbjurationSavant())
         data.add_feature(WizardAbjurerFeatures.ArcaneWard())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -62,7 +63,7 @@ class AbjurerWizardLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -86,7 +87,7 @@ class AbjurerWizardLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -97,7 +98,7 @@ class AbjurerWizardLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -120,7 +121,7 @@ class AbjurerWizardLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -131,7 +132,7 @@ class AbjurerWizardLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -152,7 +153,7 @@ class AbjurerWizardLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -163,7 +164,7 @@ class AbjurerWizardLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class AbjurerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):

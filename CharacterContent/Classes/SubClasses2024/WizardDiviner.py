@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     DivinationLevel8Spells,
     DivinationLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 DivinationSpellsUpTo2: TypeAlias = DivinationLevel1Spells | DivinationLevel2Spells
 
@@ -50,8 +51,8 @@ class WizardDivinerLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(WizardDivinerFeatures.DivinationSavant())
         data.add_feature(WizardDivinerFeatures.Portent())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -62,7 +63,7 @@ class WizardDivinerLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -83,7 +84,7 @@ class WizardDivinerLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -94,7 +95,7 @@ class WizardDivinerLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -115,7 +116,7 @@ class WizardDivinerLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -126,7 +127,7 @@ class WizardDivinerLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -150,7 +151,7 @@ class WizardDivinerLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -161,7 +162,7 @@ class WizardDivinerLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class WizardDivinerCustomStarterClassArgs(WizardCustomStarterClassArgs):

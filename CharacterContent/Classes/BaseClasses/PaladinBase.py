@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellLists import (
     PaladinLevel4Spells,
     PaladinLevel5Spells,
 )
+from Model.CharacterSources import SpellSource
 
 
 @attr.dataclass
@@ -40,8 +41,8 @@ class PaladinLevel1(ClassBuilder.BaseClassLevel1):
         data.add_feature(PaladinFeatures.LayOnHands())
 
         # Add/Change prepared spells:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -59,7 +60,7 @@ class PaladinLevel2(ClassBuilder.BaseClassLevel2):
         data.add_spell(PaladinLevel1Spells.DIVINE_SMITE)
 
         # Add prepared spells:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -70,7 +71,7 @@ class PaladinLevel3(ClassBuilder.BaseClassLevel3):
         channel_divinity_feature = PaladinFeatures.ChannelDivinity()
         channel_divinity_feature.add_spell("Divine Sense")
         data.add_feature(channel_divinity_feature)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -80,7 +81,7 @@ class PaladinLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(self, data: Grants) -> None:
         data.add_feature(self.general_feat)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -94,7 +95,7 @@ class PaladinLevel5(ClassBuilder.BaseClassLevel5):
         data.add_spell(PaladinLevel2Spells.FIND_STEED)
 
         # Add/Change prepared spells:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -109,7 +110,7 @@ class PaladinLevel7(ClassBuilder.BaseClassLevel7):
     spell: PaladinLevel1Spells | PaladinLevel2Spells
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -131,8 +132,8 @@ class PaladinLevel9(ClassBuilder.BaseClassLevel9):
     ) -> None:
         # Abjure Foes joins Channel Divinity's options here; ChannelDivinity
         # works that out from the Paladin level when it's read.
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -156,7 +157,7 @@ class PaladinLevel11(ClassBuilder.BaseClassLevel11):
         data: Grants,
     ) -> None:
         data.add_feature(PaladinFeatures.RadiantStrikes())
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -177,7 +178,7 @@ class PaladinLevel13(ClassBuilder.BaseClassLevel13):
     )
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -202,7 +203,7 @@ class PaladinLevel15(ClassBuilder.BaseClassLevel15):
     )
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -231,8 +232,8 @@ class PaladinLevel17(ClassBuilder.BaseClassLevel17):
     )
 
     def add_features(self, data: Grants) -> None:
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -260,7 +261,7 @@ class PaladinLevel19(ClassBuilder.BaseClassLevel19):
 
     def add_features(self, data: Grants) -> None:
         data.add_feature(self.epic_boon)
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass

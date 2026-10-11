@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellLists import (
     EvocationLevel8Spells,
     EvocationLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 EvocationSpellsUpTo2: TypeAlias = EvocationLevel1Spells | EvocationLevel2Spells
 
@@ -50,8 +51,8 @@ class EvokerWizardLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(WizardEvokerFeatures.EvocationSavant())
         data.add_feature(WizardEvokerFeatures.PotentCantrip())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -62,7 +63,7 @@ class EvokerWizardLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -83,7 +84,7 @@ class EvokerWizardLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -94,7 +95,7 @@ class EvokerWizardLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -115,7 +116,7 @@ class EvokerWizardLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -126,7 +127,7 @@ class EvokerWizardLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -147,7 +148,7 @@ class EvokerWizardLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -158,7 +159,7 @@ class EvokerWizardLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class EvokerWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):

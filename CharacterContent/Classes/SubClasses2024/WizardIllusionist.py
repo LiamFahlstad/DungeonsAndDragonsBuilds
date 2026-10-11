@@ -24,6 +24,7 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel8Spells,
     IllusionLevel9Spells,
 )
+from Model.CharacterSources import SpellSource
 
 IllusionSpellsUpTo2: TypeAlias = IllusionLevel1Spells | IllusionLevel2Spells
 
@@ -53,8 +54,8 @@ class IllusionistWizardLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(WizardIllusionistFeatures.IllusionSavant())
         data.add_feature(WizardIllusionistFeatures.ImprovedIllusions())
-        data.add_spell(self.spell_1)
-        data.add_spell(self.spell_2)
+        data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
+        data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
         data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION)
 
 
@@ -66,7 +67,7 @@ class IllusionistWizardLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -89,7 +90,7 @@ class IllusionistWizardLevel7(ClassBuilder.SubclassLevel7):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -100,7 +101,7 @@ class IllusionistWizardLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -121,7 +122,7 @@ class IllusionistWizardLevel11(ClassBuilder.SubclassLevel11):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -132,7 +133,7 @@ class IllusionistWizardLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -153,7 +154,7 @@ class IllusionistWizardLevel15(ClassBuilder.SubclassLevel15):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 @attr.dataclass
@@ -164,7 +165,7 @@ class IllusionistWizardLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_spell(self.spell)
+        data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
 class IllusionistWizardCustomStarterClassArgs(WizardCustomStarterClassArgs):
