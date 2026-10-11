@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Utils import StringUtils
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -82,6 +83,7 @@ class FontOfMagic(Feature):
                 max_uses=20,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Sorcerer level.",
+                gained_at=levels_gained(lambda level: level, from_level=2),
             ),
         )
 

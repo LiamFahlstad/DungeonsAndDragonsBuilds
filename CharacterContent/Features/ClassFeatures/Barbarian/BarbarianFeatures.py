@@ -19,6 +19,7 @@ from Core.Definitions import Ability, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -37,6 +38,7 @@ class Rage(Feature):
                 regain_x_on=(1, "short rest"),
                 regain_all_on="long rest",
                 current_formula="Current amount: determined by your Barbarian level — 2 uses at levels 1-2, 3 at 3-5, 4 at 6-11, 5 at 12-16, 6 at 17-20.",
+                gained_at=[1, 1, 3, 6, 12, 17],
             ),
         )
 

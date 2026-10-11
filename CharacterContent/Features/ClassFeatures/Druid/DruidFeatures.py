@@ -21,6 +21,7 @@ from Model.Content.Improvements import (
 from Model.Creatures.Combatants import CreatureForm
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
@@ -122,6 +123,7 @@ class WildShape(Feature):
                 regain_x_on=(1, "short rest"),
                 regain_all_on="long rest",
                 current_formula="Current amount: determined by your Druid level — 2 uses at levels 2-5, 3 at 6-16, 4 at 17+.",
+                gained_at=[2, 2, 6, 17],
             ),
         )
         self.known_forms = known_forms

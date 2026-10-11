@@ -24,7 +24,10 @@ class PsionicPower(Feature):
             ),
             usage_tags=["utility"],
             uses=FeatureUses(
-                max_uses=12, regain_all_on="long rest", regain_x_on=(1, "short rest")
+                max_uses=12,
+                regain_all_on="long rest",
+                regain_x_on=(1, "short rest"),
+                gained_at=[3, 3, 3, 3, 5, 5, 9, 9, 13, 13, 17, 17],
             ),
         )
 

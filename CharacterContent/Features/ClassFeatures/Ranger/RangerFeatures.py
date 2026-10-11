@@ -11,7 +11,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
-from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
+from Core.Rules import levels_gained, ALL_LEVELS, MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
 
@@ -57,6 +57,7 @@ class FavoredEnemy(Feature):
                 max_uses=6,
                 regain_all_on="long rest",
                 current_formula="Current amount: determined by your character level — 2 uses at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+.",
+                gained_at=[1, 1, 5, 9, 13, 17],
             ),
         )
 

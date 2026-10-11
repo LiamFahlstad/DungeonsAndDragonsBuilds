@@ -21,6 +21,7 @@ class SuperiorityDice(Feature):
                 max_uses=6,
                 regain_all_on="short or long rest",
                 current_formula="Current amount: 4, increasing to 5 at Fighter level 7 and 6 at Fighter level 15.",
+                gained_at=[3, 3, 3, 3, 7, 15],
             ),
         )
 

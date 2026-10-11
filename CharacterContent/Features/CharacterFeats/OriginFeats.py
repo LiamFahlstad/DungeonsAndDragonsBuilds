@@ -30,7 +30,7 @@ from CharacterContent.Spells.SpellLists import (
 from Core.Definitions import Ability, CharacterClass, DamageType, Skill
 from Model.Grants import Grants
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Core.Rules import MAX_PROFICIENCY_BONUS
+from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
 
@@ -166,6 +166,7 @@ class Lucky(OriginFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -454,6 +455,7 @@ class FamiliarFriend(OriginFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -546,6 +548,7 @@ class SpellfireSpark(OriginFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -597,6 +600,7 @@ class SharpEye(OriginFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -637,6 +641,7 @@ def _uses_per_proficiency_bonus(regain_all_on: str) -> FeatureUses:
         max_uses=MAX_PROFICIENCY_BONUS,
         regain_all_on=regain_all_on,
         current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
 

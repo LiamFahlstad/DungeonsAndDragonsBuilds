@@ -31,6 +31,24 @@ def proficiency_bonus(character_level: int) -> int:
 # uses scale with the proficiency bonus.
 MAX_PROFICIENCY_BONUS = proficiency_bonus(MAX_LEVEL)
 
+
+def levels_gained(count_at_level, from_level: int = MIN_LEVEL) -> list[int]:
+    """For a count that grows with level (`count_at_level(level) -> int`), the
+    level each unit of it is gained at, in order - e.g. the proficiency bonus
+    gives [1, 1, 5, 9, 13, 17]. Used as FeatureUses.gained_at, the number
+    printed under each use box. `from_level` is the level the feature itself
+    is gained at: nothing is gained before it, so a level-3 feature scaling
+    with the proficiency bonus gives [3, 3, 5, 9, 13, 17]."""
+    gained: list[int] = []
+    for level in range(from_level, MAX_LEVEL + 1):
+        while len(gained) < count_at_level(level):
+            gained.append(level)
+    return gained
+
+
+# The level each box of a proficiency-bonus-scaled feature is gained at.
+PROFICIENCY_BONUS_GAINED_AT = levels_gained(proficiency_bonus)
+
 # Expertise doubles the proficiency bonus.
 EXPERTISE_MULTIPLIER = 2
 

@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Utils import StringUtils
-from Core.Rules import MAX_PROFICIENCY_BONUS
+from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 
 
@@ -58,6 +58,7 @@ class EmboldeningBond(Feature):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=3),
             ),
         )
 

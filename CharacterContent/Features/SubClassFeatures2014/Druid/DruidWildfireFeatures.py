@@ -18,7 +18,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Presentation.CreatureStatBlocks import format_creature_stat_block
-from Core.Rules import MAX_PROFICIENCY_BONUS
+from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 
 
@@ -179,10 +179,15 @@ class CauterizingFlames(Feature):
             activation=FeatureActivation(
                 action_type="reaction", duration="1 Minute", range="30 Feet"
             ),
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=10),
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:
-        proficiency_bonus = character.get_proficiency_bonus()
         wisdom_modifier = character.get_ability_modifier(Ability.WISDOM)
         description = (
             "You gain the ability to turn death into magical flames that can heal or incinerate. When a Small or larger creature dies within 30 feet of you or your wildfire spirit, a harmless spectral flame springs forth in the dead creature's space and flickers there for 1 minute. When a creature you can see enters that space, you can use your reaction to extinguish the spectral flame there and either heal the creature or deal fire damage to it. "
@@ -190,12 +195,10 @@ class CauterizingFlames(Feature):
             "\n"
             "You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()

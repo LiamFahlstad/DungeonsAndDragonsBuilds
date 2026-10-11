@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import CharacterClass
 from Utils import StringUtils
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -35,6 +36,7 @@ class SecondWind(Feature):
                 regain_x_on=(1, "short rest"),
                 regain_all_on="long rest",
                 current_formula="Current amount: determined by your character level — 2 uses at levels 1-3, 3 at 4-9, 4 at 10+.",
+                gained_at=[1, 1, 4, 10],
             ),
         )
 
@@ -95,6 +97,7 @@ class ActionSurge(Feature):
                 max_uses=2,
                 regain_all_on="short or long rest",
                 current_formula="Current amount: 1 use below character level 17, 2 uses at 17+.",
+                gained_at=[2, 17],
             ),
         )
 
@@ -187,6 +190,7 @@ class Indomitable(Feature):
                 max_uses=3,
                 regain_all_on="long rest",
                 current_formula="Current amount: determined by your character level — 1 use below level 13, 2 at 13-16, 3 at 17+.",
+                gained_at=[9, 13, 17],
             ),
         )
 

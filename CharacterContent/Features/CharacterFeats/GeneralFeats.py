@@ -20,7 +20,7 @@ from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Records.GrantStamp import GrantStamp
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Core.Rules import MAX_ABILITY_MODIFIER, MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
+from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_ABILITY_MODIFIER, MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
 
@@ -977,6 +977,7 @@ class FairyTrickster(_AbilityScoreFeat):
         max_uses=MAX_PROFICIENCY_BONUS,
         regain_all_on="long rest",
         current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
     def get_description(self, character: CharacterView) -> str:
@@ -1059,6 +1060,7 @@ class MythalTouched(_AbilityScoreFeat):
         max_uses=MAX_PROFICIENCY_BONUS,
         regain_all_on="long rest",
         current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
     def calculate_dc(self, character: CharacterView) -> int:
@@ -1114,6 +1116,7 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
         max_uses=MAX_PROFICIENCY_BONUS,
         regain_all_on="long rest",
         current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
     def get_description(self, character: CharacterView) -> str:
@@ -1253,6 +1256,7 @@ class GatheredWhispers(GeneralFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -1289,6 +1293,7 @@ class LivingShadow(GeneralFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -1329,6 +1334,7 @@ class MistWalker(GeneralFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -1364,6 +1370,7 @@ class SecondSkin(GeneralFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -1408,6 +1415,7 @@ class SymbioticBeing(GeneralFeat):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
@@ -1533,6 +1541,7 @@ class SpellResistant(_AbilityScoreFeat):
         max_uses=MAX_PROFICIENCY_BONUS,
         regain_all_on="long rest",
         current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
     def __init__(

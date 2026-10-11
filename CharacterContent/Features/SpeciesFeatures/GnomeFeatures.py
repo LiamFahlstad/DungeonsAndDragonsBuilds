@@ -2,7 +2,7 @@ from Core.Definitions import Ability, CreatureSize, Sense
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Model.Content.Improvements import SavingThrowAdvantage, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Core.Rules import MAX_PROFICIENCY_BONUS
+from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
 SPEED = 30  # Given by your species
@@ -50,6 +50,7 @@ class ForestGnomeSpeakWithAnimals(Feature):
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 

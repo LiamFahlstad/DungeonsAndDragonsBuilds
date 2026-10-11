@@ -95,6 +95,7 @@ class ChannelDivinity(Feature):
                 regain_x_on=(1, "short rest"),
                 regain_all_on="long rest",
                 current_formula="Current amount: 2 uses below character level 11, 3 at 11+.",
+                gained_at=[3, 3, 11],
             ),
         )
 

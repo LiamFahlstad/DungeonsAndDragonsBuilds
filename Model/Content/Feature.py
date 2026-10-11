@@ -30,6 +30,18 @@ class FeatureUses:
     # Short plain-English fragment describing how to derive the build's real current
     # count from the max shown by the boxes (e.g. "equal to your proficiency bonus.").
     current_formula: str | None = None
+    # The level each box is gained at, one entry per box, printed under it the
+    # way spell slots show theirs - e.g. PROFICIENCY_BONUS_GAINED_AT, or
+    # Core.Rules.levels_gained(...) for a class-level table. Leave unset for a
+    # count that doesn't grow with level (a fixed count, an ability modifier).
+    gained_at: list[int] | None = None
+
+    def __post_init__(self):
+        if self.gained_at is not None and len(self.gained_at) != self.max_uses:
+            raise ValueError(
+                f"gained_at has {len(self.gained_at)} entries but max_uses is "
+                f"{self.max_uses} - it needs one level per box"
+            )
 
 
 class ActionType(str, Enum):

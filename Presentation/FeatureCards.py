@@ -652,6 +652,7 @@ def _uses_html(uses: FeatureUses) -> str:
         regain_all_on=uses.regain_all_on,
         regain_x_on=uses.regain_x_on,
         current_formula=uses.current_formula,
+        gained_at=uses.gained_at,
     )
 
 

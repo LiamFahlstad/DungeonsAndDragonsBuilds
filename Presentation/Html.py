@@ -157,15 +157,20 @@ def render_slot_boxes(
     regain_all_on: str | None = None,
     regain_x_on: tuple | None = None,
     current_formula: str | None = None,
+    gained_at: list[int] | None = None,
 ) -> str:
     """Render limited-use checkbox slots plus an optional reset/current-count note.
 
     This is the structured counterpart to the [BOXES:]/[RESET:]/[CURRENT:] sentinels
     consumed by boxes_to_html() - callers that already hold the box count and reset
     rules as data (e.g. Feature.uses) can render directly instead of embedding
-    sentinels in description text.
+    sentinels in description text. With `gained_at` (one level per box), each box
+    gets the level it's gained at under it, like spell slots.
     """
-    boxes_html = '<span class="slot-box"></span>' * max_uses
+    if gained_at is not None:
+        boxes_html = "".join(_slot_box_with_level(level) for level in gained_at)
+    else:
+        boxes_html = '<span class="slot-box"></span>' * max_uses
 
     reset_label = None
     if regain_x_on is not None:
@@ -444,15 +449,19 @@ def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
 SLOT_GAINED_NOTE = "Number under each slot: the character level it's gained at"
 
 
-def _slot_boxes_with_levels(gained_at: list[int]) -> str:
-    """One slot box per entry of `gained_at`, each with the character level
-    it's gained at under it."""
-    boxes = "".join(
+def _slot_box_with_level(level: int) -> str:
+    """One slot box with the level it's gained at under it."""
+    return (
         f"<span class='slot-gained'>"
         f"<span class='slot-box'></span>"
         f"<span class='slot-gained-level'>{level}</span></span>"
-        for level in gained_at
     )
+
+
+def _slot_boxes_with_levels(gained_at: list[int]) -> str:
+    """One slot box per entry of `gained_at`, each with the character level
+    it's gained at under it."""
+    boxes = "".join(_slot_box_with_level(level) for level in gained_at)
     return f"<div class='slot-box-group'>{boxes}</div>"
 
 

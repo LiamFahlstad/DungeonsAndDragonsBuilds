@@ -6,8 +6,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
-from Utils import StringUtils
-from Core.Rules import MAX_PROFICIENCY_BONUS
+from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 
 
@@ -26,6 +25,7 @@ class MagicAwareness(Feature):
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=3),
             ),
         )
 
@@ -95,10 +95,15 @@ class BolsteringMagic(Feature):
             activation=FeatureActivation(
                 action_type="action", duration="For 10 Minutes", range="Touch"
             ),
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=6),
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:
-        proficiency_bonus = character.get_proficiency_bonus()
         description = (
             "Beginning at 6th level, you can harness your wild magic to bolster yourself or a companion. As an action, you can touch one creature (which can be yourself) and confer one of the following benefits of your choice to that creature:\n"
             "\n"
@@ -108,12 +113,10 @@ class BolsteringMagic(Feature):
             "\n"
             "You can take this action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
-        return StringUtils.add_boxes(
-            description,
-            MAX_PROFICIENCY_BONUS,
-            regain_all_on="long rest",
-            current_formula="Current amount: equal to your proficiency bonus.",
-        )
+        return description
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
 
 class UnstableBacklash(Feature):

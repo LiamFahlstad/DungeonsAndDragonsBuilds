@@ -15,6 +15,7 @@ from Model.Content.Improvements import (
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import Ability
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
@@ -128,6 +129,7 @@ class MonksFocus(Feature):
                 max_uses=LEVEL_TO_FOCUS_POINTS[20],
                 regain_all_on="short or long rest",
                 current_formula="Current amount: equal to your Monk level.",
+                gained_at=levels_gained(lambda level: LEVEL_TO_FOCUS_POINTS.get(level, 0), from_level=2),
             ),
         )
 

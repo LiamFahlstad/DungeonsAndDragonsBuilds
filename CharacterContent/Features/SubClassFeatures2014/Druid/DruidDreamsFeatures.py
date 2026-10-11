@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Utils import StringUtils
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -24,6 +25,7 @@ class BalmOfTheSummerCourt(Feature):
                 max_uses=20,
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Druid level.",
+                gained_at=levels_gained(lambda level: level, from_level=3),
             ),
         )
 
