@@ -57,6 +57,26 @@ class RegainedOn(str, Enum):
     OTHER = "other"
 
 
+def regained_on_from_uses(uses: FeatureUses | None) -> RegainedOn | None:
+    """Derive RegainedOn from a FeatureUses.regain_all_on label, for features
+    (like feats) that state their cadence once in FeatureUses rather than
+    overriding Feature.regained_on themselves. Rest cadences win over an
+    initiative roll, since rests are what restore uses between fights."""
+    if uses is None or uses.regain_all_on is None:
+        return None
+    cadence = uses.regain_all_on.lower()
+    has_short, has_long = "short" in cadence, "long" in cadence
+    if has_short and has_long:
+        return RegainedOn.SHORT_OR_LONG_REST
+    if has_short:
+        return RegainedOn.SHORT_REST
+    if has_long:
+        return RegainedOn.LONG_REST
+    if "initiative" in cadence:
+        return RegainedOn.INITIATIVE_ROLL
+    return RegainedOn.OTHER
+
+
 class FeatureTarget(str, Enum):
     """Who or what a feature's effect can be aimed at, as stated in the
     feature's own description."""

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from Core.Definitions import Ability
 from Core.Weapons import WeaponProperty, WeaponTraits
 from Model.Content.Improvements import (
     ArmorClassBonus,
@@ -8,6 +9,7 @@ from Model.Content.Improvements import (
 )
 from Model.Content.FightingStyle import FightingStyle
 from Model.Ledger.LedgerWriter import LedgerWriter
+from CharacterContent.Spells.SpellLists import WizardLevel0Spells
 
 
 class FightStyleModifier(FightingStyle):
@@ -132,4 +134,54 @@ class UnarmedFighting(FightingStyle):
             " If you aren't holding any weapons or a Shield when you make the attack roll, the d6 becomes a d8."
             " At the start of each of your turns, you can deal 1d4 Bludgeoning damage to one creature Grappled by you."
             " (calculate manually)\n"
+        )
+
+
+class ArcaneWarrior(FightingStyle):
+    name = "Arcane Warrior"
+
+    def __init__(
+        self,
+        cantrip_1: WizardLevel0Spells,
+        cantrip_2: WizardLevel0Spells,
+        spellcasting_ability: Ability,
+    ):
+        if cantrip_1 == cantrip_2:
+            raise ValueError("Arcane Warrior requires two different Wizard cantrips.")
+        if spellcasting_ability not in (
+            Ability.INTELLIGENCE,
+            Ability.WISDOM,
+            Ability.CHARISMA,
+        ):
+            raise ValueError(
+                "Arcane Warrior spellcasting ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.cantrip_1 = cantrip_1
+        self.cantrip_2 = cantrip_2
+        self.spellcasting_ability = spellcasting_ability
+
+    def description(self):
+        return (
+            f"Arcane Warrior: You learn two Wizard cantrips of your choice: {self.cantrip_1.value} and {self.cantrip_2.value}. "
+            f"Your spellcasting ability for these spells is {self.spellcasting_ability.value}. "
+            "Whenever you gain a level, you can replace one of these cantrips with another Wizard cantrip."
+        )
+
+
+class PackFighting(FightingStyle):
+    name = "Pack Fighting"
+
+    def description(self):
+        return (
+            "Pack Fighting: When you make a melee attack with a weapon or an Unarmed Strike against a creature, you gain a +1 bonus to the damage roll if at least one of your allies is within 5 feet of the creature and the ally doesn't have the Incapacitated condition. "
+            "If at least one ally within 5 feet of the creature also has this feat and doesn't have the Incapacitated condition, this bonus increases to +2. (calculate manually)"
+        )
+
+
+class ProneFighting(FightingStyle):
+    name = "Prone Fighting"
+
+    def description(self):
+        return (
+            "Prone Fighting: While you have the Prone condition, you don't have Disadvantage due to the Prone condition on attack rolls, and the Prone condition doesn't grant Advantage on attack rolls made against you."
         )

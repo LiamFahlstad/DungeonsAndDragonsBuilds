@@ -29,10 +29,14 @@ independently hand-derived from the rule, not copied from running the code):
   cast it in this way when you finish a Long Rest" (Find Familiar) - i.e.
   ONE use per long rest, independent of Proficiency Bonus.
 
-No real Epic Boon is implemented in this codebase (EpicBoon.py only has a
-`DummyEpicBoon` placeholder with no ability score or cap-at-30 logic), so
-there is nothing rules-bearing to test there beyond that it's a harmless
-no-op; this is called out in the test report rather than encoded as a bug.
+- Epic boons (2024 PHB / Arcana Unleashed 2026): "+1 to <ability>, to a
+  maximum of 30" - the one ASI allowed past 20. Boon of Speed +30 ft, Boon
+  of Fortitude +40 Hit Point maximum, Boon of Truesight 60 ft Truesight,
+  Boon of Energy Resistance two different listed damage types, Boon of
+  Skill proficiency in every skill plus Expertise in one.
+- Feats whose benefit returns "when you finish a Short or Long Rest" must
+  report RegainedOn.SHORT_OR_LONG_REST, since the combat UI's short rest
+  only refills features with a short-rest cadence.
 """
 
 import pytest
@@ -43,16 +47,19 @@ from CharacterContent.Features.CharacterFeats import (
     GeneralFeats,
     OriginFeats,
 )
+from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
     DruidLevel0Spells,
     DruidLevel1Spells,
+    NecromancyLevel0Spells,
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
+from Model.Content.Feature import FeatureUses, RegainedOn, regained_on_from_uses
 from Model.Content.Improvements import SkillProficiency
-from Core.Definitions import Ability, CharacterClass, Sense, Skill
+from Core.Definitions import Ability, CharacterClass, DamageType, Sense, Skill
 from Model.Character import Character
 
 STR, DEX, CON, INT, WIS, CHA = (
@@ -349,6 +356,17 @@ HALF_FEATS = [
     (GeneralFeats.Telepathic, CHA, STR),
     (GeneralFeats.WarCaster, INT, STR),
     (GeneralFeats.WeaponMaster, DEX, CHA),
+    (GeneralFeats.AbjurationAdept, INT, STR),
+    (GeneralFeats.ConjurationAdept, WIS, STR),
+    (GeneralFeats.DivinationAdept, CHA, DEX),
+    (GeneralFeats.EnchantmentAdept, CHA, CON),
+    (GeneralFeats.EvocationAdept, INT, DEX),
+    (GeneralFeats.IllusionAdept, INT, STR),
+    (GeneralFeats.NecromancyAdept, WIS, CON),
+    (GeneralFeats.TransmutationAdept, INT, DEX),
+    (GeneralFeats.SpellSubterfuge, CHA, STR),
+    (GeneralFeats.ShiftingCombatant, STR, CHA),
+    (GeneralFeats.TacticalCombatant, DEX, INT),
 ]
 
 
@@ -522,18 +540,286 @@ class TestFreeBackgroundSkillProficiency:
 # ---------------------------------------------------------------------------
 
 
-class TestEpicBoon:
-    def test_dummy_epic_boon_is_a_harmless_placeholder(self, make_sources):
-        # No real Epic Boon (ability score increase to a cap of 30, etc.) is
-        # implemented anywhere in this codebase - EpicBoon.py only contains
-        # this placeholder. Documented here rather than encoded as a bug;
-        # see the test report for the "needs content" note.
+class TestDummyEpicBoon:
+    def test_is_a_harmless_placeholder(self, make_sources):
         sources = make_sources(strength=20)
         boon = EpicBoon.DummyEpicBoon()
         sources.add_effect(boon)
         character = Character(sources)
         assert character.get_ability_score(STR) == 20
         assert boon.name == "Epic Boon"
+
+
+# (boon class, a valid ability per its own text)
+EPIC_BOONS = [
+    (EpicBoon.BoonOfCombatProwess, STR),
+    (EpicBoon.BoonOfDimensionalTravel, DEX),
+    (EpicBoon.BoonOfEruptingSpellpower, INT),
+    (EpicBoon.BoonOfFate, WIS),
+    (EpicBoon.BoonOfFortitude, CON),
+    (EpicBoon.BoonOfIrresistibleOffense, STR),
+    (EpicBoon.BoonOfRecovery, CON),
+    (EpicBoon.BoonOfSpeed, DEX),
+    (EpicBoon.BoonOfSpellRecall, CHA),
+    (EpicBoon.BoonOfTheIronMind, CON),
+    (EpicBoon.BoonOfTheNightSpirit, DEX),
+    (EpicBoon.BoonOfTruesight, WIS),
+]
+
+# (boon class, an ability NOT on its restricted list)
+RESTRICTED_EPIC_BOONS = [
+    (EpicBoon.BoonOfEruptingSpellpower, STR),
+    (EpicBoon.BoonOfIrresistibleOffense, INT),
+    (EpicBoon.BoonOfSpellRecall, DEX),
+]
+
+
+@pytest.mark.parametrize(
+    "boon_class,ability",
+    EPIC_BOONS,
+    ids=[f"{c.__name__}_{a.name}" for c, a in EPIC_BOONS],
+)
+class TestEpicBoonShape:
+    def test_can_raise_an_ability_past_20(self, make_sources, boon_class, ability):
+        sources = make_sources(**{ability.name.lower(): 20})
+        sources.add_effect(boon_class(ability))
+        assert Character(sources).get_ability_score(ability) == 21
+
+    def test_capped_at_30(self, make_sources, boon_class, ability):
+        sources = make_sources(**{ability.name.lower(): 30})
+        sources.add_effect(boon_class(ability))
+        assert Character(sources).get_ability_score(ability) == 30
+
+
+@pytest.mark.parametrize(
+    "boon_class,ability",
+    RESTRICTED_EPIC_BOONS,
+    ids=[c.__name__ for c, _ in RESTRICTED_EPIC_BOONS],
+)
+def test_epic_boon_rejects_ability_not_on_its_list(boon_class, ability):
+    with pytest.raises(ValueError):
+        boon_class(ability)
+
+
+class TestEpicBoonBenefits:
+    def test_boon_of_speed_adds_30_feet(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfSpeed(DEX))
+        assert Character(sources).calculate_speed() == 60
+
+    def test_boon_of_fortitude_adds_40_hit_points(self, make_sources):
+        # Ability increase goes to STR so CON (and per-level HP) is unchanged.
+        without = Character(make_sources()).calculate_hit_points()
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfFortitude(STR))
+        assert Character(sources).calculate_hit_points() == without + 40
+
+    def test_boon_of_truesight_grants_60_feet(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfTruesight(WIS))
+        assert Character(sources).get_sense_range(Sense.TRUESIGHT) == 60
+
+    def test_boon_of_skill_grants_every_skill_and_one_expertise(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfSkill(DEX, Skill.STEALTH))
+        character = Character(sources)
+        assert all(character.is_proficient_in_skill(skill) for skill in Skill)
+        assert character.has_expertise_in_skill(Skill.STEALTH)
+        assert not character.has_expertise_in_skill(Skill.ARCANA)
+
+    def test_boon_of_energy_resistance_grants_both_chosen_types(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(
+            EpicBoon.BoonOfEnergyResistance(CON, [DamageType.FIRE, DamageType.COLD])
+        )
+        character = Character(sources)
+        assert character.is_resistant_to_damage(DamageType.FIRE)
+        assert character.is_resistant_to_damage(DamageType.COLD)
+        assert not character.is_resistant_to_damage(DamageType.ACID)
+
+    @pytest.mark.parametrize(
+        "damage_types",
+        [
+            [DamageType.FIRE],
+            [DamageType.FIRE, DamageType.FIRE],
+            [DamageType.FIRE, DamageType.SLASHING],
+        ],
+        ids=["one_type", "duplicate", "not_on_list"],
+    )
+    def test_boon_of_energy_resistance_rejects_invalid_choices(self, damage_types):
+        with pytest.raises(ValueError):
+            EpicBoon.BoonOfEnergyResistance(CON, damage_types)
+
+    def test_boon_of_energy_resistance_dc_is_8_plus_con_mod_plus_proficiency(
+        self, make_character
+    ):
+        # CON 18 -> +4, level 19 -> proficiency bonus +6.
+        character = make_character(
+            constitution=18, levels={CharacterClass.FIGHTER: 19}
+        )
+        boon = EpicBoon.BoonOfEnergyResistance(CON, [DamageType.FIRE, DamageType.COLD])
+        assert boon.calculate_dc(character) == 8 + 4 + 6
+
+    def test_boon_of_magic_school_mastery_is_repeatable(self):
+        assert EpicBoon.BoonOfMagicSchoolMastery.repeatable
+
+
+# ---------------------------------------------------------------------------
+# Feats from Arcana Unleashed 2026, Lorwyn and Astarion's Book of Hungers
+# ---------------------------------------------------------------------------
+
+SPELLCASTING_ORIGIN_FEATS = [
+    (OriginFeats.ArcaneArtist, "Minor Illusion"),
+    (OriginFeats.ArcaneEloquence, "Vicious Mockery"),
+    (OriginFeats.ArcaneInfiltrator, "Friends"),
+    (OriginFeats.ArcaneOmens, "Guidance"),
+    (OriginFeats.ArcaneOverload, "Fire Bolt"),
+    (OriginFeats.ArcaneSafeguard, "Resistance"),
+    (OriginFeats.ChildOfTheSun, "Faerie Fire"),
+    (OriginFeats.ShadowmoorHexer, "Hex"),
+]
+
+
+@pytest.mark.parametrize(
+    "feat_class,spell",
+    SPELLCASTING_ORIGIN_FEATS,
+    ids=[c.__name__ for c, _ in SPELLCASTING_ORIGIN_FEATS],
+)
+class TestSpellcastingOriginFeats:
+    def test_teaches_its_spell_with_the_chosen_ability(self, feat_class, spell):
+        feat = feat_class(WIS)
+        assert feat.get_spells() == [spell]
+        assert feat.get_spell_casting_ability() == WIS
+
+    @pytest.mark.parametrize("bad_ability", [STR, DEX, CON])
+    def test_rejects_physical_spellcasting_ability(
+        self, feat_class, spell, bad_ability
+    ):
+        with pytest.raises(ValueError):
+            feat_class(bad_ability)
+
+
+class TestArcaneUndertaker:
+    def test_teaches_the_chosen_necromancy_cantrip(self):
+        feat = OriginFeats.ArcaneUndertaker(NecromancyLevel0Spells.TOLL_THE_DEAD, INT)
+        assert feat.get_spells() == ["Toll the Dead"]
+        assert feat.get_spell_casting_ability() == INT
+
+
+class TestPortalJumper:
+    def test_grants_the_chosen_resistance(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(OriginFeats.PortalJumper(DamageType.PSYCHIC))
+        character = Character(sources)
+        assert character.is_resistant_to_damage(DamageType.PSYCHIC)
+        assert not character.is_resistant_to_damage(DamageType.RADIANT)
+
+    def test_rejects_damage_type_not_on_its_list(self):
+        with pytest.raises(ValueError):
+            OriginFeats.PortalJumper(DamageType.FIRE)
+
+    @pytest.mark.parametrize("level", [1, 5, 9, 13, 17])
+    def test_uses_equal_proficiency_bonus(self, make_character, level):
+        character = make_character(levels={CharacterClass.FIGHTER: level})
+        feat = OriginFeats.PortalJumper(DamageType.RADIANT)
+        assert feat.number_of_uses(character) == PHB_PROFICIENCY_BONUS[level]
+
+
+class TestTransmutedAnatomy:
+    def test_speed_increases_by_5_feet(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(OriginFeats.TransmutedAnatomy())
+        assert Character(sources).calculate_speed() == 35
+
+
+class TestOtherworldlyFamiliar:
+    def test_resistance_belongs_to_the_familiar_not_the_character(
+        self, make_sources
+    ):
+        sources = make_sources()
+        sources.add_effect(
+            GeneralFeats.OtherworldlyFamiliar(4, STR, DamageType.RADIANT)
+        )
+        assert not Character(sources).is_resistant_to_damage(DamageType.RADIANT)
+
+    def test_rejects_damage_type_not_on_its_list(self):
+        with pytest.raises(ValueError):
+            GeneralFeats.OtherworldlyFamiliar(4, STR, DamageType.FIRE)
+
+
+class TestSpellSubterfuge:
+    def test_uses_equal_the_increased_ability_modifier(self, make_character):
+        # CHA 18 -> +4.
+        character = make_character(charisma=18, levels={CharacterClass.WIZARD: 4})
+        feat = GeneralFeats.SpellSubterfuge(character_level=4, ability=CHA)
+        assert feat.number_of_uses(character) == 4
+
+
+class TestShiftingCombatant:
+    def test_dc_uses_the_ability_increased_by_the_feat(self, make_character):
+        # DEX 16 -> +3, level 5 -> proficiency bonus +3.
+        character = make_character(dexterity=16, levels={CharacterClass.FIGHTER: 5})
+        feat = GeneralFeats.ShiftingCombatant(character_level=4, ability=DEX)
+        assert feat.calculate_dc(character) == 8 + 3 + 3
+
+
+class TestArcaneWarrior:
+    def test_rejects_the_same_cantrip_twice(self):
+        with pytest.raises(ValueError):
+            FightingStyles.ArcaneWarrior(
+                WizardLevel0Spells.RAY_OF_FROST, WizardLevel0Spells.RAY_OF_FROST, INT
+            )
+
+    def test_rejects_physical_spellcasting_ability(self):
+        with pytest.raises(ValueError):
+            FightingStyles.ArcaneWarrior(
+                WizardLevel0Spells.MAGE_HAND, WizardLevel0Spells.RAY_OF_FROST, STR
+            )
+
+
+class TestRegainedOn:
+    @pytest.mark.parametrize(
+        "feat",
+        [
+            OriginFeats.TirelessReveler(),
+            OriginFeats.VampireHunter(),
+            EpicBoon.BoonOfFate(STR),
+            EpicBoon.BoonOfEruptingSpellpower(INT),
+        ],
+        ids=lambda feat: feat.name,
+    )
+    def test_short_or_long_rest_feats_refill_on_a_short_rest(
+        self, make_character, feat
+    ):
+        assert feat.regained_on(make_character()) == RegainedOn.SHORT_OR_LONG_REST
+
+    @pytest.mark.parametrize(
+        "feat",
+        [
+            OriginFeats.ArcaneInfiltrator(INT),
+            OriginFeats.PortalJumper(DamageType.RADIANT),
+            GeneralFeats.DivinationAdept(4, WIS),
+        ],
+        ids=lambda feat: feat.name,
+    )
+    def test_long_rest_feats_refill_on_a_long_rest(self, make_character, feat):
+        assert feat.regained_on(make_character()) == RegainedOn.LONG_REST
+
+    def test_feat_without_uses_has_nothing_to_regain(self, make_character):
+        assert OriginFeats.ArcaneEloquence(CHA).regained_on(make_character()) is None
+
+    @pytest.mark.parametrize(
+        "label,expected",
+        [
+            ("long rest", RegainedOn.LONG_REST),
+            ("short rest", RegainedOn.SHORT_REST),
+            ("short or long rest", RegainedOn.SHORT_OR_LONG_REST),
+            ("initiative roll", RegainedOn.INITIATIVE_ROLL),
+            ("dawn", RegainedOn.OTHER),
+        ],
+    )
+    def test_regained_on_from_uses_maps_cadence_labels(self, label, expected):
+        assert regained_on_from_uses(FeatureUses(1, regain_all_on=label)) == expected
 
 
 class TestSpeedy:

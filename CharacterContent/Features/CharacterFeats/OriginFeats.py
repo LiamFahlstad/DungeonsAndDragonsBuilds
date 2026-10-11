@@ -1,20 +1,33 @@
 from typing import Optional
 
-from Model.Content.Feature import Feature, FeatureTarget, FeatureUses, RegainedOn
+from Model.Content.Feature import (
+    Feature,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+    regained_on_from_uses,
+)
 from Model.Content.Improvements import (
+    DamageResistance,
     HitPointsPerLevelBonus,
     InitiativeProficiency,
     SkillProficiencyChoice,
+    SpeedBonus,
 )
 from CharacterContent.Spells.SpellLists import (
+    BardLevel0Spells,
+    BardLevel1Spells,
     ClericLevel0Spells,
     ClericLevel1Spells,
     DruidLevel0Spells,
     DruidLevel1Spells,
+    EvocationLevel0Spells,
+    NecromancyLevel0Spells,
+    WarlockLevel1Spells,
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
-from Core.Definitions import Ability, CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, DamageType, Skill
 from Model.Grants import Grants
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS
@@ -31,6 +44,9 @@ class OriginFeat(Feature):
 
     def get_spells(self) -> list[str]:
         return []
+
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
+        return regained_on_from_uses(self.uses)
 
     def grant_to(self, data: Grants) -> None:
         """Grant this feat and the spells it comes with (listed under the
@@ -433,7 +449,7 @@ class FamiliarFriend(OriginFeat):
         self.spell_casting_ability = spell_casting_ability
         super().__init__(
             name="Familiar Friend",
-            origin="Arcana Unleashed 2026",
+            origin="Origin Feat",
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
                 regain_all_on="long rest",
@@ -606,6 +622,335 @@ class Survivor(OriginFeat):
             "Steel Yourself. When you fail a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to add a bonus to the roll potentially causing it to succeed. The bonus is equal to your Proficiency Bonus.\n"
             "Once you take this Reaction, you can't do so again until you finish a Long Rest.\n"
         )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+_MENTAL_ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+
+def _uses_per_proficiency_bonus(regain_all_on: str) -> FeatureUses:
+    """Uses for a benefit usable "a number of times equal to your Proficiency
+    Bonus"; pair it with a number_of_uses() that returns the proficiency bonus."""
+    return FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on=regain_all_on,
+        current_formula="Current amount: equal to your proficiency bonus.",
+    )
+
+
+class _SpellcastingOriginFeat(OriginFeat):
+    """Base class for origin feats that teach a spell whose spellcasting
+    ability (Intelligence, Wisdom, or Charisma) is chosen with the feat.
+
+    Subclasses declare:
+        _NAME   – feat display name
+        _SPELL  – the spell the feat teaches
+        _USES   – optional FeatureUses for a limited-use benefit
+
+    They only need to implement get_description().
+    """
+
+    _NAME: str
+    _SPELL: str
+    _USES: FeatureUses | None = None
+
+    def __init__(self, spell_casting_ability: Ability):
+        if spell_casting_ability not in _MENTAL_ABILITIES:
+            raise ValueError(
+                f"{self._NAME} spellcasting ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.spell_casting_ability = spell_casting_ability
+        super().__init__(name=self._NAME, origin="Origin Feat", uses=self._USES)
+
+    def get_spells(self) -> list[str]:
+        return [self._SPELL]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
+
+
+class ArcaneArtist(_SpellcastingOriginFeat):
+    _NAME = "Arcane Artist"
+    _SPELL = BardLevel0Spells.MINOR_ILLUSION
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Minor Illusion cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Inspiring Magic. When you cast a spell from the Illusion school, you can choose one ally within 30 feet of yourself who can see you. That ally gains Heroic Inspiration. Once you use this benefit, you can't use it again until you finish a Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class ArcaneEloquence(_SpellcastingOriginFeat):
+    _NAME = "Arcane Eloquence"
+    _SPELL = BardLevel0Spells.VICIOUS_MOCKERY
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Vicious Mockery cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Smooth Talker. When you make a Charisma (Deception, Intimidation, or Persuasion) check, you can roll 1d4 and add the number rolled to the ability check."
+        )
+
+
+class ArcaneInfiltrator(_SpellcastingOriginFeat):
+    _NAME = "Arcane Infiltrator"
+    _SPELL = BardLevel0Spells.FRIENDS
+    _USES = _uses_per_proficiency_bonus("long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Friends cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Cunning Diversion. You can take the Dodge action as a Bonus Action. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class ArcaneOmens(_SpellcastingOriginFeat):
+    _NAME = "Arcane Omens"
+    _SPELL = ClericLevel0Spells.GUIDANCE
+    _USES = _uses_per_proficiency_bonus("long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Guidance cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Helpful Premonition. When you or a creature you can see within 30 feet of yourself fails a saving throw, you can take a Reaction to roll 1d4 and add the number rolled to the save's total, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class ArcaneOverload(_SpellcastingOriginFeat):
+    _NAME = "Arcane Overload"
+    _SPELL = EvocationLevel0Spells.FIRE_BOLT
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Fire Bolt cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Power Surge. When you cast an Evocation spell and deal damage with it, you can add your Proficiency Bonus to one damage roll of that spell. Once you use this benefit, you can't do so again until you finish a Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class ArcaneSafeguard(_SpellcastingOriginFeat):
+    _NAME = "Arcane Safeguard"
+    _SPELL = ClericLevel0Spells.RESISTANCE
+    _USES = _uses_per_proficiency_bonus("long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the Resistance cantrip. {self.spell_casting_ability.value} is your spellcasting ability for this spell. "
+            "You can cast the Resistance cantrip as a Bonus Action. You can do so a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
+            "Sheltering Aid. When you take the Help action to assist with an ally's ability check, that ally gains a number of Temporary Hit Points equal to your Proficiency Bonus."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class ArcaneUndertaker(_SpellcastingOriginFeat):
+    _NAME = "Arcane Undertaker"
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(
+        self,
+        necromancy_cantrip: NecromancyLevel0Spells,
+        spell_casting_ability: Ability,
+    ):
+        self.necromancy_cantrip = necromancy_cantrip
+        super().__init__(spell_casting_ability)
+
+    def get_spells(self) -> list[str]:
+        return [self.necromancy_cantrip]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Cantrip. You learn the {self.necromancy_cantrip.value} cantrip (a Cleric or Wizard cantrip from the Necromancy school). {self.spell_casting_ability.value} is your spellcasting ability for this spell.\n"
+            "Knowledge from the Dead. When you make an Intelligence (History) or Wisdom (Medicine) check, you can roll 1d4 and add the number rolled to the ability check.\n"
+            "Understanding of Death. When you take the Help action to stabilize a creature with 0 Hit Points, you gain Heroic Inspiration. Once you use this benefit, you can't use it again until you finish a Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class PortalJumper(OriginFeat):
+    VALID_DAMAGE_TYPES = (DamageType.NECROTIC, DamageType.PSYCHIC, DamageType.RADIANT)
+
+    def __init__(self, damage_type: DamageType):
+        if damage_type not in self.VALID_DAMAGE_TYPES:
+            allowed = ", ".join(dt.value for dt in self.VALID_DAMAGE_TYPES)
+            raise ValueError(f"Portal Jumper damage type must be one of: {allowed}.")
+        self.damage_type = damage_type
+        self._resistance = DamageResistance(damage_type)
+        super().__init__(
+            name="Portal Jumper",
+            origin="Origin Feat",
+            uses=_uses_per_proficiency_bonus("long rest"),
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        self._resistance.apply(ledger_writer)
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Otherworldly Resilience. You have Resistance to {self.damage_type.value} damage.\n"
+            "Portal Step. You can spend 15 feet of movement to teleport to an unoccupied space you can see within 15 feet of yourself. You can use this benefit a number of times equal to your Proficiency Bonus but only once per turn, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class TransmutedAnatomy(OriginFeat):
+    def __init__(self):
+        self._speed = SpeedBonus(5)
+        super().__init__(
+            name="Transmuted Anatomy",
+            origin="Origin Feat",
+            uses=_uses_per_proficiency_bonus("long rest"),
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        self._speed.apply(ledger_writer)
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Lengthened Stride. Your Speed increases by 5 feet.\n"
+            "Resilient Anatomy. You have Advantage on saving throws against effects that would compel you to shape-shift against your will. "
+            "Additionally, when you fail a Constitution saving throw, you can take a Reaction to roll 1d4 and add the number rolled to the save, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class ChildOfTheSun(_SpellcastingOriginFeat):
+    _NAME = "Child of the Sun"
+    _SPELL = BardLevel1Spells.FAERIE_FIRE
+    # One free cast of Faerie Fire per Long Rest.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Eyes of Eirdu. You and allies within 10 feet of you have Advantage on saving throws made to avoid or end the Blinded condition.\n"
+            f"Faerie Fire. You learn the Faerie Fire spell. {self.spell_casting_ability.value} is your spellcasting ability for this spell. "
+            "You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have. "
+            "When you cast Faerie Fire without a spell slot using this benefit, taking damage can't break your Concentration on the spell."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class ShadowmoorHexer(_SpellcastingOriginFeat):
+    _NAME = "Shadowmoor Hexer"
+    _SPELL = WarlockLevel1Spells.HEX
+    # One free cast of Hex per Long Rest.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            f"Hex. You always have the Hex spell prepared. {self.spell_casting_ability.value} is your spellcasting ability for this spell. "
+            "You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have.\n"
+            "Curse Magic. When a creature that you've cursed with Hex hits you with an attack roll, the creature takes Psychic damage equal to your Proficiency Bonus. A creature takes this damage only once per turn."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class TirelessReveler(OriginFeat):
+    def __init__(self):
+        super().__init__(
+            name="Tireless Reveler",
+            origin="Origin Feat",
+            uses=_uses_per_proficiency_bonus("short or long rest"),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return "When an ally you can see within 60 feet of yourself expends Heroic Inspiration, you can gain Heroic Inspiration if you lack it. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Short or Long Rest."
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class VampireHunter(OriginFeat):
+    def __init__(self):
+        super().__init__(
+            name="Vampire Hunter",
+            origin="Origin Feat",
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Adroit Escape. You have Advantage on checks to escape from nonmagical restraints or the Grappled condition.\n"
+            "Vitality Ward. When you take Necrotic damage, you can take a Reaction to mitigate the damage. Roll a number of d6s equal to your Proficiency Bonus, and add them together. Reduce the Necrotic damage you take by this total. Once you use this benefit, you can't use it again until you finish a Short or Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class VampiresPlaything(OriginFeat):
+    def __init__(self):
+        super().__init__(
+            name="Vampire's Plaything",
+            origin="Origin Feat",
+            uses=_uses_per_proficiency_bonus("long rest"),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "You gain the following benefits.\n"
+            "Decanting. When you finish a Long Rest, you can create one Potion of Healing or an Antitoxin, as long as you have an empty vial or flask. These liquids evaporate when you finish another Long Rest.\n"
+            "Timely Retreat. You can take a Bonus Action to take the Dash action or the Disengage action. You can use this benefit a number of times equal to your Proficiency Bonus, and you recover all expended uses when you finish a Long Rest.\n"
+            "Vampiric Connection. The DM determines the fate of your former vampire master. While you and your former vampire master are on the same plane of existence, the vampire can communicate with you telepathically, and you can choose to allow the vampire to perceive through your senses."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

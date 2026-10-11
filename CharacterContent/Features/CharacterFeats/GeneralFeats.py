@@ -1,4 +1,10 @@
-from Model.Content.Feature import Feature, FeatureTarget, FeatureUses, RegainedOn
+from Model.Content.Feature import (
+    Feature,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+    regained_on_from_uses,
+)
 from Model.Content.Improvements import (
     AbilityScoreBonus,
     DamageResistance,
@@ -14,7 +20,7 @@ from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Records.GrantStamp import GrantStamp
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Core.Rules import MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
+from Core.Rules import MAX_ABILITY_MODIFIER, MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 
 
@@ -26,16 +32,7 @@ class GeneralFeat(Feature):
     labeled_by_class_level = True
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
-        if self.uses is None or self.uses.regain_all_on is None:
-            return None
-        cadence = self.uses.regain_all_on.lower()
-        if cadence == "long rest":
-            return RegainedOn.LONG_REST
-        if cadence == "short rest":
-            return RegainedOn.SHORT_REST
-        if "short" in cadence and "long" in cadence:
-            return RegainedOn.SHORT_OR_LONG_REST
-        return RegainedOn.OTHER
+        return regained_on_from_uses(self.uses)
 
 
 class _AbilityScoreFeat(GeneralFeat):
@@ -1492,7 +1489,6 @@ class Watchers(GeneralFeat):
 
 class ElementalFamiliar(_AbilityScoreFeat):
     _NAME = "Elemental Familiar"
-    _ORIGIN = "General Feat Level 4+ (Arcana Unleashed 2026)"
     _ABILITIES = tuple(Ability)
 
     def __init__(self, character_level: int, ability: Ability, damage_type: DamageType):
@@ -1532,7 +1528,6 @@ class ElementalFamiliar(_AbilityScoreFeat):
 
 class SpellResistant(_AbilityScoreFeat):
     _NAME = "Spell Resistant"
-    _ORIGIN = "General Feat Level 4+ (Arcana Unleashed 2026)"
     _ABILITIES = (Ability.DEXTERITY, Ability.CONSTITUTION)
     _USES = FeatureUses(
         max_uses=MAX_PROFICIENCY_BONUS,
@@ -1574,6 +1569,267 @@ class SpellResistant(_AbilityScoreFeat):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+# ---------------------------------------------------------------------------
+# Arcana Unleashed 2026: School Adepts
+# ---------------------------------------------------------------------------
+
+_MENTAL_ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+_STRENGTH_OR_DEXTERITY = (Ability.STRENGTH, Ability.DEXTERITY)
+
+
+class _SchoolAdept(_AbilityScoreFeat):
+    """Base class for the 8 school Adept feats, which differ only in their
+    name, spell table and school benefit.
+
+    Subclasses declare:
+        _NAME           – feat name, e.g. "Abjuration Adept"
+        _SPELLS         – the always-prepared spell for spell slot levels 1-5, in order
+        _SCHOOL_EFFECT  – the school-specific benefit text
+    """
+
+    _ABILITIES = _MENTAL_ABILITIES
+
+    _SPELLS: tuple[str, str, str, str, str]
+    _SCHOOL_EFFECT: str
+
+    def get_description(self, character: CharacterView) -> str:
+        spell_table = "\n".join(
+            f"{slot_level} | {spell}"
+            for slot_level, spell in enumerate(self._SPELLS, start=1)
+        )
+        return (
+            "Prerequisite: Level 4+, Spellcasting or Pact Magic Feature\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.\n"
+            f"Additional Spells. Your prowess allows you to always have certain spells at the ready. When you have spell slots of a level specified in the {self._NAME} Spells table, you thereafter always have the spells listed for that level and lower prepared.\n"
+            f"{self._SCHOOL_EFFECT}\n"
+            f"{self._NAME} Spells:\n"
+            "Spell Slot Level | Spell\n"
+            f"{spell_table}"
+        )
+
+
+class AbjurationAdept(_SchoolAdept):
+    _NAME = "Abjuration Adept"
+    _SPELLS = ("Shield", "Lesser Restoration", "Protection from Energy", "Banishment", "Mass Cure Wounds")
+    _SCHOOL_EFFECT = "Protective Ward. When you cast a spell from the Abjuration school using a spell slot, you or one creature you can see within 30 feet of yourself gains Temporary Hit Points equal to twice the level of spell slot expended."
+
+
+class ConjurationAdept(_SchoolAdept):
+    _NAME = "Conjuration Adept"
+    _SPELLS = ("Entangle", "Misty Step", "Conjure Animals", "Dimension Door", "Conjure Elemental")
+    _SCHOOL_EFFECT = "Persistent Conjuration. While maintaining Concentration on a spell from the Conjuration school, you gain a bonus to Constitution saving throws to maintain this Concentration. This bonus is equal to the ability modifier of the score increased by this feat."
+
+
+class DivinationAdept(_SchoolAdept):
+    _NAME = "Divination Adept"
+    _SPELLS = ("Detect Evil and Good", "Mind Spike", "Clairvoyance", "Divination", "Scrying")
+    _SCHOOL_EFFECT = "Prescient Intervention. When a creature you can see within 60 feet of yourself makes a D20 Test, you can take a Reaction to give that creature Advantage or Disadvantage (your choice) on that roll. Once you use this benefit, you can't do so again until you finish a Long Rest. You can also regain use of this feature when you cast a spell from the Divination school using a spell slot."
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+
+class EnchantmentAdept(_SchoolAdept):
+    _NAME = "Enchantment Adept"
+    _SPELLS = ("Dissonant Whispers", "Enthrall", "Hold Person", "Dominate Beast", "Modify Memory")
+    _SCHOOL_EFFECT = "Subtle Enchantments. When you cast a spell from the Enchantment school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell."
+
+
+class EvocationAdept(_SchoolAdept):
+    _NAME = "Evocation Adept"
+    _SPELLS = ("Chromatic Orb", "Shatter", "Fireball", "Vitriolic Sphere", "Wall of Force")
+    _SCHOOL_EFFECT = "Fueled Evocation. Once per turn when you cast an Evocation spell and deal damage, you can roll up to two of your unexpended Hit Point Dice and add the total rolled to one of the spell's damage rolls. Those Hit Point Dice are then expended."
+
+
+class IllusionAdept(_SchoolAdept):
+    _NAME = "Illusion Adept"
+    _SPELLS = ("Silent Image", "Phantasmal Force", "Major Image", "Hallucinatory Terrain", "Seeming")
+    _SCHOOL_EFFECT = "Masterful Illusions. When you cast a spell from the Illusion school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell. Additionally, creatures have Disadvantage on Intelligence (Investigation) checks made to discern the true nature of illusions created by your spells."
+
+
+class NecromancyAdept(_SchoolAdept):
+    _NAME = "Necromancy Adept"
+    _SPELLS = ("Inflict Wounds", "Ray of Enfeeblement", "Vampiric Touch", "Blight", "Raise Dead")
+    _SCHOOL_EFFECT = "Life Manipulation. When you cast a spell from the Necromancy school using a spell slot, you can immediately roll up to two of your unexpended Hit Point Dice. You regain Hit Points equal to the total rolled plus the level of spell slot expended. Those Hit Point Dice are then expended."
+
+
+class TransmutationAdept(_SchoolAdept):
+    _NAME = "Transmutation Adept"
+    _SPELLS = ("Jump", "Spider Climb", "Slow", "Polymorph", "Animate Objects")
+    _SCHOOL_EFFECT = "Magical Augmentation. On your turn when you cast a spell from the Transmutation school using a spell slot, your Speed increases by a number of feet equal to five times the level of spell slot expended. This increase lasts until the end of the turn."
+
+
+# ---------------------------------------------------------------------------
+# Arcana Unleashed 2026: other general feats
+# ---------------------------------------------------------------------------
+
+
+class MagicConnoisseur(_AbilityScoreFeat):
+    _NAME = "Magic Connoisseur"
+    _ABILITIES = _MENTAL_ABILITIES
+    # One free cast of each of the two chosen spells per Long Rest.
+    _USES = FeatureUses(max_uses=2, regain_all_on="long rest")
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        level_1_spell: str,
+        level_2_spell: str,
+    ):
+        self.level_1_spell = level_1_spell
+        self.level_2_spell = level_2_spell
+        super().__init__(character_level, ability)
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Magic Initiate Feat\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.\n"
+            "Additional Spells. Choose a level 1 and a level 2 spell from the same list you selected for the Magic Initiate feat's cantrips. You always have those spells prepared. "
+            "You can cast each spell once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest. "
+            "You can also cast those spells using any spell slots you have of the appropriate level. The spellcasting ability for these spells is the same as the spellcasting ability chosen for your Magic Initiate feat's spells.\n"
+            f"Chosen spells: {self.level_1_spell} (level 1) and {self.level_2_spell} (level 2).\n"
+            "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list."
+        )
+
+
+class OtherworldlyFamiliar(_AbilityScoreFeat):
+    _NAME = "Otherworldly Familiar"
+    _ABILITIES = tuple(Ability)
+    VALID_DAMAGE_TYPES = (
+        DamageType.NECROTIC,
+        DamageType.POISON,
+        DamageType.PSYCHIC,
+        DamageType.RADIANT,
+        DamageType.THUNDER,
+    )
+
+    def __init__(self, character_level: int, ability: Ability, damage_type: DamageType):
+        if damage_type not in self.VALID_DAMAGE_TYPES:
+            allowed = ", ".join(dt.value for dt in self.VALID_DAMAGE_TYPES)
+            raise ValueError(f"{self._NAME} damage type must be one of: {allowed}.")
+        # The familiar gains this resistance, not the character - so it is
+        # only described, never applied to the stat block.
+        self.damage_type = damage_type
+        super().__init__(character_level, ability)
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Familiar Friend Feat\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Otherworldly Power. When you cast the Find Familiar spell, you can imbue your familiar with otherworldly might, which lasts until you cast Find Familiar again. While imbued, your familiar gains the following benefits:\n"
+            f"Energy Resistance. Your familiar has Resistance to {self.damage_type.value} damage.\n"
+            "Phase Walk. Your familiar can move through other creatures and objects as if they were Difficult Terrain. If your familiar ends its turn inside an object, it is shunted to the last unoccupied space it was in."
+        )
+
+
+class SoothingFamiliar(_AbilityScoreFeat):
+    _NAME = "Soothing Familiar"
+    _ABILITIES = tuple(Ability)
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Familiar Friend Feat\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Healing Beacon. Positive energy fills a 5-foot Emanation originating from your familiar as long as it is within 120 feet of you. Whenever an ally in that Emanation rolls a die to determine the number of Hit Points restored to a creature, that ally can treat a roll of 1 or 2 on the die as a 3."
+        )
+
+
+class SpellSubterfuge(_AbilityScoreFeat):
+    _NAME = "Spell Subterfuge"
+    _ABILITIES = _MENTAL_ABILITIES
+    _USES = FeatureUses(
+        max_uses=MAX_ABILITY_MODIFIER,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to the ability modifier of the score increased by this feat.",
+    )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_ability_modifier(self.ability))
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Spellcasting or Pact Magic Feature\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.\n"
+            "Shrouding Spells. After you cast a spell that has a casting time of an action using a spell slot, you can take both the Dash and Hide actions as a Bonus Action. "
+            "You can use this benefit a number of times equal to the ability modifier of the score increased by this feat, and you regain all expended uses when you finish a Long Rest.\n"
+            "Sneaky Casting. If you have the Hide action's Invisible condition, casting a spell with a Verbal component or making a spell attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class WarlikeFamiliar(_AbilityScoreFeat):
+    _NAME = "Warlike Familiar"
+    _ABILITIES = tuple(Ability)
+    # One free cast of Battle Familiar per Long Rest.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Familiar Friend Feat\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Battle Familiar. You always have the Battle Familiar spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest. "
+            "You can also cast the spell using any spell slots you have of the appropriate level. Your spellcasting ability for this spell is the one chosen for the Faithful Companion benefit of your Familiar Friend feat.\n"
+            "Intercept Attack. When a creature within 5 feet of your familiar is hit by an attack roll, your familiar can take a Reaction to add a bonus to the creature's Armor Class against that attack, potentially causing the attack to miss. The bonus is equal to your Proficiency Bonus."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+# ---------------------------------------------------------------------------
+# D&D Beyond Drops July 2026
+# ---------------------------------------------------------------------------
+
+
+class ShiftingCombatant(_AbilityScoreFeat):
+    _NAME = "Shifting Combatant"
+    _ABILITIES = _STRENGTH_OR_DEXTERITY
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+, Weapon Mastery Feature\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Strength or Dexterity score by 1, to a maximum of 20.\n"
+            "Domino Strike. When you hit a creature with a weapon and activate the Push mastery property to push that creature into a space occupied by a Large or smaller creature, you can force the creatures to collide. "
+            "Each creature makes a Dexterity saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus), taking 1d10 Bludgeoning damage on a failed save.\n"
+            "Fearless Leap. When you make a Long Jump, moving at least 10 feet immediately before the jump, and land in a space within 5 feet of two or more enemies, attack rolls made against you have Disadvantage until the start of your next turn."
+        )
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return (
+            8
+            + character.get_ability_modifier(self.ability)
+            + character.get_proficiency_bonus()
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class TacticalCombatant(_AbilityScoreFeat):
+    _NAME = "Tactical Combatant"
+    _ABILITIES = _STRENGTH_OR_DEXTERITY
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "Prerequisite: Level 4+ and Strength or Dexterity 13+\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Strength or Dexterity score by 1, to a maximum of 20.\n"
+            "Buffering Strike. When you hit a creature with a weapon, you can gain Temporary Hit Points equal to the total number rolled on the weapon's damage dice. Once you use this benefit, you can't use it again until you roll Initiative or finish a Short or Long Rest.\n"
+            "Honed Instincts. When you fail an ability check, you can roll 1d6 and add the number rolled to the ability check, potentially turning it into a success. Once you use this benefit, you can't use it again until you roll Initiative or finish a Short or Long Rest."
+        )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
