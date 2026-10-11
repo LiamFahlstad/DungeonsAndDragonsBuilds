@@ -1,4 +1,19 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability
+from Core.Definitions import (
+    ARTIFICER_HIT_DIE,
+    Ability,
+    CharacterClass,
+    Condition,
+    CreatureSize,
+    DamageType,
+)
+from Model.Creatures.Combatants import (
+    Alignment,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import MonsterAbility
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -64,6 +79,83 @@ class ReanimatorSkillSet(Feature):
         return description
 
 
+def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantData:
+    artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
+    intelligence_modifier = character.get_intelligence_modifier()
+    spell_attack = character.calculate_attack_bonus_for_ability(Ability.INTELLIGENCE)
+    spell_save_dc = character.calculate_difficulty_class()
+    proficiency_bonus = character.get_proficiency_bonus()
+    death_burst_dice = "4d4" if character.has_feature(ImprovedReanimation) else "2d4"
+
+    return ExtendedCombatantData(
+        combatant_type="Reanimated Companion",
+        hp=5 + 5 * artificer_level,
+        ac=10 + intelligence_modifier,
+        temp_hp=0,
+        conditions=[],
+        ability_scores={Ability.STRENGTH: 11, Ability.DEXTERITY: 10, Ability.CONSTITUTION: 16, Ability.INTELLIGENCE: 4, Ability.WISDOM: 10, Ability.CHARISMA: 6},
+        saving_throws={Ability.STRENGTH: 0, Ability.DEXTERITY: 0, Ability.CONSTITUTION: 3, Ability.INTELLIGENCE: -3, Ability.WISDOM: 0, Ability.CHARISMA: -2},
+        spell_slots={},
+        cr="None",
+        monster_type=MonsterType.UNDEAD,
+        alignment=Alignment.NEUTRAL,
+        size=CreatureSize.MEDIUM,
+        description=(
+            f"XP 0; PB equals your Proficiency Bonus (currently +{proficiency_bonus}). "
+            "Your Strange Modifications choices (Ferocity, Bloated, Gaunt, Moist) change this card as described in those features."
+        ),
+        hp_formula=f"5 + five times your Artificer level; {artificer_level}d8 Hit Dice",
+        speed_ground_ft=30,
+        damage_resistances=[
+            DamageTypeEntry(damage_types=[DamageType.NECROTIC, DamageType.POISON])
+        ],
+        damage_immunities=[DamageTypeEntry(damage_types=[DamageType.LIGHTNING])],
+        condition_immunities=[
+            Condition.CHARMED,
+            Condition.EXHAUSTION,
+            Condition.POISONED,
+        ],
+        senses="Blindsight 60 ft.; Passive Perception 10",
+        languages="Understands the languages you know",
+        traits=[
+            MonsterAbility(
+                name="Death Burst",
+                description=(
+                    "The companion explodes when it dies. Dexterity Saving Throw: "
+                    f"DC {spell_save_dc}, each creature in a 10-foot Emanation originating from the companion. "
+                    f"Failure: {death_burst_dice} Necrotic damage. Success: Half damage."
+                ),
+            ),
+            MonsterAbility(
+                name="Lightning Absorption",
+                description="Whenever the companion is subjected to Lightning damage, it regains a number of Hit Points equal to the Lightning damage dealt.",
+            ),
+        ],
+        actions=[
+            MonsterAbility(
+                name="Dreadful Swipe",
+                description=(
+                    f"Melee Attack Roll: {spell_attack:+}, reach 5 ft. "
+                    f"Hit: 1d4 + {intelligence_modifier} Necrotic damage (1d4 plus your Intelligence modifier), "
+                    "and the target can't take Opportunity Attacks until the start of its next turn."
+                ),
+            )
+        ],
+        bonus_actions=[],
+        reactions=[],
+        legendary_actions=[],
+        legendary_resistances=0,
+        lair_actions=[],
+        mythic_actions=[],
+    )
+
+
+def format_reanimated_companion(character: CharacterView) -> str:
+    return format_creature_stat_block(
+        _build_reanimated_companion(character), retain_mental_abilities=False
+    )
+
+
 class ReanimatedCompanion(Feature):
     def __init__(self):
         super().__init__(
@@ -82,7 +174,8 @@ class ReanimatedCompanion(Feature):
             "Using Tinker's Tools or another type of Artisan's Tools with which you have proficiency, you can take a Magic action to create a Reanimated Companion (see the stat block) through the power of necromancy and science. The companion manifests in an unoccupied space within 5 feet of you. You determine the companion's appearance; your choices don't affect the companion's game statistics.\n"
             "The companion is Friendly to you and your allies and obeys you. It lasts until you finish a Long Rest or until you take a Magic action to dismiss it early, at which point it harmlessly collapses into a pile of viscera. It immediately drops to 0 Hit Points and dies (triggering its Death Burst trait) if you die.\n"
             "Once you create a companion, you can't do so again until you finish a Long Rest or expend a spell slot to create one. You can have only one companion at a time and can't create one while your companion is present.\n"
-            "The Companion in Combat. In combat, the companion acts during your turn. It can move and take its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, the companion acts on its own and isn't limited to the Dodge action."
+            "The Companion in Combat. In combat, the companion acts during your turn. It can move and take its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, the companion acts on its own and isn't limited to the Dodge action.\n"
+            + format_reanimated_companion(character)
         )
         return description
 

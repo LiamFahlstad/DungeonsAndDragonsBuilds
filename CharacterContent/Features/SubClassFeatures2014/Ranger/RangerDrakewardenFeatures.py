@@ -15,7 +15,7 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import MonsterAbility
-from Core.Definitions import CharacterClass, DamageType
+from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
 
@@ -75,8 +75,18 @@ def _build_drake(
         ac=14 + proficiency_bonus,
         temp_hp=0,
         conditions=[],
-        ability_scores={"STR": 16, "DEX": 12, "CON": 15, "INT": 8, "WIS": 14, "CHA": 8},
-        saving_throws={"DEX": 1 + proficiency_bonus, "WIS": 2 + proficiency_bonus},
+        ability_scores={
+            Ability.STRENGTH: 16,
+            Ability.DEXTERITY: 12,
+            Ability.CONSTITUTION: 15,
+            Ability.INTELLIGENCE: 8,
+            Ability.WISDOM: 14,
+            Ability.CHARISMA: 8,
+        },
+        saving_throws={
+            Ability.DEXTERITY: 1 + proficiency_bonus,
+            Ability.WISDOM: 2 + proficiency_bonus,
+        },
         spell_slots={},
         cr=str(proficiency_bonus),
         monster_type=MonsterType.DRAGON,

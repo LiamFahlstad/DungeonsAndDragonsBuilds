@@ -1,4 +1,18 @@
-from Core.Definitions import ARTIFICER_HIT_DIE
+from Core.Definitions import (
+    ARTIFICER_HIT_DIE,
+    Ability,
+    CharacterClass,
+    Condition,
+    CreatureSize,
+    DamageType,
+)
+from Model.Creatures.Combatants import (
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import MonsterAbility
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Content.Feature import Feature, FeatureUses, FeatureActivation, RegainedOn
 from Model.Content.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
@@ -74,6 +88,81 @@ class BattleReady(Feature):
         ]
 
 
+def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
+    artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
+    intelligence_modifier = character.get_intelligence_modifier()
+    spell_attack = character.calculate_attack_bonus_for_ability(Ability.INTELLIGENCE)
+    proficiency_bonus = character.get_proficiency_bonus()
+
+    deflect = (
+        "Trigger: A creature the defender can see within 5 feet of it makes an attack roll targeting a different creature. "
+        "Response: The triggering creature makes the attack roll with Disadvantage."
+    )
+    if character.has_feature(ImprovedDefender):
+        deflect += (
+            f" The attacker takes 1d4 + {intelligence_modifier} Force damage "
+            "(Improved Deflection: 1d4 plus your Intelligence modifier)."
+        )
+    return ExtendedCombatantData(
+        combatant_type="Steel Defender",
+        hp=5 + 5 * artificer_level,
+        ac=12 + intelligence_modifier,
+        temp_hp=0,
+        conditions=[],
+        ability_scores={Ability.STRENGTH: 14, Ability.DEXTERITY: 12, Ability.CONSTITUTION: 14, Ability.INTELLIGENCE: 4, Ability.WISDOM: 10, Ability.CHARISMA: 6},
+        saving_throws={Ability.STRENGTH: 2, Ability.DEXTERITY: 1, Ability.CONSTITUTION: 2, Ability.INTELLIGENCE: -3, Ability.WISDOM: 0, Ability.CHARISMA: -2},
+        spell_slots={},
+        cr="None",
+        monster_type=MonsterType.CONSTRUCT,
+        size=CreatureSize.MEDIUM,
+        description=f"XP 0; PB equals your Proficiency Bonus (currently +{proficiency_bonus}).",
+        hp_formula=f"5 + five times your Artificer level; {artificer_level}d8 Hit Dice",
+        speed_ground_ft=40,
+        damage_immunities=[DamageTypeEntry(damage_types=[DamageType.POISON])],
+        condition_immunities=[
+            Condition.CHARMED,
+            Condition.EXHAUSTION,
+            Condition.POISONED,
+        ],
+        senses="Darkvision 60 ft., Passive Perception 10",
+        languages="Understands the languages you know",
+        traits=[
+            MonsterAbility(
+                name="Steel Bond",
+                description=f"Add your Proficiency Bonus (+{proficiency_bonus}) to any ability check or saving throw the Steel Defender makes.",
+            )
+        ],
+        actions=[
+            MonsterAbility(
+                name="Force-Empowered Rend",
+                description=(
+                    f"Melee Attack Roll: {spell_attack:+}, reach 5 ft. "
+                    f"Hit: 1d8 + {2 + intelligence_modifier} Force damage (1d8 + 2 plus your Intelligence modifier)."
+                ),
+            ),
+            MonsterAbility(
+                name="Repair (3/Day)",
+                description=(
+                    "The defender, or one Construct or object it can see within 5 feet of it, regains Hit Points "
+                    f"equal to 2d8 + {intelligence_modifier} (2d8 plus your Intelligence modifier)."
+                ),
+            ),
+        ],
+        bonus_actions=[],
+        reactions=[MonsterAbility(name="Deflect Attack", description=deflect)],
+        legendary_actions=[],
+        legendary_resistances=0,
+        lair_actions=[],
+        mythic_actions=[],
+    )
+
+
+def format_steel_defender(character: CharacterView) -> str:
+    return format_creature_stat_block(
+        _build_steel_defender(character), retain_mental_abilities=False
+    )
+
+
 class SteelDefender(Feature):
     def __init__(self):
         super().__init__(
@@ -89,24 +178,7 @@ class SteelDefender(Feature):
             "The Defender in Combat. In combat, the defender acts during your turn. It can move and take its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, the defender acts on its own and isn't limited to the Dodge action.\n"
             "Restoring or Replacing the Defender. If the defender has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The defender returns to life after 1 minute with all its Hit Points restored.\n"
             "Whenever you finish a Long Rest, you can create a new defender if you have Smith's Tools in hand. If you already have a defender from this feature, the first one vanishes.\n"
-            "Steel Defender\n"
-            "Medium Construct\n"
-            "Armor Class: 12 + your Intelligence modifier\n"
-            "Hit Points: HP 5 + five times your Artificer level (the defender has a number of Hit Dice [d8s] equal to your Artificer level)\n"
-            "Speed: Speed 40 ft.\n"
-            "STR (Mod/Save)	DEX (Mod/Save)	CON (Mod/Save)	INT (Mod/Save)	WIS (Mod/Save)	CHA (Mod/Save)\n"
-            "14 (+2/+2)	12 (+1/+1)	14 (+2/+2)	4 (−3/-3)	10 (+0/+0)	6 (-2/-2)\n"
-            "Immunities: Poison; Charmed, Exhaustion, Poisoned\n"
-            "Senses: Darkvision 60 ft., Passive Perception 10\n"
-            "Languages: Understands the languages you know\n"
-            "Challenge Rating: None (XP 0; PB equals your Proficiency Bonus)\n"
-            "Traits\n"
-            "Steel Bond. Add your Proficiency Bonus to any ability check or saving throw the Steel Defender makes.\n"
-            "Actions\n"
-            "Force-Empowered Rend. Melee Attack Roll: Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d8 + 2 plus your Intelligence modifier Force damage.\n"
-            "Repair (3/Day). The defender, or one Construct or object it can see within 5 feet of it, regains a number of Hit Points equal to 2d8 plus your Intelligence modifier.\n"
-            "Reactions\n"
-            "Deflect Attack. Trigger: A creature the defender can see within 5 feet of it makes an attack roll targeting a different creature. Response: The triggering creature makes the attack roll with Disadvantage."
+            + format_steel_defender(character)
         )
         return description
 

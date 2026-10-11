@@ -16,13 +16,22 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
 def _normalize_ability_keyed_dict(d: Optional[dict]) -> dict:
     """Allow `Ability` enum members as dict keys (e.g. `{Ability.STRENGTH: 10}`)
     alongside plain short-name strings (`{"STR": 10}`), collapsing both to
-    short-name string keys — the form the rest of the combat pipeline expects."""
+    short-name string keys — the form the rest of the combat pipeline expects.
+    Any other key (e.g. "Str") raises, since stat blocks would silently read it
+    as missing and show 10."""
     if not d:
         return {}
-    return {
-        (key.short_name if isinstance(key, Ability) else key): value
-        for key, value in d.items()
-    }
+    valid = {ability.short_name for ability in Ability}
+    normalized = {}
+    for key, value in d.items():
+        short = key.short_name if isinstance(key, Ability) else key
+        if short not in valid:
+            raise ValueError(
+                f"Invalid ability key {key!r}; use an Ability member "
+                f"(e.g. Ability.STRENGTH) or one of {sorted(valid)}"
+            )
+        normalized[short] = value
+    return normalized
 
 
 class MonsterType(str, Enum):

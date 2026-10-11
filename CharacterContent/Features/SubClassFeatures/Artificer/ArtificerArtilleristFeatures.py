@@ -1,5 +1,5 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 
 
@@ -67,9 +67,35 @@ class EldritchCannon(Feature):
             "Activate Cannon (Requires You to be within 60 Feet of the Cannon): As a Bonus Action, you order the cannon to use the Flamethrower, Force Ballista, or Protector option below; you can direct the cannon to move up to 15 feet before or after that option:\n"
             "Flamethrower: The cannon exhales fire in a 15-foot Cone. Each creature in that area makes a Dexterity saving throw against your spell save DC, taking 2d8 Fire damage on a failed save or half as much damage on a successful one. Flammable objects in the Cone that aren't being worn or carried start burning.\n"
             "Force Ballista: Make a ranged spell attack originating from the cannon at one creature or object within 120 feet of it. On a hit, the target takes 2d8 Force damage, and if the target is a creature, it is pushed up to 5 feet away from the cannon.\n"
-            "Protector: The cannon emits a burst of positive energy that grants itself and each creature of your choice within 10 feet of it a number of Temporary Hit Points equal to 1d8 plus your Intelligence modifier (minimum of 1)."
+            "Protector: The cannon emits a burst of positive energy that grants itself and each creature of your choice within 10 feet of it a number of Temporary Hit Points equal to 1d8 plus your Intelligence modifier (minimum of 1).\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        """The cannon's numbers at the character's level (Explosive Cannon's
+        Firepower adds 1d8 to its damage rolls and to Protector's Temporary HP)."""
+        artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
+        spell_save_dc = character.calculate_difficulty_class()
+        spell_attack = character.calculate_attack_bonus_for_ability(
+            Ability.INTELLIGENCE
+        )
+        intelligence_modifier = max(1, character.get_intelligence_modifier())
+        explosive = character.has_feature(ExplosiveCannon)
+        damage_dice = "3d8" if explosive else "2d8"
+        protector_dice = "2d8" if explosive else "1d8"
+        lines = [
+            f"Your cannon right now: Hit Points {5 * artificer_level} (Mending restores 2d6), Armor Class 18.",
+            f"Flamethrower: DC {spell_save_dc} Dexterity save, {damage_dice} Fire damage (half on success).",
+            f"Force Ballista: {spell_attack:+} to hit, {damage_dice} Force damage.",
+            f"Protector: {protector_dice} + {intelligence_modifier} Temporary Hit Points.",
+        ]
+        if explosive:
+            lines.append(
+                f"Detonate (Reaction): DC {spell_save_dc} Dexterity save, 3d10 Force damage (half on success) within 20 feet."
+            )
+        return "\n".join(lines)
 
 
 class ArcaneFirearm(Feature):
