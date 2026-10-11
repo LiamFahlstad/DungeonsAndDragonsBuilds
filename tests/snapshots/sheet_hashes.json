@@ -3676,6 +3676,24 @@
    "items.html": "668aa0490ee0b492e14f29dd17eab4dc8511028194ad9911878300543288ecdb"
   }
  },
+ "Y2024_Artificer_Reanimator_Dessie": {
+  "concise": {
+   "character.html": "c1691f26f9692af548989f1cc35b3049f4ead6d273abbf3cb0dfcc2151bd9ae2",
+   "features/level_01.html": "9d26d8610ff55a8b6b0d564777a337b0aa8d1b854b7c8f7db78d6720a9ff60f8",
+   "features/level_02.html": "2e87aad103b69cdf91054f4e6b1ff34a29d2ce7c364bb3d6d2f74fc7addead91",
+   "features/level_03.html": "7ac16cda3a6635734a3b34db80f54d7aafc11682163f11321215fddbdfc17302",
+   "full_character_sheet.html": "371b3ca35251bb37666d9dd098a25bf75f77f696b9d1f4af1f8d296c434c5378",
+   "items.html": "26f7d82cb8c1e83e3f8bbe44723bc03c5918f8700a28a8267fd9864f15e212b6"
+  },
+  "full": {
+   "character.html": "c1691f26f9692af548989f1cc35b3049f4ead6d273abbf3cb0dfcc2151bd9ae2",
+   "features/level_01.html": "abc5d341b0467b653ad337113cba622b2af501a297dad772474e296972237f72",
+   "features/level_02.html": "2e87aad103b69cdf91054f4e6b1ff34a29d2ce7c364bb3d6d2f74fc7addead91",
+   "features/level_03.html": "7ac16cda3a6635734a3b34db80f54d7aafc11682163f11321215fddbdfc17302",
+   "full_character_sheet.html": "4d548fd2b24e2a7dc06d6297c0482c34a824290f85aba35665dda42c0e16a64e",
+   "items.html": "26f7d82cb8c1e83e3f8bbe44723bc03c5918f8700a28a8267fd9864f15e212b6"
+  }
+ },
  "Y2024_Barbarian_Berserker_YmiraSkullcrusher": {
   "concise": {
    "character.html": "7e5a6e3084527c2a272b61c1c6fd6367a9b513196fb0e287a5c595bbc1897116",
@@ -3865,16 +3883,16 @@
    "features/level_01.html": "19c07ff6740419d76533716820a8787f33e8588867fe398f69f25071c91e3331",
    "features/level_02.html": "5e355526672c192747218e2d1195926a53ab6b1a26b86545e89c7908e3e557b4",
    "features/level_03.html": "806f518315844826d67d2c415233e2177fe3edebc227b06a2c1056a2770b26d4",
-   "full_character_sheet.html": "ee17ff812096888966f0475063cb20161a344b68439d4ee6868be43c1beb7b0d",
-   "items.html": "6e2fbdeb14fb7882ecf3f4d187e99c0d6112162b463f022c52530cb056125769"
+   "full_character_sheet.html": "c6b4a254cedfb0ef2bec33702fcb4db4f0d43f6134dda6d0a36959904a3a8daf",
+   "items.html": "e538307e7325d5a6e252d61a94487ad7e1417a0c1757e9ffb2b2b9c75f06eea8"
   },
   "full": {
    "character.html": "ef6e77eae3784e2b2d17c75b02139855eed7d35dbdde3d6729c446119ea8cadc",
    "features/level_01.html": "b39861f73951c7b4ec55e70b8d5268909da50ffd3d090cac6b0343d392ffff06",
    "features/level_02.html": "5e355526672c192747218e2d1195926a53ab6b1a26b86545e89c7908e3e557b4",
    "features/level_03.html": "806f518315844826d67d2c415233e2177fe3edebc227b06a2c1056a2770b26d4",
-   "full_character_sheet.html": "8b11fa7e3410dab647d1434fc6fe97bf83d3ca6e2535eeed6be0de669ed57f5b",
-   "items.html": "6e2fbdeb14fb7882ecf3f4d187e99c0d6112162b463f022c52530cb056125769"
+   "full_character_sheet.html": "5316e74dc3182f38fa2775f67211491022a290d528062021061dcda0b6498b25",
+   "items.html": "e538307e7325d5a6e252d61a94487ad7e1417a0c1757e9ffb2b2b9c75f06eea8"
   }
  },
  "Y2024_Druid_Moon_UrsalineNightpelt": {
@@ -4199,6 +4217,26 @@
    "fighting_styles.html": "8c6464797406dbc02a97d522f30b3faf6ebfc93c112b532fad863fb9c4c85302",
    "full_character_sheet.html": "2e0a22c762ea26b2530b8d58cc86b3013543c24f88ef304f3daaa3e3476bfd7b",
    "items.html": "d7e821d36b68d581ef1f4f9e577178e80e1823f194601d1983c5af061ba60e85"
+  }
+ },
+ "Y2024_Ranger_Drakewarden_Hanna": {
+  "concise": {
+   "character.html": "0c00371fc774aad45829a8344f6181546f0d67c5ff972cdbf1171c649b42fece",
+   "features/level_01.html": "c023ee8bb13937e8a8ce19520d34a47fad205daad9e6182426e8769525b366a7",
+   "features/level_02.html": "8fdee2d1c81689e8f6ef01e994bfca71de95fdb6177c426e06dda1dc618df5b0",
+   "features/level_03.html": "6940aa206c622096df2a2543e646f880ade05ec58b19a4791fa99858909165c9",
+   "fighting_styles.html": "39081c959f5202e2db5b4f5b260733c3328a5a1a4cb91a9b4a42976187e7d8ea",
+   "full_character_sheet.html": "f1a7cd909111066394606ed5c9adbfbe9aa66189fa55681b2396ef856c94acdb",
+   "items.html": "6b44c107dec6da24af03775edafe31bbe5438968c7489ba68b00cf2da7ec3a23"
+  },
+  "full": {
+   "character.html": "0c00371fc774aad45829a8344f6181546f0d67c5ff972cdbf1171c649b42fece",
+   "features/level_01.html": "ab0d89581c6c6e63d2525ae93002246c2d9f39e8acbdfb98c7f36188a5badddd",
+   "features/level_02.html": "2087109723943718b1a9d9cee65d77daae8b4a54a5198674d9f0e70d311d914e",
+   "features/level_03.html": "4e761a46c28511eb0e5de178c491ebc64c745e92d4929c7dd10618d8aa5ec358",
+   "fighting_styles.html": "39081c959f5202e2db5b4f5b260733c3328a5a1a4cb91a9b4a42976187e7d8ea",
+   "full_character_sheet.html": "e9cb20e547e14ddd8ec771ad1da6263a106dd701982129c94d39966cda97eb29",
+   "items.html": "6b44c107dec6da24af03775edafe31bbe5438968c7489ba68b00cf2da7ec3a23"
   }
  },
  "Y2024_Ranger_GloomStalker_NyxShadowtracker": {

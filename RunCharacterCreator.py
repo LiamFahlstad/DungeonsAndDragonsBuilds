@@ -9,6 +9,7 @@ from Builds.CharacterBuilder import BuildClass, CharacterBuilder, is_build_class
 from Builds.Characters import (
     Y2024_Artificer_BattleSmith_PetraGearhollow,
     Y2024_Artificer_Cartographer_ObmarStalskagg,
+    Y2024_Artificer_Reanimator_Dessie,
     Y2024_Barbarian_Berserker_YmiraSkullcrusher,
     Y2024_Barbarian_WorldTree_DagnyEvergrasp,
     Y2024_Bard_Glamour_IselleMoonweave,
@@ -30,6 +31,7 @@ from Builds.Characters import (
     Y2024_Paladin_Glory_BalderSunoath,
     Y2024_Paladin_Vengeance_NadiaIronvow,
     Y2024_Ranger_BeastMaster_OrinPackleader,
+    Y2024_Ranger_Drakewarden_Hanna,
     Y2024_Ranger_GloomStalker_NyxShadowtracker,
     Y2024_Rogue_ArcaneTrickster_ThumSchtock,
     Y2024_Rogue_Assassin_LysandraNightblade,
@@ -55,6 +57,7 @@ class BuildSelector:
         return {
             "Y2024_Artificer_BattleSmith_PetraGearhollow": Y2024_Artificer_BattleSmith_PetraGearhollow.Y2024ArtificerBattleSmithPetraGearhollowCharacterBuilder,
             "Y2024_Artificer_Cartographer_ObmarStalskagg": Y2024_Artificer_Cartographer_ObmarStalskagg.Y2024ArtificerCartographerObmarStalskaggCharacterBuilder,
+            "Y2024_Artificer_Reanimator_Dessie": Y2024_Artificer_Reanimator_Dessie.Y2024ArtificerReanimatorDessieCharacterBuilder,
             "Y2024_Barbarian_Berserker_YmiraSkullcrusher": Y2024_Barbarian_Berserker_YmiraSkullcrusher.Y2024BarbarianBerserkerYmiraSkullcrusherCharacterBuilder,
             "Y2024_Barbarian_WorldTree_DagnyEvergrasp": Y2024_Barbarian_WorldTree_DagnyEvergrasp.Y2024BarbarianWorldTreeDagnyEvergraspCharacterBuilder,
             "Y2024_Bard_Glamour_IselleMoonweave": Y2024_Bard_Glamour_IselleMoonweave.Y2024BardGlamourIselleMoonweaveCharacterBuilder,
@@ -76,6 +79,7 @@ class BuildSelector:
             "Y2024_Paladin_Devotion_ElricPactsworn": Y2024_Paladin_Devotion_ElricPactsworn.Y2024PaladinDevotionElricPactswornCharacterBuilder,
             "Y2024_Paladin_Devotion_Edmund": Y2024_Paladin_Devotion_Edmund.Y2024PaladinDevotionEdmundCharacterBuilder,
             "Y2024_Ranger_BeastMaster_OrinPackleader": Y2024_Ranger_BeastMaster_OrinPackleader.Y2024RangerBeastMasterOrinPackleaderCharacterBuilder,
+            "Y2024_Ranger_Drakewarden_Hanna": Y2024_Ranger_Drakewarden_Hanna.Y2024RangerDrakewardenHannaCharacterBuilder,
             "Y2024_Ranger_GloomStalker_NyxShadowtracker": Y2024_Ranger_GloomStalker_NyxShadowtracker.Y2024RangerGloomStalkerNyxShadowtrackerCharacterBuilder,
             "Y2024_Rogue_ArcaneTrickster_ThumSchtock": Y2024_Rogue_ArcaneTrickster_ThumSchtock.Y2024RogueArcaneTricksterThumSchtockCharacterBuilder,
             "Y2024_Rogue_Assassin_LysandraNightblade": Y2024_Rogue_Assassin_LysandraNightblade.Y2024RogueAssassinLysandraNightbladeCharacterBuilder,
