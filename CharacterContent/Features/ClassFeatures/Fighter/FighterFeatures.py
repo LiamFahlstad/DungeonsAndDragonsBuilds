@@ -7,8 +7,6 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Core.Definitions import CharacterClass
-from Utils import StringUtils
-from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -107,18 +105,6 @@ class ActionSurge(Feature):
             "Once you use this feature, you can’t do so again until you finish a Short or Long Rest. Starting at level 17, you can use it twice before a rest but only once on a turn."
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {level: (2 if level >= 17 else 1) for level in range(2, 21)}
-        steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                uses_by_level
-            )
-        ]
-        return [("Action Surge Uses", steps)]
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         uses = self.number_of_uses(character)

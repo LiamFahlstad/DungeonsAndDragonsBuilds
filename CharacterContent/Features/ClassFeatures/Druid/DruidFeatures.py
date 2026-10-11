@@ -21,10 +21,8 @@ from Model.Content.Improvements import (
 from Model.Creatures.Combatants import CreatureForm
 from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 
 
 class PrimalOrderType(str, Enum):
@@ -208,25 +206,6 @@ class WildShape(Feature):
             "No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.\n"
             "Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.\n"
         )
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {}
-        for level in range(2, 21):
-            if level >= 17:
-                uses_by_level[level] = 4
-            elif level >= 6:
-                uses_by_level[level] = 3
-            else:
-                uses_by_level[level] = 2
-        steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                uses_by_level
-            )
-        ]
-        return [("Wild Shape Uses", steps)]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

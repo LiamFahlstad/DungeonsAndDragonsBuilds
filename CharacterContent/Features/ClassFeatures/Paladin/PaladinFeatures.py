@@ -11,7 +11,6 @@ from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 
 
 class LayOnHands(Feature):
@@ -172,18 +171,6 @@ class ChannelDivinity(Feature):
             description += AbjureFoes().get_description(character) + "\n"
 
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {level: (3 if level >= 11 else 2) for level in range(3, 21)}
-        steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                uses_by_level
-            )
-        ]
-        return [("Channel Divinity Uses", steps)]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

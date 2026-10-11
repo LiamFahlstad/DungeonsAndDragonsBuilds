@@ -19,7 +19,6 @@ from Core.Definitions import Ability, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
-from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -65,37 +64,16 @@ class Rage(Feature):
     def get_resource_tiles(
         self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]]:
-        rage_uses_by_level = {}
-        rage_damage_by_level = {}
-        for level in ALL_LEVELS:
-            if level <= 2:
-                rage_uses_by_level[level] = 2
-            elif level <= 5:
-                rage_uses_by_level[level] = 3
-            elif level <= 11:
-                rage_uses_by_level[level] = 4
-            elif level <= 16:
-                rage_uses_by_level[level] = 5
-            else:
-                rage_uses_by_level[level] = 6
-            rage_damage_by_level[level] = f"+{get_rage_damage_bonus(level)}"
-
-        uses_steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                rage_uses_by_level
-            )
-        ]
+        rage_damage_by_level = {
+            level: f"+{get_rage_damage_bonus(level)}" for level in ALL_LEVELS
+        }
         damage_steps = [
             (f"Lv {level_range}", value)
             for level_range, value in StringUtils.compress_level_progression(
                 rage_damage_by_level
             )
         ]
-        return [
-            ("Rage Uses", uses_steps),
-            ("Rage Damage", damage_steps),
-        ]
+        return [("Rage Damage", damage_steps)]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

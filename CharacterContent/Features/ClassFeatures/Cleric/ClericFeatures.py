@@ -13,10 +13,8 @@ from Model.Content.Improvements import (
 )
 from Core.Definitions import CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 
 
 class Spellcasting(Feature):
@@ -108,25 +106,6 @@ class ChannelDivinity(Feature):
             "Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die."
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {}
-        for level in range(2, 21):
-            if level >= 18:
-                uses_by_level[level] = 4
-            elif level >= 6:
-                uses_by_level[level] = 3
-            else:
-                uses_by_level[level] = 2
-        steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                uses_by_level
-            )
-        ]
-        return [("Channel Divinity Uses", steps)]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

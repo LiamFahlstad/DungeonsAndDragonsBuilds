@@ -10,8 +10,7 @@ from Model.Content.Improvements import GrantSense, SkillExpertiseChoice, SpeedBo
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
-from Core.Rules import levels_gained, ALL_LEVELS, MAX_ABILITY_MODIFIER
+from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
 
@@ -67,29 +66,6 @@ class FavoredEnemy(Feature):
             "You regain all expended uses of this ability when you finish a Long Rest.\n"
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        uses_by_level = {}
-        for level in ALL_LEVELS:
-            if level < 5:
-                uses_by_level[level] = 2
-            elif level < 9:
-                uses_by_level[level] = 3
-            elif level < 13:
-                uses_by_level[level] = 4
-            elif level < 17:
-                uses_by_level[level] = 5
-            else:
-                uses_by_level[level] = 6
-        steps = [
-            (f"Lv {level_range}", str(value))
-            for level_range, value in StringUtils.compress_level_progression(
-                uses_by_level
-            )
-        ]
-        return [("Free Hunter's Mark Uses", steps)]
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         free_hunters_mark_uses = self.number_of_uses(character)
