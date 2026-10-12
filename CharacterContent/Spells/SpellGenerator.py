@@ -56,10 +56,26 @@ def member_name(spell_name: str) -> str:
 
 def build_enum_source(class_name: str, spell_names: list[str]) -> str:
     if not spell_names:
-        return f"class {class_name}(str, Enum):\n    pass\n"
-    lines = [f"class {class_name}(str, Enum):"]
+        return f"class {class_name}(StrEnum):\n    pass\n"
+    lines = [f"class {class_name}(StrEnum):"]
     for name in spell_names:
         lines.append(f'    {member_name(name)} = "{name}"')
+    return "\n".join(lines) + "\n"
+
+
+def build_level_unions_source() -> str:
+    """Per-level unions of the school enums, e.g. Level1Spells = AbjurationLevel1Spells | ..."""
+    lines = [
+        "# Any spell of a given level, regardless of school. These are type unions",
+        "# (usable in annotations and isinstance checks), not enums themselves.",
+    ]
+    for level in LEVELS:
+        lines.append(f"Level{level}Spells = (")
+        for i, school in enumerate(SCHOOL_ORDER):
+            lines.append(f"    {'| ' if i else ''}{school}Level{level}Spells")
+        lines.append(")")
+        if level == 0:
+            lines.append("Cantrips = Level0Spells")
     return "\n".join(lines) + "\n"
 
 
@@ -74,7 +90,9 @@ def main():
             by_class_level.setdefault((cls, level), []).append(spell.name)
         by_school_level.setdefault((spell.school, level), []).append(spell.name)
 
-    output = ["from enum import Enum\n\n"]
+    # StrEnum (not str, Enum) so f"{spell}" renders "Shield", not
+    # "AbjurationLevel1Spells.SHIELD", in feature descriptions.
+    output = ["from enum import StrEnum\n\n\n"]
 
     # Class-based enums: only emitted when at least one spell exists for that
     # class/level combination (half-casters like Paladin/Ranger never get
@@ -85,7 +103,7 @@ def main():
             if not names:
                 continue
             output.append(build_enum_source(f"{cls}Level{level}Spells", names))
-            output.append("\n")
+            output.append("\n\n")
 
     # School-based enums: always emitted for all 10 levels, even if empty,
     # since callers build "spells up to level N" unions across every level.
@@ -93,7 +111,9 @@ def main():
         for level in LEVELS:
             names = sorted(by_school_level.get((school, level), []))
             output.append(build_enum_source(f"{school}Level{level}Spells", names))
-            output.append("\n")
+            output.append("\n\n")
+
+    output.append(build_level_unions_source())
 
     Path(OUTPUT_PY).write_text("".join(output).rstrip() + "\n", encoding="utf-8")
     print(f"Generated enums for {len(spells)} spells -> {OUTPUT_PY}")
