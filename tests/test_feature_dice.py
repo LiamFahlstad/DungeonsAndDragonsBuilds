@@ -117,18 +117,15 @@ class TestCard:
         )
 
         html = self._card(name, FighterBattleMasterFeatures.SuperiorityDice)
-        panel = html[
-            html.index("<div class='feature-stats'>") : html.index(
-                "fuel your maneuvers"
-            )
-        ]
+        start = html.index("<div class='feature-stats'>")
+        panel = html[start : html.index("<div class='feature-upgrade'>", start)]
         uses_at = panel.index("<span class='feature-stat-label'>Uses</span>")
         dice_at = panel.index("<span class='feature-stat-label'>Dice</span>")
         assert uses_at < dice_at
         assert "slot-box" in panel[uses_at:dice_at]
         assert "Superiority Die" in panel[dice_at:]
-        # The panel comes before the description text.
-        assert html.index("feature-stats") < html.index("fuel your maneuvers")
+        # The panel comes after the description text.
+        assert html.index("fuel your maneuvers") < html.index("feature-stats")
 
     def test_resource_tiles_render_as_a_scaling_row(self):
         name = next(n for n in ALL_BUILDS if "Barbarian" in n)

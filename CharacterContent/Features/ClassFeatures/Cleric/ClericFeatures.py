@@ -14,6 +14,13 @@ from Model.Content.Improvements import (
 )
 from Core.Definitions import Ability, CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+)
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 
@@ -122,6 +129,78 @@ class ChannelDivinity(Feature):
             f"Right now: Divine Spark rolls {DIVINE_SPARK_DICE.at(character)} + {character.get_wisdom_modifier()}."
         )
         return description
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses, their recharge and the Divine Spark dice are in the card's
+        # stats panel; this lays out the rest of the source text. Formulas
+        # only - the sheet is printed once and kept as the Cleric levels up.
+        return [
+            Paragraph(
+                "Channel divine energy to create one effect. Each time you use "
+                "Channel Divinity, choose which effect: you start with Divine Spark "
+                "and Turn Undead, and gain more options from your subclass and at "
+                "higher Cleric levels."
+            ),
+            Facts(
+                (
+                    (
+                        "Save DC",
+                        f"{dc_formula(Ability.WISDOM)} (your Cleric spell save DC)",
+                    ),
+                )
+            ),
+            Option(
+                "Divine Spark",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            ("Range", "30 feet"),
+                            ("Target", "Another creature you can see"),
+                            (
+                                "Roll",
+                                "Divine Spark dice (see Dice below) + Wisdom "
+                                "modifier",
+                            ),
+                            (
+                                "Heal",
+                                "The creature regains Hit Points equal to the roll.",
+                            ),
+                            (
+                                "Harm",
+                                "Constitution save against your Save DC. Failed: "
+                                "Necrotic or "
+                                "Radiant damage (your choice) equal to the roll. "
+                                "Succeeded: half as much (round down).",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Turn Undead",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            ("Range", "30 feet"),
+                            ("Target", "Each Undead of your choice"),
+                            ("Save", "Wisdom save against your Save DC"),
+                            (
+                                "Failed",
+                                "Frightened and Incapacitated for 1 minute. On its "
+                                "turns it moves as far away from you as it can.",
+                            ),
+                            (
+                                "Ends early",
+                                "For a creature that takes any damage; for all of "
+                                "them if you have the Incapacitated condition or die.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.WISDOM)

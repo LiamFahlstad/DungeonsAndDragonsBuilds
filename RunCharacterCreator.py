@@ -145,6 +145,13 @@ if __name__ == "__main__":
         "default; the Passive tag is always shown.",
     )
     parser.add_argument(
+        "--source-text",
+        action="store_true",
+        help="Print each feature's source rules text instead of its improved "
+        "description (a clearer layout of the same rules that some features "
+        "have).",
+    )
+    parser.add_argument(
         "--probability-tables",
         action="store_true",
         help="Include DC-save / spell-attack / weapon-attack success rate reference tables.",
@@ -153,7 +160,9 @@ if __name__ == "__main__":
 
     skill_config = Definitions.SkillConfig.DEFAULT
     builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
-    writer = HtmlCharacterSheetWriter(show_feature_tags=args.feature_tags)
+    writer = HtmlCharacterSheetWriter(
+        show_feature_tags=args.feature_tags, source_text=args.source_text
+    )
     for build_class in builds.values():
         character = build_class().build()
         writer.write_character_sheet(

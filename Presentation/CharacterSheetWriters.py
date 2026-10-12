@@ -73,11 +73,14 @@ def _slugify_name(name: str) -> str:
 
 
 class HtmlCharacterSheetWriter:
-    def __init__(self, show_feature_tags: bool = False):
+    def __init__(self, show_feature_tags: bool = False, source_text: bool = False):
         # Feature cards' header tag chips (action, duration, range, save DC,
         # usage roles) are off unless asked for (RunCharacterCreator.py
         # --feature-tags); the Passive tag is always shown.
         self.show_feature_tags = show_feature_tags
+        # Print features' source text instead of their improved descriptions
+        # (RunCharacterCreator.py --source-text).
+        self.source_text = source_text
 
     def _open_page(self, path: str | pathlib.Path) -> TextIO:
         """Every page is written through this. The snapshot tests override it
@@ -1875,6 +1878,7 @@ class HtmlCharacterSheetWriter:
                         file,
                         description_mode,
                         show_tags=self.show_feature_tags,
+                        source_text=self.source_text,
                     )
                 file.write("</div>\n<br class='section-gap'>\n")
             else:
@@ -1924,6 +1928,7 @@ class HtmlCharacterSheetWriter:
                     description_mode,
                     max_level=level,
                     show_tags=self.show_feature_tags,
+                    source_text=self.source_text,
                 )
             sorted_level_extensions = sorted(
                 level_extensions,
@@ -1940,6 +1945,7 @@ class HtmlCharacterSheetWriter:
                     parent.name,
                     description_mode,
                     show_tags=self.show_feature_tags,
+                    source_text=self.source_text,
                 )
             file.write("</div>\n")
 

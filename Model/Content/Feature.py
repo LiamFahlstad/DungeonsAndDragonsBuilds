@@ -6,6 +6,7 @@ from typing import Callable, Literal, Sequence
 from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL
 from Model.Content.Effect import Effect
+from Model.Content.FeatureText import Block
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
@@ -279,8 +280,10 @@ class Feature(Effect):
     # origin only says when it's available (see Presentation/FeatureCards.py).
     labeled_by_class_level = False
 
-    # Optional alternate renderings: get_table_description() and get_concise_description()
-    # both fall back to get_description() when they return None.
+    # Optional alternate renderings: get_improved_description() replaces
+    # get_description() on full sheets; get_table_description() and
+    # get_concise_description() fall back to the improved description, then
+    # to get_description(), when they return None.
 
     def __init__(
         self,
@@ -336,6 +339,18 @@ class Feature(Effect):
         pass
 
     def get_description(self, character: CharacterView) -> str | None:
+        return None
+
+    def get_improved_description(
+        self, character: CharacterView
+    ) -> "list[Block] | None":
+        """Override to give the card a clearer layout of the same rules as
+        get_description(): paragraphs, facts, tables and named options
+        (Model/Content/FeatureText.py, whose docstring has the guidelines).
+        When set, the sheet shows it instead of get_description(), which
+        stays as the source text (RunCharacterCreator.py --source-text
+        prints it instead). Return None (default) to show
+        get_description()."""
         return None
 
     def get_table_description(

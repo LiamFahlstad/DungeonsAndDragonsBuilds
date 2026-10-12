@@ -6,6 +6,7 @@ import re
 from typing import Literal, Sequence, TextIO
 
 from Model.Content.Feature import ActionType, Feature, FeatureUses
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
@@ -231,7 +232,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             margin: 0.3em 0 0.3em 1.2em;
         }
 
-        /* The stats panel at the top of a card body: one labelled row per
+        /* The stats panel at the bottom of a card body: one labelled row per
            tracked number - "Uses" (the use boxes), "Dice" (a FeatureDice
            progression) and "Scaling" (get_resource_tiles values such as
            Rage Damage). Label column on the left, content on the right.
@@ -251,7 +252,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             row-gap: 0.45rem;
             align-items: center;
             max-width: none;
-            margin: 0 0 0.6rem 0;
+            margin: 0.5rem 0 0.2rem 0;
             padding: 0.4rem 0.6rem;
             border: 1px solid #d8c8a8;
             border-radius: 5px;
@@ -374,6 +375,58 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             color: #6a5636;
         }
 
+        /* Improved descriptions (Feature.get_improved_description): the
+           same rules as the source text, laid out for reading at a glance.
+           Facts and each option are a contained, bordered table - a label
+           column and a value column - so the card reads as a few tidy
+           boxes rather than loose lines. Kept whole across page breaks. */
+        .feature-box {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #c9b48e;
+            margin: 0.45rem 0;
+            font-size: 0.84rem;
+            break-inside: avoid;
+        }
+
+        .feature-box th,
+        .feature-box td {
+            padding: 4px 8px;
+            border-top: 1px solid #ebe0cb;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        /* One label width for every box, so values line up down the card. */
+        .feature-box .feature-box-label {
+            width: 6.5rem;
+            white-space: nowrap;
+            font-weight: 700;
+            color: #6a5636;
+        }
+
+        /* An option's name, as the box's header row. */
+        .feature-box .feature-box-header {
+            border-top: none;
+            border-bottom: 1.5px solid #b89060;
+            padding: 5px 8px;
+        }
+
+        .feature-option-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #3a2c1c;
+            margin-right: 0.45rem;
+        }
+
+        .feature-box td p {
+            margin: 0;
+        }
+
+        .feature-box .feature-table {
+            margin: 0;
+        }
+
         /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
         .feature-table {
             width: 100%;
@@ -471,9 +524,15 @@ def render_feature_description(
     feature: Feature,
     character: Character,
     description_mode: DescriptionMode = None,
+    source_text: bool = False,
 ) -> str | None:
     """The card body's HTML, or None when the card isn't shown in this mode
-    (a passive feature on a condensed sheet, or no description at all)."""
+    (a passive feature on a condensed sheet, or no description at all).
+
+    Full sheets show the improved description in place of the source text
+    when the feature has one (source_text=True - RunCharacterCreator.py
+    --source-text - shows the source instead). Condensed sheets show the
+    concise/table version, falling back to the same choice."""
     if description_mode is not None and feature.skippable_in_concise:
         return None
 
@@ -487,10 +546,71 @@ def render_feature_description(
         if concise_description is not None:
             return description_to_html(concise_description)
 
+    if not source_text:
+        improved = feature.get_improved_description(character)
+        if improved is not None:
+            return improved_description_to_html(improved)
     description = feature.get_description(character)
     if description is None:
         return None
     return description_to_html(description)
+
+
+def improved_description_to_html(blocks: "list[Block]") -> str:
+    """An improved description (Model/Content/FeatureText.py) as HTML."""
+    return Html.highlight_damage_types("".join(_block_html(b) for b in blocks))
+
+
+def _block_html(block: Block) -> str:
+    """A top-level block: paragraphs as text, everything else as a
+    contained .feature-box table."""
+    if isinstance(block, Paragraph):
+        return _paragraphs_html(block)
+    if isinstance(block, Facts):
+        return f"<table class='feature-box'>{_box_rows(block)}</table>\n"
+    if isinstance(block, Table):
+        return _table_html(block)
+    if isinstance(block, Option):
+        header = (
+            "<tr><th class='feature-box-header' colspan='2'>"
+            f"<span class='feature-option-name'>{block.name}</span>"
+            "</th></tr>"
+        )
+        rows = "".join(_box_rows(inner) for inner in block.blocks)
+        return f"<table class='feature-box'>{header}{rows}</table>\n"
+    raise TypeError(f"Unknown improved-description block: {block!r}")
+
+
+def _box_rows(block: Block) -> str:
+    """A block as rows of a .feature-box: facts as label/value rows, any
+    other block as one full-width row."""
+    if isinstance(block, Facts):
+        return "".join(
+            f"<tr><th class='feature-box-label'>{label}</th><td>{value}</td></tr>"
+            for label, value in block.rows
+        )
+    if isinstance(block, Paragraph):
+        return f"<tr><td colspan='2'>{_paragraphs_html(block)}</td></tr>"
+    if isinstance(block, Table):
+        return f"<tr><td colspan='2'>{_table_html(block)}</td></tr>"
+    raise TypeError(f"Can't nest {type(block).__name__} inside an Option")
+
+
+def _paragraphs_html(block: Paragraph) -> str:
+    return "".join(
+        f"<p>{_bolden_line(line.strip())}</p>\n"
+        for line in block.text.split("\n")
+        if line.strip()
+    )
+
+
+def _table_html(block: Table) -> str:
+    header = "".join(f"<th>{column}</th>" for column in block.columns)
+    body = "".join(
+        "<tr>" + "".join(f"<td>{cell}</td>" for cell in row) + "</tr>"
+        for row in block.rows
+    )
+    return f"<table class='feature-table'><tr>{header}</tr>{body}</table>\n"
 
 
 def description_to_html(description: str) -> str:
@@ -570,13 +690,17 @@ def write_feature_card(
     description_mode: DescriptionMode = None,
     max_level: int | None = None,
     show_tags: bool = False,
+    source_text: bool = False,
 ) -> None:
     """The feature's card, with its extensions nested as upgrade blocks. On a
     per-level page (max_level set), extensions granted above the page's level,
     or above the parent's level (they get a card of their own there), are
     left out. show_tags adds the header tag chips (action, duration, range,
-    save DC, usage roles); the Passive tag is shown either way."""
-    html_description = render_feature_description(feature, character, description_mode)
+    save DC, usage roles); the Passive tag is shown either way. source_text
+    shows each feature's source text instead of its improved description."""
+    html_description = render_feature_description(
+        feature, character, description_mode, source_text
+    )
     if html_description is None:
         return
 
@@ -589,8 +713,8 @@ def write_feature_card(
         show_tags,
     )
 
-    file.write(_stats_panel_html(feature, character))
     file.write(f"{html_description}\n")
+    file.write(_stats_panel_html(feature, character))
 
     parent_level = character.stamp_of(feature).level
     for extension in ordered_extensions(character, feature):
@@ -602,7 +726,7 @@ def write_feature_card(
                 continue
 
         extension_html = render_feature_description(
-            extension, character, description_mode
+            extension, character, description_mode, source_text
         )
         if extension_html is None:
             continue
@@ -631,11 +755,14 @@ def write_extension_card(
     parent_name: str,
     description_mode: DescriptionMode = None,
     show_tags: bool = False,
+    source_text: bool = False,
 ) -> None:
     """An extension as a card of its own on its level page, flagged as
     extending `parent_name` (with the same blue-label styling as a nested
     upgrade block)."""
-    html_description = render_feature_description(feature, character, description_mode)
+    html_description = render_feature_description(
+        feature, character, description_mode, source_text
+    )
     if html_description is None:
         return
 
@@ -692,11 +819,11 @@ def _write_card_close(file: TextIO) -> None:
 
 def _upgrade_block_html(label: str, body_html: str, stats_html: str = "") -> str:
     """An extension rendered as a blue-labelled .feature-upgrade block, its
-    own stats panel (if any) above its text."""
+    own stats panel (if any) below its text."""
     return (
         f"<div class='feature-upgrade'>\n"
         f"<span class='feature-upgrade-label'>{label}</span>\n"
-        f"<div class='feature-upgrade-body'>{stats_html}{body_html}</div>\n"
+        f"<div class='feature-upgrade-body'>{body_html}{stats_html}</div>\n"
         f"</div>\n"
     )
 
