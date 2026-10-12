@@ -5,6 +5,7 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDice,
 )
 from Model.Content.Improvements import (
     SkillBonus,
@@ -78,6 +79,19 @@ class DivineOrderThaumaturge(Feature):
         return description
 
 
+DIVINE_SPARK_DICE = FeatureDice(
+    "Divine Spark",
+    (
+        (2, "1d8"),
+        (7, "2d8"),
+        (13, "3d8"),
+        (18, "4d8"),
+    ),
+    CharacterClass.CLERIC,
+    note="+ Wisdom modifier",
+)
+
+
 class ChannelDivinity(Feature):
     def __init__(self):
         super().__init__(
@@ -94,6 +108,7 @@ class ChannelDivinity(Feature):
                 current_formula="Current amount: determined by your Cleric level — 2 uses at levels 1-5, 3 at 6-17, 4 at 18+.",
                 gained_at=[2, 2, 6, 18],
             ),
+            dice=DIVINE_SPARK_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -104,14 +119,9 @@ class ChannelDivinity(Feature):
             "Divine Spark. As a Magic action, you point your Holy Symbol at another creature you can see within 30 feet of yourself and focus divine energy at it. Roll 1d8 and add your Wisdom modifier. You either restore Hit Points to the creature equal to that total or force the creature to make a Constitution saving throw. On a failed save, the creature takes Necrotic or Radiant damage (your choice) equal to that total. On a successful save, the creature takes half as much damage (round down).\n"
             "You roll an additional d8 when you reach Cleric levels 7 (2d8), 13 (3d8), and 18 (4d8).\n"
             "Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die.\n"
-            f"Right now: Divine Spark rolls {self._divine_spark_dice(character)} + {character.get_wisdom_modifier()}."
+            f"Right now: Divine Spark rolls {DIVINE_SPARK_DICE.at(character)} + {character.get_wisdom_modifier()}."
         )
         return description
-
-    @staticmethod
-    def _divine_spark_dice(character: CharacterView) -> str:
-        level = character.get_class_level(CharacterClass.CLERIC)
-        return f"{1 + (level >= 7) + (level >= 13) + (level >= 18)}d8"
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.WISDOM)

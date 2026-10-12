@@ -8,9 +8,17 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+
+PSIONIC_ENERGY_DIE = FeatureDice.from_function(
+    "Psionic Energy Die",
+    lambda level: psionic_energy_dice(level)[0],
+    from_level=3,
+    scales_with=CharacterClass.ROGUE,
+)
 
 
 class PsionicPower(Feature):
@@ -30,6 +38,7 @@ class PsionicPower(Feature):
                 regain_x_on=(1, "short rest"),
                 gained_at=PSIONIC_ENERGY_DICE_GAINED_AT,
             ),
+            dice=PSIONIC_ENERGY_DIE,
         )
 
     def number_of_uses(self, character: CharacterView) -> int:

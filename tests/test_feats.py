@@ -654,9 +654,7 @@ class TestEpicBoonBenefits:
         self, make_character
     ):
         # CON 18 -> +4, level 19 -> proficiency bonus +6.
-        character = make_character(
-            constitution=18, levels={CharacterClass.FIGHTER: 19}
-        )
+        character = make_character(constitution=18, levels={CharacterClass.FIGHTER: 19})
         boon = EpicBoon.BoonOfEnergyResistance(CON, [DamageType.FIRE, DamageType.COLD])
         assert boon.calculate_dc(character) == 8 + 4 + 6
 
@@ -733,9 +731,7 @@ class TestTransmutedAnatomy:
 
 
 class TestOtherworldlyFamiliar:
-    def test_resistance_belongs_to_the_familiar_not_the_character(
-        self, make_sources
-    ):
+    def test_resistance_belongs_to_the_familiar_not_the_character(self, make_sources):
         sources = make_sources()
         sources.add_effect(
             GeneralFeats.OtherworldlyFamiliar(4, STR, DamageType.RADIANT)

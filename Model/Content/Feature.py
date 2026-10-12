@@ -1,8 +1,10 @@
 import re
 from dataclasses import dataclass
 from enum import Enum
-from typing import Literal
+from typing import Callable, Literal, Sequence
 
+from Core.Definitions import CharacterClass
+from Core.Rules import MAX_LEVEL, MIN_LEVEL
 from Model.Content.Effect import Effect
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -42,6 +44,102 @@ class FeatureUses:
                 f"gained_at has {len(self.gained_at)} entries but max_uses is "
                 f"{self.max_uses} - it needs one level per box"
             )
+
+
+@dataclass
+class FeatureDice:
+    """A die (or dice pool) that grows with level, rendered on the feature's
+    card as a track of every step - "1d6 Lv 1-4 › 1d8 Lv 5-10 › ..." - the
+    way FeatureUses renders use boxes.
+
+    Like FeatureUses, the card never calls out the "current" step: level
+    pages are generated once and not reprinted as the player levels up, so
+    the whole progression is shown with equal weight. A description that
+    wants today's value reads it with at(character), so the card text and
+    the track come from the same table.
+
+    progression lists (level gained at, dice) in ascending level order, one
+    entry per change - e.g. ((1, "1d6"), (5, "1d8"), (11, "1d10"),
+    (17, "1d12")). Each step lasts until the next one (the last to level
+    20). For a step every level or two, build it with from_function().
+    """
+
+    # What the dice are, e.g. "Martial Arts Die" or "Extra Damage".
+    label: str
+    progression: tuple[tuple[int, str], ...]
+    # Whose level the steps are keyed on; None for character level (e.g. a
+    # species trait such as Breath Weapon).
+    scales_with: CharacterClass | None = None
+    # A short rider printed under the track, e.g. "+ Wisdom modifier".
+    note: str | None = None
+
+    def __post_init__(self):
+        self.progression = tuple(
+            (int(level), str(dice)) for level, dice in self.progression
+        )
+        if not self.progression:
+            raise ValueError(f"{self.label}: progression needs at least one step")
+        levels = [level for level, _ in self.progression]
+        if levels != sorted(set(levels)):
+            raise ValueError(
+                f"{self.label}: progression levels must be strictly ascending, got {levels}"
+            )
+        if levels[0] < MIN_LEVEL or levels[-1] > MAX_LEVEL:
+            raise ValueError(
+                f"{self.label}: progression levels must be within {MIN_LEVEL}-{MAX_LEVEL}, got {levels}"
+            )
+
+    @classmethod
+    def from_function(
+        cls,
+        label: str,
+        dice_at_level: Callable[[int], str],
+        from_level: int = MIN_LEVEL,
+        scales_with: CharacterClass | None = None,
+        note: str | None = None,
+    ) -> "FeatureDice":
+        """Build the progression from a level -> dice function (e.g. Sneak
+        Attack's (level + 1) // 2 d6), keeping only the levels where the
+        dice change."""
+        progression: list[tuple[int, str]] = []
+        for level in range(from_level, MAX_LEVEL + 1):
+            dice = dice_at_level(level)
+            if not progression or progression[-1][1] != dice:
+                progression.append((level, dice))
+        return cls(label, tuple(progression), scales_with, note)
+
+    @property
+    def level_basis(self) -> str:
+        """Whose level the steps follow, for the card: "Monk level"."""
+        if self.scales_with is None:
+            return "character level"
+        return f"{self.scales_with.value} level"
+
+    def steps(self) -> list[tuple[str, str]]:
+        """(level range, dice) per step, e.g. [("1-4", "1d6"), ("5-10", "1d8")]."""
+        result = []
+        for index, (level, dice) in enumerate(self.progression):
+            if index + 1 < len(self.progression):
+                last = self.progression[index + 1][0] - 1
+            else:
+                last = MAX_LEVEL
+            result.append((str(level) if level == last else f"{level}-{last}", dice))
+        return result
+
+    def at_level(self, level: int) -> str:
+        """The dice at `level` (the first step's dice below its level)."""
+        dice = self.progression[0][1]
+        for step_level, step_dice in self.progression:
+            if level >= step_level:
+                dice = step_dice
+        return dice
+
+    def at(self, character: CharacterView) -> str:
+        """The dice at the character's current level (class or character
+        level, per scales_with)."""
+        if self.scales_with is None:
+            return self.at_level(character.character_level)
+        return self.at_level(character.get_class_level(self.scales_with))
 
 
 class ActionType(str, Enum):
@@ -195,6 +293,7 @@ class Feature(Effect):
         ) = None,
         activation: "FeatureActivation | None" = None,
         uses: "FeatureUses | None" = None,
+        dice: "FeatureDice | Sequence[FeatureDice] | None" = None,
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
@@ -219,6 +318,15 @@ class Feature(Effect):
         # max uses, what resets them, and optionally a formula explaining the
         # current uses based on character stats.
         self.uses = uses
+        # Set for features whose dice grow with level (e.g. a Martial Arts
+        # die, Sneak Attack, a breath weapon's damage). Each FeatureDice is
+        # shown on the card as its full level progression.
+        if dice is None:
+            self.dice: list[FeatureDice] = []
+        elif isinstance(dice, FeatureDice):
+            self.dice = [dice]
+        else:
+            self.dice = list(dice)
 
     def apply(self, ledger_writer: LedgerWriter):
         """Record this feature's effects on the stat block. Features, armor
@@ -282,11 +390,12 @@ class Feature(Effect):
         """Override to surface this feature's core numbers as small stat
         tiles at the top of its own feature card (visually the same idea as
         the Max HP tile, sized down to fit a card) for resources checked
-        constantly in play - e.g. a martial arts die size or a resource
-        point total. Returns a list of (group_label, steps) tuples, where
+        constantly in play - e.g. Rage Damage or a count of options known.
+        Dice that grow with level belong in FeatureDice (Feature(dice=...))
+        instead. Returns a list of (group_label, steps) tuples, where
         steps is a list of (step_label, value) pairs - typically one tile
-        per level or level-range, e.g. [("Martial Arts Die",
-        [("Lv 1-4", "1d6"), ("Lv 5-10", "1d8"), ...])], commonly built from
+        per level or level-range, e.g. [("Rage Damage",
+        [("Lv 1-8", "+2"), ("Lv 9-15", "+3"), ...])], commonly built from
         StringUtils.compress_level_progression(). Every step is shown with
         equal weight and no "current level" is called out: the generated
         page isn't reprinted on every level-up, so a step highlighted as

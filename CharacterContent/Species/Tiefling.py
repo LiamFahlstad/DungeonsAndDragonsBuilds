@@ -36,7 +36,9 @@ class TieflingSpeciesBuilder(SpeciesBuilder):
 
         data.add_feature(TieflingFeatures.Darkvision(60))
         data.add_feature(TieflingFeatures.OtherworldlyPresence())
-        data.add_cantrip(TransmutationLevel0Spells.THAUMATURGY, data.spell_casting_ability)
+        data.add_cantrip(
+            TransmutationLevel0Spells.THAUMATURGY, data.spell_casting_ability
+        )
 
         spell_1 = None
         spell_2 = None

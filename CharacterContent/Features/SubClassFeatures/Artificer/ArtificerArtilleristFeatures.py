@@ -1,4 +1,10 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDice,
+)
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 
@@ -41,6 +47,25 @@ class Spells(Feature):
         return description
 
 
+CANNON_DAMAGE_DICE = FeatureDice(
+    "Flamethrower and Force Ballista",
+    (
+        (3, "2d8"),
+        (9, "3d8"),
+    ),
+    CharacterClass.ARTIFICER,
+)
+CANNON_PROTECTOR_DICE = FeatureDice(
+    "Protector",
+    (
+        (3, "1d8"),
+        (9, "2d8"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="+ Intelligence modifier (minimum of 1) Temporary Hit Points",
+)
+
+
 class EldritchCannon(Feature):
     def __init__(self):
         super().__init__(
@@ -50,6 +75,7 @@ class EldritchCannon(Feature):
                 action_type=ActionType.ACTION, duration="1 Hour", range="5 Feet"
             ),
             usage_tags=["damage", "buff"],
+            dice=[CANNON_DAMAGE_DICE, CANNON_PROTECTOR_DICE],
         )
 
     def calculate_dc(self, character: CharacterView) -> int:

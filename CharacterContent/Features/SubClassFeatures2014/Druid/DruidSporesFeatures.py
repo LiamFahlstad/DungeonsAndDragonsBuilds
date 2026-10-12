@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -35,14 +36,19 @@ class CircleSporesSpells(Feature):
 
 def halo_of_spores_die(character: CharacterView) -> str:
     """1d4, rising to 1d6/1d8/1d10 at Druid levels 6/10/14."""
-    level = character.get_class_level(CharacterClass.DRUID)
-    if level >= 14:
-        return "1d10"
-    if level >= 10:
-        return "1d8"
-    if level >= 6:
-        return "1d6"
-    return "1d4"
+    return HALO_OF_SPORES_DICE.at(character)
+
+
+HALO_OF_SPORES_DICE = FeatureDice(
+    "Halo of Spores Damage",
+    (
+        (3, "1d4"),
+        (6, "1d6"),
+        (10, "1d8"),
+        (14, "1d10"),
+    ),
+    CharacterClass.DRUID,
+)
 
 
 class HaloOfSpores(Feature):
@@ -54,6 +60,7 @@ class HaloOfSpores(Feature):
                 action_type=ActionType.REACTION, range="10 Feet"
             ),
             usage_tags=["damage"],
+            dice=HALO_OF_SPORES_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -5,6 +5,7 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDice,
 )
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Core.Definitions import CharacterClass, Condition, DamageType
@@ -48,6 +49,18 @@ class Spells(Feature):
         return description
 
 
+ELIXIR_HEALING_DICE = FeatureDice(
+    "Healing Elixir",
+    (
+        (3, "2d8"),
+        (9, "3d8"),
+        (15, "4d8"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="+ Intelligence modifier",
+)
+
+
 class ExperimentalElixir(Feature):
     def __init__(self):
         super().__init__(
@@ -55,6 +68,7 @@ class ExperimentalElixir(Feature):
             origin="Alchemist Artificer Level 3",
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["heal", "buff", "utility"],
+            dice=ELIXIR_HEALING_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -81,7 +95,7 @@ class ExperimentalElixir(Feature):
         level = character.get_class_level(CharacterClass.ARTIFICER)
         tier = 2 if level >= 15 else 1 if level >= 9 else 0
         elixirs = 5 if level >= 15 else 4 if level >= 9 else 3 if level >= 5 else 2
-        healing = ("2d8", "3d8", "4d8")[tier]
+        healing = ELIXIR_HEALING_DICE.at(character)
         speed = (10, 15, 20)[tier]
         resilience = ("10 minutes", "1 hour", "8 hours")[tier]
         boldness = ("1 minute", "10 minutes", "1 hour")[tier]

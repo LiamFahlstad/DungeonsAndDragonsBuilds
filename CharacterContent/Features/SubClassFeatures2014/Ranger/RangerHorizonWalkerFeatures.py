@@ -4,6 +4,7 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDice,
 )
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
@@ -56,6 +57,16 @@ class DetectPortal(Feature):
         ]
 
 
+PLANAR_WARRIOR_DICE = FeatureDice(
+    "Extra Force Damage",
+    (
+        (3, "1d8"),
+        (11, "2d8"),
+    ),
+    CharacterClass.RANGER,
+)
+
+
 class PlanarWarrior(Feature):
     def __init__(self):
         super().__init__(
@@ -67,6 +78,7 @@ class PlanarWarrior(Feature):
                 range="30 Feet",
             ),
             usage_tags=["damage", "buff"],
+            dice=PLANAR_WARRIOR_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -82,7 +94,7 @@ class PlanarWarrior(Feature):
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         ranger_level = character.get_class_level(CharacterClass.RANGER)
-        extra_damage = "2d8" if ranger_level >= 11 else "1d8"
+        extra_damage = PLANAR_WARRIOR_DICE.at(character)
         return [
             ("What", "Convert next hit to force damage"),
             ("Action", "Bonus action"),

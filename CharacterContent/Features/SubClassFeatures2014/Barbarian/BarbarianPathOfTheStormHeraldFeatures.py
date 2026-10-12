@@ -1,6 +1,12 @@
 import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDice,
+)
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -34,6 +40,18 @@ def _dice_damage_value(barbarian_level: int) -> str:
     return "1d6"
 
 
+STORM_AURA_SEA_DICE = FeatureDice(
+    "Sea Lightning Damage",
+    (
+        (3, "1d6"),
+        (10, "2d6"),
+        (15, "3d6"),
+        (20, "4d6"),
+    ),
+    CharacterClass.BARBARIAN,
+)
+
+
 class StormAura(Feature):
     def __init__(self, environment: Definitions.BarbarianStormEnvironment):
         super().__init__(
@@ -45,6 +63,7 @@ class StormAura(Feature):
                 range="10 Feet",
             ),
             usage_tags=["damage", "heal", "control"],
+            dice=STORM_AURA_SEA_DICE,
         )
         self.environment = environment
 

@@ -4,16 +4,20 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDice,
 )
 from Model.Content.Improvements import (
     GrantLanguage,
     SavingThrowProficiencyChoice,
     SkillExpertiseChoice,
 )
-from Core.Definitions import Ability, Language, Skill
+from Core.Definitions import (
+    Ability,
+    Language,
+    Skill,
+    CharacterClass,
+)
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
-from Core.Rules import ALL_LEVELS
 from Model.View import CharacterView
 
 
@@ -35,10 +39,20 @@ class Expertise(Feature):
         return description
 
 
+SNEAK_ATTACK_DICE = FeatureDice.from_function(
+    "Sneak Attack Damage",
+    lambda level: f"{(level + 1) // 2}d6",
+    scales_with=CharacterClass.ROGUE,
+)
+
+
 class SneakAttack(Feature):
     def __init__(self):
         super().__init__(
-            name="Sneak Attack", origin="Rogue Level 1", usage_tags=["damage"]
+            name="Sneak Attack",
+            origin="Rogue Level 1",
+            usage_tags=["damage"],
+            dice=SNEAK_ATTACK_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -48,18 +62,6 @@ class SneakAttack(Feature):
             "The extra damage increases as you gain Rogue levels, as shown in the Sneak Attack column of the Rogue Features table."
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        dice_by_level = {level: f"{(level + 1) // 2}d6" for level in ALL_LEVELS}
-        steps = [
-            (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(
-                dice_by_level
-            )
-        ]
-        return [("Sneak Attack Damage", steps)]
 
     def get_concise_description(self, character: CharacterView) -> str:
         return "Once per turn, add 1d6 extra damage (same type as weapon) to an attack using a Finesse or Ranged weapon if you have Advantage on the roll. Alternatively, you don't need Advantage if an ally is within 5 feet of the target (ally not Incapacitated, and you don't have Disadvantage). Damage increases with Rogue levels."

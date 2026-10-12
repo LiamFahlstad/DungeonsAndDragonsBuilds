@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     FeatureUses,
     ActionType,
     RegainedOn,
+    FeatureDice,
 )
 from Model.Content.Improvements import (
     AbilityScoreBonus,
@@ -14,11 +15,13 @@ from Model.Content.Improvements import (
     SpeedBonus,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Core.Definitions import Ability
+from Core.Definitions import (
+    Ability,
+    CharacterClass,
+)
 from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Core.Rules import MAX_LEVEL
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -68,9 +71,18 @@ LEVEL_TO_FOCUS_POINTS = {
 }
 
 
+MARTIAL_ARTS_DIE = FeatureDice.from_function(
+    "Martial Arts Die",
+    lambda level: LEVEL_TO_MARTIAL_ARTS_DIE[level].value,
+    scales_with=CharacterClass.MONK,
+)
+
+
 class MartialArts(Feature):
     def __init__(self):
-        super().__init__(name="Martial Arts", origin="Monk Level 1")
+        super().__init__(
+            name="Martial Arts", origin="Monk Level 1", dice=MARTIAL_ARTS_DIE
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -83,18 +95,6 @@ class MartialArts(Feature):
             "    * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC."
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        die_values = {
-            level: die.value for level, die in LEVEL_TO_MARTIAL_ARTS_DIE.items()
-        }
-        steps = [
-            (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(die_values)
-        ]
-        return [("Martial Arts Die", steps)]
 
 
 class UnarmoredDefenseText(Feature):

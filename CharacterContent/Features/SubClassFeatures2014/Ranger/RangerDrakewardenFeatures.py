@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDice,
 )
 from Core.Definitions import CreatureSize
 from Model.Creatures.Combatants import (
@@ -198,6 +199,16 @@ class BondOfFangAndScale(Feature):
         return description
 
 
+DRAKES_BREATH_DICE = FeatureDice(
+    "Breath Damage",
+    (
+        (7, "8d6"),
+        (15, "10d6"),
+    ),
+    CharacterClass.RANGER,
+)
+
+
 class DrakesBreath(Feature):
     def __init__(self):
         super().__init__(
@@ -208,6 +219,7 @@ class DrakesBreath(Feature):
             ),
             usage_tags=["damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+            dice=DRAKES_BREATH_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:

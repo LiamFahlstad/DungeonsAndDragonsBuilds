@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -83,9 +84,24 @@ class RuneCarver(Feature):
     @staticmethod
     def _current_values(character: CharacterView) -> str:
         fighter_level = character.get_class_level(CharacterClass.FIGHTER)
-        runes_known = 5 if fighter_level >= 15 else 4 if fighter_level >= 10 else 3 if fighter_level >= 7 else 2
+        runes_known = (
+            5
+            if fighter_level >= 15
+            else 4 if fighter_level >= 10 else 3 if fighter_level >= 7 else 2
+        )
         invocations = "twice" if character.has_feature(MasterOfRunes) else "once"
         return f"Runes known right now: {runes_known}, each invoked {invocations} per short or long rest."
+
+
+GIANTS_MIGHT_DICE = FeatureDice(
+    "Extra Damage",
+    (
+        (3, "1d6"),
+        (10, "1d8"),
+        (18, "1d10"),
+    ),
+    CharacterClass.FIGHTER,
+)
 
 
 class GiantsMight(Feature):
@@ -103,6 +119,7 @@ class GiantsMight(Feature):
                 current_formula="Current amount: equal to your proficiency bonus.",
                 gained_at=levels_gained(proficiency_bonus, from_level=3),
             ),
+            dice=GIANTS_MIGHT_DICE,
         )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

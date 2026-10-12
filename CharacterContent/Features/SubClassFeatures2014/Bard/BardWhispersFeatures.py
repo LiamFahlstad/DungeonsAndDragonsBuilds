@@ -5,9 +5,21 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDice,
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+
+PSYCHIC_BLADES_DICE = FeatureDice(
+    "Psychic Damage",
+    (
+        (3, "2d6"),
+        (5, "3d6"),
+        (10, "5d6"),
+        (15, "8d6"),
+    ),
+    CharacterClass.BARD,
+)
 
 
 class PsychicBlades(Feature):
@@ -16,6 +28,7 @@ class PsychicBlades(Feature):
             name="Psychic Blades",
             origin="College of Whispers Bard Level 3",
             usage_tags=["damage"],
+            dice=PSYCHIC_BLADES_DICE,
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

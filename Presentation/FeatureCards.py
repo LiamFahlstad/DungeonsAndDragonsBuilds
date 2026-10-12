@@ -5,7 +5,7 @@ everything here turns that into HTML."""
 import re
 from typing import Literal, Sequence, TextIO
 
-from Model.Content.Feature import ActionType, Feature, FeatureUses
+from Model.Content.Feature import ActionType, Feature, FeatureDice, FeatureUses
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
@@ -262,6 +262,106 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             gap: 0.4rem;
         }
 
+        /* A die that grows with level (Feature.dice), drawn as a track of
+           every step - die on top, the levels it covers underneath - joined
+           by chevrons. Like the resource tiles, no step is highlighted as
+           "current": the page isn't reprinted on level-up. Every div here
+           resets the base div rule (a centered 700px column), whose auto
+           margins would otherwise spread the steps across the card. */
+        .feature-dice {
+            max-width: none;
+            margin: 0 0 0.5rem 0;
+            padding: 0;
+            break-inside: avoid;
+        }
+
+        .feature-dice-header {
+            max-width: none;
+            margin: 0 0 0.2rem 0;
+            padding: 0;
+            display: flex;
+            align-items: baseline;
+            gap: 0.4rem;
+        }
+
+        .feature-dice-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #7a2e2e;
+        }
+
+        .feature-dice-basis {
+            font-size: 0.62rem;
+            font-style: italic;
+            color: #7a6a50;
+        }
+
+        .feature-dice-track {
+            max-width: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            row-gap: 0.3rem;
+        }
+
+        .feature-dice-step {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 2.8em;
+            max-width: none;
+            margin: 0;
+            padding: 0.15rem 0.45rem;
+            border: 1.5px solid #a65252;
+            border-radius: 6px;
+            background: #fbf3f0;
+        }
+
+        /* The chevron between two steps. */
+        .feature-dice-step + .feature-dice-step {
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .feature-dice-step + .feature-dice-step::before {
+            content: "\\203A";
+            position: absolute;
+            left: -0.8rem;
+            top: 50%;
+            transform: translateY(-55%);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #a65252;
+        }
+
+        .feature-dice-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #5a1e1e;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+
+        .feature-dice-levels {
+            font-size: 0.56rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #7a6a50;
+            white-space: nowrap;
+        }
+
+        .feature-dice-note {
+            display: block;
+            margin-top: 0.15rem;
+            font-size: 0.68rem;
+            color: #6a5636;
+        }
+
         /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
         .feature-table {
             width: 100%;
@@ -485,6 +585,9 @@ def write_feature_card(
             file.write("</div>\n")
         file.write("</div>\n")
 
+    for dice in feature.dice:
+        file.write(_dice_html(dice))
+
     file.write(f"{html_description}\n")
     if feature.uses is not None:
         file.write(_uses_html(feature.uses) + "\n")
@@ -513,6 +616,7 @@ def write_feature_card(
                 f"{label}: {extension.name}{extension_tags}",
                 extension_html,
                 extension.uses,
+                extension.dice,
             )
         )
 
@@ -539,7 +643,9 @@ def write_extension_card(
         feature, character, file, description_mode, feature_label(feature, character)
     )
     file.write(
-        _upgrade_block_html(f"Extends {parent_name}", html_description, feature.uses)
+        _upgrade_block_html(
+            f"Extends {parent_name}", html_description, feature.uses, feature.dice
+        )
     )
     _write_card_close(file)
 
@@ -574,14 +680,46 @@ def _write_card_close(file: TextIO) -> None:
     file.write("</div>\n")
 
 
-def _upgrade_block_html(label: str, body_html: str, uses: FeatureUses | None) -> str:
+def _upgrade_block_html(
+    label: str,
+    body_html: str,
+    uses: FeatureUses | None,
+    dice: list[FeatureDice] | None = None,
+) -> str:
     """An extension rendered as a blue-labelled .feature-upgrade block."""
     uses_html = "\n" + _uses_html(uses) if uses is not None else ""
+    dice_html = "".join(_dice_html(d) for d in dice or [])
     return (
         f"<div class='feature-upgrade'>\n"
         f"<span class='feature-upgrade-label'>{label}</span>\n"
-        f"<div class='feature-upgrade-body'>{body_html}{uses_html}</div>\n"
+        f"<div class='feature-upgrade-body'>{dice_html}{body_html}{uses_html}</div>\n"
         f"</div>\n"
+    )
+
+
+def _dice_html(dice: FeatureDice) -> str:
+    """A FeatureDice as its full progression track (see .feature-dice)."""
+    steps = "".join(
+        "<div class='feature-dice-step'>"
+        f"<span class='feature-dice-value'>{value}</span>"
+        f"<span class='feature-dice-levels'>Lv {levels}</span>"
+        "</div>"
+        for levels, value in dice.steps()
+    )
+    note = (
+        f"<span class='feature-dice-note'>{dice.note}</span>"
+        if dice.note is not None
+        else ""
+    )
+    return (
+        "<div class='feature-dice'>"
+        "<div class='feature-dice-header'>"
+        f"<span class='feature-dice-label'>{dice.label}</span>"
+        f"<span class='feature-dice-basis'>by {dice.level_basis}</span>"
+        "</div>"
+        f"<div class='feature-dice-track'>{steps}</div>"
+        f"{note}"
+        "</div>\n"
     )
 
 

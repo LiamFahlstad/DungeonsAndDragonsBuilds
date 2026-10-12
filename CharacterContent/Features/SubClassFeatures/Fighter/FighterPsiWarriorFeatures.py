@@ -1,16 +1,24 @@
-from Core.Definitions import FIGHTER_HIT_DIE, CharacterClass, DamageType
+from Core.Definitions import CharacterClass, DamageType
 from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
-    Feature,
-    FeatureUses,
-    FeatureActivation,
     ActionType,
-    RegainedOn,
+    Feature,
+    FeatureActivation,
+    FeatureDice,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+
+PSIONIC_ENERGY_DIE = FeatureDice.from_function(
+    "Psionic Energy Die",
+    lambda level: psionic_energy_dice(level)[0],
+    from_level=3,
+    scales_with=CharacterClass.FIGHTER,
+)
 
 
 class PsionicPower(Feature):
@@ -28,6 +36,7 @@ class PsionicPower(Feature):
                 regain_x_on=(1, "short rest"),
                 gained_at=PSIONIC_ENERGY_DICE_GAINED_AT,
             ),
+            dice=PSIONIC_ENERGY_DIE,
         )
 
     def number_of_uses(self, character: CharacterView) -> int:

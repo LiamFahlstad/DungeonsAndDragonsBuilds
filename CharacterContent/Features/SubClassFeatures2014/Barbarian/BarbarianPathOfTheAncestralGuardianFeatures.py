@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     RegainedOn,
+    FeatureDice,
 )
 from Utils import StringUtils
 from Model.View import CharacterView
@@ -40,6 +41,17 @@ class AncestralProtectors(Feature):
         return FeatureTarget.ENEMY
 
 
+SPIRIT_SHIELD_DICE = FeatureDice(
+    "Damage Reduction",
+    (
+        (6, "2d6"),
+        (10, "3d6"),
+        (14, "4d6"),
+    ),
+    CharacterClass.BARBARIAN,
+)
+
+
 class SpiritShield(Feature):
     def __init__(self):
         super().__init__(
@@ -51,6 +63,7 @@ class SpiritShield(Feature):
                 range="30 Feet",
             ),
             usage_tags=["buff"],
+            dice=SPIRIT_SHIELD_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:

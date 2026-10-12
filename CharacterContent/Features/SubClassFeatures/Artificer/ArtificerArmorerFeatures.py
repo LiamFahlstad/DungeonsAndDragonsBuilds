@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDice,
 )
 from Model.View import CharacterView
 
@@ -83,6 +84,35 @@ class ArcaneArmor(Feature):
         return FeatureTarget.SELF
 
 
+FORCE_DEMOLISHER_DICE = FeatureDice(
+    "Force Demolisher (Dreadnaught)",
+    (
+        (3, "1d10"),
+        (15, "2d6"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="+ Intelligence modifier, +1 more from level 9",
+)
+THUNDER_PULSE_DICE = FeatureDice(
+    "Thunder Pulse (Guardian)",
+    (
+        (3, "1d8"),
+        (15, "1d10"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="+ Intelligence modifier, +1 more from level 9",
+)
+LIGHTNING_LAUNCHER_DICE = FeatureDice(
+    "Lightning Launcher (Infiltrator)",
+    (
+        (3, "1d6"),
+        (15, "2d6"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="+ Intelligence modifier, +1 more from level 9; +1d6 once per turn",
+)
+
+
 class ArmorModel(Feature):
     def __init__(self):
         super().__init__(
@@ -94,6 +124,7 @@ class ArmorModel(Feature):
                 regain_all_on="long rest",
                 current_formula="Giant Stature (Dreadnaught): equal to your Intelligence modifier.",
             ),
+            dice=[FORCE_DEMOLISHER_DICE, THUNDER_PULSE_DICE, LIGHTNING_LAUNCHER_DICE],
         )
 
     def number_of_uses(self, character: CharacterView) -> int:

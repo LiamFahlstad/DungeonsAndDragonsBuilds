@@ -175,15 +175,12 @@ PHB_2024_SNEAK_ATTACK_DICE = {
 
 
 class TestRogueSneakAttack:
-    def test_dice_progression_matches_phb_table(self, make_character):
-        character = make_character(levels={CharacterClass.ROGUE: 1})
-        tiles = RogueFeatures.SneakAttack().get_resource_tiles(character)
-        assert len(tiles) == 1
-        label, steps = tiles[0]
-        assert label == "Sneak Attack Damage"
-        dice_by_level = _expand_level_ranges(steps)
+    def test_dice_progression_matches_phb_table(self):
+        (dice,) = RogueFeatures.SneakAttack().dice
+        assert dice.label == "Sneak Attack Damage"
+        assert dice.scales_with == CharacterClass.ROGUE
         for level, num_dice in PHB_2024_SNEAK_ATTACK_DICE.items():
-            assert dice_by_level[level] == f"{num_dice}d6", f"Rogue level {level}"
+            assert dice.at_level(level) == f"{num_dice}d6", f"Rogue level {level}"
 
 
 class TestRogueExpertise:

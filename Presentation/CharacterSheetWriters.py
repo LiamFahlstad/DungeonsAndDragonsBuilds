@@ -229,13 +229,13 @@ class HtmlCharacterSheetWriter:
         file.write("</div>\n")
 
         file.write("<div class='conditions-grid'>\n")
-        file.write("<span class='status-tracker-label conditions-label'>Conditions</span>\n")
+        file.write(
+            "<span class='status-tracker-label conditions-label'>Conditions</span>\n"
+        )
         for condition in Definitions.Condition.list_sorted():
             if condition == Definitions.Condition.EXHAUSTION:
                 continue
-            file.write(
-                f"<span class='status-chip'>{pen_box}{condition.value}</span>\n"
-            )
+            file.write(f"<span class='status-chip'>{pen_box}{condition.value}</span>\n")
         file.write("</div>\n")
 
         file.write("</div>\n")

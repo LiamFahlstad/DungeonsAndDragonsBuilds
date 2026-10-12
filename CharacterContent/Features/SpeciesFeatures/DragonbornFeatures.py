@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Model.Content.Improvements import DamageResistance as DamageResistanceImprovement
 from Core.Definitions import CreatureSize
@@ -51,6 +52,18 @@ class DamageResistance(Feature):
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."
 
 
+BREATH_WEAPON_DICE = FeatureDice(
+    "Breath Weapon Damage",
+    (
+        (1, "1d10"),
+        (5, "2d10"),
+        (11, "3d10"),
+        (17, "4d10"),
+    ),
+    None,
+)
+
+
 class BreathWeapon(Feature):
     def __init__(self, dragon_color: DragonColor):
         self.color = dragon_color
@@ -66,18 +79,13 @@ class BreathWeapon(Feature):
                 current_formula="Current amount: equal to your proficiency bonus.",
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
+            dice=BREATH_WEAPON_DICE,
         )
-
-    @staticmethod
-    def _damage_dice(character: CharacterView) -> str:
-        """1d10, +1d10 at character levels 5, 11 and 17."""
-        level = character.character_level
-        return f"{1 + (level >= 5) + (level >= 11) + (level >= 17)}d10"
 
     def get_description(self, character: CharacterView) -> str:
         text = (
             "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus).\n"
-            f"On a failed save, a creature takes 1d10 {self.damage_type.value} damage (your Draconic Ancestry is {self.color.value} dragon). On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10); right now it is {self._damage_dice(character)}.\n"
+            f"On a failed save, a creature takes 1d10 {self.damage_type.value} damage (your Draconic Ancestry is {self.color.value} dragon). On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10); right now it is {BREATH_WEAPON_DICE.at(character)}.\n"
             "You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return text
@@ -99,7 +107,7 @@ class BreathWeapon(Feature):
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
 
-        damage = self._damage_dice(character)
+        damage = BREATH_WEAPON_DICE.at(character)
 
         save_dc = self.calculate_dc(character)
 

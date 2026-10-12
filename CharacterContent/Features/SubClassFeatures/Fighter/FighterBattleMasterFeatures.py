@@ -6,9 +6,20 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+
+SUPERIORITY_DIE = FeatureDice(
+    "Superiority Die",
+    (
+        (3, "d8"),
+        (10, "d10"),
+        (18, "d12"),
+    ),
+    CharacterClass.FIGHTER,
+)
 
 
 class SuperiorityDice(Feature):
@@ -23,6 +34,7 @@ class SuperiorityDice(Feature):
                 current_formula="Current amount: 4, increasing to 5 at Fighter level 7 and 6 at Fighter level 15.",
                 gained_at=[3, 3, 3, 3, 7, 15],
             ),
+            dice=SUPERIORITY_DIE,
         )
 
     def number_of_uses(self, character: CharacterView) -> int:

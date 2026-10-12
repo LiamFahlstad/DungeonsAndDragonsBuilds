@@ -13,7 +13,13 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import MonsterAbility
 from Presentation.CreatureStatBlocks import format_creature_stat_block
-from Model.Content.Feature import Feature, FeatureUses, FeatureActivation, RegainedOn
+from Model.Content.Feature import (
+    Feature,
+    FeatureUses,
+    FeatureActivation,
+    RegainedOn,
+    FeatureDice,
+)
 from Model.Content.Improvements import GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -109,8 +115,22 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
         ac=12 + intelligence_modifier,
         temp_hp=0,
         conditions=[],
-        ability_scores={Ability.STRENGTH: 14, Ability.DEXTERITY: 12, Ability.CONSTITUTION: 14, Ability.INTELLIGENCE: 4, Ability.WISDOM: 10, Ability.CHARISMA: 6},
-        saving_throws={Ability.STRENGTH: 2, Ability.DEXTERITY: 1, Ability.CONSTITUTION: 2, Ability.INTELLIGENCE: -3, Ability.WISDOM: 0, Ability.CHARISMA: -2},
+        ability_scores={
+            Ability.STRENGTH: 14,
+            Ability.DEXTERITY: 12,
+            Ability.CONSTITUTION: 14,
+            Ability.INTELLIGENCE: 4,
+            Ability.WISDOM: 10,
+            Ability.CHARISMA: 6,
+        },
+        saving_throws={
+            Ability.STRENGTH: 2,
+            Ability.DEXTERITY: 1,
+            Ability.CONSTITUTION: 2,
+            Ability.INTELLIGENCE: -3,
+            Ability.WISDOM: 0,
+            Ability.CHARISMA: -2,
+        },
         spell_slots={},
         cr="None",
         monster_type=MonsterType.CONSTRUCT,
@@ -195,6 +215,17 @@ class ExtraAttack(Feature):
         return description
 
 
+ARCANE_JOLT_DICE = FeatureDice(
+    "Arcane Jolt",
+    (
+        (9, "2d6"),
+        (15, "4d6"),
+    ),
+    CharacterClass.ARTIFICER,
+    note="Force damage or healing",
+)
+
+
 class ArcaneJolt(Feature):
     def __init__(self):
         super().__init__(
@@ -207,6 +238,7 @@ class ArcaneJolt(Feature):
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
+            dice=ARCANE_JOLT_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:

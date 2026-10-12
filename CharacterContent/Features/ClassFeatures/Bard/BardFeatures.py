@@ -6,12 +6,15 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDice,
 )
 from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
-from Core.Definitions import Skill
+from Core.Definitions import (
+    Skill,
+    CharacterClass,
+)
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
-from Core.Rules import ALL_LEVELS, MAX_ABILITY_MODIFIER
+from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
 
@@ -33,6 +36,18 @@ class Spellcasting(Feature):
         return RegainedOn.LONG_REST
 
 
+BARDIC_INSPIRATION_DIE = FeatureDice(
+    "Bardic Inspiration Die",
+    (
+        (1, "1d6"),
+        (5, "1d8"),
+        (10, "1d10"),
+        (15, "1d12"),
+    ),
+    CharacterClass.BARD,
+)
+
+
 class BardicInspiration(Feature):
     def __init__(self):
         super().__init__(
@@ -47,6 +62,7 @@ class BardicInspiration(Feature):
                 regain_all_on="long rest",
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),
+            dice=BARDIC_INSPIRATION_DIE,
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -57,27 +73,6 @@ class BardicInspiration(Feature):
             "    * At Higher Levels. Your Bardic Inspiration die changes when you reach certain Bard levels, as shown in the Bardic Die column of the Bard Features table. The die becomes a d8 at level 5, a d10 at level 10, and a d12 at level 15.\n"
         )
         return description
-
-    def get_resource_tiles(
-        self, character: CharacterView
-    ) -> list[tuple[str, list[tuple[str, str]]]]:
-        die_by_level = {}
-        for level in ALL_LEVELS:
-            if level >= 15:
-                die_by_level[level] = "1d12"
-            elif level >= 10:
-                die_by_level[level] = "1d10"
-            elif level >= 5:
-                die_by_level[level] = "1d8"
-            else:
-                die_by_level[level] = "1d6"
-        steps = [
-            (f"Lv {level_range}", value)
-            for level_range, value in StringUtils.compress_level_progression(
-                die_by_level
-            )
-        ]
-        return [("Bardic Inspiration Die", steps)]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -1,4 +1,8 @@
-from Core.Definitions import Ability, DRUID_HIT_DIE
+from Core.Definitions import (
+    Ability,
+    DRUID_HIT_DIE,
+    CharacterClass,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -6,6 +10,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
@@ -42,6 +47,17 @@ class StarMap(Feature):
         return max(1, character.get_wisdom_modifier())
 
 
+STARRY_FORM_DICE = FeatureDice(
+    "Archer and Chalice",
+    (
+        (3, "1d8"),
+        (10, "2d8"),
+    ),
+    CharacterClass.DRUID,
+    note="+ Wisdom modifier",
+)
+
+
 class StarryForm(Feature):
     def __init__(self):
         super().__init__(
@@ -53,6 +69,7 @@ class StarryForm(Feature):
                 range="10-Foot Radius",
             ),
             usage_tags=["damage", "heal", "buff"],
+            dice=STARRY_FORM_DICE,
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
@@ -77,7 +94,7 @@ class StarryForm(Feature):
         wisdom_modifier = character.get_wisdom_modifier()
         spell_attack = character.calculate_attack_bonus_for_ability(Ability.WISDOM)
         twinkling = character.has_feature(TwinklingConstellations)
-        dice = "2d8" if twinkling else "1d8"
+        dice = STARRY_FORM_DICE.at(character)
         lines = [
             f"Archer right now: {spell_attack:+} to hit, {dice} + {wisdom_modifier} Radiant damage.",
             f"Chalice right now: regain {dice} + {wisdom_modifier} Hit Points.",

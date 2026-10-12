@@ -5,11 +5,13 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureUses,
     FeatureTarget,
+    FeatureDice,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Core.Definitions import CharacterClass
 
 
 class ExpandedSpellList(Feature):
@@ -32,6 +34,16 @@ class ExpandedSpellList(Feature):
         return description
 
 
+TENTACLE_DICE = FeatureDice(
+    "Tentacle Cold Damage",
+    (
+        (3, "1d8"),
+        (10, "2d8"),
+    ),
+    CharacterClass.WARLOCK,
+)
+
+
 class TentacleOfTheDeep(Feature):
     def __init__(self):
         super().__init__(
@@ -49,11 +61,12 @@ class TentacleOfTheDeep(Feature):
                 current_formula="Current amount: equal to your proficiency bonus.",
                 gained_at=levels_gained(proficiency_bonus, from_level=3),
             ),
+            dice=TENTACLE_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        damage = "2d8" if warlock_level >= 10 else "1d8"
+        damage = TENTACLE_DICE.at(character)
         description = (
             "You can magically summon a spectral tentacle that strikes at your foes. As a bonus action, you create a 10-foot-long tentacle at a point you can see within 60 feet of you. The tentacle lasts for 1 minute or until you use this feature to create another tentacle.\n"
             "\n"
@@ -75,7 +88,7 @@ class TentacleOfTheDeep(Feature):
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         proficiency_bonus = self.number_of_uses(character)
-        damage = "2d8" if warlock_level >= 10 else "1d8"
+        damage = TENTACLE_DICE.at(character)
         return [
             ("Action", "Bonus action to summon"),
             ("Range", "60 feet from you"),
@@ -135,6 +148,16 @@ class OceanicSoul(Feature):
         return FeatureTarget.SELF
 
 
+GUARDIAN_COIL_DICE = FeatureDice(
+    "Damage Reduction",
+    (
+        (6, "1d8"),
+        (10, "2d8"),
+    ),
+    CharacterClass.WARLOCK,
+)
+
+
 class GuardianCoil(Feature):
     def __init__(self):
         super().__init__(
@@ -144,17 +167,18 @@ class GuardianCoil(Feature):
                 action_type=ActionType.REACTION, range="10 Feet"
             ),
             usage_tags=["buff"],
+            dice=GUARDIAN_COIL_DICE,
         )
 
     def get_description(self, character: CharacterView) -> str:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        damage = "2d8" if warlock_level >= 10 else "1d8"
+        damage = GUARDIAN_COIL_DICE.at(character)
         description = f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        damage = "2d8" if warlock_level >= 10 else "1d8"
+        damage = GUARDIAN_COIL_DICE.at(character)
         return [
             ("Trigger", "Damage taken within 10 feet of tentacle"),
             ("Type", "Reaction"),

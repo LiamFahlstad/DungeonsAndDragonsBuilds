@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDice,
 )
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -42,6 +43,25 @@ class ArcaneArcherLore(Feature):
         return description
 
 
+ARCANE_SHOT_DICE = FeatureDice(
+    "Extra Damage",
+    (
+        (3, "2d6"),
+        (18, "4d6"),
+    ),
+    CharacterClass.FIGHTER,
+    note="Beguiling, Bursting, Enfeebling, Grasping and Shadow; Banishing also deals 2d6 Force from level 18",
+)
+ARCANE_SHOT_LINE_DICE = FeatureDice(
+    "Piercing and Seeking Extra Damage",
+    (
+        (3, "1d6"),
+        (18, "2d6"),
+    ),
+    CharacterClass.FIGHTER,
+)
+
+
 class ArcaneShot(Feature):
     def __init__(self):
         super().__init__(
@@ -49,6 +69,7 @@ class ArcaneShot(Feature):
             origin="Arcane Archer Fighter Level 3",
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=2, regain_all_on="short or long rest"),
+            dice=[ARCANE_SHOT_DICE, ARCANE_SHOT_LINE_DICE],
         )
 
     def number_of_uses(self, character: CharacterView) -> int:
@@ -95,7 +116,9 @@ class ArcaneShot(Feature):
     def _current_values(character: CharacterView) -> str:
         """The options' extra damage at the character's Fighter level."""
         upgraded = character.get_class_level(CharacterClass.FIGHTER) >= 18
-        extra, line_extra = ("4d6", "2d6") if upgraded else ("2d6", "1d6")
+        extra, line_extra = ARCANE_SHOT_DICE.at(character), ARCANE_SHOT_LINE_DICE.at(
+            character
+        )
         banishing = f"{extra} Force" if upgraded else "no extra damage"
         return (
             f"Your Arcane Shot options right now: Beguiling, Bursting, Enfeebling, Grasping and Shadow deal {extra} extra; "

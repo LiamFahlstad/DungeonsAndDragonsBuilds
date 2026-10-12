@@ -44,7 +44,11 @@ def _subclass_label(character: Character, class_name: str) -> Optional[str]:
         if stamp.kind is not GrantKind.SUBCLASS or stamp.granted_by != class_name:
             continue
         match = _LEVEL_LABEL.match(feature.origin or "")
-        if match and match.group(1).endswith(class_name) and match.group(1) != class_name:
+        if (
+            match
+            and match.group(1).endswith(class_name)
+            and match.group(1) != class_name
+        ):
             return match.group(1)
     try:
         character_class = CharacterClass(class_name)
@@ -52,6 +56,7 @@ def _subclass_label(character: Character, class_name: str) -> Optional[str]:
         return None
     subclass = character.class_levels.active_subclasses.get(character_class)
     return f"{subclass} {class_name}" if subclass else None
+
 
 SPELL_CARD_CSS = """/* ── Spell entries ────────────────────────────────────────────────── */
         .spells {

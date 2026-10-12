@@ -32,11 +32,23 @@ def test_every_spell_has_a_source():
     "build_name, spell, label",
     [
         # A grant with its own label.
-        ("Y2024_Druid_Moon_Maggie", "Cure Wounds", "Circle of the Moon Spells table (Circle of the Moon Druid Level 3)"),
+        (
+            "Y2024_Druid_Moon_Maggie",
+            "Cure Wounds",
+            "Circle of the Moon Spells table (Circle of the Moon Druid Level 3)",
+        ),
         # Subclass spells name the subclass the way its feature cards do.
-        ("Y2024ClericLightAmaraSunkindleCharacterBuilder", "Burning Hands", "Granted by Light Domain Cleric Level 3"),
+        (
+            "Y2024ClericLightAmaraSunkindleCharacterBuilder",
+            "Burning Hands",
+            "Granted by Light Domain Cleric Level 3",
+        ),
         # A species trait.
-        ("Y2014WizardChronurgyAurelioTimewardCharacterBuilder", "Mending", "Granted by Rock Gnome"),
+        (
+            "Y2014WizardChronurgyAurelioTimewardCharacterBuilder",
+            "Mending",
+            "Granted by Rock Gnome",
+        ),
     ],
 )
 def test_source_examples(build_name, spell, label):
@@ -45,5 +57,10 @@ def test_source_examples(build_name, spell, label):
 
 def test_class_picks_are_marked_chosen():
     labels = _labels("Y2024ClericLightAmaraSunkindleCharacterBuilder")
-    chosen = [l for ls in labels.values() for l in ls if l.startswith("Chosen at Cleric Level")]
+    chosen = [
+        l
+        for ls in labels.values()
+        for l in ls
+        if l.startswith("Chosen at Cleric Level")
+    ]
     assert chosen
