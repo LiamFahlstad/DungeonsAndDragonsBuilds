@@ -175,7 +175,7 @@ def get_starter_class_builder():
                         character_level=4,
                         ability=Ability.WISDOM,
                     ),
-                    cantrip=EvocationLevel0Spells.FIRE_BOLT,
+                    cantrip=DruidLevel0Spells.PRODUCE_FLAME,
                     spell=DruidLevel2Spells.MOONBEAM,
                 ),
                 5: DruidLevel5(

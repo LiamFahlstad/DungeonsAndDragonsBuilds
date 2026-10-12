@@ -8,8 +8,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Utils import StringUtils
-from Core.Rules import levels_gained
+from Core.Rules import MAX_ABILITY_MODIFIER, levels_gained
 from Model.View import CharacterView
 
 
@@ -96,17 +95,23 @@ class HiddenPaths(Feature):
             origin="Circle of Dreams Druid Level 10",
             usage_tags=["utility"],
             activation=FeatureActivation(action_type="bonus_action"),
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
 
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_wisdom_modifier())
+
     def get_description(self, character: CharacterView) -> str:
-        wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
-        uses = max(1, wisdom_mod)
         description = (
             "Starting at 10th level, you can use the hidden, magical pathways that some fey use to traverse space in a blink of an eye. As a bonus action on your turn, you can teleport up to 60 feet to an unoccupied space you can see. Alternatively, you can use your action to teleport one willing creature you touch up to 30 feet to an unoccupied space you can see.\n"
             "\n"
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
-        return StringUtils.add_boxes(description, uses, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wisdom_mod = character.get_ability_modifier(Definitions.Ability.WISDOM)
@@ -122,7 +127,9 @@ class HiddenPaths(Feature):
 class WalkerInDreams(Feature):
     def __init__(self):
         super().__init__(
-            name="Walker in Dreams", origin="Circle of Dreams Druid Level 14"
+            name="Walker in Dreams",
+            origin="Circle of Dreams Druid Level 14",
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -135,4 +142,4 @@ class WalkerInDreams(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description

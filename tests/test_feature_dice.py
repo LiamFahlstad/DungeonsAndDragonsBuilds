@@ -107,13 +107,43 @@ class TestCard:
         assert "Martial Arts Die" in html
         assert "by Monk level" in html
         for levels, dice in MonkFeatures.MARTIAL_ARTS_DIE.steps():
-            assert f"<span class='feature-dice-value'>{dice}</span>" in html
-            assert f"<span class='feature-dice-levels'>Lv {levels}</span>" in html
+            assert f"<span class='feature-track-value'>{dice}</span>" in html
+            assert f"<span class='feature-track-levels'>Lv {levels}</span>" in html
+
+    def test_uses_and_dice_sit_together_in_one_labelled_panel(self):
+        name = next(n for n in ALL_BUILDS if "BattleMaster" in n)
+        from CharacterContent.Features.SubClassFeatures.Fighter import (
+            FighterBattleMasterFeatures,
+        )
+
+        html = self._card(name, FighterBattleMasterFeatures.SuperiorityDice)
+        panel = html[
+            html.index("<div class='feature-stats'>") : html.index(
+                "fuel your maneuvers"
+            )
+        ]
+        uses_at = panel.index("<span class='feature-stat-label'>Uses</span>")
+        dice_at = panel.index("<span class='feature-stat-label'>Dice</span>")
+        assert uses_at < dice_at
+        assert "slot-box" in panel[uses_at:dice_at]
+        assert "Superiority Die" in panel[dice_at:]
+        # The panel comes before the description text.
+        assert html.index("feature-stats") < html.index("fuel your maneuvers")
+
+    def test_resource_tiles_render_as_a_scaling_row(self):
+        name = next(n for n in ALL_BUILDS if "Barbarian" in n)
+        from CharacterContent.Features.ClassFeatures.Barbarian import (
+            BarbarianFeatures,
+        )
+
+        html = self._card(name, BarbarianFeatures.Rage)
+        assert "<span class='feature-stat-label'>Scaling</span>" in html
+        assert "Rage Damage" in html
 
     def test_sneak_attack_track_has_ten_steps(self):
         name = next(n for n in ALL_BUILDS if "Rogue" in n)
         html = self._card(name, RogueFeatures.SneakAttack)
-        assert html.count("class='feature-dice-step'") == 10
+        assert html.count("class='feature-track-step'") == 10
 
 
 def test_every_granted_feature_dice_matches_its_class_levels():

@@ -16,7 +16,6 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Utils import StringUtils
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
@@ -224,6 +223,7 @@ class BlazingRevival(Feature):
             origin="Circle of Wildfire Druid Level 14",
             usage_tags=["heal"],
             activation=FeatureActivation(range="120 Feet"),
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -232,7 +232,7 @@ class BlazingRevival(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [

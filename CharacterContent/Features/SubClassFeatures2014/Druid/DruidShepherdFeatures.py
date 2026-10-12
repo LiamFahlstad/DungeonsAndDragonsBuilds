@@ -10,7 +10,6 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Model.View import CharacterView
 
 
@@ -114,6 +113,7 @@ class FaithfulSummons(Feature):
             origin="Circle of the Shepherd Druid Level 14",
             usage_tags=["buff", "summon"],
             activation=FeatureActivation(duration="1 Hour", range="20 Feet"),
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -122,7 +122,7 @@ class FaithfulSummons(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
-        return StringUtils.add_boxes(description, 1, regain_all_on="long rest")
+        return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         return [

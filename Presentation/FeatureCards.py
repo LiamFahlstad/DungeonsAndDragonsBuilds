@@ -5,7 +5,7 @@ everything here turns that into HTML."""
 import re
 from typing import Literal, Sequence, TextIO
 
-from Model.Content.Feature import ActionType, Feature, FeatureDice, FeatureUses
+from Model.Content.Feature import ActionType, Feature, FeatureUses
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
@@ -231,84 +231,96 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             margin: 0.3em 0 0.3em 1.2em;
         }
 
-        /* Core resource numbers (e.g. Martial Arts die, Focus Points) called
-           out at the top of a feature's own card - reuses .stat-tile /
-           .stat-tile-resource from the base sheet CSS, just laid out to fit
-           inside a card instead of the overview row. The sheet isn't
-           reprinted every level-up, so every level's value is shown as an
-           equally-weighted box - there's no "current level" callout, since
-           that would go stale the moment the player levels up without a
-           reprint. */
-        .feature-resource-section {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin: 0 0 0.5rem 0;
-        }
+        /* The stats panel at the top of a card body: one labelled row per
+           tracked number - "Uses" (the use boxes), "Dice" (a FeatureDice
+           progression) and "Scaling" (get_resource_tiles values such as
+           Rage Damage). Label column on the left, content on the right.
 
-        .feature-resource-group-label {
-            display: block;
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6a5636;
-            margin-bottom: 0.2rem;
-        }
+           Progressions are drawn as a track of every step - value on top,
+           the levels it covers underneath - joined by chevrons. No step is
+           highlighted as "current": the page isn't reprinted on level-up.
 
-        .feature-resource-tiles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-
-        /* A die that grows with level (Feature.dice), drawn as a track of
-           every step - die on top, the levels it covers underneath - joined
-           by chevrons. Like the resource tiles, no step is highlighted as
-           "current": the page isn't reprinted on level-up. Every div here
-           resets the base div rule (a centered 700px column), whose auto
-           margins would otherwise spread the steps across the card. */
-        .feature-dice {
+           Every div here resets the base div rule (a centered 700px
+           column), whose auto margins would otherwise spread the steps
+           across the card. Boxes are never filled: they stay white so
+           they can be ticked or written in. */
+        .feature-stats {
+            display: grid;
+            grid-template-columns: max-content 1fr;
+            column-gap: 0.8rem;
+            row-gap: 0.45rem;
+            align-items: center;
             max-width: none;
-            margin: 0 0 0.5rem 0;
-            padding: 0;
+            margin: 0 0 0.6rem 0;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #d8c8a8;
+            border-radius: 5px;
+            background: #fff;
             break-inside: avoid;
         }
 
-        .feature-dice-header {
+        .feature-stat-label {
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a5636;
+            white-space: nowrap;
+        }
+
+        .feature-stat-value {
             max-width: none;
-            margin: 0 0 0.2rem 0;
+            margin: 0;
             padding: 0;
+            min-width: 0;
+        }
+
+        .feature-stats .slot-box-group {
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-stats .slot-reset-label {
+            margin: 0.15em 0 0 0;
+        }
+
+        .slot-box {
+            background: #fff;
+        }
+
+        .feature-track-header {
             display: flex;
             align-items: baseline;
             gap: 0.4rem;
+            max-width: none;
+            margin: 0 0 0.2rem 0;
+            padding: 0;
         }
 
-        .feature-dice-label {
-            font-size: 0.68rem;
+        .feature-track-title {
+            font-size: 0.78rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #7a2e2e;
+            color: #3a2c1c;
         }
 
-        .feature-dice-basis {
-            font-size: 0.62rem;
+        .feature-track-basis {
+            font-size: 0.66rem;
             font-style: italic;
             color: #7a6a50;
         }
 
-        .feature-dice-track {
-            max-width: none;
-            margin: 0;
-            padding: 0;
+        .feature-track {
             display: flex;
             flex-wrap: wrap;
             align-items: stretch;
             row-gap: 0.3rem;
+            max-width: none;
+            margin: 0;
+            padding: 0;
         }
 
-        .feature-dice-step {
+        .feature-track-step {
             display: inline-flex;
             flex-direction: column;
             align-items: center;
@@ -316,18 +328,18 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             max-width: none;
             margin: 0;
             padding: 0.15rem 0.45rem;
-            border: 1.5px solid #a65252;
+            border: 1.5px solid #9a7040;
             border-radius: 6px;
-            background: #fbf3f0;
+            background: #fff;
         }
 
         /* The chevron between two steps. */
-        .feature-dice-step + .feature-dice-step {
+        .feature-track-step + .feature-track-step {
             margin-left: 1rem;
             position: relative;
         }
 
-        .feature-dice-step + .feature-dice-step::before {
+        .feature-track-step + .feature-track-step::before {
             content: "\\203A";
             position: absolute;
             left: -0.8rem;
@@ -335,18 +347,18 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             transform: translateY(-55%);
             font-size: 1rem;
             font-weight: 700;
-            color: #a65252;
+            color: #9a7040;
         }
 
-        .feature-dice-value {
+        .feature-track-value {
             font-size: 0.95rem;
             font-weight: 700;
-            color: #5a1e1e;
+            color: #3a2c1c;
             line-height: 1.15;
             white-space: nowrap;
         }
 
-        .feature-dice-levels {
+        .feature-track-levels {
             font-size: 0.56rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -355,7 +367,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             white-space: nowrap;
         }
 
-        .feature-dice-note {
+        .feature-track-note {
             display: block;
             margin-top: 0.15rem;
             font-size: 0.68rem;
@@ -570,27 +582,8 @@ def write_feature_card(
         feature, character, file, description_mode, feature_label(feature, character)
     )
 
-    resource_tiles = feature.get_resource_tiles(character)
-    if resource_tiles:
-        file.write("<div class='feature-resource-section'>\n")
-        for group_label, steps in resource_tiles:
-            file.write("<div class='feature-resource-group'>\n")
-            file.write(
-                f"<span class='feature-resource-group-label'>{group_label}</span>\n"
-            )
-            file.write("<div class='feature-resource-tiles'>\n")
-            for step_label, value in steps:
-                file.write(_resource_tile_html(step_label, value))
-            file.write("</div>\n")
-            file.write("</div>\n")
-        file.write("</div>\n")
-
-    for dice in feature.dice:
-        file.write(_dice_html(dice))
-
+    file.write(_stats_panel_html(feature, character))
     file.write(f"{html_description}\n")
-    if feature.uses is not None:
-        file.write(_uses_html(feature.uses) + "\n")
 
     parent_level = character.stamp_of(feature).level
     for extension in ordered_extensions(character, feature):
@@ -615,8 +608,7 @@ def write_feature_card(
             _upgrade_block_html(
                 f"{label}: {extension.name}{extension_tags}",
                 extension_html,
-                extension.uses,
-                extension.dice,
+                _stats_panel_html(extension, character),
             )
         )
 
@@ -644,7 +636,9 @@ def write_extension_card(
     )
     file.write(
         _upgrade_block_html(
-            f"Extends {parent_name}", html_description, feature.uses, feature.dice
+            f"Extends {parent_name}",
+            html_description,
+            _stats_panel_html(feature, character),
         )
     )
     _write_card_close(file)
@@ -680,46 +674,75 @@ def _write_card_close(file: TextIO) -> None:
     file.write("</div>\n")
 
 
-def _upgrade_block_html(
-    label: str,
-    body_html: str,
-    uses: FeatureUses | None,
-    dice: list[FeatureDice] | None = None,
-) -> str:
-    """An extension rendered as a blue-labelled .feature-upgrade block."""
-    uses_html = "\n" + _uses_html(uses) if uses is not None else ""
-    dice_html = "".join(_dice_html(d) for d in dice or [])
+def _upgrade_block_html(label: str, body_html: str, stats_html: str = "") -> str:
+    """An extension rendered as a blue-labelled .feature-upgrade block, its
+    own stats panel (if any) above its text."""
     return (
         f"<div class='feature-upgrade'>\n"
         f"<span class='feature-upgrade-label'>{label}</span>\n"
-        f"<div class='feature-upgrade-body'>{dice_html}{body_html}{uses_html}</div>\n"
+        f"<div class='feature-upgrade-body'>{stats_html}{body_html}</div>\n"
         f"</div>\n"
     )
 
 
-def _dice_html(dice: FeatureDice) -> str:
-    """A FeatureDice as its full progression track (see .feature-dice)."""
-    steps = "".join(
-        "<div class='feature-dice-step'>"
-        f"<span class='feature-dice-value'>{value}</span>"
-        f"<span class='feature-dice-levels'>Lv {levels}</span>"
-        "</div>"
-        for levels, value in dice.steps()
+def _stats_panel_html(feature: Feature, character: Character) -> str:
+    """The card's .feature-stats panel: a "Uses" row for its use boxes, a
+    "Dice" row per FeatureDice and a "Scaling" row per resource-tile group.
+    Empty when the feature has none of them."""
+    rows: list[tuple[str, str]] = []
+    if feature.uses is not None:
+        rows.append(("Uses", _uses_html(feature.uses)))
+    for dice in feature.dice:
+        rows.append(
+            (
+                "Dice",
+                _track_html(
+                    dice.label,
+                    f"by {dice.level_basis}",
+                    [(f"Lv {levels}", value) for levels, value in dice.steps()],
+                    dice.note,
+                ),
+            )
+        )
+    for group_label, steps in feature.get_resource_tiles(character) or []:
+        rows.append(("Scaling", _track_html(group_label, None, steps, None)))
+    if not rows:
+        return ""
+    cells = "".join(
+        f"<span class='feature-stat-label'>{label}</span>"
+        f"<div class='feature-stat-value'>{content}</div>"
+        for label, content in rows
     )
-    note = (
-        f"<span class='feature-dice-note'>{dice.note}</span>"
-        if dice.note is not None
-        else ""
+    return f"<div class='feature-stats'>{cells}</div>\n"
+
+
+def _track_html(
+    title: str,
+    basis: str | None,
+    steps: list[tuple[str, str]],
+    note: str | None,
+) -> str:
+    """A level progression as a .feature-track: one step per (levels, value),
+    joined by chevrons, under a title."""
+    basis_html = (
+        f"<span class='feature-track-basis'>{basis}</span>" if basis is not None else ""
+    )
+    steps_html = "".join(
+        "<div class='feature-track-step'>"
+        f"<span class='feature-track-value'>{value}</span>"
+        f"<span class='feature-track-levels'>{levels}</span>"
+        "</div>"
+        for levels, value in steps
+    )
+    note_html = (
+        f"<span class='feature-track-note'>{note}</span>" if note is not None else ""
     )
     return (
-        "<div class='feature-dice'>"
-        "<div class='feature-dice-header'>"
-        f"<span class='feature-dice-label'>{dice.label}</span>"
-        f"<span class='feature-dice-basis'>by {dice.level_basis}</span>"
+        "<div class='feature-track-header'>"
+        f"<span class='feature-track-title'>{title}</span>{basis_html}"
         "</div>"
-        f"<div class='feature-dice-track'>{steps}</div>"
-        f"{note}"
-        "</div>\n"
+        f"<div class='feature-track'>{steps_html}</div>"
+        f"{note_html}"
     )
 
 
@@ -821,13 +844,4 @@ def _uses_html(uses: FeatureUses) -> str:
         regain_x_on=uses.regain_x_on,
         current_formula=uses.current_formula,
         gained_at=uses.gained_at,
-    )
-
-
-def _resource_tile_html(label: str, value) -> str:
-    return (
-        "<div class='stat-tile stat-tile-resource'>"
-        f"<span class='stat-tile-label'>{label}</span>"
-        f"<span class='stat-tile-value'>{value}</span>"
-        "</div>\n"
     )
