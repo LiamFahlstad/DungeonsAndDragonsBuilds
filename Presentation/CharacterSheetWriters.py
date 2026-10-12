@@ -73,6 +73,12 @@ def _slugify_name(name: str) -> str:
 
 
 class HtmlCharacterSheetWriter:
+    def __init__(self, show_feature_tags: bool = False):
+        # Feature cards' header tag chips (action, duration, range, save DC,
+        # usage roles) are off unless asked for (RunCharacterCreator.py
+        # --feature-tags); the Passive tag is always shown.
+        self.show_feature_tags = show_feature_tags
+
     def _open_page(self, path: str | pathlib.Path) -> TextIO:
         """Every page is written through this. The snapshot tests override it
         to capture pages in memory (tests/_snapshot_helpers.py): reading a
@@ -1863,7 +1869,13 @@ class HtmlCharacterSheetWriter:
                 )
                 file.write("<div class='features'>\n")
                 for feature in sorted_features:
-                    write_feature_card(feature, character, file, description_mode)
+                    write_feature_card(
+                        feature,
+                        character,
+                        file,
+                        description_mode,
+                        show_tags=self.show_feature_tags,
+                    )
                 file.write("</div>\n<br class='section-gap'>\n")
             else:
                 file.write("<div class='print-page-break'></div>\n")
@@ -1906,7 +1918,12 @@ class HtmlCharacterSheetWriter:
             file.write("<div class='features'>\n")
             for feature in level_features:
                 write_feature_card(
-                    feature, character, file, description_mode, max_level=level
+                    feature,
+                    character,
+                    file,
+                    description_mode,
+                    max_level=level,
+                    show_tags=self.show_feature_tags,
                 )
             sorted_level_extensions = sorted(
                 level_extensions,
@@ -1917,7 +1934,12 @@ class HtmlCharacterSheetWriter:
             )
             for parent, extension in sorted_level_extensions:
                 write_extension_card(
-                    extension, character, file, parent.name, description_mode
+                    extension,
+                    character,
+                    file,
+                    parent.name,
+                    description_mode,
+                    show_tags=self.show_feature_tags,
                 )
             file.write("</div>\n")
 

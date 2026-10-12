@@ -119,7 +119,8 @@ class CapturingSheetWriter(HtmlCharacterSheetWriter):
     bytes}) instead of onto disk. The bytes are exactly what the real writer
     would write: same encoding, same newline translation."""
 
-    def __init__(self, output_folder: Path):
+    def __init__(self, output_folder: Path, show_feature_tags: bool = False):
+        super().__init__(show_feature_tags=show_feature_tags)
         self._root = output_folder
         self.pages: dict[str, bytes] = {}
 

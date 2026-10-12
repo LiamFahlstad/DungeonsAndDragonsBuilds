@@ -569,17 +569,24 @@ def write_feature_card(
     file: TextIO,
     description_mode: DescriptionMode = None,
     max_level: int | None = None,
+    show_tags: bool = False,
 ) -> None:
     """The feature's card, with its extensions nested as upgrade blocks. On a
     per-level page (max_level set), extensions granted above the page's level,
     or above the parent's level (they get a card of their own there), are
-    left out."""
+    left out. show_tags adds the header tag chips (action, duration, range,
+    save DC, usage roles); the Passive tag is shown either way."""
     html_description = render_feature_description(feature, character, description_mode)
     if html_description is None:
         return
 
     _write_card_open(
-        feature, character, file, description_mode, feature_label(feature, character)
+        feature,
+        character,
+        file,
+        description_mode,
+        feature_label(feature, character),
+        show_tags,
     )
 
     file.write(_stats_panel_html(feature, character))
@@ -601,7 +608,9 @@ def write_feature_card(
             continue
         extension_tags = "".join(
             f" {tag}"
-            for tag in _header_tags_html(extension, character, description_mode)
+            for tag in _header_tags_html(
+                extension, character, description_mode, show_tags
+            )
         )
         label = feature_label(extension, character)
         file.write(
@@ -621,6 +630,7 @@ def write_extension_card(
     file: TextIO,
     parent_name: str,
     description_mode: DescriptionMode = None,
+    show_tags: bool = False,
 ) -> None:
     """An extension as a card of its own on its level page, flagged as
     extending `parent_name` (with the same blue-label styling as a nested
@@ -632,7 +642,12 @@ def write_extension_card(
     # The card header already carries this feature's tags (Passive included),
     # so the label only names the parent.
     _write_card_open(
-        feature, character, file, description_mode, feature_label(feature, character)
+        feature,
+        character,
+        file,
+        description_mode,
+        feature_label(feature, character),
+        show_tags,
     )
     file.write(
         _upgrade_block_html(
@@ -650,6 +665,7 @@ def _write_card_open(
     file: TextIO,
     description_mode: DescriptionMode,
     label: str,
+    show_tags: bool = False,
 ) -> None:
     """Write a card's header (name, tag chips, origin) and open its body.
     Close with _write_card_close."""
@@ -661,7 +677,7 @@ def _write_card_open(
     file.write("<div class='feature-header'>\n")
     file.write("<span class='feature-name-group'>\n")
     file.write(f"<span class='feature-name'>{feature.name}</span>\n")
-    for tag in _header_tags_html(feature, character, description_mode):
+    for tag in _header_tags_html(feature, character, description_mode, show_tags):
         file.write(f"{tag}\n")
     file.write("</span>\n")
     file.write(f"<span class='feature-origin'>{label}</span>\n")
@@ -757,15 +773,22 @@ def _shows_passive_tag(feature: Feature, description_mode: DescriptionMode) -> b
 
 
 def _header_tags_html(
-    feature: Feature, character: Character, description_mode: DescriptionMode
+    feature: Feature,
+    character: Character,
+    description_mode: DescriptionMode,
+    show_tags: bool = False,
 ) -> list[str]:
-    """The tag chips shown beside a feature's name (Passive, action economy,
-    duration, range, save DC, usage roles), in display order."""
+    """The tag chips shown beside a feature's name, in display order: the
+    Passive tag always, and - only with show_tags (RunCharacterCreator.py
+    --feature-tags) - action economy, duration, range, save DC and usage
+    roles."""
     activation = feature.activation
     if _shows_passive_tag(feature, description_mode):
         passive_tag = "<span class='feature-passive-tag'>Passive</span>"
     else:
         passive_tag = ""
+    if not show_tags:
+        return [passive_tag] if passive_tag else []
     tags = [
         passive_tag,
         _action_tag_html(activation.action_type),

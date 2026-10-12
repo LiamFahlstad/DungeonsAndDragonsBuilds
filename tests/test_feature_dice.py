@@ -158,3 +158,42 @@ def test_every_granted_feature_dice_matches_its_class_levels():
                         f"{name}: {feature.name}'s {dice.label} scales with "
                         f"{dice.scales_with.value} level, which the build lacks"
                     )
+
+
+class TestHeaderTags:
+    """Header tag chips (action, duration, range, save DC, usage roles) are
+    opt-in (RunCharacterCreator.py --feature-tags); Passive always shows."""
+
+    def _card(self, show_tags: bool) -> str:
+        from CharacterContent.Features.SubClassFeatures.Fighter import (
+            FighterBattleMasterFeatures,
+        )
+
+        name = next(n for n in ALL_BUILDS if "BattleMaster" in n)
+        character = ALL_BUILDS[name]().build()
+        feature = next(
+            f
+            for f in character.features
+            if isinstance(f, FighterBattleMasterFeatures.SuperiorityDice)
+        )
+        out = io.StringIO()
+        write_feature_card(feature, character, out, show_tags=show_tags)
+        return out.getvalue()
+
+    def test_tags_are_hidden_by_default(self):
+        html = self._card(show_tags=False)
+        for chip in ("feature-dc-tag", "feature-usage-tag", "feature-duration-tag"):
+            assert chip not in html
+
+    def test_tags_show_with_the_flag(self):
+        html = self._card(show_tags=True)
+        assert "feature-dc-tag" in html
+        assert "feature-usage-tag" in html
+
+    def test_passive_tag_is_kept_without_the_flag(self):
+        name = next(n for n in ALL_BUILDS if "Rogue" in n)
+        character = ALL_BUILDS[name]().build()
+        feature = next(f for f in character.features if f.skippable_in_concise)
+        out = io.StringIO()
+        write_feature_card(feature, character, out)
+        assert "feature-passive-tag" in out.getvalue()

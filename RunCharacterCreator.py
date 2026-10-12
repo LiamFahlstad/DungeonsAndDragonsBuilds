@@ -138,6 +138,13 @@ if __name__ == "__main__":
         "'_concise' or '_table' suffix accordingly.",
     )
     parser.add_argument(
+        "--feature-tags",
+        action="store_true",
+        help="Show the tag chips beside each feature's name (action economy, "
+        "duration, range, save DC and usage roles such as Damage or Heal). Off by "
+        "default; the Passive tag is always shown.",
+    )
+    parser.add_argument(
         "--probability-tables",
         action="store_true",
         help="Include DC-save / spell-attack / weapon-attack success rate reference tables.",
@@ -146,7 +153,7 @@ if __name__ == "__main__":
 
     skill_config = Definitions.SkillConfig.DEFAULT
     builds = ExampleSelector.builds() if args.example else BuildSelector.builds()
-    writer = HtmlCharacterSheetWriter()
+    writer = HtmlCharacterSheetWriter(show_feature_tags=args.feature_tags)
     for build_class in builds.values():
         character = build_class().build()
         writer.write_character_sheet(
