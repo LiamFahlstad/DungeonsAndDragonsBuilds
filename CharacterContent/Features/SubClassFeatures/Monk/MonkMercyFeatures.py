@@ -181,6 +181,7 @@ class HandOfUltimateMercy(Feature):
             origin="Warrior of Mercy Monk Level 17",
             activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"),
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

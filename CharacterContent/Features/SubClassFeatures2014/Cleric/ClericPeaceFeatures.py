@@ -68,7 +68,7 @@ class EmboldeningBond(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can forge an empowering bond among people who are at peace with one another. As an action, you choose a number of willing creatures within 30 feet of you (this can include yourself) equal to your proficiency bonus. You create a magical bond among them for 10 minutes or until you use this feature again. While any bonded creature is within 30 feet of another, the creature can roll a d4 and add the number rolled to an attack roll, an ability check, or a saving throw it makes. Each creature can add the d4 no more than once per turn.\n"
-            "You regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description
 
@@ -105,6 +105,7 @@ class BalmOfPeaceChannelDivinity(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to make your very presence a soothing balm. As an action, you can move up to your speed, without provoking opportunity attacks, and when you move within 5 feet of any other creature during this action, you can restore a number of hit points to that creature equal to 2d6 + your Wisdom modifier (minimum of 1 hit point). A creature can receive this healing only once whenever you take this action."
+        description += f"\nRight now: each creature regains 2d6 + {character.get_wisdom_modifier()} hit points (minimum of 1)."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:

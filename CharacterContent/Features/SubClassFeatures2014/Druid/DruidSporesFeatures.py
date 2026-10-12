@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, Condition
+from Core.Definitions import Ability, CharacterClass, Condition
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -33,6 +33,18 @@ class CircleSporesSpells(Feature):
         return description
 
 
+def halo_of_spores_die(character: CharacterView) -> str:
+    """1d4, rising to 1d6/1d8/1d10 at Druid levels 6/10/14."""
+    level = character.get_class_level(CharacterClass.DRUID)
+    if level >= 14:
+        return "1d10"
+    if level >= 10:
+        return "1d8"
+    if level >= 6:
+        return "1d6"
+    return "1d4"
+
+
 class HaloOfSpores(Feature):
     def __init__(self):
         super().__init__(
@@ -52,9 +64,13 @@ class HaloOfSpores(Feature):
             "2nd-5th\t1d4\n"
             "6th-9th\t1d6\n"
             "10th-13th\t1d8\n"
-            "14th-20th\t1d10"
+            "14th-20th\t1d10\n"
+            f"Right now: {halo_of_spores_die(character)} necrotic damage."
         )
         return description
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -76,7 +92,8 @@ class SymbioticEntity(Feature):
             "You gain the ability to channel magic into your spores. As an action, you can expend a use of your Wild Shape feature to awaken those spores, rather than transforming into a beast form, and you gain temporary hit points equal to 4 times your Druid level. While this feature is active, you gain the following benefits:\n"
             "    * When you deal your Halo of Spores damage, roll the damage die a second time and add it to the total.\n"
             "    * Your melee weapon attacks deal an extra 1d6 necrotic damage to any target they hit.\n"
-            "These benefits last for 10 minutes, until you lose all these temporary hit points, or until you use your Wild Shape again."
+            "These benefits last for 10 minutes, until you lose all these temporary hit points, or until you use your Wild Shape again.\n"
+            f"Right now: {4 * character.get_class_level(CharacterClass.DRUID)} temporary hit points."
         )
         return description
 
@@ -103,7 +120,8 @@ class FungalInfestation(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your spores gain the ability to infest a corpse and animate it. If a beast or a humanoid that is Small or Medium dies within 10 feet of you, you can use your reaction to animate it, causing it to stand up immediately with 1 hit point. The creature uses the Zombie stat block in the Monster Manual. It remains animate for 1 hour, after which time it collapses and dies.\n"
-            "In combat, the zombie's turn comes immediately after yours. It obeys your mental commands, and the only action it can take is the Attack action, making one melee attack."
+            "In combat, the zombie's turn comes immediately after yours. It obeys your mental commands, and the only action it can take is the Attack action, making one melee attack.\n"
+            "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
         return description
 
@@ -150,6 +168,9 @@ class SpreadingSpores(Feature):
             "While the cube of spores persists, you can't use your Halo of Spores reaction."
         )
         return description
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
 
 
 class FungalBody(Feature):

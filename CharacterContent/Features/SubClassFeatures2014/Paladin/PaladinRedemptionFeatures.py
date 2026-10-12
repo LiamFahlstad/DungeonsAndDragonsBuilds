@@ -121,6 +121,8 @@ class ProtectiveSpirit(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "A holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your Paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren't incapacitated."
+        level = character.get_class_level(CharacterClass.PALADIN)
+        description += f"\nRight now: 1d6 + {level // 2} hit points."
         return description
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

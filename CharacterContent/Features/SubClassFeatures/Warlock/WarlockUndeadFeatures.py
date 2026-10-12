@@ -94,6 +94,11 @@ class NecroticHusk(Feature):
             origin="Undead Patron Warlock Level 10",
             activation=FeatureActivation(range="30-Foot Emanation"),
             usage_tags=["buff", "damage"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="short or long rest",
+                current_formula="Used by Unholy Resuscitation.",
+            ),
         )
         # Only the base Resistance is unconditional; the upgrade to Immunity
         # while using Form of Dread is conditional/temporary and stays

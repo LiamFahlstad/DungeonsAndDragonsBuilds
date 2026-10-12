@@ -93,8 +93,22 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
         ac=10 + intelligence_modifier,
         temp_hp=0,
         conditions=[],
-        ability_scores={Ability.STRENGTH: 11, Ability.DEXTERITY: 10, Ability.CONSTITUTION: 16, Ability.INTELLIGENCE: 4, Ability.WISDOM: 10, Ability.CHARISMA: 6},
-        saving_throws={Ability.STRENGTH: 0, Ability.DEXTERITY: 0, Ability.CONSTITUTION: 3, Ability.INTELLIGENCE: -3, Ability.WISDOM: 0, Ability.CHARISMA: -2},
+        ability_scores={
+            Ability.STRENGTH: 11,
+            Ability.DEXTERITY: 10,
+            Ability.CONSTITUTION: 16,
+            Ability.INTELLIGENCE: 4,
+            Ability.WISDOM: 10,
+            Ability.CHARISMA: 6,
+        },
+        saving_throws={
+            Ability.STRENGTH: 0,
+            Ability.DEXTERITY: 0,
+            Ability.CONSTITUTION: 3,
+            Ability.INTELLIGENCE: -3,
+            Ability.WISDOM: 0,
+            Ability.CHARISMA: -2,
+        },
         spell_slots={},
         cr="None",
         monster_type=MonsterType.UNDEAD,
@@ -248,6 +262,11 @@ class RefinedReanimation(Feature):
             origin="Reanimator Artificer Level 15",
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["heal", "utility"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Facilitated Revival.",
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:

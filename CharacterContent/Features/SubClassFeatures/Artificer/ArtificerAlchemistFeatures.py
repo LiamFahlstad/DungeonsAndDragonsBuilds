@@ -146,6 +146,11 @@ class ChemicalMastery(Feature):
             name="Chemical Mastery",
             origin="Alchemist Artificer Level 15",
             usage_tags=["damage", "buff", "utility"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Conjured Cauldron.",
+            ),
         )
         self._resistances = [
             DamageResistance(DamageType.ACID),

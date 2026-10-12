@@ -99,6 +99,8 @@ class AuraOfConquest(Feature):
             "\n"
             "At 18th level, the range of this aura increases to 30 feet."
         )
+        level = character.get_class_level(CharacterClass.PALADIN)
+        description += f"\nRight now: {level // 2} psychic damage, {'30' if level >= 18 else '10'}-foot aura."
         return description
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

@@ -127,7 +127,7 @@ class EmbodimentOfTheLaw(Feature):
         return RegainedOn.LONG_REST
 
     def number_of_uses(self, character: CharacterView) -> int:
-        return character.get_wisdom_modifier()
+        return max(1, character.get_wisdom_modifier())
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wis_mod = character.get_ability_modifier(Ability.WISDOM)

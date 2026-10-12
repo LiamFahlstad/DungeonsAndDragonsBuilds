@@ -67,6 +67,7 @@ class WordsOfTerror(Feature):
                 duration="1 Hour or Until Attacked or Damaged"
             ),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
@@ -140,6 +141,7 @@ class ShadowLore(Feature):
                 range="30 Feet",
             ),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

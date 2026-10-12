@@ -25,6 +25,8 @@ from CharacterContent.Spells.SpellLists import (
 
 @attr.dataclass
 class RangerFeyWandererLevel3(ClassBuilder.SubclassLevel3):
+    # Otherworldly Glamour: Deception, Performance, or Persuasion.
+    skill: Skill
 
     def add_features(
         self,
@@ -32,7 +34,7 @@ class RangerFeyWandererLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(RangerFeyWandererFeatures.DreadfulStrikes())
         data.add_feature(RangerFeyWandererFeatures.FeyWandererSpells())
-        data.add_feature(RangerFeyWandererFeatures.OtherworldlyGlamour())
+        data.add_feature(RangerFeyWandererFeatures.OtherworldlyGlamour(self.skill))
         data.add_spell(EnchantmentLevel1Spells.CHARM_PERSON)
 
 

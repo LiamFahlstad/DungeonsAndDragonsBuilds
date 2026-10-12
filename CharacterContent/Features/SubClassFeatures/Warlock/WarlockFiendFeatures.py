@@ -90,7 +90,14 @@ class HurlThroughHell(Feature):
             name="Hurl Through Hell",
             origin="Fiend Patron Warlock Level 14",
             usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return 1
+
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()

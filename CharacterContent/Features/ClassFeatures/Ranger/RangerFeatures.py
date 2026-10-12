@@ -55,15 +55,15 @@ class FavoredEnemy(Feature):
             uses=FeatureUses(
                 max_uses=6,
                 regain_all_on="long rest",
-                current_formula="Current amount: determined by your character level — 2 uses at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+.",
+                current_formula="Current amount: determined by your Ranger level — 2 uses at levels 1-4, 3 at 5-8, 4 at 9-12, 5 at 13-16, 6 at 17+.",
                 gained_at=[1, 1, 5, 9, 13, 17],
             ),
         )
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You always have the Hunter's Mark spell prepared.\n"
-            "You regain all expended uses of this ability when you finish a Long Rest.\n"
+            "You always have the Hunter's Mark spell prepared. You can cast it twice without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.\n"
+            "The number of times you can cast the spell without a spell slot increases when you reach certain Ranger levels: 3 at level 5, 4 at level 9, 5 at level 13, and 6 at level 17.\n"
         )
         return description
 
@@ -135,7 +135,8 @@ class Roving(Feature):
         super().__init__(
             name="Roving",
             origin="Ranger Level 6",
-            skippable_in_concise=True,
+            # Not skippable: the Climb and Swim Speeds aren't tracked anywhere
+            # else, so this card is the only place they show.
             usage_tags=["buff", "utility"],
         )
 

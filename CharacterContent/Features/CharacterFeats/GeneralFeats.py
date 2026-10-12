@@ -66,7 +66,12 @@ from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Records.GrantStamp import GrantStamp
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_ABILITY_MODIFIER, MAX_ABILITY_SCORE, MAX_PROFICIENCY_BONUS
+from Core.Rules import (
+    PROFICIENCY_BONUS_GAINED_AT,
+    MAX_ABILITY_MODIFIER,
+    MAX_ABILITY_SCORE,
+    MAX_PROFICIENCY_BONUS,
+)
 from Model.View import CharacterView
 
 
@@ -471,6 +476,11 @@ class LightlyArmored(_AbilityScoreFeat):
 class MageSlayer(_AbilityScoreFeat):
     _NAME = "Mage Slayer"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+    _USES = FeatureUses(
+        max_uses=1,
+        regain_all_on="short or long rest",
+        current_formula="Used by Guarded Mind.",
+    )
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1053,6 +1063,7 @@ class GenieMagic(_AbilityScoreFeat):
     _NAME = "Genie Magic"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1083,6 +1094,7 @@ class LordlyResolve(_AbilityScoreFeat):
     _NAME = "Lordly Resolve"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.CHARISMA)
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1171,7 +1183,8 @@ class PurpleDragonCommandant(_AbilityScoreFeat):
             "You gain the following benefits.\n"
             "Ability Score Increase. Increase your Strength or Dexterity score by 1, to a maximum of 20.\n"
             "Encourage Ally. As a Bonus Action, you bolster one ally you can see within 30 feet. The ally gains Temporary Hit Points equal to 2d6 plus the modifier of the ability score increased by this feat. You can take this Bonus Action a number of times equal to your Proficiency Bonus, and you regain all uses when you finish a Long Rest.\n"
-            "Last Stand. You have Advantage on attack rolls while Bloodied."
+            "Last Stand. You have Advantage on attack rolls while Bloodied.\n"
+            f"Right now: Encourage Ally grants 2d6 + {character.get_ability_modifier(self.ability)} Temporary Hit Points."
         )
         return description
 

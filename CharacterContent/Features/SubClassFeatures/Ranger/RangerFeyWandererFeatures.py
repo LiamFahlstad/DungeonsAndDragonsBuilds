@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Model.Content.Improvements import SkillBonus
+from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
@@ -58,9 +58,15 @@ class FeyWandererSpells(Feature):
 
 
 class OtherworldlyGlamour(Feature):
-    def __init__(self):
+    VALID_SKILLS = [Skill.DECEPTION, Skill.PERFORMANCE, Skill.PERSUASION]
+
+    def __init__(self, skill: Skill):
+        self.skill = skill
         super().__init__(
             name="Otherworldly Glamour", origin="Fey Wanderer Ranger Level 3"
+        )
+        self._skill = SkillProficiencyChoice(
+            [skill], self.VALID_SKILLS, count=1, error_prefix="Otherworldly Glamour"
         )
 
     def apply(self, ledger_writer: LedgerWriter):
@@ -69,6 +75,7 @@ class OtherworldlyGlamour(Feature):
         # so both the Wisdom modifier and the skill's ability are final.
         for skill in Skill:
             SkillBonus(skill, self._charisma_check_bonus(skill)).apply(ledger_writer)
+        self._skill.apply(ledger_writer)
 
     @staticmethod
     def _charisma_check_bonus(skill: Skill):
@@ -82,7 +89,8 @@ class OtherworldlyGlamour(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you make a Charisma check, you gain a bonus to the check equal to your Wisdom modifier (Minimum of +1).\n"
-            "You also gain proficiency in one of these skills of your choice: Deception, Performance, or Persuasion."
+            "You also gain proficiency in one of these skills of your choice: Deception, Performance, or Persuasion. "
+            f"You chose {self.skill.value}."
         )
         return description
 

@@ -129,7 +129,9 @@ class MonksFocus(Feature):
                 max_uses=LEVEL_TO_FOCUS_POINTS[20],
                 regain_all_on="short or long rest",
                 current_formula="Current amount: equal to your Monk level.",
-                gained_at=levels_gained(lambda level: LEVEL_TO_FOCUS_POINTS.get(level, 0), from_level=2),
+                gained_at=levels_gained(
+                    lambda level: LEVEL_TO_FOCUS_POINTS.get(level, 0), from_level=2
+                ),
             ),
         )
 
@@ -139,6 +141,9 @@ class MonksFocus(Feature):
     # features themselves render below as extension blocks.
     def get_description(self, character: CharacterView) -> str:
         return "Focus Point save DC: 8 plus your Wisdom modifier and Proficiency Bonus."
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return 8 + character.get_wisdom_modifier() + character.get_proficiency_bonus()
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
@@ -256,7 +261,10 @@ class UnarmoredMovement(Feature):
 class UncannyMetabolism(Feature):
     def __init__(self):
         super().__init__(
-            name="Uncanny Metabolism", origin="Monk Level 2", usage_tags=["heal"]
+            name="Uncanny Metabolism",
+            origin="Monk Level 2",
+            usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

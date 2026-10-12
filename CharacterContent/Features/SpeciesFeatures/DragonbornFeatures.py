@@ -122,6 +122,7 @@ class DraconicFlight(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
             ),
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -91,6 +91,7 @@ class BeguilingDefenses(Feature):
             origin="Archfey Patron Warlock Level 10",
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff", "damage"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
         self._immunity = ConditionImmunity(Condition.CHARMED)
 

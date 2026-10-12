@@ -73,7 +73,7 @@ class VampiricBite(Feature):
             "In addition, when you deal this damage to a creature that isn't a Construct or an Undead, you can empower yourself in one of the following ways:\n"
             "Drain. You regain Hit Points equal to the Piercing damage dealt.\n"
             "Strengthen. You gain a bonus to the next ability check or attack roll you make within the next minute; the bonus is equal to the Piercing damage dealt.\n"
-            "You can empower yourself with this trait, and you regain all expended uses when you finish a Long Rest."
+            "You can empower yourself with this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return description
 

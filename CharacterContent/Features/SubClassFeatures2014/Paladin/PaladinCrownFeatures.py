@@ -72,6 +72,7 @@ class TurnTheTide(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to bolster injured creatures. As a bonus action, each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1 hp) if it has no more than half of its hit points."
+        description += f"\nRight now: 1d6 + {max(1, character.get_charisma_modifier())} hit points."
         return description
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

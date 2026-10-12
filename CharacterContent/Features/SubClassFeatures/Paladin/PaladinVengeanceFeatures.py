@@ -1,5 +1,11 @@
 from Core.Definitions import PALADIN_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -113,6 +119,7 @@ class AvengingAngel(Feature):
                 duration="10 Minutes or Until Ended",
             ),
             usage_tags=["buff", "control", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

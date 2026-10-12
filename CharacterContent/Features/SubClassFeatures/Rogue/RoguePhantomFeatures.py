@@ -29,7 +29,7 @@ class WailsFromTheGrave(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Immediately after you deal Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack damage dice for your level (round up), and the second creature takes Necrotic damage equal to the roll's total as wails of the dead sound around it.\n"
-            "You can use this feature a number of times based on your Dexterity modifier, and you regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Dexterity modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
@@ -117,6 +117,7 @@ class GhostWalk(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
             ),
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -1,10 +1,11 @@
 from Core.Definitions import PALADIN_HIT_DIE
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
 from Model.View import CharacterView
 
@@ -83,6 +84,7 @@ class UndyingSentinel(Feature):
             name="Undying Sentinel",
             origin="Oath of the Ancients Paladin Level 15",
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
@@ -114,6 +116,7 @@ class ElderChampion(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"
             ),
             usage_tags=["heal", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

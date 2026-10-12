@@ -68,7 +68,7 @@ class Howl(Feature):
             "Each creature of your choice within 15 feet of you must succeed on a Wisdom saving throw "
             "(DC 8 plus your Constitution modifier and Proficiency Bonus) or have Disadvantage on attack rolls "
             "and saving throws until the start of your next turn.\n"
-            "You can use this trait, and you regain all expended uses when you finish a Long Rest."
+            "You can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return description
 

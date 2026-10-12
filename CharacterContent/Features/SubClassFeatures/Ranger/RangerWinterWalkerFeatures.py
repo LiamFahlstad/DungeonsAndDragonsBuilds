@@ -80,6 +80,7 @@ class FortifyingSoul(Feature):
                 action_type=ActionType.ACTION, duration="1 Hour"
             ),
             usage_tags=["heal", "buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -162,6 +163,7 @@ class FrozenHaunt(Feature):
             origin="Winter Walker Ranger Level 15",
             activation=FeatureActivation(range="15-Foot Emanation"),
             usage_tags=["damage", "buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

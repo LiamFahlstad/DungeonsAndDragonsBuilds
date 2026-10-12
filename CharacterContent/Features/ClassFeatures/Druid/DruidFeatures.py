@@ -355,7 +355,15 @@ class BeastSpells(Feature):
 
 class Archdruid(Feature):
     def __init__(self):
-        super().__init__(name="Archdruid", origin="Druid Level 20")
+        super().__init__(
+            name="Archdruid",
+            origin="Druid Level 20",
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Nature Magician.",
+            ),
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (

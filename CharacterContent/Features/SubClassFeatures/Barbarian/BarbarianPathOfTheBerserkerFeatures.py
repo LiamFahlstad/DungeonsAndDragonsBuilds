@@ -3,7 +3,13 @@ from Core.Definitions import BARBARIAN_HIT_DIE
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
     get_rage_damage_bonus,
 )
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -80,6 +86,7 @@ class IntimidatingPresence(Feature):
                 range="30-Foot Emanation",
             ),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

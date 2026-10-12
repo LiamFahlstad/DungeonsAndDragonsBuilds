@@ -6,8 +6,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Model.Content.Improvements import MultiAbilityArmorClass
-from Core.Definitions import Ability
+from Model.Content.Improvements import MultiAbilityArmorClass, SkillProficiencyChoice
+from Core.Definitions import Ability, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -79,7 +79,15 @@ class GenieSpells(Feature):
 
 
 class GeniesSplendor(Feature):
-    def __init__(self):
+    VALID_SKILLS = [
+        Skill.ACROBATICS,
+        Skill.INTIMIDATION,
+        Skill.PERFORMANCE,
+        Skill.PERSUASION,
+    ]
+
+    def __init__(self, skill: Skill):
+        self.skill = skill
         super().__init__(
             name="Genie's Splendor",
             origin="Oath of the Noble Genies Paladin Level 3",
@@ -88,9 +96,13 @@ class GeniesSplendor(Feature):
         # "When you aren't wearing any armor, your base Armor Class equals 10
         # plus your Dexterity and Charisma modifiers. You can use a Shield..."
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
+        self._skill = SkillProficiencyChoice(
+            [skill], self.VALID_SKILLS, count=1, error_prefix="Genie's Splendor"
+        )
 
     def apply(self, ledger_writer: LedgerWriter):
         self._ac.apply(ledger_writer)
+        self._skill.apply(ledger_writer)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
@@ -98,7 +110,8 @@ class GeniesSplendor(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers. You can use a Shield and still gain this benefit.\n"
-            "You also gain proficiency in one of the following skills of your choice: Acrobatics, Intimidation, Performance, or Persuasion."
+            "You also gain proficiency in one of the following skills of your choice: Acrobatics, Intimidation, Performance, or Persuasion. "
+            f"You chose {self.skill.value}."
         )
         return description
 
@@ -151,7 +164,7 @@ class ElementalRebuke(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.\n"
-            "You regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
@@ -181,6 +194,7 @@ class NobleScion(Feature):
                 duration="10 Minutes or Until Ended",
             ),
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

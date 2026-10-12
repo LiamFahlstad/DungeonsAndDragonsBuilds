@@ -1,5 +1,11 @@
 from Core.Definitions import CharacterClass, DamageType, SORCERER_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -137,6 +143,7 @@ class WarpingImplosion(Feature):
                 action_type=ActionType.ACTION, range="120 Feet"
             ),
             usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:

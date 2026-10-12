@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import (
     DamageResistance,
+    GrantLanguage,
     HitPointsPerLevelBonus,
     InitiativeProficiency,
     SkillProficiencyChoice,
@@ -28,7 +29,7 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel0Spells,
     WizardLevel1Spells,
 )
-from Core.Definitions import Ability, CharacterClass, DamageType, Skill
+from Core.Definitions import Ability, CharacterClass, DamageType, Language, Skill
 from Model.Grants import Grants
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
@@ -398,7 +399,20 @@ class Tough(OriginFeat):
 
 class CultOfTheDragonInitiate(OriginFeat):
     def __init__(self):
-        super().__init__(name="Cult of the Dragon Initiate", origin="Origin Feat")
+        super().__init__(
+            name="Cult of the Dragon Initiate",
+            origin="Origin Feat",
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="short or long rest",
+                current_formula="Used by Inspired by Fear.",
+            ),
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        # Dragon's Tongue. (A character who already knows Draconic picks
+        # another language instead; that choice isn't tracked.)
+        GrantLanguage(Language.DRACONIC).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -463,12 +477,8 @@ class FamiliarFriend(OriginFeat):
         super().__init__(
             name="Familiar Friend",
             origin="Origin Feat",
-            uses=FeatureUses(
-                max_uses=MAX_PROFICIENCY_BONUS,
-                regain_all_on="long rest",
-                current_formula="Current amount: equal to your proficiency bonus.",
-                gained_at=PROFICIENCY_BONUS_GAINED_AT,
-            ),
+            # One free casting of Find Familiar per Long Rest.
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_spells(self) -> list[str]:
@@ -483,7 +493,8 @@ class FamiliarFriend(OriginFeat):
             "Faithful Companion. You always have the Find Familiar spell prepared. "
             f"{self.spell_casting_ability.value} is your spellcasting ability for this spell. "
             "You can cast it once without a spell slot or Material components, and you regain the ability to cast it in this way when you finish a Long Rest. You can also cast the spell using any spell slots you have.\n"
-            "Fortified Familiar. When you cast the Find Familiar spell, your familiar’s Hit Point maximum and current Hit Points are increased by an amount equal to twice your character level.\n"
+            "Fortified Familiar. When you cast the Find Familiar spell, your familiar’s Hit Point maximum and current Hit Points are increased by an amount equal to twice your character level "
+            f"(currently {2 * character.character_level}).\n"
             "Helpful Friend. When you make an ability check using a skill in which you have proficiency while your familiar is within 5 feet of you, you gain Advantage on the check."
         )
         return description
@@ -530,7 +541,15 @@ class PurpleDragonRook(OriginFeat):
             count=1,
             error_prefix="Purple Dragon Rook",
         )
-        super().__init__(name="Purple Dragon Rook", origin="Origin Feat")
+        super().__init__(
+            name="Purple Dragon Rook",
+            origin="Origin Feat",
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Rallying Cry.",
+            ),
+        )
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)

@@ -1,10 +1,12 @@
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
+from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 
 
@@ -63,7 +65,16 @@ class WrithingTide(Feature):
                 duration="1 Minute or Until Incapacitated",
             ),
             usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=7),
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -118,7 +129,16 @@ class SwarmingDispersal(Feature):
                 action_type=ActionType.REACTION, range="30 Feet"
             ),
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=15),
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def get_description(self, character: CharacterView) -> str:
         description = (

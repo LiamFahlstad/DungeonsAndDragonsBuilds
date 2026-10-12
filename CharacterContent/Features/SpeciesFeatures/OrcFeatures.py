@@ -45,7 +45,7 @@ class AdrenalineRush(Feature):
     def get_description(self, character: CharacterView) -> str:
         text = (
             "You can take the Dash action as a Bonus Action. When you do so, you gain a number of Temporary Hit Points equal to your Proficiency Bonus.\n"
-            "You can use this trait, and you regain all expended uses when you finish a Short or Long Rest."
+            "You can use this trait a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Short or Long Rest."
         )
         return text
 
@@ -65,6 +65,7 @@ class RelentlessEndurance(Feature):
             name="Relentless Endurance",
             origin="Orc Trait",
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

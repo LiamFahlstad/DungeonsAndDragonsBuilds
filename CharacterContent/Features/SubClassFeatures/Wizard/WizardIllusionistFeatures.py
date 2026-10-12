@@ -1,5 +1,11 @@
 from Core.Definitions import WIZARD_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -45,6 +51,7 @@ class IllusorySelf(Feature):
             origin="Illusionist Wizard Level 10",
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

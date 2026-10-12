@@ -49,15 +49,25 @@ class UnwaveringMark(Feature):
                 duration="Until End of Your Next Turn", range="5 Feet"
             ),
             usage_tags=["damage", "control"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Strength modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_strength_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can menace your foes, foiling their attacks and punishing them for harming others. When you hit a creature with a melee weapon attack, you can mark the creature until the end of your next turn. This effect ends early if you are incapacitated or you die, or if someone else marks the creature.\n"
             "While it is within 5 feet of you, a creature marked by you has disadvantage on any attack roll that doesn't target you.\n"
             "In addition, if a creature marked by you deals damage to anyone other than you, you can make a special melee weapon attack against the marked creature as a bonus action on your next turn. You have advantage on the attack roll, and if it hits, the attack's weapon deals extra damage to the target equal to half your fighter level.\n"
-            "You regain all expended uses of it when you finish a long rest."
+            "Regardless of the number of creatures you mark, you can make this special attack a number of times equal to your Strength modifier (a minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
+        level = character.get_class_level(CharacterClass.FIGHTER)
+        description += f"\nRight now: {level // 2} extra damage on the special attack."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -97,12 +107,20 @@ class WardingManeuver(Feature):
                 action_type=ActionType.REACTION, range="5 Feet"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Constitution modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_constitution_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to fend off strikes directed at you, your mount, or other creatures nearby. If you or a creature you can see within 5 feet of you is hit by an attack, you can roll 1d8 as a reaction if you're wielding a melee weapon or a shield. Roll the die, and add the number rolled to the target's AC against that attack. If the attack still hits, the target has resistance against the attack's damage.\n"
-            "You regain all expended uses of it when you finish a long rest."
+            "You can use this feature a number of times equal to your Constitution modifier (a minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
         return description
 

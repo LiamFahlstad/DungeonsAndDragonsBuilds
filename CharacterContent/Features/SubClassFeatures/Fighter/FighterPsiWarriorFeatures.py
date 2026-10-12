@@ -128,6 +128,7 @@ class BulwarkOfForce(Feature):
                 range="30 Feet",
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

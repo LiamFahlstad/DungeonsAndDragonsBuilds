@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Language
+from Core.Definitions import CharacterClass, Language
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -63,6 +63,8 @@ class SpiritTotem(Feature):
             "    * Hawk Spirit. The hawk spirit is a consummate hunter, aiding you and your allies with its keen sight. When a creature makes an attack roll against a target in the spirit's aura, you can use your reaction to grant advantage to that attack roll. In addition, you and your allies have advantage on Wisdom (Perception) checks while in the aura.\n"
             "    * Unicorn Spirit. The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit's aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level."
         )
+        level = character.get_class_level(CharacterClass.DRUID)
+        description += f"\nRight now: Bear {5 + level} temporary hit points; Unicorn {level} hit points."
         return description
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
@@ -100,6 +102,8 @@ class GuardianSpirit(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."
+        level = character.get_class_level(CharacterClass.DRUID)
+        description += f"\nRight now: {level // 2} hit points."
         return description
 
 

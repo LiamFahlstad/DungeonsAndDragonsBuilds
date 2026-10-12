@@ -46,7 +46,7 @@ class Rage(Feature):
             "You can imbue yourself with a primal power called Rage, a force that grants you extraordinary might and resilience.\n"
             "    * Casting Time: Bonus Action\n"
             "    * Condition: Not wearing Heavy armor\n"
-            "    * Number of usages: You can enter your Rage.\n"
+            f"    * Number of usages: You can enter your Rage the number of times shown for your Barbarian level in the Rages column of the Barbarian Features table: 2 at levels 1-2, 3 at 3-5, 4 at 6-11, 5 at 12-16, 6 at 17-20 (currently {self.number_of_uses(character)}).\n"
             "    * Regaining: You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.\n"
             "    * While active, your Rage follows the rules below.\n"
             "        - Damage Resistance: You have Resistance to Bludgeoning, Piercing, and Slashing damage.\n"

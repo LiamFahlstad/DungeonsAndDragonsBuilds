@@ -84,6 +84,7 @@ class UniversalSpeech(Feature):
                 action_type=ActionType.ACTION, duration="1 Hour", range="60 Feet"
             ),
             usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
@@ -98,6 +99,9 @@ class UniversalSpeech(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest, unless you "
             "expend a spell slot to use it again."
+        )
+        description += (
+            f"\nRight now: up to {max(1, character.get_charisma_modifier())} creatures."
         )
         return description
 

@@ -1,4 +1,5 @@
 import Core.Definitions as Definitions
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -65,6 +66,7 @@ class DefyDeath(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
+        description += f"\nRight now: 1d8 + {character.get_constitution_modifier()} hit points (minimum of 1)."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -115,6 +117,8 @@ class IndestructibleLife(Feature):
             "\n"
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
+        level = character.get_class_level(CharacterClass.WARLOCK)
+        description += f"\nRight now: 1d8 + {level} hit points."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:

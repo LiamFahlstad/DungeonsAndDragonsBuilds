@@ -1,10 +1,11 @@
 from Core.Definitions import CreatureSize, DamageType, Sense
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -66,6 +67,7 @@ class HealingHands(Feature):
             origin="Aasimar Trait",
             activation=FeatureActivation(action_type=ActionType.ACTION, range="Touch"),
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -87,6 +89,7 @@ class CelestialRevelation(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Minute"
             ),
             usage_tags=["damage", "buff", "control", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

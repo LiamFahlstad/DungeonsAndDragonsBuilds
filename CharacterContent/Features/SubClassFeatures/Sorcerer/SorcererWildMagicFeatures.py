@@ -1,5 +1,11 @@
 from Core.Definitions import SORCERER_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -101,7 +107,11 @@ class ControlledChaos(Feature):
 
 class TamedSurge(Feature):
     def __init__(self):
-        super().__init__(name="Tamed Surge", origin="Wild Magic Sorcerer Level 18")
+        super().__init__(
+            name="Tamed Surge",
+            origin="Wild Magic Sorcerer Level 18",
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (

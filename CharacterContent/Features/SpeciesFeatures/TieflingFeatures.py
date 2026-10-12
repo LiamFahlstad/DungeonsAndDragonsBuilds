@@ -52,9 +52,11 @@ class FiendishLegacy(Feature):
     def get_description(self, character: CharacterView) -> str:
         text = f"You also know the '{self.cantrip.value}' cantrip.\n"
         if self.spell_1 is not None and character.character_level >= 3:
-            text += f"You can cast the '{self.spell_1.value}' without expending a spell slot once per Long Rest.\n"
+            text += f"You always have the '{self.spell_1.value}' spell prepared (from character level 3).\n"
         if self.spell_2 is not None and character.character_level >= 5:
-            text += f"You can cast the '{self.spell_2.value}' without expending a spell slot once per Long Rest.\n"
+            text += f"You always have the '{self.spell_2.value}' spell prepared (from character level 5).\n"
+        if character.character_level >= 3:
+            text += "You can cast each of these spells once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast them using any spell slots you have of the appropriate level.\n"
         return text
 
 

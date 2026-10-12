@@ -1,5 +1,5 @@
 from Core.Definitions import WARLOCK_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, RegainedOn
+from Model.Content.Feature import Feature, FeatureActivation, FeatureUses, RegainedOn
 from Utils import StringUtils
 from Model.View import CharacterView
 
@@ -85,6 +85,7 @@ class MagicalCunning(Feature):
             name="Magical Cunning",
             origin="Warlock Level 2",
             activation=FeatureActivation(duration="1 Minute"),
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

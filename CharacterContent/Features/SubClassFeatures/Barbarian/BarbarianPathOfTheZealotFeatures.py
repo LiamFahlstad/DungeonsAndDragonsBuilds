@@ -1,6 +1,7 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from Model.Content.Feature import (
+    FeatureUses,
     Feature,
     FeatureActivation,
     ActionType,
@@ -45,7 +46,18 @@ class WarriorOfTheGods(Feature):
             origin="Path Of The Zealot Barbarian Level 3",
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
+            # The pool of d12s: 4, then 5/6/7 at Barbarian levels 6/12/17.
+            uses=FeatureUses(
+                max_uses=7,
+                regain_all_on="long rest",
+                current_formula="Current amount: 4 d12s, 5 at Barbarian level 6, 6 at 12, 7 at 17.",
+                gained_at=[3, 3, 3, 3, 6, 12, 17],
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        level = character.get_class_level(Definitions.CharacterClass.BARBARIAN)
+        return 4 + (level >= 6) + (level >= 12) + (level >= 17)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -59,14 +71,7 @@ class WarriorOfTheGods(Feature):
         barbarian_level = character.get_class_level(
             Definitions.CharacterClass.BARBARIAN
         )
-        if barbarian_level < 6:
-            pool_size = 4
-        elif barbarian_level < 12:
-            pool_size = 5
-        elif barbarian_level < 17:
-            pool_size = 6
-        else:
-            pool_size = 7
+        pool_size = self.number_of_uses(character)
         return [
             ("Action", "Bonus Action"),
             ("Pool Size", f"{pool_size} d12s (level {barbarian_level})"),
@@ -108,6 +113,7 @@ class ZealousPresence(Feature):
                 range="60 Feet",
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -140,6 +146,7 @@ class RageOfTheGods(Feature):
                 duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"
             ),
             usage_tags=["buff", "heal", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

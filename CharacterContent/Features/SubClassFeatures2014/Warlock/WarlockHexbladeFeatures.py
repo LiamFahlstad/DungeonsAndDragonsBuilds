@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Core.Definitions import ArmorType
+from Core.Definitions import ArmorType, CharacterClass
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
@@ -55,6 +55,8 @@ class HexbladesCurse(Feature):
             "    * If the cursed target dies, you regain Hit Points equal to your Warlock level plus your Charisma modifier (minimum of 1 Hit Point).\n"
             "You can't use this feature again until you finish a Short or Long Rest."
         )
+        level = character.get_class_level(CharacterClass.WARLOCK)
+        description += f"\nRight now: +{character.get_proficiency_bonus()} damage; regain {max(1, level + character.get_charisma_modifier())} hit points when the target dies."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -116,6 +118,8 @@ class AccursedSpecter(Feature):
             "The Specter remains in your service until the end of your next Long Rest, at which point it vanishes to the afterlife.\n"
             "Once you bind a Specter with this feature, you can't use the feature again until you finish a Long Rest."
         )
+        level = character.get_class_level(CharacterClass.WARLOCK)
+        description += f"\nRight now: {level // 2} temporary hit points, +{max(0, character.get_charisma_modifier())} to its attack rolls."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:

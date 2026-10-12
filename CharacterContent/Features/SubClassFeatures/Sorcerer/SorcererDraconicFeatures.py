@@ -1,11 +1,12 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, DamageType, SORCERER_HIT_DIE
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
 from Model.Content.Improvements import (
     DamageResistance,
@@ -103,6 +104,7 @@ class DragonWings(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Hour"
             ),
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

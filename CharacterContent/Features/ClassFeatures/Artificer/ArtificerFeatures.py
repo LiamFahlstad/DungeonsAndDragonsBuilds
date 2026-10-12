@@ -165,7 +165,15 @@ class ReplicateMagicItem(Feature):
 
 class MagicItemTinker(Feature):
     def __init__(self):
-        super().__init__(name="Magic Item Tinker", origin="Artificer Level 6")
+        super().__init__(
+            name="Magic Item Tinker",
+            origin="Artificer Level 6",
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Drain Magic Item.",
+            ),
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (

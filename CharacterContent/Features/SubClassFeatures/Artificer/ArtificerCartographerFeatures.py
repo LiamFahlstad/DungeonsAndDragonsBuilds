@@ -163,6 +163,11 @@ class SuperiorAtlas(Feature):
             name="Superior Atlas",
             origin="Cartographer Artificer Level 15",
             usage_tags=["heal", "utility"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by Unerring Path.",
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:

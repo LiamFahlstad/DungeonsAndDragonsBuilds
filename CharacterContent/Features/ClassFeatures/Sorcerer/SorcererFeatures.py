@@ -90,7 +90,7 @@ class FontOfMagic(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Rules for Sorcery Points:\n"
-            "    * You regain all expended Sorcery Points when you finish a Long Rest.\n"
+            "    * You have Sorcery Points equal to your Sorcerer level, and you can't have more than that. You regain all expended Sorcery Points when you finish a Long Rest.\n"
             "    * Using Sorcery Points: You can use your Sorcery Points to fuel the options below, along with other features, such as Metamagic, that use those points.\n"
             "    * Converting Spell Slots to Sorcery Points: You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).\n"
             "    * Creating Spell Slots: As a Bonus Action, you can transform unexpended Sorcery Points into one spell slot. The Creating Spell Slots table shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. Any spell slot you create with this feature vanishes when you finish a Long Rest.\n"
@@ -159,7 +159,11 @@ class Metamagic(Feature):
 
 class SorcerousRestoration(Feature):
     def __init__(self):
-        super().__init__(name="Sorcerous Restoration", origin="Sorcerer Level 5")
+        super().__init__(
+            name="Sorcerous Restoration",
+            origin="Sorcerer Level 5",
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you finish a Short Rest, you can regain expended Sorcery Points, but no more than a number equal to half your Sorcerer level (round down). Once you use this feature, you can't do so again until you finish a Long Rest."

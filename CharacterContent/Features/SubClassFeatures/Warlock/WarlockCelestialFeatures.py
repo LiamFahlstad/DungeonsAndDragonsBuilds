@@ -2,6 +2,7 @@ from Core.Definitions import WARLOCK_HIT_DIE, DamageType
 import Core.Definitions as Definitions
 from Model.Content.Feature import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,
@@ -9,6 +10,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Core.Rules import levels_gained
 from Model.View import CharacterView
 
 
@@ -32,7 +34,17 @@ class HealingLight(Feature):
                 action_type=ActionType.BONUS_ACTION, range="60 Feet"
             ),
             usage_tags=["heal"],
+            # The pool of d6s: 1 plus your Warlock level.
+            uses=FeatureUses(
+                max_uses=21,
+                regain_all_on="long rest",
+                current_formula="Current amount: 1 plus your Warlock level (d6s).",
+                gained_at=levels_gained(lambda level: 1 + level, from_level=3),
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return 1 + character.get_class_level(Definitions.CharacterClass.WARLOCK)
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -105,6 +117,7 @@ class SearingVengeance(Feature):
             origin="Celestial Patron Warlock Level 14",
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["heal", "damage", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -75,7 +75,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: RangerFeyWandererLevel3(),
+                3: RangerFeyWandererLevel3(skill=Skill.PERSUASION),
             },
         ),
         replace_spells={},

@@ -1,4 +1,10 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
 
@@ -30,6 +36,7 @@ class DetectPortal(Feature):
             origin="Horizon Walker Ranger Level 3",
             activation=FeatureActivation(action_type=ActionType.ACTION, range="1 Mile"),
             usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -67,6 +74,10 @@ class PlanarWarrior(Feature):
             "You learn to draw on the energy of the multiverse to augment your attacks.\n"
             "As a bonus action, choose one creature you can see within 30 feet of you. The next time you hit that creature on this turn with a weapon attack, all damage dealt by the attack becomes force damage, and the creature takes an extra 1d8 force damage from the attack. When you reach 11th level in this class, the extra damage increases to 2d8."
         )
+        level = character.get_class_level(CharacterClass.RANGER)
+        description += (
+            f"\nRight now: {'2d8' if level >= 11 else '1d8'} extra force damage."
+        )
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -97,6 +108,7 @@ class EtherealStep(Feature):
                 duration="Until End of Current Turn",
             ),
             usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

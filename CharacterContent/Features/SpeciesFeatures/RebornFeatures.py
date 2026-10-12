@@ -1,5 +1,6 @@
 from Core.Definitions import DamageType, Skill
-from Model.Content.Feature import Feature, RegainedOn
+from Core.Rules import MAX_PROFICIENCY_BONUS, PROFICIENCY_BONUS_GAINED_AT
+from Model.Content.Feature import Feature, FeatureUses, RegainedOn
 from Model.Content.Improvements import DamageResistance, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -29,8 +30,19 @@ class Everlasting(Feature):
 class RebornKnowledge(Feature):
     def __init__(self):
         super().__init__(
-            name="Reborn Knowledge", origin="Reborn Trait", usage_tags=["buff"]
+            name="Reborn Knowledge",
+            origin="Reborn Trait",
+            usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your proficiency bonus.",
+                gained_at=PROFICIENCY_BONUS_GAINED_AT,
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def get_description(self, character: CharacterView) -> str:
         description = (

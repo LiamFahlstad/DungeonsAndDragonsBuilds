@@ -1,3 +1,4 @@
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -44,6 +45,9 @@ class WatchersWill(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
+        description += (
+            f"\nRight now: up to {max(1, character.get_charisma_modifier())} creatures."
+        )
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -98,6 +102,8 @@ class AuraOfTheSentinel(Feature):
             "\n"
             "At 18th level, the range of this aura increases to 30 feet."
         )
+        level = character.get_class_level(CharacterClass.PALADIN)
+        description += f"\nRight now: +{character.get_proficiency_bonus()} to initiative, {'30' if level >= 18 else '10'}-foot aura."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:

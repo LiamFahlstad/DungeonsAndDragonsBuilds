@@ -1,5 +1,11 @@
 from Core.Definitions import BARD_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -10,6 +16,7 @@ class BeguilingMagic(Feature):
             origin="College of Glamour Bard Level 3",
             activation=FeatureActivation(duration="1 Minute", range="60 Feet"),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
@@ -81,6 +88,7 @@ class MantleOfMajesty(Feature):
                 duration="1 Minute or Until Concentration Ends",
             ),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

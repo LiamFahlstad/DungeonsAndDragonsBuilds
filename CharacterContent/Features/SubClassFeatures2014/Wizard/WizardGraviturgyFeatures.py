@@ -83,7 +83,7 @@ class ViolentAttraction(Feature):
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character: CharacterView) -> int:
-        return character.get_intelligence_modifier()
+        return max(1, character.get_intelligence_modifier())
 
 
 class EventHorizon(Feature):

@@ -1,6 +1,6 @@
 import Core.Definitions as Definitions
 from Core.Definitions import Skill, WIZARD_HIT_DIE
-from Model.Content.Feature import Feature, RegainedOn
+from Model.Content.Feature import Feature, FeatureUses, RegainedOn
 from Model.Content.Improvements import SkillExpertiseChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -18,13 +18,21 @@ class RitualAdept(Feature):
 
 class ArcaneRecovery(Feature):
     def __init__(self):
-        super().__init__(name="Arcane Recovery", origin="Wizard Level 1")
+        super().__init__(
+            name="Arcane Recovery",
+            origin="Wizard Level 1",
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return 1
 
     def get_description(self, character: CharacterView) -> str:
 
         text = (
             "You can regain some of your magical energy by studying your spellbook. When you finish a Short Rest, you can choose expended spell slots to recover. The spell slots can have a combined level equal to no more than half your Wizard level (round up), and none of the slots can be level 6 or higher. For example, if you're a level 4 Wizard, you can recover up to two levels' worth of spell slots, regaining either one level 2 spell slot or two level 1 spell slots.\n"
-            "Once you use this feature, you can't do so again until you finish a Long Rest."
+            "Once you use this feature, you can't do so again until you finish a Long Rest.\n"
+            f"Right now: up to {(character.get_class_level(Definitions.CharacterClass.WIZARD) + 1) // 2} levels' worth of spell slots."
         )
         return text
 

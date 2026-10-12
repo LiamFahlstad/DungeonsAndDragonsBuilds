@@ -84,7 +84,7 @@ def get_starter_class_builder():
                 ),
             },
             subclass_features_by_level={
-                3: PaladinGeniesLevel3(),
+                3: PaladinGeniesLevel3(skill=Skill.INTIMIDATION),
             },
         ),
         replace_spells={},

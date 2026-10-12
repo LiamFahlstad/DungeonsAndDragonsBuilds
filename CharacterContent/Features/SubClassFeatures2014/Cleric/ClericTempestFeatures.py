@@ -47,6 +47,9 @@ class WrathOfTheStorm(Feature):
             ),
         )
 
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can thunderously rebuke attackers. When a creature within 5 feet of you that you can see hits you with an attack, you can use your reaction to cause the creature to make a Dexterity saving throw. The creature takes 2d8 lightning or thunder damage (your choice) on a failed saving throw, and half as much damage on a successful one.\n"
@@ -61,7 +64,7 @@ class WrathOfTheStorm(Feature):
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character: CharacterView) -> int:
-        return character.get_wisdom_modifier()
+        return max(1, character.get_wisdom_modifier())
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         wis_mod = character.get_ability_modifier(Ability.WISDOM)

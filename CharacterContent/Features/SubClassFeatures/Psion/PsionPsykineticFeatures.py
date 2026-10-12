@@ -9,8 +9,8 @@ class StrongerTelekinesis(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "When you cast Mage Hand, its range increases by 30\n"
-            "feet when you cast it, and the hand can carry up to\n"
+            "When you cast Mage Hand, its range increases by 30 "
+            "feet when you cast it, and the hand can carry up to "
             "20 pounds."
         )
         return description
@@ -26,18 +26,18 @@ class TelekineticTechniques(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "When you use Telekinetic Propel, you can roll 1d4\n"
-            "and use the number rolled instead of expending a\n"
+            "When you use Telekinetic Propel, you can roll 1d4 "
+            "and use the number rolled instead of expending a "
             "Psionic Energy Die.\n"
-            "In addition, when a target fails the saving throw\n"
-            "against your Telekinetic Propel, you can impose one\n"
-            "of the following effects on that target\n"
-            "Boost. The target's Speed increases by 10 feet\n"
+            "In addition, when a target fails the saving throw "
+            "against your Telekinetic Propel, you can impose one "
+            "of the following effects on that target "
+            "Boost. The target's Speed increases by 10 feet "
             "until the start of your next turn.\n"
-            "Disorient. The target can't make Opportunity\n"
+            "Disorient. The target can't make Opportunity "
             "Attacks until the start of its next turn.\n"
-            "Telekinetic Bolt. The target takes Force damage\n"
-            "equal to the number rolled on the Psionic Energy\n"
+            "Telekinetic Bolt. The target takes Force damage "
+            "equal to the number rolled on the Psionic Energy "
             "Die."
         )
         return description
@@ -57,13 +57,13 @@ class DestructiveTrance(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "At the start of your turn, you can expend one Psionic\n"
-            "Energy Die to enter a destructive state. For the next\n"
-            "10 minutes, you gain a Fly Speed of 20 feet and can\n"
-            "hover, and when you cast a Psion spell that expends\n"
-            "a spell slot, you can roll your Psionic Energy Die and\n"
-            "add the number rolled to one damage roll of that\n"
-            "spell. This roll doesn't expend the Psionic Energy\n"
+            "At the start of your turn, you can expend one Psionic "
+            "Energy Die to enter a destructive state. For the next "
+            "10 minutes, you gain a Fly Speed of 20 feet and can "
+            "hover, and when you cast a Psion spell that expends "
+            "a spell slot, you can roll your Psionic Energy Die and "
+            "add the number rolled to one damage roll of that "
+            "spell. This roll doesn't expend the Psionic Energy "
             "Die."
         )
         return description
@@ -94,17 +94,17 @@ class ReboundingField(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "When you cast Shield in response to being hit by an\n"
-            "attack roll and cause the triggering attack to miss,\n"
-            "you can expend one Psionic Energy Die to launch the\n"
-            "force back at the attacker. The attacker makes a\n"
-            "Dexterity saving throw. Roll one Psionic Energy Die.\n"
-            "On a failed save, the attacker takes Force damage\n"
-            "equal to the amount rolled plus your Intelligence\n"
-            "modifier. On a successful save, the attacker takes\n"
-            "half as much damage only. Whether the target fails\n"
-            "or succeeds on the saving throw, you gain\n"
-            "Temporary Hit Points equal to the amount of\n"
+            "When you cast Shield in response to being hit by an "
+            "attack roll and cause the triggering attack to miss, "
+            "you can expend one Psionic Energy Die to launch the "
+            "force back at the attacker. The attacker makes a "
+            "Dexterity saving throw. Roll one Psionic Energy Die. "
+            "On a failed save, the attacker takes Force damage "
+            "equal to the amount rolled plus your Intelligence "
+            "modifier. On a successful save, the attacker takes "
+            "half as much damage only. Whether the target fails "
+            "or succeeds on the saving throw, you gain "
+            "Temporary Hit Points equal to the amount of "
             "damage dealt."
         )
         return description
@@ -137,12 +137,12 @@ class EnhancedTelekineticCrush(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "When you cast Telekinetic Crush, you can expend one\n"
-            "Psionic Energy Die to modify the spell so that\n"
-            "whether a creature fails or succeeds on the saving\n"
-            "throw against the spell, its Speed is halved until the\n"
-            "start of your next turn. In addition, you can roll the\n"
-            "expended Psionic Energy Die and add the number\n"
+            "When you cast Telekinetic Crush, you can expend one "
+            "Psionic Energy Die to modify the spell so that "
+            "whether a creature fails or succeeds on the saving "
+            "throw against the spell, its Speed is halved until the "
+            "start of your next turn. In addition, you can roll the "
+            "expended Psionic Energy Die and add the number "
             "rolled to one damage roll of the spell."
         )
         return description
@@ -170,12 +170,12 @@ class HeightenedTelekinesis(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You can cast Telekinesis without expending a spell\n"
-            "slot by instead expending four Psionic Energy Dice.\n"
-            "When you cast Telekinesis without expending a spell\n"
-            "slot using this feature, you can modify the spell so\n"
-            "that it doesn't require Concentration. If you do so,\n"
-            "the spell's duration becomes 1 minute for that\n"
+            "You can cast Telekinesis without expending a spell "
+            "slot by instead expending four Psionic Energy Dice. "
+            "When you cast Telekinesis without expending a spell "
+            "slot using this feature, you can modify the spell so "
+            "that it doesn't require Concentration. If you do so, "
+            "the spell's duration becomes 1 minute for that "
             "casting, and you can concentrate on another spell as normal."
         )
         return description

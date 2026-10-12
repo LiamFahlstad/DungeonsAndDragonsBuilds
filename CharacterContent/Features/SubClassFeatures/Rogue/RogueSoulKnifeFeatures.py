@@ -56,7 +56,9 @@ class PsionicPower(Feature):
 
     @staticmethod
     def _current_values(character: CharacterView) -> str:
-        die, count = psionic_energy_dice(character.get_class_level(CharacterClass.ROGUE))
+        die, count = psionic_energy_dice(
+            character.get_class_level(CharacterClass.ROGUE)
+        )
         return (
             f"Your Psionic Energy Dice right now: {count} {die}s. "
             f"Psychic Whispers links up to {character.get_proficiency_bonus()} creatures."
@@ -117,6 +119,7 @@ class PsychicVeil(Feature):
                 action_type=ActionType.ACTION, duration="1 Hour or Until Dismissed"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -146,6 +149,7 @@ class RendMind(Feature):
             origin="Soulknife Rogue Level 17",
             activation=FeatureActivation(duration="1 Minute"),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:

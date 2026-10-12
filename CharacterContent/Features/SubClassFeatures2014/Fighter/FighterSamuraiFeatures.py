@@ -10,8 +10,9 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import (
-    SkillProficiencyChoice,
     SavingThrowProficiencyChoice,
+    SkillBonus,
+    SkillProficiencyChoice,
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
@@ -68,6 +69,8 @@ class FightingSpirit(Feature):
             "The number of temporary hit points depends on your fighter level: 5 at 3rd level, 10 at 10th level, and 15 at 15th level.\n"
             "You can use this feature three times. You regain all expended uses of it when you finish a long rest."
         )
+        level = character.get_class_level(CharacterClass.FIGHTER)
+        description += f"\nRight now: {5 + 5 * (level >= 10) + 5 * (level >= 15)} temporary hit points."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -118,6 +121,11 @@ class ElegantCourtier(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._proficiency_choice.apply(ledger_writer)
+        # "Whenever you make a Charisma (Persuasion) check, you gain a bonus
+        # to the check equal to your Wisdom modifier."
+        SkillBonus(Skill.PERSUASION, lambda cs: cs.get_wisdom_modifier()).apply(
+            ledger_writer
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -166,6 +174,7 @@ class StrengthBeforeDeath(Feature):
             name="Strength Before Death",
             origin="Samurai Fighter Level 18",
             activation=FeatureActivation(action_type=ActionType.REACTION),
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

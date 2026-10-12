@@ -73,7 +73,7 @@ class WardingFlare(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When a creature that you can see within 30 feet of yourself makes an attack roll, you can take a Reaction to impose Disadvantage on the attack roll, causing light to flare before it hits or misses.\n"
-            "You can use this feature a number of times based on your Wisdom modifier. You regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return description
 

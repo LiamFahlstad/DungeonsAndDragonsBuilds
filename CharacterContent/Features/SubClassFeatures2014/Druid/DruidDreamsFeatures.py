@@ -1,4 +1,5 @@
 import Core.Definitions as Definitions
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -37,6 +38,8 @@ class BalmOfTheSummerCourt(Feature):
             "\n"
             "You regain the expended dice when you finish a long rest."
         )
+        level = character.get_class_level(CharacterClass.DRUID)
+        description += f"\nRight now: {level}d6 in the pool, up to {max(1, level // 2)} dice at a time."
         return description
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

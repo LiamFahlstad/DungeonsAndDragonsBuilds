@@ -1,5 +1,11 @@
 from Core.Definitions import PSION_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, RegainedOn
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+    RegainedOn,
+)
 from Model.View import CharacterView
 
 
@@ -14,43 +20,43 @@ class PsionicPower(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You harbor a wellspring of psionic energy within\n"
-            "yourself. This energy is represented by your Psionic\n"
-            "Energy Dice. Your Psion level determines the die\n"
-            "size and number of Psionic Energy Dice you have, as\n"
-            "shown in the Energy Dice column of the Psiopn table\n"
-            "Your Psionic Energy Dice are used to enhance or\n"
-            "fuel certain Psion features. You start with two such\n"
-            "features: Telekinetic Propel and Telepathic\n"
-            "Connection, each of which is detailed below. Some of\n"
-            "your powers expend the Psionic Energy Dice, as\n"
-            "specified in a power's description, and you can't use\n"
-            "a power if it requires you to use a die when all your\n"
+            "You harbor a wellspring of psionic energy within "
+            "yourself. This energy is represented by your Psionic "
+            "Energy Dice. Your Psion level determines the die "
+            "size and number of Psionic Energy Dice you have, as "
+            "shown in the Energy Dice column of the Psion table. "
+            "Your Psionic Energy Dice are used to enhance or "
+            "fuel certain Psion features. You start with two such "
+            "features: Telekinetic Propel and Telepathic "
+            "Connection, each of which is detailed below. Some of "
+            "your powers expend the Psionic Energy Dice, as "
+            "specified in a power's description, and you can't use "
+            "a power if it requires you to use a die when all your "
             "Psionic Energy Dice are expended.\n"
-            "You regain one expended Psionic Energy Die when\n"
-            "you finish a Short Rest, and you regain all of them\n"
+            "You regain one expended Psionic Energy Die when "
+            "you finish a Short Rest, and you regain all of them "
             "when you finish a Long Rest.\n"
-            "Some features that use Psionic Energy Dice\n"
-            "require your target to make a saving throw. The save\n"
-            "DC equals the spell save DC from this class's\n"
+            "Some features that use Psionic Energy Dice "
+            "require your target to make a saving throw. The save "
+            "DC equals the spell save DC from this class's "
             "Spellcasting feature.\n"
-            "Telekinetic Propel. As a Bonus Action, choose one\n"
-            "Large or smaller creature other than you that you\n"
-            "can see within 30 feet of yourself. When you do so,\n"
-            "the target must succeed on a Strength saving throw\n"
-            "or be moved 5 feet straight toward you or straight\n"
-            "away from you. Alternatively, you can roll one\n"
-            "Psionic Energy Die when you take this Bonus Action,\n"
-            "and the distance moved is equal to 5 times the\n"
-            "number rolled. The die is expended only if the target\n"
+            "Telekinetic Propel. As a Bonus Action, choose one "
+            "Large or smaller creature other than you that you "
+            "can see within 30 feet of yourself. When you do so, "
+            "the target must succeed on a Strength saving throw "
+            "or be moved 5 feet straight toward you or straight "
+            "away from you. Alternatively, you can roll one "
+            "Psionic Energy Die when you take this Bonus Action, "
+            "and the distance moved is equal to 5 times the "
+            "number rolled. The die is expended only if the target "
             "fails the saving throw.\n"
-            "Telepathic Connection. You have telepathy with a\n"
-            "range of 30 feet. As a Bonus Action, you can roll one\n"
-            "Psionic Energy Die. For the next hour, the range of\n"
-            "your telepathy increases by a number of feet equal\n"
-            "to 10 times the number rolled. The first time you use\n"
-            "this Bonus Action after each Long Rest, you don't\n"
-            "expend the Psionic Energy Die. All other times you\n"
+            "Telepathic Connection. You have telepathy with a "
+            "range of 30 feet. As a Bonus Action, you can roll one "
+            "Psionic Energy Die. For the next hour, the range of "
+            "your telepathy increases by a number of feet equal "
+            "to 10 times the number rolled. The first time you use "
+            "this Bonus Action after each Long Rest, you don't "
+            "expend the Psionic Energy Die. All other times you "
             "use this feature, you expend the die."
         )
         return description
@@ -65,8 +71,8 @@ class SubtleTelekinesis(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You know the Mage Hand cantrip. You can cast it\n"
-            "without Somatic components, and you can make the\n"
+            "You know the Mage Hand cantrip. You can cast it "
+            "without Somatic components, and you can make the "
             "spectral hand Invisible when you cast it."
         )
         return description
@@ -78,18 +84,18 @@ class PsionicDiscipline(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You learn further psionic techniques that are fueled\n"
-            "by your Psionic Energy Dice. You gain two\n"
-            "disciplines of your choice, such as Expanded\n"
-            "Awareness and Id Insinuation. Disciplines are\n"
-            "described in the “Psionic Discipline Options” section\n"
+            "You learn further psionic techniques that are fueled "
+            "by your Psionic Energy Dice. You gain two "
+            "disciplines of your choice, such as Expanded "
+            "Awareness and Id Insinuation. Disciplines are "
+            "described in the “Psionic Discipline Options” section "
             "later in this class's description.\n"
-            "You can use only one Discipline each turn and only\n"
-            "once per turn unless otherwise noted in one of those\n"
+            "You can use only one Discipline each turn and only "
+            "once per turn unless otherwise noted in one of those "
             "options.\n"
-            "Whenever you gain a Psion level, you can replace\n"
-            "one of your Psionic Discipline options with one you\n"
-            "don't know. You gain one additional option at Psion\n"
+            "Whenever you gain a Psion level, you can replace "
+            "one of your Psionic Discipline options with one you "
+            "don't know. You gain one additional option at Psion "
             "levels 5, 10, 13, and 17."
         )
         return description
@@ -101,13 +107,14 @@ class PsionicRestoration(Feature):
             name="Psionic Restoration",
             origin="Psion Level 5",
             activation=FeatureActivation(action_type=ActionType.ACTION),
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You can perform a meditation that focuses the mind\n"
-            "for 1 minute. At the end of it, you regain expended\n"
-            "Psionic Energy Dice. Once you use this feature, you\n"
+            "You can perform a meditation that focuses the mind "
+            "for 1 minute. At the end of it, you regain expended "
+            "Psionic Energy Dice. Once you use this feature, you "
             "can't do so again until you finish a Long Rest."
         )
         return description
@@ -131,10 +138,10 @@ class PsionicSurge(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You can push your psionic powers using your life\n"
-            "force. After you roll one or more Psionic Energy\n"
-            "Dice, you can expend one of your Hit Point Dice and\n"
-            "treat any roll of 1, 2, or 3 on those Psionic Energy\n"
+            "You can push your psionic powers using your life "
+            "force. After you roll one or more Psionic Energy "
+            "Dice, you can expend one of your Hit Point Dice and "
+            "treat any roll of 1, 2, or 3 on those Psionic Energy "
             "Dice as a 4."
         )
         return description
@@ -155,8 +162,8 @@ class PsionicReserves(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "When you roll Initiative, you regain expended uses\n"
-            "of Psionic Energy Dice until you have four if you\n"
+            "When you roll Initiative, you regain expended uses "
+            "of Psionic Energy Dice until you have four if you "
             "have fewer than that."
         )
         return description
@@ -171,8 +178,8 @@ class EpicBoon(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You gain an Epic Boon feat or another feat of your\n"
-            "choice for which you qualify. Boon of Energy\n"
+            "You gain an Epic Boon feat or another feat of your "
+            "choice for which you qualify. Boon of Energy "
             "Resistance is recommended."
         )
         return description
@@ -186,13 +193,13 @@ class EnkindledLifeForce(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = (
-            "You burn your life force to achieve greater psionics.\n"
-            "Once per turn, when you roll one or more Psionic\n"
-            "Energy Dice for a Psion feature or Psionic Discipline,\n"
-            "you can expend one or two of your Hit Point Dice.\n"
-            "For each Hit Point Die expended, roll an additional\n"
-            "Psionic Energy Die and add the numbers rolled to\n"
-            "the total. This roll does not expend the Psionic\n"
+            "You burn your life force to achieve greater psionics. "
+            "Once per turn, when you roll one or more Psionic "
+            "Energy Dice for a Psion feature or Psionic Discipline, "
+            "you can expend one or two of your Hit Point Dice. "
+            "For each Hit Point Die expended, roll an additional "
+            "Psionic Energy Die and add the numbers rolled to "
+            "the total. This roll does not expend the Psionic "
             "Energy Die."
         )
         return description

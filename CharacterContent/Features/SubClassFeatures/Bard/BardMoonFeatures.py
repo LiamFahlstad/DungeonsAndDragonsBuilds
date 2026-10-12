@@ -1,5 +1,11 @@
 from Core.Definitions import BARD_HIT_DIE, Language, Skill
-from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, RegainedOn
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+    RegainedOn,
+)
 from Model.Content.Improvements import GrantLanguage, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -74,6 +80,7 @@ class BlessingOfMoonlight(Feature):
             origin="College of the Moon Bard Level 6",
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["heal"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

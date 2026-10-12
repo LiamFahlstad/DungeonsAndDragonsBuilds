@@ -1,5 +1,5 @@
 from Core.Definitions import SORCERER_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
+from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, FeatureUses
 from Model.View import CharacterView
 
 
@@ -80,6 +80,7 @@ class CrownOfSpellfire(Feature):
             name="Crown of Spellfire",
             origin="Spellfire Sorcerer Level 18",
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -63,6 +63,13 @@ class WildSurge(Feature):
             activation=FeatureActivation(duration="Until Your Rage Ends"),
         )
 
+    def calculate_dc(self, character: CharacterView) -> int:
+        return (
+            8
+            + character.get_proficiency_bonus()
+            + character.get_constitution_modifier()
+        )
+
     def get_description(self, character: CharacterView) -> str:
         proficiency_bonus = character.get_proficiency_bonus()
         con_mod = character.get_ability_modifier(Definitions.Ability.CONSTITUTION)

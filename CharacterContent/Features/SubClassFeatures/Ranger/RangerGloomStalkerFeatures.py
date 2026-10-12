@@ -94,16 +94,10 @@ class IronMind(Feature):
         )
 
     def apply(self, ledger_writer: LedgerWriter):
-        # Wisdom, or - if already proficient - the first ability that isn't.
+        # Wisdom, or - if already proficient - Intelligence or Charisma (the
+        # first one lacked; the rule offers no other alternative).
         SavingThrowProficiencyOrAlternative(
-            Ability.WISDOM,
-            [
-                Ability.INTELLIGENCE,
-                Ability.CHARISMA,
-                Ability.STRENGTH,
-                Ability.DEXTERITY,
-                Ability.CONSTITUTION,
-            ],
+            Ability.WISDOM, [Ability.INTELLIGENCE, Ability.CHARISMA]
         ).apply(ledger_writer)
 
     def get_description(self, character: CharacterView) -> str:

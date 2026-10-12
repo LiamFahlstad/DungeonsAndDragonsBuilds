@@ -66,7 +66,7 @@ class WarPriest(Feature):
         )
 
     def get_description(self, character: CharacterView) -> str:
-        description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You regain all expended uses when you finish a Short or Long Rest."
+        description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:

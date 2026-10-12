@@ -1,5 +1,11 @@
 from Core.Definitions import SORCERER_HIT_DIE, Sense
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -105,6 +111,7 @@ class UmbralForm(Feature):
             name="Umbral Form",
             origin="Shadow Sorcerer Level 18",
             usage_tags=["buff", "utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

@@ -1,4 +1,5 @@
 import Core.Definitions as Definitions
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -68,6 +69,8 @@ class StormAura(Feature):
             "\n"
             f"You have chosen the {self.environment.value} environment."
         )
+        level = character.get_class_level(CharacterClass.BARBARIAN)
+        description += f"\nRight now: Desert {2 + (level >= 5) + (level >= 10) + (level >= 15) + (level >= 20)} fire damage; Sea {1 + (level >= 10) + (level >= 15) + (level >= 20)}d6 lightning damage; Tundra {2 + (level >= 5) + (level >= 10) + (level >= 15) + (level >= 20)} temporary hit points; save DC {self.calculate_dc(character)}."
         return description
 
 

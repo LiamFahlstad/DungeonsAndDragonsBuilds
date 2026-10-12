@@ -1,4 +1,10 @@
-from Model.Content.Feature import ActionType, Feature, FeatureActivation, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import (
     GrantLanguage,
     SavingThrowProficiencyChoice,
@@ -292,7 +298,11 @@ class Elusive(Feature):
 
 class StrokeOfLuck(Feature):
     def __init__(self):
-        super().__init__(name="Stroke of Luck", origin="Rogue Level 20")
+        super().__init__(
+            name="Stroke of Luck",
+            origin="Rogue Level 20",
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
 
     def get_description(self, character: CharacterView) -> str:
         description = (

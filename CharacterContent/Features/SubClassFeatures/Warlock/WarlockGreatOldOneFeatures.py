@@ -1,5 +1,11 @@
 from Core.Definitions import DamageType, WARLOCK_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -57,6 +63,7 @@ class ClairvoyantCombatant(Feature):
             name="Clairvoyant Combatant",
             origin="Great Old One Patron Warlock Level 6",
             usage_tags=["buff", "control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:

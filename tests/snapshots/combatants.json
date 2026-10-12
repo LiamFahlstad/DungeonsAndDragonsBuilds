@@ -15159,17 +15159,17 @@
    "Reanimator Spells",
    "Reanimator's Skill Set",
    "Reanimated Companion",
-   "Resourceful",
-   "Skillful",
-   "Versatile",
-   "Alert"
+   "Brave",
+   "Luck",
+   "Halfling Nimbleness",
+   "Naturally Stealthy"
   ],
   "hp": 27,
   "invocations": [],
   "max_hp": 27,
   "name": "Dessie",
   "proficiency_bonus": 2,
-  "size": "Medium",
+  "size": "Small",
   "speed": 30,
   "spell_slots": {
    "1": 3
@@ -15186,6 +15186,16 @@
     "Intelligence"
    ],
    [
+    "Guidance",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Message",
+    0,
+    "Intelligence"
+   ],
+   [
     "Minor Illusion",
     0,
     "Intelligence"
@@ -15193,16 +15203,6 @@
    [
     "Shield",
     1,
-    "Intelligence"
-   ],
-   [
-    "Shocking Grasp",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Thunderclap",
-    0,
     "Intelligence"
    ],
    [

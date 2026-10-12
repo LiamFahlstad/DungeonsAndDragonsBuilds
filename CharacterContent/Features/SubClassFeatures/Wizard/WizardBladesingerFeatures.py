@@ -1,6 +1,7 @@
 from Core.Definitions import Skill, WIZARD_HIT_DIE
 from Model.Content.Feature import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,
@@ -9,6 +10,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import SkillProficiencyChoice, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
 
@@ -21,7 +23,15 @@ class Bladesong(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Minute"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Intelligence modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_intelligence_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -45,7 +55,7 @@ class Bladesong(Feature):
             ("Uses", f"{int_mod} per Long Rest (minimum 1); +1 from Arcane Recovery"),
             (
                 "Agility",
-                f"AC +{int_mod} (min +1), Speed +10 ft, Advantage on Acrobatics",
+                f"AC +{max(1, int_mod)}, Speed +10 ft, Advantage on Acrobatics",
             ),
             ("Bladework", f"Use INT mod ({int_mod}) for attack and damage rolls"),
             ("Focus", f"Add INT mod ({int_mod}) to CON saves for Concentration"),

@@ -1,3 +1,4 @@
+from Core.Definitions import Ability
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -59,6 +60,9 @@ class MomentaryStasis(Feature):
             ),
         )
 
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach 6th level, as an action, you can magically force a Large or smaller creature you can see within 60 feet of you to make a Constitution saving throw against your spell save DC. Unless the saving throw is a success, the creature is encased in a field of magical energy until the end of your next turn or until the creature takes any damage. While encased in this way, the creature is incapacitated and has a speed of 0.\n"
@@ -84,7 +88,7 @@ class MomentaryStasis(Feature):
         return FeatureTarget.ENEMY
 
     def number_of_uses(self, character: CharacterView) -> int:
-        return character.get_intelligence_modifier()
+        return max(1, character.get_intelligence_modifier())
 
 
 class ArcaneAbeyance(Feature):

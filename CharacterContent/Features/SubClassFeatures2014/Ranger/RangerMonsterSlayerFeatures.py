@@ -1,10 +1,12 @@
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
+from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 
 
@@ -37,7 +39,15 @@ class HuntersSense(Feature):
                 action_type=ActionType.ACTION, range="60 Feet"
             ),
             usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Wisdom modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_wisdom_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -125,6 +135,7 @@ class MagicUsersNemesis(Feature):
                 action_type=ActionType.REACTION, range="60 Feet"
             ),
             usage_tags=["control"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:

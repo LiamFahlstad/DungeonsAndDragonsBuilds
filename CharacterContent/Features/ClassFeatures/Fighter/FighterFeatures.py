@@ -33,7 +33,7 @@ class SecondWind(Feature):
                 max_uses=4,
                 regain_x_on=(1, "short rest"),
                 regain_all_on="long rest",
-                current_formula="Current amount: determined by your character level — 2 uses at levels 1-3, 3 at 4-9, 4 at 10+.",
+                current_formula="Current amount: determined by your Fighter level — 2 uses at levels 1-3, 3 at 4-9, 4 at 10+.",
                 gained_at=[1, 1, 4, 10],
             ),
         )
@@ -42,8 +42,10 @@ class SecondWind(Feature):
         base_text = (
             "You have a limited well of physical and mental stamina that you can draw on. "
             "As a Bonus Action, you can use it to regain Hit Points equal to 1d10 plus your Fighter level.\n"
+            "You can use this feature twice (three times from Fighter level 4, four times from level 10). "
             "You regain one expended use when you finish a Short Rest, "
             "and you regain all expended uses when you finish a Long Rest.\n"
+            f"Right now: {self.number_of_uses(character)} uses, regaining 1d10 + {character.get_class_level(CharacterClass.FIGHTER)} Hit Points."
         )
 
         return base_text
@@ -94,7 +96,7 @@ class ActionSurge(Feature):
             uses=FeatureUses(
                 max_uses=2,
                 regain_all_on="short or long rest",
-                current_formula="Current amount: 1 use below character level 17, 2 uses at 17+.",
+                current_formula="Current amount: 1 use below Fighter level 17, 2 uses at 17+.",
                 gained_at=[2, 17],
             ),
         )

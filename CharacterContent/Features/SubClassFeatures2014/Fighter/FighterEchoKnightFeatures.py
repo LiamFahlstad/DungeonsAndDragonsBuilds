@@ -46,13 +46,21 @@ class UnleashIncarnation(Feature):
             name="Unleash Incarnation",
             origin="Echo Knight Fighter Level 3",
             usage_tags=["damage"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Constitution modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_constitution_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 3rd level, you can heighten your echo's fury. Whenever you take the Attack action, you can make one additional melee attack from the echo's position.\n"
             "\n"
-            "You regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
         return description
 
@@ -112,6 +120,7 @@ class ShadowMartyr(Feature):
                 action_type=ActionType.REACTION, range="5 Feet"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -136,14 +145,23 @@ class ReclaimPotential(Feature):
             name="Reclaim Potential",
             origin="Echo Knight Fighter Level 15",
             usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Current amount: equal to your Constitution modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_constitution_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
             "By 15th level, you've learned to absorb the fleeting magic of your echo. When an echo of yours is destroyed by taking damage, you can gain a number of temporary hit points equal to 2d6 + your Constitution modifier, provided you don't already have temporary hit points.\n"
             "\n"
-            "You regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your Constitution modifier (a minimum of once). You regain all expended uses when you finish a long rest."
         )
+        description += f"\nRight now: 2d6 + {character.get_constitution_modifier()} temporary hit points."
         return description
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

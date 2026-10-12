@@ -1,5 +1,11 @@
 from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -102,6 +108,7 @@ class AncientMight(Feature):
             name="Ancient Might",
             origin="Hollow Warden Ranger Level 15",
             usage_tags=["damage", "heal", "buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
         self._immunity = ConditionImmunity(Condition.EXHAUSTION)
 

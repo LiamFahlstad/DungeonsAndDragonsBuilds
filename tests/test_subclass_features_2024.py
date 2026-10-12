@@ -727,10 +727,19 @@ class TestPromisedPassiveBenefits:
             make_character(
                 dexterity=14, charisma=16, armor_training=[ArmorType.SHIELD]
             ),
-            [PaladinGeniesFeatures.GeniesSplendor()],
+            [PaladinGeniesFeatures.GeniesSplendor(Skill.PERSUASION)],
             [Armor.ShieldArmor()],
         )
         assert character.calculate_armor_class() == 10 + 2 + 3 + 2
+
+    def test_genies_splendor_grants_the_chosen_skill(self, make_character):
+        # "You also gain proficiency in one of the following skills of your
+        # choice: Acrobatics, Intimidation, Performance, or Persuasion."
+        character = apply_features(
+            make_character(),
+            [PaladinGeniesFeatures.GeniesSplendor(Skill.INTIMIDATION)],
+        )
+        assert character.is_proficient_in_skill(Skill.INTIMIDATION)
 
     def test_dazzling_footwork_unarmored_defense_not_with_shield(self, make_character):
         # "While you aren't wearing armor or wielding a Shield... Your base
@@ -757,11 +766,13 @@ class TestPromisedPassiveBenefits:
         # bonus to the check equal to your Wisdom modifier (Minimum of +1)."
         character = apply_features(
             make_character(wisdom=wisdom),
-            [RangerFeyWandererFeatures.OtherworldlyGlamour()],
+            [RangerFeyWandererFeatures.OtherworldlyGlamour(Skill.PERSUASION)],
         )
         for skill in (Skill.DECEPTION, Skill.INTIMIDATION, Skill.PERSUASION):
             assert character.get_skill_bonus(skill) == expected
         assert character.get_skill_bonus(Skill.STEALTH) == 0
+        # "You also gain proficiency in one of these skills of your choice."
+        assert character.is_proficient_in_skill(Skill.PERSUASION)
 
     def test_battle_smith_martial_weapons(self, make_sources):
         # battle_smith.txt: "Weapon Knowledge. You gain proficiency with

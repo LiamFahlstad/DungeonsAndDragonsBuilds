@@ -1,9 +1,11 @@
 from Core.Definitions import ARTIFICER_HIT_DIE, Ability, CharacterClass
+from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
     FeatureTarget,
+    FeatureUses,
     RegainedOn,
 )
 from Model.View import CharacterView
@@ -87,7 +89,15 @@ class ArmorModel(Feature):
             name="Armor Model",
             origin="Armorer Artificer Level 3",
             usage_tags=["damage", "buff", "control", "utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Giant Stature (Dreadnaught): equal to your Intelligence modifier.",
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_intelligence_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -190,6 +200,11 @@ class PerfectedArmor(Feature):
             name="Perfected Armor",
             origin="Armorer Artificer Level 15",
             usage_tags=["damage", "control", "buff", "utility"],
+            uses=FeatureUses(
+                max_uses=MAX_ABILITY_MODIFIER,
+                regain_all_on="long rest",
+                current_formula="Guardian's pull or Infiltrator's flight, whichever model you wear: equal to your Intelligence modifier.",
+            ),
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
@@ -197,6 +212,9 @@ class PerfectedArmor(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return max(1, character.get_intelligence_modifier())
 
     def get_description(self, character: CharacterView) -> str:
         description = (

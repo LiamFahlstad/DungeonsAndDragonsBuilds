@@ -24,6 +24,8 @@ from CharacterContent.Spells.SpellLists import (
 
 @attr.dataclass
 class PaladinGeniesLevel3(ClassBuilder.SubclassLevel3):
+    # Genie's Splendor: Acrobatics, Intimidation, Performance, or Persuasion.
+    skill: Skill
 
     def add_features(
         self,
@@ -33,7 +35,7 @@ class PaladinGeniesLevel3(ClassBuilder.SubclassLevel3):
             PaladinGeniesFeatures.ElementalSmite(),
             extends=PaladinFeatures.ChannelDivinity,
         )
-        data.add_feature(PaladinGeniesFeatures.GeniesSplendor())
+        data.add_feature(PaladinGeniesFeatures.GeniesSplendor(self.skill))
         data.add_spell(EvocationLevel1Spells.CHROMATIC_ORB)
         data.add_spell(TransmutationLevel0Spells.ELEMENTALISM)
         data.add_spell(EvocationLevel1Spells.THUNDEROUS_SMITE)

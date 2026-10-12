@@ -1,7 +1,18 @@
 import Core.Definitions as Definitions
 from Core.Definitions import BARBARIAN_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
+    get_rage_damage_bonus,
+)
 from Model.View import CharacterView
+
+
+def _vitality_current_values(character: CharacterView) -> str:
+    level = character.get_class_level(Definitions.CharacterClass.BARBARIAN)
+    return (
+        f"Right now: {level} Temporary Hit Points when you Rage; "
+        f"{get_rage_damage_bonus(level)}d6 for the other creature."
+    )
 
 
 class VitalityOfTheTree(Feature):
@@ -17,7 +28,8 @@ class VitalityOfTheTree(Feature):
         description = (
             "Your Rage taps into the life force of the World Tree. You gain the following benefits.\n"
             "Vitality Surge. When you activate your Rage, you gain a number of Temporary Hit Points equal to your Barbarian level.\n"
-            "Life-Giving Force. At the start of each of your turns while your Rage is active, you can choose another creature within 10 feet of yourself to gain Temporary Hit Points. To determine the number of Temporary Hit Points, roll a number of d6s equal to your Rage Damage bonus, and add them together. If any of these Temporary Hit Points remain when your Rage ends, they vanish."
+            "Life-Giving Force. At the start of each of your turns while your Rage is active, you can choose another creature within 10 feet of yourself to gain Temporary Hit Points. To determine the number of Temporary Hit Points, roll a number of d6s equal to your Rage Damage bonus, and add them together. If any of these Temporary Hit Points remain when your Rage ends, they vanish.\n"
+            + _vitality_current_values(character)
         )
         return description
 

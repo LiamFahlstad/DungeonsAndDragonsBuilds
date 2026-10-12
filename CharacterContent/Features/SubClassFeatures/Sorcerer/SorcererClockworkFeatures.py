@@ -56,7 +56,7 @@ class RestoreBalance(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your connection to the plane of absolute order allows you to equalize chaotic moments. When a creature you can see within 60 feet of yourself is about to roll a d20 with Advantage or Disadvantage, you can take a Reaction to prevent the roll from being affected by Advantage and Disadvantage.\n"
-            "You regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 
@@ -115,6 +115,7 @@ class TranceOfOrder(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Minute"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

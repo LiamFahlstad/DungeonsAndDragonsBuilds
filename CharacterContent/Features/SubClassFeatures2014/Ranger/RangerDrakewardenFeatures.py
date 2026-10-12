@@ -1,11 +1,13 @@
 from typing import Optional
+from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 
 from Model.Content.Feature import (
+    ActionType,
     Feature,
     FeatureActivation,
-    ActionType,
-    RegainedOn,
     FeatureTarget,
+    FeatureUses,
+    RegainedOn,
 )
 from Core.Definitions import CreatureSize
 from Model.Creatures.Combatants import (
@@ -46,7 +48,9 @@ def _build_drake(
     )
     if has_wings:
         fang_label = "Magic Fang + Empowered Bite" if is_large else "Magic Fang"
-        bite_description += f", plus {bite_extra_dice} {chosen_type.value} damage ({fang_label})"
+        bite_description += (
+            f", plus {bite_extra_dice} {chosen_type.value} damage ({fang_label})"
+        )
 
     traits = [
         MonsterAbility(
@@ -203,6 +207,7 @@ class DrakesBreath(Feature):
                 action_type=ActionType.ACTION, range="30-Foot Cone"
             ),
             usage_tags=["damage"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:
@@ -243,7 +248,16 @@ class PerfectedBond(Feature):
             origin="Drakewarden Ranger Level 15",
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
+            uses=FeatureUses(
+                max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
+                current_formula="Reflexive Resistance: equal to your proficiency bonus.",
+                gained_at=levels_gained(proficiency_bonus, from_level=15),
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
 
     def get_description(self, character: CharacterView) -> str:
         description = (

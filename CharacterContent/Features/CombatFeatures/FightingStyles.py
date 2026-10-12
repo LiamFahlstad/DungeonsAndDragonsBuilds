@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 
-from Core.Definitions import Ability
+from Core.Definitions import Ability, Sense
 from Core.Weapons import WeaponProperty, WeaponTraits
 from Model.Content.Improvements import (
     ArmorClassBonus,
+    GrantSense,
     WeaponAttackBonus,
     WeaponDamageBonus,
 )
@@ -40,6 +41,9 @@ class Archery(FightStyleModifier):
 
 class BlindFighting(FightingStyle):
     name = "Blind Fighting"
+
+    def apply(self, ledger_writer: LedgerWriter):
+        GrantSense(Sense.BLINDSIGHT, 10).apply(ledger_writer)
 
     def description(self):
         return "Blind Fighting: You have Blindsight with a range of 10 feet."
@@ -113,7 +117,7 @@ class ThrownWeaponFighting(FightStyleModifier):
         ).apply(ledger_writer)
 
     def description(self):
-        return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (calculate manually)"
+        return "Thrown Weapon Fighting: When you hit with a ranged attack roll using a weapon that has the Thrown property, you gain a +2 bonus to the damage roll. (added automatically to the damage of every weapon with the Thrown property; leave it out when you make a melee attack with one, such as a Handaxe or Dagger)"
 
 
 class TwoWeaponFighting(FightingStyle):
@@ -182,6 +186,4 @@ class ProneFighting(FightingStyle):
     name = "Prone Fighting"
 
     def description(self):
-        return (
-            "Prone Fighting: While you have the Prone condition, you don't have Disadvantage due to the Prone condition on attack rolls, and the Prone condition doesn't grant Advantage on attack rolls made against you."
-        )
+        return "Prone Fighting: While you have the Prone condition, you don't have Disadvantage due to the Prone condition on attack rolls, and the Prone condition doesn't grant Advantage on attack rolls made against you."

@@ -1,4 +1,4 @@
-from Core.Definitions import PALADIN_HIT_DIE
+from Core.Definitions import CharacterClass, PALADIN_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -111,6 +111,8 @@ class AuraOfHate(Feature):
             "You, as well as any fiends and undead within 10 feet of you, gain a bonus to melee weapon damage rolls equal to your Charisma modifier (minimum of +1).\n"
             "A creature can benefit from this feature from only one Paladin at a time."
         )
+        level = character.get_class_level(CharacterClass.PALADIN)
+        description += f"\nRight now: +{max(1, character.get_charisma_modifier())} melee weapon damage, {'30' if level >= 18 else '10'}-foot aura."
         return description
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

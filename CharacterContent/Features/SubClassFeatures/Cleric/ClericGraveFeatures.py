@@ -101,7 +101,7 @@ class SentinelAtDeathsDoor(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you or a Bloodied creature you can see within 60 feet of yourself is hit with an attack roll, you can take a Reaction to halve that attack's damage (round down). If the triggering attack roll was a Critical Hit, any effects triggered by a Critical Hit are canceled.\n"
-            "You regain all expended uses when you finish a Long Rest."
+            "You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return description
 
@@ -132,6 +132,11 @@ class DivineReaper(Feature):
             origin="Grave Domain Cleric Level 17",
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["heal"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="short or long rest",
+                current_formula="Used by Keeper of Souls.",
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:

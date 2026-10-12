@@ -13,7 +13,7 @@ from Model.Content.Improvements import (
     GrantWeaponProficiency,
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Core.Definitions import ArmorType
+from Core.Definitions import ArmorType, CharacterClass
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
@@ -81,6 +81,7 @@ class EyesOfNight(Feature):
             "You can see through the deepest gloom. You have darkvision out to a range of 300 feet. In that radius, you can see in dim light as if it were bright light and in darkness as if it were dim light.\n"
             "As an action, you can magically share the darkvision of this feature with willing creatures you can see within 10 feet of you, up to a number of creatures equal to your Wisdom modifier (minimum of one creature). The shared darkvision lasts for 1 hour. Once you share it, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to share it again."
         )
+        description += f"\nRight now: share with up to {max(1, character.get_wisdom_modifier())} creatures."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -136,6 +137,8 @@ class TwilightSanctuaryChannelDivinity(Feature):
             "    * You grant it temporary hit points equal to 1d6 plus your cleric level.\n"
             "    * You end one effect on it causing it to be charmed or frightened."
         )
+        level = character.get_class_level(CharacterClass.CLERIC)
+        description += f"\nRight now: 1d6 + {level} temporary hit points."
         return description
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
@@ -173,7 +176,7 @@ class StepsOfNight(Feature):
         return FeatureTarget.SELF
 
     def get_description(self, character: CharacterView) -> str:
-        description = "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You regain all expended uses when you finish a long rest."
+        description = "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         return description
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

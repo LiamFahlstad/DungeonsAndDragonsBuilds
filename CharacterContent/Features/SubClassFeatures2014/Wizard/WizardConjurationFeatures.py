@@ -1,6 +1,12 @@
 from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.View import CharacterView
 
 
@@ -58,6 +64,7 @@ class BenignTransportation(Feature):
                 action_type=ActionType.ACTION, range="30 Feet"
             ),
             usage_tags=["utility"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

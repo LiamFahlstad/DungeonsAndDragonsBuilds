@@ -8,7 +8,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLanguage
-from Core.Definitions import DamageType, Language
+from Core.Definitions import Ability, CharacterClass, DamageType, Language
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 
@@ -66,6 +66,8 @@ class HeartOfTheStorm(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
+        level = character.get_class_level(CharacterClass.SORCERER)
+        description += f"\nRight now: {level // 2} lightning or thunder damage."
         return description
 
 
@@ -101,15 +103,16 @@ class StormsFury(Feature):
                 action_type=ActionType.REACTION, range="20 Feet"
             ),
             usage_tags=["damage", "control"],
-            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you."
+        level = character.get_class_level(CharacterClass.SORCERER)
+        description += f"\nRight now: {level} lightning damage, save DC {self.calculate_dc(character)}."
         return description
-
-    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
-        return RegainedOn.LONG_REST
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -148,6 +151,9 @@ class WindSoul(Feature):
         description = (
             "You gain immunity to lightning and thunder damage.\n"
             "You also gain a magical flying speed of 60 feet. As an action, you can reduce your flying speed to 30 feet for 1 hour and choose a number of creatures within 30 feet of you equal to 3 + your Charisma modifier. The chosen creatures gain a magical flying speed of 30 feet for 1 hour. Once you reduce your flying speed in this way, you can't do so again until you finish a short or long rest."
+        )
+        description += (
+            f"\nRight now: up to {3 + character.get_charisma_modifier()} creatures."
         )
         return description
 

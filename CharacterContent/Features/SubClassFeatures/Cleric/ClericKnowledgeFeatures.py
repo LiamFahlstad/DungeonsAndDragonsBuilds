@@ -1,4 +1,10 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureUses,
+)
 from Model.Content.Improvements import (
     SavingThrowProficiencyOrAlternative,
     SkillExpertiseChoice,
@@ -122,6 +128,7 @@ class DivineForeknowledge(Feature):
                 action_type=ActionType.BONUS_ACTION, duration="1 Hour"
             ),
             usage_tags=["buff"],
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
     def get_description(self, character: CharacterView) -> str:

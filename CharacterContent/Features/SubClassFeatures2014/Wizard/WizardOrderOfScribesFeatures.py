@@ -39,6 +39,11 @@ class AwakenedSpellbook(Feature):
             name="Awakened Spellbook",
             origin="Order of Scribes Wizard Level 3",
             usage_tags=["utility"],
+            uses=FeatureUses(
+                max_uses=1,
+                regain_all_on="long rest",
+                current_formula="Used by ritual casting at normal speed.",
+            ),
         )
 
     def get_description(self, character: CharacterView) -> str:
