@@ -56,35 +56,49 @@ class PowerfulBuild(Feature):
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
 
 
+# The benefits that take a Bonus Action or a Reaction; the rest ride on a hit.
+_GIANT_ANCESTRY_ACTION = {
+    GiantAncestryType.CLOUD_GIANT: ActionType.BONUS_ACTION,
+    GiantAncestryType.STONE_GIANT: ActionType.REACTION,
+    GiantAncestryType.STORM_GIANT: ActionType.REACTION,
+}
+
+
 class GiantAncestry(Feature):
     def __init__(self, giant_ancestry_type: GiantAncestryType):
         self.giant_ancestry_type = giant_ancestry_type
         super().__init__(
             name="Giant Ancestry",
             origin="Goliath Trait",
+            activation=FeatureActivation(
+                action_type=_GIANT_ANCESTRY_ACTION.get(giant_ancestry_type)
+            ),
             usage_tags=["buff", "damage", "control"],
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
     def get_description(self, character: CharacterView) -> str:
-        text = ""
+        text = "You are descended from Giants. You chose the following benefit, a supernatural boon from your ancestry.\n"
         if self.giant_ancestry_type == GiantAncestryType.CLOUD_GIANT:
-            text += "As a Bonus Action, you magically teleport up to 30 feet to an unoccupied space you can see.\n"
+            text += "Cloud's Jaunt (Cloud Giant). As a Bonus Action, you magically teleport up to 30 feet to an unoccupied space you can see.\n"
         if self.giant_ancestry_type == GiantAncestryType.FIRE_GIANT:
-            text += "When you hit a target with an attack roll and deal damage to it, you can also deal 1d10 Fire damage to that target.\n"
+            text += "Fire's Burn (Fire Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d10 Fire damage to that target.\n"
         if self.giant_ancestry_type == GiantAncestryType.FROST_GIANT:
-            text += "When you hit a target with an attack roll and deal damage to it, you can also deal 1d6 Cold damage to that target and reduce its Speed by 10 feet until the start of your next turn.\n"
+            text += "Frost's Chill (Frost Giant). When you hit a target with an attack roll and deal damage to it, you can also deal 1d6 Cold damage to that target and reduce its Speed by 10 feet until the start of your next turn.\n"
         if self.giant_ancestry_type == GiantAncestryType.HILL_GIANT:
-            text += "When you hit a Large or smaller creature with an attack roll and deal damage to it, you can give that target the Prone condition.\n"
+            text += "Hill's Tumble (Hill Giant). When you hit a Large or smaller creature with an attack roll and deal damage to it, you can give that target the Prone condition.\n"
         if self.giant_ancestry_type == GiantAncestryType.STONE_GIANT:
-            text += "When you take damage, you can take a Reaction to roll 1d12. Add your Constitution modifier to the number rolled and reduce the damage by that total.\n"
+            text += "Stone's Endurance (Stone Giant). When you take damage, you can take a Reaction to roll 1d12. Add your Constitution modifier to the number rolled and reduce the damage by that total.\n"
         if self.giant_ancestry_type == GiantAncestryType.STORM_GIANT:
-            text += "When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
-        text += "You can use the benefit, and you regain all expended uses when you finish a Long Rest"
+            text += "Storm's Thunder (Storm Giant). When you take damage from a creature within 60 feet of you, you can take a Reaction to deal 1d8 Thunder damage to that creature.\n"
+        text += "You can use the chosen benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        if self.giant_ancestry_type == GiantAncestryType.STONE_GIANT:
+            text += f"\nRight now you reduce the damage by 1d12 + {character.get_constitution_modifier()}."
         return text
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

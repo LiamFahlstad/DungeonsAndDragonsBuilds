@@ -217,6 +217,16 @@ class TestDeclaredExtensions:
         assert character.extensions_of(parent) == [child]
         assert list(character.iter_features_with_extensions()) == [parent, child]
 
+    def test_has_feature_counts_extensions(self, make_sources):
+        # Upgrades like Explosive Cannon are granted as extensions; features
+        # ask has_feature to show them, so an extension must count as had.
+        sources = make_sources()
+        grant(sources).add_feature(_Parent(name="Parent"))
+        grant(sources).add_feature(_Child(name="Child"), extends=_Parent)
+        character = Character(sources)
+        assert character.has_feature(_Parent)
+        assert character.has_feature(_Child)
+
     def test_extends_a_specific_instance(self, make_sources):
         sources = make_sources()
         first, second = _Parent(name="First"), _Parent(name="Second")

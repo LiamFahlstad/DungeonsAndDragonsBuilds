@@ -1,4 +1,4 @@
-from Core.Definitions import Language
+from Core.Definitions import CharacterClass, Language
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -75,9 +75,17 @@ class RuneCarver(Feature):
             "    In addition, you can invoke the rune as a bonus action, gaining resistance to bludgeoning, piercing, and slashing damage for 1 minute. Once you invoke this rune, you can't do so again until you finish a short or long rest.\n"
             "\n"
             "Storm Rune (7th Level or Higher). Using this rune, you can glimpse the future like a storm giant seer. While wearing or carrying an object inscribed with this rune, you have advantage on Intelligence (Arcana) checks, and you can't be surprised as long as you aren't incapacitated.\n"
-            "    In addition, you can invoke the rune as a bonus action to enter a prophetic state for 1 minute or until you're incapacitated. Until the state ends, when you or another creature you can see within 60 feet of you makes an attack roll, a saving throw, or an ability check, you can use your reaction to cause the roll to have advantage or disadvantage. Once you invoke this rune, you can't do so again until you finish a short or long rest."
+            "    In addition, you can invoke the rune as a bonus action to enter a prophetic state for 1 minute or until you're incapacitated. Until the state ends, when you or another creature you can see within 60 feet of you makes an attack roll, a saving throw, or an ability check, you can use your reaction to cause the roll to have advantage or disadvantage. Once you invoke this rune, you can't do so again until you finish a short or long rest.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        fighter_level = character.get_class_level(CharacterClass.FIGHTER)
+        runes_known = 5 if fighter_level >= 15 else 4 if fighter_level >= 10 else 3 if fighter_level >= 7 else 2
+        invocations = "twice" if character.has_feature(MasterOfRunes) else "once"
+        return f"Runes known right now: {runes_known}, each invoked {invocations} per short or long rest."
 
 
 class GiantsMight(Feature):
@@ -110,9 +118,19 @@ class GiantsMight(Feature):
             "    * You have advantage on Strength checks and Strength saving throws.\n"
             "    * Once on each of your turns, one of your attacks with a weapon or an unarmed strike can deal an extra 1d6 damage to a target on a hit.\n"
             "\n"
-            "You regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest.\n"
+            f"Your extra damage right now: {self._damage_die(character)}."
         )
         return description
+
+    @staticmethod
+    def _damage_die(character: CharacterView) -> str:
+        """1d6, 1d8 with Great Stature, 1d10 with Runic Juggernaut."""
+        if character.has_feature(RunicJuggernaut):
+            return "1d10"
+        if character.has_feature(GreatStature):
+            return "1d8"
+        return "1d6"
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
@@ -122,7 +140,7 @@ class GiantsMight(Feature):
             ("Duration", "1 minute"),
             (
                 "Benefits",
-                "Become Large (if smaller); advantage on Strength checks/saves; +1d6 damage once per turn",
+                f"Become Large (if smaller); advantage on Strength checks/saves; +{self._damage_die(character)} damage once per turn",
             ),
             ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
             ("Regain", "Long rest"),
@@ -153,7 +171,7 @@ class RunicShield(Feature):
         description = (
             "You learn to invoke your rune magic to protect your allies. When another creature you can see within 60 feet of you is hit by an attack roll, you can use your reaction to force the attacker to reroll the d20 and use the new roll.\n"
             "\n"
-            "You regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description
 

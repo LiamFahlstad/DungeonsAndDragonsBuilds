@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
-from Core.Definitions import Condition, DamageType
+from Core.Definitions import CharacterClass, Condition, DamageType
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -70,9 +70,31 @@ class ExperimentalElixir(Feature):
             "3	Resilience. The drinker gains a +1 bonus to AC for 10 minutes. The duration increases when you reach Artificer levels 9 (1 hour) and 15 (8 hours).\n"
             "4	Boldness. The drinker can roll 1d4 and add the number rolled to every attack roll and saving throw it makes for the next minute. The duration increases when you reach Artificer levels 9 (10 minutes) and 15 (1 hour).\n"
             "5	Flight. The drinker gains a Fly Speed of 10 feet for 10 minutes. The Fly Speed increases when you reach Artificer levels 9 (20 feet) and 15 (30 feet).\n"
-            "6	You determine the elixir's effect by choosing one of the other rows in this table."
+            "6	You determine the elixir's effect by choosing one of the other rows in this table.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        """The elixir count and each effect at the character's Artificer level."""
+        level = character.get_class_level(CharacterClass.ARTIFICER)
+        tier = 2 if level >= 15 else 1 if level >= 9 else 0
+        elixirs = 5 if level >= 15 else 4 if level >= 9 else 3 if level >= 5 else 2
+        healing = ("2d8", "3d8", "4d8")[tier]
+        speed = (10, 15, 20)[tier]
+        resilience = ("10 minutes", "1 hour", "8 hours")[tier]
+        boldness = ("1 minute", "10 minutes", "1 hour")[tier]
+        fly = (10, 20, 30)[tier]
+        intelligence_modifier = character.get_intelligence_modifier()
+        return (
+            f"Your elixirs right now: {elixirs} per Long Rest. "
+            f"Healing {healing} + {intelligence_modifier} Hit Points; "
+            f"Swiftness +{speed} feet Speed for 1 hour; "
+            f"Resilience +1 AC for {resilience}; "
+            f"Boldness +1d4 for {boldness}; "
+            f"Flight {fly} feet Fly Speed for 10 minutes."
+        )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

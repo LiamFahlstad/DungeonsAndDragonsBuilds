@@ -110,7 +110,7 @@ class ElementalGift(Feature):
         description = (
             "At 6th level, you begin to take on characteristics of your patron's kind. You now have resistance to a damage type determined by your patron's kind: bludgeoning (Dao), thunder (Djinni), fire (Efreeti), or cold (Marid).\n"
             "\n"
-            "In addition, as a bonus action, you can give yourself a flying speed of 30 feet that lasts for 10 minutes, during which you can hover. You regain all expended uses when you finish a long rest.\n"
+            "In addition, as a bonus action, you can give yourself a flying speed of 30 feet that lasts for 10 minutes, during which you can hover. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.\n"
             "\n"
             f"You have chosen the {self.kind.value} kind, so you have resistance to {damage_type} damage."
         )

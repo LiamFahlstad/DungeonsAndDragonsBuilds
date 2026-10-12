@@ -1,5 +1,5 @@
 from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
-from Core.Definitions import Skill
+from Core.Definitions import CharacterClass, Skill
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -48,7 +48,11 @@ class ArcaneShot(Feature):
             name="Arcane Shot",
             origin="Arcane Archer Fighter Level 3",
             usage_tags=["damage", "control"],
+            uses=FeatureUses(max_uses=2, regain_all_on="short or long rest"),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return 2
 
     def calculate_dc(self, character: CharacterView) -> int:
         intelligence_modifier = character.get_intelligence_modifier()
@@ -82,9 +86,21 @@ class ArcaneShot(Feature):
             "\n"
             "Seeking Arrow. Using divination magic, you grant your arrow the ability to seek out your target, allowing the arrow to curve and twist its path in search of its prey. When you use this option, you don't make an attack roll for the attack. Instead, choose one creature you have seen in the past minute. The arrow flies toward that creature, moving around corners if necessary and ignoring three-quarters cover and half cover. If the target is within the weapon's range and there is a path large enough for the arrow to travel to the target, the target must make a Dexterity saving throw. On a failed save, it takes damage as if it were hit by the arrow, plus an extra 1d6 force damage, and you learn the target's current location. On a successful save, the target takes half as much damage, and you don't learn its location. The force damage increases to 2d6 when you reach 18th level in this class.\n"
             "\n"
-            "Shadow Arrow. You weave illusion magic into your arrow, causing it to occlude your foe's vision with shadows. The creature hit by the arrow takes an extra 2d6 psychic damage, and it must succeed on a Wisdom saving throw or be unable to see anything farther than 5 feet away until the start of your next turn. The psychic damage increases to 4d6 when you reach 18th level in this class."
+            "Shadow Arrow. You weave illusion magic into your arrow, causing it to occlude your foe's vision with shadows. The creature hit by the arrow takes an extra 2d6 psychic damage, and it must succeed on a Wisdom saving throw or be unable to see anything farther than 5 feet away until the start of your next turn. The psychic damage increases to 4d6 when you reach 18th level in this class.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        """The options' extra damage at the character's Fighter level."""
+        upgraded = character.get_class_level(CharacterClass.FIGHTER) >= 18
+        extra, line_extra = ("4d6", "2d6") if upgraded else ("2d6", "1d6")
+        banishing = f"{extra} Force" if upgraded else "no extra damage"
+        return (
+            f"Your Arcane Shot options right now: Beguiling, Bursting, Enfeebling, Grasping and Shadow deal {extra} extra; "
+            f"Piercing and Seeking deal {line_extra} extra; Banishing deals {banishing}."
+        )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

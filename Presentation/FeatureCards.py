@@ -125,6 +125,21 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             padding: 1px 6px;
         }
 
+        /* Flags the saving throw DC a feature imposes (Feature.calculate_dc),
+           so the number is on the card even when the text only gives the
+           formula. Own neutral color, like the range chip. */
+        .feature-dc-tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #a0522d;
+            color: #8b4513;
+            border-radius: 3px;
+            padding: 1px 6px;
+        }
+
         /* Flags a feature's range/area (e.g. "30 Feet", "20-Foot Cone", "Self")
            the same way .feature-duration-tag flags duration. Free-text, own
            neutral color distinct from the other chips. */
@@ -451,7 +466,9 @@ def write_feature_card(
     if html_description is None:
         return
 
-    _write_card_open(feature, file, description_mode, feature_label(feature, character))
+    _write_card_open(
+        feature, character, file, description_mode, feature_label(feature, character)
+    )
 
     resource_tiles = feature.get_resource_tiles(character)
     if resource_tiles:
@@ -487,7 +504,8 @@ def write_feature_card(
         if extension_html is None:
             continue
         extension_tags = "".join(
-            f" {tag}" for tag in _header_tags_html(extension, description_mode)
+            f" {tag}"
+            for tag in _header_tags_html(extension, character, description_mode)
         )
         label = feature_label(extension, character)
         file.write(
@@ -517,7 +535,9 @@ def write_extension_card(
 
     # The card header already carries this feature's tags (Passive included),
     # so the label only names the parent.
-    _write_card_open(feature, file, description_mode, feature_label(feature, character))
+    _write_card_open(
+        feature, character, file, description_mode, feature_label(feature, character)
+    )
     file.write(
         _upgrade_block_html(f"Extends {parent_name}", html_description, feature.uses)
     )
@@ -526,6 +546,7 @@ def write_extension_card(
 
 def _write_card_open(
     feature: Feature,
+    character: Character,
     file: TextIO,
     description_mode: DescriptionMode,
     label: str,
@@ -540,7 +561,7 @@ def _write_card_open(
     file.write("<div class='feature-header'>\n")
     file.write("<span class='feature-name-group'>\n")
     file.write(f"<span class='feature-name'>{feature.name}</span>\n")
-    for tag in _header_tags_html(feature, description_mode):
+    for tag in _header_tags_html(feature, character, description_mode):
         file.write(f"{tag}\n")
     file.write("</span>\n")
     file.write(f"<span class='feature-origin'>{label}</span>\n")
@@ -574,9 +595,11 @@ def _shows_passive_tag(feature: Feature, description_mode: DescriptionMode) -> b
     return description_mode is None and feature.skippable_in_concise
 
 
-def _header_tags_html(feature: Feature, description_mode: DescriptionMode) -> list[str]:
+def _header_tags_html(
+    feature: Feature, character: Character, description_mode: DescriptionMode
+) -> list[str]:
     """The tag chips shown beside a feature's name (Passive, action economy,
-    duration, range, usage roles), in display order."""
+    duration, range, save DC, usage roles), in display order."""
     activation = feature.activation
     if _shows_passive_tag(feature, description_mode):
         passive_tag = "<span class='feature-passive-tag'>Passive</span>"
@@ -587,6 +610,7 @@ def _header_tags_html(feature: Feature, description_mode: DescriptionMode) -> li
         _action_tag_html(activation.action_type),
         _duration_tag_html(activation.duration),
         _range_tag_html(activation.range, activation.range_shape),
+        _dc_tag_html(feature.calculate_dc(character)),
         _usage_tags_html(feature.usage_tags),
     ]
     return [tag for tag in tags if tag]
@@ -634,6 +658,12 @@ _USAGE_LABELS = {
     "utility": "Utility",
     "summon": "Summon",
 }
+
+
+def _dc_tag_html(dc: int | None) -> str:
+    if dc is None:
+        return ""
+    return f"<span class='feature-dc-tag'>Save DC {dc}</span>"
 
 
 def _usage_tags_html(usage_tags: Sequence[str] | None) -> str:

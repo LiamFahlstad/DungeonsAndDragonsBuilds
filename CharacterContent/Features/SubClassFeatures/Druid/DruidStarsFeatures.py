@@ -27,7 +27,7 @@ class StarMap(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You’ve created a star chart as part of your heavenly studies. It is a Tiny object, and you can use it as a Spellcasting Focus for your Druid spells. You determine its form by rolling on the Star Map table or by choosing one.\n"
-            "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest.\n"
+            "While holding the map, you have the Guidance and Guiding Bolt spells prepared, and you can cast Guiding Bolt without expending a spell slot. You can cast it in that way a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.\n"
             "If you lose the map, you can perform a 1-hour ceremony to magically create a replacement. This ceremony can be performed during a Short or Long Rest, and it destroys the previous map."
         )
         return description
@@ -65,9 +65,26 @@ class StarryForm(Feature):
             "Whenever you assume your starry form, choose which of the following constellations glimmers on your body; your choice gives you certain benefits while in the form.\n"
             "Archer. A constellation of an archer appears on you. When you activate this form and as a Bonus Action on your subsequent turns while it lasts, you can make a ranged spell attack, hurling a luminous arrow that targets one creature within 60 feet of yourself. On a hit, the attack deals Radiant damage equal to 1d8 plus your Wisdom modifier.\n"
             "Chalice. A constellation of a life-giving goblet appears on you. Whenever you cast a spell using a spell slot that restores Hit Points to a creature, you or another creature within 30 feet of you can regain Hit Points equal to 1d8 plus your Wisdom modifier.\n"
-            "Dragon. A constellation of a wise dragon appears on you. When you make an Intelligence or a Wisdom check or a Constitution saving throw to maintain Concentration, you can treat a roll of 9 or lower on the d20 as a 10."
+            "Dragon. A constellation of a wise dragon appears on you. When you make an Intelligence or a Wisdom check or a Constitution saving throw to maintain Concentration, you can treat a roll of 9 or lower on the d20 as a 10.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        """The constellations' numbers at the character's level (Twinkling
+        Constellations turns the 1d8s into 2d8 and gives the Dragon flight)."""
+        wisdom_modifier = character.get_wisdom_modifier()
+        spell_attack = character.calculate_attack_bonus_for_ability(Ability.WISDOM)
+        twinkling = character.has_feature(TwinklingConstellations)
+        dice = "2d8" if twinkling else "1d8"
+        lines = [
+            f"Archer right now: {spell_attack:+} to hit, {dice} + {wisdom_modifier} Radiant damage.",
+            f"Chalice right now: regain {dice} + {wisdom_modifier} Hit Points.",
+        ]
+        if twinkling:
+            lines.append("Dragon right now: also a Fly Speed of 20 feet (can hover).")
+        return "\n".join(lines)
 
 
 class CosmicOmen(Feature):
@@ -93,7 +110,7 @@ class CosmicOmen(Feature):
             "Whenever you finish a Long Rest, you can consult your Star Map for omens and roll a die. Until you finish your next Long Rest, you gain access to a special Reaction based on whether you rolled an even or an odd number on the die:\n"
             "Weal (Even). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and add the number rolled to the total.\n"
             "Woe (Odd). Whenever a creature you can see within 30 feet of you is about to make a D20 Test, you can take a Reaction to roll 1d6 and subtract the number rolled from the total.\n"
-            "You can use this Reaction a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest."
+            "You can use this Reaction a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
 

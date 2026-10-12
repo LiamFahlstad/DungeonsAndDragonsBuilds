@@ -62,15 +62,22 @@ class BreathWeapon(Feature):
             usage_tags=["damage"],
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,
+                regain_all_on="long rest",
                 current_formula="Current amount: equal to your proficiency bonus.",
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
 
+    @staticmethod
+    def _damage_dice(character: CharacterView) -> str:
+        """1d10, +1d10 at character levels 5, 11 and 17."""
+        level = character.character_level
+        return f"{1 + (level >= 5) + (level >= 11) + (level >= 17)}d10"
+
     def get_description(self, character: CharacterView) -> str:
         text = (
             "When you take the Attack action on your turn, you can replace one of your attacks with an exhalation of magical energy in either a 15-foot Cone or a 30-foot Line that is 5 feet wide (choose the shape each time). Each creature in that area must make a Dexterity saving throw (DC 8 plus your Constitution modifier and Proficiency Bonus).\n"
-            f"On a failed save, a creature takes {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon. The damage increases as you gain levels, as shown in the Breath Weapon column of the Dragonborn Features table. On a successful save, a creature takes half as much damage.\n"
+            f"On a failed save, a creature takes 1d10 {self.damage_type.value} damage (your Draconic Ancestry is {self.color.value} dragon). On a successful save, a creature takes half as much damage. This damage increases by 1d10 when you reach character levels 5 (2d10), 11 (3d10), and 17 (4d10); right now it is {self._damage_dice(character)}.\n"
             "You can use this Breath Weapon a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
         return text
@@ -92,14 +99,7 @@ class BreathWeapon(Feature):
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         proficiency_bonus = character.get_proficiency_bonus()
 
-        if character.character_level < 5:
-            damage = "1d10"
-        elif character.character_level < 11:
-            damage = "2d10"
-        elif character.character_level < 17:
-            damage = "3d10"
-        else:
-            damage = "4d10"
+        damage = self._damage_dice(character)
 
         save_dc = self.calculate_dc(character)
 

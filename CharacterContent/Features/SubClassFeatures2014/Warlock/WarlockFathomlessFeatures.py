@@ -61,9 +61,16 @@ class TentacleOfTheDeep(Feature):
             "\n"
             "As a bonus action on your turn, you can move the tentacle up to 30 feet and repeat the attack.\n"
             "\n"
-            "You can summon the tentacle a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
+            "You can summon the tentacle a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.\n"
+            f"Your tentacle right now: {self._spell_attack(character):+} to hit, {damage} cold damage."
         )
         return description
+
+    @staticmethod
+    def _spell_attack(character: CharacterView) -> int:
+        return character.calculate_attack_bonus_for_ability(
+            Definitions.Ability.CHARISMA
+        )
 
     def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
         warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
@@ -72,7 +79,10 @@ class TentacleOfTheDeep(Feature):
         return [
             ("Action", "Bonus action to summon"),
             ("Range", "60 feet from you"),
-            ("Attack", f"Melee spell attack within 10 feet of tentacle"),
+            (
+                "Attack",
+                f"Melee spell attack ({self._spell_attack(character):+}) within 10 feet of tentacle",
+            ),
             ("Damage", f"{damage} cold + 10 feet speed reduction"),
             ("Movement", "Bonus action to move up to 30 feet, repeat attack"),
             ("Uses", f"Proficiency bonus ({proficiency_bonus})"),

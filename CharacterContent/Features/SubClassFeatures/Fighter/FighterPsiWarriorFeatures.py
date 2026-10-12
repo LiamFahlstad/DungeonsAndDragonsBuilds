@@ -1,6 +1,8 @@
-from Core.Definitions import FIGHTER_HIT_DIE, DamageType
+from Core.Definitions import FIGHTER_HIT_DIE, CharacterClass, DamageType
+from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
     Feature,
+    FeatureUses,
     FeatureActivation,
     ActionType,
     RegainedOn,
@@ -20,7 +22,16 @@ class PsionicPower(Feature):
                 action_type=ActionType.ACTION, range="30 Feet"
             ),
             usage_tags=["damage", "buff"],
+            uses=FeatureUses(
+                max_uses=len(PSIONIC_ENERGY_DICE_GAINED_AT),
+                regain_all_on="long rest",
+                regain_x_on=(1, "short rest"),
+                gained_at=PSIONIC_ENERGY_DICE_GAINED_AT,
+            ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return psionic_energy_dice(character.get_class_level(CharacterClass.FIGHTER))[1]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -38,9 +49,22 @@ class PsionicPower(Feature):
             "Protective Field. When you or another creature you can see within 30 feet of you takes damage, you can take a Reaction to expend one Psionic Energy Die, roll the die, and reduce the damage taken by the number rolled plus your Intelligence modifier (minimum reduction of 1), as you create a momentary shield of telekinetic force.\n"
             "Psionic Strike. You can propel your weapons with psionic force. Once on each of your turns, immediately after you hit a target within 30 feet of yourself with an attack and deal damage to it with a weapon, you can expend one Psionic Energy Die, rolling it and dealing Force damage to the target equal to the number rolled plus your Intelligence modifier.\n"
             "Telekinetic Movement. You can move an object or a creature with your mind. As a Magic action, choose one target you can see within 30 feet of yourself; the target must be a loose object that is Large or smaller or one willing creature other than you. You transport the target up to 30 feet to an unoccupied space you can see. Alternatively, if the target is a Tiny object, you can transport it to or from your hand.\n"
-            "Once you take this action, you can’t do so again until you finish a Short or Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it."
+            "Once you take this action, you can’t do so again until you finish a Short or Long Rest unless you expend a Psionic Energy Die (no action required) to restore your use of it.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        die, count = psionic_energy_dice(
+            character.get_class_level(CharacterClass.FIGHTER)
+        )
+        intelligence_modifier = character.get_intelligence_modifier()
+        return (
+            f"Your Psionic Energy Dice right now: {count} {die}s. "
+            f"Protective Field reduces damage by 1{die} + {intelligence_modifier} (minimum 1); "
+            f"Psionic Strike deals 1{die} + {intelligence_modifier} Force damage."
+        )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

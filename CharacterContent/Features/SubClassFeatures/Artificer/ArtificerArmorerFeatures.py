@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability
+from Core.Definitions import ARTIFICER_HIT_DIE, Ability, CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -106,9 +106,40 @@ class ArmorModel(Feature):
             "You customize your armor for subtler undertakings. It has the following features:\n"
             "Lightning Launcher. A gemlike node appears on your armor, from which you can shoot bolts of lightning. The launcher counts as a Simple Ranged weapon with a normal range of 90 feet and a long range of 300 feet, and it deals 1d6 Lightning damage on a hit. Once on each of your turns when you hit a creature with the launcher, you can deal an extra 1d6 Lightning damage to that target.\n"
             "Powered Steps. Your Speed increases by 5 feet.\n"
-            "Dampening Field. You have Advantage on Dexterity (Stealth) checks. If the armor imposes Disadvantage on such checks, the Advantage and Disadvantage cancel each other, as normal."
+            "Dampening Field. You have Advantage on Dexterity (Stealth) checks. If the armor imposes Disadvantage on such checks, the Advantage and Disadvantage cancel each other, as normal.\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        """The special weapons' numbers at the character's level (Improved
+        Armorer adds +1 to attack and damage, Perfected Armor bigger dice)."""
+        artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
+        improved = 1 if character.has_feature(ImprovedArmorer) else 0
+        perfected = character.has_feature(PerfectedArmor)
+        attack = (
+            character.get_proficiency_bonus()
+            + character.get_intelligence_modifier()
+            + improved
+        )
+        damage = character.get_intelligence_modifier() + improved
+        uses = max(1, character.get_intelligence_modifier())
+        demolisher, pulse, launcher = (
+            ("2d6", "1d10", "2d6") if perfected else ("1d10", "1d8", "1d6")
+        )
+        lines = [
+            f"Your special weapons right now: {attack:+} to hit.",
+            f"Force Demolisher: {demolisher} + {damage} Force damage, Reach. Giant Stature: {uses} per Long Rest.",
+            f"Thunder Pulse: {pulse} + {damage} Thunder damage. Defensive Field: {artificer_level} Temporary Hit Points.",
+            f"Lightning Launcher: {launcher} + {damage} Lightning damage (+1d6 once per turn), range 90/300 feet.",
+        ]
+        if perfected:
+            lines.append(
+                f"Guardian pull (Reaction): DC {character.calculate_difficulty_class()} Strength save, {uses} per Long Rest. "
+                f"Infiltrator flight (Bonus Action): {uses} per Long Rest."
+            )
+        return "\n".join(lines)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

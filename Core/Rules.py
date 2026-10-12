@@ -108,3 +108,30 @@ MAX_ATTUNED_ITEMS = 3
 # House rule: a person carries 3 + Strength modifier item slots, plus
 # bonuses from containers and features.
 CARRYING_CAPACITY_BASE_SLOTS = 3
+
+# ── Psionic Energy Dice ──────────────────────────────────────────────────────
+
+# The Psi Warrior and Soulknife Energy Dice tables are the same table, read by
+# Fighter or Rogue level respectively: (from level, die size, number of dice).
+_PSIONIC_ENERGY_DICE = (
+    (17, "d12", 12),
+    (13, "d10", 10),
+    (11, "d10", 8),
+    (9, "d8", 8),
+    (5, "d8", 6),
+    (3, "d6", 4),
+)
+
+
+def psionic_energy_dice(class_level: int) -> tuple[str, int]:
+    """(die size, number of dice) at a Psi Warrior or Soulknife class level."""
+    for from_level, die, count in _PSIONIC_ENERGY_DICE:
+        if class_level >= from_level:
+            return die, count
+    return "d6", 0
+
+
+# The level each Psionic Energy Die box is gained at: [3, 3, 3, 3, 5, 5, ...].
+PSIONIC_ENERGY_DICE_GAINED_AT = levels_gained(
+    lambda level: psionic_energy_dice(level)[1]
+)

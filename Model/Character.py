@@ -258,9 +258,12 @@ class Character:
         return ExtensionTree.resolve(self.feature_grants)
 
     def has_feature(self, feature_type: type) -> bool:
-        """Whether a feature of `feature_type` is granted plainly (not as an
-        extension)."""
-        return any(isinstance(f, feature_type) for f in self.features)
+        """Whether a feature of `feature_type` is granted, plainly or as an
+        extension - upgrades like Explosive Cannon are granted as extensions
+        of the feature they improve, and still count as had."""
+        return any(
+            isinstance(f, feature_type) for f in self.iter_features_with_extensions()
+        )
 
     def get_features_by_type(self, feature_type: type[FeatureT]) -> list[FeatureT]:
         return [

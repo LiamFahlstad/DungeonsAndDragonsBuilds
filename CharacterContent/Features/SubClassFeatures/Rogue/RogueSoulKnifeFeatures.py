@@ -1,5 +1,6 @@
 from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
 import Core.Definitions as Definitions
+from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -24,12 +25,15 @@ class PsionicPower(Feature):
             ),
             usage_tags=["utility"],
             uses=FeatureUses(
-                max_uses=12,
+                max_uses=len(PSIONIC_ENERGY_DICE_GAINED_AT),
                 regain_all_on="long rest",
                 regain_x_on=(1, "short rest"),
-                gained_at=[3, 3, 3, 3, 5, 5, 9, 9, 13, 13, 17, 17],
+                gained_at=PSIONIC_ENERGY_DICE_GAINED_AT,
             ),
         )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return psionic_energy_dice(character.get_class_level(CharacterClass.ROGUE))[1]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -45,9 +49,18 @@ class PsionicPower(Feature):
             "Any features in this subclass that use a Psionic Energy Die use only the dice from this subclass. Some of your powers expend a Psionic Energy Die, as specified in the power's description, and you can't use the power if it requires you to use a die when your Psionic Energy Dice are all expended.\n"
             "You regain one of your expended Psionic Energy Dice when you finish a Short Rest, and you regain all of them when you finish a Long Rest.\n"
             "Psi-Bolstered Knack. If you fail an ability check using a skill or tool with which you have proficiency, you can roll one Psionic Energy Die and add the number rolled to the check, potentially turning failure into success. The die is expended only if the roll then succeeds.\n"
-            "Psychic Whispers. You can establish telepathic communication between yourself and others. As a Magic action, choose one or more creatures you can see, up to a number of creatures equal to your Proficiency Bonus, and then roll one Psionic Energy Die. For a number of hours equal to the number rolled, the chosen creatures can speak telepathically to you, and you can speak telepathically with them. To send or receive a message (no action required), you and the other creature must be within 1 mile of each other. A creature can end the telepathic connection at any time (no action required)."
+            "Psychic Whispers. You can establish telepathic communication between yourself and others. As a Magic action, choose one or more creatures you can see, up to a number of creatures equal to your Proficiency Bonus, and then roll one Psionic Energy Die. For a number of hours equal to the number rolled, the chosen creatures can speak telepathically to you, and you can speak telepathically with them. To send or receive a message (no action required), you and the other creature must be within 1 mile of each other. A creature can end the telepathic connection at any time (no action required).\n"
+            + self._current_values(character)
         )
         return description
+
+    @staticmethod
+    def _current_values(character: CharacterView) -> str:
+        die, count = psionic_energy_dice(character.get_class_level(CharacterClass.ROGUE))
+        return (
+            f"Your Psionic Energy Dice right now: {count} {die}s. "
+            f"Psychic Whispers links up to {character.get_proficiency_bonus()} creatures."
+        )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
