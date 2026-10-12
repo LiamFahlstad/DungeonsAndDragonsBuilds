@@ -1,3 +1,49 @@
+from CharacterContent.Spells.SpellLists import (
+    AbjurationLevel1Spells,
+    AbjurationLevel2Spells,
+    AbjurationLevel3Spells,
+    AbjurationLevel4Spells,
+    AbjurationLevel5Spells,
+    ConjurationLevel1Spells,
+    ConjurationLevel2Spells,
+    ConjurationLevel3Spells,
+    ConjurationLevel4Spells,
+    ConjurationLevel5Spells,
+    DivinationLevel1Spells,
+    DivinationLevel2Spells,
+    DivinationLevel3Spells,
+    DivinationLevel4Spells,
+    DivinationLevel5Spells,
+    EnchantmentLevel1Spells,
+    EnchantmentLevel2Spells,
+    EnchantmentLevel4Spells,
+    EnchantmentLevel5Spells,
+    EvocationLevel1Spells,
+    EvocationLevel2Spells,
+    EvocationLevel3Spells,
+    EvocationLevel4Spells,
+    EvocationLevel5Spells,
+    IllusionLevel1Spells,
+    IllusionLevel2Spells,
+    IllusionLevel3Spells,
+    IllusionLevel4Spells,
+    IllusionLevel5Spells,
+    NecromancyLevel1Spells,
+    NecromancyLevel2Spells,
+    NecromancyLevel3Spells,
+    NecromancyLevel4Spells,
+    NecromancyLevel5Spells,
+    TransmutationLevel1Spells,
+    TransmutationLevel2Spells,
+    TransmutationLevel3Spells,
+    TransmutationLevel4Spells,
+    TransmutationLevel5Spells,
+    Level1Spells,
+    Level2Spells,
+    Level3Spells,
+    Level4Spells,
+    Level5Spells,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureTarget,
@@ -1603,12 +1649,12 @@ class _SchoolAdept(_AbilityScoreFeat):
 
     _ABILITIES = _MENTAL_ABILITIES
 
-    _SPELLS: tuple[str, str, str, str, str]
+    _SPELLS: tuple[Level1Spells, Level2Spells, Level3Spells, Level4Spells, Level5Spells]
     _SCHOOL_EFFECT: str
 
     def get_description(self, character: CharacterView) -> str:
         spell_table = "\n".join(
-            f"{slot_level} | {spell}"
+            f"{slot_level} | {spell.value}"
             for slot_level, spell in enumerate(self._SPELLS, start=1)
         )
         return (
@@ -1625,50 +1671,98 @@ class _SchoolAdept(_AbilityScoreFeat):
 
 class AbjurationAdept(_SchoolAdept):
     _NAME = "Abjuration Adept"
-    _SPELLS = ("Shield", "Lesser Restoration", "Protection from Energy", "Banishment", "Mass Cure Wounds")
+    _SPELLS = (
+        AbjurationLevel1Spells.SHIELD,
+        AbjurationLevel2Spells.LESSER_RESTORATION,
+        AbjurationLevel3Spells.PROTECTION_FROM_ENERGY,
+        AbjurationLevel4Spells.BANISHMENT,
+        AbjurationLevel5Spells.MASS_CURE_WOUNDS,
+    )
     _SCHOOL_EFFECT = "Protective Ward. When you cast a spell from the Abjuration school using a spell slot, you or one creature you can see within 30 feet of yourself gains Temporary Hit Points equal to twice the level of spell slot expended."
 
 
 class ConjurationAdept(_SchoolAdept):
     _NAME = "Conjuration Adept"
-    _SPELLS = ("Entangle", "Misty Step", "Conjure Animals", "Dimension Door", "Conjure Elemental")
+    _SPELLS = (
+        ConjurationLevel1Spells.ENTANGLE,
+        ConjurationLevel2Spells.MISTY_STEP,
+        ConjurationLevel3Spells.CONJURE_ANIMALS,
+        ConjurationLevel4Spells.DIMENSION_DOOR,
+        ConjurationLevel5Spells.CONJURE_ELEMENTAL,
+    )
     _SCHOOL_EFFECT = "Persistent Conjuration. While maintaining Concentration on a spell from the Conjuration school, you gain a bonus to Constitution saving throws to maintain this Concentration. This bonus is equal to the ability modifier of the score increased by this feat."
 
 
 class DivinationAdept(_SchoolAdept):
     _NAME = "Divination Adept"
-    _SPELLS = ("Detect Evil and Good", "Mind Spike", "Clairvoyance", "Divination", "Scrying")
+    _SPELLS = (
+        DivinationLevel1Spells.DETECT_EVIL_AND_GOOD,
+        DivinationLevel2Spells.MIND_SPIKE,
+        DivinationLevel3Spells.CLAIRVOYANCE,
+        DivinationLevel4Spells.DIVINATION,
+        DivinationLevel5Spells.SCRYING,
+    )
     _SCHOOL_EFFECT = "Prescient Intervention. When a creature you can see within 60 feet of yourself makes a D20 Test, you can take a Reaction to give that creature Advantage or Disadvantage (your choice) on that roll. Once you use this benefit, you can't do so again until you finish a Long Rest. You can also regain use of this feature when you cast a spell from the Divination school using a spell slot."
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
 
 class EnchantmentAdept(_SchoolAdept):
     _NAME = "Enchantment Adept"
-    _SPELLS = ("Dissonant Whispers", "Enthrall", "Hold Person", "Dominate Beast", "Modify Memory")
+    _SPELLS = (
+        EnchantmentLevel1Spells.DISSONANT_WHISPERS,
+        EnchantmentLevel2Spells.ENTHRALL,
+        EnchantmentLevel2Spells.HOLD_PERSON,
+        EnchantmentLevel4Spells.DOMINATE_BEAST,
+        EnchantmentLevel5Spells.MODIFY_MEMORY,
+    )
     _SCHOOL_EFFECT = "Subtle Enchantments. When you cast a spell from the Enchantment school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell."
 
 
 class EvocationAdept(_SchoolAdept):
     _NAME = "Evocation Adept"
-    _SPELLS = ("Chromatic Orb", "Shatter", "Fireball", "Vitriolic Sphere", "Wall of Force")
+    _SPELLS = (
+        EvocationLevel1Spells.CHROMATIC_ORB,
+        EvocationLevel2Spells.SHATTER,
+        EvocationLevel3Spells.FIREBALL,
+        EvocationLevel4Spells.VITRIOLIC_SPHERE,
+        EvocationLevel5Spells.WALL_OF_FORCE,
+    )
     _SCHOOL_EFFECT = "Fueled Evocation. Once per turn when you cast an Evocation spell and deal damage, you can roll up to two of your unexpended Hit Point Dice and add the total rolled to one of the spell's damage rolls. Those Hit Point Dice are then expended."
 
 
 class IllusionAdept(_SchoolAdept):
     _NAME = "Illusion Adept"
-    _SPELLS = ("Silent Image", "Phantasmal Force", "Major Image", "Hallucinatory Terrain", "Seeming")
+    _SPELLS = (
+        IllusionLevel1Spells.SILENT_IMAGE,
+        IllusionLevel2Spells.PHANTASMAL_FORCE,
+        IllusionLevel3Spells.MAJOR_IMAGE,
+        IllusionLevel4Spells.HALLUCINATORY_TERRAIN,
+        IllusionLevel5Spells.SEEMING,
+    )
     _SCHOOL_EFFECT = "Masterful Illusions. When you cast a spell from the Illusion school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell. Additionally, creatures have Disadvantage on Intelligence (Investigation) checks made to discern the true nature of illusions created by your spells."
 
 
 class NecromancyAdept(_SchoolAdept):
     _NAME = "Necromancy Adept"
-    _SPELLS = ("Inflict Wounds", "Ray of Enfeeblement", "Vampiric Touch", "Blight", "Raise Dead")
+    _SPELLS = (
+        NecromancyLevel1Spells.INFLICT_WOUNDS,
+        NecromancyLevel2Spells.RAY_OF_ENFEEBLEMENT,
+        NecromancyLevel3Spells.VAMPIRIC_TOUCH,
+        NecromancyLevel4Spells.BLIGHT,
+        NecromancyLevel5Spells.RAISE_DEAD,
+    )
     _SCHOOL_EFFECT = "Life Manipulation. When you cast a spell from the Necromancy school using a spell slot, you can immediately roll up to two of your unexpended Hit Point Dice. You regain Hit Points equal to the total rolled plus the level of spell slot expended. Those Hit Point Dice are then expended."
 
 
 class TransmutationAdept(_SchoolAdept):
     _NAME = "Transmutation Adept"
-    _SPELLS = ("Jump", "Spider Climb", "Slow", "Polymorph", "Animate Objects")
+    _SPELLS = (
+        TransmutationLevel1Spells.JUMP,
+        TransmutationLevel2Spells.SPIDER_CLIMB,
+        TransmutationLevel3Spells.SLOW,
+        TransmutationLevel4Spells.POLYMORPH,
+        TransmutationLevel5Spells.ANIMATE_OBJECTS,
+    )
     _SCHOOL_EFFECT = "Magical Augmentation. On your turn when you cast a spell from the Transmutation school using a spell slot, your Speed increases by a number of feet equal to five times the level of spell slot expended. This increase lasts until the end of the turn."
 
 

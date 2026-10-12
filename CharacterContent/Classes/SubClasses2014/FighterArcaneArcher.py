@@ -8,6 +8,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Grants import Grants
+from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
 from Core.Definitions import FighterSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Fighter import (
     FighterArcaneArcherFeatures,
@@ -17,7 +18,7 @@ from CharacterContent.Features.SubClassFeatures2014.Fighter import (
 @attr.dataclass
 class FighterArcaneArcherLevel3(ClassBuilder.SubclassLevel3):
     skill: Skill
-    cantrip: str
+    cantrip: TransmutationLevel0Spells
 
     def add_features(
         self,

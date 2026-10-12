@@ -1,3 +1,4 @@
+from CharacterContent.Spells.SpellLists import Cantrips, Level1Spells, Level2Spells
 from Core.Definitions import CreatureSize, DamageType, Sense
 from Model.Content.Feature import Feature
 from Model.Content.Improvements import DamageResistance, GrantSense
@@ -37,18 +38,23 @@ class Darkvision(Feature):
 
 
 class FiendishLegacy(Feature):
-    def __init__(self, cantrip: str, spell_1: str | None, spell_2: str | None):
+    def __init__(
+        self,
+        cantrip: Cantrips,
+        spell_1: Level1Spells | None,
+        spell_2: Level2Spells | None,
+    ):
         self.cantrip = cantrip
         self.spell_1 = spell_1
         self.spell_2 = spell_2
         super().__init__(name="Fiendish Legacy", origin="Tiefling Trait")
 
     def get_description(self, character: CharacterView) -> str:
-        text = f"You also know the '{self.cantrip}' cantrip.\n"
+        text = f"You also know the '{self.cantrip.value}' cantrip.\n"
         if self.spell_1 is not None and character.character_level >= 3:
-            text += f"You can cast the '{self.spell_1}' without expending a spell slot once per Long Rest.\n"
+            text += f"You can cast the '{self.spell_1.value}' without expending a spell slot once per Long Rest.\n"
         if self.spell_2 is not None and character.character_level >= 5:
-            text += f"You can cast the '{self.spell_2}' without expending a spell slot once per Long Rest.\n"
+            text += f"You can cast the '{self.spell_2.value}' without expending a spell slot once per Long Rest.\n"
         return text
 
 

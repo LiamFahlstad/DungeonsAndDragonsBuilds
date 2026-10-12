@@ -14,6 +14,7 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
+from CharacterContent.Spells import SpellLists
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
 from Core.Definitions import Ability, DamageType, Skill
 from Model.AbilityScores import PointBuyAbilityScores
@@ -120,7 +121,7 @@ class Y2024RangerDrakewardenHannaCharacterBuilder(CharacterBuilder):
             "Kingdom Saving Agency",
             items=[
                 (Items.Spyglass(), 1),
-                (Items.Scroll("Darkvision"), 1),
+                (Items.Scroll(SpellLists.TransmutationLevel2Spells.DARKVISION), 1),
                 (Items.Manacles(), 1),
                 (Items.PotionOfHealing(), 1),
             ],

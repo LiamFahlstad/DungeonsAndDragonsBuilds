@@ -1,3 +1,4 @@
+from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
 from Core.Definitions import Skill
 from Model.Content.Feature import (
     FeatureUses,
@@ -14,7 +15,7 @@ from Model.View import CharacterView
 
 
 class ArcaneArcherLore(Feature):
-    def __init__(self, skill: Skill, cantrip: str):
+    def __init__(self, skill: Skill, cantrip: TransmutationLevel0Spells):
         super().__init__(
             name="Arcane Archer Lore",
             origin="Arcane Archer Fighter Level 3",
@@ -36,7 +37,7 @@ class ArcaneArcherLore(Feature):
         description = (
             "At 3rd level, you learn magical theory or some of the secrets of nature - typical for practitioners of this elven martial tradition. "
             f"You choose to gain proficiency in either the Arcana or the Nature skill, and you choose to learn either the Prestidigitation or Druidcraft cantrip. "
-            f"You chose {self._skill.value} and {self._cantrip}."
+            f"You chose {self._skill.value} and {self._cantrip.value}."
         )
         return description
 

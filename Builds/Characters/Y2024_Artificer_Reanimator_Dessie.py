@@ -12,7 +12,7 @@ from CharacterContent.Classes.SubClasses2024.ArtificerReanimator import (
 )
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Items, Weapons
-from CharacterContent.Species import Human
+from CharacterContent.Species import Halfling
 from CharacterContent.Spells.SpellLists import (
     ArtificerLevel0Spells,
     ArtificerLevel1Spells,
@@ -89,8 +89,8 @@ def get_starter_class_builder():
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ArtificerLevel1(
-                    cantrip_1=ArtificerLevel0Spells.SHOCKING_GRASP,
-                    cantrip_2=ArtificerLevel0Spells.THUNDERCLAP,
+                    cantrip_1=ArtificerLevel0Spells.MESSAGE,
+                    cantrip_2=ArtificerLevel0Spells.GUIDANCE,
                     spell_1=ArtificerLevel1Spells.GREASE,
                     spell_2=ArtificerLevel1Spells.FAERIE_FIRE,
                 ),
@@ -118,10 +118,7 @@ class Y2024ArtificerReanimatorDessieCharacterBuilder(CharacterBuilder):
         super().__init__(
             name="Dessie",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERCEPTION,
-                origin_feat=OriginFeats.Alert(),
-            ),
+            species_builder=Halfling.HalflingSpeciesBuilder(),
         )
         # Kingdom Saving Agency mission issue (the agency that recruited the
         # party): Dessie is the party's investigator. A magnifying glass for

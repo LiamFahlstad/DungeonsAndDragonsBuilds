@@ -12,6 +12,7 @@ from Core.Definitions import DruidLandType, DruidSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Druid import DruidLandFeatures
 from CharacterContent.Spells.SpellLists import (
     AbjurationLevel4Spells,
+    Cantrips,
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
     ConjurationLevel3Spells,
@@ -26,12 +27,19 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel2Spells,
     NecromancyLevel1Spells,
     NecromancyLevel4Spells,
+    Level1Spells,
+    Level2Spells,
+    Level3Spells,
+    Level4Spells,
+    Level5Spells,
     TransmutationLevel4Spells,
 )
 
 # Circle Spells granted by the Circle of the Land Spells feature, keyed by chosen
 # land type and the Druid level at which they are gained (3, 5, 7, and 9).
-_LEVEL_3_CIRCLE_SPELLS: dict[DruidLandType, list[str]] = {
+_LEVEL_3_CIRCLE_SPELLS: dict[
+    DruidLandType, list[Cantrips | Level1Spells | Level2Spells]
+] = {
     DruidLandType.ARID: [
         EvocationLevel0Spells.FIRE_BOLT,
         EvocationLevel1Spells.BURNING_HANDS,
@@ -54,21 +62,21 @@ _LEVEL_3_CIRCLE_SPELLS: dict[DruidLandType, list[str]] = {
     ],
 }
 
-_LEVEL_5_CIRCLE_SPELLS: dict[DruidLandType, str] = {
+_LEVEL_5_CIRCLE_SPELLS: dict[DruidLandType, Level3Spells] = {
     DruidLandType.ARID: EvocationLevel3Spells.FIREBALL,
     DruidLandType.POLAR: ConjurationLevel3Spells.SLEET_STORM,
     DruidLandType.TEMPERATE: EvocationLevel3Spells.LIGHTNING_BOLT,
     DruidLandType.TROPICAL: ConjurationLevel3Spells.STINKING_CLOUD,
 }
 
-_LEVEL_7_CIRCLE_SPELLS: dict[DruidLandType, str] = {
+_LEVEL_7_CIRCLE_SPELLS: dict[DruidLandType, Level4Spells] = {
     DruidLandType.ARID: NecromancyLevel4Spells.BLIGHT,
     DruidLandType.POLAR: EvocationLevel4Spells.ICE_STORM,
     DruidLandType.TEMPERATE: AbjurationLevel4Spells.FREEDOM_OF_MOVEMENT,
     DruidLandType.TROPICAL: TransmutationLevel4Spells.POLYMORPH,
 }
 
-_LEVEL_9_CIRCLE_SPELLS: dict[DruidLandType, str] = {
+_LEVEL_9_CIRCLE_SPELLS: dict[DruidLandType, Level5Spells] = {
     DruidLandType.ARID: EvocationLevel5Spells.WALL_OF_STONE,
     DruidLandType.POLAR: EvocationLevel5Spells.CONE_OF_COLD,
     DruidLandType.TEMPERATE: ConjurationLevel5Spells.TREE_STRIDE,

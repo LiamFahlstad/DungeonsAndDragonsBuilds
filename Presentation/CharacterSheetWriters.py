@@ -151,36 +151,90 @@ class HtmlCharacterSheetWriter:
             for start, end, character_class in character.get_class_level_segments()
         )
 
+    @staticmethod
+    def _hit_dice_html(character: Character) -> str:
+        """Hit dice for the overview details, largest die first - one hit
+        die per class level, so a Fighter 3 / Wizard 2 shows 3d10 and 2d6 -
+        each followed by a pen box per die to mark the ones spent."""
+        counts: dict[int, int] = {}
+        for start, end, character_class in character.get_class_level_segments():
+            die = character_class.hit_die
+            counts[die] = counts.get(die, 0) + end - start + 1
+        return " ".join(
+            f"{count}d{die} <span class='status-marks hit-dice-marks'>"
+            + "<span class='pen-box'></span>" * count
+            + "</span>"
+            for die, count in sorted(counts.items(), reverse=True)
+        )
+
     def _write_status_section(self, file: TextIO):
-        """Write pen-fillable status trackers: Inspiration, Death Saves, Conditions.
+        """Write pen-fillable status trackers: Inspiration, Death Saves,
+        Exhaustion, then the remaining Conditions.
 
         The sheet is meant to be printed and marked by hand, so these are plain
         empty boxes (matching the .pen-box used for spell slots elsewhere) rather
-        than interactive <input type='checkbox'> elements.
+        than interactive <input type='checkbox'> elements. Death saves use
+        circles, as on the official sheet, so they read apart from the boxes.
         """
+
+        def tracker(label: str, body: str, extra_class: str = "") -> str:
+            classes = f"status-tracker {extra_class}".strip()
+            return (
+                f"<div class='{classes}'>"
+                f"<span class='status-tracker-label'>{label}</span>"
+                f"{body}</div>\n"
+            )
+
+        def row(label: str, marks: str) -> str:
+            return (
+                "<span class='status-tracker-row'>"
+                f"<span class='status-row-label'>{label}</span>"
+                f"<span class='status-marks'>{marks}</span></span>"
+            )
+
+        pen_box = "<span class='pen-box'></span>"
+        pen_circle = "<span class='pen-box pen-circle'></span>"
+
         file.write("<div class='status-section'>\n")
+        file.write("<div class='status-trackers'>\n")
 
-        file.write("<div class='status-row'>\n")
+        file.write(
+            tracker(
+                "Inspiration",
+                "<span class='status-marks'>"
+                "<span class='pen-box pen-box-lg'></span></span>",
+                "status-tracker-inspiration",
+            )
+        )
 
-        file.write("<span class='status-chip status-chip-inspiration'>")
-        file.write("<span class='pen-box'></span>Inspiration</span>\n")
+        file.write(
+            tracker(
+                "Death Saves",
+                row("Successes", pen_circle * 3) + row("Failures", pen_circle * 3),
+            )
+        )
 
-        file.write("<span class='status-chip status-chip-deathsave'>")
-        file.write("<span class='status-chip-label'>Death Save &mdash; Success</span>")
-        file.write("<span class='pen-box'></span>" * 3)
-        file.write("</span>\n")
-
-        file.write("<span class='status-chip status-chip-deathsave'>")
-        file.write("<span class='status-chip-label'>Failure</span>")
-        file.write("<span class='pen-box'></span>" * 3)
-        file.write("</span>\n")
+        exhaustion_boxes = "".join(
+            f"<span class='exhaustion-level'>{pen_box}"
+            f"<span class='exhaustion-num'>{level}</span></span>"
+            for level in range(1, 7)
+        )
+        file.write(
+            tracker(
+                "Exhaustion",
+                f"<span class='status-marks'>{exhaustion_boxes}</span>",
+            )
+        )
 
         file.write("</div>\n")
 
-        file.write("<div class='conditions-row'>\n")
+        file.write("<div class='conditions-grid'>\n")
+        file.write("<span class='status-tracker-label conditions-label'>Conditions</span>\n")
         for condition in Definitions.Condition.list_sorted():
+            if condition == Definitions.Condition.EXHAUSTION:
+                continue
             file.write(
-                f"<span class='status-chip'><span class='pen-box'></span>{condition.value}</span>\n"
+                f"<span class='status-chip'>{pen_box}{condition.value}</span>\n"
             )
         file.write("</div>\n")
 
@@ -200,7 +254,8 @@ class HtmlCharacterSheetWriter:
 
     @staticmethod
     def _stat_tile_hp(label: str, value) -> str:
-        """Render HP tile with format: blank/max_hp for player to fill in current HP."""
+        """Render HP tile with format: blank/max_hp for player to fill in
+        current HP, plus a Temp HP blank underneath."""
         return (
             f"<div class='stat-tile stat-tile-hero'>"
             f"<span class='stat-tile-label'>{label}</span>"
@@ -208,6 +263,7 @@ class HtmlCharacterSheetWriter:
             f"<span class='hp-blank'></span>"
             f"<span class='hp-slash'>/</span>{value}"
             f"</span>"
+            f"<span class='stat-tile-sub hp-temp'>Temp <span class='hp-temp-blank'></span></span>"
             "</div>\n"
         )
 
@@ -261,6 +317,7 @@ class HtmlCharacterSheetWriter:
             self._stat_tile("Prof. Bonus", f"{character.get_proficiency_bonus():+}")
         )
         file.write("</div>\n")
+        self._write_status_section(file)
 
         languages = ", ".join(
             language.value
@@ -310,6 +367,7 @@ class HtmlCharacterSheetWriter:
         details = [
             ("Class", self._format_class_level_history(character)),
             ("Subclass", character_subclass),
+            ("Hit Dice", self._hit_dice_html(character)),
             ("Size", size.value),
             ("Armor Prof.", ", ".join(sorted(a.value for a in armor_proficiencies))),
             (
@@ -1566,7 +1624,6 @@ class HtmlCharacterSheetWriter:
                 f"<h1>{character_name} - Level {character.character_level} "
                 f"{base_class.value}</h1>\n"
             )
-            self._write_status_section(file)
             self._write_overview(
                 character,
                 file,
@@ -1621,7 +1678,6 @@ class HtmlCharacterSheetWriter:
                 "<span class='blank-fill blank-fill-sm'></span> "
                 "<span class='blank-fill blank-fill-lg'></span></h1>\n"
             )
-            self._write_status_section(file)
 
             # ── Overview ─────────────────────────────────────────────────
             file.write("<h2>Overview</h2>\n")
@@ -1634,11 +1690,13 @@ class HtmlCharacterSheetWriter:
             file.write(self._stat_tile("Speed", f"{blank_sm} ft"))
             file.write(self._stat_tile("Prof. Bonus", blank_sm))
             file.write("</div>\n")
+            self._write_status_section(file)
 
             file.write("<div class='overview-details'>\n")
             for label in (
                 "Class",
                 "Subclass",
+                "Hit Dice",
                 "Size",
                 "Armor Prof.",
                 "Weapon Prof.",
@@ -1776,7 +1834,6 @@ class HtmlCharacterSheetWriter:
                 f"<h1>{character_name} - Level {character.character_level} "
                 f"{base_class.value}</h1>\n"
             )
-            self._write_status_section(file)
             self._write_overview(
                 character,
                 file,

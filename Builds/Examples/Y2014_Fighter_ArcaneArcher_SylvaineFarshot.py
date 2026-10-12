@@ -37,6 +37,7 @@ from CharacterContent.Features.CharacterFeats import (
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
+from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
 from Model.AbilityScores import StandardArrayAbilityScores
 
 
@@ -137,7 +138,7 @@ def get_starter_class_builder():
             subclass_features_by_level={
                 3: FighterArcaneArcherLevel3(
                     skill=Skill.ARCANA,
-                    cantrip="Prestidigitation",
+                    cantrip=TransmutationLevel0Spells.PRESTIDIGITATION,
                 ),
                 7: FighterArcaneArcherLevel7(),
                 15: FighterArcaneArcherLevel15(),

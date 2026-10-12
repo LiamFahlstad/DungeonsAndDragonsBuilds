@@ -791,10 +791,16 @@ BASE_CHARACTER_SHEET_CSS = """
             gap: 0.4rem;
         }
 
+        /* Fixed-size squares, centered in their grid cell */
         .ability-tile {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            width: 6.2rem;
+            aspect-ratio: 1;
+            margin: 0 auto;
             gap: 0.05rem;
             padding: 0.3rem 0.4rem;
             border: 1px solid #c4b49a;
@@ -1535,52 +1541,147 @@ BASE_CHARACTER_SHEET_CSS = """
             min-width: 14rem;
         }
 
-        /* ── Status Section (Inspiration, Death Saves, Conditions) ──────────
-           Pen-fillable, not interactive — the sheet is meant to be printed
-           and marked by hand, so these reuse the .pen-box square (same idea
-           as .slot-box for spell slots) instead of real form controls. Chips
-           wrap freely so the row packs to fit whatever width is available. */
+        /* ── Status Section (Inspiration, Death Saves, Hit Dice, Exhaustion,
+           Conditions) ─────────────────────────────────────────────────────
+           Sits inside the Overview right under the HP tile, so everything
+           tracked mid-fight is in one place. Pen-fillable, not interactive -
+           the sheet is meant to be printed and marked by hand, so these reuse
+           the .pen-box square (same idea as .slot-box for spell slots)
+           instead of real form controls. Each tracker is a small labelled
+           box in the same style as the stat tiles above it. */
+        .status-section,
+        :where(.status-section) div {
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
         .status-section {
-            margin: 0.5rem 0 0.75rem 0;
-            padding: 0.5rem 0.6rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .status-trackers {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-section .status-tracker {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            padding: 0.3rem 0.7rem 0.4rem 0.7rem;
+            border: 1px solid #b89060;
+            border-radius: 6px;
+        }
+
+        .status-tracker-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6a5636;
+            white-space: nowrap;
+        }
+
+        .status-tracker-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .status-row-label {
+            min-width: 4.2em;
+            font-weight: 600;
+            color: #3a2c1c;
+        }
+
+        .status-marks {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Inspiration: one big box, centered in its tile */
+        .status-section .status-tracker-inspiration {
+            align-items: center;
+        }
+
+        .status-tracker-inspiration .status-marks {
+            flex: 1;
+        }
+
+        .pen-box.pen-box-lg {
+            width: 1.4em;
+            height: 1.4em;
+        }
+
+        .pen-box.pen-circle {
+            border-radius: 50%;
+        }
+
+        /* Hit-dice spent boxes inside the overview detail chip */
+        .hit-dice-marks {
+            gap: 0.15rem;
+            margin-right: 0.3rem;
+            vertical-align: middle;
+        }
+
+        .exhaustion-level {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.05rem;
+            margin-right: 0.1rem;
+        }
+
+        .exhaustion-num {
+            font-size: 0.6rem;
+            line-height: 1;
+            color: #7a6a50;
+        }
+
+        .conditions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(7.2rem, 1fr));
+            gap: 0.25rem 0.6rem;
+            padding: 0.4rem 0.6rem;
             border: 1px solid var(--border-color);
             border-radius: 4px;
         }
 
-        .status-row {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.4rem 1.5rem;
-            padding-bottom: 0.45rem;
-            margin-bottom: 0.45rem;
-            border-bottom: 1px solid #ddd0b8;
+        .status-section .conditions-grid {
+            padding: 0.4rem 0.6rem;
         }
 
-        .conditions-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem 0.9rem;
+        .conditions-label {
+            grid-column: 1 / -1;
         }
 
         .status-chip {
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             white-space: nowrap;
         }
 
-        .status-chip-inspiration {
-            font-weight: 600;
-            color: #3a2c1c;
+        .hp-temp {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 0.25rem;
         }
 
-        .status-chip-label {
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: #3a2c1c;
-            margin-right: 0.1rem;
+        .hp-temp-blank {
+            display: inline-block;
+            width: 2.2em;
+            height: 1.1em;
+            border-bottom: 1px solid #999;
         }
 
         .pen-box {

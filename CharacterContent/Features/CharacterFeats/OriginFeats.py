@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellLists import (
     BardLevel1Spells,
     ClericLevel0Spells,
     ClericLevel1Spells,
+    ConjurationLevel1Spells,
     DruidLevel0Spells,
     DruidLevel1Spells,
     EvocationLevel0Spells,
@@ -471,7 +472,7 @@ class FamiliarFriend(OriginFeat):
         )
 
     def get_spells(self) -> list[str]:
-        return ["Find Familiar"]
+        return [ConjurationLevel1Spells.FIND_FAMILIAR]
 
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability

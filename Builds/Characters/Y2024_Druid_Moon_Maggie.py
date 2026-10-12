@@ -13,13 +13,14 @@ from CharacterContent.Classes.SubClasses2024.DruidMoon import (
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Halfling
+from CharacterContent.Spells import SpellLists
 from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
     DruidLevel2Spells,
 )
 from CharacterContent.ToolProficiencies.Proficiencies import CartographersTools
-from Combat.Monsters.CR_0.monsters import GiantBadger
+from Combat.Monsters.CR_0.monsters import Cat
 from Combat.Monsters.CR_1.monsters import BrownBear, DireWolf, GiantSpider
 from Core.Definitions import Ability, Skill
 from Model.AbilityScores import PointBuyAbilityScores
@@ -88,7 +89,7 @@ def get_starter_class_builder():
                     # Placeholder 1st-level pick (level 2 slot only allows 1st
                     # level); swapped for Pass without Trace via replace_spells.
                     spell=DruidLevel1Spells.FOG_CLOUD,
-                    known_forms=[BrownBear, DireWolf, GiantSpider, GiantBadger],
+                    known_forms=[BrownBear, DireWolf, GiantSpider, Cat],
                 ),
                 3: DruidLevel3(
                     spell=DruidLevel2Spells.SPIKE_GROWTH,
@@ -118,7 +119,7 @@ class Y2024DruidMoonMaggieCharacterBuilder(CharacterBuilder):
             items=[
                 (Items.Map(), 1),
                 (Items.Antitoxin(), 1),
-                (Items.Scroll("Lesser Restoration"), 1),
+                (Items.Scroll(SpellLists.AbjurationLevel2Spells.LESSER_RESTORATION), 1),
                 (Items.PotionOfHealing(), 1),
             ],
             gold=10,  # travel expenses

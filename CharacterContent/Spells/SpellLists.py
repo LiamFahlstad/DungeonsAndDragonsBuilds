@@ -2508,3 +2508,107 @@ class TransmutationLevel9Spells(str, Enum):
     SHAPECHANGE = "Shapechange"
     TIME_STOP = "Time Stop"
     TRUE_POLYMORPH = "True Polymorph"
+
+# Any spell of a given level, regardless of school. These are type unions
+# (usable in annotations and isinstance checks), not enums themselves.
+Level0Spells = (
+    AbjurationLevel0Spells
+    | ConjurationLevel0Spells
+    | DivinationLevel0Spells
+    | EnchantmentLevel0Spells
+    | EvocationLevel0Spells
+    | IllusionLevel0Spells
+    | NecromancyLevel0Spells
+    | TransmutationLevel0Spells
+)
+Cantrips = Level0Spells
+Level1Spells = (
+    AbjurationLevel1Spells
+    | ConjurationLevel1Spells
+    | DivinationLevel1Spells
+    | EnchantmentLevel1Spells
+    | EvocationLevel1Spells
+    | IllusionLevel1Spells
+    | NecromancyLevel1Spells
+    | TransmutationLevel1Spells
+)
+Level2Spells = (
+    AbjurationLevel2Spells
+    | ConjurationLevel2Spells
+    | DivinationLevel2Spells
+    | EnchantmentLevel2Spells
+    | EvocationLevel2Spells
+    | IllusionLevel2Spells
+    | NecromancyLevel2Spells
+    | TransmutationLevel2Spells
+)
+Level3Spells = (
+    AbjurationLevel3Spells
+    | ConjurationLevel3Spells
+    | DivinationLevel3Spells
+    | EnchantmentLevel3Spells
+    | EvocationLevel3Spells
+    | IllusionLevel3Spells
+    | NecromancyLevel3Spells
+    | TransmutationLevel3Spells
+)
+Level4Spells = (
+    AbjurationLevel4Spells
+    | ConjurationLevel4Spells
+    | DivinationLevel4Spells
+    | EnchantmentLevel4Spells
+    | EvocationLevel4Spells
+    | IllusionLevel4Spells
+    | NecromancyLevel4Spells
+    | TransmutationLevel4Spells
+)
+Level5Spells = (
+    AbjurationLevel5Spells
+    | ConjurationLevel5Spells
+    | DivinationLevel5Spells
+    | EnchantmentLevel5Spells
+    | EvocationLevel5Spells
+    | IllusionLevel5Spells
+    | NecromancyLevel5Spells
+    | TransmutationLevel5Spells
+)
+Level6Spells = (
+    AbjurationLevel6Spells
+    | ConjurationLevel6Spells
+    | DivinationLevel6Spells
+    | EnchantmentLevel6Spells
+    | EvocationLevel6Spells
+    | IllusionLevel6Spells
+    | NecromancyLevel6Spells
+    | TransmutationLevel6Spells
+)
+Level7Spells = (
+    AbjurationLevel7Spells
+    | ConjurationLevel7Spells
+    | DivinationLevel7Spells
+    | EnchantmentLevel7Spells
+    | EvocationLevel7Spells
+    | IllusionLevel7Spells
+    | NecromancyLevel7Spells
+    | TransmutationLevel7Spells
+)
+Level8Spells = (
+    AbjurationLevel8Spells
+    | ConjurationLevel8Spells
+    | DivinationLevel8Spells
+    | EnchantmentLevel8Spells
+    | EvocationLevel8Spells
+    | IllusionLevel8Spells
+    | NecromancyLevel8Spells
+    | TransmutationLevel8Spells
+)
+Level9Spells = (
+    AbjurationLevel9Spells
+    | ConjurationLevel9Spells
+    | DivinationLevel9Spells
+    | EnchantmentLevel9Spells
+    | EvocationLevel9Spells
+    | IllusionLevel9Spells
+    | NecromancyLevel9Spells
+    | TransmutationLevel9Spells
+)
