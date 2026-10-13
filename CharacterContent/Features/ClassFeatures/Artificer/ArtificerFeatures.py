@@ -6,8 +6,9 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
-from Core.Rules import MAX_ABILITY_MODIFIER
+from Core.Rules import MAX_ABILITY_MODIFIER, MAX_LEVEL
 from Model.View import CharacterView
+from Utils import StringUtils
 from Model.Content.FeatureText import (
     Block,
     Facts,
@@ -110,9 +111,210 @@ class TinkersMagic(Feature):
         return FeatureTarget.OBJECT
 
 
+# The Plans Known and Magic Items columns of the Artificer Features table,
+# as {Artificer level: count from that level on}.
+PLANS_KNOWN_GAINED_AT = {2: 4, 6: 5, 10: 6, 14: 7, 18: 8}
+MAGIC_ITEMS_GAINED_AT = {2: 2, 6: 3, 10: 4, 14: 5, 18: 6}
+
+# A plan that stands for any item of a kind: it can be learned more than
+# once, a different item each time, and each counts as its own plan.
+ANY_ITEM_MARK = "*"
+
+# The Magic Item Plans tables as {lowest Artificer level: ((plan,
+# attunement), ...)}; attunement is "Yes", "No" or "Varies".
+MAGIC_ITEM_PLANS: dict[int, tuple[tuple[str, str], ...]] = {
+    2: (
+        ("Alchemy Jug", "No"),
+        ("Bag of Holding", "No"),
+        ("Cap of Water Breathing", "No"),
+        ("Any Common magic item that isn't a Potion, a Scroll, or cursed", "Varies"),
+        ("Goggles of Night", "No"),
+        ("Manifold Tool", "Yes"),
+        ("Repeating Shot", "Yes"),
+        ("Returning Weapon", "No"),
+        ("Rope of Climbing", "No"),
+        ("Sending Stones", "No"),
+        ("Shield +1", "No"),
+        ("Wand of Magic Detection", "No"),
+        ("Wand of Secrets", "No"),
+        ("Wand of the War Mage +1", "Yes"),
+        ("Weapon +1", "No"),
+        ("Wraps of Unarmed Power +1", "No"),
+    ),
+    6: (
+        ("Armor +1", "No"),
+        ("Boots of Elvenkind", "No"),
+        ("Boots of the Winding Path", "Yes"),
+        ("Cloak of Elvenkind", "Yes"),
+        ("Cloak of the Manta Ray", "No"),
+        ("Dazzling Weapon", "Yes"),
+        ("Eyes of Charming", "Yes"),
+        ("Eyes of Minute Seeing", "No"),
+        ("Gloves of Thievery", "No"),
+        ("Helm of Awareness", "No"),
+        ("Lantern of Revealing", "No"),
+        ("Mind Sharpener", "Yes"),
+        ("Necklace of Adaption", "Yes"),
+        ("Pipes of Haunting", "No"),
+        ("Repulsion Shield", "No"),
+        ("Ring of Swimming", "No"),
+        ("Ring of Water Walking", "No"),
+        ("Sentinel Shield", "No"),
+        ("Spell-Refueling Ring", "Yes"),
+        ("Wand of Magic Missiles", "No"),
+        ("Wand of Web", "Yes"),
+        ("Weapon of Warning", "Yes"),
+    ),
+    10: (
+        ("Armor of Resistance", "Yes"),
+        ("Dagger of Venom", "No"),
+        ("Elven Chain", "No"),
+        ("Ring of Feather Falling", "Yes"),
+        ("Ring of Jumping", "Yes"),
+        ("Ring of Mind Shielding", "Yes"),
+        ("Shield +2", "No"),
+        ("Any Uncommon Wondrous Item that isn't cursed", "Varies"),
+        ("Wand of the War Mage +2", "Yes"),
+        ("Weapon +2", "No"),
+        ("Wraps of Unarmed Power +2", "No"),
+    ),
+    14: (
+        ("Armor +2", "No"),
+        ("Arrow-Catching Shield", "Yes"),
+        ("Flame Tongue", "Yes"),
+        ("Any Rare Wondrous Item that isn't cursed", "Varies"),
+        ("Ring of Free Action", "Yes"),
+        ("Ring of Protection", "Yes"),
+        ("Ring of the Ram", "Yes"),
+    ),
+}
+
+# Fill-in rows on the printed card: one per plan known at level 20.
+_WORKSHOP_ROWS = max(PLANS_KNOWN_GAINED_AT.values())
+
+
+def _count_at(gained_at: dict[int, int], level: int) -> int:
+    """The count from a {level: count} progression at an Artificer level
+    (0 before the first entry)."""
+    return max(
+        (count for from_level, count in gained_at.items() if from_level <= level),
+        default=0,
+    )
+
+
+def plans_known(artificer_level: int) -> int:
+    return _count_at(PLANS_KNOWN_GAINED_AT, artificer_level)
+
+
+def magic_items_allowed(artificer_level: int) -> int:
+    return _count_at(MAGIC_ITEMS_GAINED_AT, artificer_level)
+
+
+def _plan_html(plan: str, attunement: str) -> str:
+    """A plan's catalogue entry: the name, then A when it needs Attunement
+    or * when it stands for any item of a kind."""
+    if plan.startswith("Any "):
+        return f"{plan}{ANY_ITEM_MARK}"
+    if attunement == "Yes":
+        return f"{plan}<sup>A</sup>"
+    return plan
+
+
 class ReplicateMagicItem(Feature):
     def __init__(self):
         super().__init__(name="Replicate Magic Item", origin="Artificer Level 2")
+
+    def get_resource_tiles(
+        self, character: CharacterView
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        return [
+            (label, self._steps(count_at))
+            for label, count_at in (
+                ("Plans Known", plans_known),
+                ("Magic Items", magic_items_allowed),
+            )
+        ]
+
+    @staticmethod
+    def _steps(count_at) -> list[tuple[str, str]]:
+        by_level = {level: count_at(level) for level in range(2, MAX_LEVEL + 1)}
+        return [
+            (f"Lv {levels}", value)
+            for levels, value in StringUtils.compress_level_progression(by_level)
+        ]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Plans Known and Magic Items are in the Scaling rows below.
+        return [
+            Paragraph(
+                "You know arcane plans, and each Long Rest you turn some of them into working magic items."
+            ),
+            Facts(
+                (
+                    (
+                        "Plans",
+                        "Plans Known (see Scaling below), from any plan table your Artificer level qualifies for. "
+                        "Start with four from the level 2+ table; Bag of Holding, Cap of Water Breathing, Sending Stones and Wand of the War Mage are recommended.",
+                    ),
+                    (
+                        "Swap a plan",
+                        "Whenever you gain an Artificer level, replace one plan with another you qualify for. Items made from the old plan vanish at once.",
+                    ),
+                    (
+                        "Make items",
+                        "When you finish a Long Rest with Tinker's Tools in hand, make up to Magic Items (see Scaling below) items, each from a different plan you know",
+                    ),
+                    (
+                        "Item limit",
+                        "At most Magic Items (see Scaling below) exist at once; making another makes the oldest vanish as the new one appears",
+                    ),
+                    (
+                        "Attunement",
+                        "Attune the instant you make it, or later by the normal process",
+                    ),
+                    (
+                        "Duration",
+                        "Works like the normal item but isn't permanent: when you die, it vanishes after 1d4 days. "
+                        "A container's contents appear harmlessly in and around its space when it vanishes.",
+                    ),
+                    (
+                        "Focus",
+                        "Any Wand or Weapon you make is a Spellcasting Focus, instead of Artisan's Tools",
+                    ),
+                )
+            ),
+            Option(
+                "Magic Item Plans",
+                (
+                    Table(
+                        ("Artificer level", "Plans"),
+                        tuple(
+                            (
+                                f"{level}+",
+                                ", ".join(
+                                    _plan_html(plan, attunement)
+                                    for plan, attunement in plans
+                                ),
+                            )
+                            for level, plans in MAGIC_ITEM_PLANS.items()
+                        ),
+                    ),
+                    Paragraph(
+                        f"Plans marked <sup>A</sup> require Attunement; for those marked {ANY_ITEM_MARK} it varies by item, "
+                        "and you can learn them more than once (a different item each time, each its own plan)"
+                    ),
+                ),
+            ),
+            Option(
+                "Your workshop",
+                (
+                    Table(
+                        ("Plan known", "Item made"),
+                        (("&nbsp;", "&#9744;"),) * _WORKSHOP_ROWS,
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
