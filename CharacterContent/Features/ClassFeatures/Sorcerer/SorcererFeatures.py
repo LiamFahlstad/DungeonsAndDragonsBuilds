@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import levels_gained
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class Spellcasting(Feature):
@@ -50,6 +51,23 @@ class InnateSorcery(Feature):
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Unleash the magic an event in your past left in you."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute"),
+                    ("Spell DC", "+1 to the spell save DC of your Sorcerer spells"),
+                    (
+                        "Spell attacks",
+                        "Advantage on the attack rolls of Sorcerer spells you cast",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "An event in your past left an indelible mark on you, infusing you with simmering magic. As a Bonus Action, you can unleash that magic for 1 minute, during which you gain the following benefits:\n"
@@ -86,6 +104,62 @@ class FontOfMagic(Feature):
                 gained_at=levels_gained(lambda level: level, from_level=2),
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Sorcery Point boxes are in the panel below.
+        return [
+            Paragraph(
+                "Sorcery Points fuel Metamagic and other features, and convert to and from spell slots."
+            ),
+            Facts(
+                (
+                    (
+                        "Sorcery Points",
+                        "Equal to your Sorcerer level, which is also the most you can have",
+                    ),
+                    ("Recharge", "All on a Long Rest"),
+                )
+            ),
+            Option(
+                "Spell slot into points",
+                (
+                    Facts(
+                        (
+                            ("Action", "No action required"),
+                            (
+                                "Gain",
+                                "Sorcery Points equal to the expended slot's level",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Points into a spell slot",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            (
+                                "Create",
+                                "One spell slot, no higher than level 5, from unexpended Sorcery Points",
+                            ),
+                            ("Lasts", "Until you finish a Long Rest"),
+                        )
+                    ),
+                    Table(
+                        ("Slot level", "Sorcery Point cost", "Minimum Sorcerer level"),
+                        (
+                            ("1", "2", "2"),
+                            ("2", "3", "3"),
+                            ("3", "5", "5"),
+                            ("4", "6", "7"),
+                            ("5", "7", "9"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

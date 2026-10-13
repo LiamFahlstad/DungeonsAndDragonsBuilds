@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class WailsFromTheGrave(Feature):
@@ -70,6 +71,54 @@ class TokensOfTheDeparted(Feature):
             activation=FeatureActivation(range="30 Feet"),
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Spirits of the dead leave you soul trinkets with resonant power."
+            ),
+            Facts(
+                (
+                    (
+                        "Trinkets",
+                        "You gain two soul trinkets (Tiny objects). Finish a Long Rest with fewer than two and you gain trinkets until you have two.",
+                    ),
+                    (
+                        "Maximum",
+                        "2; 3 from Rogue level 13; 4 from level 17. Gaining one at the maximum destroys and replaces an old one.",
+                    ),
+                    (
+                        "Gain more",
+                        "Reaction when a creature you can see within 30 feet of you dies; the trinket appears on your person",
+                    ),
+                    (
+                        "Distance",
+                        "A trinket more than 30 feet from you teleports back to your person",
+                    ),
+                )
+            ),
+            Option(
+                "Using trinkets",
+                (
+                    Facts(
+                        (
+                            (
+                                "Life Essence",
+                                "While you have at least one: Advantage on Death Saving Throws and Constitution saving throws",
+                            ),
+                            (
+                                "Death's Knell",
+                                "When you deal Sneak Attack damage on your turn, destroy one to use Wails from the Grave without expending a use",
+                            ),
+                            (
+                                "Spirit Query",
+                                "Magic action: destroy one to cast Augury with no components, using Constitution as the spellcasting modifier. If you know the creature the trinket came from, ask its spirit one question instead.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

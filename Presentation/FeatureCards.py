@@ -400,7 +400,6 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
         /* One label width for every box, so values line up down the card. */
         .feature-box .feature-box-label {
             width: 6.5rem;
-            white-space: nowrap;
             font-weight: 700;
             color: #6a5636;
         }

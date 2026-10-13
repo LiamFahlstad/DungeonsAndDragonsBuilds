@@ -8,6 +8,8 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Core.Definitions import Ability
 
 
 class LunarEmbodiment(Feature):
@@ -134,6 +136,87 @@ class LunarPhenomenon(Feature):
             usage_tags=["utility", "damage", "control", "heal", "buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Tap the special power of your current Lunar Embodiment phase."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Bonus Action, or as part of the Bonus Action you take to change phase with Waxing and Waning (using the new phase's power)",
+                    ),
+                    ("Save DC", f"Your spell save DC ({dc_formula(Ability.CHARISMA)})"),
+                    (
+                        "Limit",
+                        "Each phase's power once per Long Rest; spend 5 Sorcery Points to use it again",
+                    ),
+                )
+            ),
+            Option(
+                "Full Moon",
+                (
+                    Facts(
+                        (
+                            (
+                                "Area",
+                                "Each creature of your choice within 30 feet of you",
+                            ),
+                            (
+                                "Save",
+                                "Constitution. Failed: Blinded until the end of its next turn.",
+                            ),
+                            (
+                                "Heal",
+                                "One creature of your choice in the area regains 3d8 Hit Points",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "New Moon",
+                (
+                    Facts(
+                        (
+                            (
+                                "Area",
+                                "Each creature of your choice within 30 feet of you",
+                            ),
+                            (
+                                "Save",
+                                "Dexterity. Failed: 3d10 Necrotic damage and Speed 0 until the end of its next turn.",
+                            ),
+                            (
+                                "You",
+                                "Invisible until the end of your next turn, or until right after you make an attack or cast a spell",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Crescent Moon",
+                (
+                    Facts(
+                        (
+                            (
+                                "Teleport",
+                                "To an unoccupied space you can see within 60 feet",
+                            ),
+                            (
+                                "Passenger",
+                                "One willing creature you can see within 5 feet, to a space within 5 feet of your destination",
+                            ),
+                            (
+                                "Protection",
+                                "You and that creature have Resistance to all damage until the start of your next turn",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

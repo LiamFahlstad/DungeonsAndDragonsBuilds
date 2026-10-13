@@ -12,6 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class InspiringSmite(Feature):
@@ -166,6 +167,40 @@ class LivingLegend(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Empower yourself with the legends of your great deeds."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "10 minutes"),
+                    (
+                        "Limit",
+                        "Once per Long Rest; expend a level 5 spell slot (no action required) to use it again",
+                    ),
+                )
+            ),
+            Option(
+                "Benefits",
+                (
+                    Facts(
+                        (
+                            ("Charismatic", "Advantage on all Charisma checks"),
+                            (
+                                "Saving Throw Reroll",
+                                "Reaction when you fail a saving throw: reroll it and use the new roll",
+                            ),
+                            (
+                                "Unerring Strike",
+                                "Once on each of your turns, when you miss with a weapon attack roll, it hits instead",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

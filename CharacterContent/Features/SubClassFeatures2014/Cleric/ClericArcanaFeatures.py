@@ -1,8 +1,12 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiency
-from Core.Definitions import Skill
+from Core.Definitions import (
+    Skill,
+    Ability,
+)
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ArcaneInitiate(Feature):
@@ -53,6 +57,48 @@ class ArcaneAbjurationChannelDivinity(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to abjure otherworldly creatures."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "One Celestial, Elemental, Fey or Fiend of your choice that can see or hear you",
+                    ),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "Turned for 1 minute or until it takes any damage"),
+                    (
+                        "Turned",
+                        "It moves as far from you as it can, can't willingly end its move within 30 feet of you, and can't take reactions. Its action can only be Dash or escaping something that stops it moving (Dodge if it can't move).",
+                    ),
+                )
+            ),
+            Option(
+                "Arcane Banishment (Cleric level 5+)",
+                (
+                    Paragraph(
+                        "A creature that fails the save is instead banished for 1 minute (as Banishment, no Concentration) if it isn't on its home plane and its CR is low enough:"
+                    ),
+                    Table(
+                        ("Cleric level", "Banishes creatures of CR"),
+                        (
+                            ("5", "1/2 or lower"),
+                            ("8", "1 or lower"),
+                            ("11", "2 or lower"),
+                            ("14", "3 or lower"),
+                            ("17", "4 or lower"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

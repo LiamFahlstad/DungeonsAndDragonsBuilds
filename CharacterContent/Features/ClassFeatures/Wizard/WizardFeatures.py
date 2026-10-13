@@ -4,6 +4,7 @@ from Model.Content.Feature import Feature, FeatureUses, RegainedOn
 from Model.Content.Improvements import SkillExpertiseChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class RitualAdept(Feature):
@@ -26,6 +27,26 @@ class ArcaneRecovery(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return 1
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Regain some magical energy by studying your spellbook."),
+            Facts(
+                (
+                    ("When", "You finish a Short Rest"),
+                    (
+                        "Recover",
+                        "Expended spell slots with a combined level of up to half your Wizard level (round up); none can be level 6 or higher",
+                    ),
+                    (
+                        "Example",
+                        "A level 4 Wizard recovers one level 2 slot or two level 1 slots",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
 

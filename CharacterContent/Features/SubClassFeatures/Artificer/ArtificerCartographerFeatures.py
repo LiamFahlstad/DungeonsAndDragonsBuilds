@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class CartographerToolsOfTheTrade(Feature):
@@ -55,6 +56,38 @@ class AdventurersAtlas(Feature):
             origin="Cartographer Artificer Level 3",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Draw magical maps that link your allies."),
+            Facts(
+                (
+                    (
+                        "When",
+                        "Whenever you finish a Long Rest, holding Cartographer's Tools",
+                    ),
+                    (
+                        "Map holders",
+                        "Touch 2 to 1 + Intelligence modifier creatures (you can be one)",
+                    ),
+                    ("Lasts", "Until you die or use this feature again"),
+                )
+            ),
+            Option(
+                "Carrying a map",
+                (
+                    Facts(
+                        (
+                            ("Awareness", "Add 1d4 to Initiative rolls"),
+                            (
+                                "Positioning",
+                                "Know where every other map holder on the same plane is, and target another map holder with a spell or effect regardless of sight or cover, if it's in range",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -169,6 +202,24 @@ class SuperiorAtlas(Feature):
                 current_formula="Used by Unerring Path.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Unerring Path's once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Your Adventurer's Atlas improves."),
+            Facts(
+                (
+                    (
+                        "Safe Haven",
+                        "When a map holder would drop to 0 Hit Points but not die, it can destroy its map: its Hit Points become 2 x your Artificer level, and it teleports to a space within 5 feet of you or another map holder",
+                    ),
+                    (
+                        "Unerring Path",
+                        "If you hold a map, cast Find the Path without a spell slot, preparation or components. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

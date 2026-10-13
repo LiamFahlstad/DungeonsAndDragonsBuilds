@@ -1,6 +1,7 @@
 from Core.Definitions import CLERIC_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class BlessingOfTheTrickster(Feature):
@@ -55,6 +56,43 @@ class InvokeDuplicity(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Create a perfect, animated illusion of yourself."),
+            Facts(
+                (
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Action", "Bonus Action"),
+                    ("Range", "An unoccupied space you can see within 30 feet"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you dismiss it (no action required) or are Incapacitated",
+                    ),
+                )
+            ),
+            Option(
+                "While it lasts",
+                (
+                    Facts(
+                        (
+                            (
+                                "Cast Spells",
+                                "Cast spells as if you were in the illusion's space, using your own senses",
+                            ),
+                            (
+                                "Distract",
+                                "Advantage on attack rolls against a creature that can see the illusion when you and it are both within 5 feet of that creature",
+                            ),
+                            (
+                                "Move",
+                                "Bonus Action: move it up to 30 feet to a space you can see within 120 feet of you",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

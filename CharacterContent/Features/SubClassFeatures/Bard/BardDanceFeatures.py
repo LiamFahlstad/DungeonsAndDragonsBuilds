@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import MultiAbilityArmorClass
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class DazzlingFootwork(Feature):
@@ -21,6 +22,31 @@ class DazzlingFootwork(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._ac.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While you aren't wearing armor or wielding a Shield:"),
+            Facts(
+                (
+                    (
+                        "Dance Virtuoso",
+                        "Advantage on Charisma (Performance) checks that involve dancing",
+                    ),
+                    (
+                        "Unarmored Defense",
+                        "Base AC = 10 + Dexterity modifier + Charisma modifier",
+                    ),
+                    (
+                        "Agile Strikes",
+                        "When you expend Bardic Inspiration as part of an action, Bonus Action or Reaction, make one Unarmed Strike as part of it",
+                    ),
+                    (
+                        "Bardic Damage",
+                        "Use Dexterity for Unarmed Strike attack rolls. Damage: Bludgeoning equal to a roll of your Bardic Inspiration die + Dexterity modifier, without expending the die.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

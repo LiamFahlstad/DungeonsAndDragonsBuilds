@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Core.Definitions import Ability
 
 
 class Spellcasting(Feature):
@@ -105,6 +107,29 @@ class SpellThief(Feature):
             ),
             usage_tags=["buff", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Steal the knowledge of a spell from another spellcaster."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Immediately after a creature casts a spell that targets you or includes you in its area",
+                    ),
+                    (
+                        "Save",
+                        f"Intelligence save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                    ),
+                    (
+                        "Failed",
+                        "The spell's effect on you is negated. If it's level 1+ and a level you can cast, you have it prepared for 8 hours and the caster can't cast it for 8 hours.",
+                    ),
+                    ("Limit", "Once per Long Rest (after you steal a spell)"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

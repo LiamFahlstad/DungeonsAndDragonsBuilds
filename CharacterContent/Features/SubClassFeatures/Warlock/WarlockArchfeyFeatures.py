@@ -13,6 +13,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ArchfeySpells(Feature):
@@ -48,6 +49,31 @@ class StepsOfTheFey(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Free Misty Step uses are in the panel below.
+        return [
+            Paragraph(
+                "Cast Misty Step without a spell slot, Charisma modifier (minimum once) times per Long Rest."
+            ),
+            Option(
+                "Extra effect (choose one per casting)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Refreshing Step",
+                                "Right after you teleport, you or a creature you can see within 10 feet gains 1d10 Temporary Hit Points",
+                            ),
+                            (
+                                "Taunting Step",
+                                f"Creatures within 5 feet of the space you left make a Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)}) or have Disadvantage on attack rolls against creatures other than you until the start of your next turn",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

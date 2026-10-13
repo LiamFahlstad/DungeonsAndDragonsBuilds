@@ -1,4 +1,8 @@
-from Core.Definitions import CharacterClass, DamageType
+from Core.Definitions import (
+    CharacterClass,
+    DamageType,
+    Ability,
+)
 from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
     ActionType,
@@ -12,6 +16,13 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+)
 
 PSIONIC_ENERGY_DIE = FeatureDice.from_function(
     "Psionic Energy Die",
@@ -41,6 +52,80 @@ class PsionicPower(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return psionic_energy_dice(character.get_class_level(CharacterClass.FIGHTER))[1]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Dice count, size and recharge are in the panel below.
+        return [
+            Paragraph("Psionic Energy Dice fuel this subclass's powers."),
+            Facts(
+                (
+                    (
+                        "Dice",
+                        "Only this subclass's features use these dice. You can't use a power that needs a die when all your dice are expended.",
+                    ),
+                )
+            ),
+            Option(
+                "Protective Field",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            (
+                                "Trigger",
+                                "You or another creature you can see within 30 feet of you takes damage",
+                            ),
+                            ("Cost", "Expend one Psionic Energy Die"),
+                            (
+                                "Reduction",
+                                "The die roll + Intelligence modifier (minimum 1)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Psionic Strike",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "Once on each of your turns, right after you hit a target within 30 feet of you with an attack and deal weapon damage to it",
+                            ),
+                            ("Cost", "Expend one Psionic Energy Die"),
+                            (
+                                "Damage",
+                                "The die roll + Intelligence modifier Force damage",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Telekinetic Movement",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            ("Range", "30 feet"),
+                            (
+                                "Target",
+                                "A loose Large or smaller object, or one willing creature other than you",
+                            ),
+                            (
+                                "Effect",
+                                "Move it up to 30 feet to an unoccupied space you can see. A Tiny object can instead go to or from your hand.",
+                            ),
+                            (
+                                "Limit",
+                                "Once per Short or Long Rest; expend a Psionic Energy Die (no action required) to use it again",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -96,6 +181,49 @@ class TelekineticAdept(Feature):
         intelligence_modifier = character.get_intelligence_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + intelligence_modifier + proficiency_bonus
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Psi-Powered Leap",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            (
+                                "Effect",
+                                "A Fly Speed equal to twice your Speed until the end of the turn",
+                            ),
+                            (
+                                "Limit",
+                                "Once per Short or Long Rest; expend a Psionic Energy Die (no action required) to use it again",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Telekinetic Thrust",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You deal damage to a target with Psionic Strike",
+                            ),
+                            (
+                                "Save",
+                                f"Strength save ({dc_formula(Ability.INTELLIGENCE)})",
+                            ),
+                            (
+                                "Failed",
+                                "Give it the Prone condition, or move it up to 10 feet horizontally",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

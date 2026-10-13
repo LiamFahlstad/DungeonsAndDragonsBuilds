@@ -16,6 +16,7 @@ from Core.Definitions import (
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class Spellcasting(Feature):
@@ -64,6 +65,30 @@ class BardicInspiration(Feature):
             ),
             dice=BARDIC_INSPIRATION_DIE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and the Bardic Inspiration die are in the panel below.
+        return [
+            Paragraph(
+                "Inspire others through words, music or dance, to turn a failure into a success."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "60 feet"),
+                    ("Target", "Another creature that can see or hear you"),
+                    ("Effect", "It gains one Bardic Inspiration die (see Dice below)"),
+                    (
+                        "Using it",
+                        "Once within the next hour, when it fails a D20 Test, it can roll the die and add the number rolled to the d20. The die is expended when rolled.",
+                    ),
+                    (
+                        "Limit",
+                        "A creature can have only one Bardic Inspiration die at a time",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -4,6 +4,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class BonusProficiencies(Feature):
@@ -37,6 +38,45 @@ class BladeFlourish(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Show off martial prowess with each Attack action."),
+            Facts(
+                (
+                    (
+                        "Speed",
+                        "When you take the Attack action on your turn, your walking speed increases by 10 feet until the end of the turn",
+                    ),
+                    (
+                        "Trigger",
+                        "A weapon attack from that action hits a creature: you can use one flourish below (one per turn)",
+                    ),
+                    ("Cost", "One use of Bardic Inspiration; roll the die"),
+                )
+            ),
+            Option(
+                "Flourishes",
+                (
+                    Facts(
+                        (
+                            (
+                                "Defensive",
+                                "The target takes extra damage equal to the roll, and you add the roll to your AC until the start of your next turn",
+                            ),
+                            (
+                                "Slashing",
+                                "The target and any other creature of your choice you can see within 5 feet of you take extra damage equal to the roll",
+                            ),
+                            (
+                                "Mobile",
+                                "The target takes extra damage equal to the roll and is pushed up to 5 feet + the roll away from you. You can then use your reaction to move up to your walking speed to a space within 5 feet of it.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class GraveDomainSpells(Feature):
@@ -38,6 +39,23 @@ class CircleOfMortality(Feature):
             origin="Grave Domain Cleric Level 3",
             usage_tags=["damage", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Pull of Death",
+                        "Once per turn, when you damage a creature that's missing any Hit Points with a spell or an attack roll, it takes +1d4 Necrotic damage (1d6 from Cleric level 11)",
+                    ),
+                    ("Return to Life", "Cast Spare the Dying as a Bonus Action"),
+                    (
+                        "Healing the fallen",
+                        "When you heal a creature at 0 Hit Points with a spell or Channel Divinity, use the maximum on each healing die instead of rolling",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -138,6 +156,23 @@ class DivineReaper(Feature):
                 current_formula="Used by Keeper of Souls.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Keeper of Souls' once-per-rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Enhanced Necromancy",
+                        "When you cast a level 1-5 Necromancy spell that targets one creature, or a Grave Domain spell, expend a Channel Divinity use to target a second creature in range (providing costly or consumed Material components for each)",
+                    ),
+                    (
+                        "Keeper of Souls",
+                        "When an enemy dies within 60 feet of you, you or a creature you can see within 60 feet regains 2 x Cleric level Hit Points. Not while you're Incapacitated. Once per Short or Long Rest; expend a level 6+ spell slot (no action required) to use it again.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

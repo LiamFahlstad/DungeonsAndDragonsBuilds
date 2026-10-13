@@ -15,6 +15,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class StarMap(Feature):
@@ -28,6 +29,30 @@ class StarMap(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Free Guiding Bolt uses are in the panel below.
+        return [
+            Paragraph(
+                "A Tiny star chart you use as a Spellcasting Focus for your Druid spells."
+            ),
+            Facts(
+                (
+                    (
+                        "Spells",
+                        "While holding it, you have Guidance and Guiding Bolt prepared",
+                    ),
+                    (
+                        "Free Guiding Bolt",
+                        "Cast it without a spell slot, Wisdom modifier (minimum once) times per Long Rest",
+                    ),
+                    (
+                        "Replace it",
+                        "A 1-hour ceremony during a Short or Long Rest; it destroys the old map",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -75,6 +100,82 @@ class StarryForm(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Archer and Chalice dice are in the panel below.
+        return [
+            Paragraph("Take on a luminous starry form instead of shape-shifting."),
+            Facts(
+                (
+                    ("Cost", "One use of Wild Shape"),
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes. Ends early if you dismiss it (no action required), have the Incapacitated condition, or use this feature again.",
+                    ),
+                    (
+                        "Light",
+                        "Bright Light in a 10-foot radius and Dim Light for 10 feet more",
+                    ),
+                    ("Constellation", "Choose one each time you take the form"),
+                )
+            ),
+            Option(
+                "Archer",
+                (
+                    Facts(
+                        (
+                            (
+                                "Action",
+                                "When you take the form, and as a Bonus Action on your later turns",
+                            ),
+                            ("Range", "60 feet"),
+                            ("Target", "One creature"),
+                            (
+                                "Attack",
+                                "Ranged spell attack (Wisdom modifier + Proficiency Bonus)",
+                            ),
+                            (
+                                "Hit",
+                                "Archer and Chalice dice (see Dice below) + Wisdom modifier Radiant damage",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Chalice",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You cast a spell using a spell slot that restores Hit Points to a creature",
+                            ),
+                            ("Range", "30 feet"),
+                            ("Target", "You or another creature"),
+                            (
+                                "Heal",
+                                "Archer and Chalice dice (see Dice below) + Wisdom modifier Hit Points",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Dragon",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "On Intelligence and Wisdom checks, and Constitution saves to maintain Concentration, treat a d20 roll of 9 or lower as a 10",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can expend a use of your Wild Shape feature to take on a starry form rather than shape-shifting.\n"
@@ -121,6 +222,25 @@ class CosmicOmen(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph(
+                "After each Long Rest, consult your Star Map and roll a die: an even roll gives you Weal, an odd roll Woe, until your next Long Rest."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 30 feet is about to make a D20 Test",
+                    ),
+                    ("Weal (even)", "Roll 1d6 and add it to the total"),
+                    ("Woe (odd)", "Roll 1d6 and subtract it from the total"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

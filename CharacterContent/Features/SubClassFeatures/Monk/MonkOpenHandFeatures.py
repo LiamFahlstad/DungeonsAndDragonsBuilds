@@ -1,5 +1,8 @@
 import Core.Definitions as Definitions
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import (
+    MONK_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -12,6 +15,7 @@ from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -153,6 +157,33 @@ class QuiveringPalm(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Set up lethal vibrations in a creature's body."),
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an Unarmed Strike"),
+                    ("Cost", "4 Focus Points"),
+                    (
+                        "Lasts",
+                        "Days equal to your Monk level; harmless until you end them",
+                    ),
+                    (
+                        "End them",
+                        "Take an action, or forgo one attack of your Attack action; you must be on the same plane",
+                    ),
+                    (
+                        "Save",
+                        f"Constitution save ({dc_formula(Ability.WISDOM)}): 10d12 Force damage, half on a success",
+                    ),
+                    (
+                        "Limit",
+                        "One creature at a time; you can end the vibrations harmlessly (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

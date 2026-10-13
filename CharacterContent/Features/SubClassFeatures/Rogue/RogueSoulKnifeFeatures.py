@@ -12,6 +12,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 PSIONIC_ENERGY_DIE = FeatureDice.from_function(
     "Psionic Energy Die",
@@ -43,6 +44,59 @@ class PsionicPower(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return psionic_energy_dice(character.get_class_level(CharacterClass.ROGUE))[1]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Dice count, size and recharge are in the panel below.
+        return [
+            Paragraph("Psionic Energy Dice fuel this subclass's powers."),
+            Facts(
+                (
+                    (
+                        "Dice",
+                        "Only this subclass's features use these dice. You can't use a power that needs a die when all your dice are expended.",
+                    ),
+                )
+            ),
+            Option(
+                "Psi-Bolstered Knack",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You fail an ability check using a skill or tool you're proficient with",
+                            ),
+                            (
+                                "Effect",
+                                "Roll a Psionic Energy Die and add it to the check. The die is expended only if the check then succeeds.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Psychic Whispers",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            (
+                                "Targets",
+                                "Up to your Proficiency Bonus in creatures you can see",
+                            ),
+                            (
+                                "Duration",
+                                "Hours equal to one roll of a Psionic Energy Die",
+                            ),
+                            (
+                                "Effect",
+                                "You and they can speak telepathically (no action required) while within 1 mile of each other. Any of them can end its connection at any time (no action required).",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -84,6 +138,31 @@ class PsychicBlades(Feature):
             origin="Soulknife Rogue Level 3",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Manifest a blade of psychic energy in your free hand when you take the Attack action or make an Opportunity Attack."
+            ),
+            Facts(
+                (
+                    ("Weapon", "Simple Melee; Finesse, Thrown (range 60/120 feet)"),
+                    (
+                        "Damage",
+                        "1d6 Psychic + the ability modifier used for the attack roll",
+                    ),
+                    (
+                        "Mastery",
+                        "Vex (free; doesn't count against your Weapon Mastery choices)",
+                    ),
+                    ("After the attack", "The blade vanishes, leaving no mark"),
+                    (
+                        "Second blade",
+                        "After attacking with a blade on your turn, a Bonus Action attack with a second blade if your other hand is free; its damage die is 1d4",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

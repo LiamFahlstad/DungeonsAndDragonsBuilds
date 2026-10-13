@@ -1,6 +1,10 @@
-from Core.Definitions import BARD_HIT_DIE
+from Core.Definitions import (
+    BARD_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, RegainedOn
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class Channeler(Feature):
@@ -30,6 +34,105 @@ class SpiritsFromBeyond(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Channel a spirit of the dead when you give out Bardic Inspiration, then unleash it on a creature."
+            ),
+            Facts(
+                (
+                    (
+                        "Channel",
+                        "When you take a Bonus Action to give a creature a Bardic Inspiration die, roll that die and channel the spirit with that number",
+                    ),
+                    (
+                        "Choose instead",
+                        "Bonus Action, expending a use of Bardic Inspiration: channel a spirit of your choice whose number is no higher than your Bardic Inspiration die's highest number (a d8 reaches the Shade)",
+                    ),
+                    ("Lasts", "Until you unleash it or finish a Short or Long Rest"),
+                    (
+                        "Unleash",
+                        "Magic action. Target one creature you can see within 30 feet.",
+                    ),
+                    (
+                        "Save DC",
+                        f"Your Bard spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                )
+            ),
+            Option(
+                "Spirits from Beyond",
+                (
+                    Paragraph("Die = your Bardic Inspiration die."),
+                    Table(
+                        ("Roll", "Spirit", "Effect"),
+                        (
+                            (
+                                "1",
+                                "Beloved",
+                                "The target regains Hit Points equal to one roll of the die + your Charisma modifier.",
+                            ),
+                            (
+                                "2",
+                                "Sharpshooter",
+                                "The target takes Force damage equal to one roll of the die + your Charisma modifier.",
+                            ),
+                            (
+                                "3",
+                                "Avenger",
+                                "Until the end of your next turn, any creature that hits the target with a melee attack roll takes Force damage equal to one roll of the die.",
+                            ),
+                            (
+                                "4",
+                                "Renegade",
+                                "The target can immediately take a Reaction to teleport up to 30 feet to an unoccupied space it can see.",
+                            ),
+                            (
+                                "5",
+                                "Fortune Teller",
+                                "The target has Advantage on D20 Tests until the start of your next turn.",
+                            ),
+                            (
+                                "6",
+                                "Wayfarer",
+                                "The target gains Temporary Hit Points equal to one roll of the die + your Bard level. While it has them, its Speed increases by 10 feet.",
+                            ),
+                            (
+                                "7",
+                                "Trickster",
+                                "Wisdom save. Failed: Psychic damage equal to two rolls of the die, and Charmed until the start of your next turn. Succeeded: half the damage only.",
+                            ),
+                            (
+                                "8",
+                                "Shade",
+                                "The target is Invisible until the end of its next turn, or until it makes an attack roll, deals damage or casts a spell. When that ends, each creature in a 5-foot Emanation from it makes a Constitution save or takes Necrotic damage equal to two rolls of the die.",
+                            ),
+                            (
+                                "9",
+                                "Arsonist",
+                                "Dexterity save. Fire damage equal to four rolls of the die; half on a success.",
+                            ),
+                            (
+                                "10",
+                                "Coward",
+                                "The target and each creature of your choice in a 30-foot Emanation from it make a Wisdom save. Failed: Frightened until the start of your next turn; while Frightened, its Speed is halved (round down) and it can take an action or a Bonus Action, not both.",
+                            ),
+                            (
+                                "11",
+                                "Brute",
+                                "Each creature of your choice in a 30-foot Emanation from the target makes a Strength save. Failed: Thunder damage equal to three rolls of the die, and Prone. Succeeded: half the damage only.",
+                            ),
+                            (
+                                "12",
+                                "Priest",
+                                "The target regains Hit Points equal to two rolls of the die, and one condition of your choice ends on it: Blinded, Charmed, Deafened, Paralyzed, Poisoned or Stunned.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -61,6 +164,26 @@ class EmpoweredChanneling(Feature):
             origin="College of Spirits Bard Level 6",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Power from Beyond",
+                        "Once per turn, when a Bard spell you cast with a spell slot deals damage or restores Hit Points, roll 1d6 and add it to one damage roll or to the healing",
+                    ),
+                    (
+                        "Spiritual Manifestation",
+                        "You always have Spirit Guardians prepared and can cast it once per Long Rest without a spell slot",
+                    ),
+                    (
+                        "Guarding spirits",
+                        "When you cast Spirit Guardians, you and allies in its Emanation can have Half Cover. Once per Short or Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

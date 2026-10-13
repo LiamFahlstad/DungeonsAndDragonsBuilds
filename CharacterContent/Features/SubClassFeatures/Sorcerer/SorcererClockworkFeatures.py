@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class ClockworkSpells(Feature):
@@ -148,6 +149,39 @@ class ClockworkCavalcade(Feature):
             ),
             usage_tags=["heal", "control", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Summon spirits of order to expunge disorder around you."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Area", "A 30-foot Cube originating from you"),
+                    (
+                        "Limit",
+                        "Once per Long Rest; spend 7 Sorcery Points (no action required) to use it again",
+                    ),
+                )
+            ),
+            Option(
+                "Effects in the Cube",
+                (
+                    Facts(
+                        (
+                            (
+                                "Heal",
+                                "Restore up to 100 Hit Points, divided as you choose among creatures of your choice",
+                            ),
+                            ("Repair", "Damaged objects entirely inside are repaired"),
+                            (
+                                "Dispel",
+                                "Every spell of level 6 or lower ends on creatures and objects of your choice",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

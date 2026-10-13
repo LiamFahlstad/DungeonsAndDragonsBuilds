@@ -1,4 +1,9 @@
-from Core.Definitions import CharacterClass, DamageType, SORCERER_HIT_DIE
+from Core.Definitions import (
+    CharacterClass,
+    DamageType,
+    SORCERER_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -9,6 +14,13 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+)
 
 
 class PsionicSpells(Feature):
@@ -106,6 +118,43 @@ class RevelationInFlesh(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Unleash the aberrant truth hidden within your body."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "1 or more Sorcery Points; one benefit below per point"),
+                    ("Duration", "10 minutes"),
+                )
+            ),
+            Option(
+                "Benefits",
+                (
+                    Facts(
+                        (
+                            (
+                                "Aquatic Adaptation",
+                                "Swim Speed equal to twice your Speed, and you can breathe underwater",
+                            ),
+                            (
+                                "Glistening Flight",
+                                "Fly Speed equal to your Speed, and you can hover",
+                            ),
+                            (
+                                "See the Invisible",
+                                "See Invisible creatures within 60 feet that aren't behind Total Cover",
+                            ),
+                            (
+                                "Wormlike Movement",
+                                "Move through spaces as narrow as 1 inch, and spend 5 feet of movement to escape nonmagical restraints or the Grappled condition",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can unleash the aberrant truth hidden within yourself. As a Bonus Action, you can spend 1 Sorcery Point or more to magically alter your body for 10 minutes. For each Sorcery Point you spend, you gain one of the following benefits of your choice, the effects of which last until the alteration ends.\n"
@@ -148,6 +197,32 @@ class WarpingImplosion(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Teleport away and leave a space-warping implosion behind."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Teleport", "To an unoccupied space you can see within 120 feet"),
+                    ("Area", "Each creature within 30 feet of the space you left"),
+                    (
+                        "Save",
+                        f"Strength save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "3d10 Force damage, and pulled toward the space you left",
+                    ),
+                    ("Succeeded", "Half the damage only"),
+                    (
+                        "Limit",
+                        "Once per Long Rest; spend 5 Sorcery Points (no action required) to use it again",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

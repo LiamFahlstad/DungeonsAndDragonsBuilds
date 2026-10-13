@@ -2,6 +2,7 @@ from Core.Definitions import MONK_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, RegainedOn, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -87,6 +88,51 @@ class MysticFocus(Feature):
         super().__init__(
             name="Mystic Focus", origin="Warrior of the Mystic Arts Monk Level 6"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Convert spell slots into Focus Points and back."),
+            Option(
+                "Slot into Focus Points",
+                (
+                    Facts(
+                        (
+                            ("Action", "No action required"),
+                            (
+                                "Gain",
+                                "Regain expended Focus Points equal to the slot's level",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Focus Points into a slot",
+                (
+                    Facts(
+                        (
+                            (
+                                "When",
+                                "You finish a Short Rest or use Uncanny Metabolism",
+                            ),
+                            (
+                                "Recover",
+                                "One expended spell slot, no higher than level 4, by spending Focus Points",
+                            ),
+                        )
+                    ),
+                    Table(
+                        ("Slot level", "Focus Point cost", "Minimum Monk level"),
+                        (
+                            ("1", "2", "6"),
+                            ("2", "3", "7"),
+                            ("3", "5", "13"),
+                            ("4", "6", "19"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

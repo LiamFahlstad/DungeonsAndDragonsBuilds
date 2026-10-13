@@ -1,5 +1,9 @@
 from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
-from Core.Definitions import CharacterClass, Skill
+from Core.Definitions import (
+    CharacterClass,
+    Skill,
+    Ability,
+)
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -13,6 +17,7 @@ from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ArcaneArcherLore(Feature):
@@ -79,6 +84,64 @@ class ArcaneShot(Feature):
         intelligence_modifier = character.get_intelligence_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + proficiency_bonus + intelligence_modifier
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and the extra-damage dice are in the panel below.
+        return [
+            Paragraph("Imbue arrows with magic drawn from the schools of magic."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, when you fire an arrow from a Shortbow or Longbow as part of the Attack action. Decide when it hits, unless the option makes no attack roll.",
+                    ),
+                    ("Options known", "2; one more at Fighter levels 7, 10, 15 and 18"),
+                    ("Save DC", dc_formula(Ability.INTELLIGENCE)),
+                )
+            ),
+            Option(
+                "Arcane Shot options",
+                (
+                    Table(
+                        ("Option", "Effect"),
+                        (
+                            (
+                                "Banishing",
+                                "Charisma save. Failed: banished to the Feywild until the end of its next turn (Speed 0, Incapacitated), then it reappears. From Fighter level 18 it also takes 2d6 Force damage.",
+                            ),
+                            (
+                                "Beguiling",
+                                "+2d6 Psychic damage (4d6 at Fighter 18). Wisdom save. Failed: Charmed by an ally of yours within 30 feet until the start of your next turn, ending early if that ally harms it.",
+                            ),
+                            (
+                                "Bursting",
+                                "The target and every other creature within 10 feet of it take 2d6 Force damage (4d6 at Fighter 18).",
+                            ),
+                            (
+                                "Enfeebling",
+                                "+2d6 Necrotic damage (4d6 at Fighter 18). Constitution save. Failed: its weapon attacks deal half damage until the start of your next turn.",
+                            ),
+                            (
+                                "Grasping",
+                                "+2d6 Poison damage; its Speed drops by 10 feet and it takes 2d6 Slashing damage the first time each turn it moves 1 foot or more without teleporting (both 4d6 at Fighter 18). Lasts 1 minute or until you use this option again; the target or a creature that can reach it can take an action to remove it with a Strength (Athletics) check against your Save DC.",
+                            ),
+                            (
+                                "Piercing",
+                                "No attack roll: a 1-foot-wide, 30-foot line through objects and cover. Dexterity save. Failed: the arrow's damage + 1d6 Piercing (2d6 at Fighter 18). Succeeded: half.",
+                            ),
+                            (
+                                "Seeking",
+                                "No attack roll: target a creature you've seen in the past minute, ignoring half and three-quarters cover. Dexterity save. Failed: the arrow's damage + 1d6 Force (2d6 at Fighter 18), and you learn where it is. Succeeded: half.",
+                            ),
+                            (
+                                "Shadow",
+                                "+2d6 Psychic damage (4d6 at Fighter 18). Wisdom save. Failed: it can't see beyond 5 feet until the start of your next turn.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

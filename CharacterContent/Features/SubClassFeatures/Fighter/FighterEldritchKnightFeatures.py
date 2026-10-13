@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class EldritchKnightSpellcasting(Feature):
@@ -49,6 +50,31 @@ class WarBond(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Bond with up to two weapons."),
+            Facts(
+                (
+                    (
+                        "Ritual",
+                        "1 hour (can be during a Short Rest), with the weapon in reach, then touch it. Fails if another Fighter is bonded to it or someone else is attuned to it.",
+                    ),
+                    (
+                        "Can't be disarmed",
+                        "Of a bonded weapon, unless you're Incapacitated",
+                    ),
+                    (
+                        "Summon",
+                        "Bonus Action: a bonded weapon on the same plane teleports to your hand (one at a time)",
+                    ),
+                    (
+                        "Limit",
+                        "Two bonded weapons; bonding a third breaks one of the others",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

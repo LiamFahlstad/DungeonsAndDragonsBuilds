@@ -1,4 +1,7 @@
-from Core.Definitions import BARD_HIT_DIE
+from Core.Definitions import (
+    BARD_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -7,6 +10,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class BeguilingMagic(Feature):
@@ -21,6 +25,33 @@ class BeguilingMagic(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("You always have Charm Person and Mirror Image prepared."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Immediately after you cast an Enchantment or Illusion spell using a spell slot",
+                    ),
+                    ("Target", "A creature you can see within 60 feet"),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "Charmed or Frightened (your choice) for 1 minute; it repeats the save at the end of each of its turns",
+                    ),
+                    (
+                        "Limit",
+                        "Once per Long Rest; expend a Bardic Inspiration use (no action required) to use it again",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -11,6 +11,7 @@ from Core.Definitions import Ability, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ElementalSmite(Feature):
@@ -24,6 +25,43 @@ class ElementalSmite(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add a genie's power to your Divine Smite."),
+            Facts(
+                (
+                    ("Trigger", "Immediately after you cast Divine Smite"),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Save DC", f"Your spell save DC ({dc_formula(Ability.CHARISMA)})"),
+                )
+            ),
+            Option(
+                "Effects (choose one)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Dao's Crush",
+                                "The Smite's target is Grappled (escape against your Save DC) and Restrained while Grappled",
+                            ),
+                            (
+                                "Djinni's Escape",
+                                "Teleport up to 30 feet to a space you can see. Until the end of your next turn: Resistance to Bludgeoning, Piercing and Slashing damage, and Immunity to Grappled, Prone and Restrained.",
+                            ),
+                            (
+                                "Efreeti's Fury",
+                                "The target takes +2d4 Fire damage, and another creature you can see within 30 feet takes 2d4 Fire damage",
+                            ),
+                            (
+                                "Marid's Surge",
+                                "The target and each creature of your choice in a 10-foot Emanation from you make a Strength save. Failed: pushed 15 feet away from you and Prone.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

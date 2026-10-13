@@ -1,6 +1,7 @@
 from Core.Definitions import SORCERER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, FeatureUses
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class SpellfireSpells(Feature):
@@ -82,6 +83,39 @@ class CrownOfSpellfire(Feature):
             usage_tags=["buff", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Infuse an Innate Sorcery with spellfire."),
+            Facts(
+                (
+                    ("Trigger", "When you use Innate Sorcery; lasts while it's active"),
+                    (
+                        "Limit",
+                        "Once per Long Rest; spend 5 Sorcery Points (no action required) to use it again",
+                    ),
+                )
+            ),
+            Option(
+                "While active",
+                (
+                    Facts(
+                        (
+                            (
+                                "Burning Life Force",
+                                "Once per turn when an attack roll hits you, expend up to your Charisma modifier (minimum 1) Hit Point Dice and reduce the damage by their total",
+                            ),
+                            ("Flight", "Fly Speed of 60 feet, and you can hover"),
+                            (
+                                "Spell Avoidance",
+                                "Against a spell or magical effect whose save halves the damage: no damage on a success, half on a failure (not while Incapacitated)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

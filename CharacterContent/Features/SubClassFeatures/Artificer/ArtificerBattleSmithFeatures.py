@@ -1,31 +1,29 @@
+from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import (
-    ARTIFICER_HIT_DIE,
     Ability,
     CharacterClass,
     Condition,
     CreatureSize,
     DamageType,
 )
+from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    FeatureDice,
+    FeatureUses,
+    RegainedOn,
+)
+from Model.Content.Improvements import GrantWeaponProficiency
 from Model.Creatures.Combatants import (
     DamageTypeEntry,
     ExtendedCombatantData,
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import MonsterAbility
-from Presentation.CreatureStatBlocks import format_creature_stat_block
-from Model.Content.Feature import (
-    Feature,
-    FeatureUses,
-    FeatureActivation,
-    RegainedOn,
-    FeatureDice,
-)
-from Model.Content.Improvements import GrantWeaponProficiency
-from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
-from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Presentation.CreatureStatBlocks import format_creature_stat_block
 
 
 class ToolsOfTheTrade(Feature):

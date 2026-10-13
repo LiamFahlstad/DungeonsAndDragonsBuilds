@@ -12,6 +12,7 @@ from Core.Definitions import CharacterClass, Condition, DamageType
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class ToolsOfTheTrade(Feature):
@@ -70,6 +71,65 @@ class ExperimentalElixir(Feature):
             usage_tags=["heal", "buff", "utility"],
             dice=ELIXIR_HEALING_DICE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Healing elixir's dice are in the panel below.
+        return [
+            Paragraph("Brew magical elixirs with random effects."),
+            Facts(
+                (
+                    (
+                        "After a Long Rest",
+                        "Holding Alchemist's Supplies, make 2 elixirs (3 from Artificer level 5, 4 from 9, 5 from 15); roll each one's effect on the table",
+                    ),
+                    (
+                        "Extra elixirs",
+                        "Magic action, holding Alchemist's Supplies: expend a spell slot to make one more, choosing its effect",
+                    ),
+                    (
+                        "Drinking",
+                        "Bonus Action: the creature drinks it or gives it to a creature within 5 feet",
+                    ),
+                    ("Lasts", "Until drunk or poured out, or your next Long Rest"),
+                )
+            ),
+            Option(
+                "Experimental Elixir",
+                (
+                    Table(
+                        ("d6", "Elixir", "Effect"),
+                        (
+                            (
+                                "1",
+                                "Healing",
+                                "Regain Healing Elixir dice (see Dice below) + your Intelligence modifier Hit Points",
+                            ),
+                            (
+                                "2",
+                                "Swiftness",
+                                "Speed +10 feet for 1 hour (+15 feet from Artificer level 9, +20 from 15)",
+                            ),
+                            (
+                                "3",
+                                "Resilience",
+                                "+1 AC for 10 minutes (1 hour from Artificer level 9, 8 hours from 15)",
+                            ),
+                            (
+                                "4",
+                                "Boldness",
+                                "Add 1d4 to attack rolls and saving throws for 1 minute (10 minutes from Artificer level 9, 1 hour from 15)",
+                            ),
+                            (
+                                "5",
+                                "Flight",
+                                "Fly Speed of 10 feet for 10 minutes (20 feet from Artificer level 9, 30 from 15)",
+                            ),
+                            ("6", "Your choice", "Choose one of the other effects"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -176,6 +236,27 @@ class ChemicalMastery(Feature):
         for resistance in self._resistances:
             resistance.apply(ledger_writer)
         self._immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Conjured Cauldron's once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Alchemical Eruption",
+                        "Once on each of your turns, when an Artificer spell you cast deals Acid, Fire or Poison damage to a target, also deal 2d8 Force damage to it",
+                    ),
+                    (
+                        "Chemical Resistance",
+                        "Resistance to Acid and Poison damage, and Immunity to the Poisoned condition",
+                    ),
+                    (
+                        "Conjured Cauldron",
+                        "Cast Tasha's Bubbling Cauldron without a spell slot, preparation or Material components, using Alchemist's Supplies as the focus. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

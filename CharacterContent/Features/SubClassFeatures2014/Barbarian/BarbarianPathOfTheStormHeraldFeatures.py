@@ -1,5 +1,8 @@
 import Core.Definitions as Definitions
-from Core.Definitions import CharacterClass
+from Core.Definitions import (
+    CharacterClass,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -10,6 +13,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 _STORM_SOUL_RESISTANCE = {
     Definitions.BarbarianStormEnvironment.DESERT: Definitions.DamageType.FIRE,
@@ -71,6 +75,68 @@ class StormAura(Feature):
         proficiency_bonus = character.get_proficiency_bonus()
         constitution_modifier = character.get_constitution_modifier()
         return 8 + proficiency_bonus + constitution_modifier
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Sea's lightning dice are in the panel below.
+        return [
+            Paragraph(
+                "While you rage, you emanate a stormy aura 10 feet in every direction (not through Total Cover)."
+            ),
+            Facts(
+                (
+                    (
+                        "Activate",
+                        "When you enter your rage, and again as a Bonus Action on each of your turns",
+                    ),
+                    (
+                        "Environment",
+                        f"Desert, Sea or Tundra; change it whenever you gain a Barbarian level. You chose {self.environment.value}.",
+                    ),
+                    ("Save DC", dc_formula(Ability.CONSTITUTION)),
+                )
+            ),
+            Option(
+                "Desert",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "Every other creature in the aura takes Fire damage: 2; 3 at Barbarian level 5; 4 at 10; 5 at 15; 6 at 20",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Sea",
+                (
+                    Facts(
+                        (
+                            ("Target", "One other creature you can see in the aura"),
+                            ("Save", "Dexterity"),
+                            (
+                                "Damage",
+                                "Sea Lightning Damage dice (see Dice below); half on a success",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Tundra",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "Each creature of your choice in the aura gains Temporary Hit Points: 2; 3 at Barbarian level 5; 4 at 10; 5 at 15; 6 at 20",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -11,6 +11,7 @@ from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class LayOnHands(Feature):
@@ -23,6 +24,27 @@ class LayOnHands(Feature):
             ),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Heal with a blessed touch, drawing on a pool of healing power."),
+            Facts(
+                (
+                    ("Pool", "5 x Paladin level Hit Points; refills on a Long Rest"),
+                    ("Action", "Bonus Action"),
+                    ("Range", "Touch"),
+                    ("Target", "A creature, which can be you"),
+                    (
+                        "Heal",
+                        "Restore any number of Hit Points from the pool, up to what remains in it",
+                    ),
+                    (
+                        "Cure poison",
+                        "Spend 5 points from the pool to remove the Poisoned condition. Those points restore no Hit Points.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -254,6 +276,32 @@ class AbjureFoes(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Overwhelm foes with awe as you present your Holy Symbol or weapon."
+            ),
+            Facts(
+                (
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Action", "Magic action"),
+                    ("Range", "60 feet"),
+                    (
+                        "Targets",
+                        "Up to your Charisma modifier (minimum 1) creatures you can see",
+                    ),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "Frightened for 1 minute or until it takes any damage. While Frightened this way, on its turns it can do only one of: move, take an action, or take a Bonus Action.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."

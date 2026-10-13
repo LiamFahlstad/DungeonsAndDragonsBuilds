@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 SUPERIORITY_DIE = FeatureDice(
     "Superiority Die",
@@ -71,6 +72,29 @@ class CombatSuperiority(Feature):
         super().__init__(
             name="Combat Superiority", origin="Battle Master Fighter Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Superiority Dice card has the dice and their boxes.
+        return [
+            Paragraph("Learn maneuvers fueled by Superiority Dice."),
+            Facts(
+                (
+                    (
+                        "Maneuvers known",
+                        "3; two more at Fighter levels 7, 10 and 15, when you can also swap one",
+                    ),
+                    ("Per attack", "One maneuver"),
+                    (
+                        "Superiority Dice",
+                        "Four d8s; five from Fighter level 7, six from 15. Expended when used; all regained on a Short or Long Rest.",
+                    ),
+                    (
+                        "Save DC",
+                        "8 + Strength or Dexterity modifier (your choice) + Proficiency Bonus",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

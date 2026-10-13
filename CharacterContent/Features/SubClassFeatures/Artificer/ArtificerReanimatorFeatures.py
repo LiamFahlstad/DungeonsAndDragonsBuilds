@@ -24,6 +24,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ReanimatorSpells(Feature):
@@ -68,6 +69,45 @@ class ReanimatorSkillSet(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Jolt to Life's uses are in the panel below.
+        return [
+            Option(
+                "Jolt to Life",
+                (
+                    Facts(
+                        (
+                            ("Trigger", "You cast Spare the Dying"),
+                            (
+                                "Heal",
+                                "The target regains Hit Points equal to your Artificer level",
+                            ),
+                            (
+                                "Area",
+                                "Each creature of your choice in a 10-foot Emanation from the target",
+                            ),
+                            (
+                                "Save",
+                                f"Dexterity save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)}): 2d4 Lightning damage (3d4 from Artificer level 11, 4d4 from 17); half on a success",
+                            ),
+                            (
+                                "Uses",
+                                "Intelligence modifier (minimum once) per Long Rest",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Facts(
+                (
+                    (
+                        "Reanimator's Tools",
+                        "Proficiency with Alchemist's Supplies, or another Artisan's Tools if you already have it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -245,6 +285,34 @@ class MacabreModifications(Feature):
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your Reanimated Companion gains two Strange Modifications instead of one, and you can also pick these options."
+            ),
+            Option(
+                "New modifications",
+                (
+                    Facts(
+                        (
+                            (
+                                "Bloated",
+                                "It becomes Large. A Large or smaller creature it hits with Dreadful Swipe is pushed up to 10 feet away. Add your Intelligence modifier to its Death Burst damage.",
+                            ),
+                            (
+                                "Gaunt",
+                                f"Speed 45 feet and a Climb Speed equal to its Speed, climbing any surface without a check. A creature of your choice that starts its turn within 10 feet of it makes a Wisdom save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)}) or is Frightened until the start of its next turn.",
+                            ),
+                            (
+                                "Moist",
+                                "A Swim Speed equal to its Speed, and it can squeeze through 1-inch spaces. An attacker within 10 feet that hits it with an attack roll takes Acid damage equal to your Intelligence modifier.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You experiment and alter your companion further. Whenever you create a Reanimated Companion, the companion now gains two options for Strange Modifications, instead of one. Additionally, when picking options for Strange Modifications, you can also choose from the following options.\n"
@@ -268,6 +336,27 @@ class RefinedReanimation(Feature):
                 current_formula="Used by Facilitated Revival.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Facilitated Revival's once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Facilitated Revival",
+                        "Cast Raise Dead without a spell slot or Material components, using artisan's tools you're proficient with as the focus. Once per Long Rest.",
+                    ),
+                    (
+                        "Life Transfer",
+                        "Reaction when you or your companion takes damage: regain Hit Points equal to the companion's current Hit Points; it then drops to 0 and dies (triggering Death Burst)",
+                    ),
+                    (
+                        "Superior Modifications",
+                        "Your companion gains three Strange Modifications",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -13,6 +13,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 SPEED = 30  # Given by your species
 
@@ -57,6 +58,68 @@ class Shifting(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        option = {
+            ShiftForm.BESAST_HIDE: (
+                "Beasthide",
+                (
+                    (
+                        "Effect",
+                        "+1d6 Temporary Hit Points when you shift, and +1 to AC while shifted",
+                    ),
+                ),
+            ),
+            ShiftForm.LONG_TOOTH: (
+                "Longtooth",
+                (
+                    (
+                        "Action",
+                        "When you shift, and as a Bonus Action on your other turns while shifted",
+                    ),
+                    ("Attack", "An Unarmed Strike with your fangs"),
+                    (
+                        "Damage",
+                        "1d6 + Strength modifier Piercing, instead of the normal Unarmed Strike damage",
+                    ),
+                ),
+            ),
+            ShiftForm.SWIFTSTRIDE: (
+                "Swiftstride",
+                (
+                    ("Speed", "+10 feet while shifted"),
+                    (
+                        "Reaction",
+                        "When a creature ends its turn within 5 feet of you, move up to 10 feet without provoking Opportunity Attacks",
+                    ),
+                ),
+            ),
+            ShiftForm.WILD_HUNT: (
+                "Wildhunt",
+                (
+                    (
+                        "Effect",
+                        "Advantage on Wisdom checks, and no creature within 30 feet of you has Advantage on attack rolls against you unless you're Incapacitated",
+                    ),
+                ),
+            ),
+        }[self.shift_form]
+        name, rows = option
+        return [
+            Paragraph("Shape-shift into a more bestial appearance."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute, or until you revert as a Bonus Action"),
+                    (
+                        "When you shift",
+                        "Gain 2 x Proficiency Bonus Temporary Hit Points",
+                    ),
+                )
+            ),
+            Option(f"{name} (your option)", (Facts(rows),)),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

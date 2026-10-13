@@ -1,4 +1,9 @@
-from Core.Definitions import CreatureSize, DamageType, Sense
+from Core.Definitions import (
+    CreatureSize,
+    DamageType,
+    Sense,
+    Ability,
+)
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -10,6 +15,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -91,6 +97,45 @@ class CelestialRevelation(Feature):
             usage_tags=["damage", "buff", "control", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "From character level 3, transform to reveal your celestial nature."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute, or until you end it (no action required)"),
+                    (
+                        "Extra damage",
+                        "Once on each of your turns, + Proficiency Bonus damage to one target you damage with an attack or a spell: Necrotic for Necrotic Shroud, Radiant for the others",
+                    ),
+                )
+            ),
+            Option(
+                "Transformations (choose one each time)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Heavenly Wings",
+                                "Spectral wings give you a Fly Speed equal to your Speed",
+                            ),
+                            (
+                                "Inner Radiance",
+                                "You shed Bright Light in a 10-foot radius and Dim Light for 10 feet more. At the end of each of your turns, each creature within 10 feet of you takes Radiant damage equal to your Proficiency Bonus.",
+                            ),
+                            (
+                                "Necrotic Shroud",
+                                f"Creatures other than your allies within 10 feet of you make a Charisma save ({dc_formula(Ability.CHARISMA)}). Failed: Frightened until the end of your next turn.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = (

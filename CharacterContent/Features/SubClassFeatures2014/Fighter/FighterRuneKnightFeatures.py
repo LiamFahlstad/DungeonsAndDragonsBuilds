@@ -1,4 +1,8 @@
-from Core.Definitions import CharacterClass, Language
+from Core.Definitions import (
+    CharacterClass,
+    Language,
+    Ability,
+)
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -13,6 +17,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class BonusProficiencies(Feature):
@@ -44,6 +49,65 @@ class RuneCarver(Feature):
         constitution_modifier = character.get_constitution_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + proficiency_bonus + constitution_modifier
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Inscribe magic runes onto your gear."),
+            Facts(
+                (
+                    (
+                        "Runes known",
+                        "2; 3 at Fighter level 7; 4 at 10; 5 at 15. Swap one each time you gain a Fighter level.",
+                    ),
+                    (
+                        "Inscribe",
+                        "After a Long Rest, touch as many objects as runes you know (a weapon, armor, shield, jewelry or another worn or held item) and put a different rune on each. It lasts until your next Long Rest.",
+                    ),
+                    ("Invoke", "Each rune once per Short or Long Rest"),
+                    ("Save DC", dc_formula(Ability.CONSTITUTION)),
+                )
+            ),
+            Option(
+                "Runes",
+                (
+                    Table(
+                        ("Rune", "While carried", "Invoke"),
+                        (
+                            (
+                                "Cloud",
+                                "Advantage on Dexterity (Sleight of Hand) and Charisma (Deception) checks",
+                                "Reaction when you or a creature you can see within 30 feet is hit by an attack roll: the attack targets another creature within 30 feet (not the attacker), using the same roll",
+                            ),
+                            (
+                                "Fire",
+                                "Proficiency Bonus doubled on ability checks using a tool you're proficient with",
+                                "When you hit with a weapon: +2d6 Fire damage; Strength save or Restrained for 1 minute, taking 2d6 Fire at the start of each of its turns (repeats the save each turn)",
+                            ),
+                            (
+                                "Frost",
+                                "Advantage on Wisdom (Animal Handling) and Charisma (Intimidation) checks",
+                                "Bonus Action: +2 to Strength and Constitution checks and saves for 10 minutes",
+                            ),
+                            (
+                                "Stone",
+                                "Advantage on Wisdom (Insight) checks; Darkvision 120 feet",
+                                "Reaction when a creature you can see ends its turn within 30 feet: Wisdom save or Charmed for 1 minute (Speed 0, Incapacitated; repeats the save each turn)",
+                            ),
+                            (
+                                "Hill (Fighter 7+)",
+                                "Advantage on saves against being Poisoned; Resistance to Poison damage",
+                                "Bonus Action: Resistance to Bludgeoning, Piercing and Slashing damage for 1 minute",
+                            ),
+                            (
+                                "Storm (Fighter 7+)",
+                                "Advantage on Intelligence (Arcana) checks; you can't be surprised unless Incapacitated",
+                                "Bonus Action: for 1 minute, use your Reaction to give Advantage or Disadvantage to an attack roll, save or check by you or a creature you can see within 60 feet",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

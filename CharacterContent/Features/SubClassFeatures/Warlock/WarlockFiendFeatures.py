@@ -1,9 +1,13 @@
-from Core.Definitions import WARLOCK_HIT_DIE
+from Core.Definitions import (
+    WARLOCK_HIT_DIE,
+    Ability,
+)
 import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class FiendSpells(Feature):
@@ -100,7 +104,33 @@ class HurlThroughHell(Feature):
         return RegainedOn.LONG_REST
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Hurl a creature you hit through the Lower Planes."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, when you hit a creature with an attack roll",
+                    ),
+                    (
+                        "Save",
+                        f"Charisma save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "It vanishes through a nightmare landscape: 8d10 Psychic damage unless it's a Fiend, and Incapacitated until the end of your next turn, when it returns to its space",
+                    ),
+                    (
+                        "Limit",
+                        "Once per Long Rest; expend a Pact Magic spell slot (no action required) to use it again",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

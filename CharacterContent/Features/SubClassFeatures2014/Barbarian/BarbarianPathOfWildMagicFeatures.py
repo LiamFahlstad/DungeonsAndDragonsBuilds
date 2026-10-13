@@ -8,6 +8,8 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Core.Definitions import Ability
 
 
 class MagicAwareness(Feature):
@@ -69,6 +71,59 @@ class WildSurge(Feature):
             + character.get_proficiency_bonus()
             + character.get_constitution_modifier()
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Wild magic erupts from you when you enter your rage."),
+            Facts(
+                (
+                    ("Trigger", "You enter your rage: roll a d8 on the table below"),
+                    ("Save DC", dc_formula(Ability.CONSTITUTION)),
+                )
+            ),
+            Option(
+                "Wild Magic",
+                (
+                    Table(
+                        ("d8", "Effect"),
+                        (
+                            (
+                                "1",
+                                "Each creature of your choice you can see within 30 feet makes a Constitution save or takes 1d12 Necrotic damage. You gain 1d12 Temporary Hit Points.",
+                            ),
+                            (
+                                "2",
+                                "Teleport up to 30 feet to an unoccupied space you can see. Until your rage ends, repeat as a Bonus Action on each of your turns.",
+                            ),
+                            (
+                                "3",
+                                "A spirit appears within 5 feet of one creature you can see within 30 feet. At the end of the turn it explodes: each creature within 5 feet of it makes a Dexterity save or takes 1d6 Force damage. Until your rage ends, summon another as a Bonus Action on each of your turns.",
+                            ),
+                            (
+                                "4",
+                                "Until your rage ends, one weapon you hold deals Force damage and gains the Light and Thrown properties (range 20/60). If it leaves your hand, it reappears there at the end of the turn.",
+                            ),
+                            (
+                                "5",
+                                "Until your rage ends, a creature that hits you with an attack roll takes 1d6 Force damage.",
+                            ),
+                            (
+                                "6",
+                                "Until your rage ends, you have a +1 bonus to AC, and allies within 10 feet of you have it too.",
+                            ),
+                            (
+                                "7",
+                                "Until your rage ends, the ground within 15 feet of you is Difficult Terrain for your enemies.",
+                            ),
+                            (
+                                "8",
+                                "Another creature you can see within 30 feet makes a Constitution save or takes 1d6 Radiant damage and is Blinded until the start of your next turn. Until your rage ends, repeat as a Bonus Action on each of your turns.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         proficiency_bonus = character.get_proficiency_bonus()

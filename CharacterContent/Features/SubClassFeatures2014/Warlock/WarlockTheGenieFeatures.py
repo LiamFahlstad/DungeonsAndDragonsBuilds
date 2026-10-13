@@ -10,6 +10,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DAO: "bludgeoning",
@@ -61,6 +62,63 @@ class GeniesVessel(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
         self.kind = kind
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box for Bottled Respite is in the panel below.
+        return [
+            Paragraph(
+                "Your patron's gift: a Tiny vessel you can use as a spellcasting focus for your Warlock spells. Its powers work while you touch it."
+            ),
+            Facts(
+                (
+                    (
+                        "Vessel",
+                        "AC = your spell save DC. Hit Points = Warlock level + Proficiency Bonus. Immune to Poison and Psychic damage.",
+                    ),
+                    (
+                        "Replace it",
+                        "A 1-hour ceremony during a Short or Long Rest; it vanishes when you die",
+                    ),
+                )
+            ),
+            Option(
+                "Bottled Respite",
+                (
+                    Facts(
+                        (
+                            ("Action", "Action"),
+                            (
+                                "Effect",
+                                "Vanish into the vessel: a comfortable 20-foot-radius, 20-foot-high cylinder. You can hear the area around the vessel.",
+                            ),
+                            ("Duration", "Up to 2 x Proficiency Bonus hours"),
+                            (
+                                "Leaving",
+                                "Bonus Action, or early if you die or the vessel is destroyed; you appear in the nearest unoccupied space. Objects left inside stay until carried out.",
+                            ),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Genie's Wrath",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "Once during each of your turns, when you hit with an attack roll",
+                            ),
+                            (
+                                "Damage",
+                                f"+ Proficiency Bonus {_WRATH_DAMAGE_TYPE[self.kind].capitalize()} damage ({self.kind.value})",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]

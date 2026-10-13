@@ -19,6 +19,7 @@ from Core.Definitions import (
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class Expertise(Feature):
@@ -54,6 +55,29 @@ class SneakAttack(Feature):
             usage_tags=["damage"],
             dice=SNEAK_ATTACK_DICE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Sneak Attack dice are in the panel below.
+        return [
+            Paragraph("Once per turn, exploit a foe's distraction for extra damage."),
+            Facts(
+                (
+                    (
+                        "Frequency",
+                        "Once per turn, on one creature you hit with an attack roll",
+                    ),
+                    ("Weapon", "A Finesse or a Ranged weapon"),
+                    (
+                        "Condition",
+                        "You have Advantage on the roll, or an ally without the Incapacitated condition is within 5 feet of the target and you don't have Disadvantage",
+                    ),
+                    (
+                        "Damage",
+                        "Your Sneak Attack dice (see Dice below), of the weapon's damage type",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -144,6 +168,50 @@ class CunningStrike(Feature):
         super().__init__(
             name="Cunning Strike", origin="Rogue Level 5", usage_tags=["control"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Trade Sneak Attack dice for an extra effect."),
+            Facts(
+                (
+                    ("Trigger", "You deal Sneak Attack damage; add one effect below"),
+                    (
+                        "Cost",
+                        "Remove the effect's dice from the Sneak Attack before rolling",
+                    ),
+                    (
+                        "Timing",
+                        "The effect happens immediately after the attack's damage is dealt",
+                    ),
+                    ("Save DC", dc_formula(Ability.DEXTERITY)),
+                )
+            ),
+            Option(
+                "Effects (choose one)",
+                (
+                    Table(
+                        ("Effect", "Cost", "Result"),
+                        (
+                            (
+                                "Poison",
+                                "1d6",
+                                "Constitution save. Failed: Poisoned for 1 minute; it repeats the save at the end of each of its turns, ending the effect on a success. You need a Poisoner's Kit on your person.",
+                            ),
+                            (
+                                "Trip",
+                                "1d6",
+                                "A Large or smaller target makes a Dexterity save. Failed: Prone.",
+                            ),
+                            (
+                                "Withdraw",
+                                "1d6",
+                                "Immediately after the attack, move up to half your Speed without provoking Opportunity Attacks.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -237,6 +305,36 @@ class DeviousStrikes(Feature):
         super().__init__(
             name="Devious Strikes", origin="Rogue Level 14", usage_tags=["control"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("New Cunning Strike effects, using your Cunning Strike save DC."),
+            Option(
+                "New effects",
+                (
+                    Table(
+                        ("Effect", "Cost", "Result"),
+                        (
+                            (
+                                "Daze",
+                                "2d6",
+                                "Constitution save. Failed: on its next turn it can do only one of: move, take an action, or take a Bonus Action.",
+                            ),
+                            (
+                                "Obscure",
+                                "3d6",
+                                "Dexterity save. Failed: Blinded until the end of its next turn.",
+                            ),
+                            (
+                                "Knock Out",
+                                "6d6",
+                                "Constitution save. Failed: Unconscious for 1 minute or until it takes any damage; it repeats the save at the end of its turns, ending the effect on a success.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

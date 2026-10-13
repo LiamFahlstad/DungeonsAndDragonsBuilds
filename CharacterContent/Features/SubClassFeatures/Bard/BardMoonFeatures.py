@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantLanguage, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class MoonsInspiration(Feature):
@@ -19,6 +20,22 @@ class MoonsInspiration(Feature):
             activation=FeatureActivation(duration="Until Start of Your Next Turn"),
             usage_tags=["buff", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Inspired Eclipse",
+                        "When you give a Bardic Inspiration die as a Bonus Action, you can also teleport up to 30 feet to a space you can see and become Invisible until the start of your next turn (ending early after you attack, deal damage or cast a spell)",
+                    ),
+                    (
+                        "Lunar Vitality",
+                        "Once per turn when you restore Hit Points with a spell, expend a Bardic Inspiration die: add its roll to the healing, and the creature's Speed increases by 10 feet until the end of its next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

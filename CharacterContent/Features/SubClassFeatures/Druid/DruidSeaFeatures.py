@@ -1,6 +1,10 @@
-from Core.Definitions import DRUID_HIT_DIE
+from Core.Definitions import (
+    DRUID_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class CircleOfTheSeaSpells(Feature):
@@ -32,6 +36,44 @@ class WrathOfTheSea(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Surround yourself with a churning aura of ocean spray."),
+            Facts(
+                (
+                    ("Cost", "One use of Wild Shape"),
+                    ("Action", "Bonus Action"),
+                    ("Area", "5-foot Emanation"),
+                    (
+                        "Duration",
+                        "10 minutes; ends early if you dismiss it (no action required), manifest it again or are Incapacitated",
+                    ),
+                )
+            ),
+            Option(
+                "Crashing spray",
+                (
+                    Facts(
+                        (
+                            (
+                                "Action",
+                                "When you manifest it, and as a Bonus Action on your later turns",
+                            ),
+                            ("Target", "Another creature you can see in the Emanation"),
+                            (
+                                "Save",
+                                f"Constitution save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                            ),
+                            (
+                                "Failed",
+                                "Cold damage: a number of d6s equal to your Wisdom modifier (minimum 1d6). A Large or smaller target is pushed up to 15 feet away from you.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

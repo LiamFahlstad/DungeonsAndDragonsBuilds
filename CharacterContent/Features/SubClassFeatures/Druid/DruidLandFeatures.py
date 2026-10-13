@@ -4,6 +4,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
     Definitions.DruidLandType.ARID: "Fire",
@@ -76,6 +77,26 @@ class NaturalRecovery(Feature):
         super().__init__(
             name="Natural Recovery", origin="Circle of the Land Druid Level 6"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Free spell",
+                        "Cast one level 1+ spell prepared from your Circle Spells without a spell slot. Once per Long Rest.",
+                    ),
+                    (
+                        "Recover slots",
+                        "When you finish a Short Rest, recover expended spell slots with a combined level up to half your Druid level (round up), none level 6+. Once per Long Rest.",
+                    ),
+                    (
+                        "Example",
+                        "A level 6 Druid recovers one level 3 slot, a level 2 and a level 1 slot, or three level 1 slots",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

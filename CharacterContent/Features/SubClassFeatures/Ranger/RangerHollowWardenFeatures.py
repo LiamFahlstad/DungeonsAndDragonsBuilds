@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class HollowWardenSpells(Feature):
@@ -46,6 +47,41 @@ class WrathOfTheWild(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Transform into a ghastly form drawn from ancient horrors of the land."
+            ),
+            Facts(
+                (
+                    ("Cost", "One use of Favored Enemy"),
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you're Incapacitated, die, or end it (no action required)",
+                    ),
+                )
+            ),
+            Option(
+                "While transformed",
+                (
+                    Facts(
+                        (
+                            ("Ancient Armor", "+1 to AC; +2 from Ranger level 11"),
+                            (
+                                "Prowling Retribution",
+                                "Right after a creature you can see within 5 feet damages you or an ally, make an Opportunity Attack against it",
+                            ),
+                            (
+                                "Unnerving Aura",
+                                f"When you transform and at the start of each of your turns, each creature of your choice in a 10-foot Emanation makes a Wisdom save against your spell save DC ({dc_formula(Ability.WISDOM)}). Failed: Frightened until the start of your next turn.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -114,6 +150,24 @@ class AncientMight(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Persistent Wrath's once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Ominous Strikes",
+                        "Attacks that hit a Frightened creature deal extra damage equal to your Wisdom modifier",
+                    ),
+                    (
+                        "Persistent Wrath",
+                        "If you drop to 0 Hit Points but don't die while transformed by Wrath of the Wild, your Hit Points become 2 x Ranger level instead. Once per Long Rest; expend a level 4+ spell slot (no action required) to use it again.",
+                    ),
+                    ("Timeless", "Immunity to the Exhaustion condition"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

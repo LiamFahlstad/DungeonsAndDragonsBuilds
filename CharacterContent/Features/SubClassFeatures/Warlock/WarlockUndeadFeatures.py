@@ -12,6 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class FormOfDread(Feature):
@@ -31,7 +32,7 @@ class FormOfDread(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -41,6 +42,42 @@ class FormOfDread(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Transform into an avatar of your patron's dreadful power."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you're Incapacitated or end it (no action required)",
+                    ),
+                )
+            ),
+            Option(
+                "While transformed",
+                (
+                    Facts(
+                        (
+                            (
+                                "Facsimile of Life",
+                                "When you transform, gain 1d10 + Warlock level Temporary Hit Points",
+                            ),
+                            (
+                                "Fearless Form",
+                                "Immunity to the Frightened condition; it ends on you when you transform",
+                            ),
+                            (
+                                "Frightful Avatar",
+                                f"Once per turn when you hit a creature with an attack roll, it makes a Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)}) or is Frightened until the end of your next turn",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -77,6 +114,26 @@ class GraveTouched(Feature):
             usage_tags=["damage", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Arcane Necrosis",
+                        "Necrotic damage from your attacks, Warlock spells and Warlock features ignores Resistance. Once per turn, change a damaging spell's damage type to Necrotic.",
+                    ),
+                    (
+                        "Dreaded Necrosis",
+                        "Once per turn in Form of Dread, when an attack roll hits and deals Necrotic damage, roll one extra damage die",
+                    ),
+                    (
+                        "Undead Endurance",
+                        "No Exhaustion from dehydration, malnutrition or suffocation. You don't need sleep, and magic can't put you to sleep.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your patron's powers have a profound effect on your body and magic, granting you the following benefits.\n"
@@ -109,7 +166,46 @@ class NecroticHusk(Feature):
         self._resistance.apply(ledger_writer)
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Unholy Resuscitation's once-per-rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Necrotic Resilience",
+                        "Resistance to Necrotic damage; Immunity while in Form of Dread",
+                    ),
+                )
+            ),
+            Option(
+                "Unholy Resuscitation",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You drop to 0 Hit Points and don't die outright",
+                            ),
+                            (
+                                "Area",
+                                "Each creature of your choice in a 30-foot Emanation",
+                            ),
+                            (
+                                "Save",
+                                f"Constitution save against your spell save DC ({dc_formula(Ability.CHARISMA)}): 2d10 + Charisma modifier Necrotic damage, half on a success",
+                            ),
+                            (
+                                "Then",
+                                "Your Hit Points become 2 x Warlock level, and you gain 1 Exhaustion level",
+                            ),
+                            ("Limit", "Once per Short or Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

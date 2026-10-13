@@ -2,6 +2,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class AbjurationSavant(Feature):
@@ -26,6 +27,31 @@ class ArcaneWard(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Weave a protective ward from your abjuration magic."),
+            Facts(
+                (
+                    (
+                        "Create",
+                        "When you cast an Abjuration spell with a spell slot. Once per Long Rest; it lasts until your next Long Rest.",
+                    ),
+                    (
+                        "Ward Hit Points",
+                        "Maximum 2 x Wizard level + Intelligence modifier",
+                    ),
+                    (
+                        "Absorb",
+                        "When you take damage, the ward takes it first (after your Resistances and Vulnerabilities); you take any excess. At 0 it absorbs nothing, but stays.",
+                    ),
+                    (
+                        "Recharge",
+                        "Casting an Abjuration spell with a slot restores 2 x the slot's level. Or as a Bonus Action, expend a spell slot to restore 2 x its level.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

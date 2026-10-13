@@ -1,6 +1,7 @@
 from Core.Definitions import MONK_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class ArmsOfTheAstralSelf(Feature):
@@ -15,6 +16,42 @@ class ArmsOfTheAstralSelf(Feature):
             ),
             usage_tags=["damage", "buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Summon the spectral arms of your astral self."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "1 ki point"),
+                    (
+                        "When summoned",
+                        "Each creature of your choice you can see within 10 feet makes a Dexterity save or takes Force damage equal to two rolls of your Martial Arts die",
+                    ),
+                    (
+                        "Duration",
+                        "10 minutes; ends early if you're Incapacitated or die",
+                    ),
+                )
+            ),
+            Option(
+                "While the arms are present",
+                (
+                    Facts(
+                        (
+                            (
+                                "Strength",
+                                "Use your Wisdom modifier instead of Strength for Strength checks and saving throws",
+                            ),
+                            (
+                                "Unarmed strikes",
+                                "Make them with the arms. On your turn their reach is 5 feet greater, they can use Wisdom instead of Strength or Dexterity for attack and damage rolls, and they deal Force damage.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

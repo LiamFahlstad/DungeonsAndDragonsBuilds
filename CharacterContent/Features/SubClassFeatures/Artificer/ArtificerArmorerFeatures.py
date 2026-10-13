@@ -10,6 +10,7 @@ from Model.Content.Feature import (
     FeatureDice,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ToolsOfTheTrade(Feature):
@@ -130,6 +131,78 @@ class ArmorModel(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Weapon dice and Giant Stature's uses are in the panel below.
+        return [
+            Paragraph(
+                "Customize your Arcane Armor as one of three models. Each has a special weapon."
+            ),
+            Facts(
+                (
+                    (
+                        "Special weapon",
+                        "Use your Intelligence modifier, instead of Strength or Dexterity, for its attack and damage rolls",
+                    ),
+                    (
+                        "Change model",
+                        "When you finish a Short or Long Rest with Smith's Tools in hand",
+                    ),
+                )
+            ),
+            Option(
+                "Dreadnaught",
+                (
+                    Facts(
+                        (
+                            (
+                                "Force Demolisher",
+                                "Simple Melee weapon with Reach; Force damage. On a hit against a creature at least one size smaller than you, push it up to 10 feet away or pull it up to 10 feet toward you.",
+                            ),
+                            (
+                                "Giant Stature",
+                                "Bonus Action: for 1 minute your reach increases by 5 feet, and you become Large if you're smaller (if there's room)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Guardian",
+                (
+                    Facts(
+                        (
+                            (
+                                "Thunder Pulse",
+                                "Simple Melee weapon; Thunder damage. A creature hit has Disadvantage on attack rolls against targets other than you until the start of your next turn.",
+                            ),
+                            (
+                                "Defensive Field",
+                                "While Bloodied, Bonus Action: gain Temporary Hit Points equal to your Artificer level; you lose them if you doff the armor",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Infiltrator",
+                (
+                    Facts(
+                        (
+                            (
+                                "Lightning Launcher",
+                                "Simple Ranged weapon, range 90/300 feet; Lightning damage. Once on each of your turns when you hit, +1d6 Lightning damage.",
+                            ),
+                            ("Powered Steps", "Speed +5 feet"),
+                            (
+                                "Dampening Field",
+                                "Advantage on Dexterity (Stealth) checks; it cancels the armor's Disadvantage, if any",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can customize your Arcane Armor. When you do so, choose one of the following armor models: Dreadnaught, Guardian, or Infiltrator. The model you choose gives you special benefits while you wear it.\n"
@@ -246,6 +319,69 @@ class PerfectedArmor(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The weapon dice are on the Armor Model card; uses are below.
+        return [
+            Paragraph("Each armor model gains more benefits."),
+            Option(
+                "Dreadnaught",
+                (
+                    Facts(
+                        (
+                            ("Force Demolisher", "Damage becomes 2d6 Force"),
+                            (
+                                "Giant Stature",
+                                "Your reach increases by 10 feet instead, you can become Large or Huge, and you have Advantage on Strength checks and Strength saving throws for the duration",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Guardian",
+                (
+                    Facts(
+                        (
+                            ("Thunder Pulse", "Damage becomes 1d10 Thunder"),
+                            (
+                                "Pull",
+                                "Reaction when a Huge or smaller creature you can see ends its turn within 30 feet of you",
+                            ),
+                            (
+                                "Save",
+                                f"Strength save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                            ),
+                            (
+                                "Failed",
+                                "Pulled up to 25 feet straight toward you. If it ends within 5 feet of you, make a melee weapon attack against it as part of the Reaction.",
+                            ),
+                            (
+                                "Uses",
+                                "Intelligence modifier (minimum once) per Long Rest",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Infiltrator",
+                (
+                    Facts(
+                        (
+                            (
+                                "Lightning Launcher",
+                                "Damage becomes 2d6 Lightning. A creature it damages sheds Dim Light in a 5-foot radius and has Disadvantage on attack rolls against you until the start of your next turn.",
+                            ),
+                            (
+                                "Flight",
+                                "Bonus Action: Fly Speed equal to twice your Speed until the end of the turn. Intelligence modifier (minimum once) uses per Long Rest.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

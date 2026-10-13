@@ -11,6 +11,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class FrigidExplorer(Feature):
@@ -165,6 +166,39 @@ class FrozenHaunt(Feature):
             usage_tags=["damage", "buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "When you cast Hunter's Mark, you can take on a ghostly, snowy form until the spell ends."
+            ),
+            Facts(
+                (
+                    (
+                        "Limit",
+                        "Once per Long Rest; expend a level 4+ spell slot (no action required) to use it again",
+                    ),
+                )
+            ),
+            Option(
+                "While in the form",
+                (
+                    Facts(
+                        (
+                            (
+                                "Frozen Soul",
+                                "Immunity to Cold damage. When you take the form and at the start of each of your turns, creatures of your choice in a 15-foot Emanation take 2d4 Cold damage.",
+                            ),
+                            (
+                                "Partially Incorporeal",
+                                "Immunity to Grappled, Prone and Restrained. Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one, and get shunted out if the form ends.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

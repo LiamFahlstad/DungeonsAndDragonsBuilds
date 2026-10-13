@@ -20,6 +20,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class Rage(Feature):
@@ -40,6 +41,62 @@ class Rage(Feature):
                 gained_at=[1, 1, 3, 6, 12, 17],
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses, their recharge and the Rage Damage bonus are in the panel below.
+        return [
+            Paragraph("Unleash a primal Rage for extraordinary might and resilience."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You aren't wearing Heavy armor"),
+                    (
+                        "Duration",
+                        "Until the end of your next turn; keep it going for up to 10 minutes",
+                    ),
+                )
+            ),
+            Option(
+                "While raging",
+                (
+                    Facts(
+                        (
+                            ("Resistance", "Bludgeoning, Piercing and Slashing damage"),
+                            (
+                                "Rage Damage",
+                                "+ your Rage Damage bonus (see Scaling below) when you deal damage with an attack using Strength, with a weapon or an Unarmed Strike",
+                            ),
+                            (
+                                "Strength",
+                                "Advantage on Strength checks and Strength saving throws",
+                            ),
+                            (
+                                "Limits",
+                                "You can't maintain Concentration and you can't cast spells",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Keeping it going",
+                (
+                    Facts(
+                        (
+                            (
+                                "Extend",
+                                "On your turn, do one of: make an attack roll against an enemy, force an enemy to make a saving throw, or take a Bonus Action to extend it. Each extension lasts until the end of your next turn.",
+                            ),
+                            ("Maximum", "10 minutes"),
+                            (
+                                "Ends early",
+                                "You don Heavy armor or have the Incapacitated condition",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -309,6 +366,43 @@ class BrutalStrike(Feature):
             origin="Barbarian Level 9",
             usage_tags=["damage", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Trade Reckless Attack's Advantage for a harder, more punishing hit."
+            ),
+            Facts(
+                (
+                    ("Trigger", "You use Reckless Attack"),
+                    (
+                        "Cost",
+                        "Forgo Advantage on one Strength-based attack roll of your choice on your turn. That roll mustn't have Disadvantage.",
+                    ),
+                    (
+                        "On a hit",
+                        "The target takes an extra 1d10 damage of the weapon's or Unarmed Strike's type, and you cause one effect below",
+                    ),
+                )
+            ),
+            Option(
+                "Effects (choose one)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Forceful Blow",
+                                "The target is pushed 15 feet straight away from you. You can then move up to half your Speed straight toward it without provoking Opportunity Attacks.",
+                            ),
+                            (
+                                "Hamstring Blow",
+                                "The target's Speed is reduced by 15 feet until the start of your next turn. Only the most recent Hamstring Blow affects a target.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class FightingStyle(Feature):
@@ -37,6 +38,18 @@ class SecondWind(Feature):
                 gained_at=[1, 1, 4, 10],
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and their recharge are in the panel below.
+        return [
+            Paragraph("Draw on a well of stamina to recover in the middle of a fight."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Heal", "1d10 + Fighter level Hit Points"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         base_text = (

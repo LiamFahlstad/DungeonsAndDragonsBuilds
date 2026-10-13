@@ -12,6 +12,7 @@ from Core.Definitions import CharacterClass, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class Spellcasting(Feature):
@@ -186,6 +187,38 @@ class Tireless(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses of the Temporary Hit Points benefit are in the panel below.
+        return [
+            Paragraph("Primal forces fuel you on your journeys."),
+            Option(
+                "Temporary Hit Points",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            (
+                                "Gain",
+                                "1d8 + Wisdom modifier (minimum of 1) Temporary Hit Points",
+                            ),
+                            ("Uses", "Wisdom modifier (minimum of once) per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Decrease Exhaustion",
+                (
+                    Facts(
+                        (
+                            ("When", "You finish a Short Rest"),
+                            ("Effect", "Your Exhaustion level, if any, decreases by 1"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class ManifestEcho(Feature):
@@ -21,6 +22,50 @@ class ManifestEcho(Feature):
             ),
             usage_tags=["damage", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Manifest a translucent gray echo of yourself to fight from."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "An unoccupied space you can see within 15 feet"),
+                    (
+                        "Lasts",
+                        "Until it's destroyed, you dismiss it (Bonus Action), you manifest another, or you're Incapacitated",
+                    ),
+                    (
+                        "Echo",
+                        "AC 14 + Proficiency Bonus, 1 Hit Point, immune to all conditions; uses your saving throw bonuses; your size, and it occupies its space",
+                    ),
+                )
+            ),
+            Option(
+                "Using the echo",
+                (
+                    Facts(
+                        (
+                            (
+                                "Move it",
+                                "On your turn, up to 30 feet in any direction (no action required). It's destroyed if it ends your turn more than 30 feet from you.",
+                            ),
+                            (
+                                "Swap",
+                                "Bonus Action: teleport to swap places with it, costing 15 feet of movement",
+                            ),
+                            (
+                                "Attack",
+                                "Each attack of your Attack action can come from your space or the echo's",
+                            ),
+                            (
+                                "Opportunity Attack",
+                                "Reaction when a creature you can see within 5 feet of the echo moves 5 feet or more away from it, as if you were in the echo's space",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

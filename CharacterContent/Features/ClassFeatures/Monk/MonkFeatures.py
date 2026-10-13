@@ -23,6 +23,7 @@ from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_LEVEL
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -83,6 +84,45 @@ class MartialArts(Feature):
         super().__init__(
             name="Martial Arts", origin="Monk Level 1", dice=MARTIAL_ARTS_DIE
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Martial Arts die is in the panel below.
+        return [
+            Paragraph("Fight with your Unarmed Strike and Monk weapons."),
+            Facts(
+                (
+                    (
+                        "Monk weapons",
+                        "Simple Melee weapons, and Martial Melee weapons with the Light property",
+                    ),
+                    (
+                        "Requirement",
+                        "You're unarmed or wielding only Monk weapons, and you aren't wearing armor or wielding a Shield",
+                    ),
+                )
+            ),
+            Option(
+                "Benefits",
+                (
+                    Facts(
+                        (
+                            (
+                                "Bonus strike",
+                                "Make an Unarmed Strike as a Bonus Action",
+                            ),
+                            (
+                                "Damage",
+                                "Roll your Martial Arts die (see Dice below) in place of the normal damage of your Unarmed Strike or Monk weapons",
+                            ),
+                            (
+                                "Dexterity",
+                                "Use Dexterity instead of Strength for the attack and damage rolls of Unarmed Strikes and Monk weapons, and for the save DC of your Grapple and Shove",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -200,6 +240,25 @@ class StepOfTheWind(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Move fast and slip away."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Free", "Take the Dash action"),
+                    (
+                        "1 Focus Point",
+                        "Take both the Disengage and Dash actions, and your jump distance is doubled for the turn",
+                    ),
+                    (
+                        "From Monk level 10",
+                        "When you spend the Focus Point, a willing Large or smaller creature within 5 feet can move with you until the end of your turn, without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
@@ -290,6 +349,48 @@ class DeflectAttacks(Feature):
             usage_tags=["buff", "damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Blunt an attack that hits you, and if you stop it completely, send it back."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "An attack roll hits you and its damage includes Bludgeoning, Piercing or Slashing damage (any damage type from Monk level 13, Deflect Energy)",
+                    ),
+                    (
+                        "Reduction",
+                        "1d10 + Dexterity modifier + Monk level, off the attack's total damage",
+                    ),
+                )
+            ),
+            Option(
+                "Redirect (damage reduced to 0)",
+                (
+                    Facts(
+                        (
+                            ("Cost", "1 Focus Point"),
+                            (
+                                "Target",
+                                "A creature you can see within 5 feet (melee attack), or within 60 feet and not behind Total Cover (ranged attack)",
+                            ),
+                            (
+                                "Save",
+                                f"Dexterity save against your Focus save DC ({dc_formula(Ability.WISDOM)})",
+                            ),
+                            (
+                                "Failed",
+                                "Two rolls of your Martial Arts die + Dexterity modifier, of the attack's damage type",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 13:
@@ -363,6 +464,29 @@ class StunningStrike(Feature):
             activation=FeatureActivation(duration="Until Start of Next Turn"),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Stagger a creature you hit."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, when you hit a creature with a Monk weapon or an Unarmed Strike",
+                    ),
+                    ("Cost", "1 Focus Point"),
+                    (
+                        "Save",
+                        f"Constitution save against your Focus save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "Stunned until the start of your next turn"),
+                    (
+                        "Succeeded",
+                        "Its Speed is halved until the start of your next turn, and the next attack roll against it before then has Advantage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Once per turn when you hit a creature with a Monk weapon or an Unarmed Strike, you can expend 1 Focus Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target's Speed is halved until the start of your next turn, and the next attack roll made against the target before then has Advantage."

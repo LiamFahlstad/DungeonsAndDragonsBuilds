@@ -1,4 +1,8 @@
-from Core.Definitions import BARD_HIT_DIE, CharacterClass
+from Core.Definitions import (
+    BARD_HIT_DIE,
+    CharacterClass,
+    Ability,
+)
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -9,6 +13,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 PSYCHIC_BLADES_DICE = FeatureDice(
     "Psychic Damage",
@@ -128,6 +133,46 @@ class MantleOfWhispers(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Steal a dead humanoid's shadow and wear their persona."),
+            Option(
+                "Capture a shadow",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            ("Trigger", "A humanoid dies within 30 feet of you"),
+                            ("Keep it", "Until you use it or finish a Long Rest"),
+                            ("Limit", "Once per Short or Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Use the shadow",
+                (
+                    Facts(
+                        (
+                            ("Action", "Action; the shadow vanishes"),
+                            (
+                                "Disguise",
+                                "You look like the dead person, healthy and alive, for 1 hour or until you end it as a Bonus Action",
+                            ),
+                            (
+                                "Knowledge",
+                                "You know what the humanoid would freely share with a casual acquaintance (no secrets), enough to pass as them",
+                            ),
+                            (
+                                "Seeing through it",
+                                "A creature's Wisdom (Insight) check contested by your Charisma (Deception) check, with +5 to your check",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 6th level, you gain the ability to adopt a humanoid's persona. When a humanoid dies within 30 feet of you, you can magically capture its shadow using your reaction. You retain this shadow until you use it or you finish a long rest.\n"
@@ -159,6 +204,35 @@ class ShadowLore(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Whisper a phrase that taps a creature's deepest fears."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "One creature that can hear you and shares a language with you (otherwise it succeeds automatically)",
+                    ),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)}). Succeeded: no effect.",
+                    ),
+                    (
+                        "Failed",
+                        "Charmed by you for 8 hours, or until you or your allies attack or damage it. It believes you know its most mortifying secret.",
+                    ),
+                    (
+                        "While Charmed",
+                        "It obeys your commands and grants you favors as a close friend would, but won't risk its life or fight for you unless already inclined to",
+                    ),
+                    ("Afterwards", "It has no idea why it feared you"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

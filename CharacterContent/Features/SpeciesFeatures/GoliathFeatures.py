@@ -11,6 +11,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -82,6 +83,77 @@ class GiantAncestry(Feature):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        benefit = {
+            GiantAncestryType.CLOUD_GIANT: (
+                "Cloud's Jaunt",
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Effect",
+                        "Teleport up to 30 feet to an unoccupied space you can see",
+                    ),
+                ),
+            ),
+            GiantAncestryType.FIRE_GIANT: (
+                "Fire's Burn",
+                (
+                    (
+                        "Trigger",
+                        "You hit a target with an attack roll and deal damage to it",
+                    ),
+                    ("Damage", "+1d10 Fire damage"),
+                ),
+            ),
+            GiantAncestryType.FROST_GIANT: (
+                "Frost's Chill",
+                (
+                    (
+                        "Trigger",
+                        "You hit a target with an attack roll and deal damage to it",
+                    ),
+                    (
+                        "Effect",
+                        "+1d6 Cold damage, and its Speed drops by 10 feet until the start of your next turn",
+                    ),
+                ),
+            ),
+            GiantAncestryType.HILL_GIANT: (
+                "Hill's Tumble",
+                (
+                    (
+                        "Trigger",
+                        "You hit a Large or smaller creature with an attack roll and deal damage to it",
+                    ),
+                    ("Effect", "It has the Prone condition"),
+                ),
+            ),
+            GiantAncestryType.STONE_GIANT: (
+                "Stone's Endurance",
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage"),
+                    ("Reduction", "1d12 + Constitution modifier"),
+                ),
+            ),
+            GiantAncestryType.STORM_GIANT: (
+                "Storm's Thunder",
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature within 60 feet of you damages you"),
+                    ("Damage", "1d8 Thunder damage to that creature"),
+                ),
+            ),
+        }[self.giant_ancestry_type]
+        name, rows = benefit
+        return [
+            Paragraph(
+                f"A supernatural boon from your {self.giant_ancestry_type.value} ancestry."
+            ),
+            Option(name, (Facts(rows),)),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = "You are descended from Giants. You chose the following benefit, a supernatural boon from your ancestry.\n"

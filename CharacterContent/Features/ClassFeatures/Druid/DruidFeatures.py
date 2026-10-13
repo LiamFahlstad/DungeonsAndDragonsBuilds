@@ -23,6 +23,7 @@ from Core.Definitions import CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class PrimalOrderType(str, Enum):
@@ -364,6 +365,53 @@ class Archdruid(Feature):
                 current_formula="Used by Nature Magician.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The vitality of nature constantly blooms within you."),
+            Option(
+                "Evergreen Wild Shape",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You roll Initiative and have no uses of Wild Shape left",
+                            ),
+                            ("Effect", "Regain one expended use of Wild Shape"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Nature Magician",
+                (
+                    Facts(
+                        (
+                            ("Action", "No action required"),
+                            (
+                                "Convert",
+                                "Any number of unexpended Wild Shape uses into one spell slot, each use giving 2 spell levels (two uses make a level 4 slot)",
+                            ),
+                            ("Limit", "Once per Long Rest (box below)"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Longevity",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "For every ten years that pass, your body ages only one year",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -12,6 +12,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class Bladesong(Feature):
@@ -32,6 +33,47 @@ class Bladesong(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Invoke an elven magic of blade and song."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You aren't wearing armor or using a Shield"),
+                    (
+                        "Duration",
+                        "1 minute. Ends early if you're Incapacitated, don armor or a Shield, or attack with a weapon using two hands; dismiss it any time (no action required).",
+                    ),
+                    (
+                        "Recharge",
+                        "All uses on a Long Rest; one use when you use Arcane Recovery",
+                    ),
+                )
+            ),
+            Option(
+                "While active",
+                (
+                    Facts(
+                        (
+                            (
+                                "Agility",
+                                "AC + Intelligence modifier (minimum +1), Speed +10 feet, and Advantage on Dexterity (Acrobatics) checks",
+                            ),
+                            (
+                                "Bladework",
+                                "Use Intelligence for the attack and damage rolls of weapons you're proficient with",
+                            ),
+                            (
+                                "Focus",
+                                "Add your Intelligence modifier to Constitution saves to maintain Concentration",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class TransmutationSavant(Feature):
@@ -32,6 +33,43 @@ class TransmutersStone(Feature):
             origin="Transmuter Wizard Level 3",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Create a magic stone after each Long Rest; it lasts until you make another. You can use it as a Spellcasting Focus for your Wizard spells."
+            ),
+            Facts(
+                (
+                    (
+                        "Bearer",
+                        "Gains proficiency in Constitution saving throws, plus the benefit you chose",
+                    ),
+                    (
+                        "Change benefit",
+                        "When you cast a Transmutation spell using a spell slot",
+                    ),
+                )
+            ),
+            Option(
+                "Benefits (choose one)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Darkvision",
+                                "Darkvision 60 feet, or +60 feet to existing Darkvision",
+                            ),
+                            (
+                                "Resistance",
+                                "Resistance to Acid, Cold, Fire, Lightning, Poison or Thunder damage (your choice)",
+                            ),
+                            ("Speed", "Speed +10 feet"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -122,6 +160,39 @@ class ShapeShifter(Feature):
     def __init__(self):
         super().__init__(name="Shape-Shifter", origin="Transmuter Wizard Level 10")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Polymorph",
+                        "Always prepared; cast it once per Long Rest without a spell slot",
+                    ),
+                    (
+                        "Self-polymorph",
+                        "When you target yourself, you can modify it (once per Long Rest) to gain the benefits below",
+                    ),
+                )
+            ),
+            Option(
+                "Modified Polymorph",
+                (
+                    Facts(
+                        (
+                            (
+                                "Game Statistics",
+                                "You also keep your memories, ability to communicate, Intelligence, Wisdom and Charisma scores, proficiencies, class features and feats",
+                            ),
+                            (
+                                "Transmute Spells",
+                                "You can cast Transmutation spells that have no costly or consumed Material components",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have the Polymorph spell prepared and can cast it once without expending a spell slot. You regain the ability to cast it in this way when you finish a Long Rest.\n"
@@ -146,6 +217,47 @@ class MasterTransmuter(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["heal", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Spend the magic stored in your Transmuter's Stone for a powerful effect."
+            ),
+            Facts(
+                (
+                    ("Action", "Magic action, while you carry the stone"),
+                    (
+                        "Cost",
+                        "The stone crumbles to dust, unless you expend a level 7+ spell slot as part of the action",
+                    ),
+                )
+            ),
+            Option(
+                "Benefits (choose one)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Major Transformation",
+                                "Spend 10 minutes handling a nonmagical object up to a 10-foot Cube (or eight connected 5-foot Cubes) to turn it into another nonmagical object of similar size and mass and equal or lesser value",
+                            ),
+                            (
+                                "Panacea",
+                                "Touch a creature: it regains half its Hit Point maximum (round down), is cured of magical contagions and curses (including Attunement to a cursed item), and stops being Poisoned or Petrified",
+                            ),
+                            (
+                                "Restore Life",
+                                "Cast Raise Dead without a spell slot, using the stone for its Material components",
+                            ),
+                            (
+                                "Restore Youth",
+                                "Touch a willing creature: its Exhaustion drops to 0 and it permanently appears 3d10 years younger (not below young adulthood)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

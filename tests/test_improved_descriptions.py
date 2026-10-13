@@ -134,3 +134,33 @@ def test_every_improved_description_keeps_its_source_text():
                 assert feature.get_description(
                     character
                 ), f"{name}: {feature.name} has an improved description but no source text"
+
+
+def test_every_improved_description_is_formulas_not_todays_numbers():
+    """The sheet is printed once and kept as the character levels up, so an
+    improved description must not depend on the character's stats or level.
+    Each granted feature is rendered against two very different reference
+    characters; a choice stored on the feature itself (a Storm Herald's
+    environment, a Genie's kind) may vary between builds, a number may not."""
+    by_level = sorted(
+        (builder().build() for builder in ALL_BUILDS.values()),
+        key=lambda c: c.character_level,
+    )
+    low, high = by_level[0], by_level[-1]
+    assert low.character_level < high.character_level
+
+    checked: set[str] = set()
+    varying: set[str] = set()
+    for character in by_level:
+        for feature in character.iter_features_with_extensions():
+            if feature.get_improved_description(character) is None:
+                continue
+            checked.add(type(feature).__qualname__)
+            renders = {
+                improved_description_to_html(feature.get_improved_description(ref) or [])
+                for ref in (low, high, character)
+            }
+            if len(renders) > 1:
+                varying.add(type(feature).__qualname__)
+    assert not varying, f"Improved descriptions that change with the character: {sorted(varying)}"
+    assert len(checked) >= 10

@@ -1,6 +1,7 @@
 from Core.Definitions import ROGUE_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class FastHands(Feature):
@@ -68,6 +69,23 @@ class UseMagicDevice(Feature):
             origin="Thief Rogue Level 13",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Attunement", "Attune to up to four magic items at once"),
+                    (
+                        "Charges",
+                        "When you use a property that expends charges, roll 1d6: on a 6 it costs no charges",
+                    ),
+                    (
+                        "Scrolls",
+                        "Use any Spell Scroll, with Intelligence as the spellcasting ability. Cantrips and level 1 spells always work; higher levels need an Intelligence (Arcana) check (DC 10 + the spell's level), and the scroll disintegrates on a failure.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

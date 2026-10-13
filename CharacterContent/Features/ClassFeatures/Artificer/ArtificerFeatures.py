@@ -8,6 +8,13 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    Table,
+)
 
 
 class Spellcasting(Feature):
@@ -45,6 +52,33 @@ class TinkersMagic(Feature):
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph(
+                "You know the Mending cantrip, and you can conjure mundane gear."
+            ),
+            Facts(
+                (
+                    ("Action", "Magic action, holding Tinker's Tools"),
+                    ("Range", "An unoccupied space within 5 feet"),
+                    ("Lasts", "Until you finish a Long Rest, then it vanishes"),
+                )
+            ),
+            Option(
+                "Items (choose one)",
+                (
+                    Paragraph(
+                        "Ball Bearings, Basket, Bedroll, Bell, Blanket, Block and Tackle, "
+                        "Bottle (Glass), Bucket, Caltrops, Candle, Crowbar, Flask, Grappling "
+                        "Hook, Hunting Trap, Jug, Lamp, Manacles, Net, Oil, Paper, Parchment, "
+                        "Pole, Pouch, Rope, Sack, Shovel, Spikes (Iron), String, Tinderbox, "
+                        "Torch, Vial. See each item's rules in the Player's Handbook."
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -175,6 +209,60 @@ class MagicItemTinker(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Drain Magic Item's once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "New options for items you made with Replicate Magic Item, each used by touching one within 5 feet of you."
+            ),
+            Option(
+                "Charge Magic Item",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            ("Target", "A replicated item that uses charges"),
+                            ("Cost", "A level 1+ spell slot"),
+                            (
+                                "Effect",
+                                "The item regains charges equal to the slot's level",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Drain Magic Item",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            (
+                                "Effect",
+                                "The item vanishes and becomes a spell slot: level 1 for a Common item, level 2 for an Uncommon or Rare one. The slot vanishes when you finish a Long Rest.",
+                            ),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Transmute Magic Item",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            (
+                                "Effect",
+                                "Transform the item into a different magic item based on a plan you know",
+                            ),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Replicate Magic Item feature gains the following options.\n"
@@ -244,6 +332,32 @@ class MagicItemAdept(Feature):
 class SpellStoringItem(Feature):
     def __init__(self):
         super().__init__(name="Spell-storing Item", origin="Artificer Level 11")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Store a spell in an item for anyone to use."),
+            Facts(
+                (
+                    ("When", "Whenever you finish a Long Rest"),
+                    (
+                        "Item",
+                        "One Simple or Martial weapon, or one item you can use as a Spellcasting Focus, that you touch",
+                    ),
+                    (
+                        "Spell",
+                        "A level 1-3 Artificer spell with a casting time of an action and no consumed Material component (it needn't be prepared)",
+                    ),
+                    (
+                        "Using it",
+                        "Whoever holds it takes a Magic action to produce the spell, using your spellcasting ability modifier (and concentrating if needed). A creature that does so can't do it again until the start of its next turn.",
+                    ),
+                    (
+                        "Lasts",
+                        "2 x Intelligence modifier uses (minimum 2), or until you store another spell",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -11,6 +11,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class SpeechOfTheWoods(Feature):
@@ -47,6 +48,74 @@ class SpiritTotem(Feature):
             usage_tags=["buff", "summon"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Paragraph(
+                "Summon an incorporeal nature spirit whose aura aids you and your allies."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "A point you can see within 60 feet"),
+                    ("Area", "30-foot-radius aura around the spirit"),
+                    ("Duration", "1 minute"),
+                    ("Move it", "Bonus Action: up to 60 feet to a point you can see"),
+                )
+            ),
+            Option(
+                "Bear Spirit",
+                (
+                    Facts(
+                        (
+                            (
+                                "Appears",
+                                "Each creature of your choice in the aura gains 5 + Druid level Temporary Hit Points",
+                            ),
+                            (
+                                "In the aura",
+                                "You and your allies have Advantage on Strength checks and Strength saving throws",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Hawk Spirit",
+                (
+                    Facts(
+                        (
+                            (
+                                "Reaction",
+                                "When a creature makes an attack roll against a target in the aura, give that roll Advantage",
+                            ),
+                            (
+                                "In the aura",
+                                "You and your allies have Advantage on Wisdom (Perception) checks",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Unicorn Spirit",
+                (
+                    Facts(
+                        (
+                            (
+                                "In the aura",
+                                "You and your allies have Advantage on ability checks to detect creatures in the aura",
+                            ),
+                            (
+                                "Healing",
+                                "When you cast a spell with a spell slot that restores Hit Points to any creature, each creature of your choice in the aura also regains Hit Points equal to your Druid level",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

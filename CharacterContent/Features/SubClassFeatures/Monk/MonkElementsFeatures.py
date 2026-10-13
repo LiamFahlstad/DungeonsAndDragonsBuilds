@@ -1,7 +1,11 @@
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import (
+    MONK_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -61,6 +65,32 @@ class ElementalAttunement(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Imbue yourself with elemental energy."),
+            Facts(
+                (
+                    ("When", "At the start of your turn"),
+                    ("Cost", "1 Focus Point"),
+                    ("Duration", "10 minutes, or until you're Incapacitated"),
+                )
+            ),
+            Option(
+                "While attuned",
+                (
+                    Facts(
+                        (
+                            ("Reach", "Your Unarmed Strikes have 10 feet more reach"),
+                            (
+                                "Elemental Strikes",
+                                f"An Unarmed Strike that hits can deal Acid, Cold, Fire, Lightning or Thunder damage instead. If it does, the target can be forced to make a Strength save ({dc_formula(Ability.WISDOM)}); on a failure you move it up to 10 feet toward or away from you.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -150,6 +180,27 @@ class ElementalEpitome(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["buff", "damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While Elemental Attunement is active:"),
+            Facts(
+                (
+                    (
+                        "Damage Resistance",
+                        "Resistance to Acid, Cold, Fire, Lightning or Thunder (your choice; change it at the start of each of your turns)",
+                    ),
+                    (
+                        "Destructive Stride",
+                        "When you use Step of the Wind, Speed +20 feet for the turn, and creatures of your choice take one roll of your Martial Arts die (Acid, Cold, Fire, Lightning or Thunder) when you enter a space within 5 feet of them, once per turn each",
+                    ),
+                    (
+                        "Empowered Strikes",
+                        "Once on each of your turns, an Unarmed Strike that hits deals an extra roll of your Martial Arts die, of the strike's damage type",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

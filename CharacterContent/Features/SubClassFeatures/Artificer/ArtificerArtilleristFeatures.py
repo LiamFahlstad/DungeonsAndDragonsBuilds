@@ -7,6 +7,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ToolsOfTheTrade(Feature):
@@ -80,6 +81,89 @@ class EldritchCannon(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The cannon's damage and Protector dice are in the panel below.
+        return [
+            Paragraph("Create a magical cannon that fires on your command."),
+            Facts(
+                (
+                    (
+                        "Create",
+                        "Magic action with Smith's Tools or Woodcarver's Tools: a Small or Tiny cannon on a horizontal surface within 5 feet",
+                    ),
+                    (
+                        "Lasts",
+                        "1 hour, until it drops to 0 Hit Points, or until you dismiss it (Magic action)",
+                    ),
+                    (
+                        "Limit",
+                        "One cannon at a time; once per Long Rest, or expend a spell slot to create another",
+                    ),
+                    (
+                        "Cannon",
+                        "AC 18. Hit Points 5 x Artificer level (Mending restores 2d6). Immune to Poison and Psychic damage.",
+                    ),
+                    (
+                        "Activate",
+                        "Bonus Action, within 60 feet of it: one option below; it can move up to 15 feet before or after",
+                    ),
+                    (
+                        "Save DC",
+                        f"Your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                    ),
+                )
+            ),
+            Option(
+                "Flamethrower",
+                (
+                    Facts(
+                        (
+                            ("Area", "15-foot Cone"),
+                            (
+                                "Save",
+                                "Dexterity. Failed: cannon damage (see Dice below) as Fire damage; half on a success. Unattended flammable objects start burning.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Force Ballista",
+                (
+                    Facts(
+                        (
+                            ("Range", "120 feet from the cannon"),
+                            (
+                                "Attack",
+                                "Ranged spell attack (Intelligence modifier + Proficiency Bonus)",
+                            ),
+                            (
+                                "Hit",
+                                "Cannon damage (see Dice below) as Force damage; a creature is pushed up to 5 feet away from the cannon",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Protector",
+                (
+                    Facts(
+                        (
+                            (
+                                "Area",
+                                "The cannon and each creature of your choice within 10 feet of it",
+                            ),
+                            (
+                                "Effect",
+                                "Temporary Hit Points: Protector dice (see Dice below) + Intelligence modifier (minimum 1)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

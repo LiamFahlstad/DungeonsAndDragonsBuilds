@@ -73,6 +73,7 @@ from Core.Rules import (
     MAX_PROFICIENCY_BONUS,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Table
 
 
 class GeneralFeat(Feature):
@@ -1128,6 +1129,71 @@ class MythalTouched(_AbilityScoreFeat):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Mythal Ward's uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Ability Score",
+                        "Increase your Intelligence, Wisdom or Charisma by 1, to a maximum of 20",
+                    ),
+                )
+            ),
+            Option(
+                "Mythal Ward",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            (
+                                "Trigger",
+                                "A spell attack hits you, or you fail a saving throw against a spell",
+                            ),
+                            ("Effect", "Roll a d20 on the table below"),
+                            (
+                                "Save DC",
+                                f"8 + {self.ability.value} modifier + Proficiency Bonus",
+                            ),
+                        )
+                    ),
+                    Table(
+                        ("d20", "Effect"),
+                        (
+                            (
+                                "1-2",
+                                "You and each creature within 15 feet of you make a Dexterity save: Force damage equal to 1d8 x the triggering spell's level, or half on a success.",
+                            ),
+                            (
+                                "3-7",
+                                "You and the triggering spell's caster form a telepathic link for 1 hour.",
+                            ),
+                            (
+                                "8-10",
+                                "Gravity reverses in a 15-foot-radius, 60-foot-tall Cylinder centered on you for 1 minute, as Reverse Gravity.",
+                            ),
+                            (
+                                "11-13",
+                                "You and the triggering spell's caster each make a Constitution save. Failed: Stunned until the end of its next turn.",
+                            ),
+                            (
+                                "14-17",
+                                "+2 bonus to AC for 1 minute, which can turn the triggering spell attack into a miss.",
+                            ),
+                            (
+                                "18-19",
+                                "Each flammable, nonmagical object within 10 feet of the triggering spell's caster bursts into flame, takes 1d4 Fire damage and is burning.",
+                            ),
+                            (
+                                "20",
+                                "The triggering spell dissipates with no effect and the action used to cast it is wasted; a spell slot used for it isn't expended.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

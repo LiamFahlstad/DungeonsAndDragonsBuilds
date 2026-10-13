@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class MoteOfPotential(Feature):
@@ -38,6 +39,44 @@ class MoteOfPotential(Feature):
                 "Creature gains temp HP equal to die roll + CHA modifier (min 1)",
             ),
             ("Duration", "Until Bardic Inspiration die is lost"),
+        ]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "A Bardic Inspiration die you give comes with a mote that adds an effect when the die is used."
+            ),
+            Facts(
+                (
+                    ("Trigger", "You give a creature a Bardic Inspiration die"),
+                    (
+                        "Mote",
+                        "A Tiny, intangible and invulnerable mote orbits within 5 feet of the creature until the die is lost",
+                    ),
+                )
+            ),
+            Option(
+                "When the die is used",
+                (
+                    Table(
+                        ("Used on", "Effect"),
+                        (
+                            (
+                                "Ability check",
+                                "The creature can roll the Bardic Inspiration die again and choose which roll to use",
+                            ),
+                            (
+                                "Attack roll",
+                                f"Right after it rolls the die, the target and each creature of your choice you can see within 5 feet of it make a Constitution save against your spell save DC ({dc_formula(Ability.CHARISMA)}) or take Thunder damage equal to the number rolled",
+                            ),
+                            (
+                                "Saving throw",
+                                "Right after it adds the die, the creature gains Temporary Hit Points equal to the number rolled + your Charisma modifier (minimum 1)",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ]
 
     def get_description(self, character: CharacterView) -> str:

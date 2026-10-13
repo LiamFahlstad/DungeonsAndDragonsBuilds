@@ -7,6 +7,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class WizardlyQuill(Feature):
@@ -46,6 +47,29 @@ class AwakenedSpellbook(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The ritual benefit's once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Your spellbook has an arcane sentience. While you hold it:"),
+            Facts(
+                (
+                    ("Focus", "Use it as a spellcasting focus for your wizard spells"),
+                    (
+                        "Damage type",
+                        "When you cast a wizard spell with a spell slot, swap its damage type for one from another spell in your spellbook of the same level as the slot",
+                    ),
+                    (
+                        "Quick ritual",
+                        "Cast a wizard spell as a ritual in its normal casting time instead of +10 minutes; once per Long Rest",
+                    ),
+                    (
+                        "Replace it",
+                        "During a Short Rest, with your Wizardly Quill write sigils in a blank book or an attuned magic spellbook; it becomes your spellbook, with all its spells, and the old book's pages go blank",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Using specially prepared inks and ancient incantations passed down by your wizardly order, you have awakened an arcane sentience within your spellbook.\n"
@@ -77,6 +101,50 @@ class ManifestMind(Feature):
                 gained_at=levels_gained(proficiency_bonus, from_level=6),
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses of casting from the mind are in the panel below.
+        return [
+            Paragraph(
+                "Conjure the mind of your Awakened Spellbook as a Tiny spectral object."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action, while the book is on your person"),
+                    ("Range", "An unoccupied space within 60 feet"),
+                    (
+                        "Senses",
+                        "It sees and hears, has Darkvision 60 feet, sheds Dim Light in a 10-foot radius, and shares what it senses with you telepathically",
+                    ),
+                    (
+                        "Move it",
+                        "Bonus Action: up to 30 feet to a space you or it can see; it passes through creatures, not objects",
+                    ),
+                    (
+                        "Ends",
+                        "It's more than 300 feet from you, Dispel Magic targets it, the book is destroyed, you die, or you dismiss it (Bonus Action)",
+                    ),
+                    (
+                        "Conjure again",
+                        "Once per Long Rest, or expend a spell slot of any level",
+                    ),
+                )
+            ),
+            Option(
+                "Cast from the mind",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "When you cast a wizard spell on your turn, cast it as if from the mind's space, using its senses",
+                            ),
+                            ("Uses", "Proficiency Bonus per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -132,6 +200,43 @@ class OneWithTheWord(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Your soul is entwined with your Awakened Spellbook."),
+            Facts(
+                (
+                    (
+                        "Lore",
+                        "While the book is on your person, Advantage on Intelligence (Arcana) checks",
+                    ),
+                )
+            ),
+            Option(
+                "Sacrifice the mind",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            (
+                                "Trigger",
+                                "You take damage while the spectral mind is manifested",
+                            ),
+                            (
+                                "Effect",
+                                "Dismiss the mind to prevent all of that damage",
+                            ),
+                            (
+                                "Cost",
+                                "Roll 3d6: spells of your choice with a combined level of at least the roll vanish from the book (not enough spells: you drop to 0 Hit Points). You can't cast them until you finish 1d6 Long Rests, then they return.",
+                            ),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
