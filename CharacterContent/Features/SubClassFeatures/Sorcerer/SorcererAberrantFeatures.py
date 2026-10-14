@@ -53,6 +53,26 @@ class TelepathicSpeech(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Link your mind to another creature's."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Target", "One creature you can see within 30 feet"),
+                    ("Range", "Charisma modifier miles (minimum 1 mile) between you"),
+                    (
+                        "Language",
+                        "You each must mentally use a language the other knows",
+                    ),
+                    (
+                        "Duration",
+                        "Sorcerer level minutes; ends early if you connect with a different creature",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can form a telepathic connection between your mind and the mind of another. As a Bonus Action, choose one creature you can see within 30 feet of yourself. You and the chosen creature can communicate telepathically with each other while the two of you are within a number of miles of each other equal to your Charisma modifier (minimum of 1 mile). To understand each other, you each must mentally use a language the other knows.\n"

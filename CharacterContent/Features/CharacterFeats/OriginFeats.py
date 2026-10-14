@@ -35,6 +35,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 from Model.CharacterSources import SpellSource
+from Model.Content.FeatureText import Block, Facts
 
 
 class OriginFeat(Feature):
@@ -366,6 +367,27 @@ class SavageAttacker(OriginFeat):
 class TavernBrawler(OriginFeat):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Enhanced Unarmed Strike",
+                        "When it hits and deals damage, deal 1d4 + Strength modifier Bludgeoning damage instead of the normal damage",
+                    ),
+                    (
+                        "Damage Rerolls",
+                        "Reroll a 1 on an Unarmed Strike damage die; you must use the new roll",
+                    ),
+                    ("Improvised Weaponry", "Proficiency with improvised weapons"),
+                    (
+                        "Push",
+                        "Once per turn, when you hit with an Unarmed Strike as part of the Attack action, deal damage and also push the target 5 feet away",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

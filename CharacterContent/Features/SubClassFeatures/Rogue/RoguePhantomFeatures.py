@@ -169,6 +169,31 @@ class GhostWalk(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Assume a spectral form."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you end it (no action required)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or destroy one of your soul trinkets (no action required) to restore it",
+                    ),
+                    ("Flight", "Fly Speed 10 feet, and you can hover"),
+                    ("Hazy Form", "Attack rolls against you have Disadvantage"),
+                    (
+                        "Incorporeal Movement",
+                        "Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you assume a spectral form, gaining the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest unless you destroy one of your soul trinkets from Tokens of the Departed (no action required) to restore your use of it.\n"

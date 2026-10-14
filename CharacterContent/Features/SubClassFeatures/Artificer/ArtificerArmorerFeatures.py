@@ -58,6 +58,29 @@ class ArcaneArmor(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Turn the armor you wear into Arcane Armor."),
+            Facts(
+                (
+                    ("Action", "Magic action, with Smith's Tools in hand"),
+                    ("Lasts", "Until you don another suit of armor or you die"),
+                    (
+                        "No Strength Requirement",
+                        "The armor's Strength requirement doesn't apply to you",
+                    ),
+                    (
+                        "Quick Don and Doff",
+                        "Don or doff it as a Utilize action. It can't be removed against your will.",
+                    ),
+                    (
+                        "Spellcasting Focus",
+                        "Use it as a focus for your Artificer spells",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Magic action while you have Smith's Tools in hand, you can turn a suit of armor you are wearing into Arcane Armor. The armor continues to be Arcane Armor until you don another suit of armor or you die.\n"

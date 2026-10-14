@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class NaturesWrath(Feature):
@@ -121,6 +122,34 @@ class ElderChampion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Imbue your Aura of Protection with primal power."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute, or until you end it (no action required)"),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 5 spell slot (no action required) to restore it",
+                    ),
+                    (
+                        "Diminish Defiance",
+                        "Enemies in the aura have Disadvantage on saves against your spells and Channel Divinity options",
+                    ),
+                    (
+                        "Regeneration",
+                        "Regain 10 Hit Points at the start of each of your turns",
+                    ),
+                    (
+                        "Swift Spells",
+                        "Cast a spell with a casting time of an action as a Bonus Action instead",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

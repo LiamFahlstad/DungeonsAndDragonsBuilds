@@ -24,6 +24,13 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Presentation.CreatureStatBlocks import format_creature_stat_block
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    StatBlock,
+)
 
 
 class ToolsOfTheTrade(Feature):
@@ -189,6 +196,34 @@ class SteelDefender(Feature):
             usage_tags=["summon"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your tinkering has made you a companion. You choose its look and whether it has two legs or four; neither changes its statistics."
+            ),
+            Facts(
+                (
+                    (
+                        "Loyalty",
+                        "Friendly to you and your allies, and obeys you. It vanishes if you die.",
+                    ),
+                    (
+                        "In combat",
+                        "Acts on your turn. It moves and uses its Reaction on its own, but its only action is Dodge unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, it acts on its own and isn't limited to Dodge.",
+                    ),
+                    (
+                        "Revive",
+                        "Magic action: touch it within 1 hour of its death and expend a spell slot. It returns to life after 1 minute with all its Hit Points.",
+                    ),
+                    (
+                        "Replace",
+                        "When you finish a Long Rest with Smith's Tools in hand, create a new one; the old one vanishes",
+                    ),
+                )
+            ),
+            StatBlock(format_steel_defender(character)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your tinkering has borne you a companion, a Steel Defender (see the stat block). You determine the defender's appearance and whether it has two legs or four; your choices don't affect the defender's game statistics.\n"
@@ -238,6 +273,49 @@ class ArcaneJolt(Feature):
             ),
             dice=ARCANE_JOLT_DICE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and the jolt dice are in the panel below.
+        return [
+            Paragraph("Channel magical energy through a strike."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit with an attack roll using a magic weapon, or your Steel Defender hits",
+                    ),
+                    ("Limit", "Once per turn"),
+                )
+            ),
+            Option(
+                "Destructive Energy",
+                (
+                    Facts(
+                        (
+                            (
+                                "Damage",
+                                "The target takes extra Arcane Jolt dice (see Dice below) Force damage",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Restorative Energy",
+                (
+                    Facts(
+                        (
+                            ("Range", "30 feet of the target"),
+                            ("Target", "One creature or object you can see"),
+                            (
+                                "Heal",
+                                "It regains Arcane Jolt dice (see Dice below) Hit Points",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class ShadowSpells(Feature):
@@ -43,6 +44,22 @@ class PowerOfShadow(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         for sense in self._senses:
             sense.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Eyes of the Dark",
+                        "Darkvision 120 feet and Blindsight 10 feet. You see normally through Darkness created by your spells.",
+                    ),
+                    (
+                        "Strength of the Grave",
+                        "If you would drop to 0 Hit Points and not die outright, make a Charisma save (DC 5 + the damage taken). On a success, your Hit Points become Charisma modifier + Sorcerer level instead. Once per Long Rest after a success.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -113,6 +130,33 @@ class UmbralForm(Feature):
             usage_tags=["buff", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Adopt a shadowy form."),
+            Facts(
+                (
+                    ("Trigger", "You use Innate Sorcery"),
+                    (
+                        "Duration",
+                        "While Innate Sorcery is active, or until you end it (no action required)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or spend 6 Sorcery Points (no action required) to restore it",
+                    ),
+                    (
+                        "Incorporeal Movement",
+                        "Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one",
+                    ),
+                    (
+                        "Shadow Resilience",
+                        "Resistance to all damage except Force and Radiant",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

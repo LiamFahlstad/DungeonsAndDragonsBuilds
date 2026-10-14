@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class OathOfVengeanceSpells(Feature):
@@ -124,6 +125,30 @@ class AvengingAngel(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Become an avenging angel."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you end it (no action required)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 5 spell slot (no action required) to restore it",
+                    ),
+                    ("Flight", "Spectral wings: Fly Speed 60 feet, and you can hover"),
+                    (
+                        "Frightful Aura",
+                        "An enemy that starts its turn in your Aura of Protection makes a Wisdom save or is Frightened for 1 minute or until it takes damage. Attack rolls against it have Advantage.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

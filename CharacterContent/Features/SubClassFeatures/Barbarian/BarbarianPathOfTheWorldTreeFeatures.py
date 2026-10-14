@@ -5,6 +5,7 @@ from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import 
     get_rage_damage_bonus,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 def _vitality_current_values(character: CharacterView) -> str:
@@ -23,6 +24,23 @@ class VitalityOfTheTree(Feature):
             activation=FeatureActivation(range="10 Feet"),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Rage taps the life force of the World Tree."),
+            Facts(
+                (
+                    (
+                        "Vitality Surge",
+                        "When you activate your Rage, gain Temporary Hit Points equal to your Barbarian level",
+                    ),
+                    (
+                        "Life-Giving Force",
+                        "At the start of each of your turns while raging, another creature within 10 feet gains Temporary Hit Points: roll d6s equal to your Rage Damage bonus. They vanish when your Rage ends.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

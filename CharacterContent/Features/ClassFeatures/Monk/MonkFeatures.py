@@ -538,6 +538,27 @@ class HeightenedFocus(Feature):
     def __init__(self):
         super().__init__(name="Heightened Focus", origin="Monk Level 10")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Focus Point options grow stronger."),
+            Facts(
+                (
+                    (
+                        "Flurry of Blows",
+                        "Spend 1 Focus Point to make three Unarmed Strikes instead of two",
+                    ),
+                    (
+                        "Patient Defense",
+                        "When you spend a Focus Point on it, gain Temporary Hit Points equal to two rolls of your Martial Arts die",
+                    ),
+                    (
+                        "Step of the Wind",
+                        "When you spend a Focus Point on it, bring a willing Large or smaller creature within 5 feet along until the end of your turn; its movement doesn't provoke Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits.\n"

@@ -234,6 +234,27 @@ class SuperiorDread(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While you're in your Form of Dread:"),
+            Facts(
+                (
+                    (
+                        "Dread Resistance",
+                        "Resistance to Bludgeoning, Piercing and Slashing damage",
+                    ),
+                    (
+                        "Ghostly Flight",
+                        "Fly Speed equal to your Speed, and you can hover. Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one.",
+                    ),
+                    (
+                        "Profane Casting",
+                        "Cast Warlock Conjuration and Necromancy spells without Verbal, Somatic or Material components, except costly or consumed Materials",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Form of Dread improves, granting you the following benefits while you are using it.\n"

@@ -92,6 +92,34 @@ class WondrousAlteration(Feature):
             usage_tags=["buff", "damage", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You always have Alter Self prepared, and you can cast it once without a spell slot per Long Rest."
+            ),
+            Option(
+                "Extra benefits by Alter Self option",
+                (
+                    Facts(
+                        (
+                            (
+                                "Aquatic Adaptation",
+                                "While underwater, take the Dash action as a Bonus Action",
+                            ),
+                            (
+                                "Change Appearance",
+                                "Advantage on Charisma (Deception) checks",
+                            ),
+                            (
+                                "Natural Weapons",
+                                "The growth deals 2d6 damage of its type, and you have Advantage on Constitution saves to maintain Concentration",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have the Alter Self spell prepared and can cast it once without expending a spell slot. You regain the ability to cast it in this way when you finish a Long Rest.\n"
@@ -142,6 +170,28 @@ class PotentStone(Feature):
             origin="Transmuter Wizard Level 10",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Transmuter's Stone is more versatile."),
+            Facts(
+                (
+                    (
+                        "Benefits",
+                        "Choose up to two when you create the stone. Each option once, except Resistance, which you can take twice with different damage types.",
+                    ),
+                    (
+                        "Change",
+                        "Swap either or both when you cast a Transmutation spell using a spell slot",
+                    ),
+                    (
+                        "Mighty Build",
+                        "New option: the bearer has Advantage on Strength saves and counts as one size larger for carrying capacity",
+                    ),
+                    ("Tremorsense", "New option: the bearer gains Tremorsense 30 feet"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

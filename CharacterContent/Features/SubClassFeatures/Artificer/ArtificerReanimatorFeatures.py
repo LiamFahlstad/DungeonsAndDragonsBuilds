@@ -24,7 +24,14 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+    StatBlock,
+)
 
 
 class ReanimatorSpells(Feature):
@@ -222,6 +229,36 @@ class ReanimatedCompanion(Feature):
             ),
             usage_tags=["summon"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Create a companion through necromancy and science. You choose its look; that doesn't change its statistics."
+            ),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Magic action, using Tinker's Tools or other Artisan's Tools you're proficient with",
+                    ),
+                    ("Range", "An unoccupied space within 5 feet"),
+                    (
+                        "Lasts",
+                        "Until you finish a Long Rest or dismiss it (Magic action). If you die, it drops to 0 Hit Points and dies, triggering its Death Burst.",
+                    ),
+                    (
+                        "Limit",
+                        "Once per Long Rest, or expend a spell slot to create it again. Only one at a time, and not while yours is present.",
+                    ),
+                    ("Loyalty", "Friendly to you and your allies, and obeys you"),
+                    (
+                        "In combat",
+                        "Acts on your turn. It moves and uses its Reaction on its own, but its only action is Dodge unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, it acts on its own and isn't limited to Dodge.",
+                    ),
+                )
+            ),
+            StatBlock(format_reanimated_companion(character)),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

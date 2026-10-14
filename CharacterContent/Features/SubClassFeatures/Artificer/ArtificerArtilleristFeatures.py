@@ -271,6 +271,22 @@ class FortifiedPosition(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Double Firepower",
+                        "Have two cannons at once and create both with the same Magic action (a spell slot for each if you pay with slots). Activate both with one Bonus Action, same option or different ones. No third cannon while you have two.",
+                    ),
+                    (
+                        "Shimmering Field Projection",
+                        "You and your allies have Half Cover while within 10 feet of your Eldritch Cannon",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You're a master at forming well-defended emplacements using your Eldritch Cannon. You gain the following benefits.\n"

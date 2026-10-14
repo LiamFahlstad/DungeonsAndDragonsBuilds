@@ -302,6 +302,26 @@ class DualWielder(_AbilityScoreFeat):
     _NAME = "Dual Wielder"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Ability Score",
+                        "Increase your Strength or Dexterity by 1, to a maximum of 20",
+                    ),
+                    (
+                        "Enhanced Dual Wielding",
+                        "When you take the Attack action and attack with a Light weapon, make one extra attack as a Bonus Action later that turn with a different Melee weapon that isn't Two-Handed. Don't add your ability modifier to its damage unless it's negative.",
+                    ),
+                    (
+                        "Quick Draw",
+                        "Draw or stow two weapons that aren't Two-Handed when you could normally draw or stow one",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Strength or Dexterity 13+\n"
@@ -548,6 +568,30 @@ class ModeratelyArmored(_AbilityScoreFeat):
 class MountedCombatant(_AbilityScoreFeat):
     _NAME = "Mounted Combatant"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY, Ability.WISDOM)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Ability Score",
+                        "Increase your Strength, Dexterity or Wisdom by 1, to a maximum of 20",
+                    ),
+                    (
+                        "Mounted Strike",
+                        "While mounted, Advantage on attack rolls against an unmounted creature within 5 feet of your mount that is at least one size smaller than the mount",
+                    ),
+                    (
+                        "Leap Aside",
+                        "While you ride it and neither of you is Incapacitated, your mount takes no damage on a successful Dexterity save against a half-damage effect, and half on a failed one",
+                    ),
+                    (
+                        "Veer",
+                        "While mounted and not Incapacitated, make an attack that hits your mount hit you instead",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -950,6 +994,30 @@ class Telepathic(_AbilityScoreFeat):
 class WarCaster(_AbilityScoreFeat):
     _NAME = "War Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Ability Score",
+                        "Increase your Intelligence, Wisdom or Charisma by 1, to a maximum of 20",
+                    ),
+                    (
+                        "Concentration",
+                        "Advantage on Constitution saves to maintain Concentration",
+                    ),
+                    (
+                        "Reactive Spell",
+                        "When a creature provokes an Opportunity Attack by leaving your reach, take a Reaction to cast a spell at it instead. The spell must have a casting time of an action and target only that creature.",
+                    ),
+                    (
+                        "Somatic Components",
+                        "Perform them even with weapons or a Shield in one or both hands",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

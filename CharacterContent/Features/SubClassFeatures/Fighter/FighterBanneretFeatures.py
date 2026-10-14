@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class KnightlyEnvoy(Feature):
@@ -12,6 +13,26 @@ class KnightlyEnvoy(Feature):
             origin="Banneret Fighter Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Comprehension",
+                        "Cast Comprehend Languages, but only as a Ritual; Charisma is your spellcasting ability for it",
+                    ),
+                    (
+                        "Polyglot",
+                        "Learn one language. When you finish a Long Rest, you can swap it for a language you've heard, seen signed or read in the past 24 hours.",
+                    ),
+                    (
+                        "Well Spoken",
+                        "Proficiency in Insight, Intimidation, Persuasion or Performance (your choice)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class OathOfDevotionSpells(Feature):
@@ -42,6 +43,34 @@ class SacredWeapon(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Imbue a weapon with positive energy."),
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action"),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Target", "One Melee weapon you're holding"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you use it again, end it (no action required) or stop carrying the weapon",
+                    ),
+                    (
+                        "Attack",
+                        "Add your Charisma modifier (minimum +1) to attack rolls with it",
+                    ),
+                    (
+                        "Damage",
+                        "Its normal damage type or Radiant, your choice on each hit",
+                    ),
+                    (
+                        "Light",
+                        "Bright Light in a 20-foot radius and Dim Light 20 feet beyond",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -114,6 +143,37 @@ class HolyNimbus(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Imbue your Aura of Protection with holy power."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you end it (no action required)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 5 spell slot (no action required) to restore it",
+                    ),
+                    (
+                        "Holy Ward",
+                        "Advantage on saving throws a Fiend or an Undead forces you to make",
+                    ),
+                    (
+                        "Radiant Damage",
+                        "An enemy that starts its turn in the aura takes Charisma modifier + Proficiency Bonus Radiant damage",
+                    ),
+                    (
+                        "Sunlight",
+                        "The aura is filled with Bright Light that is sunlight",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -188,7 +188,7 @@ class ElementalRebuke(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -198,6 +198,28 @@ class ElementalRebuke(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Turn an attack's force back on the attacker."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You're hit by an attack roll"),
+                    ("Effect", "Halve the attack's damage to you (round down)"),
+                    (
+                        "Save",
+                        f"The attacker makes a Dexterity save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "2d10 + Charisma modifier damage: Acid, Cold, Fire, Lightning or Thunder (your choice)",
+                    ),
+                    ("Succeeded", "Half damage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

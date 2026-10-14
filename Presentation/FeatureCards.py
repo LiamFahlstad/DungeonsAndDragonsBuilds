@@ -6,7 +6,7 @@ import re
 from typing import Literal, Sequence, TextIO
 
 from Model.Content.Feature import ActionType, Feature, FeatureUses
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, StatBlock, Table
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
@@ -569,6 +569,8 @@ def _block_html(block: Block) -> str:
         return f"<table class='feature-box'>{_box_rows(block)}</table>\n"
     if isinstance(block, Table):
         return _table_html(block)
+    if isinstance(block, StatBlock):
+        return block.html + "\n"
     if isinstance(block, Option):
         header = (
             "<tr><th class='feature-box-header' colspan='2'>"
@@ -592,6 +594,8 @@ def _box_rows(block: Block) -> str:
         return f"<tr><td colspan='2'>{_paragraphs_html(block)}</td></tr>"
     if isinstance(block, Table):
         return f"<tr><td colspan='2'>{_table_html(block)}</td></tr>"
+    if isinstance(block, StatBlock):
+        return f"<tr><td colspan='2'>{block.html}</td></tr>"
     raise TypeError(f"Can't nest {type(block).__name__} inside an Option")
 
 

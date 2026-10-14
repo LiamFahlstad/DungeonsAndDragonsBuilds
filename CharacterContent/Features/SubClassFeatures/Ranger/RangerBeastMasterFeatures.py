@@ -7,6 +7,12 @@ from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
 )
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    StatBlock,
+)
 
 
 class PrimalCompanion(Feature):
@@ -21,6 +27,38 @@ class PrimalCompanion(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["summon"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Summon a primal beast: a Beast of the Land, Sea or Sky (all three stat blocks below). Pick a fitting animal; it bears primal markings."
+            ),
+            Facts(
+                (
+                    (
+                        "In combat",
+                        "Acts on your turn. It moves and uses its Reaction on its own, but its only action is Dodge unless you take a Bonus Action to command it to take an action from its stat block or another action. If you have the Incapacitated condition, it acts on its own and isn't limited to Dodge.",
+                    ),
+                    (
+                        "Beast's Strike",
+                        "When you take the Attack action, give up one of your attacks to command it to take the Beast's Strike action",
+                    ),
+                    (
+                        "Revive",
+                        "Magic action: touch it within 1 hour of its death and expend a spell slot. It returns to life after 1 minute with all its Hit Points.",
+                    ),
+                    (
+                        "Replace",
+                        "When you finish a Long Rest, summon a different beast (choose its stat block and look) in an unoccupied space within 5 feet; the old one vanishes",
+                    ),
+                )
+            ),
+            StatBlock(
+                PrimalCompanions.format_all_primal_companions(
+                    character, self.companion_type, self.damage_type
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

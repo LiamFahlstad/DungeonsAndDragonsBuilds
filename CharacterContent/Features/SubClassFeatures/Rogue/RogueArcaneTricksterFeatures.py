@@ -6,13 +6,49 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    dc_formula,
+    Option,
+)
 from Core.Definitions import Ability
+from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
+    spellcasting_table,
+)
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Arcane Trickster Rogue Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You cast Wizard spells, with Intelligence as your spellcasting ability."
+            ),
+            Facts(
+                (
+                    ("Save DC", dc_formula(Ability.INTELLIGENCE)),
+                    ("Spell attack", "Intelligence modifier + Proficiency Bonus"),
+                    ("Focus", "An Arcane Focus"),
+                    (
+                        "Cantrips",
+                        "Mage Hand and two other Wizard cantrips (Mind Sliver and Minor Illusion recommended); another at Rogue level 10. Whenever you gain a Rogue level, replace one other than Mage Hand.",
+                    ),
+                    (
+                        "Prepared spells",
+                        "As many as the table shows, of levels you have slots for, from the Wizard list. Start with three level 1 spells (Charm Person, Disguise Self and Fog Cloud recommended). Whenever you gain a Rogue level, replace one.",
+                    ),
+                    (
+                        "Spell slots",
+                        "As the table below; regain all when you finish a Long Rest",
+                    ),
+                )
+            ),
+            Option("Arcane Trickster Spellcasting", (spellcasting_table("Rogue"),)),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

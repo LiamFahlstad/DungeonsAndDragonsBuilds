@@ -1,8 +1,21 @@
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import (
+    MONK_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import Feature, FeatureActivation, RegainedOn, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    Table,
+    dc_formula,
+)
+from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
+    spellcasting_table,
+)
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -56,6 +69,39 @@ class MysticArtsSpellcasting(Feature):
         super().__init__(
             name="Spellcasting", origin="Warrior of the Mystic Arts Monk Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You cast Sorcerer spells, with Wisdom as your spellcasting ability."
+            ),
+            Facts(
+                (
+                    ("Save DC", dc_formula(Ability.WISDOM)),
+                    ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
+                    ("Focus", "An Arcane Focus"),
+                    (
+                        "Cantrips",
+                        "Two Sorcerer cantrips (Blade Ward and Thunderclap recommended); a third at Monk level 10. Whenever you gain a Monk level, replace one.",
+                    ),
+                    (
+                        "Prepared spells",
+                        "As many as the table shows, of levels you have slots for, from the Sorcerer list. Start with three level 1 spells (Jump, Magic Missile and Shield recommended). Whenever you gain a Monk level, replace one.",
+                    ),
+                    (
+                        "Spell slots",
+                        "As the table below; regain all when you finish a Long Rest",
+                    ),
+                    (
+                        "Multiclassing",
+                        "With Spellcasting from another class too, add one third of your Monk levels (round down) to find your spell slots",
+                    ),
+                )
+            ),
+            Option(
+                "Warrior of the Mystic Arts Spellcasting", (spellcasting_table("Monk"),)
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

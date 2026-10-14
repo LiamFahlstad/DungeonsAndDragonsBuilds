@@ -9,6 +9,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class DivineFury(Feature):
@@ -148,6 +149,25 @@ class RageOfTheGods(Feature):
             usage_tags=["buff", "heal", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Take the form of a divine warrior when you Rage."),
+            Facts(
+                (
+                    ("Trigger", "You activate your Rage"),
+                    ("Duration", "1 minute, or until you drop to 0 Hit Points"),
+                    ("Limit", "Once per Long Rest"),
+                    ("Flight", "Fly Speed equal to your Speed, and you can hover"),
+                    ("Resistance", "Necrotic, Psychic and Radiant damage"),
+                    (
+                        "Revivification",
+                        "Reaction when a creature within 30 feet would drop to 0 Hit Points: expend a use of Rage to set its Hit Points to your Barbarian level instead",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

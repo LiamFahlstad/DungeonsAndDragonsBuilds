@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class GreatOldOneSpells(Feature):
@@ -34,6 +35,26 @@ class AwakenedMind(Feature):
             ),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Link your mind to another creature's."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Target", "One creature you can see within 30 feet"),
+                    ("Range", "Charisma modifier miles (minimum 1 mile) between you"),
+                    (
+                        "Language",
+                        "You each must mentally use a language the other knows",
+                    ),
+                    (
+                        "Duration",
+                        "Warlock level minutes; ends early if you connect with a different creature",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -15,6 +15,7 @@ from Model.Content.Improvements import (
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class DreadAmbusher(Feature):
@@ -32,6 +33,28 @@ class DreadAmbusher(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         InitiativeBonus(lambda cs: cs.get_wisdom_modifier()).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Dreadful Strike's uses are in the panel below.
+        return [
+            Paragraph("You set fearsome ambushes."),
+            Facts(
+                (
+                    (
+                        "Ambusher's Leap",
+                        "At the start of your first turn of each combat, your Speed increases by 10 feet until the end of that turn",
+                    ),
+                    (
+                        "Dreadful Strike",
+                        "Once per turn, when you hit a creature with a weapon, deal an extra 2d6 Psychic damage. Wisdom modifier (minimum once) times per Long Rest.",
+                    ),
+                    (
+                        "Initiative Bonus",
+                        "Add your Wisdom modifier to Initiative rolls",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -117,7 +140,45 @@ class StalkersFlurry(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Dreadful Strike's Psychic damage becomes 2d8, and when you use it you can add one effect:"
+            ),
+            Option(
+                "Sudden Strike",
+                (
+                    Facts(
+                        (
+                            (
+                                "Attack",
+                                "Another attack with the same weapon against a different creature within 5 feet of the original target and within the weapon's range",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Mass Fear",
+                (
+                    Facts(
+                        (
+                            (
+                                "Area",
+                                "The target and each creature within 10 feet of it",
+                            ),
+                            (
+                                "Save",
+                                f"Wisdom save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                            ),
+                            ("Failed", "Frightened until the start of your next turn"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

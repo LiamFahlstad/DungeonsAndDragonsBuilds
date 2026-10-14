@@ -18,6 +18,9 @@ Guidelines:
   or a successful save).
 - Don't repeat what the card already shows: use boxes and dice tracks have
   their own panel.
+- A companion's or form's stat block goes in a StatBlock, the one block
+  allowed to show today's numbers (next to their formulas, as a stat block
+  does).
 
 The source text stays in Feature.get_description(): it's what the
 improved version is checked against, and RunCharacterCreator.py
@@ -72,7 +75,17 @@ class Option:
     blocks: tuple["Block", ...] = field(default_factory=tuple)
 
 
-Block = Paragraph | Facts | Table | Option
+@dataclass(frozen=True)
+class StatBlock:
+    """A creature's stat block (a companion, a Wild Shape form), already
+    formatted as HTML by the creature formatters. Unlike the other blocks it
+    shows the creature at the character's current level, beside the
+    formulas, as the source text's stat blocks do."""
+
+    html: str
+
+
+Block = Paragraph | Facts | Table | Option | StatBlock
 
 
 def dc_formula(ability: Ability) -> str:

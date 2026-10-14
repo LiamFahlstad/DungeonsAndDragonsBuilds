@@ -125,7 +125,34 @@ class BeguilingDefenses(Feature):
         self._immunity.apply(ledger_writer)
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "Your patron guards your mind and body. You're immune to the Charmed condition."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Right after a creature you can see hits you with an attack roll",
+                    ),
+                    ("Effect", "Halve the damage you take (round down)"),
+                    (
+                        "Save",
+                        f"The attacker makes a Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    ("Failed", "It takes Psychic damage equal to the damage you take"),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a Pact Magic spell slot (no action required) to restore it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

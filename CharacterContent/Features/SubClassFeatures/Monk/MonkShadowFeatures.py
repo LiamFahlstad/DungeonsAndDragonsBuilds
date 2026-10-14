@@ -4,6 +4,7 @@ from Model.Content.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -59,6 +60,23 @@ class ShadowArts(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._darkvision.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Darkness",
+                        "Spend 1 Focus Point to cast Darkness without components. You can see within it, and at the start of each of your turns you can move its area to a space within 60 feet.",
+                    ),
+                    ("Darkvision", "60 feet, or +60 feet if you already have it"),
+                    (
+                        "Shadowy Figments",
+                        "You know Minor Illusion; Wisdom is your spellcasting ability for it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -124,6 +142,33 @@ class CloakOfShadows(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Shroud yourself in shadows."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Magic action, while entirely within Dim Light or Darkness",
+                    ),
+                    ("Cost", "3 Focus Points"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you're Incapacitated or end your turn in Bright Light",
+                    ),
+                    ("Invisibility", "You have the Invisible condition"),
+                    (
+                        "Partially Incorporeal",
+                        "Move through occupied spaces as Difficult Terrain; end your turn in one and you're shunted to the last unoccupied space you were in",
+                    ),
+                    (
+                        "Shadow Flurry",
+                        "Use Flurry of Blows without spending Focus Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

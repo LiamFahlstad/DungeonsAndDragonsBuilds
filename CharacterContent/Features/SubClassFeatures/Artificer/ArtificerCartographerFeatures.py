@@ -129,6 +129,41 @@ class MappingMagic(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Illuminated Cartography's uses are in the panel below.
+        return [
+            Option(
+                "Illuminated Cartography",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "Cast Faerie Fire without a spell slot, outlining creatures as if in ink; Intelligence modifier (minimum once) times per Long Rest",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Portal Jump",
+                (
+                    Facts(
+                        (
+                            (
+                                "Cost",
+                                "Half your Speed (round down) of movement, on your turn; not if your Speed is 0",
+                            ),
+                            (
+                                "Teleport",
+                                "To an unoccupied space you can see within 10 feet, or within 5 feet of a creature within 30 feet that holds one of your Adventurer's Atlas maps",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"

@@ -11,6 +11,7 @@ from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class DreadfulStrikes(Feature):
@@ -110,7 +111,34 @@ class BeguilingTwist(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Feywild magic guards your mind."),
+            Facts(
+                (
+                    (
+                        "Defense",
+                        "Advantage on saves to avoid or end the Charmed or Frightened condition",
+                    ),
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within 120 feet succeeds on a save to avoid or end Charmed or Frightened",
+                    ),
+                    ("Target", "A different creature you can see within 120 feet"),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    (
+                        "Failed",
+                        "Charmed or Frightened (your choice) for 1 minute; it repeats the save at the end of each of its turns, ending the effect on a success",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

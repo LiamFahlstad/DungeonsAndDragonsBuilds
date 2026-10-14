@@ -2,6 +2,7 @@ from Core.Definitions import WARLOCK_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureUses, RegainedOn
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class ReplacingEldritchInvocations(Feature):
@@ -130,6 +131,29 @@ class ContactPatron(Feature):
 class MysticArcanum(Feature):
     def __init__(self):
         super().__init__(name="Mystic Arcanum", origin="Warlock Level 11")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your patron grants you magical secrets: high-level Warlock spells you cast without a slot."
+            ),
+            Facts(
+                (
+                    (
+                        "Arcana",
+                        "One Warlock spell of each level: level 6 now, level 7 at Warlock level 13, level 8 at 15, level 9 at 17",
+                    ),
+                    (
+                        "Casting",
+                        "Cast each arcanum once without expending a spell slot; regain all when you finish a Long Rest",
+                    ),
+                    (
+                        "Swap",
+                        "Whenever you gain a Warlock level, replace one arcanum with another Warlock spell of the same level",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

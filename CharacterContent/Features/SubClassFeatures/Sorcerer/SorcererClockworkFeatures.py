@@ -84,6 +84,27 @@ class BastionOfLaw(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Ward a creature with a shimmering shield of order."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Range", "30 feet"),
+                    ("Target", "You or another creature you can see"),
+                    ("Cost", "1 to 5 Sorcery Points; the ward holds that many d8s"),
+                    (
+                        "Effect",
+                        "When the warded creature takes damage, it can expend and roll any number of the dice to reduce the damage by the total",
+                    ),
+                    (
+                        "Duration",
+                        "Until you finish a Long Rest or use this feature again",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can tap into the grand equation of existence to imbue a creature with a shimmering shield of order. As a Magic action, you can expend 1 to 5 Sorcery Points to create a magical ward around yourself or another creature you can see within 30 feet of yourself. The ward is represented by a number of d8s equal to the number of Sorcery Points spent to create it. When the warded creature takes damage, it can expend a number of those dice, roll them, and reduce the damage taken by the total rolled on those dice.\n"

@@ -1,4 +1,8 @@
-from Core.Definitions import CharacterClass, ROGUE_HIT_DIE
+from Core.Definitions import (
+    CharacterClass,
+    ROGUE_HIT_DIE,
+    Ability,
+)
 import Core.Definitions as Definitions
 from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
@@ -12,7 +16,13 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+)
 
 PSIONIC_ENERGY_DIE = FeatureDice.from_function(
     "Psionic Energy Die",
@@ -189,6 +199,40 @@ class SoulBlades(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("New powers for your Psychic Blades."),
+            Option(
+                "Homing Strikes",
+                (
+                    Facts(
+                        (
+                            ("Trigger", "You miss with a Psychic Blade attack roll"),
+                            (
+                                "Effect",
+                                "Roll a Psionic Energy Die and add it to the roll. The die is expended only if the attack then hits.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Psychic Teleportation",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            ("Cost", "One Psionic Energy Die; roll it"),
+                            (
+                                "Effect",
+                                "Throw a Psychic Blade at an unoccupied space you can see up to 10 x the roll feet away, then teleport there; the blade vanishes",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can now use the following powers with your Psychic Blades.\n"
@@ -247,6 +291,29 @@ class RendMind(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Sweep your Psychic Blades through a creature's mind."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You deal Sneak Attack damage to a creature with your Psychic Blades",
+                    ),
+                    ("Save", f"Wisdom, DC {dc_formula(Ability.DEXTERITY)}"),
+                    (
+                        "Failed",
+                        "Stunned for 1 minute; it repeats the save at the end of each of its turns, ending the effect on a success",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend three Psionic Energy Dice (no action required) to restore it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

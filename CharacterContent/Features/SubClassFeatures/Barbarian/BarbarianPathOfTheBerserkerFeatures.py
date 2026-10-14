@@ -1,5 +1,8 @@
 import Core.Definitions as Definitions
-from Core.Definitions import BARBARIAN_HIT_DIE
+from Core.Definitions import (
+    BARBARIAN_HIT_DIE,
+    Ability,
+)
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
     get_rage_damage_bonus,
 )
@@ -11,6 +14,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class Frenzy(Feature):
@@ -88,6 +92,28 @@ class IntimidatingPresence(Feature):
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Strike terror with your menacing presence."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Area", "30-foot Emanation"),
+                    ("Target", "Each creature of your choice in it"),
+                    ("Save", f"Wisdom, DC {dc_formula(Ability.STRENGTH)}"),
+                    (
+                        "Failed",
+                        "Frightened for 1 minute; it repeats the save at the end of each of its turns, ending the effect on a success",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a use of Rage (no action required) to restore it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

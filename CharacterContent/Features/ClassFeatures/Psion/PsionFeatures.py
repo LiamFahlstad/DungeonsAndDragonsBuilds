@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class PsionicPower(Feature):
@@ -17,6 +18,60 @@ class PsionicPower(Feature):
             activation=FeatureActivation(range="30 Feet"),
             usage_tags=["control", "buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "A wellspring of psionic energy, measured in Psionic Energy Dice (number and size set by the Energy Dice column of the Psion table). They fuel your Psion powers; a power that needs a die can't be used when all are expended."
+            ),
+            Facts(
+                (
+                    ("Regain", "One die on a Short Rest; all on a Long Rest"),
+                    ("Save DC", "Your Psion spell save DC"),
+                )
+            ),
+            Option(
+                "Telekinetic Propel",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            ("Range", "30 feet"),
+                            (
+                                "Target",
+                                "One Large or smaller creature other than you that you can see",
+                            ),
+                            (
+                                "Save",
+                                "Strength. Failed: moved 5 feet straight toward or away from you.",
+                            ),
+                            (
+                                "Empowered",
+                                "Roll a Psionic Energy Die: the distance becomes 5 x the roll. The die is expended only if the target fails.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Telepathic Connection",
+                (
+                    Facts(
+                        (
+                            ("Telepathy", "30 feet"),
+                            (
+                                "Extend",
+                                "Bonus Action: roll a Psionic Energy Die; for 1 hour the range grows by 10 x the roll in feet",
+                            ),
+                            (
+                                "Cost",
+                                "The first use after each Long Rest is free; after that, the die is expended",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

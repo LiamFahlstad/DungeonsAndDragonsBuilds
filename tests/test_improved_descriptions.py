@@ -1,7 +1,8 @@
 """
 Improved descriptions (Model/Content/FeatureText.py): the same rules as a
 feature's source text, laid out for reading at a glance. Shown instead of
-the source on full sheets; the source stays, collapsed, under it.
+the source on full sheets; RunCharacterCreator.py --source-text prints the
+source instead.
 """
 
 import pytest
@@ -11,7 +12,14 @@ from CharacterContent.Features.ClassFeatures.Cleric.ClericFeatures import (
 )
 from Core.Definitions import Ability
 from Model.Content.Feature import Feature
-from Model.Content.FeatureText import Facts, Option, Paragraph, Table, dc_formula
+from Model.Content.FeatureText import (
+    Facts,
+    Option,
+    Paragraph,
+    StatBlock,
+    Table,
+    dc_formula,
+)
 from Presentation.FeatureCards import (
     improved_description_to_html,
     render_feature_description,
@@ -136,6 +144,18 @@ def test_every_improved_description_keeps_its_source_text():
                 ), f"{name}: {feature.name} has an improved description but no source text"
 
 
+def _without_stat_blocks(blocks):
+    """The blocks minus StatBlocks, which show today's numbers by design."""
+    kept = []
+    for block in blocks:
+        if isinstance(block, StatBlock):
+            continue
+        if isinstance(block, Option):
+            block = Option(block.name, tuple(_without_stat_blocks(block.blocks)))
+        kept.append(block)
+    return kept
+
+
 def test_every_improved_description_is_formulas_not_todays_numbers():
     """The sheet is printed once and kept as the character levels up, so an
     improved description must not depend on the character's stats or level.
@@ -157,10 +177,14 @@ def test_every_improved_description_is_formulas_not_todays_numbers():
                 continue
             checked.add(type(feature).__qualname__)
             renders = {
-                improved_description_to_html(feature.get_improved_description(ref) or [])
+                improved_description_to_html(
+                    _without_stat_blocks(feature.get_improved_description(ref) or [])
+                )
                 for ref in (low, high, character)
             }
             if len(renders) > 1:
                 varying.add(type(feature).__qualname__)
-    assert not varying, f"Improved descriptions that change with the character: {sorted(varying)}"
+    assert (
+        not varying
+    ), f"Improved descriptions that change with the character: {sorted(varying)}"
     assert len(checked) >= 10

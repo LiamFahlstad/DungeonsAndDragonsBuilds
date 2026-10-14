@@ -11,10 +11,14 @@ from Model.Content.Feature import (
     FeatureDice,
 )
 from Model.Content.Improvements import DamageResistance as DamageResistanceImprovement
-from Core.Definitions import CreatureSize
+from Core.Definitions import (
+    CreatureSize,
+    Ability,
+)
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -81,6 +85,30 @@ class BreathWeapon(Feature):
             ),
             dice=BREATH_WEAPON_DICE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and damage dice are in the panel below.
+        return [
+            Paragraph("Exhale destructive energy instead of attacking."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Replaces one attack of your Attack action on your turn",
+                    ),
+                    (
+                        "Area",
+                        "15-foot Cone or 30-foot Line 5 feet wide (choose each time)",
+                    ),
+                    ("Save", f"Dexterity, DC {dc_formula(Ability.CONSTITUTION)}"),
+                    (
+                        "Failed",
+                        f"Breath Weapon Damage dice (see Dice below) {self.damage_type.value} damage ({self.color.value} dragon ancestry)",
+                    ),
+                    ("Succeeded", "Half damage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = (

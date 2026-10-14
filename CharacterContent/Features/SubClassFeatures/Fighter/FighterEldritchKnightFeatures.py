@@ -1,4 +1,7 @@
-from Core.Definitions import FIGHTER_HIT_DIE
+from Core.Definitions import (
+    FIGHTER_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -7,12 +10,48 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    Option,
+    dc_formula,
+)
+from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
+    spellcasting_table,
+)
 
 
 class EldritchKnightSpellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Eldritch Knight Fighter Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You cast Wizard spells, with Intelligence as your spellcasting ability."
+            ),
+            Facts(
+                (
+                    ("Save DC", dc_formula(Ability.INTELLIGENCE)),
+                    ("Spell attack", "Intelligence modifier + Proficiency Bonus"),
+                    ("Focus", "An Arcane Focus"),
+                    (
+                        "Cantrips",
+                        "Two Wizard cantrips (Ray of Frost and Shocking Grasp recommended); a third at Fighter level 10. Whenever you gain a Fighter level, replace one.",
+                    ),
+                    (
+                        "Prepared spells",
+                        "As many as the table shows, of levels you have slots for, from the Wizard list. Start with three level 1 spells (Burning Hands, Jump and Shield recommended). Whenever you gain a Fighter level, replace one.",
+                    ),
+                    (
+                        "Spell slots",
+                        "As the table below; regain all when you finish a Long Rest",
+                    ),
+                )
+            ),
+            Option("Eldritch Knight Spellcasting", (spellcasting_table("Fighter"),)),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
