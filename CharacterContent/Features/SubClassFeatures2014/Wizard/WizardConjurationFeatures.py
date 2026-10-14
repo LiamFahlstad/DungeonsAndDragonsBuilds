@@ -37,20 +37,6 @@ class MinorConjuration(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Location", "Your hand or unoccupied space within 10 feet"),
-            ("Object Type", "Nonmagical inanimate object you have seen"),
-            ("Size", "No larger than 3 feet on a side"),
-            ("Weight", "No more than 10 pounds"),
-            ("Appearance", "Visibly magical, dim light 5 feet"),
-            (
-                "Duration",
-                "1 hour, until you use feature again, or until takes/deals damage",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
@@ -73,14 +59,6 @@ class BenignTransportation(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest or you cast a conjuration spell of 1st level or higher."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Option 1", "Teleport up to 30 feet to unoccupied space you can see"),
-            ("Option 2", "Swap with willing Small or Medium creature within range"),
-            ("Recharge", "Long rest or cast conjuration spell of 1st level or higher"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

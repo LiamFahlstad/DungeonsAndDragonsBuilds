@@ -48,14 +48,6 @@ class DetectPortal(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Detect closest planar portal"),
-            ("Action", "Action"),
-            ("Range", "1 mile"),
-            ("Recharge", "Short or long rest"),
-        ]
-
 
 PLANAR_WARRIOR_DICE = FeatureDice(
     "Extra Force Damage",
@@ -92,20 +84,6 @@ class PlanarWarrior(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        ranger_level = character.get_class_level(CharacterClass.RANGER)
-        extra_damage = PLANAR_WARRIOR_DICE.at(character)
-        return [
-            ("What", "Convert next hit to force damage"),
-            ("Action", "Bonus action"),
-            ("Range", "30 feet"),
-            ("Condition", "Next hit on this turn"),
-            (
-                "Effect",
-                "All damage becomes force; extra " + extra_damage + " force damage",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -129,14 +107,6 @@ class EtherealStep(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Cast Etherealness spell"),
-            ("Action", "Bonus action"),
-            ("Effect", "Ethereal Plane; lasts until end of current turn"),
-            ("Recharge", "Short or long rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

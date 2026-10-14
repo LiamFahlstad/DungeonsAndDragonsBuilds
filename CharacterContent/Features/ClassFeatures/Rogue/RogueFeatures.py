@@ -24,9 +24,7 @@ from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(
-            name="Expertise", origin="Rogue Level 1", skippable_in_concise=True
-        )
+        super().__init__(name="Expertise", origin="Rogue Level 1", passive=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Rogue Expertise"
         )
@@ -86,9 +84,6 @@ class SneakAttack(Feature):
             "The extra damage increases as you gain Rogue levels, as shown in the Sneak Attack column of the Rogue Features table."
         )
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "Once per turn, add 1d6 extra damage (same type as weapon) to an attack using a Finesse or Ranged weapon if you have Advantage on the roll. Alternatively, you don't need Advantage if an ally is within 5 feet of the target (ally not Incapacitated, and you don't have Disadvantage). Damage increases with Rogue levels."
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -150,14 +145,6 @@ class SteadyAim(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Effect", "Advantage on next attack roll this turn"),
-            ("Prerequisite", "Haven't moved this turn"),
-            ("After Using", "Speed becomes 0 until end of turn"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
@@ -228,23 +215,6 @@ class CunningStrike(Feature):
         return (
             8 + character.get_dexterity_modifier() + character.get_proficiency_bonus()
         )
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        saving_throw = self.calculate_dc(character)
-        return [
-            (
-                "Poison (Cost: 1d6)",
-                f"Target makes Constitution save (DC {saving_throw}) or gains Poisoned condition for 1 minute. Requires Poisoner's Kit.",
-            ),
-            (
-                "Trip (Cost: 1d6)",
-                f"Target Large or smaller makes Dexterity save (DC {saving_throw}) or gains Prone condition",
-            ),
-            (
-                "Withdraw (Cost: 1d6)",
-                "Move up to half your speed without provoking Opportunity Attacks",
-            ),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -345,31 +315,13 @@ class DeviousStrikes(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Daze (Cost: 2d6)",
-                "Target makes Constitution save or can only move, take an action, or take a Bonus Action on its next turn (not multiple)",
-            ),
-            (
-                "Knock Out (Cost: 6d6)",
-                "Target makes Constitution save or gains Unconscious condition for 1 minute or until taking damage (repeats save at end of turn)",
-            ),
-            (
-                "Obscure (Cost: 3d6)",
-                "Target makes Dexterity save or gains Blinded condition until end of its next turn",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
 
 class SlipperyMind(Feature):
     def __init__(self):
-        super().__init__(
-            name="Slippery Mind", origin="Rogue Level 15", skippable_in_concise=True
-        )
+        super().__init__(name="Slippery Mind", origin="Rogue Level 15", passive=True)
         self._choice = SavingThrowProficiencyChoice(
             [Ability.WISDOM, Ability.CHARISMA],
             list(Ability),
@@ -410,13 +362,6 @@ class StrokeOfLuck(Feature):
             "Once you use this feature, you can't use it again until you finish a Short or Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "You fail a d20 Test"),
-            ("Effect", "Turn the roll into a 20"),
-            ("Recharge", "Short or Long Rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

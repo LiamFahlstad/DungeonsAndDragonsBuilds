@@ -97,22 +97,6 @@ class HandOfHealing(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wisdom_modifier = character.get_wisdom_modifier()
-        return [
-            ("Action", "Magic action"),
-            ("Cost", "1 Focus Point"),
-            ("Range", "Touch"),
-            (
-                "Effect",
-                f"Restore 1 Martial Arts die + {wisdom_modifier:+d} (Wisdom) Hit Points",
-            ),
-            (
-                "Special",
-                "Can replace one Unarmed Strike in Flurry of Blows without spending Focus Point",
-            ),
-        ]
-
 
 class ImplementsOfMercy(Feature):
     def __init__(self):
@@ -193,14 +177,3 @@ class HandOfUltimateMercy(Feature):
             "Once you use this feature, you can't use it again until you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wisdom_modifier = character.get_wisdom_modifier()
-        return [
-            ("Action", "Magic action"),
-            ("Cost", "5 Focus Points"),
-            ("Target", "Corpse of creature dead within 24 hours"),
-            ("Hit Points Restored", f"4d10 + {wisdom_modifier:+d} (Wisdom)"),
-            ("Conditions Removed", "Blinded, Deafened, Paralyzed, Poisoned, Stunned"),
-            ("Recharge", "Once per Long Rest"),
-        ]

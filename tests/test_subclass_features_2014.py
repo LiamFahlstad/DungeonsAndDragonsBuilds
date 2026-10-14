@@ -281,7 +281,7 @@ class TestLimitedUseResourcesNotWired:
     """A feature with a fixed number of uses per rest should set
     uses=FeatureUses(...) in __init__ (as e.g. RunicShield right next to
     GiantsMight does) so number_of_uses()/regained_on() reflect it generically,
-    not just describe it in prose/get_table_description() text."""
+    not just describe it in prose."""
 
     def test_giants_might_uses_equal_proficiency_bonus(self, make_character):
         character = make_character(levels={CharacterClass.FIGHTER: 3})  # PB +2
@@ -376,8 +376,7 @@ class TestClassLevelVsCharacterLevelScaling:
             levels={CharacterClass.PALADIN: 7, CharacterClass.ROGUE: 13}
         )
         feature = PaladinConquestFeatures.AuraOfConquest()
-        table = dict(feature.get_table_description(character))
-        assert table["Damage"] == "Psychic damage = half paladin level (3)"
+        assert "Right now: 3 psychic damage" in feature.get_description(character)
 
     def test_protective_spirit_scales_with_paladin_level_not_total_level(
         self, make_character
@@ -386,8 +385,7 @@ class TestClassLevelVsCharacterLevelScaling:
             levels={CharacterClass.PALADIN: 15, CharacterClass.ROGUE: 5}
         )
         feature = PaladinRedemptionFeatures.ProtectiveSpirit()
-        table = dict(feature.get_table_description(character))
-        assert table["Effect"] == "Regain 1d6 + 7 HP"
+        assert "Right now: 1d6 + 7 hit points." in feature.get_description(character)
 
 
 # ── Extensions: a feature learned later augments an earlier one ─────────────

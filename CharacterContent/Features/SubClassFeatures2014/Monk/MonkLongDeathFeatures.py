@@ -40,14 +40,6 @@ class HourOfReaping(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "30 feet (creatures that can see you)"),
-            ("Save", "Wisdom"),
-            ("Effect", "Frightened until end of your next turn"),
-        ]
-
 
 class MasteryOfDeath(Feature):
     def __init__(self):
@@ -82,15 +74,3 @@ class TouchOfTheLongDeath(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "Touch (5 feet)"),
-            ("Cost", "1-10 ki points"),
-            ("Save", "Constitution"),
-            (
-                "Damage",
-                "2d10 necrotic per ki point spent (failed save); half on success",
-            ),
-        ]

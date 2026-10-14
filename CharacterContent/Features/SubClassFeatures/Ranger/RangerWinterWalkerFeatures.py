@@ -1,4 +1,4 @@
-from Core.Definitions import CharacterClass, DamageType, RANGER_HIT_DIE
+from Core.Definitions import DamageType, RANGER_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -91,19 +91,6 @@ class FortifyingSoul(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_wisdom_modifier()
-        ranger_level = character.get_class_level(CharacterClass.RANGER)
-        targets = max(1, wis_mod)
-        healing = f"1d10 + {ranger_level}"
-        return [
-            ("Action", "Magic action"),
-            ("Targets", f"Up to {targets} creatures"),
-            ("Healing", healing),
-            ("Secondary Effect", "Advantage on Frightened saves for 1 hour"),
-            ("Recharge", "Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -145,16 +132,6 @@ class ChillingRetribution(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Trigger", "Creature hits you with attack roll"),
-            ("Action", "Reaction"),
-            ("Save", "Wisdom save vs. spell save DC"),
-            ("Effect on Failure", "Stunned until end of your next turn (Speed 0)"),
-            ("Uses", f"{uses} per Long Rest"),
-        ]
 
 
 class FrozenHaunt(Feature):

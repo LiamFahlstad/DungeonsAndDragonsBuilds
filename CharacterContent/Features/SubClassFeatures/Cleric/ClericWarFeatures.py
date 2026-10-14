@@ -29,15 +29,6 @@ class GuidedStrike(Feature):
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Add +10 to a missed attack roll"),
-            ("Trigger", "Reaction (for others) or no action (for self)"),
-            ("Cost", "Channel Divinity"),
-            ("Range", "30 feet for other creatures"),
-            ("Effect", "Attack may hit after bonus applied"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -69,16 +60,6 @@ class WarPriest(Feature):
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Make one extra attack"),
-            ("Trigger", "Bonus Action"),
-            ("Attack Type", "Weapon or Unarmed Strike"),
-            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
-            ("Recharge", "Short or Long Rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -102,22 +83,13 @@ class WarGodsBlessing(Feature):
         description = "You can expend a use of your Channel Divinity to cast Shield of Faith or Spiritual Weapon rather than expending a spell slot. When you cast either spell in this way, the spell doesn't require Concentration. Instead the spell lasts for 1 minute, but it ends early if you cast that spell again, have the Incapacitated condition, or die."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Cast Shield of Faith or Spiritual Weapon"),
-            ("Cost", "Channel Divinity (instead of spell slot)"),
-            ("Concentration", "Not required"),
-            ("Duration", "1 minute"),
-            ("Ending", "Ends early if cast again, Incapacitated, or die"),
-        ]
-
 
 class AvatarOfBattle(Feature):
     def __init__(self):
         super().__init__(
             name="Avatar of Battle",
             origin="War Domain Cleric Level 17",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistances = [

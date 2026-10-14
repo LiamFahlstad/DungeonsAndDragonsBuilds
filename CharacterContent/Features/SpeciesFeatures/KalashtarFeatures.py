@@ -13,7 +13,7 @@ class DualMind(Feature):
         super().__init__(
             name="Dual Mind",
             origin="Kalashtar Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._advantage = SavingThrowAdvantage([Ability.WISDOM, Ability.CHARISMA])
@@ -30,7 +30,7 @@ class MentalDiscipline(Feature):
         super().__init__(
             name="Mental Discipline",
             origin="Kalashtar Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)

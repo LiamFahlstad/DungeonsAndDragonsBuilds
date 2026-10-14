@@ -58,23 +58,6 @@ class DazzlingFootwork(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Dance Virtuoso",
-                "Advantage on Charisma (Performance) checks involving dancing",
-            ),
-            ("Unarmored Defense", "AC = 10 + Dex modifier + Cha modifier"),
-            (
-                "Agile Strikes",
-                "When expending Bardic Inspiration, make one Unarmed Strike as part of that action",
-            ),
-            (
-                "Bardic Damage",
-                "Unarmed Strikes use Dexterity; deal Bludgeoning damage = Bardic Inspiration die roll + Dex modifier (no cost)",
-            ),
-        ]
-
 
 class InspiringMovement(Feature):
     def __init__(self):
@@ -94,18 +77,6 @@ class InspiringMovement(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Enemy you can see ends its turn within 5 feet of you"),
-            ("Action", "Reaction"),
-            ("Cost", "1 use of Bardic Inspiration"),
-            (
-                "Effect",
-                "You move up to half your Speed; one ally within 30 feet moves up to half its Speed using its Reaction",
-            ),
-            ("Movement", "Does not provoke Opportunity Attacks"),
-        ]
-
 
 class TandemFootwork(Feature):
     def __init__(self):
@@ -119,17 +90,6 @@ class TandemFootwork(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Roll Initiative"),
-            ("Condition", "You cannot have the Incapacitated condition"),
-            ("Cost", "1 use of Bardic Inspiration"),
-            (
-                "Effect",
-                "Roll Bardic Inspiration die; you and each ally within 30 feet who can see/hear you gain that bonus to Initiative",
-            ),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
@@ -150,11 +110,3 @@ class LeadingEvasion(Feature):
             "You can't use this feature if you have the Incapacitated condition."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Dexterity save to take only half damage"),
-            ("Benefit", "Success: take no damage; Failure: take only half damage"),
-            ("Share", "Creatures within 5 feet can use this benefit for the same save"),
-            ("Condition", "Cannot use if you have the Incapacitated condition"),
-        ]

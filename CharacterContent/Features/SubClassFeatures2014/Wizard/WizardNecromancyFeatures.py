@@ -92,16 +92,5 @@ class CommandUndead(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Target", "One undead within 60 feet that you can see"),
-            ("Save", "Charisma saving throw vs spell save DC"),
-            ("On Success", "Can't use on this undead again"),
-            ("On Fail", "Becomes friendly, obeys your commands until used again"),
-            ("Int 8+", "Has advantage on save"),
-            ("Int 12+", "Can repeat save at end of every hour"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

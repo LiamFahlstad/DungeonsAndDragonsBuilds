@@ -74,16 +74,6 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "30 feet"),
-            ("Target", "Beast or plant creature that can see you"),
-            ("Save", "Wisdom saving throw"),
-            ("Duration", "1 minute or until it takes damage"),
-            ("Effect", "Charmed; friendly to you and creatures you designate"),
-        ]
-
 
 class DampenElements(Feature):
     def __init__(self):

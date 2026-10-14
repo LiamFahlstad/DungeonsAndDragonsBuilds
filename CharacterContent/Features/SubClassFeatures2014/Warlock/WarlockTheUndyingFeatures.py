@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
@@ -69,17 +68,6 @@ class DefyDeath(Feature):
         description += f"\nRight now: 1d8 + {character.get_constitution_modifier()} hit points (minimum of 1)."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        con_mod = character.get_constitution_modifier()
-        return [
-            (
-                "Trigger",
-                "Succeed on death saving throw OR stabilize creature with Spare the Dying",
-            ),
-            ("Effect", f"Regain 1d8 + Constitution modifier ({con_mod}) HP (min 1)"),
-            ("Recharge", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -120,15 +108,6 @@ class IndestructibleLife(Feature):
         level = character.get_class_level(CharacterClass.WARLOCK)
         description += f"\nRight now: 1d8 + {level} hit points."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        return [
-            ("Action", "Bonus action on your turn"),
-            ("Effect", f"Regain 1d8 + Warlock level ({warlock_level}) HP"),
-            ("Bonus", "Reattach severed body parts"),
-            ("Recharge", "Short or long rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

@@ -31,9 +31,7 @@ class Skirmisher(Feature):
 
 class Survivalist(Feature):
     def __init__(self):
-        super().__init__(
-            name="Survivalist", origin="Scout Rogue Level 3", skippable_in_concise=True
-        )
+        super().__init__(name="Survivalist", origin="Scout Rogue Level 3", passive=True)
         self._proficiency = SkillProficiency([Skill.NATURE, Skill.SURVIVAL])
         self._expertise = SkillExpertise([Skill.NATURE, Skill.SURVIVAL])
 

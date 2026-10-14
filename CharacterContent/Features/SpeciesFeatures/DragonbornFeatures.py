@@ -44,7 +44,7 @@ class DamageResistance(Feature):
         super().__init__(
             name="Damage Resistance",
             origin="Dragonborn Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistance = DamageResistanceImprovement(self.damage_type)
@@ -131,22 +131,6 @@ class BreathWeapon(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-
-        damage = BREATH_WEAPON_DICE.at(character)
-
-        save_dc = self.calculate_dc(character)
-
-        return [
-            ("Trigger", "Replace one attack when taking Attack action"),
-            ("Shape", "15-foot Cone or 30-foot Line (5 feet wide)"),
-            ("Save", f"Dexterity DC {save_dc} (8 + CON mod + proficiency)"),
-            ("Damage", f"{damage} {self.damage_type.value}"),
-            ("Effect", "Full damage on failed save, half on success"),
-            ("Uses", f"{proficiency_bonus} per Long Rest"),
-        ]
 
 
 class DraconicFlight(Feature):

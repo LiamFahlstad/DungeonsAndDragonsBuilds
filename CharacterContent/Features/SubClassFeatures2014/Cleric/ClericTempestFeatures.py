@@ -66,19 +66,6 @@ class WrathOfTheStorm(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
-        return [
-            ("Trigger", "When creature within 5 feet hits you with attack"),
-            ("Action", "Reaction"),
-            ("Save", "Dexterity saving throw"),
-            ("Damage (Failed)", "2d8 lightning or thunder (your choice)"),
-            ("Damage (Successful)", "Half damage"),
-            ("Uses", f"Wisdom modifier (minimum 1) – {uses}"),
-            ("Recharge", "Long rest"),
-        ]
-
 
 class TempestDomainSpells(Feature):
     def __init__(self):

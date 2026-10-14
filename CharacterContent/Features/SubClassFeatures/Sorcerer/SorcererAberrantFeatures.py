@@ -1,9 +1,4 @@
-from Core.Definitions import (
-    CharacterClass,
-    DamageType,
-    SORCERER_HIT_DIE,
-    Ability,
-)
+from Core.Definitions import DamageType, SORCERER_HIT_DIE, Ability
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -83,19 +78,6 @@ class TelepathicSpeech(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        charisma_modifier = character.get_charisma_modifier()
-        sorcerer_level = character.get_class_level(CharacterClass.SORCERER)
-        distance = max(1, charisma_modifier)
-        return [
-            ("Trigger", "Bonus Action"),
-            ("Range", "30 feet (to establish)"),
-            ("Distance", f"{distance} mile(s) apart"),
-            ("Effect", "Telepathic communication (must share a language)"),
-            ("Duration", f"{sorcerer_level} minutes"),
-            ("Ending", "Establish connection with different creature"),
-        ]
-
 
 class PsionicSorcery(Feature):
     def __init__(self):
@@ -111,7 +93,7 @@ class PsychicDefenses(Feature):
         super().__init__(
             name="Psychic Defenses",
             origin="Aberrant Sorcerer Level 6",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistance = DamageResistance(DamageType.PSYCHIC)
@@ -188,20 +170,6 @@ class RevelationInFlesh(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Cost", "1+ Sorcery Points (1 per benefit)"),
-            ("Duration", "10 minutes"),
-            ("Aquatic Adaptation", "Swim Speed = 2x Speed, breathe underwater"),
-            ("Glistening Flight", "Fly Speed = Speed, can hover"),
-            ("See the Invisible", "See Invisible creatures within 60 feet"),
-            (
-                "Wormlike Movement",
-                "Move through 1-inch spaces, escape restraints/grapple",
-            ),
-        ]
-
 
 class WarpingImplosion(Feature):
     def __init__(self):
@@ -253,14 +221,3 @@ class WarpingImplosion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Magic action"),
-            ("Range", "120 feet (teleport destination)"),
-            ("Effect Area", "30-foot radius around former position"),
-            ("Save", "Strength save (spell save DC)"),
-            ("Failed Save", "3d10 Force damage + pulled to former space"),
-            ("Successful Save", "Half damage only"),
-            ("Recharge", "Long Rest or 5 Sorcery Points"),
-        ]

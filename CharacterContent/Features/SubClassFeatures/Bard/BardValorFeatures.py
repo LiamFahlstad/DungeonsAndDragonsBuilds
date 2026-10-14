@@ -22,18 +22,6 @@ class CombatInspiration(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Defense",
-                "When hit by attack, use Reaction to roll Bardic Inspiration die and add to AC (may cause attack to miss)",
-            ),
-            (
-                "Offense",
-                "After hitting with attack, roll Bardic Inspiration die and add to the attack's damage",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 

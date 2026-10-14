@@ -52,17 +52,6 @@ class ControlUndead(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Control undead creature"),
-            ("Action", "Action"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Range", "30 feet"),
-            ("Save", "Wisdom"),
-            ("Effect", "Obey commands for 24 hours"),
-            ("Immunity", "CR ≥ Paladin level"),
-        ]
-
 
 class DreadfulAspect(Feature):
     def __init__(self):
@@ -84,17 +73,6 @@ class DreadfulAspect(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Channel magical menace"),
-            ("Action", "Action"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Range", "30 feet (can see you)"),
-            ("Save", "Wisdom"),
-            ("Effect", "Frightened for 1 minute"),
-            ("Recheck", "Can retry save if > 30 feet away at end of turn"),
-        ]
 
 
 class AuraOfHate(Feature):

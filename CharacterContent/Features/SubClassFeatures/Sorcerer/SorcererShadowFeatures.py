@@ -92,18 +92,6 @@ class BeastsOfIllOmen(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Cost", "3 Sorcery Points"),
-            ("Spell", "Summon Beast (no slot, no prepare, no Material)"),
-            (
-                "Effect",
-                "Enemies within 5 feet of beast have Disadvantage on spell saves",
-            ),
-            ("Concentration", "Removable; 1 minute duration; ends early if cast again"),
-        ]
-
 
 class ShadowWalk(Feature):
     def __init__(self):
@@ -168,15 +156,3 @@ class UmbralForm(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Use Innate Sorcery"),
-            ("Duration", "While Innate Sorcery active or until dismissed (no action)"),
-            (
-                "Incorporeal Movement",
-                "Move through creatures/objects (Difficult Terrain); 1d10 Force damage if turn ends inside",
-            ),
-            ("Shadow Resilience", "Resistance to all damage except Force and Radiant"),
-            ("Recharge", "Long Rest or 6 Sorcery Points"),
-        ]

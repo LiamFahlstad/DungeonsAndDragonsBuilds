@@ -54,16 +54,11 @@ class RebornKnowledge(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "Gain proficiency in one skill of your choice. When you fail an ability check, add 1d6 to the roll to potentially turn it into a success (uses per Long Rest equal to your Proficiency Bonus)."
-
 
 class RebornKnowledgeSkill(Feature):
     def __init__(self, skill: Skill):
         self.skill = skill
-        super().__init__(
-            name="Reborn Knowledge", origin="Reborn Trait", skippable_in_concise=True
-        )
+        super().__init__(name="Reborn Knowledge", origin="Reborn Trait", passive=True)
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="RebornKnowledgeSkill"
         )

@@ -87,15 +87,6 @@ class PathToTheGrave(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Curse one creature within 30 feet"),
-            ("Trigger", "Bonus Action, Holy Symbol, Channel Divinity"),
-            ("Duration", "Until start of your next turn"),
-            ("Effect", "Disadvantage on attack rolls and saving throws"),
-            ("Bonus", "Extra Necrotic or Radiant damage (Cleric level) when hit"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -122,16 +113,6 @@ class SentinelAtDeathsDoor(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Halve incoming attack damage"),
-            ("Trigger", "Reaction when you or Bloodied creature within 60 feet is hit"),
-            ("Effect", "Halve damage (round down); cancel Critical Hit effects"),
-            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
-            ("Recharge", "Long Rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

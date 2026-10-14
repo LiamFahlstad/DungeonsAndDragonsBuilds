@@ -190,7 +190,7 @@ class TestHeaderTags:
     def test_passive_tag_is_kept_without_the_flag(self):
         name = next(n for n in ALL_BUILDS if "Rogue" in n)
         character = ALL_BUILDS[name]().build()
-        feature = next(f for f in character.features if f.skippable_in_concise)
+        feature = next(f for f in character.features if f.passive)
         out = io.StringIO()
         write_feature_card(feature, character, out)
         assert "feature-passive-tag" in out.getvalue()

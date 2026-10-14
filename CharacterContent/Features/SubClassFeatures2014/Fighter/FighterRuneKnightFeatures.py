@@ -25,7 +25,7 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies",
             origin="Rune Knight Fighter Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._language = GrantLanguage(Language.GIANT)
 
@@ -213,20 +213,6 @@ class GiantsMight(Feature):
             return "1d8"
         return "1d6"
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-
-        return [
-            ("Action", "Bonus action"),
-            ("Duration", "1 minute"),
-            (
-                "Benefits",
-                f"Become Large (if smaller); advantage on Strength checks/saves; +{self._damage_die(character)} damage once per turn",
-            ),
-            ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
-            ("Regain", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -255,17 +241,6 @@ class RunicShield(Feature):
             "You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = self.number_of_uses(character)
-
-        return [
-            ("Trigger", "Ally within 60 feet is hit by an attack"),
-            ("Action", "Reaction"),
-            ("Effect", "Force attacker to reroll d20"),
-            ("Uses", f"{proficiency_bonus} (proficiency bonus)"),
-            ("Regain", "Long rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

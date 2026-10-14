@@ -61,17 +61,6 @@ class BlessingOfTheForge(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "At end of long rest"),
-            ("Action", "Touch"),
-            ("Target", "One nonmagical armor or weapon"),
-            ("Bonus", "+1 to AC (armor) or +1 to attack and damage (weapon)"),
-            ("Duration", "Until end of next long rest or until you die"),
-            ("Uses", "1"),
-            ("Recharge", "Long rest"),
-        ]
-
 
 class ForgeDomainSpells(Feature):
     def __init__(self):
@@ -116,7 +105,7 @@ class SoulOfTheForge(Feature):
         super().__init__(
             name="Soul of the Forge",
             origin="Forge Domain Cleric Level 6",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistance = DamageResistance(DamageType.FIRE)
@@ -142,7 +131,7 @@ class SaintOfForgeAndFire(Feature):
         super().__init__(
             name="Saint of Forge and Fire",
             origin="Forge Domain Cleric Level 17",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         # Only the fire immunity is unconditional; the bludgeoning/piercing/

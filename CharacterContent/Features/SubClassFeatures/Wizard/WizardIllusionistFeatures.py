@@ -64,14 +64,6 @@ class IllusorySelf(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Hit by attack roll"),
-            ("Action", "Reaction"),
-            ("Effect", "Attack misses, illusion dissipates"),
-            ("Recharge", "Short or Long Rest; or expend spell slot (level 2+)"),
-        ]
-
 
 class IllusoryReality(Feature):
     def __init__(self):
@@ -90,12 +82,3 @@ class IllusoryReality(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Casting Time", "Bonus Action"),
-            ("Trigger", "Cast illusion spell with spell slot (while spell ongoing)"),
-            ("Target", "Inanimate, nonmagical object in illusion"),
-            ("Duration", "1 minute"),
-            ("Limitation", "Can't deal damage or give conditions"),
-        ]

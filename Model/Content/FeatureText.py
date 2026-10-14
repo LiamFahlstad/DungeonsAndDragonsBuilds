@@ -2,9 +2,9 @@
 glance - short paragraphs, label/value facts, tables and named options -
 instead of the source's wall of prose.
 
-An improved description is not a summary (that's
-Feature.get_concise_description): it keeps every rule of the source text,
-just laid out so the numbers and choices can be found without rereading.
+An improved description is not a summary: it keeps every rule of the
+source text, just laid out so the numbers and choices can be found without
+rereading.
 Guidelines:
 
 - Lead with one or two sentences saying what the feature is for.

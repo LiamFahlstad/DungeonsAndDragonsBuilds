@@ -2,8 +2,7 @@
 Step 0).
 
 test_feature_apply_order.py proves the *stats* don't depend on the order
-effects apply in. These tests check the whole sheet, in full and concise mode,
-against the golden hashes in tests/snapshots/sheet_hashes.json:
+effects apply in. These tests check the whole sheet against the golden hashes in tests/snapshots/sheet_hashes.json:
 
 - apply order: every effect (features, extensions, armor, weapons, items,
   fighting styles) applied in a different order;

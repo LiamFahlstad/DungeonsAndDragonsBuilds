@@ -72,15 +72,3 @@ class Overchannel(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Deal maximum damage with spell"),
-            ("Eligible Spells", "Wizard spell, level 1-5 slot, deals damage"),
-            (
-                "Cost",
-                "First use free; subsequent: 2d12 necrotic/slot level (escalates +1d12 per use)",
-            ),
-            ("Damage Type", "Necrotic (ignores Resistance and Immunity)"),
-            ("Recharge", "Long Rest"),
-        ]

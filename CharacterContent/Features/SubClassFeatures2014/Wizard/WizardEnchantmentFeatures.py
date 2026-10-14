@@ -34,21 +34,6 @@ class HypnoticGaze(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Target", "One creature within 5 feet that can see or hear you"),
-            ("Save", "Wisdom saving throw vs spell save DC"),
-            ("Effect", "Charmed, speed 0, incapacitated and dazed"),
-            ("Duration", "Until end of your next turn"),
-            ("Maintain", "Use action on subsequent turns to extend"),
-            (
-                "Ends if",
-                "You move >5 feet away, creature can't see/hear you, or takes damage",
-            ),
-            ("Recharge", "Long rest (per target)"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -71,18 +56,6 @@ class InstinctiveCharm(Feature):
             "You must choose to use this feature before knowing whether the attack hits or misses. Creatures that can't be charmed are immune to this effect."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Creature within 30 feet makes attack roll against you"),
-            ("Action", "Reaction"),
-            ("Requirement", "Another creature must be within attack's range"),
-            ("Save", "Wisdom saving throw vs spell save DC"),
-            ("On Fail", "Attacker must target nearest creature (not you, not self)"),
-            ("On Success", "Can't use on this attacker until long rest"),
-            ("Timing", "Declare before knowing if attack hits"),
-            ("Immunity", "Creatures that can't be charmed are immune"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

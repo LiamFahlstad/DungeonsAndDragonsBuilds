@@ -64,16 +64,6 @@ class DarkOnesOwnLuck(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("When", "Ability check or saving throw (after seeing roll)"),
-            ("Effect", "Add 1d10 to your roll"),
-            ("Limit", "No more than once per roll"),
-            ("Uses", f"{uses} per Long Rest"),
-            ("Recharge", "Long Rest"),
-        ]
-
 
 class FiendishResilience(Feature):
     def __init__(self):
@@ -141,15 +131,3 @@ class HurlThroughHell(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Frequency", "Once per turn"),
-            ("Trigger", "Hit creature with attack roll"),
-            ("Save", "Charisma save DC"),
-            (
-                "Effect on Fail",
-                "8d10 Psychic damage (non-Fiends only); Incapacitated until end of your next turn",
-            ),
-            ("Recharge", "Long Rest or expend Pact Magic spell slot"),
-        ]

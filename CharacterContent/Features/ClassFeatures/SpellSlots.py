@@ -14,7 +14,7 @@ class SpellSlots(Feature):
         super().__init__(
             name="Spell Slots",
             origin=f"{character_class.value} Spellcasting",
-            skippable_in_concise=True,
+            passive=True,
         )
 
     def get_description(self, character: CharacterView) -> str:

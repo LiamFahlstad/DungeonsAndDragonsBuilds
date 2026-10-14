@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import GrantWeaponProficiency
@@ -65,16 +64,6 @@ class TouchOfDeathChannelDivinity(Feature):
         level = character.get_class_level(CharacterClass.CLERIC)
         description += f"\nRight now: {5 + 2 * level} extra necrotic damage."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        cleric_level = character.get_class_level(Definitions.CharacterClass.CLERIC)
-        damage = 5 + 2 * cleric_level
-        return [
-            ("Trigger", "On melee attack hit"),
-            ("Use", "1 Channel Divinity"),
-            ("Damage Type", "Necrotic"),
-            ("Damage", f"5 + twice your cleric level ({damage})"),
-        ]
 
 
 class InescapableDestruction(Feature):

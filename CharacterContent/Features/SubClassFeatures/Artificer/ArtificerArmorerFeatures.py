@@ -91,19 +91,6 @@ class ArcaneArmor(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("No Strength Requirement", "Arcane Armor has no Strength requirement"),
-            (
-                "Quick Don and Doff",
-                "Don or doff as a Utilize action; can't be removed against your will",
-            ),
-            (
-                "Spellcasting Focus",
-                "Use Arcane Armor as Spellcasting Focus for your Artificer spells",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -307,18 +294,6 @@ class ImprovedArmorer(Feature):
             "Improved Arsenal. You gain a +1 bonus to attack and damage rolls made with the special weapon of your Arcane Armor model."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Armor Replication",
-                "Learn additional Replicate Magic Item plan in Armor category; create additional item in Armor category",
-            ),
-            (
-                "Improved Arsenal",
-                "+1 bonus to attack and damage rolls with Arcane Armor model's special weapon",
-            ),
-        ]
 
 
 class PerfectedArmor(Feature):

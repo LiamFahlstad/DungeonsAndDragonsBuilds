@@ -148,7 +148,7 @@ class UnarmoredDefenseText(Feature):
 
 class UnarmoredDefense(Feature):
     def __init__(self):
-        super().__init__(skippable_in_concise=True)
+        super().__init__(passive=True)
         # "While you aren't wearing armor or wielding a Shield..."
         self._ac = MultiAbilityArmorClass(
             10,
@@ -294,9 +294,7 @@ LEVEL_TO_UNARMORED_MOVEMENT_BONUS = {
 
 class UnarmoredMovement(Feature):
     def __init__(self):
-        super().__init__(
-            name="Unarmored Movement", origin="Monk Level 2", skippable_in_concise=True
-        )
+        super().__init__(name="Unarmored Movement", origin="Monk Level 2", passive=True)
 
     def apply(self, ledger_writer: LedgerWriter):
         # "...while you aren't wearing armor or wielding a Shield." A formula,
@@ -406,28 +404,6 @@ class DeflectAttacks(Feature):
                 "You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing."
             )
             return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
-        dex_modifier = character.get_dexterity_modifier()
-        damage_types = (
-            "any type" if monk_level >= 13 else "Bludgeoning, Piercing, or Slashing"
-        )
-        return [
-            ("Trigger", f"Hit by {damage_types} attack"),
-            ("Action", "Reaction"),
-            ("Reduction", f"1d10 + {dex_modifier:+d} (DEX) + {monk_level} (level)"),
-            ("Redirect Cost", "1 Focus Point (if damage reduced to 0)"),
-            (
-                "Redirect Range",
-                "5 ft (melee) or 60 ft (ranged, not behind Total Cover)",
-            ),
-            ("Redirect Save", "Dexterity"),
-            (
-                "Redirect Damage",
-                "2 Martial Arts die + DEX modifier, same type as attack",
-            ),
-        ]
 
 
 class SlowFall(Feature):
@@ -568,22 +544,6 @@ class HeightenedFocus(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Flurry of Blows",
-                "Expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action",
-            ),
-            (
-                "Patient Defense",
-                "Expend 1 Focus Point to gain Temporary Hit Points equal to two Martial Arts die rolls",
-            ),
-            (
-                "Step of the Wind",
-                "Expend 1 Focus Point to move a willing creature (Large or smaller) within 5 ft; doesn't provoke Opportunity Attacks",
-            ),
-        ]
-
 
 class SelfRestoration(Feature):
     def __init__(self):
@@ -616,7 +576,7 @@ class DisciplinedSurvivorSavingThrows(Feature):
         super().__init__(
             name="Disciplined Survivor",
             origin="Monk Level 14",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._proficiencies = SavingThrowProficiency(
             [
@@ -682,9 +642,7 @@ class SuperiorDefense(Feature):
 
 class BodyAndMind(Feature):
     def __init__(self):
-        super().__init__(
-            name="Body and Mind", origin="Monk Level 20", skippable_in_concise=True
-        )
+        super().__init__(name="Body and Mind", origin="Monk Level 20", passive=True)
         self._bonuses = AbilityScoreBonus(
             [
                 (Ability.DEXTERITY, 4),

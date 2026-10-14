@@ -60,18 +60,6 @@ class GroupRecovery(Feature):
         description = "When you use your Second Wind to regain Hit Points, you can choose a number of allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies regains Hit Points equal to 1d4 plus your Fighter level. Once you use this ability, you can’t use it again until you finish a Short or Long Rest."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "When you use Second Wind"),
-            ("Range", "30-foot Emanation"),
-            (
-                "Targets",
-                f"Up to {max(1, character.get_charisma_modifier())} allies",
-            ),
-            ("Effect", "Each ally regains 1d4 + Fighter level HP"),
-            ("Recharge", "Short or Long Rest"),
-        ]
-
 
 class TeamTactics(Feature):
     def __init__(self):
@@ -106,17 +94,6 @@ class RallyingSurge(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "When you use Action Surge"),
-            ("Range", "30-foot Emanation"),
-            (
-                "Targets",
-                f"Up to {max(1, character.get_charisma_modifier())} allies",
-            ),
-            ("Reaction Options", "One attack, or move up to half Speed without OAs"),
-        ]
-
 
 class SharedResilience(Feature):
     def __init__(self):
@@ -136,20 +113,13 @@ class SharedResilience(Feature):
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Ally fails saving throw (within 60 feet)"),
-            ("Reaction", "Expend Indomitable"),
-            ("Effect", "Ally rerolls saving throw with +Fighter level bonus"),
-        ]
-
 
 class InspiringCommander(Feature):
     def __init__(self):
         super().__init__(
             name="Inspiring Commander",
             origin="Banneret Fighter Level 18",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._immunities = [

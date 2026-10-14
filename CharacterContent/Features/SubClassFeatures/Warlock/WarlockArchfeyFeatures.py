@@ -164,18 +164,6 @@ class BeguilingDefenses(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Passive", "Immunity to Charmed condition"),
-            ("Trigger", "Creature hits you with attack roll"),
-            (
-                "Reaction Effect",
-                "Reduce damage by half (round down); force Wisdom save DC",
-            ),
-            ("Save Effect", "On fail: attacker takes Psychic damage = damage you took"),
-            ("Recharge", "Long Rest or expend Pact Magic spell slot"),
-        ]
-
 
 class BewitchingMagic(Feature):
     def __init__(self):

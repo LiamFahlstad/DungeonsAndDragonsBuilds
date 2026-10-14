@@ -24,7 +24,7 @@ class BonusProficiency(Feature):
         super().__init__(
             name="Bonus Proficiency",
             origin="Samurai Fighter Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._skill = skill
         self._language = language
@@ -72,25 +72,6 @@ class FightingSpirit(Feature):
         level = character.get_class_level(CharacterClass.FIGHTER)
         description += f"\nRight now: {5 + 5 * (level >= 10) + 5 * (level >= 15)} temporary hit points."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        fighter_level = character.get_class_level(CharacterClass.FIGHTER)
-        temporary_hit_points = 5
-        if fighter_level >= 15:
-            temporary_hit_points = 15
-        elif fighter_level >= 10:
-            temporary_hit_points = 10
-
-        return [
-            ("Action", "Bonus action"),
-            ("Effect", "Advantage on all weapon attacks until end of turn"),
-            (
-                "Temporary HP",
-                f"{temporary_hit_points} (increases to 10 at 10th level, 15 at 15th)",
-            ),
-            ("Uses", "3"),
-            ("Regain", "Long rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -183,15 +164,6 @@ class StrengthBeforeDeath(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Take damage reducing you to 0 HP"),
-            ("Action", "Reaction"),
-            ("Effect", "Delay unconsciousness; take an extra turn"),
-            ("Conditions", "Death saves still apply; 3 failures still kills"),
-            ("Uses", "1 per long rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

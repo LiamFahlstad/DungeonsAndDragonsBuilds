@@ -41,18 +41,6 @@ class SpellfireBurst(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        charisma_modifier = character.get_charisma_modifier()
-        return [
-            (
-                "Trigger",
-                "Spend 1+ Sorcery Points as Magic action or Bonus Action (once per turn)",
-            ),
-            ("Range", "30 feet (for both options)"),
-            ("Bolstering Flames", f"Target gains Temp HP = 1d4 + {charisma_modifier}"),
-            ("Radiant Fire", "Target takes 1d4 Fire or Radiant damage (your choice)"),
-        ]
-
 
 class AbsorbSpells(Feature):
     def __init__(self):
@@ -128,20 +116,3 @@ class CrownOfSpellfire(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        charisma_modifier = character.get_charisma_modifier()
-        return [
-            ("Trigger", "Use Innate Sorcery"),
-            ("Duration", "While Innate Sorcery active"),
-            (
-                "Burning Life Force",
-                f"Once per turn when hit: expend Hit Point Dice (max {charisma_modifier}) to reduce damage",
-            ),
-            ("Flight", "Fly Speed 60 feet, can hover"),
-            (
-                "Spell Avoidance",
-                "Spells/effects: take no damage on successful save, half on failed (not Incapacitated)",
-            ),
-            ("Recharge", "Long Rest or 5 Sorcery Points"),
-        ]

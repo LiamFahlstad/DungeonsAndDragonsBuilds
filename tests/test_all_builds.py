@@ -118,8 +118,7 @@ def test_every_feature_renders(name):
     for feature in data.iter_features_with_extensions():
         description = feature.get_description(character)
         assert description is None or isinstance(description, str), feature.name
-        feature.get_table_description(character)
-        feature.get_concise_description(character)
+        feature.get_improved_description(character)
 
 
 # Features that grant proficiency *and* Expertise: picking a skill you already

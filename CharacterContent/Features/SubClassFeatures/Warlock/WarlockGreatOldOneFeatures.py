@@ -100,18 +100,6 @@ class ClairvoyantCombatant(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Form telepathic bond via Awakened Mind"),
-            ("Save", "Wisdom save DC"),
-            (
-                "Effect on Fail",
-                "Target has Disadvantage on attacks vs you; you have Advantage vs target",
-            ),
-            ("Duration", "For duration of telepathic bond"),
-            ("Recharge", "Short or Long Rest or expend Pact Magic spell slot"),
-        ]
-
 
 class EldritchHex(Feature):
     def __init__(self):
@@ -160,6 +148,3 @@ class CreateThrall(Feature):
             "In addition, the first time each turn the Aberration hits a creature under the effect of your Hex, the Aberration deals extra Psychic damage to the target equal to the bonus damage of that spell."
         )
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "When casting Summon Aberration, remove Concentration requirement (duration 1 min instead); the Aberration gains Temp HP = Warlock level + CHA mod. First time each turn the Aberration hits a creature under your Hex, it deals extra Psychic damage equal to that spell's bonus damage."

@@ -105,18 +105,6 @@ class UniversalSpeech(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        cha_mod = character.get_charisma_modifier()
-        creatures = max(1, cha_mod)
-        return [
-            ("Action", "Action"),
-            ("Range", "60 feet"),
-            ("Targets", f"Up to {creatures} creature{'s' if creatures != 1 else ''}"),
-            ("Effect", "Chosen creatures understand you regardless of language"),
-            ("Duration", "1 hour"),
-            ("Cost", "Reusable with long rest, or spell slot to repeat"),
-        ]
-
 
 class InfectiousInspiration(Feature):
     def __init__(self):

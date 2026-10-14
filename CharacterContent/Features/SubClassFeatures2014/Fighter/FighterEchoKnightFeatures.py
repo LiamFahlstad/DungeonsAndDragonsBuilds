@@ -115,17 +115,6 @@ class UnleashIncarnation(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        constitution_modifier = character.get_constitution_modifier()
-        uses = max(1, constitution_modifier)
-
-        return [
-            ("Trigger", "You take the Attack action"),
-            ("Effect", "Make one additional melee attack from echo's position"),
-            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
-            ("Regain", "Long rest"),
-        ]
-
 
 class EchoAvatar(Feature):
     def __init__(self):
@@ -147,14 +136,6 @@ class EchoAvatar(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Effect", "See/hear through echo; you are deafened and blinded"),
-            ("Duration", "Up to 10 minutes (can end at any time)"),
-            ("Range", "Echo can be up to 1,000 feet away without being destroyed"),
-        ]
-
 
 class ShadowMartyr(Feature):
     def __init__(self):
@@ -174,14 +155,6 @@ class ShadowMartyr(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Attack directed at creature you can see"),
-            ("Action", "Reaction (before attack roll)"),
-            ("Effect", "Teleport echo to 5 ft of target; attack targets echo instead"),
-            ("Uses", "1 per short or long rest"),
-        ]
 
 
 class ReclaimPotential(Feature):
@@ -214,18 +187,6 @@ class ReclaimPotential(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        constitution_modifier = character.get_constitution_modifier()
-        uses = max(1, constitution_modifier)
-
-        return [
-            ("Trigger", "Echo destroyed by taking damage"),
-            ("Effect", "Gain 2d6 + your Constitution modifier temporary HP"),
-            ("Condition", "Only if you don't already have temporary HP"),
-            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
-            ("Regain", "Long rest"),
-        ]
 
 
 class LegionOfOne(Feature):

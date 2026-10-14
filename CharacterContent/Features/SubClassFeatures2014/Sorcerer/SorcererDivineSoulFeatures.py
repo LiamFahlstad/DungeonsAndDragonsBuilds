@@ -54,13 +54,6 @@ class FavoredByTheGods(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Fail saving throw or miss attack roll"),
-            ("Effect", "Roll 2d4 and add to total"),
-            ("Recharge", "Short or long rest"),
-        ]
-
 
 class EmpoweredHealing(Feature):
     def __init__(self):
@@ -74,14 +67,6 @@ class EmpoweredHealing(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "The divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "You or ally within 5 feet rolls healing dice"),
-            ("Cost", "1 sorcery point"),
-            ("Effect", "Reroll any number of those dice once"),
-            ("Restriction", "Once per turn, not while incapacitated"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
@@ -107,14 +92,6 @@ class AngelicForm(Feature):
             "The affinity you chose for your Divine Magic feature determines the appearance of the spectral wings: eagle wings for good or law, bat wings for evil or chaos, and dragonfly wings for neutrality."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus action"),
-            ("Effect", "Manifest spectral wings"),
-            ("Flying Speed", "30 feet"),
-            ("Duration", "Until incapacitated, dead, or dismissed (bonus action)"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
@@ -145,11 +122,3 @@ class UnearthlyRecovery(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "At fewer than half your hit points"),
-            ("Action", "Bonus action"),
-            ("Effect", "Regain hit points equal to half your HP maximum"),
-            ("Recharge", "Long rest"),
-        ]

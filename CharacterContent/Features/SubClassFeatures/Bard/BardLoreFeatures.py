@@ -10,7 +10,7 @@ class BonusProficiencies(Feature):
         super().__init__(
             name="Bonus Proficiencies",
             origin="College of Lore Bard Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._proficiency = SkillProficiencyChoice(
             [skill_1, skill_2, skill_3], list(Skill), count=3
@@ -38,20 +38,6 @@ class CuttingWords(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Trigger",
-                "Creature within 60 feet makes damage roll or succeeds on ability check/attack roll",
-            ),
-            ("Action", "Reaction"),
-            ("Cost", "1 use of Bardic Inspiration"),
-            (
-                "Effect",
-                "Roll Bardic Inspiration die, subtract from creature's roll (can turn success into failure)",
-            ),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -82,17 +68,6 @@ class PeerlessSkill(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "You fail an ability check or attack roll"),
-            (
-                "Cost",
-                "1 use of Bardic Inspiration (only if it turns failure to success)",
-            ),
-            ("Effect", "Roll Bardic Inspiration die, add to failed d20"),
-            ("Failure Recovery", "If still fails, Bardic Inspiration isn't expended"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

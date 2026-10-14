@@ -629,9 +629,7 @@ class TestDruidLandsAidDamageDiceScaling:
         self, make_character, druid_level, expected_dice
     ):
         character = make_character(levels={CharacterClass.DRUID: druid_level})
-        table = dict(DruidLandFeatures.LandsAid().get_table_description(character))
-        assert expected_dice in table["Damage"]
-        assert expected_dice in table["Healing"]
+        assert DruidLandFeatures.LANDS_AID_DICE.at(character) == expected_dice
 
 
 class TestBladesingerWeaponProficiencyScope:

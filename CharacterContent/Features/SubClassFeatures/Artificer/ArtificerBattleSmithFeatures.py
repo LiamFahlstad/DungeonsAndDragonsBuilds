@@ -86,18 +86,6 @@ class BattleReady(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Arcane Empowerment",
-                "Use Intelligence modifier for attack and damage rolls with magic weapons",
-            ),
-            (
-                "Weapon Knowledge",
-                "Proficiency with Martial weapons; use any proficient weapon as Spellcasting Focus",
-            ),
-        ]
-
 
 def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
     artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
@@ -326,15 +314,6 @@ class ArcaneJolt(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Trigger", "When you or Steel Defender hits with a magic weapon"),
-            ("Destructive Energy", "Target takes extra 2d6 Force damage"),
-            ("Restorative Energy", "Restore 2d6 HP to creature within 30 feet"),
-            ("Uses", f"{uses}/LR, at most once per turn"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -357,12 +336,3 @@ class ImprovedDefender(Feature):
             "Improved Deflection. Whenever your Steel Defender uses its Deflect Attack, the attacker takes Force damage equal to 1d4 plus your Intelligence modifier."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Improved Jolt", "Arcane Jolt's damage and healing both increase to 4d6"),
-            (
-                "Improved Deflection",
-                "When Steel Defender uses Deflect Attack, attacker takes Force damage = 1d4 + INT mod",
-            ),
-        ]

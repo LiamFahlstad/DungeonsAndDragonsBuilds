@@ -112,7 +112,7 @@ class IronMind(Feature):
         super().__init__(
             name="Iron Mind",
             origin="Gloom Stalker Ranger Level 7",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
 

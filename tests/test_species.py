@@ -502,8 +502,8 @@ class TestDragonbornAncestry:
     ):
         character = make_character(levels={CharacterClass.FIGHTER: level})
         feature = DragonbornFeatures.BreathWeapon(DragonbornFeatures.DragonColor.RED)
-        table = dict(feature.get_table_description(character))
-        assert expected_dice in table["Damage"]
+        assert DragonbornFeatures.BREATH_WEAPON_DICE.at(character) == expected_dice
+        assert feature.dice == [DragonbornFeatures.BREATH_WEAPON_DICE]
 
 
 # ── Damage resistance mechanics (correct wiring) ────────────────────────────

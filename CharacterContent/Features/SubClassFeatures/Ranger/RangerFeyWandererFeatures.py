@@ -147,14 +147,6 @@ class BeguilingTwist(Feature):
         )
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "You have advantage on saving throws against Charmed or Frightened conditions. "
-            "When you or a creature you can see within 120 feet succeeds on such a save, you can use a Reaction "
-            "to force another creature within 120 feet to save against your spell save DC; on a failure, "
-            "it is charmed or frightened (your choice) for 1 minute."
-        )
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -171,14 +163,6 @@ class FeyReinforcements(Feature):
             "Whenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for the casting."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell", "Summon Fey"),
-            ("Material Components", "Waived"),
-            ("Cost", "1 use per Long Rest (no spell slot)"),
-            ("Concentration", "Optional (no Concentration = 1 minute duration)"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -206,18 +190,6 @@ class MistyWanderer(Feature):
             "In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Spell", "Misty Step"),
-            ("Cost", "No spell slot"),
-            ("Uses", f"{uses} per Long Rest"),
-            (
-                "Effect",
-                "Teleport up to 30 feet; can bring 1 willing creature within 5 feet with you",
-            ),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

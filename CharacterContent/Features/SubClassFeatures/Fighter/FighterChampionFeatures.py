@@ -101,15 +101,3 @@ class Survivor(Feature):
             "Heroic Rally. At the start of each of your turns, you regain Hit Points equal to 5 plus your Constitution modifier if you are Bloodied and have at least 1 Hit Point."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        from Core.Definitions import Ability
-
-        con_modifier = character.get_constitution_modifier()
-        return [
-            ("Defy Death", "Advantage on Death Saving Throws; rolls 18-20 count as 20"),
-            (
-                "Heroic Rally",
-                f"Start of turn: regain 5 + {con_modifier} HP (if Bloodied and HP ≥ 1)",
-            ),
-        ]

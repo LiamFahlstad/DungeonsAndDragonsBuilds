@@ -218,7 +218,7 @@ class ClassProficiencies(Feature):
         super().__init__(
             name=f"{character_class.value} {name}",
             origin=f"{character_class.value} Level 1",
-            skippable_in_concise=True,
+            passive=True,
         )
         self.character_class = character_class
         self._grants = [
@@ -305,7 +305,7 @@ class ClassSkillChoice(Feature):
     `count` skills, all drawn from `pool`.
 
     Bookkeeping only, like ClassProficiencies: no card of its own, and
-    skippable_in_concise so a concise/table sheet never shows it either."""
+    passive so a concise/table sheet never shows it either."""
 
     def __init__(self, pool: list[Skill], count: int, chosen: list[Skill]):
         self._choice = SkillProficiencyChoice(
@@ -313,7 +313,7 @@ class ClassSkillChoice(Feature):
         )
         super().__init__(
             name="Class Skill Proficiencies",
-            skippable_in_concise=True,
+            passive=True,
         )
 
     def apply(self, ledger_writer: LedgerWriter):

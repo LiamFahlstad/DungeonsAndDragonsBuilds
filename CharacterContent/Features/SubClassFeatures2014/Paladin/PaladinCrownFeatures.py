@@ -48,16 +48,6 @@ class ChampionChallenge(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Issue challenging compulsion"),
-            ("Action", "Bonus action"),
-            ("Range", "30 feet"),
-            ("Save", "Wisdom"),
-            ("Effect", "Can't willingly move > 30 feet away from you"),
-            ("Ends", "You incapacitated/dead, or creature > 30 feet away"),
-        ]
-
 
 class TurnTheTide(Feature):
     def __init__(self):
@@ -78,17 +68,6 @@ class TurnTheTide(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        charisma_modifier = character.get_charisma_modifier()
-        healing = max(1, charisma_modifier)
-        return [
-            ("What", "Bolster injured creatures"),
-            ("Action", "Bonus action"),
-            ("Range", "30 feet (hearing distance)"),
-            ("Effect", f"Regain 1d6 + {healing} HP"),
-            ("Condition", "Must have ≤ half HP"),
-        ]
-
 
 class DivineAllegiance(Feature):
     def __init__(self):
@@ -106,14 +85,6 @@ class DivineAllegiance(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Creature within 5 feet takes damage"),
-            ("Action", "Reaction"),
-            ("Effect", "You take damage instead of creature"),
-            ("Limitation", "Damage can't be reduced or prevented"),
-        ]
 
 
 class UnyieldingSaint(Feature):

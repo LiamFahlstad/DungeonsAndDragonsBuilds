@@ -27,14 +27,6 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Replacing Cantrips", "Change one when you gain a Sorcerer level"),
-            ("Replacing Spells", "Change one when you gain a Sorcerer level"),
-            ("Regaining Spell Slots", "All expended slots return on Long Rest"),
-            ("Spellcasting Ability", "Charisma"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -76,14 +68,6 @@ class InnateSorcery(Feature):
             "You can use this feature twice, and you regain all expended uses of it when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Activation", "Bonus Action"),
-            ("Duration", "1 minute"),
-            ("Uses", "2 (regain on Long Rest)"),
-            ("Effect", "Spell save DC +1; Advantage on Sorcerer spell attack rolls"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -215,20 +199,6 @@ class Metamagic(Feature):
             )
         ]
         return [("Metamagic Options Known", steps)]
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        sorcerer_level = character.get_class_level(Definitions.CharacterClass.SORCERER)
-        if sorcerer_level < 10:
-            metamagic_options = 2
-        elif sorcerer_level < 17:
-            metamagic_options = 4
-        else:
-            metamagic_options = 6
-        return (
-            f"You know {metamagic_options} Metamagic options to modify spells by spending Sorcery Points. "
-            f"Use only one per spell cast (unless noted otherwise). Replace one option at each level up; "
-            f"gain 2 more at level 10 and 2 more at level 17."
-        )
 
 
 class SorcerousRestoration(Feature):

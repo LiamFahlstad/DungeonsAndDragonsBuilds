@@ -43,16 +43,6 @@ class WailsFromTheGrave(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_dexterity_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Trigger", "After you deal Sneak Attack damage on your turn"),
-            ("Target", "Second creature within 30 feet of the first"),
-            ("Damage", f"Necrotic: half your Sneak Attack damage dice (rounded up)"),
-            ("Uses", f"{uses} uses (Dexterity modifier, minimum 1)"),
-            ("Recharge", "Long Rest"),
-        ]
-
 
 class WhispersOfTheDead(Feature):
     def __init__(self):
@@ -222,12 +212,3 @@ class DeathsFriend(Feature):
             "Draw of Death. When you roll Initiative, you gain one soul trinket for your Tokens of the Departed if you have none remaining."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Death's Lament",
-                "Wails from the Grave deals damage to both first and second creature",
-            ),
-            ("Draw of Death", "Gain one soul trinket on Initiative if you have none"),
-        ]

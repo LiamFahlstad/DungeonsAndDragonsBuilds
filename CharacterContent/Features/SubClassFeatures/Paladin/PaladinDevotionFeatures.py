@@ -80,17 +80,6 @@ class SacredWeapon(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Use Attack action"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Duration", "10 minutes or until used again"),
-            ("Attack Bonus", "+Charisma modifier (minimum +1)"),
-            ("Damage", "Normal type or Radiant"),
-            ("Light", "Bright Light 20 ft, Dim Light 20 ft beyond"),
-            ("Ending", "Early (no action required), or if not carrying weapon"),
-        ]
-
 
 class AuraOfDevotion(Feature):
     def __init__(self):
@@ -123,9 +112,6 @@ class SmiteOfProtection(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "When you cast Divine Smite, you and allies in your Aura of Protection gain Half Cover until the start of your next turn."
 
 
 class HolyNimbus(Feature):
@@ -183,16 +169,3 @@ class HolyNimbus(Feature):
             "Sunlight. The aura is filled with Bright Light that is sunlight."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "10 minutes (or until ended)"),
-            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            ("Holy Ward", "Advantage on saves against Fiends and Undead"),
-            (
-                "Radiant Damage",
-                "Enemies at turn start in aura take Charisma modifier + Proficiency Bonus Radiant damage",
-            ),
-            ("Sunlight", "Aura is filled with Bright Light (counts as sunlight)"),
-        ]

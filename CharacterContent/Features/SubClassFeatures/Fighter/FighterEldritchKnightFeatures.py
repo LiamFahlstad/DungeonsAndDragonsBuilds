@@ -70,13 +70,6 @@ class EldritchKnightSpellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "Know two Wizard cantrips (gaining another at level 10), replacing them as you level. "
-            "Prepare level 1+ Wizard spells (3 initially, scaling with levels), regaining all spell slots on long rest. "
-            "Intelligence is your spellcasting ability; use an Arcane Focus as your spellcasting focus."
-        )
-
 
 class WarBond(Feature):
     def __init__(self):
@@ -122,16 +115,6 @@ class WarBond(Feature):
             "You can have up to two bonded weapons, but you can summon only one at a time with a Bonus Action. If you attempt to bond with a third weapon, you must break the bond with one of the other two."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Bonding Ritual", "1 hour (can be during Short Rest)"),
-            ("Ritual Requirements", "Weapon within reach, touch at conclusion"),
-            ("Bond Failure", "Another Fighter bonded or weapon is attuned magic item"),
-            ("Cannot Be Disarmed", "Unless you have Incapacitated condition"),
-            ("Summoning", "Bonus Action (if on same plane)"),
-            ("Maximum Bonds", "2 bonded weapons, summon only 1 at a time"),
-        ]
 
 
 class WarMagic(Feature):

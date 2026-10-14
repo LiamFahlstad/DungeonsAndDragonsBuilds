@@ -85,23 +85,6 @@ class TentacleOfTheDeep(Feature):
             Definitions.Ability.CHARISMA
         )
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        proficiency_bonus = self.number_of_uses(character)
-        damage = TENTACLE_DICE.at(character)
-        return [
-            ("Action", "Bonus action to summon"),
-            ("Range", "60 feet from you"),
-            (
-                "Attack",
-                f"Melee spell attack ({self._spell_attack(character):+}) within 10 feet of tentacle",
-            ),
-            ("Damage", f"{damage} cold + 10 feet speed reduction"),
-            ("Movement", "Bonus action to move up to 30 feet, repeat attack"),
-            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
-            ("Recharge", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -176,15 +159,6 @@ class GuardianCoil(Feature):
         description = f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        damage = GUARDIAN_COIL_DICE.at(character)
-        return [
-            ("Trigger", "Damage taken within 10 feet of tentacle"),
-            ("Type", "Reaction"),
-            ("Effect", f"Reduce damage to chosen creature by {damage}"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -206,16 +180,6 @@ class GraspingTentacles(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        return [
-            ("Spell", "Evard's Black Tentacles"),
-            ("Counts", "Warlock spell, doesn't count against known"),
-            ("Casting", "Once per long rest without spell slot"),
-            ("Temp HP", f"Warlock level ({warlock_level})"),
-            ("Concentration", "Damage can't break it"),
-        ]
-
 
 class FathomlessPlunge(Feature):
     def __init__(self):
@@ -236,16 +200,6 @@ class FathomlessPlunge(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "See creatures within 30 feet"),
-            ("Effect", "Teleport self + up to 5 willing creatures"),
-            ("Distance", "Up to 1 mile"),
-            ("Destination", "Body of water (pond size+) or within 30 feet"),
-            ("Recharge", "Short or long rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

@@ -110,13 +110,6 @@ class CombatSuperiority(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "Learn maneuvers fueled by Superiority Dice (4 d8s at level 3, 5 at level 7, 6 at level 15). "
-            "Learn 3 maneuvers at level 3, then 2 more at levels 7, 10, and 15; can replace one on level gain. "
-            "Use one maneuver per attack, regain all dice on short or long rest. Maneuver save DC = 8 + Strength or Dexterity modifier (your choice) + Proficiency Bonus."
-        )
-
 
 class StudentOfWar(Feature):
     def __init__(self):
@@ -148,14 +141,6 @@ class KnowYourEnemy(Feature):
             "Once you use this feature, you can’t do so again until you finish a Long Rest. You can also restore a use of the feature by expending one Superiority Die (no action required)."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "30 feet"),
-            ("Effect", "Learn creature’s Immunities, Resistances, Vulnerabilities"),
-            ("Recharge", "Long Rest, or expend Superiority Die"),
-        ]
 
 
 class ImprovedCombatSuperiority(Feature):

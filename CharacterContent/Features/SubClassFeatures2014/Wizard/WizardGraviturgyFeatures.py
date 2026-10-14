@@ -108,18 +108,6 @@ class EventHorizon(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Duration", "1 minute or until concentration ends"),
-            ("Range", "30 feet"),
-            ("Trigger", "Hostile creature starts its turn within range"),
-            ("Save", "Strength saving throw vs spell save DC"),
-            ("On Fail", "2d10 force damage, speed 0 until start of next turn"),
-            ("On Success", "Half damage, movement costs 2 extra feet per foot"),
-            ("Recharge", "Long rest or 3rd+ level spell slot"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 

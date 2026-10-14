@@ -24,18 +24,6 @@ class DivineFury(Feature):
         description = "You can channel divine power into your strikes. On each of your turns while your Rage is active, the first creature you hit with a weapon or an Unarmed Strike takes extra damage equal to 1d6 plus half your Barbarian level (round down). The extra damage is Necrotic or Radiant; you choose the type each time you deal the damage."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        barbarian_level = character.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        half_level = barbarian_level // 2
-        return [
-            ("Trigger", "First hit per turn while Rage active"),
-            ("Extra Damage", f"1d6 + {half_level}"),
-            ("Damage Type", "Necrotic or Radiant (your choice)"),
-            ("Requirement", "Weapon or Unarmed Strike"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -67,18 +55,6 @@ class WarriorOfTheGods(Feature):
             "The pool’s maximum number of dice increases by one when you reach Barbarian levels 6 (5 dice), 12 (6 dice), and 17 (7 dice)."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        barbarian_level = character.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        pool_size = self.number_of_uses(character)
-        return [
-            ("Action", "Bonus Action"),
-            ("Pool Size", f"{pool_size} d12s (level {barbarian_level})"),
-            ("Effect", "Expend dice, roll, regain HP"),
-            ("Recharge", "Long Rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -124,16 +100,6 @@ class ZealousPresence(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "60 feet"),
-            ("Affected Creatures", "Up to 10 others"),
-            ("Effect", "Advantage on attacks and saves"),
-            ("Duration", "Until start of next turn"),
-            ("Recharge", "Long Rest or expend Rage use"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -178,19 +144,3 @@ class RageOfTheGods(Feature):
             "Revivification. When a creature within 30 feet of you would drop to 0 Hit Points, you can take a Reaction to expend a use of your Rage to instead change the target’s Hit Points to a number equal to your Barbarian level."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        barbarian_level = character.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        return [
-            ("Activation", "When you activate your Rage"),
-            ("Duration", "1 minute (or until you drop to 0 HP)"),
-            ("Recharge", "Long Rest"),
-            ("Flight", "Fly Speed equal to your Speed, can hover"),
-            ("Resistance", "Necrotic, Psychic, and Radiant damage"),
-            (
-                "Revivification",
-                f"Reaction within 30 ft, expend Rage use: restore HP to {barbarian_level}",
-            ),
-        ]

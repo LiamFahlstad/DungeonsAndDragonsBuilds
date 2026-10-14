@@ -45,18 +45,6 @@ class MoonsInspiration(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Inspired Eclipse",
-                "When giving Bardic Inspiration, gain Invisible condition and teleport up to 30 feet; invisibility ends at start of next turn or after you attack/deal damage/cast spell",
-            ),
-            (
-                "Lunar Vitality",
-                "Once per turn when restoring HP with a spell, expend Bardic Inspiration die to increase HP restored by that die roll; target gains 10 feet Speed until end of its next turn",
-            ),
-        ]
-
 
 class PrimalLore(Feature):
     def __init__(self, skill: Skill):
@@ -108,17 +96,6 @@ class BlessingOfMoonlight(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Always Prepared", "Moonbeam"),
-            ("Trigger", "Cast Moonbeam"),
-            (
-                "Effect",
-                "You glow faintly, shed Dim Light 5 feet; when creature fails save against Moonbeam, another creature within 60 feet regains 2d4 HP",
-            ),
-            ("Recharge", "Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -141,15 +118,3 @@ class EventidesSplendor(Feature):
             "Vibrance of the Full Moon. When you use Lunar Vitality, you can roll 1d6 and use the number rolled in place of expending a Bardic Inspiration die."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Shadow of the New Moon",
-                "When using Inspired Eclipse, recipient gains Invisible condition and Reaction to teleport up to 30 feet; stays Invisible until start of next turn",
-            ),
-            (
-                "Vibrance of the Full Moon",
-                "When using Lunar Vitality, roll 1d6 and use in place of expending Bardic Inspiration die",
-            ),
-        ]

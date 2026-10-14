@@ -39,14 +39,6 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Replacing Cantrips", "Whenever you gain a Cleric level"),
-            ("Replacing Prepared Spells", "Whenever you finish a Long Rest"),
-            ("Spellcasting Ability", "Wisdom"),
-            ("Regaining Spell Slots", "All expended slots return on Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -273,17 +265,6 @@ class DivineIntervention(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You can call on your deity or pantheon to intervene on your behalf. As a Magic action, choose any Cleric spell of level 5 or lower that doesn't require a Reaction to cast. As part of the same action, you cast that spell without expending a spell slot or needing Material components. You can't use this feature again until you finish a Long Rest."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "What",
-                "Cast any Cleric spell of level 5 or lower (no Reaction required)",
-            ),
-            ("Casting Time", "Magic action"),
-            ("Cost", "No spell slot or Material components"),
-            ("Recharge", "Long Rest"),
-        ]
 
 
 class ImprovedDivineStrike(Feature):

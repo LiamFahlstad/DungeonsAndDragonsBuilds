@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
@@ -13,14 +12,6 @@ from Utils import StringUtils
 from Model.View import CharacterView
 
 
-def _spirit_shield_dice(barbarian_level: int) -> str:
-    if barbarian_level >= 14:
-        return "4d6"
-    if barbarian_level >= 10:
-        return "3d6"
-    return "2d6"
-
-
 class AncestralProtectors(Feature):
     def __init__(self):
         super().__init__(
@@ -33,9 +24,6 @@ class AncestralProtectors(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Starting when you choose this path at 3rd level, spectral warriors appear when you enter your rage. While you're raging, the first creature you hit with an attack on your turn becomes the target of the warriors, which hinder its attacks. Until the start of your next turn, that target has disadvantage on any attack roll that isn't against you, and when the target hits a creature other than you with an attack, that creature has resistance to the damage dealt by the attack. The effect on the target ends early if your rage ends."
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "When you rage, spectral warriors target the first creature you hit each turn. That target has disadvantage on attacks not against you; creatures it hits gain resistance to the damage dealt."
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -78,18 +66,6 @@ class SpiritShield(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        barbarian_level = character.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        dice = _spirit_shield_dice(barbarian_level)
-        return [
-            ("When", "You're raging; another creature within 30 feet takes damage"),
-            ("Action", "Reaction"),
-            ("Effect", f"Reduce that damage by {dice}"),
-            ("Duration", "Ends when your rage ends"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -113,15 +89,6 @@ class ConsultTheSpirits(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spells", "Augury or Clairvoyance"),
-            ("Cost", "No spell slot or material components"),
-            ("Casting Ability", "Wisdom"),
-            ("Clairvoyance", "Summons ancestral spirit, not sensor"),
-            ("Recharge", "Short or long rest"),
-        ]
 
 
 class VengefulAncestors(Feature):

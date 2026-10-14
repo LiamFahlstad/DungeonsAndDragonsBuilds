@@ -41,19 +41,6 @@ class Bloodthirst(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            (
-                "Trigger",
-                "Enemy within 30 feet takes damage and becomes Bloodied (not killed)",
-            ),
-            ("Action", "Reaction"),
-            ("Effect", "Teleport within 5 feet of that enemy; make one melee attack"),
-            ("Uses", f"{uses} uses (Intelligence modifier, minimum 1)"),
-            ("Recharge", "Long Rest"),
-        ]
-
 
 class DreadAllegiance(Feature):
     def __init__(self):
@@ -94,18 +81,6 @@ class StrikeFear(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Cunning Strike Option", "Terrify"),
-            ("Cost", "1d6 Cunning Strike"),
-            ("Save", "Wisdom"),
-            (
-                "Effect",
-                "Frightened for 1 minute; you have Advantage on attacks against target",
-            ),
-            ("Repeat Save", "End of target's turn (success ends effect)"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -142,12 +117,3 @@ class DreadIncarnate(Feature):
             "Murderous Intent. When you roll for your Sneak Attack damage, you can treat a roll of a 1 or 2 on the die as a 3."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Cutthroat", "Regain one Bloodthirst use on Short Rest"),
-            (
-                "Murderous Intent",
-                "On Sneak Attack damage, treat 1 or 2 rolled on die as 3",
-            ),
-        ]

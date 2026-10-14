@@ -82,18 +82,6 @@ class WrathOfTheSea(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wisdom_modifier = character.get_wisdom_modifier()
-        damage_dice = max(1, wisdom_modifier)
-        return [
-            ("What", "Create 5-foot ocean spray Emanation"),
-            ("Casting Time", "Bonus Action"),
-            ("Cost", "1 use of Wild Shape"),
-            ("Duration", "10 minutes (until dismissed/Incapacitated)"),
-            ("Damage", f"{damage_dice}d6 Cold (vs. Constitution save)"),
-            ("Push", "Large or smaller creatures 15 feet away (on failed save)"),
-        ]
-
 
 class AquaticAffinity(Feature):
     def __init__(self):

@@ -63,16 +63,6 @@ class SecondWind(Feature):
 
         return base_text
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Regain hit points"),
-            ("Action", "Bonus Action"),
-            ("Effect", "1d10 + Fighter level"),
-            ("Uses", f"{uses}"),
-            ("Recharge", "1 use per short rest, all per long rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
@@ -121,18 +111,6 @@ class ActionSurge(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        recharge = "Short or long rest"
-        if character.get_class_level(CharacterClass.FIGHTER) >= 17:
-            recharge = "Short or long rest (max 1 per turn)"
-        return [
-            ("What", "Take one additional action"),
-            ("Restriction", "Cannot be Magic action"),
-            ("Uses", f"{uses}"),
-            ("Recharge", recharge),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
@@ -150,14 +128,6 @@ class TacticalMind(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("When", "When you fail an ability check"),
-            ("Cost", "1 Second Wind use"),
-            ("Effect", "Roll 1d10 and add it to the check"),
-            ("Special", "If still fails, use isn’t expended"),
-        ]
 
 
 class ExtraAttack(Feature):
@@ -201,15 +171,6 @@ class Indomitable(Feature):
             "You can use this feature twice before a Long Rest starting at level 13 and three times before a Long Rest starting at level 17."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Reroll a failed saving throw"),
-            ("Bonus", "Fighter level"),
-            ("Uses", f"{uses}"),
-            ("Recharge", "Long rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

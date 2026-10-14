@@ -280,16 +280,11 @@ class Feature(Effect):
     # origin only says when it's available (see Presentation/FeatureCards.py).
     labeled_by_class_level = False
 
-    # Optional alternate renderings: get_improved_description() replaces
-    # get_description() on full sheets; get_table_description() and
-    # get_concise_description() fall back to the improved description, then
-    # to get_description(), when they return None.
-
     def __init__(
         self,
         name: str | None = None,
         origin: str | None = None,
-        skippable_in_concise: bool = False,
+        passive: bool = False,
         usage_tags: (
             list[Literal["heal", "buff", "control", "damage", "utility", "summon"]]
             | None
@@ -300,10 +295,10 @@ class Feature(Effect):
     ):
         self.name = name if name is not None else type(self).__name__
         self.origin = origin
-        # Set True for features that only modify the stat block (e.g. a flat bonus
-        # or a resource pool) where the prose description adds nothing on a
-        # concise/table character sheet. Full-mode sheets always show it.
-        self.skippable_in_concise = skippable_in_concise
+        # Set True for features that only modify the stat block (e.g. a flat
+        # bonus or a proficiency): the card gets a Passive tag and is dimmed
+        # and sorted after the features used in play.
+        self.passive = passive
         # Action economy, duration, and range/shape for activating this feature.
         # Leave unset (or pass an empty FeatureActivation()) for passive features
         # and instantaneous effects with no meaningful range.
@@ -351,20 +346,6 @@ class Feature(Effect):
         stays as the source text (RunCharacterCreator.py --source-text
         prints it instead). Return None (default) to show
         get_description()."""
-        return None
-
-    def get_table_description(
-        self, character: CharacterView
-    ) -> list[tuple[str, str]] | None:
-        """Override to provide a concise label/value table version of the description
-        (e.g. [("What", "..."), ("Casting Time", "...")]), used when table descriptions
-        are requested. Return None to fall back to get_description()."""
-        return None
-
-    def get_concise_description(self, character: CharacterView) -> str | None:
-        """Override to provide a short prose summary of the description (a sentence
-        or two, same formatting rules as get_description), used when concise
-        descriptions are requested. Return None to fall back to get_description()."""
         return None
 
     def calculate_dc(self, character: CharacterView) -> int | None:

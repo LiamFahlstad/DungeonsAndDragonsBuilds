@@ -20,7 +20,7 @@ class FreeBackgroundAbilityBonus(Feature):
         super().__init__(
             name="Free Background Ability Bonus",
             origin="Background",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
 
@@ -51,7 +51,7 @@ class FreeBackgroundSkillProficiency(Feature):
         super().__init__(
             name="Free Background Skill Proficiency",
             origin="Background",
-            skippable_in_concise=True,
+            passive=True,
         )
 
     def apply(self, ledger_writer: LedgerWriter):

@@ -59,20 +59,6 @@ class HealingLight(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        charisma_modifier = character.get_charisma_modifier()
-        max_dice = max(1, charisma_modifier)
-        pool_size = 1 + warlock_level
-        return [
-            ("Pool", f"{pool_size} d6"),
-            ("Action", "Bonus Action"),
-            ("Range", "Self or creature within 60 feet"),
-            ("Max Dice", f"{max_dice} at once"),
-            ("Effect", "Restore HP equal to dice rolled"),
-            ("Recharge", "Long Rest"),
-        ]
-
 
 class RadiantSoul(Feature):
     def __init__(self):
@@ -103,9 +89,6 @@ class CelestialResilience(Feature):
         description = "You gain Temporary Hit Points whenever you use your Magical Cunning feature or finish a Short or Long Rest. These Temporary Hit Points equal your Warlock level plus your Charisma modifier. Additionally, choose up to five creatures you can see when you gain the points. Those creatures each gain Temporary Hit Points equal to half your Warlock level plus your Charisma modifier."
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "Gain temp HP (Warlock level + CHA mod) when using Magical Cunning or finishing Short or Long Rest; you can grant half that amount to up to 5 creatures you can see."
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -129,14 +112,3 @@ class SearingVengeance(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "You or ally within 60 feet about to fail Death Save"),
-            ("Target Effect", "Regain half max HP; end Prone condition"),
-            (
-                "Area Effect",
-                "Enemies within 30 feet take 2d8 + Charisma Radiant damage and Blinded until end of turn",
-            ),
-            ("Recharge", "Long Rest"),
-        ]

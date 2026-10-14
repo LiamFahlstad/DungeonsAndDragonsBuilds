@@ -125,19 +125,6 @@ if __name__ == "__main__":
         "of the default builds in RunCharacterCreator.py.",
     )
     parser.add_argument(
-        "--concise",
-        nargs="?",
-        const="concise",
-        default=None,
-        choices=["concise", "table"],
-        help="Render feature descriptions in a shortened form instead of the original "
-        "prose text. Bare --concise renders short prose summaries (via "
-        "Feature.get_concise_description); '--concise table' renders label/value "
-        "tables (via Feature.get_table_description). Features without the requested "
-        "version fall back to their normal description. Output files get a "
-        "'_concise' or '_table' suffix accordingly.",
-    )
-    parser.add_argument(
         "--feature-tags",
         action="store_true",
         help="Show the tag chips beside each feature's name (action economy, "
@@ -168,7 +155,6 @@ if __name__ == "__main__":
         writer.write_character_sheet(
             character,
             skill_config=skill_config,
-            description_mode=args.concise,
             include_probability_tables=args.probability_tables,
         )
 

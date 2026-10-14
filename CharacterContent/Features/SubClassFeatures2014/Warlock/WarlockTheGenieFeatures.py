@@ -174,18 +174,6 @@ class ElementalGift(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = self.number_of_uses(character)
-        damage_type = _WRATH_DAMAGE_TYPE[self.kind]
-        return [
-            ("Resistance", f"{damage_type.capitalize()} damage"),
-            ("Action", "Bonus action for flying speed"),
-            ("Flying Speed", "30 feet"),
-            ("Duration", "10 minutes (can hover)"),
-            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
-            ("Recharge", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -235,14 +223,3 @@ class LimitedWish(Feature):
             "Once you use this feature, you can't use it again until you finish 1d4 long rests."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action (speak to Genie's Vessel)"),
-            ("Spell Level", "6th level or lower"),
-            ("Casting Time", "1 action"),
-            ("Source", "Any class's spell list"),
-            ("Requirements", "Don't need to meet spell requirements"),
-            ("Components", "Costly components waived"),
-            ("Recharge", "1d4 long rests"),
-        ]

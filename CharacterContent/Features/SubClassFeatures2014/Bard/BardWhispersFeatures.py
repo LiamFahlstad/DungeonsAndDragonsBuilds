@@ -58,23 +58,6 @@ class PsychicBlades(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        if character.get_class_level(CharacterClass.BARD) < 5:
-            psychic_damage = "2d6"
-        elif character.get_class_level(CharacterClass.BARD) < 10:
-            psychic_damage = "3d6"
-        elif character.get_class_level(CharacterClass.BARD) < 15:
-            psychic_damage = "5d6"
-        else:
-            psychic_damage = "8d6"
-
-        return [
-            ("Trigger", "Hit a creature with a weapon attack"),
-            ("Cost", "1 Bardic Inspiration use"),
-            ("Damage", f"{psychic_damage} psychic"),
-            ("Limit", "Once per round on your turn"),
-        ]
-
 
 class WordsOfTerror(Feature):
     def __init__(self):
@@ -90,19 +73,6 @@ class WordsOfTerror(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Requirement", "Speak to humanoid alone for 1+ minute"),
-            ("Trigger", "End of conversation"),
-            ("Save", "Wisdom save vs Spell Save DC"),
-            (
-                "Effect (Fail)",
-                "Frightened of you or creature of your choice for 1 hour (or until attacked/damaged)",
-            ),
-            ("Effect (Success)", "Target has no hint of attempt"),
-            ("Recharge", "Short or long rest"),
-        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -249,17 +219,3 @@ class ShadowLore(Feature):
             "Once you use this feature, you can't use it again until you finish a long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "30 feet"),
-            ("Target", "One creature you can see"),
-            ("Save", "Wisdom save vs Spell Save DC"),
-            (
-                "Effect (Fail)",
-                "Charmed for 8 hours or until attacked/damaged; obeys your commands",
-            ),
-            ("Effect (Success)", "No effect"),
-            ("Cost", "Reusable with long rest"),
-        ]

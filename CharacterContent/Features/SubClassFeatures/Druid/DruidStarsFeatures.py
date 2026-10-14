@@ -62,9 +62,6 @@ class StarMap(Feature):
         )
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "You create a Tiny star chart that serves as your spellcasting focus. While holding it, you have Guidance and Guiding Bolt prepared, and can cast Guiding Bolt without expending a spell slot a number of times equal to your Wisdom modifier (minimum 1) per Long Rest. If lost, you can replace it by conducting a 1-hour ceremony during a Short or Long Rest."
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 

@@ -38,18 +38,6 @@ class RadianceOfTheDawn(Feature):
         description = "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to emit a flash of light in a 30-foot Emanation originating from yourself. Any magical Darkness—such as that created by the Darkness spell—in that area is dispelled. Additionally, each creature of your choice in that area must make a Constitution saving throw, taking Radiant damage equal to 2d10 plus your Cleric level on a failed save or half as much damage on a successful one."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Emit flash of light"),
-            ("Trigger", "Magic action, Holy Symbol, Channel Divinity"),
-            ("Area", "30-foot Emanation from yourself"),
-            ("Effect 1", "Dispel magical Darkness"),
-            (
-                "Effect 2",
-                "Constitution save; 2d10 + Cleric level Radiant damage on fail (half on success)",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
@@ -76,16 +64,6 @@ class WardingFlare(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Impose Disadvantage on attack roll"),
-            ("Trigger", "Reaction when creature within 30 feet attacks"),
-            ("Effect", "Disadvantage on the triggering attack"),
-            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
-            ("Recharge", "Long Rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -143,21 +121,6 @@ class CoronaOfLight(Feature):
             "You can use this feature a number of times based on your Wisdom modifier, and you regain all expended uses when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("What", "Emit aura of sunlight"),
-            ("Trigger", "Magic action"),
-            ("Duration", "1 minute or dismiss (no action)"),
-            ("Light", "60-foot Bright Light, +30 feet Dim Light"),
-            (
-                "Effect",
-                "Enemies in Bright Light have Disadvantage on saves vs Radiance/Fire/Radiant",
-            ),
-            ("Uses", f"{uses} (Wisdom modifier, minimum 1)"),
-            ("Recharge", "Long Rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -62,15 +62,6 @@ class RebukeTheViolent(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Attacker within 30 feet hits another creature"),
-            ("Action", "Reaction"),
-            ("Save", "Wisdom"),
-            ("Damage (fail)", "Radiant = damage dealt"),
-            ("Damage (success)", "Half damage dealt"),
-        ]
-
 
 class AuraOfTheGuardian(Feature):
     def __init__(self):
@@ -88,15 +79,6 @@ class AuraOfTheGuardian(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Range", "10 feet (30 at 18th level)"),
-            ("Trigger", "Creature takes damage"),
-            ("Action", "Reaction"),
-            ("Effect", "You take damage instead of creature"),
-            ("Limitation", "Damage can't be reduced; doesn't transfer other effects"),
-        ]
 
 
 class AuraOfTheGuardianExpansion(Feature):
@@ -128,14 +110,6 @@ class ProtectiveSpirit(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        half_level = character.get_class_level(CharacterClass.PALADIN) // 2
-        return [
-            ("Trigger", "End turn in combat with < half HP"),
-            ("Effect", f"Regain 1d6 + {half_level} HP"),
-            ("Condition", "Not incapacitated"),
-        ]
-
 
 class EmissaryOfRedemption(Feature):
     def __init__(self):
@@ -157,17 +131,3 @@ class EmissaryOfRedemption(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Avatar of peace"),
-            ("Resistance", "All damage from creatures"),
-            (
-                "Damage Return",
-                "Creatures that hit you take radiant damage = half damage to you",
-            ),
-            (
-                "Deactivation",
-                "If you attack/spell/damage a creature: benefits don't work against it for 24 hours",
-            ),
-        ]

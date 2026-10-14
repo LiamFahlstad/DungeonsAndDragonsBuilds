@@ -71,19 +71,6 @@ class MomentaryStasis(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        int_mod = character.get_intelligence_modifier()
-        uses = max(1, int_mod)
-        return [
-            ("Action", "Action"),
-            ("Target", "Large or smaller creature within 60 feet"),
-            ("Save", "Constitution saving throw vs spell save DC"),
-            ("Effect", "Incapacitated, speed 0, encased in field"),
-            ("Duration", "Until end of your next turn or until takes damage"),
-            ("Uses", f"Int modifier ({uses}, minimum 1)"),
-            ("Recharge", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 

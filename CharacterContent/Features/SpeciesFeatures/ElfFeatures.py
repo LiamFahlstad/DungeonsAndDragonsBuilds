@@ -11,9 +11,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
-        super().__init__(
-            name="Darkvision", origin="Elf Trait", skippable_in_concise=True
-        )
+        super().__init__(name="Darkvision", origin="Elf Trait", passive=True)
         self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
     def apply(self, ledger_writer: LedgerWriter):
@@ -34,9 +32,7 @@ class FeyAncestry(Feature):
 
 class KeenSenses(Feature):
     def __init__(self, skill: Skill):
-        super().__init__(
-            name="Keen Senses", origin="Elf Trait", skippable_in_concise=True
-        )
+        super().__init__(name="Keen Senses", origin="Elf Trait", passive=True)
         self._choice = SkillProficiencyChoice(
             [skill],
             [Skill.SURVIVAL, Skill.PERCEPTION, Skill.INSIGHT],

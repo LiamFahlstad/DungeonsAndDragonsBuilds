@@ -70,27 +70,6 @@ class UnwaveringMark(Feature):
         description += f"\nRight now: {level // 2} extra damage on the special attack."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        strength_modifier = character.get_strength_modifier()
-        uses = max(1, strength_modifier)
-        fighter_level = character.get_class_level(CharacterClass.FIGHTER)
-        extra_damage = fighter_level // 2
-
-        return [
-            ("Trigger", "Hit a creature with melee weapon attack"),
-            (
-                "Mark Effect",
-                "Disadvantage on attacks not targeting you (5 ft, until end of your next turn)",
-            ),
-            (
-                "Bonus Action",
-                "Make special melee attack against marked creature with advantage",
-            ),
-            ("Extra Damage", f"{extra_damage} (half your fighter level)"),
-            ("Uses", f"{uses} (Strength modifier, minimum 1)"),
-            ("Regain", "Long rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -123,18 +102,6 @@ class WardingManeuver(Feature):
             "You can use this feature a number of times equal to your Constitution modifier (a minimum of once), and you regain all expended uses of it when you finish a long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        constitution_modifier = character.get_constitution_modifier()
-        uses = max(1, constitution_modifier)
-
-        return [
-            ("Trigger", "You or ally within 5 feet is hit by an attack"),
-            ("Action", "Reaction (must wield melee weapon or shield)"),
-            ("Effect", "Roll 1d8, add to target's AC; or resistance if still hits"),
-            ("Uses", f"{uses} (Constitution modifier, minimum 1)"),
-            ("Regain", "Long rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -181,18 +148,6 @@ class FerociousCharger(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        dc = self.calculate_dc(character)
-
-        return [
-            ("Trigger", "Move 10+ feet in straight line, then hit with attack"),
-            (
-                "Effect",
-                f"Target must succeed on Strength save (DC {dc}) or be knocked prone",
-            ),
-            ("Frequency", "Once per turn"),
-        ]
 
 
 class VigilantDefender(Feature):

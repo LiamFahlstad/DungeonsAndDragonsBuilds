@@ -26,21 +26,6 @@ class MoteOfPotential(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Give a creature a Bardic Inspiration die"),
-            ("Mote Effect: Ability Check", "Roll die again, choose which roll to use"),
-            (
-                "Mote Effect: Attack Roll",
-                "Targets within 5 ft make CON save or take thunder damage equal to die roll",
-            ),
-            (
-                "Mote Effect: Saving Throw",
-                "Creature gains temp HP equal to die roll + CHA modifier (min 1)",
-            ),
-            ("Duration", "Until Bardic Inspiration die is lost"),
-        ]
-
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Paragraph(

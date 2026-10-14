@@ -174,13 +174,6 @@ class PsionicRestoration(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Meditation (1 minute)"),
-            ("Effect", "Regain expended Psionic Energy Dice"),
-            ("Recharge", "Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -200,13 +193,6 @@ class PsionicSurge(Feature):
             "Dice as a 4."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "After rolling one or more Psionic Energy Dice"),
-            ("Cost", "Expend one Hit Point Die"),
-            ("Effect", "Treat rolls of 1, 2, 3 on Psionic Energy Dice as 4"),
-        ]
 
 
 class PsionicReserves(Feature):
@@ -258,17 +244,3 @@ class EnkindledLifeForce(Feature):
             "Energy Die."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Trigger",
-                "Once per turn, when rolling Psionic Energy Dice for a Psion feature or Discipline",
-            ),
-            ("Cost", "Expend 1 or 2 Hit Point Dice"),
-            (
-                "Effect",
-                "Roll additional Psionic Energy Dice (1 per Hit Die spent) and add to total",
-            ),
-            ("Special", "Bonus rolls do not expend Psionic Energy Dice"),
-        ]

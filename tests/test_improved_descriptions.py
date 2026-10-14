@@ -34,8 +34,8 @@ def _cleric():
     return character, feature
 
 
-def _html(feature, character, mode=None, source_text=False) -> str:
-    html = render_feature_description(feature, character, mode, source_text)
+def _html(feature, character, source_text=False) -> str:
+    html = render_feature_description(feature, character, source_text)
     assert html is not None
     return html
 
@@ -80,12 +80,6 @@ class TestChannelDivinity:
             assert improved is not None
             rendered.add(improved_description_to_html(improved))
         assert len(rendered) == 1
-
-    def test_condensed_sheets_fall_back_to_it(self):
-        character, feature = _cleric()
-        assert feature.get_concise_description(character) is None
-        html = _html(feature, character, "concise")
-        assert "feature-option-name" in html
 
 
 def test_features_without_one_keep_their_source_text():

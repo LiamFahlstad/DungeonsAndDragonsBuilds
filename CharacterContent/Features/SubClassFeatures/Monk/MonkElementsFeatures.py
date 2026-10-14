@@ -100,18 +100,6 @@ class ElementalAttunement(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Start of your turn"),
-            ("Cost", "1 Focus Point"),
-            ("Duration", "10 minutes or until Incapacitated"),
-            ("Reach", "Unarmed Strikes gain 10-foot increased reach"),
-            (
-                "Elemental Strikes",
-                "Change damage type to Acid/Cold/Fire/Lightning/Thunder; target Strength save or moved 10 feet",
-            ),
-        ]
-
 
 class ManipulateElements(Feature):
     def __init__(self):
@@ -144,16 +132,6 @@ class ElementalBurst(Feature):
             "Each creature in the Sphere must make a Dexterity saving throw. On a failed save, a creature takes damage of the chosen type equal to three rolls of your Martial Arts die. On a successful save, a creature takes half as much damage."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Magic action"),
-            ("Cost", "2 Focus Points"),
-            ("Area", "20-foot-radius Sphere, 120 feet away"),
-            ("Damage Types", "Acid, Cold, Fire, Lightning, or Thunder (your choice)"),
-            ("Save", "Dexterity"),
-            ("Damage", "3 Martial Arts die on failed save, half on successful save"),
-        ]
 
 
 class StrideOfTheElements(Feature):

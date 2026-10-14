@@ -29,18 +29,6 @@ class NaturesWrath(Feature):
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Magic action"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Range", "15 feet"),
-            ("Save", "Strength"),
-            (
-                "Effect",
-                "Restrained condition for 1 minute (repeats save at end of turn)",
-            ),
-        ]
-
 
 class OathOfTheAncientsSpells(Feature):
     def __init__(self):
@@ -101,12 +89,6 @@ class UndyingSentinel(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "When reduced to 0 HP and not killed, drop to 1 HP instead and regain 3× your Paladin level HP (1/Long Rest). "
-            "Additionally, you can't be aged magically and stop visibly aging."
-        )
-
 
 class ElderChampion(Feature):
     def __init__(self):
@@ -159,19 +141,3 @@ class ElderChampion(Feature):
             "Swift Spells. Whenever you cast a spell that has a casting time of an action, you can cast it using a Bonus Action instead."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "1 minute (or until ended)"),
-            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            (
-                "Diminish Defiance",
-                "Enemies in aura have Disadvantage on saves against your spells and Channel Divinity",
-            ),
-            ("Regeneration", "Regain 10 HP at start of each turn"),
-            (
-                "Swift Spells",
-                "Cast spells with action casting time as Bonus Action instead",
-            ),
-        ]

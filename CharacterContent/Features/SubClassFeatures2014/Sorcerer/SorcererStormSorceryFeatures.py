@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -18,7 +17,7 @@ class WindSpeaker(Feature):
         super().__init__(
             name="Wind Speaker",
             origin="Storm Sorcery Sorcerer Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._language = GrantLanguage(Language.PRIMORDIAL)
 
@@ -116,16 +115,6 @@ class StormsFury(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        sorcerer_level = character.get_class_level(Definitions.CharacterClass.SORCERER)
-        return [
-            ("Trigger", "Hit by melee attack"),
-            ("Action", "Reaction"),
-            ("Damage", f"{sorcerer_level} lightning damage"),
-            ("Save", "Strength saving throw vs spell save DC"),
-            ("On Failed Save", "Pushed up to 20 feet away"),
-        ]
 
 
 class WindSoul(Feature):

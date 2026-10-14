@@ -84,18 +84,6 @@ class EyesOfNight(Feature):
         description += f"\nRight now: share with up to {max(1, character.get_wisdom_modifier())} creatures."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_wisdom_modifier()
-        creatures = max(1, wis_mod)
-        return [
-            ("Personal Darkvision", "300 feet"),
-            ("Action", "Action"),
-            ("Sharing Range", "10 feet"),
-            ("Targets to Share", f"Wisdom modifier (minimum 1) – {creatures}"),
-            ("Shared Duration", "1 hour"),
-            ("Recharge", "Long rest (or expend a spell slot)"),
-        ]
-
 
 class VigilantBlessing(Feature):
     def __init__(self):
@@ -141,19 +129,6 @@ class TwilightSanctuaryChannelDivinity(Feature):
         description += f"\nRight now: 1d6 + {level} temporary hit points."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Area", "30-foot radius sphere centered on you"),
-            ("Light", "Dim light"),
-            ("Movement", "Moves with you"),
-            ("Duration", "1 minute or until you are incapacitated or die"),
-            (
-                "Effect per Turn",
-                "Choose: grant 1d6 + cleric level temp HP, or remove charmed/frightened",
-            ),
-        ]
-
 
 class StepsOfNight(Feature):
     def __init__(self):
@@ -184,17 +159,6 @@ class StepsOfNight(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return [
-            ("Action", "Bonus action"),
-            ("Condition", "In dim light or darkness"),
-            ("Effect", "Flying speed = walking speed"),
-            ("Duration", "1 minute"),
-            ("Uses", f"Proficiency bonus ({proficiency_bonus})"),
-            ("Recharge", "Long rest"),
-        ]
 
 
 class TwilightShroud(Feature):

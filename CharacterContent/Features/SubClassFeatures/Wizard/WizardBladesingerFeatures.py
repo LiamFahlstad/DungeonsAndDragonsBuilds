@@ -86,23 +86,6 @@ class Bladesong(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        int_mod = character.get_intelligence_modifier()
-        return [
-            ("Activation", "Bonus Action (while no armor or Shield)"),
-            (
-                "Duration",
-                "1 minute (ends if Incapacitated, don armor/Shield, or use two hands on attack)",
-            ),
-            ("Uses", f"{int_mod} per Long Rest (minimum 1); +1 from Arcane Recovery"),
-            (
-                "Agility",
-                f"AC +{max(1, int_mod)}, Speed +10 ft, Advantage on Acrobatics",
-            ),
-            ("Bladework", f"Use INT mod ({int_mod}) for attack and damage rolls"),
-            ("Focus", f"Add INT mod ({int_mod}) to CON saves for Concentration"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -125,7 +108,7 @@ class TrainingInWarAndSong(Feature):
         super().__init__(
             name="Training in War and Song",
             origin="Bladesinger Wizard Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
 
     def apply(self, ledger_writer: LedgerWriter):

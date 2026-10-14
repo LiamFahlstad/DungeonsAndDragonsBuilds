@@ -63,18 +63,6 @@ class HuntersSense(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wisdom_modifier = character.get_wisdom_modifier()
-        uses = max(1, wisdom_modifier)
-        return [
-            ("What", "Discern damage immunities/resistances/vulnerabilities"),
-            ("Action", "Action"),
-            ("Range", "60 feet"),
-            ("Effect", "Learn creature's damage properties"),
-            ("Uses", f"{uses}"),
-            ("Recharge", "Long rest"),
-        ]
-
 
 class SlayersPrey(Feature):
     def __init__(self):
@@ -96,15 +84,6 @@ class SlayersPrey(Feature):
             "This benefit lasts until you finish a short or long rest. It ends early if you designate a different creature."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Designate one creature as prey"),
-            ("Action", "Bonus action"),
-            ("Range", "60 feet"),
-            ("Effect", "Extra 1d6 damage on first hit per turn"),
-            ("Duration", "Until short or long rest (ends early if redesignate)"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -150,17 +129,6 @@ class MagicUsersNemesis(Feature):
             "Once you use this feature, you can't use it again until you finish a short or long rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        spell_save_dc = self.calculate_dc(character)
-        return [
-            ("What", "Foil spell or teleport"),
-            ("Action", "Reaction"),
-            ("Range", "60 feet"),
-            ("Save", f"Wisdom save vs. spell save DC {spell_save_dc}"),
-            ("Effect", "Spell or teleport fails"),
-            ("Recharge", "Short or long rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

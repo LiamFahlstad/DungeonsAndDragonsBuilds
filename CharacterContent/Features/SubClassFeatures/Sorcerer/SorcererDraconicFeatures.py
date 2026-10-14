@@ -39,7 +39,7 @@ class DraconicResilience(Feature):
         super().__init__(
             name="Draconic Resilience",
             origin="Draconic Sorcerer Level 3",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CHARISMA])
@@ -116,14 +116,6 @@ class DragonWings(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "1 hour or dismiss (no action)"),
-            ("Benefit", "Fly Speed 60 feet"),
-            ("Recharge", "Long Rest or 3 Sorcery Points"),
-        ]
 
 
 class DragonCompanion(Feature):

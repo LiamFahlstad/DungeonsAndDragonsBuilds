@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Ability, ArmorType
+from Core.Definitions import ArmorType
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -91,16 +91,6 @@ class OrdersDemandChannelDivinity(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "30 feet"),
-            ("Target", "Creatures you can see or hear"),
-            ("Save", "Wisdom saving throw"),
-            ("Duration", "Until end of your next turn or until takes damage"),
-            ("Effect", "Charmed; optionally drop held items"),
-        ]
-
 
 class EmbodimentOfTheLaw(Feature):
     def __init__(self):
@@ -129,16 +119,6 @@ class EmbodimentOfTheLaw(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wis_mod)
-        return [
-            ("Applies to", "Enchantment spells with 1st+ level slot"),
-            ("Casting Time Change", "To 1 bonus action (if normally 1 action)"),
-            ("Uses", f"Wisdom modifier (minimum 1) – {uses}"),
-            ("Recharge", "Long rest"),
-        ]
-
 
 class OrdersWrath(Feature):
     def __init__(self):
@@ -152,6 +132,3 @@ class OrdersWrath(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn."
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "When you deal Divine Strike damage, curse the target until start of your next turn. The next time an ally hits it, the target also takes 2d8 psychic damage and the curse ends (once per turn)."

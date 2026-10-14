@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -59,21 +58,6 @@ class HexbladesCurse(Feature):
         description += f"\nRight now: +{character.get_proficiency_bonus()} damage; regain {max(1, level + character.get_charisma_modifier())} hit points when the target dies."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "30 feet"),
-            (
-                "Duration",
-                "1 minute (ends on target death, your death, or incapacitation)",
-            ),
-            ("Damage Bonus", f"Proficiency bonus ({proficiency_bonus})"),
-            ("Critical Hit", "On 19-20"),
-            ("Target Death", "Regain HP = Warlock level + Charisma modifier (min 1)"),
-            ("Recharge", "Short or long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -122,18 +106,6 @@ class AccursedSpecter(Feature):
         description += f"\nRight now: {level // 2} temporary hit points, +{max(0, character.get_charisma_modifier())} to its attack rolls."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        return [
-            ("Trigger", "Slay a Humanoid"),
-            ("Effect", "Specter rises from corpse"),
-            ("Temp HP", f"Half Warlock level ({warlock_level // 2})"),
-            ("Action", "Rolls initiative, has own turns"),
-            ("Attack Bonus", "Charisma modifier (min +0)"),
-            ("Duration", "Until end of next Long Rest"),
-            ("Recharge", "Long rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -150,13 +122,6 @@ class ArmorOfHexes(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your hex grows more powerful. If the target cursed by your Hexblade's Curse hits you with an attack roll, you can use your Reaction to roll a d6. On a 4 or higher, the attack instead misses you, regardless of its roll."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Cursed creature hits you with attack roll"),
-            ("Type", "Reaction"),
-            ("Effect", "Roll d6; on 4+ attack misses"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

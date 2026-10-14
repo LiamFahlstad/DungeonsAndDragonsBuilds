@@ -1,10 +1,22 @@
 import Core.Definitions as Definitions
-from Core.Definitions import DRUID_HIT_DIE, Condition, DamageType
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Core.Definitions import (
+    DRUID_HIT_DIE,
+    Ability,
+    CharacterClass,
+    Condition,
+    DamageType,
+)
+from Model.Content.Feature import (
+    ActionType,
+    Feature,
+    FeatureActivation,
+    FeatureDice,
+    FeatureTarget,
+)
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
     Definitions.DruidLandType.ARID: "Fire",
@@ -29,6 +41,18 @@ class CircleOfTheLandSpells(Feature):
         return description
 
 
+LANDS_AID_DICE = FeatureDice(
+    "Land's Aid",
+    (
+        (3, "2d6"),
+        (10, "3d6"),
+        (14, "4d6"),
+    ),
+    CharacterClass.DRUID,
+    note="Necrotic damage and healing",
+)
+
+
 class LandsAid(Feature):
     def __init__(self):
         super().__init__(
@@ -38,10 +62,38 @@ class LandsAid(Feature):
                 action_type=ActionType.ACTION, range="60 Feet (10-Foot-Radius Sphere)"
             ),
             usage_tags=["damage", "heal"],
+            dice=LANDS_AID_DICE,
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The damage and healing dice are in the panel below.
+        return [
+            Paragraph(
+                "Flowers and thorns bloom for a moment, harming foes and mending an ally."
+            ),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "One use of Wild Shape"),
+                    ("Range", "A point within 60 feet"),
+                    ("Area", "10-foot-radius Sphere centered on that point"),
+                    ("Target", "Each creature of your choice in the Sphere"),
+                    (
+                        "Save",
+                        f"Constitution save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "Land's Aid dice (see Dice below) Necrotic damage"),
+                    ("Succeeded", "Half damage"),
+                    (
+                        "Heal",
+                        "One creature of your choice in the area regains Land's Aid dice (see Dice below) Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
@@ -52,24 +104,6 @@ class LandsAid(Feature):
             "The damage and healing increase by 1d6 when you reach Druid levels 10 (3d6) and 14 (4d6)."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        druid_level = character.get_class_level(Definitions.CharacterClass.DRUID)
-        if druid_level >= 14:
-            damage_healing = "4d6"
-        elif druid_level >= 10:
-            damage_healing = "3d6"
-        else:
-            damage_healing = "2d6"
-        return [
-            ("What", "Create flowers and thorns in a 10-foot Sphere"),
-            ("Casting Time", "Magic action"),
-            ("Cost", "1 use of Wild Shape"),
-            ("Range", "60 feet"),
-            ("Save", "Constitution vs. your spell save DC"),
-            ("Damage", f"{damage_healing} Necrotic (half on save)"),
-            ("Healing", f"{damage_healing} HP to one creature of your choice"),
-        ]
 
 
 class NaturalRecovery(Feature):
@@ -105,25 +139,13 @@ class NaturalRecovery(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        druid_level = character.get_class_level(Definitions.CharacterClass.DRUID)
-        max_slot_level_sum = (druid_level + 1) // 2
-        return [
-            ("Ability 1", "Cast one prepared Circle Spell without slot (1/Long Rest)"),
-            (
-                "Ability 2",
-                f"Short Rest: recover spell slots (max combined level {max_slot_level_sum}, no level 6+)",
-            ),
-            ("Slot Recovery Recharge", "Long Rest"),
-        ]
-
 
 class NaturesWard(Feature):
     def __init__(self, land_type: Definitions.DruidLandType):
         super().__init__(
             name="Nature's Ward",
             origin="Circle of the Land Druid Level 10",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self.land_type = land_type
@@ -170,15 +192,3 @@ class NaturesSanctuary(Feature):
             "As a Bonus Action, you can move the Cube up to 60 feet to ground within 120 feet of yourself."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Create spectral trees and vines in a 15-foot Cube"),
-            ("Casting Time", "Magic action"),
-            ("Cost", "1 use of Wild Shape"),
-            ("Range", "120 feet"),
-            ("Duration", "1 minute (until Incapacitated/dead)"),
-            ("Benefit", "Half Cover for you and allies"),
-            ("Resistance", "Allies gain your Nature's Ward resistance"),
-            ("Bonus Action", "Move Cube up to 60 feet"),
-        ]

@@ -1,5 +1,5 @@
 import pathlib
-from typing import Literal, Optional
+from typing import Optional
 
 from Model.Character import Character
 from Presentation import Html
@@ -19,7 +19,6 @@ def write_build_group_pages(
     group_name: str,
     output_folder: str,
     characters: list["Character"],
-    description_mode: Literal["table", "concise"] | None = None,
     include_probability_tables: bool = False,
     min_level: Optional[int] = None,
     max_level: Optional[int] = None,
@@ -49,7 +48,6 @@ def write_build_group_pages(
         output_folder_obj / "features.html",
         group_name,
         prepared,
-        description_mode,
         min_level,
         max_level,
     )
@@ -76,7 +74,6 @@ def _write_features_page(
     path: pathlib.Path,
     group_name: str,
     prepared: list,
-    description_mode: Optional[Literal["table", "concise"]],
     min_level: Optional[int] = None,
     max_level: Optional[int] = None,
 ):
@@ -90,8 +87,7 @@ def _write_features_page(
             text_features = [
                 f
                 for f in character.top_level_features()
-                if render_feature_description(f, stat_block, description_mode)
-                is not None
+                if render_feature_description(f, stat_block) is not None
                 and (
                     min_level is None
                     or writer._feature_level(stat_block, f) >= min_level
@@ -113,9 +109,7 @@ def _write_features_page(
                 # max_level caps nested extension cards to the requested
                 # range's upper bound, same mechanism the per-level shard
                 # pages use (see HtmlCharacterSheetWriter._write_features_page).
-                write_feature_card(
-                    feature, stat_block, file, description_mode, max_level=max_level
-                )
+                write_feature_card(feature, stat_block, file, max_level=max_level)
         file.write("</div>\n")
 
 

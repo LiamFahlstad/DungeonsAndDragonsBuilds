@@ -169,13 +169,6 @@ class DrakeCompanion(Feature):
         )
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "Summon a friendly drake within 30 feet as an action (choose a damage type for its Draconic Essence). "
-            "The drake shares your initiative and acts after you, taking only the Dodge action unless you use a bonus action to command it. "
-            "It remains until reduced to 0 HP, resummoned, or you die; recharge with long rest or by expending a 1st-level spell slot."
-        )
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -235,19 +228,6 @@ class DrakesBreath(Feature):
         proficiency_bonus = character.get_proficiency_bonus()
         wisdom_modifier = character.get_wisdom_modifier()
         return 8 + proficiency_bonus + wisdom_modifier
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        ranger_level = character.get_class_level(CharacterClass.RANGER)
-        spell_save_dc = self.calculate_dc(character)
-        damage = "10d6" if ranger_level >= 15 else "8d6"
-        return [
-            ("What", "Exhale a cone of damaging breath"),
-            ("Action", "Action"),
-            ("Range", "30-foot cone"),
-            ("Save", f"Dexterity save vs. spell save DC {spell_save_dc}"),
-            ("Damage", f"{damage} on failed save, half on success"),
-            ("Recharge", "Long rest (or 3rd+ spell slot)"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA

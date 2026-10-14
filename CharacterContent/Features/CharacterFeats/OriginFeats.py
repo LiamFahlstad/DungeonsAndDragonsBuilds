@@ -78,9 +78,7 @@ class Skilled(OriginFeat):
         self._choice = SkillProficiencyChoice(
             skills, list(Skill), count=3, error_prefix="Skilled"
         )
-        super().__init__(
-            name="Skilled", origin="Origin Feat", skippable_in_concise=True
-        )
+        super().__init__(name="Skilled", origin="Origin Feat", passive=True)
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
@@ -186,13 +184,6 @@ class Lucky(OriginFeat):
             "Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.\n"
             "Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.\n"
             "Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll."
-        )
-        return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        description = (
-            "You have a number of Luck Points equal to your Proficiency Bonus and regain them when you finish a Long Rest. "
-            "Spend 1 Luck Point to give yourself Advantage on a d20 roll, or spend 1 Luck Point to impose Disadvantage on an attack roll against you."
         )
         return description
 
@@ -407,7 +398,7 @@ class TavernBrawler(OriginFeat):
 class Tough(OriginFeat):
     def __init__(self):
         self._hp = HitPointsPerLevelBonus(2)
-        super().__init__(name="Tough", origin="Origin Feat", skippable_in_concise=True)
+        super().__init__(name="Tough", origin="Origin Feat", passive=True)
 
     def apply(self, ledger_writer: LedgerWriter):
         self._hp.apply(ledger_writer)

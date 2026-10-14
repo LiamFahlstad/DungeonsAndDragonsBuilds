@@ -45,14 +45,6 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Replacing Cantrips", "Change one when you gain a Druid level"),
-            ("Replacing Spells", "Change one when you finish a Long Rest"),
-            ("Regaining Spell Slots", "Regain all expended slots on Long Rest"),
-            ("Spellcasting Ability", "Wisdom"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -184,14 +176,6 @@ class WildShape(Feature):
         )
         return rules + "\n\nKnown Forms:\n" + known_forms_lines
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        rows = list(self._rules(character).items())
-        forms = [form_cls() for form_cls in self.known_forms]
-        names = ", ".join(f"{form.combatant_type} (CR {form.cr})" for form in forms)
-        if names:
-            rows.append(("Current Forms", names))
-        return rows
-
     def get_original_description(self) -> str:
         """Official 2024 rules text, kept for reference only (not rendered)."""
         return (
@@ -252,18 +236,6 @@ class WildCompanion(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "What",
-                "Cast Find Familiar by expending a spell slot or a use of Wild Shape",
-            ),
-            ("Casting Time", "Magic action"),
-            ("Cost", "1 spell slot or 1 Wild Shape use"),
-            ("Components", "None (Material components waived)"),
-            ("Duration", "Familiar is Fey; disappears on Long Rest"),
-        ]
-
 
 class WildResurgence(Feature):
     def __init__(self):
@@ -275,18 +247,6 @@ class WildResurgence(Feature):
             "In addition, you can expend one use of Wild Shape (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Option 1",
-                "Expend spell slot (no action, once per turn) if no Wild Shape uses left → gain 1 Wild Shape use",
-            ),
-            (
-                "Option 2",
-                "Expend 1 Wild Shape use (no action, once per Long Rest) → gain 1 level 1 spell slot",
-            ),
-        ]
 
 
 class PotentSpellcasting(Feature):
@@ -421,19 +381,6 @@ class Archdruid(Feature):
             "Longevity. The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Evergreen Wild Shape",
-                "On Initiative roll with no Wild Shape uses left: regain 1 use",
-            ),
-            (
-                "Nature Magician",
-                "Convert unexpended Wild Shape uses to spell slot (no action, 2 spell levels per use, once per Long Rest)",
-            ),
-            ("Longevity", "Age 1 year for every 10 years that pass"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL

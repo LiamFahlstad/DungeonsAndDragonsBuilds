@@ -25,7 +25,7 @@ class ArcaneArcherLore(Feature):
         super().__init__(
             name="Arcane Archer Lore",
             origin="Arcane Archer Fighter Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._skill = skill
         self._cantrip = cantrip

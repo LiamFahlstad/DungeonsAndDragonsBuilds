@@ -17,7 +17,7 @@ class ConstructResilience(Feature):
         super().__init__(
             name="Construct Resilience",
             origin="Warforged Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistance = DamageResistance(DamageType.POISON)
@@ -50,7 +50,7 @@ class IntegratedProtection(Feature):
         super().__init__(
             name="Integrated Protection",
             origin="Warforged Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._bonus = ArmorClassBonus(1)
@@ -68,7 +68,7 @@ class SpecializedDesign(Feature):
         super().__init__(
             name="Specialized Design",
             origin="Warforged Trait",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SpecializedDesign"

@@ -26,7 +26,7 @@ class CelestialResistance(Feature):
         super().__init__(
             name="Celestial Resistance",
             origin="Aasimar Trait",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._resistances = [
@@ -44,9 +44,7 @@ class CelestialResistance(Feature):
 
 class Darkvision(Feature):
     def __init__(self):
-        super().__init__(
-            name="Darkvision", origin="Aasimar Trait", skippable_in_concise=True
-        )
+        super().__init__(name="Darkvision", origin="Aasimar Trait", passive=True)
         self._sense = GrantSense(Sense.DARKVISION, 60)
 
     def apply(self, ledger_writer: LedgerWriter):

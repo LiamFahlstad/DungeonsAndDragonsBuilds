@@ -19,9 +19,6 @@ class ReplacingEldritchInvocations(Feature):
         )
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "Whenever you gain a Warlock level, replace one invocation with another you qualify for (unless it's a prerequisite). Gain additional invocations at higher levels. Cannot pick the same invocation twice unless its description says otherwise."
-
     def get_resource_tiles(
         self, character: CharacterView
     ) -> list[tuple[str, list[tuple[str, str]]]]:
@@ -93,17 +90,6 @@ class MagicalCunning(Feature):
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Perform an esoteric rite"),
-            ("Duration", "1 minute"),
-            (
-                "Effect",
-                "Regain expended Pact Magic spell slots up to half your maximum (round up)",
-            ),
-            ("Recharge", "Once per Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -118,14 +104,6 @@ class ContactPatron(Feature):
             "Once you cast the spell with this feature, you can't do so in this way again until you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell", "Contact Other Plane (always prepared)"),
-            ("Casting", "Cast without expending a spell slot"),
-            ("Saving Throw", "Automatically succeed"),
-            ("Recharge", "Once per Long Rest"),
-        ]
 
 
 class MysticArcanum(Feature):
@@ -163,13 +141,6 @@ class MysticArcanum(Feature):
             "Whenever you gain a Warlock level, you can replace one of your arcanum spells with another Warlock spell of the same level."
         )
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "Choose a level 6 Warlock spell as an arcanum; cast it once per Long Rest without expending a spell slot. "
-            "Gain additional arcanum spells (level 7 at 13th, level 8 at 15th, level 9 at 17th). "
-            "You can replace any arcanum spell when you gain a Warlock level."
-        )
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -68,21 +68,6 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spellcasting Ability", "Intelligence"),
-            ("Cantrips Known", "3 + 1 at Rogue level 10 (Mage Hand mandatory)"),
-            ("Spellcasting Focus", "Arcane Focus allowed"),
-            (
-                "Spell Slots",
-                "See Arcane Trickster Spellcasting table (recover on Long Rest)",
-            ),
-            (
-                "Prepared Spells",
-                "See Arcane Trickster Spellcasting table (scale by Rogue level)",
-            ),
-        ]
-
 
 class MageHandLegerdemain(Feature):
     def __init__(self):
@@ -174,19 +159,6 @@ class SpellThief(Feature):
             "Once you steal a spell with this feature, you can't use this feature again until you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Creature casts spell targeting you or including you in area"),
-            ("Action", "Reaction"),
-            ("Save", "Intelligence (DC = your spell save DC)"),
-            (
-                "Effect",
-                "Negate spell; steal spell knowledge if level 1+ and castable by you",
-            ),
-            ("Duration", "8 hours (you have spell prepared; creature can't cast)"),
-            ("Limitation", "Once per Long Rest"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

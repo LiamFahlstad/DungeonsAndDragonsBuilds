@@ -55,15 +55,6 @@ class LayOnHands(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        pool_size = 5 * character.get_class_level(Definitions.CharacterClass.PALADIN)
-        return [
-            ("Healing Pool", f"{pool_size} Hit Points (replenishes on Long Rest)"),
-            ("Action", "Bonus Action"),
-            ("Use", "Touch a creature and restore HP up to pool maximum"),
-            ("Alternative", "Expend 5 HP to remove Poisoned condition"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -250,16 +241,6 @@ class AuraOfProtection(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        cha_mod = character.get_charisma_modifier()
-        bonus = max(1, cha_mod)
-        return [
-            ("Range", "10-foot Emanation from you"),
-            ("Benefit", f"+{bonus} bonus to saving throws (you and allies)"),
-            ("Condition", "Inactive while you are Incapacitated"),
-            ("Stacking", "Creature benefits from one aura at a time"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -307,19 +288,6 @@ class AbjureFoes(Feature):
         description = "As a Magic action, you can expend one use of this class's Channel Divinity to overwhelm foes with awe. As you present your Holy Symbol or weapon, you can target a number of creatures equal to your Charisma modifier (minimum of one creature) that you can see within 60 feet of yourself. Each target must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. While Frightened in this way, a target can do only one of the following on its turns: move, take an action, or take a Bonus Action."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        cha_mod = character.get_charisma_modifier()
-        targets = max(1, cha_mod)
-        return [
-            ("Action Type", "Magic action"),
-            ("Cost", "1 use of Channel Divinity"),
-            ("Range", "60 feet"),
-            ("Targets", f"Up to {targets} creatures you can see"),
-            ("Save", "Wisdom saving throw"),
-            ("Effect", "Frightened for 1 minute or until takes damage"),
-            ("Restriction", "Can only move, take an action, or Bonus Action per turn"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -361,17 +329,6 @@ class RestoringTouch(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "When you use Lay on Hands"),
-            (
-                "Effect",
-                "Remove Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned",
-            ),
-            ("Cost", "5 HP per condition removed"),
-            ("Note", "Expended HP doesn't restore hit points"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE

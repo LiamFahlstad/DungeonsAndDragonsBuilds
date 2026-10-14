@@ -45,16 +45,6 @@ class MagicAwareness(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return [
-            ("Action", "Action"),
-            ("Range", "60 feet (not through total cover)"),
-            ("Duration", "Until end of your next turn"),
-            ("Detects", "Spells (learn school of magic) and magic items"),
-            ("Uses", f"Proficiency bonus ({proficiency_bonus}) per long rest"),
-        ]
-
 
 class WildSurge(Feature):
     def __init__(self):
@@ -193,9 +183,6 @@ class UnstableBacklash(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "At 10th level, when you are imperiled during your rage, the magic within you can lash out; immediately after you take damage or fail a saving throw while raging, you can use your reaction to roll on the Wild Magic table and immediately produce the effect rolled. This effect replaces your current Wild Magic effect."
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return "When you take damage or fail a save while raging, use a Reaction to roll on the Wild Magic table and produce that effect (replaces your current effect)."
 
 
 class ControlledSurge(Feature):

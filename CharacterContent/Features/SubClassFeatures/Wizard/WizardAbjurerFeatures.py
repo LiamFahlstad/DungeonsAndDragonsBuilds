@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
@@ -64,20 +63,6 @@ class ArcaneWard(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wizard_level = character.get_class_level(Definitions.CharacterClass.WIZARD)
-        int_mod = character.get_intelligence_modifier()
-        max_hp = 2 * wizard_level + int_mod
-        return [
-            ("Ward HP Maximum", f"{max_hp} (2 × Wizard level + INT mod)"),
-            (
-                "Restoration",
-                "Cast abjuration spell OR Bonus Action + spell slot (2× slot level HP)",
-            ),
-            ("Duration", "Until Long Rest"),
-            ("Usage", "Once per Long Rest"),
-        ]
-
 
 class ProjectedWard(Feature):
     def __init__(self):
@@ -112,14 +97,6 @@ class SpellBreaker(Feature):
             "When you cast either spell with a spell slot, that slot isn't expended if the spell fails to stop a spell."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spells Prepared", "Counterspell, Dispel Magic (always)"),
-            ("Dispel Magic Action", "Bonus Action (instead of Action)"),
-            ("Dispel Magic Bonus", "Add Proficiency Bonus to ability check"),
-            ("Slot Efficiency", "Slots not expended if spell fails to stop a spell"),
-        ]
 
 
 class SpellResistance(Feature):

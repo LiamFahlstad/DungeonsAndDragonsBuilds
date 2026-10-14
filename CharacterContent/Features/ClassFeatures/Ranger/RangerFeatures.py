@@ -28,13 +28,6 @@ class Spellcasting(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell Replacement", "One spell each Long Rest"),
-            ("Spell Slots", "Regain all on Long Rest"),
-            ("Spellcasting Ability", "Wisdom"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -68,15 +61,6 @@ class FavoredEnemy(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        free_hunters_mark_uses = self.number_of_uses(character)
-
-        return [
-            ("Spell", "Hunter's Mark (always prepared)"),
-            ("Free Uses", f"{free_hunters_mark_uses}"),
-            ("Regain", "Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -99,7 +83,7 @@ class DeftExplorerExpertise(Feature):
         super().__init__(
             name="Deft Explorer Expertise",
             origin="Deft Explorer Ranger Level 2",
-            skippable_in_concise=True,
+            passive=True,
         )
         self.skill = skill
         self._choice = SkillExpertiseChoice(
@@ -158,9 +142,7 @@ class Roving(Feature):
 
 class Expertise(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(
-            name="Expertise", origin="Ranger Level 7", skippable_in_concise=True
-        )
+        super().__init__(name="Expertise", origin="Ranger Level 7", passive=True)
         self.skill_1 = skill_1
         self.skill_2 = skill_2
         self._choice = SkillExpertiseChoice(
@@ -229,15 +211,6 @@ class Tireless(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_wisdom_modifier()
-        uses = max(1, wis_mod)
-        return [
-            ("Temporary Hit Points", f"1d8 + Wisdom modifier (Magic Action)"),
-            ("THPs Uses", f"{uses}, regain on Long Rest"),
-            ("Exhaustion Reduction", "Decrease by 1 on Short Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -280,16 +253,6 @@ class NaturesVeil(Feature):
             "You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wis_mod = character.get_wisdom_modifier()
-        uses = max(1, wis_mod)
-        return [
-            ("Action", "Bonus Action"),
-            ("Effect", "Invisible condition"),
-            ("Duration", "Until end of your next turn"),
-            ("Uses", f"{uses}, regain on Long Rest"),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

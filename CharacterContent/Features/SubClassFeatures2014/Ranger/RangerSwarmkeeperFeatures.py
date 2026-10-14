@@ -90,17 +90,6 @@ class WrithingTide(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return [
-            ("What", "Gain flying speed from swarm"),
-            ("Action", "Bonus action"),
-            ("Effect", "Flying speed 10 ft, can hover"),
-            ("Duration", "1 minute or until incapacitated"),
-            ("Uses", f"{proficiency_bonus}"),
-            ("Recharge", "Long rest"),
-        ]
-
 
 class MightySwarm(Feature):
     def __init__(self):
@@ -153,17 +142,3 @@ class SwarmingDispersal(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return [
-            ("What", "Discorporate into swarm"),
-            ("Action", "Reaction"),
-            ("Condition", "When you take damage"),
-            (
-                "Effect",
-                "Resistance to that damage, teleport to unoccupied space within 30 ft",
-            ),
-            ("Uses", f"{proficiency_bonus}"),
-            ("Recharge", "Long rest"),
-        ]

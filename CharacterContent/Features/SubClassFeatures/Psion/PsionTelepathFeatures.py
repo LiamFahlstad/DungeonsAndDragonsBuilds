@@ -19,18 +19,6 @@ class MindInfiltrator(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell", "Detect Thoughts"),
-            ("Cost", "1 Psionic Energy Die"),
-            ("No Components", "Spell components waived"),
-            ("No Concentration", "Spell doesn't require Concentration"),
-            (
-                "Stealth on Read Thoughts",
-                "Target doesn't know you're probing (if fails save)",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
@@ -82,19 +70,6 @@ class BulwarkMind(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Activation", "Start of turn"),
-            ("Cost", "1 Psionic Energy Die"),
-            ("Duration", "10 minutes"),
-            ("Damage Resistance", "Psychic damage"),
-            (
-                "Saving Throw Bonus",
-                "Add die roll to INT/WIS/CHA saves (die doesn't expend)",
-            ),
-            ("Restriction", "Not while Incapacitated"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -138,17 +113,6 @@ class TelepathicBolstering(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Trigger",
-                "You or ally within telepathy range fails check or misses attack",
-            ),
-            ("Action", "Reaction"),
-            ("Effect", "Roll Psionic Energy Die and add to d20 roll"),
-            ("Cost", "1 Psionic Energy Die (expended only if success)"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -178,13 +142,6 @@ class ScrambleMinds(Feature):
             "rolling to determine its behavior."
         )
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "Cast Confusion without slot by expending 4 Psionic Energy Dice. Spell's radius becomes 30 feet, "
-            "choose one creature to auto-succeed on save, and you pick each creature's confused behavior each turn "
-            "(instead of rolling)."
-        )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA

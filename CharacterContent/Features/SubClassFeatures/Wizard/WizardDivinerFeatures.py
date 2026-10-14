@@ -37,20 +37,6 @@ class Portent(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Finish Long Rest"),
-            ("Rolls", "Roll 2d20 and record the numbers"),
-            (
-                "Usage",
-                "Replace any D20 Test (yours or seen creature) before the roll; once per turn",
-            ),
-            (
-                "Expiration",
-                "Each roll can be used once only; unused rolls lost at Long Rest",
-            ),
-        ]
-
 
 class ExpertDivination(Feature):
     def __init__(self):

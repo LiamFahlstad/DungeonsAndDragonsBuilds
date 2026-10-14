@@ -57,16 +57,6 @@ class ArcaneRecovery(Feature):
         )
         return text
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wizard_level = character.get_class_level(Definitions.CharacterClass.WIZARD)
-        max_combined = (wizard_level + 1) // 2  # Round up division
-        return [
-            ("When", "Finish a Short Rest"),
-            ("Maximum Slot Levels", f"Combined level ≤ {max_combined}"),
-            ("Slot Restrictions", "None can be level 6 or higher"),
-            ("Recharge", "Once per Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -82,9 +72,7 @@ class Scholar(Feature):
     ]
 
     def __init__(self, skill: Skill):
-        super().__init__(
-            name="Scholar", origin="Wizard Level 2", skippable_in_concise=True
-        )
+        super().__init__(name="Scholar", origin="Wizard Level 2", passive=True)
         self._expertise = SkillExpertiseChoice(
             [skill],
             self.SKILL_POOL,
@@ -118,16 +106,6 @@ class SpellMastery(Feature):
         )
         return text
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Choose", "One level 1 spell and one level 2 spell from spellbook"),
-            ("Requirements", "Chosen spells must have casting time of an action"),
-            ("Prepared", "Always"),
-            ("Cast at Lowest Level", "No spell slot required"),
-            ("Cast at Higher Level", "Expend spell slot"),
-            ("Refresh", "Long Rest; swap one spell of same level"),
-        ]
-
 
 class SignatureSpells(Feature):
     def __init__(self):
@@ -135,11 +113,3 @@ class SignatureSpells(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "Choose two level 3 spells in your spellbook as your signature spells. You always have these spells prepared, and you can cast each of them once at level 3 without expending a spell slot. When you do so, you can't cast them in this way again until you finish a Short or Long Rest. To cast either spell at a higher level, you must expend a spell slot."
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Choose", "Two level 3 spells from spellbook"),
-            ("Prepared", "Always"),
-            ("Cast at Level 3", "Once per Short or Long Rest without slot"),
-            ("Cast at Higher Level", "Expend spell slot"),
-        ]

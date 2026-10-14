@@ -51,19 +51,6 @@ class VowOfEnmity(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Use Attack action"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Range", "30 feet"),
-            ("Effect", "Advantage on attack rolls against target"),
-            ("Duration", "1 minute or until used again"),
-            (
-                "Transfer",
-                "If target drops to 0 HP, transfer vow to new target within 30 ft (no action)",
-            ),
-        ]
-
 
 class RelentlessAvenger(Feature):
     def __init__(self):
@@ -82,15 +69,6 @@ class RelentlessAvenger(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Hit with Opportunity Attack"),
-            ("Action", "Reaction"),
-            ("Effect", "Reduce target's Speed to 0 until end of turn"),
-            ("Movement", "Move up to half your Speed as part of Reaction"),
-            ("Opportunity Attacks", "Your movement doesn't provoke them"),
-        ]
 
 
 class SoulOfVengeance(Feature):
@@ -157,15 +135,3 @@ class AvengingAngel(Feature):
             "Frightful Aura. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "10 minutes (or until ended)"),
-            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            ("Flight", "Fly Speed 60 ft, can hover"),
-            (
-                "Frightful Aura",
-                "Enemies at turn start in aura save Wisdom or Frightened for 1 min (or until damaged); attack rolls against Frightened have Advantage",
-            ),
-        ]

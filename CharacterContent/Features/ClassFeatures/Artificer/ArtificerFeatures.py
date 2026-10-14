@@ -501,17 +501,6 @@ class FlashofGenius(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        intelligence_modifier = character.get_intelligence_modifier()
-        bonus = max(1, intelligence_modifier)
-        uses = max(1, intelligence_modifier)
-        return [
-            ("Trigger", "Creature within 30 feet fails ability check or saving throw"),
-            ("Action", "Reaction"),
-            ("Bonus", f"+{bonus}"),
-            ("Uses", f"{uses} per Long Rest"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
@@ -608,15 +597,3 @@ class SoulOfArtifice(Feature):
             "Magical Guidance. When you finish a Short Rest, you regain all expended uses of your Flash of Genius if you have Attunement to at least one magic item."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Cheat Death",
-                "When reduced to 0 HP, disintegrate any number of Uncommon or Rare items you created; gain 20 HP per item disintegrated",
-            ),
-            (
-                "Magical Guidance",
-                "When finishing a Short Rest while attuned to ≥1 item, regain all Flash of Genius uses",
-            ),
-        ]

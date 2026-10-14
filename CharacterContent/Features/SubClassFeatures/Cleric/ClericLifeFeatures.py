@@ -43,15 +43,6 @@ class PreserveLife(Feature):
         description = "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to evoke healing energy that can restore a number of Hit Points equal to five times your Cleric level. Choose Bloodied creatures within 30 feet of yourself (which can include you), and divide those Hit Points among them. This feature can restore a creature to no more than half its Hit Point maximum."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Restore Hit Points to Bloodied creatures"),
-            ("Trigger", "Magic action, Holy Symbol, Channel Divinity"),
-            ("Range", "30 feet (including yourself)"),
-            ("Total Healing", "5 × Cleric level"),
-            ("Limit", "No creature healed above half max HP"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 

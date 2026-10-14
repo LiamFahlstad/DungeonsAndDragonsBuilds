@@ -145,7 +145,7 @@ class AbilityScoreImprovement(GeneralFeat):
         super().__init__(
             name="Ability Score Improvement",
             origin="General Feat Level 4+",
-            skippable_in_concise=True,
+            passive=True,
         )
 
     def apply(self, ledger_writer: LedgerWriter):
@@ -420,7 +420,7 @@ class HeavilyArmored(_AbilityScoreFeat):
 
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -483,7 +483,7 @@ class LightlyArmored(_AbilityScoreFeat):
 
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -519,7 +519,7 @@ class MartialWeaponTraining(_AbilityScoreFeat):
 
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def apply(self, ledger_writer: LedgerWriter):
         super().apply(ledger_writer)
@@ -554,7 +554,7 @@ class ModeratelyArmored(_AbilityScoreFeat):
 
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -702,7 +702,7 @@ class Resilient(_AbilityScoreFeat):
 
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def apply(self, ledger_writer: LedgerWriter):
         super().apply(ledger_writer)
@@ -832,7 +832,7 @@ class SkillExpert(_AbilityScoreFeat):
             [skill], list(Skill), count=1, error_prefix="Skill Expert"
         )
         super().__init__(character_level, ability)
-        self.skippable_in_concise = True
+        self.passive = True
 
     def apply(self, ledger_writer: LedgerWriter):
         # Both grants are idempotent flags, and expertise's proficiency

@@ -45,17 +45,6 @@ class MutableForm(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Activation", "Bonus Action"),
-            ("Cost", "1 Psionic Energy Die"),
-            ("Temp HP", "Roll die + INT modifier (minimum 1)"),
-            ("Duration", "1 minute"),
-            ("Reach Bonus", "+5 feet"),
-            ("Speed Bonus", "+5 feet"),
-            ("Touch Range", "10 feet (for touch spells with action casting time)"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -137,17 +126,6 @@ class FleshWeaver(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Activation", "When using Mutable Form"),
-            ("Cost", "1 additional Psionic Energy Die"),
-            ("Organic Defense", "+2 bonus to AC"),
-            (
-                "Empowered Healing",
-                "When casting healing spell, expend die and add roll to HP regained",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -219,10 +197,3 @@ class LifeBendingWeapons(Feature):
             "next turn."
         )
         return description
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "On hit with Organic Weapon, roll a Psionic Energy Die for extra Necrotic damage "
-            "(no expend). Alternatively (once/turn), expend one die: deal extra Necrotic damage "
-            "+ heal creatures in 30-foot emanation for die roll + INT mod."
-        )

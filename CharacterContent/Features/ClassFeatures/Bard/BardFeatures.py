@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -105,37 +104,13 @@ class BardicInspiration(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        bard_level = character.get_class_level(Definitions.CharacterClass.BARD)
-        if bard_level >= 15:
-            die = "d12"
-        elif bard_level >= 10:
-            die = "d10"
-        elif bard_level >= 5:
-            die = "d8"
-        else:
-            die = "d6"
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "60 feet"),
-            ("Inspiration Die", die),
-            ("Uses", f"{self.number_of_uses(character)} per Long Rest"),
-            ("Duration", "1 hour (until creature fails a D20 Test)"),
-            (
-                "Effect",
-                "Creature adds die result to d20 to potentially turn failure into success",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
 
 class ExpertiseLevel1(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(
-            name="Expertise", origin="Bard Level 1", skippable_in_concise=True
-        )
+        super().__init__(name="Expertise", origin="Bard Level 1", passive=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -150,9 +125,7 @@ class ExpertiseLevel1(Feature):
 
 class ExpertiseLevel9(Feature):
     def __init__(self, skill_1: Skill, skill_2: Skill):
-        super().__init__(
-            name="Expertise", origin="Bard Level 9", skippable_in_concise=True
-        )
+        super().__init__(name="Expertise", origin="Bard Level 9", passive=True)
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Bard Expertise"
         )
@@ -170,7 +143,7 @@ class JackOfAllTrades(Feature):
         super().__init__(
             name="Jack of All Trades",
             origin="Bard Level 2",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._bonus = JackOfAllTradesBonus()
@@ -194,12 +167,6 @@ class FontOfInspiration(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Regain Uses On", "Short or Long Rest"),
-            ("Alternative Cost", "1 spell slot (no action required)"),
-        ]
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST
 
@@ -218,13 +185,6 @@ class Countercharm(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Creature within 30 feet fails save vs Charmed or Frightened"),
-            ("Action", "Reaction"),
-            ("Effect", "Reroll save with Advantage"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY

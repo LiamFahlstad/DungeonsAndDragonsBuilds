@@ -115,18 +115,6 @@ class BastionOfLaw(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Magic action"),
-            ("Cost", "1–5 Sorcery Points"),
-            ("Range", "30 feet"),
-            (
-                "Effect",
-                "Create d8s equal to points spent; creature can expend to reduce damage",
-            ),
-            ("Duration", "Until Long Rest or use again"),
-        ]
-
 
 class TranceOfOrder(Feature):
     def __init__(self):
@@ -149,15 +137,6 @@ class TranceOfOrder(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "1 minute"),
-            ("Benefit 1", "Attack rolls against you can’t benefit from Advantage"),
-            ("Benefit 2", "Treat d20 rolls of 9 or lower as 10"),
-            ("Recharge", "Long Rest or 5 Sorcery Points"),
-        ]
 
 
 class ClockworkCavalcade(Feature):
@@ -215,14 +194,3 @@ class ClockworkCavalcade(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Magic action"),
-            ("Area", "30-foot Cube from you"),
-            (
-                "Effects",
-                "Heal up to 100 HP (distributed), repair all damaged objects, dispel spells level 6 and lower",
-            ),
-            ("Recharge", "Long Rest or 7 Sorcery Points"),
-        ]

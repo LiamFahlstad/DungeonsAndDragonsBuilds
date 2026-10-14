@@ -1,7 +1,7 @@
 import html
 import pathlib
 from enum import Enum
-from typing import Collection, Literal, Optional, Sequence, TextIO
+from typing import Collection, Optional, Sequence, TextIO
 
 import Core.Definitions as Definitions
 from Model.Inventory import EquipmentEntry
@@ -47,7 +47,6 @@ from Utils import DamageCalculator
 
 def get_output_folder(
     data: "Character",
-    description_mode: Literal["table", "concise"] | None = None,
 ) -> str:
     if data.character_name is None:
         raise ValueError("Character name must be set to generate file path.")
@@ -56,11 +55,10 @@ def get_output_folder(
     if data.base_class is None:
         raise ValueError("Base class must be set to generate file path.")
     example_prefix = "example_" if data.is_example else ""
-    mode_suffix = f"_{description_mode}" if description_mode else ""
     return (
         f"Output/{example_prefix}{data.base_class.lower()}_"
         f"{data.character_subclass.lower().replace(' / ', '_')}_"
-        f"{_slugify_name(data.character_name)}{mode_suffix}"
+        f"{_slugify_name(data.character_name)}"
     )
 
 
@@ -1408,12 +1406,11 @@ class HtmlCharacterSheetWriter:
         self,
         data: "Character",
         skill_config: Definitions.SkillConfig = Definitions.SkillConfig.DEFAULT,
-        description_mode: Literal["table", "concise"] | None = None,
         include_probability_tables: bool = False,
         output_folder: Optional[str] = None,
     ) -> None:
         """Render every page of `data`'s character sheet. `output_folder`
-        overrides the default `get_output_folder(data, description_mode)`
+        overrides the default `get_output_folder(data)`
         path - tests use this to render into a tmp directory instead of
         `Output/`."""
         # `validate()` is the single validation entry point: the required
@@ -1422,7 +1419,7 @@ class HtmlCharacterSheetWriter:
         # effect.
         character = data.validate()
         if output_folder is None:
-            output_folder = get_output_folder(data, description_mode)
+            output_folder = get_output_folder(data)
         armors = data.armors
         armor_proficiencies = character.armor_training()
         weapon_proficiencies = character.weapon_proficiencies()
@@ -1450,9 +1447,7 @@ class HtmlCharacterSheetWriter:
         (output_folder_obj / "features").mkdir(parents=True, exist_ok=True)
 
         text_features = [
-            f
-            for f in features
-            if render_feature_description(f, character, description_mode) is not None
+            f for f in features if render_feature_description(f, character) is not None
         ]
         features_by_level: dict[int, list[Feature]] = {}
         for feature in text_features:
@@ -1474,10 +1469,7 @@ class HtmlCharacterSheetWriter:
                 ext_level = self._feature_level(data, extension)
                 if ext_level <= parent_level:
                     continue  # Already shown nested on the parent's page
-                if (
-                    render_feature_description(extension, character, description_mode)
-                    is None
-                ):
+                if render_feature_description(extension, character) is None:
                     continue
                 extensions_by_level.setdefault(ext_level, []).append(
                     (feature, extension)
@@ -1549,7 +1541,6 @@ class HtmlCharacterSheetWriter:
             weapon_proficiencies,
             skill_config,
             text_features,
-            description_mode,
             weapons,
             weapon_masteries,
             fighting_styles,
@@ -1577,7 +1568,6 @@ class HtmlCharacterSheetWriter:
                 character_name,
                 level,
                 sorted_level_features,
-                description_mode,
                 level_spells,
                 level_extensions,
             )
@@ -1820,7 +1810,6 @@ class HtmlCharacterSheetWriter:
         weapon_proficiencies: Collection[Enum],
         skill_config: Definitions.SkillConfig,
         text_features: list[Feature],
-        description_mode: Literal["table", "concise"] | None,
         weapons: list[AbstractWeapon],
         weapon_masteries: list[AbstractWeapon],
         fighting_styles: list[FightingStyle],
@@ -1876,7 +1865,6 @@ class HtmlCharacterSheetWriter:
                         feature,
                         character,
                         file,
-                        description_mode,
                         show_tags=self.show_feature_tags,
                         source_text=self.source_text,
                     )
@@ -1908,7 +1896,6 @@ class HtmlCharacterSheetWriter:
         character_name: str,
         level: int,
         level_features: list[Feature],
-        description_mode: Literal["table", "concise"] | None,
         level_spells: list[SpellGrant],
         level_extensions: list[tuple[Feature, Feature]] | None = None,
     ):
@@ -1925,7 +1912,6 @@ class HtmlCharacterSheetWriter:
                     feature,
                     character,
                     file,
-                    description_mode,
                     max_level=level,
                     show_tags=self.show_feature_tags,
                     source_text=self.source_text,
@@ -1943,7 +1929,6 @@ class HtmlCharacterSheetWriter:
                     character,
                     file,
                     parent.name,
-                    description_mode,
                     show_tags=self.show_feature_tags,
                     source_text=self.source_text,
                 )

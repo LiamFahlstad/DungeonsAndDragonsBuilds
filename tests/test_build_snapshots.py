@@ -9,8 +9,7 @@ this test compares two golden snapshots against a fresh build:
   resistances, immunities, senses, weapon attack/damage bonuses, carrying
   capacity).
 - `tests/snapshots/sheet_hashes.json` - a sha256 per rendered HTML page, for
-  every build rendered in both full mode (`description_mode=None`) and
-  `"concise"` mode.
+  every build.
 
 Rendering is deterministic across processes (checked under different
 PYTHONHASHSEED values), so pages are hashed as-is. If a page ever flips between

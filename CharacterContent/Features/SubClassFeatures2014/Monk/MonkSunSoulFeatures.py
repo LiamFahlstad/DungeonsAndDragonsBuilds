@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
     LEVEL_TO_MARTIAL_ARTS_DIE,
 )
@@ -54,18 +53,6 @@ class SearingArcStrike(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
-        max_ki_spent = monk_level // 2
-        return [
-            ("Trigger", "After you take the Attack action on your turn"),
-            ("Action", "Bonus action"),
-            ("Base Cost", "2 ki points"),
-            ("Spell", "Burning Hands"),
-            ("Upcasting", "+1 level per additional ki point"),
-            ("Max Ki", f"Half monk level ({max_ki_spent})"),
-        ]
-
 
 class SearingSunburst(Feature):
     def __init__(self):
@@ -90,17 +77,6 @@ class SearingSunburst(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Action"),
-            ("Range", "150 feet (target point)"),
-            ("Area", "20-foot-radius sphere"),
-            ("Save", "Constitution"),
-            ("Base Damage", "2d6 radiant (failed save)"),
-            ("Extra Damage", "+2d6 per ki point (max 3 ki)"),
-            ("Cover", "Total opaque cover negates save requirement"),
-        ]
 
 
 class SunShield(Feature):

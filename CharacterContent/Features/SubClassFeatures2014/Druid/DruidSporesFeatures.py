@@ -141,19 +141,6 @@ class FungalInfestation(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        wisdom_mod = character.get_ability_modifier(Ability.WISDOM)
-        uses = max(1, wisdom_mod)
-        return [
-            ("Trigger", "Small or Medium beast/humanoid dies within 10 feet"),
-            ("Action", "Reaction"),
-            ("Effect", "Animate corpse as zombie with 1 HP (uses Zombie stat block)"),
-            ("Duration", "1 hour"),
-            ("Control", "Obeys mental commands; only Attack action available"),
-            ("Uses", f"Wisdom modifier ({uses})"),
-            ("Regain", "Long rest"),
-        ]
-
 
 class SpreadingSpores(Feature):
     def __init__(self):
@@ -185,7 +172,7 @@ class FungalBody(Feature):
         super().__init__(
             name="Fungal Body",
             origin="Circle of Spores Druid Level 14",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._immunities = [

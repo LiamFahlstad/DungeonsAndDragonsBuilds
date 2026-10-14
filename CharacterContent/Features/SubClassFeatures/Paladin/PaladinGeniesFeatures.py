@@ -73,28 +73,6 @@ class ElementalSmite(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Cast Divine Smite"),
-            ("Cost", "1 Channel Divinity use"),
-            (
-                "Dao's Crush",
-                "Target Grappled (escape DC = spell save DC), Restrained while Grappled",
-            ),
-            (
-                "Djinni's Escape",
-                "Teleport within 30 ft, semi-incorporeal until end of next turn; Resist B/P/S, Immune to Grappled/Prone/Restrained",
-            ),
-            (
-                "Efreeti's Fury",
-                "Target takes 2d4 Fire; fire jumps to another creature within 30 ft for 2d4 Fire",
-            ),
-            (
-                "Marid's Surge",
-                "Target and up to 10-ft Emanation of creatures save Strength; on fail, pushed 15 ft and Prone",
-            ),
-        ]
-
 
 class GenieSpells(Feature):
     def __init__(self):
@@ -228,21 +206,6 @@ class ElementalRebuke(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Trigger", "You are hit by an attack roll"),
-            ("Action", "Reaction"),
-            ("Damage Reduction", "Halve attack damage (round down)"),
-            ("Save", "Dexterity against spell save DC"),
-            (
-                "Damage on Fail",
-                "2d10 + Charisma modifier (Acid, Cold, Fire, Lightning, or Thunder)",
-            ),
-            ("Damage on Success", "Half damage"),
-            ("Uses", f"{uses} per Long Rest"),
-        ]
-
 
 class NobleScion(Feature):
     def __init__(self):
@@ -267,15 +230,3 @@ class NobleScion(Feature):
             "Minor Wish. When you or an ally in your Aura of Protection fails a D20 Test, you can take a Reaction to make you or that ally succeed instead."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "10 minutes (or until ended)"),
-            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            ("Flight", "Fly Speed 60 feet, can hover"),
-            (
-                "Minor Wish",
-                "Reaction: when you or ally in aura fails D20 Test, make them succeed instead",
-            ),
-        ]

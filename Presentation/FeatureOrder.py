@@ -10,7 +10,7 @@ def feature_sort_key(character: Character, feature: Feature) -> tuple:
     then the source's name)."""
     stamp = character.stamp_of(feature)
     return (
-        feature.skippable_in_concise,
+        feature.passive,
         feature.name,
         stamp.kind.sheet_rank,
         stamp.granted_by,

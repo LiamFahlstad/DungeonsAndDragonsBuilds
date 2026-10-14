@@ -12,8 +12,6 @@ from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
 from Presentation.FeatureOrder import ordered_extensions
 
-DescriptionMode = Literal["table", "concise"] | None
-
 # An origin label naming the level it's granted at: "Bard Level 3",
 # "Oath of Glory Paladin Level 7" (not "General Feat Level 4+").
 _LEVEL_LABEL = re.compile(r"^(.*\S)\s+Level (\d+)$")
@@ -61,8 +59,8 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             letter-spacing: 0.02em;
         }
 
-        /* Shown on full-mode sheets for features normally skipped in concise
-           mode — flags at a glance that there's nothing here to actively track. */
+        /* Shown on passive features — flags at a glance that there's nothing
+           here to actively track. */
         .feature-passive-tag {
             display: inline-block;
             font-size: 0.68rem;
@@ -522,29 +520,13 @@ def _label_for(feature: Feature, stamp: GrantStamp) -> str:
 def render_feature_description(
     feature: Feature,
     character: Character,
-    description_mode: DescriptionMode = None,
     source_text: bool = False,
 ) -> str | None:
-    """The card body's HTML, or None when the card isn't shown in this mode
-    (a passive feature on a condensed sheet, or no description at all).
+    """The card body's HTML, or None when the feature has no description.
 
-    Full sheets show the improved description in place of the source text
-    when the feature has one (source_text=True - RunCharacterCreator.py
-    --source-text - shows the source instead). Condensed sheets show the
-    concise/table version, falling back to the same choice."""
-    if description_mode is not None and feature.skippable_in_concise:
-        return None
-
-    if description_mode == "table":
-        table_rows = feature.get_table_description(character)
-        if table_rows is not None:
-            return Html.highlight_damage_types(Html.key_value_table_to_html(table_rows))
-
-    if description_mode == "concise":
-        concise_description = feature.get_concise_description(character)
-        if concise_description is not None:
-            return description_to_html(concise_description)
-
+    The improved description is shown in place of the source text when the
+    feature has one (source_text=True - RunCharacterCreator.py --source-text
+    - shows the source instead)."""
     if not source_text:
         improved = feature.get_improved_description(character)
         if improved is not None:
@@ -690,7 +672,6 @@ def write_feature_card(
     feature: Feature,
     character: Character,
     file: TextIO,
-    description_mode: DescriptionMode = None,
     max_level: int | None = None,
     show_tags: bool = False,
     source_text: bool = False,
@@ -701,19 +682,12 @@ def write_feature_card(
     left out. show_tags adds the header tag chips (action, duration, range,
     save DC, usage roles); the Passive tag is shown either way. source_text
     shows each feature's source text instead of its improved description."""
-    html_description = render_feature_description(
-        feature, character, description_mode, source_text
-    )
+    html_description = render_feature_description(feature, character, source_text)
     if html_description is None:
         return
 
     _write_card_open(
-        feature,
-        character,
-        file,
-        description_mode,
-        feature_label(feature, character),
-        show_tags,
+        feature, character, file, feature_label(feature, character), show_tags
     )
 
     file.write(f"{html_description}\n")
@@ -728,16 +702,11 @@ def write_feature_card(
             if extension_level > parent_level:
                 continue
 
-        extension_html = render_feature_description(
-            extension, character, description_mode, source_text
-        )
+        extension_html = render_feature_description(extension, character, source_text)
         if extension_html is None:
             continue
         extension_tags = "".join(
-            f" {tag}"
-            for tag in _header_tags_html(
-                extension, character, description_mode, show_tags
-            )
+            f" {tag}" for tag in _header_tags_html(extension, character, show_tags)
         )
         label = feature_label(extension, character)
         file.write(
@@ -756,28 +725,20 @@ def write_extension_card(
     character: Character,
     file: TextIO,
     parent_name: str,
-    description_mode: DescriptionMode = None,
     show_tags: bool = False,
     source_text: bool = False,
 ) -> None:
     """An extension as a card of its own on its level page, flagged as
     extending `parent_name` (with the same blue-label styling as a nested
     upgrade block)."""
-    html_description = render_feature_description(
-        feature, character, description_mode, source_text
-    )
+    html_description = render_feature_description(feature, character, source_text)
     if html_description is None:
         return
 
     # The card header already carries this feature's tags (Passive included),
     # so the label only names the parent.
     _write_card_open(
-        feature,
-        character,
-        file,
-        description_mode,
-        feature_label(feature, character),
-        show_tags,
+        feature, character, file, feature_label(feature, character), show_tags
     )
     file.write(
         _upgrade_block_html(
@@ -793,13 +754,12 @@ def _write_card_open(
     feature: Feature,
     character: Character,
     file: TextIO,
-    description_mode: DescriptionMode,
     label: str,
     show_tags: bool = False,
 ) -> None:
     """Write a card's header (name, tag chips, origin) and open its body.
     Close with _write_card_close."""
-    if _shows_passive_tag(feature, description_mode):
+    if feature.passive:
         card_class = "feature-card is-passive"
     else:
         card_class = "feature-card"
@@ -807,7 +767,7 @@ def _write_card_open(
     file.write("<div class='feature-header'>\n")
     file.write("<span class='feature-name-group'>\n")
     file.write(f"<span class='feature-name'>{feature.name}</span>\n")
-    for tag in _header_tags_html(feature, character, description_mode, show_tags):
+    for tag in _header_tags_html(feature, character, show_tags):
         file.write(f"{tag}\n")
     file.write("</span>\n")
     file.write(f"<span class='feature-origin'>{label}</span>\n")
@@ -895,17 +855,9 @@ def _track_html(
 # ── Tag chips ────────────────────────────────────────────────────────────────
 
 
-def _shows_passive_tag(feature: Feature, description_mode: DescriptionMode) -> bool:
-    # A skippable-in-concise feature that's still showing means we're on a
-    # full-mode sheet - flag it as passive so the player knows there's
-    # nothing here to actively track.
-    return description_mode is None and feature.skippable_in_concise
-
-
 def _header_tags_html(
     feature: Feature,
     character: Character,
-    description_mode: DescriptionMode,
     show_tags: bool = False,
 ) -> list[str]:
     """The tag chips shown beside a feature's name, in display order: the
@@ -913,7 +865,7 @@ def _header_tags_html(
     --feature-tags) - action economy, duration, range, save DC and usage
     roles."""
     activation = feature.activation
-    if _shows_passive_tag(feature, description_mode):
+    if feature.passive:
         passive_tag = "<span class='feature-passive-tag'>Passive</span>"
     else:
         passive_tag = ""

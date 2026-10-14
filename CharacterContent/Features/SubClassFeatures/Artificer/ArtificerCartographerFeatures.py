@@ -98,19 +98,6 @@ class AdventurersAtlas(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        intelligence_modifier = character.get_intelligence_modifier()
-        max_creatures = max(2, 1 + intelligence_modifier)
-        return [
-            ("Trigger", f"End of Long Rest; touch {max_creatures} creatures (min 2)"),
-            ("Duration", "Until recreated or you die"),
-            ("Awareness", "Map holders add 1d4 to Initiative rolls"),
-            (
-                "Positioning",
-                "Map holders see each other (same plane); can target spells through obstacles",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
@@ -171,19 +158,6 @@ class MappingMagic(Feature):
             "Portal Jump. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            (
-                "Illuminated Cartography",
-                f"Cast Faerie Fire without slot ({uses} times, regain on long rest)",
-            ),
-            (
-                "Portal Jump",
-                "Spend half Speed to teleport within 10 ft of you or within 5 ft of map-holder within 30 ft",
-            ),
-        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -263,15 +237,3 @@ class SuperiorAtlas(Feature):
             "Unerring Path. If you are one of the map holders for your Adventurer's Atlas, you can cast Find the Path without expending a spell slot, without preparing the spell, and without needing spell components. Once you use this benefit, you can't use it again until you finish a Long Rest."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            (
-                "Safe Haven",
-                "When reduced to 0 HP (not killed), destroy map to restore HP = 2 × Artificer level and teleport within 5 ft of you or another map-holder",
-            ),
-            (
-                "Unerring Path",
-                "Cast Find the Path with no slot, preparation, or components (1/LR)",
-            ),
-        ]

@@ -19,9 +19,7 @@ class Resourceful(Feature):
 class Skillful(Feature):
     def __init__(self, skill: Skill):
         self.skill = skill
-        super().__init__(
-            name="Skillful", origin="Human Trait", skippable_in_concise=True
-        )
+        super().__init__(name="Skillful", origin="Human Trait", passive=True)
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="Skillful"
         )

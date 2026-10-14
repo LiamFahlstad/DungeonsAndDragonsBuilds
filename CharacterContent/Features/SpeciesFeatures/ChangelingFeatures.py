@@ -20,7 +20,7 @@ class ChangelingInstincts(Feature):
         super().__init__(
             name="Changeling Instincts",
             origin="Changeling Trait",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._choice = SkillProficiencyChoice(
             skills, self.VALID_SKILLS, count=2, error_prefix="Changeling Instincts"
@@ -60,12 +60,6 @@ class ShapeShifter(Feature):
             "This trait doesn't change your clothing and equipment.\n"
             "While shape-shifted with this trait, you have Advantage on Charisma checks.\n"
             "You stay in the new form until you take an action to revert to your true form."
-        )
-
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "As an action, change your appearance and voice to appear as a playable species (Medium or Small size, same limb arrangement). "
-            "Gain Advantage on Charisma checks while shifted. Revert as an action; clothing and equipment don't change."
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

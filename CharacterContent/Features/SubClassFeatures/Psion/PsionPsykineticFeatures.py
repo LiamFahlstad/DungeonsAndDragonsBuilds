@@ -68,18 +68,6 @@ class DestructiveTrance(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Activation", "Start of turn"),
-            ("Cost", "1 Psionic Energy Die"),
-            ("Duration", "10 minutes"),
-            ("Fly Speed", "20 feet (can hover)"),
-            (
-                "Damage Bonus",
-                "Add die roll to one damage roll of Psion spells (die doesn't expend)",
-            ),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -109,20 +97,6 @@ class ReboundingField(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        int_mod = character.get_intelligence_modifier()
-        return [
-            ("Trigger", "Cast Shield as reaction to attack hit and cause it to miss"),
-            ("Cost", "1 Psionic Energy Die"),
-            ("Save", "Dexterity saving throw"),
-            (
-                "On Failed Save",
-                f"Attacker takes [die roll + INT mod ({int_mod})] Force damage",
-            ),
-            ("On Successful Save", "Attacker takes half damage"),
-            ("Temp HP", "You gain temp HP equal to damage dealt"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -147,17 +121,6 @@ class EnhancedTelekineticCrush(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell", "Telekinetic Crush"),
-            ("Cost", "1 Psionic Energy Die"),
-            (
-                "Speed Effect",
-                "Speed halved until start of next turn (save doesn't prevent)",
-            ),
-            ("Damage Bonus", "Roll die and add to one damage roll of spell"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
@@ -179,17 +142,3 @@ class HeightenedTelekinesis(Feature):
             "casting, and you can concentrate on another spell as normal."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Spell", "Telekinesis"),
-            ("Resource Cost", "4 Psionic Energy Dice (instead of spell slot)"),
-            (
-                "Optional: Remove Concentration",
-                "Spell no longer requires Concentration",
-            ),
-            (
-                "If No Concentration",
-                "Duration becomes 1 minute; you can concentrate on another spell",
-            ),
-        ]

@@ -278,18 +278,6 @@ class BulwarkOfForce(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "30 feet"),
-            (
-                "Targets",
-                f"Up to {max(1, character.get_intelligence_modifier())} creatures",
-            ),
-            ("Effect", "Half Cover for 1 minute or until Incapacitated"),
-            ("Recharge", "Long Rest, or expend Psionic Energy Die"),
-        ]
-
 
 class TelekineticMaster(Feature):
     def __init__(self):

@@ -70,20 +70,6 @@ class ArmsOfTheAstralSelf(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus action"),
-            ("Cost", "1 ki point"),
-            ("Duration", "10 minutes"),
-            ("Range", "10 feet"),
-            ("Save", "Dexterity"),
-            ("Damage", "2d (force, where d = Martial Arts die)"),
-            (
-                "Benefits",
-                "Use Wisdom for Strength checks/saves, reach +5 ft, use Wisdom for attack/damage rolls with arms",
-            ),
-        ]
-
 
 class VisageOfTheAstralSelf(Feature):
     def __init__(self):
@@ -165,15 +151,3 @@ class AwakenedAstralSelf(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus action"),
-            ("Cost", "5 ki points"),
-            ("Duration", "10 minutes"),
-            ("AC Bonus", "+2"),
-            (
-                "Extra Attacks",
-                "3 attacks with Extra Attack (instead of 2) if all use astral arms",
-            ),
-        ]

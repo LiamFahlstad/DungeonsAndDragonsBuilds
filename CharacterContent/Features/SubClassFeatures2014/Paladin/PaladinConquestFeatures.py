@@ -49,15 +49,6 @@ class ConqueringPresence(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Exude terrifying presence"),
-            ("Action", "Action"),
-            ("Range", "30 feet"),
-            ("Save", "Wisdom"),
-            ("Effect", "Frightened for 1 minute; can repeat save at end of each turn"),
-        ]
-
 
 class GuidedStrike(Feature):
     def __init__(self):
@@ -73,13 +64,6 @@ class GuidedStrike(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("What", "Gain accuracy bonus to attack roll"),
-            ("Effect", "+10 to attack roll"),
-            ("Timing", "After seeing roll, before DM announces hit/miss"),
-        ]
 
 
 class AuraOfConquest(Feature):
@@ -105,16 +89,6 @@ class AuraOfConquest(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        half_paladin_level = character.get_class_level(CharacterClass.PALADIN) // 2
-        range_text = "10 feet (30 at 18th level)"
-        return [
-            ("Range", range_text),
-            ("Condition", "When creature is frightened of you"),
-            ("Speed Effect", "Reduced to 0"),
-            ("Damage", f"Psychic damage = half paladin level ({half_paladin_level})"),
-        ]
 
 
 class AuraOfConquestExpansion(Feature):

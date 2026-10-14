@@ -5,7 +5,7 @@ Wizard, Druid, Artificer, and (lightly) Psion.
 
 The base classes in this engine follow the 2024 PHB, so expected values are
 taken from the 2024 PHB class tables and cross-checked against each feature's
-own get_description()/get_table_description() prose:
+own get_description() prose:
 
   - Fighter: Second Wind, Action Surge, Indomitable "Uses" columns.
   - Rogue: Sneak Attack dice column; Expertise/Slippery Mind rule text.
@@ -334,8 +334,8 @@ class TestArcaneRecovery:
     )
     def test_max_combined_slot_level_rounds_up(self, make_character, level, expected):
         character = make_character(levels={CharacterClass.WIZARD: level})
-        table = dict(WizardFeatures.ArcaneRecovery().get_table_description(character))
-        assert table["Maximum Slot Levels"] == f"Combined level ≤ {expected}"
+        description = WizardFeatures.ArcaneRecovery().get_description(character)
+        assert f"Right now: up to {expected} levels' worth" in description
 
     def test_regained_on_long_rest(self, make_character):
         character = make_character(levels={CharacterClass.WIZARD: 1})
@@ -453,15 +453,6 @@ class TestArtificerIntelligenceScaledResources:
     def test_flash_of_genius_minimum_one_use_at_negative_modifier(self, make_character):
         character = make_character(intelligence=8, levels={CharacterClass.ARTIFICER: 7})
         assert ArtificerFeatures.FlashofGenius().number_of_uses(character) == 1
-
-    def test_flash_of_genius_table_description_does_clamp_to_minimum_one(
-        self, make_character
-    ):
-        # get_table_description() (the rendered sheet value) gets this right;
-        # only number_of_uses() (the resource-tracking value) has the bug above.
-        character = make_character(intelligence=8, levels={CharacterClass.ARTIFICER: 7})
-        table = dict(ArtificerFeatures.FlashofGenius().get_table_description(character))
-        assert table["Uses"] == "1 per Long Rest"
 
 
 # ---------------------------------------------------------------------------

@@ -170,7 +170,7 @@ class UnarmoredDefense(Feature):
         super().__init__(
             name="Unarmored Defense",
             origin="Barbarian Level 1",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._ac = MultiAbilityArmorClass(10, [Ability.DEXTERITY, Ability.CONSTITUTION])
 
@@ -189,13 +189,6 @@ class WeaponMastery(Feature):
         )
         return description
 
-    def get_concise_description(self, character: CharacterView) -> str:
-        return (
-            "You master 2 kinds of Simple or Martial Melee weapons of your choice and can "
-            "change one choice on long rest. At higher Barbarian levels, you gain the ability "
-            "to use the mastery properties of additional weapon kinds."
-        )
-
 
 class DangerSenseText(Feature):
     def __init__(self):
@@ -208,7 +201,7 @@ class DangerSenseText(Feature):
 
 class DangerSense(Feature):
     def __init__(self):
-        super().__init__(skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(passive=True, usage_tags=["buff"])
         self._advantage = SavingThrowAdvantage([Ability.DEXTERITY])
 
     def apply(self, ledger_writer: LedgerWriter):
@@ -228,14 +221,6 @@ class RecklessAttack(Feature):
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "First attack roll of your turn"),
-            ("Benefit", "Advantage on attack rolls using Strength"),
-            ("Cost", "Attack rolls against you have Advantage"),
-            ("Duration", "Until start of your next turn"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -254,7 +239,7 @@ class PrimalKnowledgeSkillProficiency(Feature):
         super().__init__(
             name="Primal Knowledge",
             origin="Barbarian Level 3",
-            skippable_in_concise=True,
+            passive=True,
         )
         self._proficiency = SkillProficiencyChoice(
             [skill],
@@ -311,7 +296,7 @@ class FastMovementBonus(Feature):
     feature of its own, skipped on condensed sheets."""
 
     def __init__(self):
-        super().__init__(skippable_in_concise=True, usage_tags=["buff"])
+        super().__init__(passive=True, usage_tags=["buff"])
 
     def apply(self, ledger_writer: LedgerWriter):
         # "...while you aren't wearing Heavy armor." A formula, so the armor
@@ -326,7 +311,7 @@ class FeralInstinct(Feature):
         super().__init__(
             name="Feral Instinct",
             origin="Barbarian Level 7",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
 
@@ -430,20 +415,6 @@ class RelentlessRage(Feature):
         )
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        barbarian_level = character.get_class_level(
-            Definitions.CharacterClass.BARBARIAN
-        )
-        return [
-            ("Trigger", "Drop to 0 Hit Points during Rage"),
-            ("Save", "DC 10 Constitution saving throw"),
-            (
-                "Effect on Success",
-                f"Regain Hit Points equal to 2 × your Barbarian level ({2 * barbarian_level} HP)",
-            ),
-            ("Scaling", "DC increases by 5 each use; resets on Short or Long Rest"),
-        ]
-
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -518,7 +489,7 @@ class PrimalChampion(Feature):
         super().__init__(
             name="Primal Champion",
             origin="Barbarian Level 20",
-            skippable_in_concise=True,
+            passive=True,
             usage_tags=["buff"],
         )
         self._bonuses = AbilityScoreBonus(

@@ -31,18 +31,6 @@ class InspiringSmite(Feature):
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
         return description
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Trigger", "Immediately after you cast Divine Smite"),
-            ("Cost", "1 Channel Divinity use"),
-            ("Range", "30 feet"),
-            ("Temporary HP", "2d8 + your Paladin level (total)"),
-            (
-                "Distribution",
-                "Allocate among chosen creatures however you wish (can include yourself)",
-            ),
-        ]
-
 
 class GlorySpells(Feature):
     def __init__(self):
@@ -161,20 +149,6 @@ class GloriousDefense(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_charisma_modifier())
 
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        uses = self.number_of_uses(character)
-        return [
-            ("Trigger", "You or ally within 10 ft is hit by attack roll"),
-            ("Action", "Reaction"),
-            ("AC Bonus", "+Charisma modifier (minimum +1)"),
-            ("Range", "10 feet for trigger, weapon range for counterattack"),
-            (
-                "Counterattack",
-                "If attack misses, make one weapon attack against attacker",
-            ),
-            ("Uses", f"{uses} per Long Rest"),
-        ]
-
 
 class LivingLegend(Feature):
     def __init__(self):
@@ -233,19 +207,3 @@ class LivingLegend(Feature):
             "Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead."
         )
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        return [
-            ("Action", "Bonus Action"),
-            ("Duration", "10 minutes"),
-            ("Recharge", "Once per Long Rest (or spend level 5 spell slot)"),
-            ("Charismatic", "Advantage on all Charisma checks"),
-            (
-                "Saving Throw Reroll",
-                "As Reaction, reroll failed save (must use new result)",
-            ),
-            (
-                "Unerring Strike",
-                "Once per turn, when you miss with weapon attack, cause it to hit instead",
-            ),
-        ]

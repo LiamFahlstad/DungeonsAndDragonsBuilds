@@ -1,10 +1,6 @@
-import Core.Definitions as Definitions
 from Core.Definitions import (
     BARBARIAN_HIT_DIE,
     Ability,
-)
-from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
-    get_rage_damage_bonus,
 )
 from Model.Content.Feature import (
     ActionType,
@@ -28,17 +24,6 @@ class Frenzy(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
         return description
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        rage_damage_bonus = get_rage_damage_bonus(
-            character.get_class_level(Definitions.CharacterClass.BARBARIAN)
-        )
-        return [
-            ("Trigger", "Use Reckless Attack during Rage"),
-            ("Effect", f"Extra {rage_damage_bonus}d6 damage on first hit"),
-            ("Damage Type", "Same as weapon or Unarmed Strike"),
-            ("Uses", "First target hit per turn"),
-        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
@@ -129,13 +114,3 @@ class IntimidatingPresence(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
-
-    def get_table_description(self, character: CharacterView) -> list[tuple[str, str]]:
-        dc = self.calculate_dc(character)
-        return [
-            ("Action", "Bonus Action"),
-            ("Range", "30-foot Emanation"),
-            ("Save", f"Wisdom save, DC {dc}"),
-            ("On Failure", "Frightened for 1 minute"),
-            ("Recharge", "Long Rest or expend Rage use"),
-        ]

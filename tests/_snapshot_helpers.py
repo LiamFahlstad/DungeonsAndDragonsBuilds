@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Callable, Optional, TextIO
 
 from Core.Definitions import Ability, Skill
-from Presentation.FeatureCards import DescriptionMode
 from Model.Character import Character
 from RunCharacterCreator import BuildSelector, ExampleSelector
 from Presentation.CharacterSheetWriters import (
@@ -39,10 +38,9 @@ HASHES_PATH = SNAPSHOT_DIR / "sheet_hashes.json"
 UPDATE_SNAPSHOTS = os.environ.get("UPDATE_SNAPSHOTS") == "1"
 SNAPSHOT_DUMP_DIR = os.environ.get("SNAPSHOT_DUMP_DIR")
 
-SHEET_MODES: tuple[tuple[str, DescriptionMode], ...] = (
-    ("full", None),
-    ("concise", "concise"),
-)
+# Each build's pages are stored under one key per sheet mode; there's one
+# mode now that every feature card shows the same description.
+SHEET_MODES: tuple[str, ...] = ("full",)
 
 
 def build(name: str) -> Character:
@@ -139,21 +137,19 @@ def render_and_hash(
     prepare: Optional[Callable[[Character], Character]] = None,
     dump: bool = False,
 ) -> dict[str, dict[str, str]]:
-    """Render `name` in full and concise mode and hash every page, per mode.
+    """Render `name` and hash every page, per mode.
     `prepare` turns each freshly built Character into the one rendered
     (the order tests rebuild it from reordered sources). `dump` copies the pages to
     SNAPSHOT_DUMP_DIR, when that's set."""
     result = {}
-    for mode_key, description_mode in SHEET_MODES:
+    for mode_key in SHEET_MODES:
         data = build(name)
         if prepare is not None:
             data = prepare(data)
-        folder_name = os.path.basename(get_output_folder(data, description_mode))
+        folder_name = os.path.basename(get_output_folder(data))
         output_folder = tmp_path / folder_name
         writer = CapturingSheetWriter(output_folder)
-        writer.write_character_sheet(
-            data, description_mode=description_mode, output_folder=str(output_folder)
-        )
+        writer.write_character_sheet(data, output_folder=str(output_folder))
         result[mode_key] = {
             page: hashlib.sha256(content).hexdigest()
             for page, content in sorted(writer.pages.items())
@@ -173,7 +169,7 @@ def sheet_differences(
 ) -> list[str]:
     """One line per mode whose pages differ (added, removed or changed)."""
     problems = []
-    for mode_key, _description_mode in SHEET_MODES:
+    for mode_key in SHEET_MODES:
         expected_pages = expected.get(mode_key, {})
         actual_pages = actual.get(mode_key, {})
         added = sorted(set(actual_pages) - set(expected_pages))
