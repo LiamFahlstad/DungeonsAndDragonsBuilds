@@ -4,6 +4,7 @@ from Core.Definitions import DamageType, Sense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 35  # Given by your species
 
@@ -65,6 +66,28 @@ class VampiricBite(Feature):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Empowerment uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Bite",
+                        "When you deal damage with an Unarmed Strike, bite instead: 1d4 + Constitution modifier Piercing damage, instead of the normal damage",
+                    ),
+                    (
+                        "Empower",
+                        "When the bite damages a creature that isn't a Construct or an Undead, choose one (Proficiency Bonus times per Long Rest):",
+                    ),
+                    ("Drain", "Regain Hit Points equal to the Piercing damage dealt"),
+                    (
+                        "Strengthen",
+                        "Add the Piercing damage dealt to your next ability check or attack roll within 1 minute",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

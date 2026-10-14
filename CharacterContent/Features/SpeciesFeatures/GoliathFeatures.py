@@ -38,6 +38,23 @@ class LargeForm(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("From character level 5, grow to Large if there's room."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you end it (no action required)",
+                    ),
+                    ("Effect", "Advantage on Strength checks, and Speed +10 feet"),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Starting at character level 5, you can change your size to Large as a Bonus Action if you're in a big enough space. This transformation lasts for 10 minutes or until you end it (no action required). For that duration, you have Advantage on Strength checks, and your Speed increases by 10 feet. Once you use this trait, you can't use it again until you finish a Long Rest."
 

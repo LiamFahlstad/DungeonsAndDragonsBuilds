@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class PeaceDomainSpells(Feature):
@@ -65,6 +66,27 @@ class EmboldeningBond(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Bond creatures at peace with one another."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "Up to Proficiency Bonus willing creatures (can include you)",
+                    ),
+                    ("Duration", "10 minutes, or until you use this feature again"),
+                    (
+                        "Bond",
+                        "While within 30 feet of another bonded creature, a bonded creature can add a d4 to an attack roll, ability check or saving throw, once per turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can forge an empowering bond among people who are at peace with one another. As an action, you choose a number of willing creatures within 30 feet of you (this can include yourself) equal to your proficiency bonus. You create a magical bond among them for 10 minutes or until you use this feature again. While any bonded creature is within 30 feet of another, the creature can roll a d4 and add the number rolled to an attack roll, an ability check, or a saving throw it makes. Each creature can add the d4 no more than once per turn.\n"
@@ -87,6 +109,23 @@ class BalmOfPeaceChannelDivinity(Feature):
             usage_tags=["heal"],
             activation=FeatureActivation(action_type="action"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cost", "One use of Channel Divinity"),
+                    (
+                        "Action",
+                        "Action: move up to your speed without provoking opportunity attacks",
+                    ),
+                    (
+                        "Heal",
+                        "Each other creature you move within 5 feet of regains 2d6 + Wisdom modifier hit points (minimum 1), once per creature per use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to make your very presence a soothing balm. As an action, you can move up to your speed, without provoking opportunity attacks, and when you move within 5 feet of any other creature during this action, you can restore a number of hit points to that creature equal to 2d6 + your Wisdom modifier (minimum of 1 hit point). A creature can receive this healing only once whenever you take this action."

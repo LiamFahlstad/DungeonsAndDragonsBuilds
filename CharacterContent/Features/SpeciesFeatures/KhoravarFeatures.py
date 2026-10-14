@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -35,6 +36,22 @@ class FeyGift(Feature):
     def __init__(self):
         super().__init__(name="Fey Gift", origin="Khoravar Trait")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        "You know Friends. After each Long Rest, you can swap it for another Cleric, Druid or Wizard cantrip.",
+                    ),
+                    (
+                        "Ability",
+                        "Intelligence, Wisdom or Charisma (chosen with the species)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You know the Friends cantrip. Whenever you finish a Long Rest, you can replace that cantrip with a different cantrip "
@@ -63,6 +80,20 @@ class LethargyResilience(Feature):
         super().__init__(
             name="Lethargy Resilience", origin="Khoravar Trait", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You fail a save to avoid or end the Unconscious condition",
+                    ),
+                    ("Effect", "You succeed instead"),
+                    ("Recharge", "After you finish 1d4 Long Rests"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can’t do so again until you finish 1d4 Long Rests."

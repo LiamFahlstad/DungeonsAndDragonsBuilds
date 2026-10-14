@@ -46,7 +46,7 @@ class WrathOfTheWild(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -128,6 +128,23 @@ class RotAndViolence(Feature):
             origin="Hollow Warden Ranger Level 11",
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While transformed with Wrath of the Wild:"),
+            Facts(
+                (
+                    (
+                        "Menacing Aura",
+                        "A creature that fails its save against your Unnerving Aura also can't regain Hit Points or take Reactions until the start of your next turn",
+                    ),
+                    (
+                        "Strangling Roots",
+                        "When you hit with a weapon attack roll, use the Sap or Slow mastery property as well as a different one",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

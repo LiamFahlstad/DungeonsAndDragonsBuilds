@@ -99,6 +99,26 @@ class SpellMastery(Feature):
     def __init__(self):
         super().__init__(name="Spell Mastery", origin="Wizard Level 18")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Spells",
+                        "One level 1 and one level 2 spell from your spellbook with a casting time of an action, always prepared",
+                    ),
+                    (
+                        "At will",
+                        "Cast them at their lowest level without a spell slot; casting higher needs a slot",
+                    ),
+                    (
+                        "Swap",
+                        "After a Long Rest, study your spellbook to replace one with an eligible spell of the same level",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         text = (
             "You have achieved such mastery over certain spells that you can cast them at will. Choose a level 1 and a level 2 spell in your spellbook that have a casting time of an action. You always have those spells prepared, and you can cast them at their lowest level without expending a spell slot. To cast either spell at a higher level, you must expend a spell slot.\n"

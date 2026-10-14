@@ -12,6 +12,7 @@ from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class CircleSporesSpells(Feature):
@@ -63,6 +64,28 @@ class HaloOfSpores(Feature):
             dice=HALO_OF_SPORES_DICE,
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The damage dice are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see moves within 10 feet of you or starts its turn there",
+                    ),
+                    (
+                        "Save",
+                        f"Constitution save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    (
+                        "Failed",
+                        "Halo of Spores Damage dice (see Dice below) necrotic damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You are surrounded by invisible, necrotic spores that are harmless until you unleash them on a creature nearby. When a creature you can see moves into a space within 10 feet of you or starts its turn there, you can use your reaction to deal necrotic damage to that creature unless it succeeds on a Constitution saving throw against your spell save DC.\n"
@@ -94,6 +117,27 @@ class SymbioticEntity(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Awaken your spores instead of taking a beast form."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Cost", "One use of Wild Shape"),
+                    ("Temporary HP", "4 x Druid level"),
+                    (
+                        "Duration",
+                        "10 minutes, until those temporary hit points are gone, or until you use Wild Shape again",
+                    ),
+                    ("Halo of Spores", "Roll its damage die twice and add both"),
+                    (
+                        "Melee",
+                        "Your melee weapon attacks deal an extra 1d6 necrotic damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to channel magic into your spores. As an action, you can expend a use of your Wild Shape feature to awaken those spores, rather than transforming into a beast form, and you gain temporary hit points equal to 4 times your Druid level. While this feature is active, you gain the following benefits:\n"
@@ -123,6 +167,29 @@ class FungalInfestation(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Your spores animate the fallen."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A Small or Medium beast or humanoid dies within 10 feet of you",
+                    ),
+                    (
+                        "Effect",
+                        "It rises with 1 hit point as a Zombie (Monster Manual) for 1 hour, then collapses and dies",
+                    ),
+                    (
+                        "In combat",
+                        "It acts right after you, obeys your mental commands, and can only take the Attack action (one melee attack)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -154,6 +221,33 @@ class SpreadingSpores(Feature):
                 range="30 Feet (10-Foot Cube)",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Seed an area with deadly spores while Symbiotic Entity is active."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "30 feet"),
+                    ("Area", "10-foot cube"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you use this again, dismiss it (bonus action), or Symbiotic Entity ends",
+                    ),
+                    (
+                        "Trigger",
+                        "A creature moves into the cube or starts its turn there",
+                    ),
+                    (
+                        "Save",
+                        f"Constitution save against your spell save DC ({dc_formula(Ability.WISDOM)}). Failed: your Halo of Spores damage (at most once per turn).",
+                    ),
+                    ("Meanwhile", "You can't use your Halo of Spores reaction"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

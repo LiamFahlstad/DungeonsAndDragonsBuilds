@@ -24,7 +24,7 @@ class BeguilingMagic(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The once-per-Long-Rest box is in the panel below.
@@ -76,6 +76,23 @@ class MantleOfInspiration(Feature):
             usage_tags=["heal", "buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Fill others with vigor through fey song or dance."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One use of Bardic Inspiration; roll the die"),
+                    ("Range", "60 feet"),
+                    ("Target", "Up to Charisma modifier (minimum one) other creatures"),
+                    (
+                        "Effect",
+                        "Each gains 2 x the roll Temporary Hit Points, then can use its Reaction to move up to its Speed without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can weave fey magic into a song or dance to fill others with vigor. As a Bonus Action, you can expend a use of Bardic Inspiration, rolling a Bardic Inspiration die. When you do so, choose a number of other creatures within 60 feet of yourself, up to a number equal to your Charisma modifier (minimum of one creature). Each of those creatures gains a number of Temporary Hit Points equal to two times the number rolled on the Bardic Inspiration die, and then each can use its Reaction to move up to its Speed without provoking Opportunity Attacks."
         return description
@@ -96,6 +113,29 @@ class MantleOfMajesty(Feature):
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Command", "Always prepared"),
+                    (
+                        "Action",
+                        "Bonus Action: cast Command without a spell slot and take on an unearthly appearance",
+                    ),
+                    ("Duration", "1 minute, or until your Concentration ends"),
+                    (
+                        "Meanwhile",
+                        "Cast Command as a Bonus Action without a spell slot each turn. Creatures Charmed by you automatically fail their saves against it.",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 3+ spell slot (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -123,10 +163,31 @@ class UnbreakableMajesty(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Assume a magically majestic presence."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute, or until you're Incapacitated"),
+                    (
+                        "Trigger",
+                        "A creature hits you with an attack roll for the first time on a turn",
+                    ),
+                    (
+                        "Save",
+                        f"Charisma save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    ("Failed", "The attack misses instead"),
+                    ("Limit", "Once per Short or Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

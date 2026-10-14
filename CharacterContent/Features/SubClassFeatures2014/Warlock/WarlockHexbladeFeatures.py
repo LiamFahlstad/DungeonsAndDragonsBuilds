@@ -10,6 +10,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType, CharacterClass
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class HexbladeExpandedSpells(Feature):
@@ -46,6 +47,29 @@ class HexbladesCurse(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Paragraph("Curse a foe with your patron's power."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "30 feet"),
+                    ("Target", "One creature you can see"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if the target dies, you die, or you're Incapacitated",
+                    ),
+                    ("Damage", "+ Proficiency Bonus to damage rolls against it"),
+                    ("Critical", "Your attack rolls against it crit on 19 or 20"),
+                    (
+                        "If it dies",
+                        "You regain Warlock level + Charisma modifier Hit Points (minimum 1)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, choose one creature you can see within 30 feet of yourself. The target is cursed for 1 minute. The curse ends early if the target dies, you die, or you have the Incapacitated condition. Until the curse ends, you gain the following benefits.\n"
@@ -75,6 +99,26 @@ class HexWarrior(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Training",
+                        "Proficiency with Medium Armor, Shields and Martial weapons",
+                    ),
+                    (
+                        "Hex weapon",
+                        "After each Long Rest, touch a weapon you're proficient with that isn't Two-Handed. Until your next Long Rest, use Charisma instead of Strength or Dexterity for its attack and damage rolls.",
+                    ),
+                    (
+                        "Pact of the Blade",
+                        "If you gain it, this applies to every pact weapon you conjure, whatever its type",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You acquire the training necessary to effectively arm yourself for battle. You gain proficiency with Medium Armor, Shields, and Martial weapons.\n"
@@ -95,6 +139,30 @@ class AccursedSpecter(Feature):
             usage_tags=["damage", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Bind the soul of a humanoid you slay."),
+            Facts(
+                (
+                    ("Trigger", "You slay a Humanoid"),
+                    (
+                        "Specter",
+                        "Its spirit rises as a Specter with half your Warlock level in Temporary Hit Points",
+                    ),
+                    (
+                        "In combat",
+                        "Roll initiative for it; it takes its own turns and obeys your verbal commands",
+                    ),
+                    (
+                        "Attack bonus",
+                        "+ Charisma modifier (minimum +0) to its attack rolls",
+                    ),
+                    ("Lasts", "Until the end of your next Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -1,4 +1,8 @@
-from Core.Definitions import Sense, Skill
+from Core.Definitions import (
+    Sense,
+    Skill,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -11,6 +15,7 @@ from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 SPEED = 30  # Given by your species
 
@@ -32,6 +37,22 @@ class FeralPounce(Feature):
         super().__init__(
             name="Feral Pounce", origin="Lupin Trait", usage_tags=["damage", "control"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Claws",
+                        "Your Unarmed Strikes deal Slashing damage instead of Bludgeoning",
+                    ),
+                    (
+                        "Pounce",
+                        "Once per turn, when an Unarmed Strike hits as part of the Attack action on your turn, use both its Damage and Shove options",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -61,6 +82,23 @@ class Howl(Feature):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Let out an unearthly howl."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Area", "Each creature of your choice within 15 feet of you"),
+                    ("Save", f"Wisdom, DC {dc_formula(Ability.CONSTITUTION)}"),
+                    (
+                        "Failed",
+                        "Disadvantage on attack rolls and saving throws until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

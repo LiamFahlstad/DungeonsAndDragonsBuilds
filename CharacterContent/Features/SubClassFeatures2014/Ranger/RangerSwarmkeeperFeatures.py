@@ -8,6 +8,8 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Core.Definitions import Ability
 
 
 class GatheredSwarm(Feature):
@@ -17,6 +19,40 @@ class GatheredSwarm(Feature):
             origin="Swarmkeeper Ranger Level 3",
             usage_tags=["damage", "control", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Intangible nature spirits swarm around you in your space (insects, twig blights, birds or pixies: your choice or a d4)."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once on each of your turns, right after you hit a creature with an attack",
+                    ),
+                )
+            ),
+            Option(
+                "Choose one",
+                (
+                    Table(
+                        ("Assist", "Effect"),
+                        (
+                            ("Sting", "The target takes 1d6 piercing damage"),
+                            (
+                                "Push",
+                                f"The target makes a Strength save against your spell save DC ({dc_formula(Ability.WISDOM)}) or is moved up to 15 feet horizontally in a direction of your choice",
+                            ),
+                            (
+                                "Lift",
+                                "You're moved 5 feet horizontally in a direction of your choice",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -14,6 +14,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -143,6 +144,27 @@ class FlurryOfHealingAndHarm(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Healing",
+                        "Replace each Flurry of Blows Unarmed Strike with Hand of Healing, without spending Focus Points on the healing",
+                    ),
+                    (
+                        "Harm",
+                        "When a Flurry of Blows strike deals damage, use Hand of Harm without spending a Focus Point (still once per turn)",
+                    ),
+                    (
+                        "Uses",
+                        "Wisdom modifier (minimum once) times per Long Rest, in total",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use Flurry of Blows, you can replace each of the Unarmed Strikes with a use of Hand of Healing without expending Focus Points for the healing.\n"
@@ -170,6 +192,26 @@ class HandOfUltimateMercy(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "5 Focus Points"),
+                    (
+                        "Target",
+                        "The corpse of a creature that died in the past 24 hours, which you touch",
+                    ),
+                    (
+                        "Effect",
+                        "It returns to life with 4d10 + Wisdom modifier Hit Points, cured of Blinded, Deafened, Paralyzed, Poisoned and Stunned",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

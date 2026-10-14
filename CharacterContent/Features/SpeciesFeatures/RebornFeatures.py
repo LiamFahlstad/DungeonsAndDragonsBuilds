@@ -4,6 +4,7 @@ from Model.Content.Feature import Feature, FeatureUses, RegainedOn
 from Model.Content.Improvements import DamageResistance, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 
@@ -21,6 +22,23 @@ class EscapedDeath(Feature):
 class Everlasting(Feature):
     def __init__(self):
         super().__init__(name="Everlasting", origin="Reborn Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Exhaustion",
+                        "None from dehydration, malnutrition or suffocation",
+                    ),
+                    (
+                        "Sleep",
+                        "You don't need to sleep, and magic can't put you to sleep",
+                    ),
+                    ("Long Rest", "4 hours, inactive and motionless but conscious"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation. You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in an inactive, motionless state, during which you retain consciousness."
@@ -43,6 +61,20 @@ class RebornKnowledge(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Skill", "Proficiency in one skill of your choice"),
+                    (
+                        "Knowledge from a Past Life",
+                        "When you fail an ability check, add 1d6 to the d20. Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

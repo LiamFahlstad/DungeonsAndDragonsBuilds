@@ -10,6 +10,7 @@ from Model.Content.Improvements import InitiativeBonus
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class FancyFootwork(Feature):
@@ -70,6 +71,42 @@ class Panache(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your charm becomes extraordinarily beguiling."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Target",
+                        "A creature that can hear you and shares a language with you",
+                    ),
+                    (
+                        "Contest",
+                        "Your Charisma (Persuasion) against its Wisdom (Insight)",
+                    ),
+                )
+            ),
+            Option(
+                "You win",
+                (
+                    Table(
+                        ("Target is", "Effect"),
+                        (
+                            (
+                                "Hostile",
+                                "For 1 minute it has disadvantage on attacks against anyone but you and can't make opportunity attacks against anyone but you. Ends if a companion attacks it or affects it with a spell, or you're more than 60 feet apart.",
+                            ),
+                            (
+                                "Not hostile",
+                                "Charmed by you for 1 minute, regarding you as a friendly acquaintance. Ends at once if you or your companions harm it.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

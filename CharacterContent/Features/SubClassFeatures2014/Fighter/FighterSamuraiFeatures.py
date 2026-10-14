@@ -17,6 +17,7 @@ from Model.Content.Improvements import (
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class BonusProficiency(Feature):
@@ -62,6 +63,22 @@ class FightingSpirit(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=3, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    (
+                        "Effect",
+                        "Advantage on weapon attack rolls until the end of the turn",
+                    ),
+                    ("Temporary HP", "5; 10 at Fighter level 10; 15 at 15"),
+                    ("Uses", "Three per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -157,6 +174,29 @@ class StrengthBeforeDeath(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "Damage reduces you to 0 hit points"),
+                    (
+                        "Effect",
+                        "Delay falling unconscious and take an extra turn right away",
+                    ),
+                    (
+                        "During it",
+                        "Damage at 0 hit points causes death saving throw failures as normal; three failures still kill you",
+                    ),
+                    (
+                        "Afterwards",
+                        "You fall unconscious if you're still at 0 hit points",
+                    ),
+                    ("Limit", "Once per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

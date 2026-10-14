@@ -39,7 +39,7 @@ class StepsOfTheFey(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -95,7 +95,32 @@ class MistyEscape(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Escape in a burst of fey magic."),
+            Facts(
+                (("Reaction", "Cast Misty Step as a Reaction when you take damage"),)
+            ),
+            Option(
+                "New Steps of the Fey options",
+                (
+                    Facts(
+                        (
+                            (
+                                "Disappearing Step",
+                                "You're Invisible until the start of your next turn, or until right after you attack, deal damage or cast a spell",
+                            ),
+                            (
+                                "Dreadful Step",
+                                f"Creatures within 5 feet of the space you left or arrive in (your choice) make a Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)}) or take 2d10 Psychic damage",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

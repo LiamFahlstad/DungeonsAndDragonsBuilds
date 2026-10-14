@@ -80,6 +80,26 @@ class PathToTheGrave(Feature):
             usage_tags=["control", "damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action, presenting your Holy Symbol"),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Range", "30 feet"),
+                    ("Target", "One creature you can see"),
+                    (
+                        "Curse",
+                        "Until the start of your next turn, Disadvantage on attack rolls and saving throws",
+                    ),
+                    (
+                        "End it",
+                        "When you or an ally you can see hits it with an attack roll, end the curse (no action required): the attack deals extra Necrotic or Radiant damage equal to your Cleric level",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you present your Holy Symbol and expend a use of Channel Divinity to curse one creature you can see within 30 feet of yourself until the start of your next turn. While cursed, the creature has Disadvantage on attack rolls and saving throws.\n"

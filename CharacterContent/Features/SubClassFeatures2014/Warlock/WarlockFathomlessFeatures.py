@@ -12,6 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 from Core.Definitions import CharacterClass
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class ExpandedSpellList(Feature):
@@ -64,13 +65,40 @@ class TentacleOfTheDeep(Feature):
             dice=TENTACLE_DICE,
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and the tentacle's damage dice are in the panel below.
+        return [
+            Paragraph("Summon a spectral tentacle that strikes at your foes."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Range",
+                        "A point you can see within 60 feet; the tentacle is 10 feet long",
+                    ),
+                    ("Duration", "1 minute, or until you create another"),
+                    (
+                        "Attack",
+                        "When you create it: a melee spell attack against one creature within 10 feet of it",
+                    ),
+                    (
+                        "Hit",
+                        "Tentacle Cold Damage dice (see Dice below) cold damage, and its speed drops by 10 feet until the start of your next turn",
+                    ),
+                    (
+                        "Again",
+                        "Bonus Action on your turn: move it up to 30 feet and repeat the attack",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
         damage = TENTACLE_DICE.at(character)
         description = (
             "You can magically summon a spectral tentacle that strikes at your foes. As a bonus action, you create a 10-foot-long tentacle at a point you can see within 60 feet of you. The tentacle lasts for 1 minute or until you use this feature to create another tentacle.\n"
             "\n"
-            f"When you create the tentacle, you can make a melee spell attack against one creature within 10 feet of it. On a hit, the target takes {damage} cold damage, and its speed is reduced by 10 feet until the start of your next turn. When you reach 10th level in this class, the damage increases to 2d8.\n"
+            f"When you create the tentacle, you can make a melee spell attack against one creature within 10 feet of it. On a hit, the target takes 1d8 cold damage, and its speed is reduced by 10 feet until the start of your next turn. When you reach 10th level in this class, the damage increases to 2d8.\n"
             "\n"
             "As a bonus action on your turn, you can move the tentacle up to 30 feet and repeat the attack.\n"
             "\n"
@@ -154,9 +182,7 @@ class GuardianCoil(Feature):
         )
 
     def get_description(self, character: CharacterView) -> str:
-        warlock_level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
-        damage = GUARDIAN_COIL_DICE.at(character)
-        description = f"Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by {damage}. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
+        description = "Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by 1d8. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
@@ -192,6 +218,24 @@ class FathomlessPlunge(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Target",
+                        "You and up to five willing creatures you can see within 30 feet",
+                    ),
+                    (
+                        "Destination",
+                        "Up to 1 mile away, in or within 30 feet of a body of water you've seen (pond size or larger); everyone appears within 30 feet of each other",
+                    ),
+                    ("Limit", "Once per short or long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -32,7 +32,7 @@ class WrathOfTheSea(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY

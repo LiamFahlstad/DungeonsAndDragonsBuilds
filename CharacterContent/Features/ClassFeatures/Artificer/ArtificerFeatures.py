@@ -15,12 +15,41 @@ from Model.Content.FeatureText import (
     Option,
     Paragraph,
     Table,
+    dc_formula,
 )
+from Core.Definitions import Ability
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Artificer Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Intelligence"),
+                    ("Save DC", dc_formula(Ability.INTELLIGENCE)),
+                    ("Spell attack", "Intelligence modifier + Proficiency Bonus"),
+                    (
+                        "Focus",
+                        "Thieves' Tools, Tinker's Tools or other Artisan's Tools you're proficient with; you must hold one to cast an Artificer spell",
+                    ),
+                    (
+                        "Cantrips",
+                        "Two Artificer cantrips; one more at Artificer levels 10 and 14. Swap one after each Long Rest.",
+                    ),
+                    (
+                        "Prepared spells",
+                        "Start with two level 1 Artificer spells; the number grows with your Artificer level. Change the list after each Long Rest.",
+                    ),
+                    (
+                        "Spell slots",
+                        "As the Artificer Features table; regain all when you finish a Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -589,6 +618,22 @@ class SoulOfArtifice(Feature):
         super().__init__(
             name="Soul of Artifice", origin="Artificer Level 20", usage_tags=["heal"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cheat Death",
+                        "When you drop to 0 Hit Points but aren't killed outright, disintegrate any number of your Uncommon or Rare Replicate Magic Item items: your Hit Points become 20 x the number destroyed",
+                    ),
+                    (
+                        "Magical Guidance",
+                        "When you finish a Short Rest while attuned to at least one magic item, regain all uses of Flash of Genius",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

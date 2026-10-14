@@ -1,4 +1,8 @@
-from Core.Definitions import DamageType, RANGER_HIT_DIE
+from Core.Definitions import (
+    DamageType,
+    RANGER_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -115,7 +119,7 @@ class ChillingRetribution(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

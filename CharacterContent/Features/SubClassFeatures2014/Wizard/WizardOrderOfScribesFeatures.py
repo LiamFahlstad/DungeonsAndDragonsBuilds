@@ -19,6 +19,26 @@ class WizardlyQuill(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Bonus Action: create a Tiny magic quill in your free hand. It vanishes if you create another or die."
+            ),
+            Facts(
+                (
+                    ("Ink", "It needs none; it writes in any color you choose"),
+                    (
+                        "Copying",
+                        "Copying a spell into your spellbook with it takes 2 minutes per spell level",
+                    ),
+                    (
+                        "Erase",
+                        "Bonus Action: wave it over text you wrote with it within 5 feet to erase it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a bonus action, you can magically create a Tiny quill in your free hand. The magic quill has the following properties:\n"
@@ -177,6 +197,43 @@ class MasterScriviner(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Enhanced scroll",
+                (
+                    Facts(
+                        (
+                            (
+                                "When",
+                                "Whenever you finish a long rest, touch your Wizardly Quill to blank paper or parchment, with your Awakened Spellbook within 5 feet",
+                            ),
+                            (
+                                "Spell",
+                                "A 1st- or 2nd-level spell from the book with a casting time of 1 action. On the scroll it counts as one level higher.",
+                            ),
+                            (
+                                "Casting",
+                                "Read it as an action. Only you can understand it.",
+                            ),
+                            (
+                                "Lasts",
+                                "Until you cast it or finish your next long rest",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Facts(
+                (
+                    (
+                        "Spell scrolls",
+                        "Crafting spell scrolls (Dungeon Master's Guide) with your Wizardly Quill takes half the gold and time",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -11,6 +11,7 @@ from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -41,6 +42,21 @@ class AdrenalineRush(Feature):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action: take the Dash action"),
+                    (
+                        "Effect",
+                        "Gain Temporary Hit Points equal to your Proficiency Bonus",
+                    ),
+                    ("Uses", "Proficiency Bonus per Short or Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = (

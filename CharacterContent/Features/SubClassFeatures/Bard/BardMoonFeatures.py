@@ -9,7 +9,11 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantLanguage, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+)
 
 
 class MoonsInspiration(Feature):
@@ -88,6 +92,21 @@ class BlessingOfMoonlight(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Moonbeam", "Always prepared"),
+                    (
+                        "Blessing",
+                        "When you cast it, you can glow (Dim Light 5 feet) while it lasts; whenever a creature fails its save against it, another creature you can see within 60 feet regains 2d4 Hit Points",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have the Moonbeam spell prepared.\n"
@@ -110,6 +129,23 @@ class EventidesSplendor(Feature):
             origin="College of the Moon Bard Level 14",
             usage_tags=["buff", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Moon's Inspiration improves."),
+            Facts(
+                (
+                    (
+                        "Shadow of the New Moon",
+                        "When you use Inspired Eclipse, the creature can also become Invisible until the start of its next turn and use its Reaction to teleport up to 30 feet to a space it can see",
+                    ),
+                    (
+                        "Vibrance of the Full Moon",
+                        "When you use Lunar Vitality, roll 1d6 instead of expending a Bardic Inspiration die",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

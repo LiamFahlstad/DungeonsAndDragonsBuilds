@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class CircleForms(Feature):
@@ -82,6 +83,25 @@ class MoonlightStep(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Reappear amid a burst of moonlight."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Effect",
+                        "Teleport up to 30 feet to an unoccupied space you can see, then have Advantage on your next attack roll this turn",
+                    ),
+                    (
+                        "Uses",
+                        "Wisdom modifier (minimum once) per Long Rest; expend a level 2+ spell slot to restore one (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

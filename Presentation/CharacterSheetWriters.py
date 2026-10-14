@@ -37,6 +37,7 @@ from Presentation import Html
 from Presentation.CreatureStatBlocks import WILDSHAPE_CARD_CSS
 from Presentation.FeatureCards import (
     FEATURE_CARD_CSS,
+    improved_description_to_html,
     render_feature_description,
     write_extension_card,
     write_feature_card,
@@ -764,13 +765,17 @@ class HtmlCharacterSheetWriter:
                 name, body = desc.split(": ", 1)
             else:
                 name, body = "Fighting Style", desc
-            processed_body = Html.boxes_to_html(body)
+            improved = None if self.source_text else style.get_improved_description()
+            if improved is not None:
+                body_html = improved_description_to_html(improved)
+            else:
+                body_html = f"<p>{Html.boxes_to_html(body)}</p>"
             file.write("<div class='feature-card'>\n")
             file.write("<div class='feature-header'>\n")
             file.write(f"<span class='feature-name'>{name}</span>\n")
             file.write("</div>\n")
             file.write("<div class='feature-body'>\n")
-            file.write(f"<p>{processed_body}</p>\n")
+            file.write(f"{body_html}\n")
             file.write("</div>\n")
             file.write("</div>\n")
 

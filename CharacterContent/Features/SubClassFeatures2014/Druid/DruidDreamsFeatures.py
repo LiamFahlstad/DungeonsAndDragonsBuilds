@@ -10,6 +10,12 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER, levels_gained
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    Option,
+)
 
 
 class BalmOfTheSummerCourt(Feature):
@@ -28,6 +34,24 @@ class BalmOfTheSummerCourt(Feature):
                 gained_at=levels_gained(lambda level: level, from_level=3),
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("A pool of fey energy that heals your allies."),
+            Facts(
+                (
+                    ("Pool", "Druid level d6s; regain all when you finish a long rest"),
+                    ("Action", "Bonus Action"),
+                    ("Range", "120 feet"),
+                    ("Target", "One ally you can see"),
+                    ("Spend", "Up to half your Druid level dice; roll them"),
+                    (
+                        "Heal",
+                        "The total in hit points, plus 1 temporary hit point per die spent",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -62,6 +86,28 @@ class HearthOfMoonlightAndShadow(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Guard your rest with the Gloaming Court's shadowy power."),
+            Facts(
+                (
+                    (
+                        "When",
+                        "At the start of a short or long rest, touch a point in space",
+                    ),
+                    (
+                        "Area",
+                        "An invisible 30-foot-radius sphere centered there; total cover blocks it",
+                    ),
+                    (
+                        "Inside",
+                        "You and your allies have +5 to Dexterity (Stealth) and Wisdom (Perception) checks, and light from open flames inside can't be seen from outside",
+                    ),
+                    ("Ends", "At the end of the rest, or when you leave the sphere"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 6th level, home can be wherever you are. During a short or long rest, you can invoke the shadowy power of the Gloaming Court to help guard your respite. At the start of the rest, you touch a point in space, and an invisible, 30-foot-radius sphere of magic appears, centered on that point. Total cover blocks the sphere.\n"
@@ -90,6 +136,42 @@ class HiddenPaths(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph(
+                "Use the fey's hidden pathways (Wisdom modifier, minimum once, per long rest):"
+            ),
+            Option(
+                "Yourself",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action on your turn"),
+                            (
+                                "Teleport",
+                                "Up to 60 feet to an unoccupied space you can see",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Another",
+                (
+                    Facts(
+                        (
+                            ("Action", "Action"),
+                            (
+                                "Teleport",
+                                "One willing creature you touch, up to 30 feet to an unoccupied space you can see",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 10th level, you can use the hidden, magical pathways that some fey use to traverse space in a blink of an eye. As a bonus action on your turn, you can teleport up to 60 feet to an unoccupied space you can see. Alternatively, you can use your action to teleport one willing creature you touch up to 30 feet to an unoccupied space you can see.\n"
@@ -106,6 +188,26 @@ class WalkerInDreams(Feature):
             origin="Circle of Dreams Druid Level 14",
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Travel through dreamlands, in mind or body."),
+            Facts(
+                (
+                    ("When", "When you finish a short rest"),
+                    (
+                        "Spell",
+                        "Cast one without a spell slot or material components: Dream (you as the messenger), Scrying, or Teleportation Circle",
+                    ),
+                    (
+                        "Teleportation Circle",
+                        "Opens a portal to where you last finished a long rest on this plane. If you haven't, it fails but isn't wasted.",
+                    ),
+                    ("Limit", "Once per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

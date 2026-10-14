@@ -185,6 +185,32 @@ class FaithfulSummons(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Nature spirits protect you when you're most defenseless."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You're reduced to 0 hit points or incapacitated against your will",
+                    ),
+                    (
+                        "Effect",
+                        "Conjure Animals as if cast with a 9th-level slot: four beasts of your choice, CR 2 or lower, within 20 feet of you",
+                    ),
+                    (
+                        "Behavior",
+                        "Without commands, they protect you and attack your foes",
+                    ),
+                    (
+                        "Duration",
+                        "1 hour without concentration, or until you dismiss it (no action required)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The nature spirits you commune with protect you when you are the most defenseless. If you are reduced to 0 hit points or are incapacitated against your will, you can immediately gain the benefits of Conjure Animals as if it were cast with a 9th-level spell slot. It summons four beasts of your choice that are challenge rating 2 or lower. The conjured beasts appear within 20 feet of you. If they receive no commands from you, they protect you from harm and attack your foes. The spell lasts for 1 hour, requiring no concentration, or until you dismiss it (no action required).\n"

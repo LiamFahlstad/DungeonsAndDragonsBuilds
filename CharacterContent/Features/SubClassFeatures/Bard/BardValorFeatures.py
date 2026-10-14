@@ -4,6 +4,7 @@ from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficienc
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class CombatInspiration(Feature):
@@ -13,6 +14,35 @@ class CombatInspiration(Feature):
             origin="College of Valor Bard Level 3",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "A creature with one of your Bardic Inspiration dice can use it for:"
+            ),
+            Option(
+                "Defense",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction when it's hit by an attack roll"),
+                            ("Effect", "Add the roll to its AC against that attack"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Offense",
+                (
+                    Facts(
+                        (
+                            ("Trigger", "Right after it hits with an attack roll"),
+                            ("Effect", "Add the roll to the attack's damage"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

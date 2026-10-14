@@ -1,5 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class BattleragerArmor(Feature):
@@ -12,6 +13,23 @@ class BattleragerArmor(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Restriction", "Only dwarves can follow this path"),
+                    (
+                        "Spike attack",
+                        "While raging in spiked armor: bonus action melee weapon attack with the spikes against a target within 5 feet, Strength for attack and damage, 1d4 piercing damage",
+                    ),
+                    (
+                        "Grapple",
+                        "When you use the Attack action to grapple and succeed, the target takes 3 piercing damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

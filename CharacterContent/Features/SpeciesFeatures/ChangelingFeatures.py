@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 SPEED = 30  # Given by your species
 
@@ -49,6 +50,29 @@ class ShapeShifter(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Change your appearance and voice at will."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Action to shift; an action to revert to your true form",
+                    ),
+                    (
+                        "Change",
+                        "Coloration, hair length, sex, height and weight, and size between Medium and Small. You can look like another playable species; your game statistics don't change.",
+                    ),
+                    (
+                        "Limits",
+                        "You can't copy someone you've never seen, must keep your basic arrangement of limbs, and your clothing and equipment don't change",
+                    ),
+                    ("While shifted", "Advantage on Charisma checks"),
+                    ("Duration", "Until you revert"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

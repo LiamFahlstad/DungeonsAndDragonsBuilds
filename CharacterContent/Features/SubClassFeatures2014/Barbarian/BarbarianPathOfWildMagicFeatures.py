@@ -155,6 +155,36 @@ class BolsteringMagic(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Bolster yourself or a companion with wild magic."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Target", "One creature you touch (can be you)"),
+                )
+            ),
+            Option(
+                "Choose one",
+                (
+                    Table(
+                        ("Benefit", "Effect"),
+                        (
+                            (
+                                "Boost",
+                                "For 10 minutes, it adds a d3 to its attack rolls and ability checks",
+                            ),
+                            (
+                                "Restore",
+                                "Roll a d3: it regains one expended spell slot of that level or lower. A creature can receive this only once per long rest.",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Beginning at 6th level, you can harness your wild magic to bolster yourself or a companion. As an action, you can touch one creature (which can be yourself) and confer one of the following benefits of your choice to that creature:\n"

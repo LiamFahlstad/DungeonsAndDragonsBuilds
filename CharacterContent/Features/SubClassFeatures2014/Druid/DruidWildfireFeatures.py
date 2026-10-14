@@ -19,6 +19,13 @@ from Model.Content.Feature import (
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    dc_formula,
+    StatBlock,
+)
 
 
 def _build_wildfire_spirit(
@@ -130,6 +137,37 @@ class SummonWildfireSpirit(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Summon the primal spirit bound to your soul instead of taking a beast form."
+            ),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Cost", "One use of Wild Shape"),
+                    ("Range", "An unoccupied space you can see within 30 feet"),
+                    (
+                        "Arrival",
+                        f"Each other creature within 10 feet of it makes a Dexterity save against your spell save DC ({dc_formula(Ability.WISDOM)}) or takes 2d6 fire damage",
+                    ),
+                    (
+                        "Lasts",
+                        "1 hour, until it drops to 0 hit points, you summon it again, or you die",
+                    ),
+                    (
+                        "Loyalty",
+                        "Friendly to you and your companions, and obeys your commands",
+                    ),
+                    (
+                        "In combat",
+                        "Shares your initiative count and takes its turn right after yours. It moves and uses its reaction on its own, but its only action is Dodge unless you take a bonus action to command another action (from its stat block or any other). If you're incapacitated, it can take any action.",
+                    ),
+                )
+            ),
+            StatBlock(format_wildfire_spirit(character)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can summon the primal spirit bound to your soul. As an action, you can expend one use of your Wild Shape feature to summon your wildfire spirit, rather than assuming a beast form.\n"
@@ -185,6 +223,26 @@ class CauterizingFlames(Feature):
                 gained_at=levels_gained(proficiency_bonus, from_level=10),
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Turn death into flames that heal or burn."),
+            Facts(
+                (
+                    (
+                        "Flame",
+                        "When a Small or larger creature dies within 30 feet of you or your wildfire spirit, a harmless spectral flame flickers in its space for 1 minute",
+                    ),
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature you can see enters a flame's space"),
+                    (
+                        "Effect",
+                        "Extinguish it to heal the creature or deal fire damage to it: 2d10 + Wisdom modifier",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         wisdom_modifier = character.get_ability_modifier(Ability.WISDOM)

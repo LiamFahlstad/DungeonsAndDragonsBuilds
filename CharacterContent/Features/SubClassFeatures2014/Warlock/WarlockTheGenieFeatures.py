@@ -163,6 +163,23 @@ class ElementalGift(Feature):
         # patron's kind" (the flight is the activated part).
         DamageResistance(_ELEMENTAL_GIFT_RESISTANCE[self.kind]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Resistance",
+                        f"{_ELEMENTAL_GIFT_RESISTANCE[self.kind].value} damage ({self.kind.value}); Dao bludgeoning, Djinni thunder, Efreeti fire, Marid cold",
+                    ),
+                    (
+                        "Flight",
+                        "Bonus Action: flying speed of 30 feet with hover for 10 minutes. Proficiency Bonus times per long rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         damage_type = _WRATH_DAMAGE_TYPE[self.kind]
         description = (
@@ -192,6 +209,27 @@ class SanctuaryVessel(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Genie's Vessel becomes a shared sanctuary."),
+            Facts(
+                (
+                    (
+                        "Guests",
+                        "When you enter it with Bottled Respite, bring up to five willing creatures you can see within 30 feet",
+                    ),
+                    (
+                        "Eject",
+                        "Bonus Action: eject any number of them. Everyone is ejected if you leave or die or the vessel is destroyed.",
+                    ),
+                    (
+                        "Rest",
+                        "Anyone inside for 10 minutes gains the benefit of a short rest, and adds your Proficiency Bonus to hit points regained from Hit Dice spent there",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 10th level, when you enter your Genie's Vessel via the Bottled Respite feature, you can now choose up to five willing creatures that you can see within 30 feet of you, and the chosen creatures are drawn into the vessel with you.\n"
@@ -215,6 +253,20 @@ class LimitedWish(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="1d4 long rests"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Action: speak your desire to your Genie's Vessel"),
+                    (
+                        "Effect",
+                        "The effect of one spell of 6th level or lower with a casting time of 1 action, from any class's list, with no requirements or costly components",
+                    ),
+                    ("Recharge", "After you finish 1d4 long rests"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

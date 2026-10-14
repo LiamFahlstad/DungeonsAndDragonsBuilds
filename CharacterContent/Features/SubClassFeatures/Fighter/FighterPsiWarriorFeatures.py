@@ -271,6 +271,29 @@ class BulwarkOfForce(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "Up to Intelligence modifier (minimum one) creatures, you included",
+                    ),
+                    (
+                        "Effect",
+                        "Half Cover for 1 minute, or until you're Incapacitated",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a Psionic Energy Die (no action required)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can shield yourself and others with telekinetic force. As a Bonus Action, you can choose creatures, including yourself, within 30 feet of yourself, up to a number of creatures equal to your Intelligence modifier (minimum of one creature). Each of the chosen creatures has Half Cover for 1 minute or until you have the Incapacitated condition.\n"
@@ -286,6 +309,26 @@ class TelekineticMaster(Feature):
             origin="Psi Warrior Fighter Level 18",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Telekinesis",
+                        "Always prepared. Cast it without a spell slot or components; Intelligence is its spellcasting ability.",
+                    ),
+                    (
+                        "Attack",
+                        "Each turn you concentrate on it (including the turn you cast it), make one weapon attack as a Bonus Action",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a Psionic Energy Die (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

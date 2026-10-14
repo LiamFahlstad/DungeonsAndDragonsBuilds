@@ -9,11 +9,43 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Table
 
 
 class DivineMagic(Feature):
     def __init__(self):
         super().__init__(name="Divine Magic", origin="Divine Soul Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cleric spells",
+                        "Whenever you learn a sorcerer cantrip or spell, you can pick it from the cleric list instead; it becomes a sorcerer spell for you",
+                    ),
+                    (
+                        "Affinity spell",
+                        "One extra spell from your divine affinity (below). It doesn't count against your spells known; replace it only with a cleric spell.",
+                    ),
+                )
+            ),
+            Option(
+                "Divine affinity",
+                (
+                    Table(
+                        ("Affinity", "Spell"),
+                        (
+                            ("Good", "Cure Wounds"),
+                            ("Evil", "Inflict Wounds"),
+                            ("Law", "Bless"),
+                            ("Chaos", "Bane"),
+                            ("Neutrality", "Protection from Evil and Good"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

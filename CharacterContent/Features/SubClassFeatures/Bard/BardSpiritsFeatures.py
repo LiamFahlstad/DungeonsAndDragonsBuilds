@@ -11,6 +11,19 @@ class Channeler(Feature):
     def __init__(self):
         super().__init__(name="Channeler", origin="College of Spirits Bard Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Guiding Whispers", "You know Guidance; its range is 60 feet"),
+                    (
+                        "Spiritual Focus",
+                        "You gain playing cards (Gaming Set) and proficiency with them. Use them, an Arcane Focus (crystal or orb), a Candle or an Ink Pen as your Bard Spellcasting Focus.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn how to contact spirits beyond the grave, letting their power and knowledge flow through you. You gain the following benefits.\n"
@@ -30,7 +43,7 @@ class SpiritsFromBeyond(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE

@@ -1,4 +1,7 @@
-from Core.Definitions import CharacterClass
+from Core.Definitions import (
+    CharacterClass,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -7,6 +10,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, dc_formula
 
 
 class UndyingExpandedSpells(Feature):
@@ -37,6 +41,28 @@ class AmongTheDead(Feature):
             activation=FeatureActivation(duration="24 Hours"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spare the Dying", "You learn it; it's a warlock cantrip for you"),
+                    ("Disease", "Advantage on saving throws against disease"),
+                    (
+                        "Undead",
+                        f"An undead that targets you directly with an attack or harmful spell makes a Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)}); not for area effects",
+                    ),
+                    (
+                        "Failed",
+                        "It must pick a new target or forfeit targeting someone other than you, possibly wasting it",
+                    ),
+                    (
+                        "Immunity",
+                        "It's immune for 24 hours if it succeeds, or if you target it with an attack or harmful spell",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

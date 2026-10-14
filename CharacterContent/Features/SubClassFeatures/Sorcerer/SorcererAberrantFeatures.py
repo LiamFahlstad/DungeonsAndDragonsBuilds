@@ -184,7 +184,7 @@ class WarpingImplosion(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The once-per-Long-Rest box is in the panel below.

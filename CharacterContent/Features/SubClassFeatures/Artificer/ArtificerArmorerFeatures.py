@@ -260,7 +260,7 @@ class ArmorModel(Feature):
         ]
         if perfected:
             lines.append(
-                f"Guardian pull (Reaction): DC {character.calculate_difficulty_class()} Strength save, {uses} per Long Rest. "
+                f"Guardian pull (Reaction): DC {character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)} Strength save, {uses} per Long Rest. "
                 f"Infiltrator flight (Bonus Action): {uses} per Long Rest."
             )
         return "\n".join(lines)
@@ -310,7 +310,7 @@ class PerfectedArmor(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST

@@ -8,6 +8,12 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    dc_formula,
+)
 
 
 class ChronalShift(Feature):
@@ -20,6 +26,22 @@ class ChronalShift(Feature):
             ),
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "After you or a creature you can see within 30 feet makes an attack roll, ability check or saving throw, once you see if it succeeds",
+                    ),
+                    ("Effect", "It rerolls and must use the new roll"),
+                    ("Uses", "Twice per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -63,11 +85,32 @@ class MomentaryStasis(Feature):
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "60 feet"),
+                    ("Target", "A Large or smaller creature you can see"),
+                    (
+                        "Save",
+                        f"Constitution save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                    ),
+                    (
+                        "Failed",
+                        "Encased until the end of your next turn or until it takes damage: incapacitated, speed 0",
+                    ),
+                    ("Uses", "Intelligence modifier (minimum once) per long rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach 6th level, as an action, you can magically force a Large or smaller creature you can see within 60 feet of you to make a Constitution saving throw against your spell save DC. Unless the saving throw is a success, the creature is encased in a field of magical energy until the end of your next turn or until the creature takes any damage. While encased in this way, the creature is incapacitated and has a speed of 0.\n"
             "\n"
-            "You can use this feature a minimum of once per long rest, and you regain all expended uses when you finish a long rest."
+            "You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a long rest."
         )
         return description
 
@@ -86,6 +129,29 @@ class ArcaneAbeyance(Feature):
             activation=FeatureActivation(duration="1 Hour"),
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Paragraph("Freeze a spell in a bead for someone else to release."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a spell using a spell slot of 4th level or lower",
+                    ),
+                    (
+                        "Bead",
+                        "Tiny, AC 15, 1 hit point, immune to poison and psychic damage. Lasts 1 hour; when it ends or the bead is destroyed, the spell is lost.",
+                    ),
+                    (
+                        "Release",
+                        "A creature holding it uses its action; the spell uses your spell attack bonus and save DC, and treats that creature as the caster otherwise",
+                    ),
+                    ("Limit", "Once per short or long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -107,6 +173,27 @@ class ConvergentFuture(Feature):
                 action_type=ActionType.REACTION, range="60 Feet"
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within 60 feet makes an attack roll, ability check or saving throw",
+                    ),
+                    (
+                        "Effect",
+                        "Ignore the die: the roll is exactly the number needed to succeed, or one less (your choice)",
+                    ),
+                    (
+                        "Cost",
+                        "You gain one level of exhaustion, removed only by a long rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

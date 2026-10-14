@@ -1,6 +1,7 @@
 from Core.Definitions import PSION_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class StrongerTelekinesis(Feature):
@@ -23,6 +24,35 @@ class TelekineticTechniques(Feature):
             origin="Psykinetic Psion Level 3",
             usage_tags=["buff", "control", "damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Telekinetic Propel improves."),
+            Facts(
+                (("Free die", "Roll 1d4 instead of expending a Psionic Energy Die"),)
+            ),
+            Option(
+                "On a failed save, add one",
+                (
+                    Facts(
+                        (
+                            (
+                                "Boost",
+                                "Its Speed increases by 10 feet until the start of your next turn",
+                            ),
+                            (
+                                "Disorient",
+                                "It can't make Opportunity Attacks until the start of its next turn",
+                            ),
+                            (
+                                "Telekinetic Bolt",
+                                "It takes Force damage equal to the Psionic Energy Die roll",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -79,6 +109,27 @@ class ReboundingField(Feature):
             origin="Psykinetic Psion Level 6",
             usage_tags=["damage", "buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Launch a blocked attack's force back at the attacker."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Your Shield, cast when hit by an attack roll, makes the attack miss",
+                    ),
+                    ("Cost", "One Psionic Energy Die; roll it"),
+                    ("Save", "The attacker makes a Dexterity save"),
+                    (
+                        "Failed",
+                        "Force damage equal to the roll + Intelligence modifier",
+                    ),
+                    ("Succeeded", "Half damage"),
+                    ("You", "Gain Temporary Hit Points equal to the damage dealt"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -1,6 +1,7 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class MindInfiltrator(Feature):
@@ -125,6 +126,23 @@ class ScrambleMinds(Feature):
             activation=FeatureActivation(range="30-Foot Radius"),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cost", "Four Psionic Energy Dice instead of a spell slot"),
+                    (
+                        "Spell",
+                        "Cast Confusion; its Sphere can be 30 feet, and one creature you can see in it succeeds on its save automatically",
+                    ),
+                    (
+                        "Control",
+                        "When an affected creature starts its turn, you pick its behavior from the table instead of rolling",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

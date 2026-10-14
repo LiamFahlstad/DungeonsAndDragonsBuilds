@@ -82,6 +82,28 @@ class BeastsOfIllOmen(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Call forth a howling beast of shadow."),
+            Facts(
+                (
+                    ("Cost", "3 Sorcery Points"),
+                    (
+                        "Spell",
+                        "Cast Summon Beast as a Bonus Action, without a spell slot, preparation or Material components",
+                    ),
+                    (
+                        "Ill Omen",
+                        "Enemies within 5 feet of the beast have Disadvantage on saves against your spells",
+                    ),
+                    (
+                        "No Concentration",
+                        "Optionally: the spell needs no Concentration, lasts 1 minute, and ends early if you cast it again",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can call forth a howling creature of shadow to hound your foes. You can spend 3 Sorcery Points to cast Summon Beast as a Bonus Action without expending a spell slot, without preparing the spell, and without Material components. The summoned creature appears as a beast made of shadow, and enemies within 5 feet of the summoned creature have Disadvantage on saving throws against spells you cast.\n"

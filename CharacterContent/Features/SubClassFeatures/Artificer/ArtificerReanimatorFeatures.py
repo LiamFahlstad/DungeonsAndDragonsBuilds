@@ -69,7 +69,7 @@ class ReanimatorSkillSet(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
@@ -130,7 +130,9 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
     artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
     intelligence_modifier = character.get_intelligence_modifier()
     spell_attack = character.calculate_attack_bonus_for_ability(Ability.INTELLIGENCE)
-    spell_save_dc = character.calculate_difficulty_class()
+    spell_save_dc = character.calculate_difficulty_class_for_ability(
+        Ability.INTELLIGENCE
+    )
     proficiency_bonus = character.get_proficiency_bonus()
     death_burst_dice = "4d4" if character.has_feature(ImprovedReanimation) else "2d4"
 
@@ -280,6 +282,32 @@ class StrangeModifications(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Each time you create a Reanimated Companion, choose one:"),
+            Option(
+                "Arcane Conduit",
+                (
+                    Facts(
+                        (
+                            (
+                                "Casting",
+                                "Cast spells as if from the companion's space, using your own senses",
+                            ),
+                            (
+                                "Damage",
+                                "Once per turn, when an Artificer Evocation or Necromancy spell deals damage while the companion is within 120 feet, add your Intelligence modifier to one damage roll",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Ferocity",
+                (Facts((("Dreadful Swipe", "Its damage die becomes 1d6"),)),),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you create a Reanimated Companion, it gains one of the following options of your choice; choose when you create the companion.\n"
@@ -311,7 +339,7 @@ class MacabreModifications(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

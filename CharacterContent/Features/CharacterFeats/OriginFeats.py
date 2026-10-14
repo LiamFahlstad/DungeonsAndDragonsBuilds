@@ -35,7 +35,12 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 from Model.CharacterSources import SpellSource
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    dc_formula,
+)
 
 
 class OriginFeat(Feature):
@@ -152,6 +157,36 @@ class Healer(OriginFeat):
     def __init__(self):
         super().__init__(name="Healer", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Battle Medic",
+                (
+                    Facts(
+                        (
+                            (
+                                "Action",
+                                "Utilize action, expending one use of a Healer's Kit",
+                            ),
+                            ("Range", "5 feet"),
+                            (
+                                "Effect",
+                                "The creature can expend one Hit Point Die; you roll it, and it regains the roll + your Proficiency Bonus Hit Points",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Facts(
+                (
+                    (
+                        "Healing Rerolls",
+                        "Reroll a 1 on a die that restores Hit Points with a spell or Battle Medic; use the new roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Battle Medic:\n"
@@ -178,6 +213,23 @@ class Lucky(OriginFeat):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Luck Points", "Proficiency Bonus per Long Rest"),
+                    (
+                        "Advantage",
+                        "When you roll a d20 for a D20 Test, spend 1 to give yourself Advantage",
+                    ),
+                    (
+                        "Disadvantage",
+                        "When a creature rolls a d20 for an attack roll against you, spend 1 to give it Disadvantage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -330,6 +382,22 @@ class Musician(OriginFeat):
     def __init__(self):
         super().__init__(name="Musician", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Instrument Training",
+                        "Proficiency with three Musical Instruments of your choice",
+                    ),
+                    (
+                        "Encouraging Song",
+                        "As you finish a Short or Long Rest, play an instrument you're proficient with: up to Proficiency Bonus allies who hear it gain Heroic Inspiration",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Instrument Training: You gain proficiency with three Musical Instruments of your choice.\n"
@@ -427,6 +495,52 @@ class CultOfTheDragonInitiate(OriginFeat):
         # another language instead; that choice isn't tracked.)
         GrantLanguage(Language.DRACONIC).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Inspired by Fear's once-per-rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Dragon's Tongue",
+                        "You know Draconic (or, if you already do, another language of your choice)",
+                    ),
+                )
+            ),
+            Option(
+                "Dragon's Terror",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            ("Range", "30 feet"),
+                            ("Target", "One creature you can see"),
+                            ("Save", f"Wisdom, DC {dc_formula(Ability.WISDOM)}"),
+                            ("Failed", "Frightened until the end of your next turn"),
+                            (
+                                "Afterwards",
+                                "A target that succeeds, or whose fear ends, is immune for 24 hours",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Inspired by Fear",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You cause a creature to be Frightened, with you as the source of its fear",
+                            ),
+                            ("Effect", "Gain Heroic Inspiration if you lack it"),
+                            ("Limit", "Once per Short or Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -462,6 +576,22 @@ class EmeraldEnclaveFledgling(OriginFeat):
 
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Speak with Animals",
+                        f"Always prepared; cast it with your spell slots. {self.spell_casting_ability.value} is its spellcasting ability. Cast as a Ritual, it lasts 8 hours.",
+                    ),
+                    (
+                        "Tag Team",
+                        "When you take the Help action, swap places with a willing, non-Incapacitated ally within 5 feet; this doesn't provoke Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -500,6 +630,26 @@ class FamiliarFriend(OriginFeat):
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Faithful Companion",
+                        f"Find Familiar is always prepared; cast it once per Long Rest without a slot or Material components, or with your spell slots. {self.spell_casting_ability.value} is its spellcasting ability.",
+                    ),
+                    (
+                        "Fortified Familiar",
+                        "When you cast Find Familiar, the familiar's Hit Point maximum and current Hit Points rise by 2 x your character level",
+                    ),
+                    (
+                        "Helpful Friend",
+                        "Advantage on ability checks with skills you're proficient in while your familiar is within 5 feet of you",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
@@ -536,6 +686,22 @@ class LordsAllianceAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Lords' Alliance Agent", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Inspiring Strike",
+                        "Once per turn, when you score a Critical Hit, an ally within 30 feet who can see or hear you and lacks Heroic Inspiration gains it",
+                    ),
+                    (
+                        "Reassert Honor",
+                        "When an enemy you can see damages an ally within 5 feet of you, you have Advantage on your next attack roll against it before the end of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -567,6 +733,20 @@ class PurpleDragonRook(OriginFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"
+        return [
+            Facts(
+                (
+                    ("Entreat", f"Proficiency in {skill_name}"),
+                    (
+                        "Rallying Cry",
+                        "When you roll Initiative and aren't Incapacitated, Proficiency Bonus creatures you can see within 30 feet gain Heroic Inspiration. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         skill_name = self._choice.skills[0].value if self._choice.skills else "Insight"
         return (
@@ -596,6 +776,22 @@ class SpellfireSpark(OriginFeat):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Magic Absorption",
+                        "Once per turn, when a spell or magical effect damages you, reduce the damage by 1d4 (not while Incapacitated)",
+                    ),
+                    (
+                        "Spellfire Flame",
+                        "You learn Sacred Flame (Intelligence, Wisdom or Charisma, chosen with the feat). Cast it as a Bonus Action Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
@@ -614,6 +810,22 @@ class SpellfireSpark(OriginFeat):
 class TyroOfTheGauntlet(OriginFeat):
     def __init__(self):
         super().__init__(name="Tyro of the Gauntlet", origin="Origin Feat")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Stand as One",
+                        "Reaction when an ally within 5 feet (not Incapacitated) would be pushed or pulled: it isn't",
+                    ),
+                    (
+                        "Vigilant",
+                        "When you take the Ready action, the next attack roll against you before the start of your next turn has Disadvantage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -662,6 +874,22 @@ class SharpEye(OriginFeat):
 class Survivor(OriginFeat):
     def __init__(self):
         super().__init__(name="Survivor", origin="Origin Feat")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Hypervigilance",
+                        "When you roll Initiative, reroll a d20 of 9 or lower; use the new roll",
+                    ),
+                    (
+                        "Steel Yourself",
+                        "Reaction when you fail a save to avoid or end Charmed or Frightened: add your Proficiency Bonus to it. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -725,6 +953,22 @@ class ArcaneArtist(_SpellcastingOriginFeat):
     _SPELL = BardLevel0Spells.MINOR_ILLUSION
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Minor Illusion; {self.spell_casting_ability.value} is its spellcasting ability",
+                    ),
+                    (
+                        "Inspiring Magic",
+                        "When you cast an Illusion spell, an ally within 30 feet who can see you gains Heroic Inspiration. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -753,6 +997,22 @@ class ArcaneInfiltrator(_SpellcastingOriginFeat):
     _SPELL = BardLevel0Spells.FRIENDS
     _USES = _uses_per_proficiency_bonus("long rest")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Friends; {self.spell_casting_ability.value} is its spellcasting ability",
+                    ),
+                    (
+                        "Cunning Diversion",
+                        "Take the Dodge action as a Bonus Action, Proficiency Bonus times per Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -771,6 +1031,22 @@ class ArcaneOmens(_SpellcastingOriginFeat):
     _NAME = "Arcane Omens"
     _SPELL = ClericLevel0Spells.GUIDANCE
     _USES = _uses_per_proficiency_bonus("long rest")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Guidance; {self.spell_casting_ability.value} is its spellcasting ability",
+                    ),
+                    (
+                        "Helpful Premonition",
+                        "Reaction when you or a creature you can see within 30 feet fails a save: add 1d4 to it. Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -791,6 +1067,22 @@ class ArcaneOverload(_SpellcastingOriginFeat):
     _SPELL = EvocationLevel0Spells.FIRE_BOLT
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Fire Bolt; {self.spell_casting_ability.value} is its spellcasting ability",
+                    ),
+                    (
+                        "Power Surge",
+                        "When an Evocation spell you cast deals damage, add your Proficiency Bonus to one of its damage rolls. Once per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -806,6 +1098,22 @@ class ArcaneSafeguard(_SpellcastingOriginFeat):
     _NAME = "Arcane Safeguard"
     _SPELL = ClericLevel0Spells.RESISTANCE
     _USES = _uses_per_proficiency_bonus("long rest")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Resistance; {self.spell_casting_ability.value} is its spellcasting ability. Cast it as a Bonus Action Proficiency Bonus times per Long Rest.",
+                    ),
+                    (
+                        "Sheltering Aid",
+                        "When you take the Help action for an ally's ability check, the ally gains Temporary Hit Points equal to your Proficiency Bonus",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -840,6 +1148,26 @@ class ArcaneUndertaker(_SpellcastingOriginFeat):
     def get_spell_source(self) -> Optional[str]:
         return SpellSource.CHOSEN
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"{self.necromancy_cantrip.value}; {self.spell_casting_ability.value} is its spellcasting ability",
+                    ),
+                    (
+                        "Knowledge from the Dead",
+                        "Add 1d4 to Intelligence (History) and Wisdom (Medicine) checks",
+                    ),
+                    (
+                        "Understanding of Death",
+                        "When you take the Help action to stabilize a creature at 0 Hit Points, gain Heroic Inspiration; once per Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -870,6 +1198,22 @@ class PortalJumper(OriginFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Otherworldly Resilience",
+                        f"Resistance to {self.damage_type.value} damage",
+                    ),
+                    (
+                        "Portal Step",
+                        "Spend 15 feet of movement to teleport to an unoccupied space you can see within 15 feet. Once per turn, Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -896,6 +1240,23 @@ class TransmutedAnatomy(OriginFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._speed.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Lengthened Stride", "Speed +5 feet"),
+                    (
+                        "Resilient Anatomy",
+                        "Advantage on saves against being shape-shifted against your will",
+                    ),
+                    (
+                        "Resilience",
+                        "Reaction when you fail a Constitution save: add 1d4 to it. Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -917,6 +1278,22 @@ class ChildOfTheSun(_SpellcastingOriginFeat):
     # One free cast of Faerie Fire per Long Rest.
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Eyes of Eirdu",
+                        "You and allies within 10 feet have Advantage on saves to avoid or end Blinded",
+                    ),
+                    (
+                        "Faerie Fire",
+                        f"You learn it; {self.spell_casting_ability.value} is its spellcasting ability. Cast it once per Long Rest without a slot (then damage can't break your Concentration on it), or with your spell slots.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -935,6 +1312,22 @@ class ShadowmoorHexer(_SpellcastingOriginFeat):
     _SPELL = WarlockLevel1Spells.HEX
     # One free cast of Hex per Long Rest.
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Hex",
+                        f"Always prepared; cast it once per Long Rest without a slot, or with your spell slots. {self.spell_casting_ability.value} is its spellcasting ability.",
+                    ),
+                    (
+                        "Curse Magic",
+                        "When a creature cursed by your Hex hits you with an attack roll, it takes Psychic damage equal to your Proficiency Bonus (once per turn)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -974,6 +1367,22 @@ class VampireHunter(OriginFeat):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Adroit Escape",
+                        "Advantage on checks to escape nonmagical restraints or the Grappled condition",
+                    ),
+                    (
+                        "Vitality Ward",
+                        "Reaction when you take Necrotic damage: reduce it by Proficiency Bonus d6s. Once per Short or Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -992,6 +1401,27 @@ class VampiresPlaything(OriginFeat):
             origin="Origin Feat",
             uses=_uses_per_proficiency_bonus("long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Timely Retreat's uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Decanting",
+                        "When you finish a Long Rest with an empty vial or flask, create a Potion of Healing or an Antitoxin. It evaporates when you finish another Long Rest.",
+                    ),
+                    (
+                        "Timely Retreat",
+                        "Bonus Action: take the Dash or Disengage action. Proficiency Bonus times per Long Rest.",
+                    ),
+                    (
+                        "Vampiric Connection",
+                        "While on the same plane, your former vampire master (its fate is up to the DM) can talk to you telepathically, and you can let it perceive through your senses",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

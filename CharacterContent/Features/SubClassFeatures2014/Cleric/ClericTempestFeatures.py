@@ -13,6 +13,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, dc_formula
 
 
 class BonusProficiencies(Feature):
@@ -49,6 +50,27 @@ class WrathOfTheStorm(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 5 feet hits you with an attack",
+                    ),
+                    (
+                        "Save",
+                        f"Dexterity save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "2d8 lightning or thunder damage (your choice)"),
+                    ("Succeeded", "Half damage"),
+                    ("Uses", "Wisdom modifier (minimum once) per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

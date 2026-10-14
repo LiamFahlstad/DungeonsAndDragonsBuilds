@@ -15,6 +15,7 @@ from Core.Definitions import CreatureSize, DamageType, Sense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -79,6 +80,22 @@ class Stonecunning(Feature):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Effect", "Tremorsense 60 feet for 10 minutes"),
+                    (
+                        "Requirement",
+                        "You must be on or touching stone, natural or worked",
+                    ),
+                    ("Uses", "Proficiency Bonus per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = (

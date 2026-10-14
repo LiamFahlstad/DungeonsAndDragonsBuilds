@@ -27,6 +27,28 @@ class WailsFromTheGrave(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Right after you deal Sneak Attack damage to a creature on your turn",
+                    ),
+                    (
+                        "Target",
+                        "A second creature you can see within 30 feet of the first",
+                    ),
+                    (
+                        "Damage",
+                        "Roll half your Sneak Attack dice (round up): Necrotic damage",
+                    ),
+                    ("Uses", "Dexterity modifier (minimum once) per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Immediately after you deal Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack damage dice for your level (round up), and the second creature takes Necrotic damage equal to the roll's total as wails of the dead sound around it.\n"

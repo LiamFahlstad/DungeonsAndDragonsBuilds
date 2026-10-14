@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class BonusProficiency(Feature):
@@ -59,6 +60,47 @@ class UnwaveringMark(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_strength_modifier())
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The special attack's uses are in the panel below.
+        return [
+            Paragraph("Menace your foes and punish them for harming others."),
+            Facts(
+                (
+                    (
+                        "Mark",
+                        "When you hit a creature with a melee weapon attack, mark it until the end of your next turn. Ends early if you're incapacitated or die, or someone else marks it.",
+                    ),
+                    (
+                        "Marked",
+                        "While within 5 feet of you, it has disadvantage on attack rolls that don't target you",
+                    ),
+                )
+            ),
+            Option(
+                "Special attack",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "A creature you marked deals damage to anyone other than you",
+                            ),
+                            ("Action", "Bonus Action on your next turn"),
+                            (
+                                "Attack",
+                                "A melee weapon attack against it, with advantage",
+                            ),
+                            ("Hit", "Extra damage equal to half your Fighter level"),
+                            (
+                                "Uses",
+                                "Strength modifier (minimum once) per long rest, however many creatures you mark",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can menace your foes, foiling their attacks and punishing them for harming others. When you hit a creature with a melee weapon attack, you can mark the creature until the end of your next turn. This effect ends early if you are incapacitated or you die, or if someone else marks the creature.\n"
@@ -95,6 +137,25 @@ class WardingManeuver(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_constitution_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction, wielding a melee weapon or a shield"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within 5 feet is hit by an attack",
+                    ),
+                    (
+                        "Effect",
+                        "Roll 1d8 and add it to the target's AC against the attack; if it still hits, the target has resistance to its damage",
+                    ),
+                    ("Uses", "Constitution modifier (minimum once) per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

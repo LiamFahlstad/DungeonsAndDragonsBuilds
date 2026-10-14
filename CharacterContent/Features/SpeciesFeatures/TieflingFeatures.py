@@ -4,6 +4,7 @@ from Model.Content.Feature import Feature
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Table
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -48,6 +49,39 @@ class FiendishLegacy(Feature):
         self.spell_1 = spell_1
         self.spell_2 = spell_2
         super().__init__(name="Fiendish Legacy", origin="Tiefling Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        chosen = (
+            ("1", f"{self.cantrip.value} (cantrip)"),
+            (
+                "3",
+                (
+                    self.spell_1.value
+                    if self.spell_1 is not None
+                    else "Chosen at character level 3"
+                ),
+            ),
+            (
+                "5",
+                (
+                    self.spell_2.value
+                    if self.spell_2 is not None
+                    else "Chosen at character level 5"
+                ),
+            ),
+        )
+        return [
+            Table(("Character level", "Spell"), chosen),
+            Facts(
+                (
+                    ("Prepared", "The level 1 and 2 spells are always prepared"),
+                    (
+                        "Casting",
+                        "Each once per Long Rest without a spell slot, or with your spell slots",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = f"You also know the '{self.cantrip.value}' cantrip.\n"

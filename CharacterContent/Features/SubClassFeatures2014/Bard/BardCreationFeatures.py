@@ -96,6 +96,33 @@ class PerformanceOfCreation(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Sing a nonmagical item into being."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Range",
+                        "An unoccupied space within 10 feet, on a surface or liquid that can support it",
+                    ),
+                    (
+                        "Item",
+                        "Nonmagical, worth up to 20 x Bard level gp. Medium or smaller (Large from Bard level 6, Huge from 14).",
+                    ),
+                    (
+                        "Lasts",
+                        "Proficiency Bonus hours; only one at a time (a new one makes the old one vanish)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per long rest, or expend a spell slot of 2nd level or higher",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Also at 3rd level, as an action, you can channel the magic of the Song of Creation to create one nonmagical item of your choice in an unoccupied space within 10 feet of you. The item must appear on a surface or in a liquid that can support it. The gp value of the item can't be more than 20 times your bard level, and the item must be Medium or smaller. The item glimmers softly, and a creature can faintly hear music when touching it. The created item disappears after a number of hours equal to your proficiency bonus. For examples of items you can create, see the equipment chapter of the Player's Handbook.\n"
@@ -126,6 +153,75 @@ class AnimatingPerformance(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Animate an item into a dancing companion."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "One Large or smaller nonmagical item that isn't worn or carried",
+                    ),
+                    (
+                        "Lasts",
+                        "1 hour, until it drops to 0 hit points, or until you die. Only one at a time.",
+                    ),
+                    (
+                        "In combat",
+                        "Shares your initiative count and takes its turn right after yours. It moves and uses its reaction on its own, but its only action is Dodge unless you take a bonus action to command another action (from its stat block or any other). If you're incapacitated, it can take any action.",
+                    ),
+                    (
+                        "Bardic Inspiration",
+                        "You can command it as part of the bonus action you use for Bardic Inspiration",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per long rest, or expend a spell slot of 3rd level or higher",
+                    ),
+                )
+            ),
+            Option(
+                "Dancing Item (Large or smaller construct)",
+                (
+                    Facts(
+                        (
+                            ("Armor Class", "16 (natural armor)"),
+                            ("Hit Points", "10 + 5 x Bard level"),
+                            ("Speed", "30 ft., fly 30 ft. (hover)"),
+                            (
+                                "Abilities",
+                                "STR 18 (+4), DEX 14 (+2), CON 16 (+3), INT 4 (-3), WIS 10 (+0), CHA 6 (-2)",
+                            ),
+                            (
+                                "Immunities",
+                                "Poison and psychic damage; charmed, exhaustion, poisoned, frightened",
+                            ),
+                            (
+                                "Senses",
+                                "Darkvision 60 ft., passive Perception 10; understands the languages you speak",
+                            ),
+                            ("Proficiency Bonus", "Equals yours"),
+                            (
+                                "Immutable Form",
+                                "Immune to any spell or effect that would alter its form",
+                            ),
+                            (
+                                "Irrepressible Dance",
+                                "When a creature starts its turn within 10 feet of it, it can raise or lower that creature's walking speed by 10 feet until the end of the turn (if not incapacitated)",
+                            ),
+                            (
+                                "Force-Empowered Slam",
+                                "Melee weapon attack: your spell attack modifier to hit, reach 5 ft., one target it can see. Hit: 1d10 + Proficiency Bonus force damage.",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -168,6 +264,23 @@ class CreativeCrescendo(Feature):
             origin="College of Creation Bard Level 14",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Items",
+                        "Performance of Creation makes up to Charisma modifier (minimum two) items at once; past that, you choose which earlier one vanishes",
+                    ),
+                    (
+                        "Size",
+                        "Only one can be your maximum size; the rest are Small or Tiny",
+                    ),
+                    ("Value", "No gp limit"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

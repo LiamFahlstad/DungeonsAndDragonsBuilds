@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class OathbreakerSpells(Feature):
@@ -140,6 +141,34 @@ class DreadLord(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Surround yourself with an aura of gloom."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Duration", "1 minute"),
+                    (
+                        "Area",
+                        "30-foot radius around you; bright light in it becomes dim light",
+                    ),
+                    (
+                        "Dread",
+                        "An enemy frightened of you that starts its turn in the aura takes 4d10 psychic damage",
+                    ),
+                    (
+                        "Shadow",
+                        "You and creatures of your choice in the aura are draped in shadow: creatures relying on sight have disadvantage on attack rolls against them",
+                    ),
+                    (
+                        "Shadow attack",
+                        "Bonus Action: melee spell attack against one creature. Hit: 3d10 + Charisma modifier necrotic damage.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

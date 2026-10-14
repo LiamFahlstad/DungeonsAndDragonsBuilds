@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class IllusionSavant(Feature):
@@ -75,6 +76,23 @@ class IllusoryReality(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Give your illusions a semi-reality, like a bridge you can cross."
+            ),
+            Facts(
+                (
+                    ("Trigger", "You cast an Illusion spell with a spell slot"),
+                    ("Action", "Bonus Action on your turn while the spell lasts"),
+                    (
+                        "Effect",
+                        "One inanimate, nonmagical object in the illusion becomes real for 1 minute; it can't deal damage or impose conditions",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have learned to weave shadow magic into your illusions to give them a semi-reality. When you cast an Illusion spell with a spell slot, you can choose one inanimate, nonmagical object that is part of the illusion and make that object real. You can do this on your turn as a Bonus Action while the spell is ongoing. The object remains real for 1 minute, during which it can't deal damage or give any conditions. For example, you can create an illusion of a bridge over a chasm and then make it real and cross it."

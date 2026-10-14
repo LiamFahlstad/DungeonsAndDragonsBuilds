@@ -4,6 +4,7 @@ from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class RadiantSunBolt(Feature):
@@ -16,6 +17,28 @@ class RadiantSunBolt(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Hurl searing bolts of magical radiance."),
+            Facts(
+                (
+                    (
+                        "Attack",
+                        "A ranged spell attack, range 30 feet, usable with the Attack action. You're proficient and add your Dexterity modifier to attack and damage.",
+                    ),
+                    ("Damage", "Martial Arts die + Dexterity modifier radiant damage"),
+                    (
+                        "Flurry",
+                        "When you use it as part of the Attack action, spend 1 ki point to make it twice as a bonus action",
+                    ),
+                    (
+                        "Extra Attack",
+                        "Once you have Extra Attack, any of the Attack action's attacks can be this one",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -42,6 +65,20 @@ class SearingArcStrike(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "Right after you take the Attack action on your turn"),
+                    ("Cost", "2 ki points: cast Burning Hands as a bonus action"),
+                    (
+                        "Upcast",
+                        "Each extra ki point raises its level by 1; spend at most half your Monk level in total",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to channel your ki into searing waves of energy. Immediately after you take the Attack action on your turn, you can spend 2 ki points to cast the Burning Hands spell as a bonus action.\n"
@@ -64,6 +101,24 @@ class SearingSunburst(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Hurl an orb that erupts into radiant light."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "A point within 150 feet"),
+                    ("Area", "20-foot-radius sphere"),
+                    (
+                        "Save",
+                        "Constitution; creatures behind opaque total cover don't save",
+                    ),
+                    ("Failed", "2d6 radiant damage"),
+                    ("Empower", "Spend up to 3 ki points: +2d6 damage each"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

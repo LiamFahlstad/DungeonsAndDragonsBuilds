@@ -8,7 +8,14 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    dc_formula,
+    Table,
+)
 from Core.Definitions import Ability
 
 
@@ -17,6 +24,46 @@ class LunarEmbodiment(Feature):
         super().__init__(
             name="Lunar Embodiment", origin="Lunar Sorcery Sorcerer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Lunar spells",
+                        "You learn the spells below at the listed Sorcerer levels; they don't count against your spells known",
+                    ),
+                    (
+                        "Phase",
+                        "Each long rest, choose Full Moon, New Moon or Crescent Moon",
+                    ),
+                    (
+                        "Free casting",
+                        "Cast your phase's 1st-level spell once without a spell slot; once per long rest",
+                    ),
+                )
+            ),
+            Option(
+                "Lunar Spells",
+                (
+                    Table(
+                        ("Sorcerer level", "Full Moon", "New Moon", "Crescent Moon"),
+                        (
+                            ("1", "Shield", "Ray of Sickness", "Color Spray"),
+                            (
+                                "3",
+                                "Lesser Restoration",
+                                "Blindness/Deafness",
+                                "Alter Self",
+                            ),
+                            ("5", "Dispel Magic", "Vampiric Touch", "Phantom Steed"),
+                            ("7", "Death Ward", "Confusion", "Hallucinatory Terrain"),
+                            ("9", "Rary's Telepathic Bond", "Hold Monster", "Mislead"),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -63,6 +110,22 @@ class LunarBoons(Feature):
                 gained_at=levels_gained(proficiency_bonus, from_level=6),
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph(
+                "Metamagic on a spell of your current phase's schools costs 1 fewer sorcery point (minimum 0), Proficiency Bonus times per long rest."
+            ),
+            Table(
+                ("Phase", "Schools"),
+                (
+                    ("Full Moon", "Abjuration and Divination"),
+                    ("New Moon", "Enchantment and Necromancy"),
+                    ("Crescent Moon", "Illusion and Transmutation"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -111,6 +174,25 @@ class LunarEmpowerment(Feature):
             origin="Lunar Sorcery Sorcerer Level 14",
             usage_tags=["utility", "buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your current Lunar Embodiment phase also grants:"),
+            Table(
+                ("Phase", "Benefit"),
+                (
+                    (
+                        "Full Moon",
+                        "Bonus action: shed bright light 10 feet and dim light 10 feet more, or douse it. You and creatures of your choice have advantage on Intelligence (Investigation) and Wisdom (Perception) checks in your bright light.",
+                    ),
+                    (
+                        "New Moon",
+                        "Advantage on Dexterity (Stealth) checks; while you're entirely in darkness, attack rolls against you have disadvantage",
+                    ),
+                    ("Crescent Moon", "Resistance to necrotic and radiant damage"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -80,7 +80,7 @@ class EldritchCannon(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The cannon's damage and Protector dice are in the panel below.
@@ -187,7 +187,9 @@ class EldritchCannon(Feature):
         """The cannon's numbers at the character's level (Explosive Cannon's
         Firepower adds 1d8 to its damage rolls and to Protector's Temporary HP)."""
         artificer_level = character.get_class_level(CharacterClass.ARTIFICER)
-        spell_save_dc = character.calculate_difficulty_class()
+        spell_save_dc = character.calculate_difficulty_class_for_ability(
+            Ability.INTELLIGENCE
+        )
         spell_attack = character.calculate_attack_bonus_for_ability(
             Ability.INTELLIGENCE
         )
@@ -216,6 +218,26 @@ class ArcaneFirearm(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Create",
+                        "After a Long Rest, carve sigils with Woodcarver's Tools into a Rod, Staff, Wand or Martial Ranged weapon. They last until you carve them on another item.",
+                    ),
+                    (
+                        "Focus",
+                        "Use it as a Spellcasting Focus for your Artificer spells",
+                    ),
+                    (
+                        "Damage",
+                        "When you cast an Artificer spell through it, add 1d8 to one of the spell's damage rolls",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you finish a Long Rest, you can use Woodcarver's Tools to carve special sigils into a Rod, Staff, Wand, or Martial Ranged weapon and thereby turn it into your Arcane Firearm. The sigils disappear from the object if you later carve them on a different item. The sigils otherwise last indefinitely.\n"
@@ -237,10 +259,44 @@ class ExplosiveCannon(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.INTELLIGENCE)
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Eldritch Cannons are more destructive."),
+            Facts(
+                (
+                    (
+                        "Firepower",
+                        "The cannon's damage rolls and Protector's Temporary Hit Points increase by 1d8",
+                    ),
+                )
+            ),
+            Option(
+                "Detonate",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction, within 60 feet of your cannon"),
+                            ("Trigger", "Your cannon takes damage"),
+                            (
+                                "Area",
+                                "The cannon is destroyed; each creature within 20 feet of it saves",
+                            ),
+                            (
+                                "Save",
+                                f"Dexterity save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                            ),
+                            ("Failed", "3d10 Force damage"),
+                            ("Succeeded", "Half damage"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

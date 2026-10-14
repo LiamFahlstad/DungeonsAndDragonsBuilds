@@ -1,4 +1,8 @@
-from Core.Definitions import DamageType, WARLOCK_HIT_DIE
+from Core.Definitions import (
+    DamageType,
+    WARLOCK_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -9,7 +13,12 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    dc_formula,
+)
 
 
 class GreatOldOneSpells(Feature):
@@ -88,7 +97,28 @@ class ClairvoyantCombatant(Feature):
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        return character.calculate_difficulty_class()
+        return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You form a telepathic bond with Awakened Mind"),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "For the bond's duration, it has Disadvantage on attack rolls against you and you have Advantage on attack rolls against it",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Short or Long Rest, or expend a Pact Magic spell slot (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -141,6 +171,22 @@ class CreateThrall(Feature):
             origin="Great Old One Patron Warlock Level 14",
             usage_tags=["heal", "damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Summon Aberration",
+                        "It can need no Concentration; it then lasts 1 minute and the Aberration gains Warlock level + Charisma modifier Temporary Hit Points",
+                    ),
+                    (
+                        "Hex",
+                        "The first time each turn the Aberration hits a creature under your Hex, it deals Hex's bonus damage as extra Psychic damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

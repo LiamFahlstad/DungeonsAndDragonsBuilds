@@ -1,6 +1,7 @@
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class EvocationSavant(Feature):
@@ -61,6 +62,24 @@ class Overchannel(Feature):
         super().__init__(
             name="Overchannel", origin="Evoker Wizard Level 14", usage_tags=["damage"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a Wizard spell with a level 1-5 spell slot that deals damage",
+                    ),
+                    ("Effect", "It deals maximum damage on the turn you cast it"),
+                    ("First use", "No drawback"),
+                    (
+                        "Each later use before a Long Rest",
+                        "Take 2d12 Necrotic damage per slot level right after casting (ignores Resistance and Immunity); +1d12 per level each further use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

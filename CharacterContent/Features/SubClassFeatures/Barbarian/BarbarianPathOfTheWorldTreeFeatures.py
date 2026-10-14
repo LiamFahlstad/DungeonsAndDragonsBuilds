@@ -1,11 +1,19 @@
 import Core.Definitions as Definitions
-from Core.Definitions import BARBARIAN_HIT_DIE
+from Core.Definitions import (
+    BARBARIAN_HIT_DIE,
+    Ability,
+)
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import (
     get_rage_damage_bonus,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    dc_formula,
+)
 
 
 def _vitality_current_values(character: CharacterView) -> str:
@@ -70,6 +78,25 @@ class BranchesOfTheTree(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Spectral branches of the World Tree pull a foe to you."),
+            Facts(
+                (
+                    ("Action", "Reaction, while your Rage is active"),
+                    (
+                        "Trigger",
+                        "A creature you can see starts its turn within 30 feet of you",
+                    ),
+                    ("Save", f"Strength, DC {dc_formula(Ability.STRENGTH)}"),
+                    (
+                        "Failed",
+                        "Teleported to an unoccupied space you can see within 5 feet of you (or the nearest one); you can then make its Speed 0 until the end of the turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever a creature you can see starts its turn within 30 feet of you while your Rage is active, you can take a Reaction to summon spectral branches of the World Tree around it. The target must succeed on a Strength saving throw (DC 8 plus your Strength modifier and Proficiency Bonus) or be teleported to an unoccupied space you can see within 5 feet of yourself or in the nearest unoccupied space you can see. After the target teleports, you can reduce its Speed to 0 until the end of the current turn."

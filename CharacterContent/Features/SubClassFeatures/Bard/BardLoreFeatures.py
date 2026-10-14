@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class BonusProficiencies(Feature):
@@ -34,6 +35,22 @@ class CuttingWords(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Sap a creature's confidence with your wit."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 60 feet makes a damage roll or succeeds on an ability check or attack roll",
+                    ),
+                    ("Cost", "One use of Bardic Inspiration"),
+                    ("Effect", "Roll the die and subtract it from the creature's roll"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You learn to use your wit to supernaturally distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of yourself makes a damage roll or succeeds on an ability check or attack roll, you can take a Reaction to expend one use of your Bardic Inspiration; roll your Bardic Inspiration die, and subtract the number rolled from the creature's roll, reducing the damage or potentially turning the success into a failure."

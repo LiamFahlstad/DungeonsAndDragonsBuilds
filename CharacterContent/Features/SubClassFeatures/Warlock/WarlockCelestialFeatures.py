@@ -12,6 +12,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import levels_gained
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class CelestialSpells(Feature):
@@ -45,6 +46,26 @@ class HealingLight(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return 1 + character.get_class_level(Definitions.CharacterClass.WARLOCK)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Channel celestial energy to heal wounds."),
+            Facts(
+                (
+                    (
+                        "Pool",
+                        "1 + Warlock level d6s; regain all when you finish a Long Rest",
+                    ),
+                    ("Action", "Bonus Action"),
+                    ("Range", "60 feet"),
+                    ("Target", "You or one creature you can see"),
+                    (
+                        "Spend",
+                        "Up to Charisma modifier (minimum one) dice; it regains the total rolled in Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -102,6 +123,28 @@ class SearingVengeance(Feature):
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You or an ally within 60 feet is about to make a Death Saving Throw",
+                    ),
+                    (
+                        "Revive",
+                        "It regains half its Hit Point maximum and can end the Prone condition on itself",
+                    ),
+                    (
+                        "Burst",
+                        "Each creature of your choice within 30 feet of it takes 2d8 + Charisma modifier Radiant damage and is Blinded until the end of the turn",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

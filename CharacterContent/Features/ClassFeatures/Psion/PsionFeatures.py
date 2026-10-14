@@ -137,6 +137,27 @@ class PsionicDiscipline(Feature):
     def __init__(self):
         super().__init__(name="Psionic Discipline", origin="Psion Level 2")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Disciplines",
+                        "Two of your choice (such as Expanded Awareness and Id Insinuation); one more at Psion levels 5, 10, 13 and 17",
+                    ),
+                    ("Fuel", "Psionic Energy Dice"),
+                    (
+                        "Limit",
+                        "One Discipline per turn, once per turn, unless an option says otherwise",
+                    ),
+                    (
+                        "Swap",
+                        "Whenever you gain a Psion level, replace one with one you don't know",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn further psionic techniques that are fueled "

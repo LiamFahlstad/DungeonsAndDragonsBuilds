@@ -74,6 +74,22 @@ class HealingHands(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Target", "A creature you touch"),
+                    (
+                        "Heal",
+                        "Roll Proficiency Bonus d4s; it regains that many Hit Points",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "As a Magic action, you touch a creature and roll a number of d4s equal to your Proficiency Bonus. The creature regains a number of Hit Points equal to the total rolled. Once you use this trait, you can't use it again until you finish a Long Rest."
 

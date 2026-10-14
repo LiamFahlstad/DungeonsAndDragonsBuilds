@@ -4,6 +4,7 @@ from Model.Content.Improvements import DamageResistance, SavingThrowAdvantage
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 
@@ -55,6 +56,19 @@ class MindLink(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Telepathy", "Range: 10 x your character level feet"),
+                    (
+                        "Two-way link",
+                        "While speaking telepathically to a creature, take a Magic action to let it reply telepathically for 1 hour, or until you end it with another Magic action",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         character_level = character.character_level
         range_feet = 10 * character_level
@@ -77,6 +91,19 @@ class SeveredFromDreams(Feature):
             activation=FeatureActivation(duration="Until Next Long Rest"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Dreamless", "You can't be targeted by the Dream spell"),
+                    (
+                        "Skill",
+                        "After each Long Rest, gain proficiency in a skill of your choice until your next Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

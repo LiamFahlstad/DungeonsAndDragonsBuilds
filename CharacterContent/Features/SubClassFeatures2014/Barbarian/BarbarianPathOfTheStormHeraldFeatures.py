@@ -173,6 +173,55 @@ class StormSoul(Feature):
         # "even when your aura isn't active".
         DamageResistance(_STORM_SOUL_RESISTANCE[self.environment]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        options = (
+            (
+                "Desert",
+                (
+                    ("Resistance", "Fire damage"),
+                    ("Heat", "You ignore the effects of extreme heat"),
+                    (
+                        "Ignite",
+                        "Action: touch a flammable object no one else is wearing or carrying to set it on fire",
+                    ),
+                ),
+            ),
+            (
+                "Sea",
+                (
+                    ("Resistance", "Lightning damage"),
+                    (
+                        "Water",
+                        "You can breathe underwater and have a swimming speed of 30 feet",
+                    ),
+                ),
+            ),
+            (
+                "Tundra",
+                (
+                    ("Resistance", "Cold damage"),
+                    ("Cold", "You ignore the effects of extreme cold"),
+                    (
+                        "Freeze",
+                        "Action: touch water to turn a 5-foot cube of it into ice for 1 minute; fails if a creature is in the cube",
+                    ),
+                ),
+            ),
+        )
+        chosen = self.environment.value
+        return [
+            Paragraph(
+                "Benefits of your Storm Aura environment, even when the aura isn't active."
+            ),
+            *(
+                Option(
+                    f"{name} (your environment)" if name == chosen else name,
+                    (Facts(rows),),
+                )
+                for name, rows in options
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The storm grants you benefits even when your aura isn't active. The benefits are based on the environment you chose for your Storm Aura.\n"
@@ -213,6 +262,57 @@ class RagingStorm(Feature):
             usage_tags=["damage", "control"],
         )
         self.environment = environment
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        options = (
+            (
+                "Desert",
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Right after a creature in your aura hits you with an attack",
+                    ),
+                    (
+                        "Save",
+                        "Dexterity. Failed: Fire damage equal to half your Barbarian level.",
+                    ),
+                ),
+            ),
+            (
+                "Sea",
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You hit a creature in your aura with an attack"),
+                    ("Save", "Strength. Failed: knocked prone."),
+                ),
+            ),
+            (
+                "Tundra",
+                (
+                    ("Trigger", "Whenever your Storm Aura's effect activates"),
+                    ("Target", "One creature you can see in the aura"),
+                    (
+                        "Save",
+                        "Strength. Failed: its speed is 0 until the start of your next turn.",
+                    ),
+                ),
+            ),
+        )
+        chosen = self.environment.value
+        return [
+            Paragraph(
+                "Your storm lashes out at foes, based on your Storm Aura environment."
+            ),
+            Facts((("Save DC", dc_formula(Ability.CONSTITUTION)),)),
+            *(
+                Option(
+                    f"{name} (your environment)" if name == chosen else name,
+                    (Facts(rows),),
+                )
+                for name, rows in options
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

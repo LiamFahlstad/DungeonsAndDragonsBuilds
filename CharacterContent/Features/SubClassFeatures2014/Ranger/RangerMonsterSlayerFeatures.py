@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class MonsterSlayerMagic(Feature):
@@ -48,6 +49,23 @@ class HuntersSense(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "60 feet"),
+                    ("Target", "One creature you can see"),
+                    (
+                        "Effect",
+                        "Learn its damage immunities, resistances and vulnerabilities. A creature hidden from divination seems to have none.",
+                    ),
+                    ("Uses", "Wisdom modifier (minimum once) per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

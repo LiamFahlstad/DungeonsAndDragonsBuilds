@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 SPEED = 30  # Given by your species
 
@@ -40,6 +41,27 @@ class EerieToken(Feature):
             uses=FeatureUses(max_uses=1),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Make a magical token from a lock of hair, a nail or similar."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Lasts", "Until you finish a Long Rest, unless destroyed early"),
+                    ("Limit", "Once per Long Rest"),
+                    (
+                        "Distant Message",
+                        "Magic action: send a telepathic message of up to 25 words to whoever holds or carries the token, within 10 miles",
+                    ),
+                    (
+                        "Remote Viewing",
+                        "Magic action, within 10 miles: see and hear as if you were at the token for 1 minute, until you're Incapacitated or you end it (no action required). The token is then destroyed.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can create a magical token by harmlessly removing a lock of hair, detaching a nail, or using some other method. "
@@ -59,6 +81,23 @@ class EerieToken(Feature):
 class HexMagic(Feature):
     def __init__(self):
         super().__init__(name="Hex Magic", origin="Hexblood Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spells", "Disguise Self and Hex, always prepared"),
+                    (
+                        "Casting",
+                        "Each once per Long Rest without a spell slot, or with your spell slots",
+                    ),
+                    (
+                        "Ability",
+                        "Intelligence, Wisdom or Charisma (chosen with the species)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

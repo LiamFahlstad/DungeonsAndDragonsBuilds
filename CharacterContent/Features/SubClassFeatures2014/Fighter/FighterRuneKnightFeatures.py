@@ -192,6 +192,27 @@ class GiantsMight(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and the extra damage die are in the panel below.
+        return [
+            Paragraph("Imbue yourself with the might of giants."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute"),
+                    (
+                        "Size",
+                        "If smaller than Large, you become Large with what you're wearing (if there's room)",
+                    ),
+                    ("Strength", "Advantage on Strength checks and saving throws"),
+                    (
+                        "Damage",
+                        "Once on each of your turns, one weapon or unarmed strike hit deals an extra Extra Damage die (see Dice below)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You have learned how to imbue yourself with the might of giants. As a bonus action, you magically gain the following benefits, which last for 1 minute:\n"

@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class AncestralProtectors(Feature):
@@ -20,6 +21,24 @@ class AncestralProtectors(Feature):
             activation=FeatureActivation(duration="Until the Start of Your Next Turn"),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Spectral warriors appear when you rage."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "While raging, the first creature you hit with an attack on your turn",
+                    ),
+                    (
+                        "Hindered",
+                        "Until the start of your next turn, it has disadvantage on attack rolls not against you, and anyone else it hits has resistance to that damage",
+                    ),
+                    ("Ends", "Early if your rage ends"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting when you choose this path at 3rd level, spectral warriors appear when you enter your rage. While you're raging, the first creature you hit with an attack on your turn becomes the target of the warriors, which hinder its attacks. Until the start of your next turn, that target has disadvantage on any attack roll that isn't against you, and when the target hits a creature other than you with an attack, that creature has resistance to the damage dealt by the attack. The effect on the target ends early if your rage ends."
@@ -78,6 +97,23 @@ class ConsultTheSpirits(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Spells",
+                        "Cast Augury or Clairvoyance without a spell slot or material components; Wisdom is the spellcasting ability",
+                    ),
+                    (
+                        "Clairvoyance",
+                        "Summons one of your ancestral spirits, invisibly, instead of a sensor",
+                    ),
+                    ("Limit", "Once per short or long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

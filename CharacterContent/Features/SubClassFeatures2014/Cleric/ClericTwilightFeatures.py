@@ -18,6 +18,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class BonusProficiencies(Feature):
@@ -76,6 +77,26 @@ class EyesOfNight(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Darkvision",
+                        "300 feet. Dim light looks like bright light and darkness like dim light.",
+                    ),
+                    (
+                        "Share",
+                        "Action: willing creatures you can see within 10 feet, up to your Wisdom modifier (minimum one), share it for 1 hour",
+                    ),
+                    (
+                        "Recharge",
+                        "Share once per long rest, or expend a spell slot of any level to share again",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can see through the deepest gloom. You have darkvision out to a range of 300 feet. In that radius, you can see in dim light as if it were bright light and in darkness as if it were dim light.\n"
@@ -117,6 +138,42 @@ class TwilightSanctuaryChannelDivinity(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use Channel Divinity to refresh your allies with soothing twilight."
+            ),
+            Facts(
+                (
+                    ("Action", "Action, presenting your holy symbol"),
+                    (
+                        "Area",
+                        "30-foot-radius sphere of dim light centered on you; it moves with you",
+                    ),
+                    ("Duration", "1 minute, or until you're incapacitated or die"),
+                    (
+                        "Trigger",
+                        "A creature (including you) ends its turn in the sphere",
+                    ),
+                )
+            ),
+            Option(
+                "Grant one",
+                (
+                    Table(
+                        ("Benefit", "Effect"),
+                        (
+                            ("Shelter", "1d6 + Cleric level temporary hit points"),
+                            (
+                                "Calm",
+                                "End one effect causing it to be charmed or frightened",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -10,6 +10,7 @@ from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLa
 from Core.Definitions import Ability, CharacterClass, DamageType, Language
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class WindSpeaker(Feature):
@@ -80,6 +81,22 @@ class StormGuide(Feature):
             ),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Rain",
+                        "Action: stop rain falling in a 20-foot-radius sphere centered on you; end it as a bonus action",
+                    ),
+                    (
+                        "Wind",
+                        "Bonus action each round: choose the wind's direction in a 100-foot-radius sphere around you until the end of your next turn (not its speed)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

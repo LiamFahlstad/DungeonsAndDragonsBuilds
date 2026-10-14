@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class CrownSpells(Feature):
@@ -114,6 +115,29 @@ class ExaltedChampion(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Duration", "1 hour; ends early if you're incapacitated or die"),
+                    (
+                        "Resistance",
+                        "Bludgeoning, piercing and slashing damage from nonmagical weapons",
+                    ),
+                    (
+                        "Allies",
+                        "Allies within 30 feet have advantage on death saving throws",
+                    ),
+                    (
+                        "Wisdom saves",
+                        "You and allies within 30 feet have advantage on them",
+                    ),
+                    ("Limit", "Once per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

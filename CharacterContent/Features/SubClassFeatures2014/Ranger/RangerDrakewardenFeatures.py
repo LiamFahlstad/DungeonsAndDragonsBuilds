@@ -21,6 +21,13 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    StatBlock,
+    dc_formula,
+)
 
 
 def _build_drake(
@@ -157,6 +164,36 @@ class DrakeCompanion(Feature):
         )
         self.damage_type = damage_type
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Summon the drake bound to you. Choose a damage type from its Draconic Essence each time; its look is up to you."
+            ),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "An unoccupied space within 30 feet"),
+                    (
+                        "Loyalty",
+                        "Friendly to you and your companions, and obeys your commands",
+                    ),
+                    (
+                        "In combat",
+                        "Shares your initiative count and takes its turn right after yours. It moves and uses its reaction on its own, but its only action is Dodge unless you take a bonus action to command another action (from its stat block or any other). If you're incapacitated, it can take any action.",
+                    ),
+                    (
+                        "Lasts",
+                        "Until it drops to 0 hit points, you summon it again, or you die. What it wore or carried is left behind.",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per long rest, or expend a spell slot of 1st level or higher",
+                    ),
+                )
+            ),
+            StatBlock(format_drake(character, self.damage_type)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As an action, you can magically summon the drake that is bound to you. It appears in an unoccupied space of your choice within 30 feet of you.\n"
@@ -180,6 +217,29 @@ class BondOfFangAndScale(Feature):
             origin="Drakewarden Ranger Level 7",
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your drake grows wings when summoned: a flying speed equal to its walking speed. While it's summoned:"
+            ),
+            Facts(
+                (
+                    (
+                        "Drake Mount",
+                        "It's Medium, and you can ride it if you're Medium or smaller (it can't fly while ridden)",
+                    ),
+                    (
+                        "Magic Fang",
+                        "Its Bite deals an extra 1d6 damage of its Draconic Essence type",
+                    ),
+                    (
+                        "Resistance",
+                        "You have resistance to its Draconic Essence damage type",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -214,6 +274,31 @@ class DrakesBreath(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
             dice=DRAKES_BREATH_DICE,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The breath's dice and once-per-long-rest box are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Area", "30-foot cone, from you or your drake"),
+                    (
+                        "Damage type",
+                        "Acid, cold, fire, lightning or poison (needn't match the drake's essence)",
+                    ),
+                    (
+                        "Save",
+                        f"Dexterity save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "Breath Damage dice (see Dice below)"),
+                    ("Succeeded", "Half damage"),
+                    (
+                        "Recharge",
+                        "Once per long rest, or expend a spell slot of 3rd level or higher",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -250,6 +335,25 @@ class PerfectedBond(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Reflexive Resistance's uses are in the panel below.
+        return [
+            Paragraph("While your drake is summoned:"),
+            Facts(
+                (
+                    (
+                        "Empowered Bite",
+                        "Its Bite deals another extra 1d6 of its Draconic Essence type (2d6 extra in total)",
+                    ),
+                    ("Large Drake", "It's Large, and it can fly while you ride it"),
+                    (
+                        "Reflexive Resistance",
+                        "Reaction when you or the drake takes damage while within 30 feet of each other: give yourself or the drake resistance to that damage. Proficiency Bonus times per long rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

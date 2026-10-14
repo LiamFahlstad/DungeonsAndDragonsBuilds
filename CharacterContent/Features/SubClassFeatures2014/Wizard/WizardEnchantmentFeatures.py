@@ -2,6 +2,7 @@ from Core import Definitions
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class EnchantmentSavant(Feature):
@@ -26,6 +27,34 @@ class HypnoticGaze(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Enthrall a creature with soft words and an enchanting gaze."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "5 feet"),
+                    ("Target", "One creature you can see that can see or hear you"),
+                    (
+                        "Save",
+                        "Wisdom save against your wizard spell save DC (8 + Intelligence modifier + Proficiency Bonus)",
+                    ),
+                    (
+                        "Failed",
+                        "Charmed by you until the end of your next turn: speed 0, incapacitated and visibly dazed",
+                    ),
+                    (
+                        "Maintain",
+                        "Use your action on later turns to extend it to the end of your next turn. It ends if you move more than 5 feet away, it can neither see nor hear you, or it takes damage.",
+                    ),
+                    (
+                        "Afterwards",
+                        "Once it ends, or if the target succeeds, you can't use this on that creature again until you finish a long rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your soft words and enchanting gaze can magically enthrall another creature. As an action, choose one creature that you can see within 5 feet of you. If the target can see or hear you, it must succeed on a Wisdom saving throw against your wizard spell save DC or be charmed by you until the end of your next turn. The charmed creature's speed drops to 0, and the creature is incapacitated and visibly dazed.\n"
@@ -48,6 +77,32 @@ class InstinctiveCharm(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Divert an attack aimed at you."),
+            Facts(
+                (
+                    ("Action", "Reaction, before you know whether the attack hits"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 30 feet makes an attack roll against you, and another creature is within the attack's range",
+                    ),
+                    (
+                        "Save",
+                        "Wisdom save against your wizard spell save DC (8 + Intelligence modifier + Proficiency Bonus); creatures that can't be charmed are immune",
+                    ),
+                    (
+                        "Failed",
+                        "It must target the creature closest to it (not you or itself); it chooses among ties",
+                    ),
+                    (
+                        "Succeeded",
+                        "You can't use this on it again until you finish a long rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -78,6 +133,22 @@ class AlterMemories(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Unaware",
+                        "When you cast an enchantment spell that charms creatures, one of them can remain unaware it's charmed",
+                    ),
+                    (
+                        "Forget",
+                        "Once before the spell ends, use your action: it makes an Intelligence save against your wizard spell save DC (8 + Intelligence modifier + Proficiency Bonus) or loses up to 1 + Charisma modifier hours of memories (your choice, no more than the spell's duration)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

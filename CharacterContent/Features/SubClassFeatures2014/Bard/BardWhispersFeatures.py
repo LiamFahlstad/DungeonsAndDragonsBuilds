@@ -39,20 +39,29 @@ class PsychicBlades(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
-    def get_description(self, character: CharacterView) -> str:
-        if character.get_class_level(CharacterClass.BARD) < 5:
-            psychic_damage = "2d6"
-        elif character.get_class_level(CharacterClass.BARD) < 10:
-            psychic_damage = "3d6"
-        elif character.get_class_level(CharacterClass.BARD) < 15:
-            psychic_damage = "5d6"
-        else:
-            psychic_damage = "8d6"
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The damage dice are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature with a weapon attack, once per round on your turn",
+                    ),
+                    ("Cost", "One use of Bardic Inspiration"),
+                    (
+                        "Damage",
+                        "Psychic Damage dice (see Dice below) extra psychic damage",
+                    ),
+                )
+            ),
+        ]
 
+    def get_description(self, character: CharacterView) -> str:
         description = (
             "When you join the College of Whispers at 3rd level, you gain the ability to make your weapon attacks magically toxic to a creature's mind.\n"
             "\n"
-            f"When you hit a creature with a weapon attack, you can expend one use of your Bardic Inspiration to deal an additional {psychic_damage} psychic damage to that target. You can do so only once per round on your turn.\n"
+            "When you hit a creature with a weapon attack, you can expend one use of your Bardic Inspiration to deal an additional 2d6 psychic damage to that target. You can do so only once per round on your turn.\n"
             "\n"
             "The psychic damage increases when you reach certain levels in this class, increasing to 3d6 at 5th level, 5d6 at 10th level, and 8d6 at 15th level."
         )
@@ -73,6 +82,26 @@ class WordsOfTerror(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Paragraph("Seed paranoia with innocent-seeming words."),
+            Facts(
+                (
+                    ("Trigger", "You speak to a humanoid alone for at least 1 minute"),
+                    (
+                        "Save",
+                        f"At the end of the conversation, Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    (
+                        "Failed",
+                        "Frightened of you or another creature of your choice for 1 hour, until it's attacked or damaged, or until it sees its allies attacked or damaged",
+                    ),
+                    ("Succeeded", "It has no hint that you tried"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

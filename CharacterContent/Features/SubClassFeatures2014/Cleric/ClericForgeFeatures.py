@@ -18,6 +18,7 @@ from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class BonusProficiencies(Feature):
@@ -89,6 +90,31 @@ class ArtisansBlessingChannelDivinity(Feature):
             origin="Forge Domain Cleric Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to forge a simple metal item."),
+            Facts(
+                (
+                    (
+                        "Ritual",
+                        "1 hour; the item appears in an unoccupied space on a surface within 5 feet",
+                    ),
+                    (
+                        "Item",
+                        "A nonmagical item with some metal, worth up to 100 gp: a simple or martial weapon, armor, ten pieces of ammunition, a set of tools, or another metal object",
+                    ),
+                    (
+                        "Cost",
+                        "Lay out metal (coins count) equal to the item's value; it transforms into the item, even its nonmetal parts",
+                    ),
+                    (
+                        "Duplicate",
+                        "Copy a nonmagical item containing metal, such as a key, if you possess the original during the ritual",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

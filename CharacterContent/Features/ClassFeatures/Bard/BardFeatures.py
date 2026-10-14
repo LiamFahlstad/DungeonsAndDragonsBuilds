@@ -194,6 +194,23 @@ class MagicalSecrets(Feature):
     def __init__(self):
         super().__init__(name="Magical Secrets", origin="Bard Level 10")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "New spells",
+                        "When your Bard Prepared Spells number increases, pick the new spells from the Bard, Cleric, Druid or Wizard lists",
+                    ),
+                    (
+                        "Replacing",
+                        "When you replace a prepared Bard spell, you can pick from those lists too",
+                    ),
+                    ("Counts as", "The chosen spells are Bard spells for you"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You've learned secrets from various magical traditions. Whenever you reach a Bard level (including this level) and the Prepared Spells number in the Bard Features table increases, you can choose any of your new prepared spells from the Bard, Cleric, Druid, and Wizard spell lists, and the chosen spells count as Bard spells for you (see a class's section for its spell list). In addition, whenever you replace a spell prepared for this class, you can replace it with a spell from those lists."
         return description

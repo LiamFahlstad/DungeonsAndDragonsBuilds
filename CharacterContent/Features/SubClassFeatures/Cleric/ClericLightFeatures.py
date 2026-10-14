@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class LightDomainSpells(Feature):
@@ -114,6 +115,27 @@ class CoronaOfLight(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        return [
+            Paragraph("Emit an aura of sunlight."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    (
+                        "Duration",
+                        "1 minute, or until you dismiss it (no action required)",
+                    ),
+                    ("Light", "Bright Light 60 feet and Dim Light 30 feet more"),
+                    (
+                        "Effect",
+                        "Enemies in the Bright Light have Disadvantage on saves against Radiance of the Dawn and spells that deal Fire or Radiant damage",
+                    ),
+                    ("Uses", "Based on your Wisdom modifier, per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

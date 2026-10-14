@@ -1,6 +1,7 @@
 from Core.Definitions import BARBARIAN_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class AnimalSpeaker(Feature):
@@ -24,6 +25,51 @@ class RageOfTheWilds(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Whenever you activate your Rage, choose one:"),
+            Option(
+                "Bear",
+                (
+                    Facts(
+                        (
+                            (
+                                "Resistance",
+                                "Every damage type except Force, Necrotic, Psychic and Radiant, while raging",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Eagle",
+                (
+                    Facts(
+                        (
+                            (
+                                "Activate",
+                                "Disengage and Dash as part of the Rage's Bonus Action",
+                            ),
+                            ("While raging", "Bonus Action: Disengage and Dash"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Wolf",
+                (
+                    Facts(
+                        (
+                            (
+                                "While raging",
+                                "Your allies have Advantage on attack rolls against your enemies within 5 feet of you",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -77,6 +123,52 @@ class PowerOfTheWilds(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["buff", "control", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Whenever you activate your Rage, choose one (lasts while raging):"
+            ),
+            Option(
+                "Falcon",
+                (
+                    Facts(
+                        (
+                            (
+                                "Flight",
+                                "Fly Speed equal to your Speed if you aren't wearing armor",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Lion",
+                (
+                    Facts(
+                        (
+                            (
+                                "Menace",
+                                "Enemies within 5 feet of you have Disadvantage on attack rolls against anyone but you or another Barbarian with this option",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Ram",
+                (
+                    Facts(
+                        (
+                            (
+                                "Topple",
+                                "When you hit a Large or smaller creature with a melee attack, it falls Prone",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

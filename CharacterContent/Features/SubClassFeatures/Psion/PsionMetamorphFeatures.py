@@ -1,6 +1,13 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Paragraph,
+    Table,
+    Option,
+)
 
 
 class MetamorphSpells(Feature):
@@ -26,6 +33,25 @@ class MutableForm(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Psionically stretch your limbs."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Psionic Energy Die; roll it"),
+                    ("Duration", "1 minute"),
+                    ("Temporary HP", "The roll + Intelligence modifier (minimum 1)"),
+                    ("Reach", "+5 feet"),
+                    ("Speed", "+5 feet"),
+                    (
+                        "Touch",
+                        "Touch spells with a casting time of an action can have a range of 10 feet",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -57,6 +83,50 @@ class OrganicWeapons(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
             usage_tags=["damage", "buff", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Reshape a free hand into a weapon."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Magic action, or as part of the Attack action before the attack roll",
+                    ),
+                    (
+                        "Lasts",
+                        "Until you change it into another weapon (Magic action), are Unconscious, or return the limb to normal (no action required)",
+                    ),
+                    (
+                        "Attacks",
+                        "Use your Intelligence modifier instead of Strength or Dexterity for attack and damage rolls",
+                    ),
+                )
+            ),
+            Table(
+                ("Weapon", "Counts as", "Damage", "Special"),
+                (
+                    (
+                        "Bone Blade",
+                        "Simple Melee, Finesse",
+                        "1d8 Piercing",
+                        "Advantage on the attack if a non-Incapacitated ally is within 5 feet of the target",
+                    ),
+                    (
+                        "Flesh Maul",
+                        "Simple Melee",
+                        "1d10 Bludgeoning",
+                        "A creature hit has Disadvantage on its next Strength or Constitution save before the start of its next turn",
+                    ),
+                    (
+                        "Viscera Launcher",
+                        "Simple Ranged, range 30/90",
+                        "1d6 Acid",
+                        "Once on each of your turns, a hit deals an extra 1d6 Acid damage",
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -138,6 +208,58 @@ class ImprovedMutableForm(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Mutable Form now lasts 10 minutes, and you gain one of these until it ends:"
+            ),
+            Option(
+                "Stony Epidermis",
+                (
+                    Facts(
+                        (
+                            (
+                                "Concentration",
+                                "Advantage on Constitution saves to maintain Concentration",
+                            ),
+                            (
+                                "Resistance",
+                                "One of Acid, Bludgeoning, Cold, Fire, Lightning, Piercing, Poison, Slashing or Thunder",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Superior Stride",
+                (
+                    Facts(
+                        (
+                            ("Requirement", "Not wearing armor"),
+                            (
+                                "Movement",
+                                "Dash as a Bonus Action; Climb and Swim Speed equal to your Speed",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Unnatural Flexibility",
+                (
+                    Facts(
+                        (
+                            ("AC", "+1"),
+                            (
+                                "Pliable",
+                                "Squeeze through spaces 1 inch wide with your gear; spend 5 feet of movement to escape nonmagical restraints or end Grappled",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you use Mutable Form, the duration increases "
@@ -177,6 +299,41 @@ class LifeBendingWeapons(Feature):
             activation=FeatureActivation(range="30-Foot Emanation"),
             usage_tags=["damage", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "When you hit with your Organic Weapon, choose one (once per turn):"
+            ),
+            Option(
+                "Free",
+                (
+                    Facts(
+                        (
+                            (
+                                "Damage",
+                                "Roll a Psionic Energy Die without expending it: extra Necrotic damage equal to the roll",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Expend",
+                (
+                    Facts(
+                        (
+                            ("Cost", "One Psionic Energy Die; roll it"),
+                            ("Damage", "Extra Necrotic damage equal to the roll"),
+                            (
+                                "Heal",
+                                "Each creature of your choice in a 30-foot Emanation from you regains the roll + Intelligence modifier Hit Points",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

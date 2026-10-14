@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -37,6 +38,26 @@ LEVEL_TO_MARTIAL_ARTS_DIE = {
 class KenseiWeapons(Feature):
     def __init__(self):
         super().__init__(name="Kensei Weapons", origin="Way of the Kensei Monk Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Choose",
+                        "One melee and one ranged weapon type: any simple or martial weapon without the heavy and special properties, or a longbow",
+                    ),
+                    (
+                        "Benefit",
+                        "You're proficient with them, and they're monk weapons for you. Many Kensei features need them.",
+                    ),
+                    (
+                        "More",
+                        "Another type, melee or ranged, at Monk levels 6, 11 and 17",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

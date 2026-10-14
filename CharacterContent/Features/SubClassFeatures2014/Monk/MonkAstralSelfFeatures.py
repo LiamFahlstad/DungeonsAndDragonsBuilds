@@ -82,6 +82,36 @@ class VisageOfTheAstralSelf(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("A spectral visage covers your face like a helmet or mask."),
+            Facts(
+                (
+                    (
+                        "Action",
+                        "Bonus Action, or as part of the bonus action for Arms of the Astral Self",
+                    ),
+                    ("Cost", "1 ki point"),
+                    (
+                        "Duration",
+                        "10 minutes; ends early if you're incapacitated or die",
+                    ),
+                    (
+                        "Astral Sight",
+                        "See normally in magical and nonmagical darkness to 120 feet",
+                    ),
+                    (
+                        "Wisdom of the Spirit",
+                        "Advantage on Wisdom (Insight) and Charisma (Intimidation) checks",
+                    ),
+                    (
+                        "Word of the Spirit",
+                        "Speak so only one creature you can see within 60 feet hears you, or amplify your voice to 600 feet",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach 6th level, you can summon the visage of your astral self. As a bonus action, or as part of the bonus action you take to activate Arms of the Astral Self, you can spend 1 ki point to summon this visage for 10 minutes. It vanishes early if you are incapacitated or die.\n"
@@ -110,6 +140,25 @@ class BodyOfTheAstralSelf(Feature):
             usage_tags=["damage", "buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "With both your astral arms and visage summoned, your astral body can appear like a suit of armor (no action required)."
+            ),
+            Facts(
+                (
+                    (
+                        "Deflect Energy",
+                        "Reaction when you take acid, cold, fire, force, lightning or thunder damage: reduce it by 1d10 + Wisdom modifier (minimum 1)",
+                    ),
+                    (
+                        "Empowered Arms",
+                        "Once on each of your turns, when you hit with the Arms of the Astral Self, deal extra damage equal to your Martial Arts die",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 11th level, when you have both your astral arms and visage summoned, you can cause the body of your astral self to appear (no action required). This spectral body covers your physical form like a suit of armor, connecting with the arms and visage. You determine its appearance.\n"
@@ -136,6 +185,28 @@ class AwakenedAstralSelf(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Cost",
+                        "5 ki points: summon your astral arms, visage and body and awaken them",
+                    ),
+                    (
+                        "Duration",
+                        "10 minutes; ends early if you're incapacitated or die",
+                    ),
+                    ("Armor of the Spirit", "+2 to AC"),
+                    (
+                        "Astral Barrage",
+                        "When Extra Attack lets you attack twice, attack three times instead if all the attacks use your astral arms",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

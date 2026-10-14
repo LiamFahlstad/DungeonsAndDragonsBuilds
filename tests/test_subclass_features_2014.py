@@ -366,8 +366,8 @@ class TestClassLevelVsCharacterLevelScaling:
             levels={CharacterClass.BARD: 5, CharacterClass.FIGHTER: 10}
         )
         feature = BardWhispersFeatures.PsychicBlades()
-        description = feature.get_description(character)
-        assert "3d6 psychic damage" in description
+        assert feature.dice == [BardWhispersFeatures.PSYCHIC_BLADES_DICE]
+        assert BardWhispersFeatures.PSYCHIC_BLADES_DICE.at(character) == "3d6"
 
     def test_aura_of_conquest_scales_with_paladin_level_not_total_level(
         self, make_character

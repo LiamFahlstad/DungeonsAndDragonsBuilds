@@ -1,4 +1,7 @@
-from Core.Definitions import CharacterClass
+from Core.Definitions import (
+    CharacterClass,
+    Ability,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -9,6 +12,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import InitiativeProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class WatchersSpells(Feature):
@@ -63,6 +67,30 @@ class AbjureTheExtraplanar(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to castigate unworldly beings."),
+            Facts(
+                (
+                    ("Action", "Action, presenting your holy symbol"),
+                    ("Range", "30 feet"),
+                    (
+                        "Target",
+                        "Each aberration, celestial, elemental, fey or fiend that can hear you",
+                    ),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    ("Failed", "Turned for 1 minute or until it takes damage"),
+                    (
+                        "Turned",
+                        "It moves as far from you as it can and can't willingly end its move within 30 feet of you. Its action can only be Dash or escaping something that stops it moving (Dodge if it can't move).",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -140,6 +168,31 @@ class MortalBulwark(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-long-rest box is in the panel below.
+        return [
+            Paragraph("Manifest divine power in defense of the mortal realms."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute"),
+                    (
+                        "Recharge",
+                        "Once per long rest, or expend a 5th-level spell slot",
+                    ),
+                    ("Truesight", "120 feet"),
+                    (
+                        "Advantage",
+                        "On attack rolls against aberrations, celestials, elementals, fey and fiends",
+                    ),
+                    (
+                        "Banish",
+                        f"When you hit and damage a creature, it makes a Charisma save against your spell save DC ({dc_formula(Ability.CHARISMA)}). Failed: banished to its native plane if it's not there. Succeeded: it can't be banished this way for 24 hours.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

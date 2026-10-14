@@ -1,5 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class MasterOfIntrigue(Feature):
@@ -47,6 +48,26 @@ class InsightfulManipulator(Feature):
             origin="Mastermind Rogue Level 9",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You spend 1 minute observing or interacting with a creature outside combat",
+                    ),
+                    (
+                        "Learn",
+                        "Whether it's your equal, superior or inferior in two of: Intelligence, Wisdom, Charisma, class levels",
+                    ),
+                    (
+                        "Bonus",
+                        "At the DM's option, a piece of its history or a personality trait",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class ConquestSpells(Feature):
@@ -136,6 +137,23 @@ class InvincibleConqueror(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Duration", "1 minute"),
+                    ("Resistance", "All damage"),
+                    (
+                        "Extra attack",
+                        "One more attack when you take the Attack action on your turn",
+                    ),
+                    ("Critical", "Melee weapon attacks crit on 19 or 20"),
+                    ("Limit", "Once per long rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

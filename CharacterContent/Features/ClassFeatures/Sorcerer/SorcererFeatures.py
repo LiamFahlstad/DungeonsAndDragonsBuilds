@@ -173,6 +173,26 @@ class Metamagic(Feature):
     def __init__(self):
         super().__init__(name="Metamagic", origin="Sorcerer Level 2")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Use",
+                        "Spend the option's Sorcery Point cost as you cast a spell; one option per spell unless an option says otherwise",
+                    ),
+                    (
+                        "Options known",
+                        "Two; two more at Sorcerer level 10 and two more at 17",
+                    ),
+                    (
+                        "Swap",
+                        "Whenever you gain a Sorcerer level, replace one option with one you don't know",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Because your magic flows from within, you can alter your spells to suit your needs; You have Metamagic options to temporarily modify spells you cast. To use an option, you must spend the number of Sorcery Points that it costs.\n"

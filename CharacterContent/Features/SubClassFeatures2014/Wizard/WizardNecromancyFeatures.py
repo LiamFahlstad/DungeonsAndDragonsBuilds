@@ -4,6 +4,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class NecromancySavant(Feature):
@@ -84,6 +85,27 @@ class CommandUndead(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Bring undead under your control."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Range", "60 feet"),
+                    ("Target", "One undead you can see"),
+                    (
+                        "Save",
+                        "Charisma save against your wizard spell save DC (8 + Intelligence modifier + Proficiency Bonus). Intelligence 8 or higher: it has advantage.",
+                    ),
+                    (
+                        "Failed",
+                        "Friendly to you and obeys your commands until you use this feature again. Intelligence 12 or higher: it repeats the save every hour until it breaks free.",
+                    ),
+                    ("Succeeded", "You can't use this on it again"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
