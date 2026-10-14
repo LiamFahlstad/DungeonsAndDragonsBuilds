@@ -22,7 +22,7 @@ class DivineMagic(Feature):
                 (
                     (
                         "Cleric spells",
-                        "Whenever you learn a sorcerer cantrip or spell, you can pick it from the cleric list instead; it becomes a sorcerer spell for you",
+                        "Whenever you learn a sorcerer cantrip or spell, you can pick it from the cleric list instead (other restrictions still apply); it becomes a sorcerer spell for you",
                     ),
                     (
                         "Affinity spell",

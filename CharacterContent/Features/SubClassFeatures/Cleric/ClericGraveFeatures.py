@@ -165,7 +165,7 @@ class DivineReaper(Feature):
                 (
                     (
                         "Enhanced Necromancy",
-                        "When you cast a level 1-5 Necromancy spell that targets one creature, or a Grave Domain spell, expend a Channel Divinity use to target a second creature in range (providing costly or consumed Material components for each)",
+                        "When you cast a Necromancy spell of level 5 or lower that targets one creature, or a Grave Domain spell, expend a Channel Divinity use to target a second creature in range (providing costly or consumed Material components for each)",
                     ),
                     (
                         "Keeper of Souls",

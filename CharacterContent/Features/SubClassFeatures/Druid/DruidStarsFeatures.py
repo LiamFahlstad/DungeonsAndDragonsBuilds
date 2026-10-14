@@ -34,7 +34,7 @@ class StarMap(Feature):
         # Free Guiding Bolt uses are in the panel below.
         return [
             Paragraph(
-                "A Tiny star chart you use as a Spellcasting Focus for your Druid spells."
+                "A Tiny star chart you use as a Spellcasting Focus for your Druid spells. Roll on the Star Map table for its form, or choose one."
             ),
             Facts(
                 (
@@ -100,7 +100,9 @@ class StarryForm(Feature):
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The Archer and Chalice dice are in the panel below.
         return [
-            Paragraph("Take on a luminous starry form instead of shape-shifting."),
+            Paragraph(
+                "Take on a luminous starry form instead of shape-shifting. You keep your game statistics."
+            ),
             Facts(
                 (
                     ("Cost", "One use of Wild Shape"),

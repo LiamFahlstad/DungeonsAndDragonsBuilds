@@ -222,7 +222,7 @@ class ShadowLore(Feature):
                     ),
                     (
                         "Failed",
-                        "Charmed by you for 8 hours, or until you or your allies attack or damage it. It believes you know its most mortifying secret.",
+                        "Charmed by you for 8 hours, or until you or your allies attack or damage it. It believes you know its most mortifying secret (you don't actually learn it).",
                     ),
                     (
                         "While Charmed",

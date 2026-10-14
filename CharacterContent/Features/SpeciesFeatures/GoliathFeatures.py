@@ -152,7 +152,7 @@ class GiantAncestry(Feature):
                 (
                     ("Action", "Reaction"),
                     ("Trigger", "You take damage"),
-                    ("Reduction", "1d12 + Constitution modifier"),
+                    ("Effect", "Reduce the damage by 1d12 + Constitution modifier"),
                 ),
             ),
             GiantAncestryType.STORM_GIANT: (

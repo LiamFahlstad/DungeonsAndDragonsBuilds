@@ -170,7 +170,7 @@ class ArmorModel(Feature):
                             ),
                             (
                                 "Giant Stature",
-                                "Bonus Action: for 1 minute your reach increases by 5 feet, and you become Large if you're smaller (if there's room)",
+                                "Bonus Action: for 1 minute your reach increases by 5 feet, and you become Large, with anything you're wearing, if you're smaller (if there's room)",
                             ),
                         )
                     ),
@@ -352,7 +352,7 @@ class PerfectedArmor(Feature):
                             ),
                             (
                                 "Failed",
-                                "Pulled up to 25 feet straight toward you. If it ends within 5 feet of you, make a melee weapon attack against it as part of the Reaction.",
+                                "Pulled up to 25 feet straight toward you, into an unoccupied space. If it ends within 5 feet of you, make a melee weapon attack against it as part of the Reaction.",
                             ),
                             (
                                 "Uses",

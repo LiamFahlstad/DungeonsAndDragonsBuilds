@@ -93,7 +93,7 @@ class TokensOfTheDeparted(Feature):
                 (
                     (
                         "Trinkets",
-                        "You gain two soul trinkets (Tiny objects). Finish a Long Rest with fewer than two and you gain trinkets until you have two.",
+                        "You gain two soul trinkets: Tiny objects whose form the DM picks or has you roll on the Player's Handbook Trinkets table. Finish a Long Rest with fewer than two and you gain trinkets until you have two.",
                     ),
                     (
                         "Maximum",
@@ -124,7 +124,7 @@ class TokensOfTheDeparted(Feature):
                             ),
                             (
                                 "Spirit Query",
-                                "Magic action: destroy one to cast Augury with no components, using Constitution as the spellcasting modifier. If you know the creature the trinket came from, ask its spirit one question instead.",
+                                "Magic action: destroy one to cast Augury with no components, using Constitution as the spellcasting modifier. If you know the creature the trinket came from, ask its spirit one question instead; it appears and answers as concisely as it can, in a language it knew in life.",
                             ),
                         )
                     ),

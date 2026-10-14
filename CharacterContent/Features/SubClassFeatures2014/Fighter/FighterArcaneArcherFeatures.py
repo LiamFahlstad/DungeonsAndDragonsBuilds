@@ -107,11 +107,11 @@ class ArcaneShot(Feature):
                         (
                             (
                                 "Banishing",
-                                "Charisma save. Failed: banished to the Feywild until the end of its next turn (Speed 0, Incapacitated), then it reappears. From Fighter level 18 it also takes 2d6 Force damage.",
+                                "Charisma save. Failed: banished to the Feywild until the end of its next turn (Speed 0, Incapacitated), then it reappears in the space it left or the nearest unoccupied space. From Fighter level 18 it also takes 2d6 Force damage.",
                             ),
                             (
                                 "Beguiling",
-                                "+2d6 Psychic damage (4d6 at Fighter 18). Wisdom save. Failed: Charmed by an ally of yours within 30 feet until the start of your next turn, ending early if that ally harms it.",
+                                "+2d6 Psychic damage (4d6 at Fighter 18). Wisdom save. Failed: Charmed by an ally of yours within 30 feet until the start of your next turn, ending early if that ally attacks it, damages it or forces it to make a save.",
                             ),
                             (
                                 "Bursting",
@@ -131,7 +131,7 @@ class ArcaneShot(Feature):
                             ),
                             (
                                 "Seeking",
-                                "No attack roll: target a creature you've seen in the past minute, ignoring half and three-quarters cover. Dexterity save. Failed: the arrow's damage + 1d6 Force (2d6 at Fighter 18), and you learn where it is. Succeeded: half.",
+                                "No attack roll: target a creature you've seen in the past minute; the arrow goes around corners, ignoring half and three-quarters cover. If the target is in range and there's a path big enough for the arrow, it makes a Dexterity save. Failed: the arrow's damage + 1d6 Force (2d6 at Fighter 18), and you learn where it is. Succeeded: half.",
                             ),
                             (
                                 "Shadow",

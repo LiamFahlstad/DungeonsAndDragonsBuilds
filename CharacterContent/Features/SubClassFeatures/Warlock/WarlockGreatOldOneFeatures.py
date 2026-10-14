@@ -178,7 +178,7 @@ class CreateThrall(Feature):
                 (
                     (
                         "Summon Aberration",
-                        "It can need no Concentration; it then lasts 1 minute and the Aberration gains Warlock level + Charisma modifier Temporary Hit Points",
+                        "When you cast it, you can make it need no Concentration: it then lasts 1 minute, and the Aberration arrives with Warlock level + Charisma modifier Temporary Hit Points",
                     ),
                     (
                         "Hex",

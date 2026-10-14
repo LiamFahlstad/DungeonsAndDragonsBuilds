@@ -293,7 +293,7 @@ class ArcaneJolt(Feature):
                 (
                     Facts(
                         (
-                            ("Range", "30 feet of the target"),
+                            ("Range", "Within 30 feet of the target"),
                             ("Target", "One creature or object you can see"),
                             (
                                 "Heal",

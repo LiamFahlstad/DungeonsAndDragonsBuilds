@@ -70,7 +70,7 @@ class BladeFlourish(Feature):
                             ),
                             (
                                 "Mobile",
-                                "The target takes extra damage equal to the roll and is pushed up to 5 feet + the roll away from you. You can then use your reaction to move up to your walking speed to a space within 5 feet of it.",
+                                "The target takes extra damage equal to the roll and is pushed up to 5 feet + the roll away from you. You can then immediately use your reaction to move up to your walking speed to an unoccupied space within 5 feet of it.",
                             ),
                         )
                     ),

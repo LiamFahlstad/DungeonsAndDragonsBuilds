@@ -173,7 +173,7 @@ class FrozenHaunt(Feature):
                             ),
                             (
                                 "Partially Incorporeal",
-                                "Immunity to Grappled, Prone and Restrained. Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one, and get shunted out if the form ends.",
+                                "Immunity to Grappled, Prone and Restrained. Move through creatures and objects as Difficult Terrain; take 1d10 Force damage if you end your turn inside one. If the form ends while you're inside one, you're shunted to the nearest unoccupied space.",
                             ),
                         )
                     ),

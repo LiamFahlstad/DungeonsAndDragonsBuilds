@@ -84,7 +84,7 @@ class Howl(Feature):
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
-        # Uses are in the panel below.
+        # The uses panel doesn't name the recharge, so it's spelled out here.
         return [
             Paragraph("Let out an unearthly howl."),
             Facts(
@@ -96,6 +96,7 @@ class Howl(Feature):
                         "Failed",
                         "Disadvantage on attack rolls and saving throws until the start of your next turn",
                     ),
+                    ("Uses", "Proficiency Bonus per Long Rest"),
                 )
             ),
         ]

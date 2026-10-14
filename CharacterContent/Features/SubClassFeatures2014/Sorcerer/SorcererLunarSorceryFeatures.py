@@ -288,7 +288,7 @@ class LunarPhenomenon(Feature):
                             ),
                             (
                                 "Passenger",
-                                "One willing creature you can see within 5 feet, to a space within 5 feet of your destination",
+                                "One willing creature you can see within 5 feet, to an unoccupied space of your choice you can see within 5 feet of your destination",
                             ),
                             (
                                 "Protection",

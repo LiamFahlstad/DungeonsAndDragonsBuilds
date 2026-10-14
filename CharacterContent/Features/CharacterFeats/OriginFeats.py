@@ -442,7 +442,7 @@ class TavernBrawler(OriginFeat):
                     ("Improvised Weaponry", "Proficiency with improvised weapons"),
                     (
                         "Push",
-                        "Once per turn, when you hit with an Unarmed Strike as part of the Attack action, deal damage and also push the target 5 feet away",
+                        "Once per turn, when you hit with an Unarmed Strike as part of the Attack action on your turn, deal damage and also push the target 5 feet away",
                     ),
                 )
             ),
@@ -786,7 +786,7 @@ class SpellfireSpark(OriginFeat):
                     ),
                     (
                         "Spellfire Flame",
-                        "You learn Sacred Flame (Intelligence, Wisdom or Charisma, chosen with the feat). Cast it as a Bonus Action Proficiency Bonus times per Long Rest.",
+                        "You learn Sacred Flame; Intelligence, Wisdom or Charisma (chosen with the feat) is its spellcasting ability. Cast it as a Bonus Action Proficiency Bonus times per Long Rest.",
                     ),
                 )
             ),

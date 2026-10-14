@@ -134,7 +134,7 @@ class ScrambleMinds(Feature):
                     ("Cost", "Four Psionic Energy Dice instead of a spell slot"),
                     (
                         "Spell",
-                        "Cast Confusion; its Sphere can be 30 feet, and one creature you can see in it succeeds on its save automatically",
+                        "Cast Confusion; its Sphere's radius can be 30 feet, and one creature you can see in it succeeds on its save automatically",
                     ),
                     (
                         "Control",

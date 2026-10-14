@@ -252,7 +252,7 @@ class ImprovedMutableForm(Feature):
                             ("AC", "+1"),
                             (
                                 "Pliable",
-                                "Squeeze through spaces 1 inch wide with your gear; spend 5 feet of movement to escape nonmagical restraints or end Grappled",
+                                "You and your gear can move through spaces as narrow as 1 inch; spend 5 feet of movement to escape nonmagical restraints or end Grappled",
                             ),
                         )
                     ),
@@ -303,10 +303,10 @@ class LifeBendingWeapons(Feature):
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Paragraph(
-                "When you hit with your Organic Weapon, choose one (once per turn):"
+                "When you hit with your Organic Weapon, choose one. Then you can't use this feature again until the start of your next turn."
             ),
             Option(
-                "Free",
+                "Keep the die",
                 (
                     Facts(
                         (
@@ -319,7 +319,7 @@ class LifeBendingWeapons(Feature):
                 ),
             ),
             Option(
-                "Expend",
+                "Expend the die",
                 (
                     Facts(
                         (

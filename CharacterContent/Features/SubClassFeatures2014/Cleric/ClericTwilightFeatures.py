@@ -164,9 +164,9 @@ class TwilightSanctuaryChannelDivinity(Feature):
                     Table(
                         ("Benefit", "Effect"),
                         (
-                            ("Shelter", "1d6 + Cleric level temporary hit points"),
+                            ("Temporary hit points", "1d6 + Cleric level"),
                             (
-                                "Calm",
+                                "End charm or fear",
                                 "End one effect causing it to be charmed or frightened",
                             ),
                         ),

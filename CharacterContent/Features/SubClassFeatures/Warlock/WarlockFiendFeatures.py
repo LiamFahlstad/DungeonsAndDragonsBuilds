@@ -112,7 +112,7 @@ class HurlThroughHell(Feature):
                     ),
                     (
                         "Failed",
-                        "It vanishes through a nightmare landscape: 8d10 Psychic damage unless it's a Fiend, and Incapacitated until the end of your next turn, when it returns to its space",
+                        "It vanishes through a nightmare landscape: 8d10 Psychic damage unless it's a Fiend, and Incapacitated until the end of your next turn, when it returns to the space it left (or the nearest unoccupied space)",
                     ),
                     (
                         "Limit",

@@ -149,7 +149,7 @@ class RevelationInFlesh(Feature):
                             ),
                             (
                                 "Wormlike Movement",
-                                "Move through spaces as narrow as 1 inch, and spend 5 feet of movement to escape nonmagical restraints or the Grappled condition",
+                                "You and your gear can move through spaces as narrow as 1 inch, and you can spend 5 feet of movement to escape nonmagical restraints or the Grappled condition",
                             ),
                         )
                     ),
@@ -201,7 +201,7 @@ class WarpingImplosion(Feature):
                     ),
                     (
                         "Failed",
-                        "3d10 Force damage, and pulled toward the space you left",
+                        "3d10 Force damage, and pulled straight toward the space you left, into the nearest unoccupied space to it",
                     ),
                     ("Succeeded", "Half the damage only"),
                     (

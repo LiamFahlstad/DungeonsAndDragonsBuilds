@@ -126,7 +126,7 @@ class ManifestMind(Feature):
         # Uses of casting from the mind are in the panel below.
         return [
             Paragraph(
-                "Conjure the mind of your Awakened Spellbook as a Tiny spectral object."
+                "Conjure the mind of your Awakened Spellbook as a Tiny spectral object. It's intangible and doesn't occupy its space."
             ),
             Facts(
                 (
@@ -138,7 +138,7 @@ class ManifestMind(Feature):
                     ),
                     (
                         "Move it",
-                        "Bonus Action: up to 30 feet to a space you or it can see; it passes through creatures, not objects",
+                        "Bonus Action: up to 30 feet to an unoccupied space you or it can see; it passes through creatures, not objects",
                     ),
                     (
                         "Ends",
@@ -286,7 +286,7 @@ class OneWithTheWord(Feature):
                             ),
                             (
                                 "Cost",
-                                "Roll 3d6: spells of your choice with a combined level of at least the roll vanish from the book (not enough spells: you drop to 0 Hit Points). You can't cast them until you finish 1d6 Long Rests, then they return.",
+                                "Roll 3d6: spells of your choice with a combined level of at least the roll vanish from the book (not enough spells: you drop to 0 Hit Points). You can't cast them, even from a scroll or another spellbook, until you finish 1d6 Long Rests; then they return.",
                             ),
                             ("Limit", "Once per Long Rest"),
                         )

@@ -76,7 +76,7 @@ class RuneCarver(Feature):
                             (
                                 "Cloud",
                                 "Advantage on Dexterity (Sleight of Hand) and Charisma (Deception) checks",
-                                "Reaction when you or a creature you can see within 30 feet is hit by an attack roll: the attack targets another creature within 30 feet (not the attacker), using the same roll",
+                                "Reaction when you or a creature you can see within 30 feet is hit by an attack roll: the attack targets another creature within 30 feet (not the attacker), using the same roll, regardless of the attack's range",
                             ),
                             (
                                 "Fire",
@@ -101,7 +101,7 @@ class RuneCarver(Feature):
                             (
                                 "Storm (Fighter 7+)",
                                 "Advantage on Intelligence (Arcana) checks; you can't be surprised unless Incapacitated",
-                                "Bonus Action: for 1 minute, use your Reaction to give Advantage or Disadvantage to an attack roll, save or check by you or a creature you can see within 60 feet",
+                                "Bonus Action: for 1 minute or until you're Incapacitated, use your Reaction to give Advantage or Disadvantage to an attack roll, save or check by you or a creature you can see within 60 feet",
                             ),
                         ),
                     ),
@@ -207,7 +207,7 @@ class GiantsMight(Feature):
                     ("Strength", "Advantage on Strength checks and saving throws"),
                     (
                         "Damage",
-                        "Once on each of your turns, one weapon or unarmed strike hit deals an extra Extra Damage die (see Dice below)",
+                        "Once on each of your turns, one weapon or unarmed strike hit deals extra damage equal to your Extra Damage die (see Dice below)",
                     ),
                 )
             ),

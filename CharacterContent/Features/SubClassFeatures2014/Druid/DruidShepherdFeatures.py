@@ -53,7 +53,7 @@ class SpiritTotem(Feature):
         # The once-per-rest box is in the panel below.
         return [
             Paragraph(
-                "Summon an incorporeal nature spirit whose aura aids you and your allies."
+                "Summon an incorporeal nature spirit whose aura aids you and your allies. It counts as neither a creature nor an object."
             ),
             Facts(
                 (

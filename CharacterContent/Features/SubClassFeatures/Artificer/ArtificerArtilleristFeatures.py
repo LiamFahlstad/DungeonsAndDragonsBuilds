@@ -90,7 +90,7 @@ class EldritchCannon(Feature):
                 (
                     (
                         "Create",
-                        "Magic action with Smith's Tools or Woodcarver's Tools: a Small or Tiny cannon on a horizontal surface within 5 feet",
+                        "Magic action with Smith's Tools or Woodcarver's Tools: a Small or Tiny cannon in an unoccupied space on a horizontal surface within 5 feet. You choose its look, and whether you carry it or it has legs or wheels.",
                     ),
                     (
                         "Lasts",

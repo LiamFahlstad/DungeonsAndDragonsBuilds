@@ -47,7 +47,7 @@ class ElementalSmite(Feature):
                             ),
                             (
                                 "Djinni's Escape",
-                                "Teleport up to 30 feet to a space you can see. Until the end of your next turn: Resistance to Bludgeoning, Piercing and Slashing damage, and Immunity to Grappled, Prone and Restrained.",
+                                "Teleport up to 30 feet to an unoccupied space you can see and turn semi-incorporeal. Until the end of your next turn: Resistance to Bludgeoning, Piercing and Slashing damage, and Immunity to Grappled, Prone and Restrained.",
                             ),
                             (
                                 "Efreeti's Fury",
@@ -55,7 +55,7 @@ class ElementalSmite(Feature):
                             ),
                             (
                                 "Marid's Surge",
-                                "The target and each creature of your choice in a 10-foot Emanation from you make a Strength save. Failed: pushed 15 feet away from you and Prone.",
+                                "The target and each creature of your choice in a 10-foot Emanation from you make a Strength save. Failed: pushed 15 feet straight away from you and Prone.",
                             ),
                         )
                     ),

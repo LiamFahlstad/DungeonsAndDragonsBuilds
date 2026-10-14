@@ -51,7 +51,9 @@ class InvokeDuplicity(Feature):
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
-            Paragraph("Create a perfect, animated illusion of yourself."),
+            Paragraph(
+                "Create a perfect, animated illusion of yourself that mimics your expressions and gestures. It's intangible and doesn't occupy its space."
+            ),
             Facts(
                 (
                     ("Cost", "One use of Channel Divinity"),
@@ -78,7 +80,7 @@ class InvokeDuplicity(Feature):
                             ),
                             (
                                 "Move",
-                                "Bonus Action: move it up to 30 feet to a space you can see within 120 feet of you",
+                                "Bonus Action: move it up to 30 feet to an unoccupied space you can see within 120 feet of you",
                             ),
                         )
                     ),

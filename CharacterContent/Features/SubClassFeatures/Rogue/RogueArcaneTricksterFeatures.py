@@ -145,7 +145,7 @@ class SpellThief(Feature):
                     ),
                     (
                         "Failed",
-                        "The spell's effect on you is negated. If it's level 1+ and a level you can cast, you have it prepared for 8 hours and the caster can't cast it for 8 hours.",
+                        "The spell's effect on you is negated. If it's level 1+ and a level you can cast (from any class's list), you have it prepared for 8 hours and the caster can't cast it for 8 hours.",
                     ),
                     ("Limit", "Once per Long Rest (after you steal a spell)"),
                 )

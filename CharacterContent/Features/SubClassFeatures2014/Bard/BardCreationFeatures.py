@@ -168,7 +168,11 @@ class AnimatingPerformance(Feature):
                     ),
                     (
                         "Lasts",
-                        "1 hour, until it drops to 0 hit points, or until you die. Only one at a time.",
+                        "1 hour, until it drops to 0 hit points, or until you die. Only one at a time: animating another makes the first inanimate.",
+                    ),
+                    (
+                        "Loyalty",
+                        "Friendly to you and your companions, and obeys your commands",
                     ),
                     (
                         "In combat",

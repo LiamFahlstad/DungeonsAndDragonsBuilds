@@ -87,7 +87,7 @@ class WildSurge(Feature):
                             ),
                             (
                                 "3",
-                                "A spirit appears within 5 feet of one creature you can see within 30 feet. At the end of the turn it explodes: each creature within 5 feet of it makes a Dexterity save or takes 1d6 Force damage. Until your rage ends, summon another as a Bonus Action on each of your turns.",
+                                "An intangible spirit (a flumph or a pixie, your choice) appears within 5 feet of one creature you can see within 30 feet. At the end of the turn it explodes: each creature within 5 feet of it makes a Dexterity save or takes 1d6 Force damage. Until your rage ends, summon another as a Bonus Action on each of your turns.",
                             ),
                             (
                                 "4",

@@ -54,7 +54,7 @@ class AmongTheDead(Feature):
                     ),
                     (
                         "Failed",
-                        "It must pick a new target or forfeit targeting someone other than you, possibly wasting it",
+                        "It must choose a new target instead of you, or forfeit targeting anyone, possibly wasting the attack or spell",
                     ),
                     (
                         "Immunity",

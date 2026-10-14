@@ -31,7 +31,7 @@ class MoonsInspiration(Feature):
                 (
                     (
                         "Inspired Eclipse",
-                        "When you give a Bardic Inspiration die as a Bonus Action, you can also teleport up to 30 feet to a space you can see and become Invisible until the start of your next turn (ending early after you attack, deal damage or cast a spell)",
+                        "When you give a Bardic Inspiration die as a Bonus Action, you can also teleport up to 30 feet to an unoccupied space you can see and become Invisible until the start of your next turn (ending early after you attack, deal damage or cast a spell)",
                     ),
                     (
                         "Lunar Vitality",
@@ -100,7 +100,7 @@ class BlessingOfMoonlight(Feature):
                     ("Moonbeam", "Always prepared"),
                     (
                         "Blessing",
-                        "When you cast it, you can glow (Dim Light 5 feet) while it lasts; whenever a creature fails its save against it, another creature you can see within 60 feet regains 2d4 Hit Points",
+                        "When you cast it, you can glow (Dim Light 5 feet) while it lasts; whenever a creature fails its save against it, another creature of your choice that you can see within 60 feet regains 2d4 Hit Points",
                     ),
                     ("Limit", "Once per Long Rest"),
                 )
@@ -137,7 +137,7 @@ class EventidesSplendor(Feature):
                 (
                     (
                         "Shadow of the New Moon",
-                        "When you use Inspired Eclipse, the creature can also become Invisible until the start of its next turn and use its Reaction to teleport up to 30 feet to a space it can see",
+                        "When you use Inspired Eclipse, the creature can also become Invisible until the start of its next turn and immediately use its Reaction to teleport up to 30 feet to an unoccupied space it can see",
                     ),
                     (
                         "Vibrance of the Full Moon",

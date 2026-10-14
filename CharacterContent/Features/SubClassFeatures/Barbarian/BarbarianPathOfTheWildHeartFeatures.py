@@ -162,7 +162,7 @@ class PowerOfTheWilds(Feature):
                         (
                             (
                                 "Topple",
-                                "When you hit a Large or smaller creature with a melee attack, it falls Prone",
+                                "When you hit a Large or smaller creature with a melee attack, you can knock it Prone",
                             ),
                         )
                     ),

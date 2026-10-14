@@ -235,7 +235,7 @@ class ShapeShifter(Feature):
                             ),
                             (
                                 "Transmute Spells",
-                                "You can cast Transmutation spells that have no costly or consumed Material components",
+                                "While shape-shifted, you can cast spells, but only Transmutation spells without costly or consumed Material components",
                             ),
                         )
                     ),

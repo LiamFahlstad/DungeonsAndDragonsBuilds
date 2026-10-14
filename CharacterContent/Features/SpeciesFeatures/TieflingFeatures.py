@@ -74,7 +74,7 @@ class FiendishLegacy(Feature):
             Table(("Character level", "Spell"), chosen),
             Facts(
                 (
-                    ("Prepared", "The level 1 and 2 spells are always prepared"),
+                    ("Prepared", "The level 3 and 5 spells are always prepared"),
                     (
                         "Casting",
                         "Each once per Long Rest without a spell slot, or with your spell slots",

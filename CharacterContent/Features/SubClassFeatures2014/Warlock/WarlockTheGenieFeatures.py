@@ -77,7 +77,7 @@ class GeniesVessel(Feature):
                     ),
                     (
                         "Replace it",
-                        "A 1-hour ceremony during a Short or Long Rest; it vanishes when you die",
+                        "If it's destroyed or lost, a 1-hour ceremony during a Short or Long Rest gets a new one (the old one is destroyed). It vanishes when you die.",
                     ),
                 )
             ),
@@ -94,7 +94,7 @@ class GeniesVessel(Feature):
                             ("Duration", "Up to 2 x Proficiency Bonus hours"),
                             (
                                 "Leaving",
-                                "Bonus Action, or early if you die or the vessel is destroyed; you appear in the nearest unoccupied space. Objects left inside stay until carried out.",
+                                "Bonus Action, or early if you die or the vessel is destroyed; you appear in the nearest unoccupied space. Objects left inside stay until carried out; if the vessel is destroyed, they appear in the nearest unoccupied spaces.",
                             ),
                             ("Limit", "Once per Long Rest"),
                         )

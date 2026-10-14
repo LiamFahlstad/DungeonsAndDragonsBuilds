@@ -112,7 +112,7 @@ class SearingSunburst(Feature):
                     ("Area", "20-foot-radius sphere"),
                     (
                         "Save",
-                        "Constitution; creatures behind opaque total cover don't save",
+                        "Constitution; a creature behind opaque total cover doesn't need to save",
                     ),
                     ("Failed", "2d6 radiant damage"),
                     ("Empower", "Spend up to 3 ki points: +2d6 damage each"),

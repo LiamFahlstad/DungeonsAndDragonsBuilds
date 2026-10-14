@@ -70,7 +70,14 @@ class AdventurersAtlas(Feature):
                         "Map holders",
                         "Touch 2 to 1 + Intelligence modifier creatures (you can be one)",
                     ),
-                    ("Lasts", "Until you die or use this feature again"),
+                    (
+                        "Map",
+                        "Constantly shows where all map holders are relative to each other; illegible to anyone else",
+                    ),
+                    (
+                        "Lasts",
+                        "Until you die or use this feature again (the old maps vanish)",
+                    ),
                 )
             ),
             Option(
@@ -220,7 +227,7 @@ class SuperiorAtlas(Feature):
                 (
                     (
                         "Safe Haven",
-                        "When a map holder would drop to 0 Hit Points but not die, it can destroy its map: its Hit Points become 2 x your Artificer level, and it teleports to a space within 5 feet of you or another map holder",
+                        "When a map holder would drop to 0 Hit Points but not die, it can destroy its map: its Hit Points become 2 x your Artificer level, and it teleports to an unoccupied space of its choice within 5 feet of you or another map holder",
                     ),
                     (
                         "Unerring Path",

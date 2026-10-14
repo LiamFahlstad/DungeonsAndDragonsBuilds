@@ -85,7 +85,10 @@ class ReanimatorSkillSet(Feature):
                 (
                     Facts(
                         (
-                            ("Trigger", "You cast Spare the Dying"),
+                            (
+                                "Trigger",
+                                "When you cast Spare the Dying, you can modify it to jolt the target back to life",
+                            ),
                             (
                                 "Heal",
                                 "The target regains Hit Points equal to your Artificer level",
@@ -357,11 +360,11 @@ class MacabreModifications(Feature):
                             ),
                             (
                                 "Gaunt",
-                                f"Speed 45 feet and a Climb Speed equal to its Speed, climbing any surface without a check. A creature of your choice that starts its turn within 10 feet of it makes a Wisdom save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)}) or is Frightened until the start of its next turn.",
+                                f"Speed 45 feet and a Climb Speed equal to its Speed; it climbs difficult surfaces, even along ceilings, without an ability check. A creature of your choice that starts its turn within 10 feet of it makes a Wisdom save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)}) or is Frightened until the start of its next turn.",
                             ),
                             (
                                 "Moist",
-                                "A Swim Speed equal to its Speed, and it can squeeze through 1-inch spaces. An attacker within 10 feet that hits it with an attack roll takes Acid damage equal to your Intelligence modifier.",
+                                "A Swim Speed equal to its Speed, and it can move through spaces as narrow as 1 inch without spending extra movement. An attacker within 10 feet that hits it with an attack roll takes Acid damage equal to your Intelligence modifier.",
                             ),
                         )
                     ),

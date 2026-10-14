@@ -161,7 +161,7 @@ class SummonWildfireSpirit(Feature):
                     ),
                     (
                         "In combat",
-                        "Shares your initiative count and takes its turn right after yours. It moves and uses its reaction on its own, but its only action is Dodge unless you take a bonus action to command another action (from its stat block or any other). If you're incapacitated, it can take any action.",
+                        "Shares your initiative count and takes its turn right after yours. Its only action is Dodge unless you take a bonus action to command another action (from its stat block or any other). If you're incapacitated, it can take any action.",
                     ),
                 )
             ),

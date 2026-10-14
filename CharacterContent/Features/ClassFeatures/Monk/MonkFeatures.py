@@ -246,7 +246,7 @@ class StepOfTheWind(Feature):
             Facts(
                 (
                     ("Action", "Bonus Action"),
-                    ("Free", "Take the Dash action"),
+                    ("No cost", "Take the Dash action"),
                     (
                         "1 Focus Point",
                         "Take both the Disengage and Dash actions, and your jump distance is doubled for the turn",

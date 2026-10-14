@@ -268,11 +268,11 @@ class Chef(_AbilityScoreFeat):
                     ("Cook's Utensils", "Proficiency"),
                     (
                         "Replenishing Meal",
-                        "During a Short Rest, with ingredients and Cook's Utensils, cook for 4 + Proficiency Bonus creatures. Each who eats and spends Hit Dice regains an extra 1d8 Hit Points.",
+                        "During a Short Rest, with ingredients and Cook's Utensils, cook for 4 + Proficiency Bonus creatures. At the end of the rest, each who eats and spends Hit Dice regains an extra 1d8 Hit Points.",
                     ),
                     (
                         "Bolstering Treats",
-                        "With 1 hour of work or after a Long Rest, make Proficiency Bonus treats (they last 8 hours). Bonus Action to eat one: gain Proficiency Bonus Temporary Hit Points.",
+                        "With 1 hour of work or after a Long Rest, with ingredients and Cook's Utensils, make Proficiency Bonus treats (they last 8 hours). A creature can eat one as a Bonus Action to gain Proficiency Bonus Temporary Hit Points.",
                     ),
                 )
             ),
@@ -467,7 +467,7 @@ class Grappler(_AbilityScoreFeat):
                     ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
                     (
                         "Punch and Grab",
-                        "Once per turn, when an Unarmed Strike hits as part of the Attack action, use both its Damage and Grapple options",
+                        "Once per turn, when an Unarmed Strike hits as part of the Attack action on your turn, use both its Damage and Grapple options",
                     ),
                     (
                         "Attack Advantage",
@@ -2059,16 +2059,21 @@ class LivingShadow(GeneralFeat):
                                 "Failed",
                                 "Incapacitated until the start of your next turn, then roll a d8 on Shadow's Will for what you do that turn",
                             ),
+                        )
+                    ),
+                    Table(
+                        ("d8", "Shadow's Will"),
+                        (
                             (
                                 "1",
-                                "No action or Bonus Action; use all your movement in a random direction (d4: north, east, south, west)",
+                                "No action or Bonus Action; use all your movement in a random direction (d4: 1 north, 2 east, 3 south, 4 west)",
                             ),
                             (
                                 "2-6",
                                 "No movement or Bonus Action; Attack action with one melee attack against a random creature in reach (no action if none)",
                             ),
                             ("7-8", "You fall Prone and your turn ends"),
-                        )
+                        ),
                     ),
                 ),
             ),
@@ -2210,16 +2215,7 @@ class SecondSkin(GeneralFeat):
             "Your skin is toughened and hardened by the Mists, granting you unnatural resilience. You gain the following features.\n"
             " * Hardened Skin. Your base AC becomes 13 + your Dexterity modifier. You can use a shield and still gain this benefit.\n"
             " * Resilient Form. When you take damage, you can take a Reaction to reduce that damage by an amount equal to your Proficiency Bonus. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
-            " * Vulnerable Weakness. Immediately after you make a D20 Test and roll a 1 on the d20, your toughened skin becomes brittle and vulnerable. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Vulnerable condition until the end of your next turn.\n"
-            "After you experience the catalyst, at the start of your next turn, make a Charisma saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you immediately use Alternate Form to cast Alter Self without a spell slot. If you've already expended the use of that feature, you instead have the Stunned condition until the start of your next turn.\n"
-            "Change Catalyst\n"
-            "1d6\tCatalyst\n"
-            "1\tSeeing a particular phase of the moon\n"
-            "2\tSmelling the scent of a certain type of flower\n"
-            "3\tHearing temple bells ringing\n"
-            "4\tHearing a particular melody\n"
-            "5\tTouching pure silver with your bare skin\n"
-            "6\tSeeing someone who resembles a specific individual\n"
+            " * Vulnerable Weakness. Immediately after you make a D20 Test and roll a 1 on the d20, your toughened skin becomes brittle and vulnerable. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Vulnerable condition until the end of your next turn."
         )
         return description
 

@@ -43,7 +43,7 @@ class BeguilingMagic(Feature):
                     ),
                     (
                         "Failed",
-                        "Charmed or Frightened (your choice) for 1 minute; it repeats the save at the end of each of its turns",
+                        "Charmed or Frightened (your choice) for 1 minute; it repeats the save at the end of each of its turns, ending the effect on a success",
                     ),
                     (
                         "Limit",
