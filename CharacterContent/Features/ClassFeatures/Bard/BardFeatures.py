@@ -9,18 +9,33 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from Core.Definitions import (
+    Ability,
     Skill,
     CharacterClass,
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Bard Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Charisma"),
+                    ("Save DC", dc_formula(Ability.CHARISMA)),
+                    ("Spell attack", "Charisma modifier + Proficiency Bonus"),
+                    ("Cantrips", "Replace one whenever you gain a Bard level"),
+                    ("Prepared spells", "Replace one whenever you gain a Bard level"),
+                    ("Spell slots", "Regain all when you finish a Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

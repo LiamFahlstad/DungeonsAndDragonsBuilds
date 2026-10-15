@@ -324,6 +324,21 @@ class UncannyMetabolism(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Trigger", "You roll Initiative"),
+                    (
+                        "Effect",
+                        "Regain all expended Focus Points, and regain Monk level + one roll of your Martial Arts die Hit Points",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you roll Initiative, you can regain all expended Focus Points. When you do so, roll your Martial Arts die, and regain a number of Hit Points equal to your Monk level plus the number rolled.\n"

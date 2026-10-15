@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class CartographerToolsOfTheTrade(Feature):
@@ -19,6 +19,22 @@ class CartographerToolsOfTheTrade(Feature):
             origin="Cartographer Artificer Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Tool Proficiency",
+                        "Calligrapher's Supplies and Cartographer's Tools. For each you already have, gain another type of Artisan's Tools of your choice instead.",
+                    ),
+                    (
+                        "Scroll Crafting",
+                        "Scribing a Spell Scroll (Player's Handbook crafting rules) takes half the time",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -34,6 +50,23 @@ class CartographerSpells(Feature):
         super().__init__(
             name="Cartographer Spells", origin="Cartographer Artificer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "Faerie Fire, Guiding Bolt, Healing Word"),
+                    ("5", "Locate Object, Mind Spike"),
+                    ("9", "Call Lightning, Clairvoyance"),
+                    ("13", "Banishment, Locate Creature"),
+                    ("17", "Scrying, Teleportation Circle"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -181,6 +214,22 @@ class GuidedPrecision(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Damage",
+                        "Once per turn, when you cast a spell from your Cartographer Spells list, or hit a creature affected by your Faerie Fire with an attack roll, add your Intelligence modifier to one damage roll of it",
+                    ),
+                    (
+                        "Concentration",
+                        "Taking damage can't make you lose Concentration on Faerie Fire",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Once per turn, whenever you cast a spell from your Cartographer Spells list or hit a creature affected by your Faerie Fire with an attack roll, you can add your Intelligence modifier to one damage roll of the spell or attack.\n"
@@ -197,6 +246,19 @@ class IngeniousMovement(Feature):
             activation=FeatureActivation(range="30 Feet"),
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Flash of Genius"),
+                    (
+                        "Effect",
+                        "As part of that Reaction, you or a willing creature you can see within 30 feet teleports up to 30 feet to an unoccupied space you can see",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Flash of Genius, you or a willing creature of your choice that you can see within 30 feet of yourself can teleport up to 30 feet to an unoccupied space you can see as part of that same Reaction."

@@ -11,7 +11,15 @@ import typing
 
 import pytest
 
-from Core.Definitions import Ability, DamageType, Skill
+from CharacterContent.Spells.SpellLists import (
+    ClericLevel0Spells,
+    ClericLevel1Spells,
+    DruidLevel0Spells,
+    DruidLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
+)
+from Core.Definitions import Ability, CharacterClass, DamageType, Skill
 from Model.Content.Feature import Feature
 from Model.Content.FightingStyle import FightingStyle
 from Presentation.FeatureCards import improved_description_to_html
@@ -75,11 +83,44 @@ def _build(cls):
         return _build_with(cls, DamageType.FIRE)
 
 
+# Magic Initiate checks its spell names against the chosen class's lists,
+# which a parameter's name and type can't tell.
+_MAGIC_INITIATE_LISTS = {
+    "MagicInitiate": (CharacterClass.WIZARD, WizardLevel0Spells, WizardLevel1Spells),
+    "MagicInitiateCleric": (
+        CharacterClass.CLERIC,
+        ClericLevel0Spells,
+        ClericLevel1Spells,
+    ),
+    "MagicInitiateDruid": (CharacterClass.DRUID, DruidLevel0Spells, DruidLevel1Spells),
+    "MagicInitiateWizard": (
+        CharacterClass.WIZARD,
+        WizardLevel0Spells,
+        WizardLevel1Spells,
+    ),
+}
+
+
+def _spell_arguments(cls, parameters) -> dict:
+    if cls.__name__ not in _MAGIC_INITIATE_LISTS:
+        return {}
+    character_class, cantrips, spells = _MAGIC_INITIATE_LISTS[cls.__name__]
+    arguments = {
+        "cantrip_1": list(cantrips)[0].value,
+        "cantrip_2": list(cantrips)[-1].value,
+        "spell": list(spells)[0].value,
+    }
+    if "character_class" in parameters:
+        arguments["character_class"] = character_class
+    return arguments
+
+
 def _build_with(cls, damage_type):
     hints = typing.get_type_hints(cls.__init__)
     parameters = inspect.signature(cls.__init__).parameters
+    known = _spell_arguments(cls, parameters)
     kwargs = {
-        name: _argument(cls, name, hints.get(name), damage_type)
+        name: known.get(name) or _argument(cls, name, hints.get(name), damage_type)
         for name, parameter in parameters.items()
         if name != "self"
         and parameter.default is inspect.Parameter.empty

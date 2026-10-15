@@ -107,6 +107,18 @@ class ManipulateElements(Feature):
             name="Manipulate Elements", origin="Warrior of the Elements Monk Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Elementalism",
+                        "You know this spell; Wisdom is your spellcasting ability for it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You know the Elementalism spell. Wisdom is your spellcasting ability for it."
         return description
@@ -126,6 +138,29 @@ class ElementalBurst(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Make elemental energy burst around a point."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "2 Focus Points"),
+                    ("Range", "A point within 120 feet"),
+                    ("Area", "20-foot-radius Sphere centered on that point"),
+                    (
+                        "Damage type",
+                        "Acid, Cold, Fire, Lightning or Thunder (your choice)",
+                    ),
+                    (
+                        "Save",
+                        f"Each creature in the Sphere makes a Dexterity save against your Focus save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "Three rolls of your Martial Arts die"),
+                    ("Succeeded", "Half damage"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Magic action, you can expend 2 Focus Points to cause elemental energy to burst in a 20-foot-radius Sphere centered on a point within 120 feet of yourself. Choose a damage type: Acid, Cold, Fire, Lightning, or Thunder.\n"
@@ -144,6 +179,18 @@ class StrideOfTheElements(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "While attuned",
+                        "While Elemental Attunement is active, you have a Fly Speed and a Swim Speed equal to your Speed",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "While your Elemental Attunement is active, you also have a Fly Speed and a Swim Speed equal to your Speed."

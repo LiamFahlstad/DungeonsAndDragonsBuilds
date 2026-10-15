@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class OathOfDevotionSpells(Feature):
@@ -15,6 +15,23 @@ class OathOfDevotionSpells(Feature):
         super().__init__(
             name="Oath of Devotion Spells", origin="Oath of Devotion Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Protection from Evil and Good, Shield of Faith"),
+                    ("5", "Aid, Zone of Truth"),
+                    ("9", "Beacon of Hope, Dispel Magic"),
+                    ("13", "Freedom of Movement, Guardian of Faith"),
+                    ("17", "Commune, Flame Strike"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -92,6 +109,22 @@ class AuraOfDevotion(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Immunity",
+                        "You and your allies are immune to the Charmed condition while in your Aura of Protection",
+                    ),
+                    (
+                        "Already Charmed",
+                        "An ally who enters the aura while Charmed ignores the condition while there",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You and your allies have Immunity to the Charmed condition while in your Aura of Protection. If a Charmed ally enters the aura, that condition has no effect on that ally while there."
         return description
@@ -108,6 +141,21 @@ class SmiteOfProtection(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your smite radiates protective energy."),
+            Facts(
+                (
+                    ("Trigger", "Whenever you cast Divine Smite"),
+                    (
+                        "Effect",
+                        "You and your allies have Half Cover while in your Aura of Protection",
+                    ),
+                    ("Duration", "Until the start of your next turn"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn."

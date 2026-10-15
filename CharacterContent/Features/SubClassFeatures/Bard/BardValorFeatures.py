@@ -67,6 +67,20 @@ class MartialTraining(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.MEDIUM, ArmorType.SHIELD]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Weapons", "Proficiency with Martial weapons"),
+                    ("Armor", "Training with Medium armor and Shields"),
+                    (
+                        "Focus",
+                        "Use a Simple or Martial weapon as a Spellcasting Focus for spells from your Bard spell list",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain proficiency with Martial weapons and training with Medium armor and Shields.\n"
@@ -78,6 +92,22 @@ class MartialTraining(Feature):
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="College of Valor Bard Level 6")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Attacks",
+                        "Two instead of one whenever you take the Attack action on your turn",
+                    ),
+                    (
+                        "Cantrip",
+                        "You can replace one of those attacks with a cantrip that has a casting time of an action",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -95,6 +125,19 @@ class BattleMagic(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a spell that has a casting time of an action",
+                    ),
+                    ("Effect", "Bonus Action: make one attack with a weapon"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."

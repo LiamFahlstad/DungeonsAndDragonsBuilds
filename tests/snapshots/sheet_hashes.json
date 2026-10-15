@@ -4,10 +4,10 @@
    "character.html": "54b14d680668ce392f48a0375297a34088c8598686cbbfc093c41cd0bf02f052",
    "features/level_01.html": "7b6bb9a3555d28637cae3a61606e044b8c07ff9db4a29b4881c8395ea36c9e9d",
    "features/level_02.html": "97b15b14ab2b3ef1c975c39c71cdb1af6b3d28d44ae8f732f602150d5e3159a0",
-   "features/level_03.html": "b9d8aa6e1b356852b3379038b8797e6dbc15ad54fcf7f430ab01f19cf7259750",
+   "features/level_03.html": "914dae720422f215c86529af680b465087eccb75c1f71d1cd8d13f07e10a9a82",
    "features/level_04.html": "239b86c5380ac4663dac06c0e660a94a190059287f116f42403cce8a22aa9a60",
    "fighting_styles.html": "5ebf85b772114057c8e8d831be83880e1233b512d82c177a693f534530ff7bd1",
-   "full_character_sheet.html": "21cc6e14b194bf919c9d7b5a5ff36e5e0c3912858bf0753797793f2d4c85fe99",
+   "full_character_sheet.html": "a2c0cb9c648d70e69c95a23c01ffa1e0d8adba934ad6309a93570b9d9a49af82",
    "items.html": "623127242c59a076e59566d750a56f594cb5356c8f7072e2caf75c45e9cb6283"
   }
  },
@@ -16,11 +16,11 @@
    "character.html": "0fe9bb6a49715a770d7cdfbf8d6c7f0721a1028e78f08d4fac0fe7f90ef3ccb6",
    "features/level_01.html": "a0cf80fc037d4eeca58bc571fc45ecf47dc4645e5682152d61e9a6272e4cd434",
    "features/level_02.html": "e4e26ecf8e91d60ac99fd7403efc71a164e058997e109af7801d2d25ebd92723",
-   "features/level_03.html": "a90c2e16b290ee22849ed9f927e5a43f96b458cac21750fe63f74b8b6697df9c",
+   "features/level_03.html": "adac220d3b74fdc099b3f6bf50e8008f4d1b3ed5bfd520377ee5091197adc76e",
    "features/level_04.html": "c864132319530767f98382989f1fddc16da09542503796ec8d0841b791586a1a",
    "features/level_05.html": "83a8861484bd338e3e755c4867b109d6ef5012cd6aa3efbda7675051eb536f31",
    "fighting_styles.html": "c5c6690ad17a7bc896afb5ef2c836e7c780c4e3489bcfe20145acf967c292b4c",
-   "full_character_sheet.html": "154a1e9d9c1e587e5f5cf42d7e854e943dde4e8086564037e2b54f8c2a6c2a42",
+   "full_character_sheet.html": "20665f24333b65ace36363243eb05daa07aaf5929be6d046e61c688134fc45d6",
    "items.html": "17926e5a18a83226136f36fadd20d140de5faa07bd1e390ea9dcef43d33fe79b"
   }
  },
@@ -157,7 +157,7 @@
  "Y2014BardCreationPiperWrenhollowCharacterBuilder": {
   "full": {
    "character.html": "eddeacfacba180480c10b09c4d2212c6a838ab8570ab57b37d0a7bc1232d51c2",
-   "features/level_01.html": "0a443398a85d874aee4b4bb9b1a4de599a9591fb051c5740e2ee5029b3f735f6",
+   "features/level_01.html": "ee09a872fdab7de132d2ecb49c31d54a7b7919bb93ff09ded92a61d6e3d622a4",
    "features/level_02.html": "66b5585b3b0e8f1f624b34efa0dc8f98532893f390255c2bc09b2907dba6478c",
    "features/level_03.html": "1b2b1f3b66e8a61beb4ce1e2429252cdd39eaa1af14a905bb7fdd8a0c23d431c",
    "features/level_04.html": "096a93c08023836772d7b24c5db1264e8d940c4a183f613a8e68cafe8aed9ae6",
@@ -171,14 +171,14 @@
    "features/level_12.html": "e7b45eb27bce131aad106cb4131ee09f3d2437d5dd16867b5efa742c91a593a0",
    "features/level_13.html": "22ad91d1480aef33a70cfb0438660d0f1daf006ff1e15b69dc6fd5b005cc8c7e",
    "features/level_14.html": "6775d63b749b020e563124f3fc2d74154d90596a2cd5bdff1926b786c5784cae",
-   "full_character_sheet.html": "d6e0b6a5498a32a195a44074ea7bf1c052290b348de1b7f6913617d9148941c3",
+   "full_character_sheet.html": "37944c05e2613703407e9cc3df73609a530d32b67f719392eb65a88580277dc3",
    "items.html": "0ec5bd96fc418955b583c36d19340b049e1c9b3fef48842b3e8d55bbab351ac2"
   }
  },
  "Y2014BardEloquenceCorvinusTalebrightCharacterBuilder": {
   "full": {
    "character.html": "6c52d75dd04d977ecee2500a5201f7b69d70138198fff6ecf438dbb03f0cc3d9",
-   "features/level_01.html": "eec2cadf9f9e8b632d54e968df3e90f736e7cce378c7c45ea3b36c28e4a36551",
+   "features/level_01.html": "7e714b92cf488cf90556e8ddf2b7bee14ef327525bd6334aee1d8395d3c9e1c1",
    "features/level_02.html": "ea8ddaec7e4ca841b44b9b1c400057fcbe22b7b96165230dff171051bbfe5234",
    "features/level_03.html": "e42753c52e5447e301d73949c9cbf82e355d5fb4af18c606e649e40db5f8d5a0",
    "features/level_04.html": "4ee9c2a9058e574dd59ae9627cfe255c2ce1fa451a3b8a5de43ceaa3487e3264",
@@ -192,14 +192,14 @@
    "features/level_12.html": "b5e0ddec636fbca206e2b803f14eb8b4be840f3522a18fd4f018a57b29c5796f",
    "features/level_13.html": "a377cb50149e9e26f627c0d230fd2fb605d5410b974f1e9c86e5751e3fef3399",
    "features/level_14.html": "307178c33bacfb369fa686e108d8c71c2c207cdd4071dbec2f13fb73f8f9f16e",
-   "full_character_sheet.html": "f67c7c7a7d438b6fdb05c953fb5ff13448f04ef5d9f0cb522c75fc45599137a0",
+   "full_character_sheet.html": "346c57b9092f7b529266d39ac33031066879d16a9fd2accc4cf36b592a91e036",
    "items.html": "54639d280414c284110e3647ef248eb74507367cb6f0dc68e14e4dc4335098a1"
   }
  },
  "Y2014BardSwordsPerrinBladesongCharacterBuilder": {
   "full": {
    "character.html": "dbba1c14a4dda1af81b5d47a92616c38a5fafb01ea502827fe65ccf0d445a405",
-   "features/level_01.html": "80b6c3b098304d2ab05b8a96de54abdb5cc17d350a4aa0690fa834a845d07d94",
+   "features/level_01.html": "979736f4458545b2f4cacb9ba1a72495baf585695ac13b054e11a9a64f4634f4",
    "features/level_02.html": "8dc64682af931a5e2a2c888f393580df767250b9dbff23eb657b3d2dac524865",
    "features/level_03.html": "3f648c8c9b7406d47cf26457f69db1b870ef04f24f3d488122d2bc045efa595b",
    "features/level_04.html": "d52c1a0eb84e6c530f8533cb18ee7cde3694a1e8bcd7e690e7b4bedd04a5f0ed",
@@ -214,14 +214,14 @@
    "features/level_13.html": "c39ffa7dd69687095cf41e3a114e83265d5b23562265291e7428a802fface934",
    "features/level_14.html": "0abe848c5d91ef0f127f5424f59412deedfe04749a0242950229b0b0f7d7e4f3",
    "fighting_styles.html": "47e8ff7e4c03ef2795725b7d8cc33d102be818f7d004064eaa7b47c6601a0965",
-   "full_character_sheet.html": "773abbd5ec3638fcc731e9bb2e3653c46fb58d0aafa7d2a4d4007e25d3a4ed7e",
+   "full_character_sheet.html": "5420ffe063288fce5d25966b7575125cfdabc9a85106850944b39fe89b2d2047",
    "items.html": "fe837d6e53ccbbc187f0931a10cf3a53aa79c4324945d0f9d930d0f5deb07f73"
   }
  },
  "Y2014BardWhispersNyraHollowechoCharacterBuilder": {
   "full": {
    "character.html": "3331f9fd4c1364d3b6f4824440ffa5d8988aff0a0e526f6b411d027cf1122da3",
-   "features/level_01.html": "daa0df90c3df2d288fc9908ce2531f7b94e02a6f274b4aa3633304d5d6197ddc",
+   "features/level_01.html": "63c19216206ad385cad9fe753c5bb13afd8c01b26f8fc207435431052aff58d5",
    "features/level_02.html": "dbacc63d9cdea93e889e3fd83b6c23079063cab2f53e0604888e123c9ac5f7c9",
    "features/level_03.html": "a9c9beb6e1c22db640d5d135ea7821a259429524f717ae60ddefb2f80d28eee5",
    "features/level_04.html": "8402e510a967bc341f217e34c7e20eca6338572268632a6e943b8000f6e6eaee",
@@ -235,14 +235,14 @@
    "features/level_12.html": "cb9a28a43f58a41546cc057bb84365249344eb7813e8c6f0d508e5c0eb9fdf2f",
    "features/level_13.html": "936aa0eac29e799dbdeed49d0339baa0e3392d8f92ed04756eb32956c57b80c6",
    "features/level_14.html": "3795eb2a0e827371f6078cc14a6ba259aaecb0bdaf79ec17ca102dac9e58ec00",
-   "full_character_sheet.html": "a653cfc62d5e773fd77909ec2579fcbbe4b2defab2691b4403bf460127ff80bb",
+   "full_character_sheet.html": "aa8e56cf29cb050bf422c7ef879e98e558e1fc0b7a45b4e31fa17c8338584c21",
    "items.html": "fbd6fc6667b2cbeef673f6472c828bbdba0cce18c1879a6fbde1e918844b74be"
   }
  },
  "Y2014ClericArcanaPeregrineStarbindCharacterBuilder": {
   "full": {
    "character.html": "7bd8037e6da11a398b7966127f0d125ffffaefe09abbcd4b0484a267e0a21cf7",
-   "features/level_01.html": "64ed34de1d6510ff8e88686dc3bbd4089c45829f967187833f6cf607c396d94b",
+   "features/level_01.html": "a5e311eedbf51dd8b4d74b3b66092e89556c181eb96a99425238a94483f9ddb1",
    "features/level_02.html": "53d490dcda97b250d0390c3aeaf397a230e65f357b421d31ec70fec7b4b72155",
    "features/level_03.html": "5ba2d86f6140d481fbda6ffce751d5d546a1c6b57cc42187ebc7db17ff52161b",
    "features/level_04.html": "6ed3aff892bc85c19d4b65da4fc2a889900c2d4ab318099a4d566db24fa68979",
@@ -259,14 +259,14 @@
    "features/level_15.html": "770071c84e27ac6cf1868fa62338b17be760aab5c19d22ff2f9542c77f5272c5",
    "features/level_16.html": "83eebbd1576a79a5d8a8185867294a7625c8609dbb9af5697c9e3aba8f4c7040",
    "features/level_17.html": "f0b953f97ba54479a5c665a59f35f473e283f06e28b39523be2d1c8732c3caf4",
-   "full_character_sheet.html": "415da266c8a72f84f97b4895c0d1eec88ee0305d15eedea440c553674b0a4037",
+   "full_character_sheet.html": "1970d7ad8d6ca2abce6546fb8f0a778bdfdb14c5fc5aacbab8cc3799e91820a0",
    "items.html": "4bd3af9c9347386f649ec05865c6fbbe04803e8c83f697fd60a372cc32bb38c3"
   }
  },
  "Y2014ClericDeathMortimerGrimvaleCharacterBuilder": {
   "full": {
    "character.html": "2ce50b1eaddea11381f57a3ca593968cf0cd13c3c2a17c6f3f482038f7447b6d",
-   "features/level_01.html": "8004825830694dfea2213624407d6efe5fd5233086b557ae8fae855447882a22",
+   "features/level_01.html": "2c85e38b9c1c6ccabe66bc2fb8a28fdaf1519b35c279331b8907b8d997cb65f5",
    "features/level_02.html": "43a11a8faac1d4502f05d4c462a8bd0f6943dfb00b2b66a0c2d348501b35fc88",
    "features/level_03.html": "f0ed22c46e35ad2bf5fa6519d9106a841c906f167b7c6c02fa5c420f5a104c6c",
    "features/level_04.html": "837e65f840b53927b1697f240a251300c08c96ddaddd55eb461307bfefeca2c1",
@@ -283,14 +283,14 @@
    "features/level_15.html": "8800145049f5f60620eed8d5334b1e678850e602c0b85b2aeeaa759a423ee6e3",
    "features/level_16.html": "24a3847bb7be2d2fb9e5b098db81da615df0765b74790dd193d8ed57f57354e1",
    "features/level_17.html": "b75ffce9a37872a4903633945954e636d971e8ed580f63a3a3f54e3a05f1ea3f",
-   "full_character_sheet.html": "32b78b95e5f8f075da9547387d9e280f0cbec8f9c672b34cd67a1a3c28569f37",
+   "full_character_sheet.html": "11b14bfb8809ed8bf8899fbb1068ab4f36ce30a3a9cfe6369540dc7104d03ae8",
    "items.html": "6e1dcef9d70bf4ddceaa76642fdf997f5fba9179745f577049c60eab91bb82ec"
   }
  },
  "Y2014ClericForgeBrennaHearthforgeCharacterBuilder": {
   "full": {
    "character.html": "e002f9777225281a99a53765d9010b2a453b681424947c6b51d10c167f363d37",
-   "features/level_01.html": "f68edccac34d0efa458188f6a3610898f8e14db13c6f4478d33d4d15f307bc20",
+   "features/level_01.html": "0c5b07c99473a5e0e14c073b5c8a733353fe031ed8e5fd0ccc53b50a9bb91852",
    "features/level_02.html": "acc1a3f3cf540227aa95e9e0d9fc1c2f30d6f65c9e694b7fb17a9497aa21662c",
    "features/level_03.html": "26ff244bcffaed59b1cac3044e61854274de9b210c736c796629d45b994e6aea",
    "features/level_04.html": "1c5b5ec7d429865be93af1898829db600efd85f306af5a2637604fb8ccfec7c0",
@@ -307,14 +307,14 @@
    "features/level_15.html": "e32d2129dbc32a6a1dee997457ee70f411e188cbc4678268453182645507bdc0",
    "features/level_16.html": "0e1533a44cf5756c73aa77e9f2beafd951e6ae27472a1588580e1f131f0d01f0",
    "features/level_17.html": "003cdf647e6081c386a7f052ebceb7ed8ea7c7b1a6623a10c8d98fb2bdffc18f",
-   "full_character_sheet.html": "c1d16b19db779cbb15b8128bb80daeb55b9c81a464b6d6f29a7d748fb1304d01",
+   "full_character_sheet.html": "6e0f7b535933961242583b19376c669c88a6f58904364ececb609da09673ca9d",
    "items.html": "85628ccba533c2de73b2ca5c17583849d54f2337e1bbbae29ec5e9b94c94cf86"
   }
  },
  "Y2014ClericNatureWillowdaleFernstepCharacterBuilder": {
   "full": {
    "character.html": "1803db518d9013ce4c89d98014ded9e5409208ed079ff5b0bda4ebea19a68745",
-   "features/level_01.html": "e3e73a5745bdeeda45fe683521c32d1a4941bafc2e3f4ce59e37b2eb7e1128c8",
+   "features/level_01.html": "71cde2c8cbade1baf7999d016bf62c7b2445123539977a30dbf86e06abcf68de",
    "features/level_02.html": "37dbc7699552fe2996d97693603c07da899f14dad426dbed8760968b657e0012",
    "features/level_03.html": "c9a78d13567aab6770e6e886b8be2360e4259497675148dc5ffe75960f072d37",
    "features/level_04.html": "77ceaa8c3311d1cf3f79e5315e453bda777595dd82a45bf2ef9b1b94e486ceb6",
@@ -331,14 +331,14 @@
    "features/level_15.html": "abbd5c6b69c9d5f31d470e1314ed6d3748e2853d0a2630133f506c27329fd54b",
    "features/level_16.html": "aa52f1e5eb72fcc6f300520c3c59e48f03dff36c0ee50074684c0dc2b217576e",
    "features/level_17.html": "40e0b4d0e7682fb3c1f18ff13c2059ac39f712c18c2d03d9e73108ba871bc8b7",
-   "full_character_sheet.html": "5df978fd60eb6222d710f285854d8b1f2d8f3b1883b0d723c288c7187e56218b",
+   "full_character_sheet.html": "527a477b2bc99a837f4a985857b7f784658440e328d6b79fb582ba357d5de477",
    "items.html": "e08111d8fd63806f2c228de8ab4729dcc9e0e924062be5834b7da624cdd10f9f"
   }
  },
  "Y2014ClericOrderCastellanTruewardCharacterBuilder": {
   "full": {
    "character.html": "6202ecd5d6df710d8f060f7f6dd544c9aca0f9ecb0b66dde877c641ffd73dcfb",
-   "features/level_01.html": "c96573dbfed4d25e4bb7eeb1c83152b6c8db038311ed1298eae683ae04cffc92",
+   "features/level_01.html": "00aff133d6875c222b31461603fef1d3e12d2a5c9b1cfbc2428265a733ab1056",
    "features/level_02.html": "a573442a69ef28aa0d34834ed0fbe5f58871ebe372f5b1587bcdddf8471a3bc2",
    "features/level_03.html": "5ee7a90522a3030986292d4750a4e493a1b1278d4ef68629509421cd2b3c8fda",
    "features/level_04.html": "331e8e670a197da73c7a4d2d7181f8aec3be975de4f719fcd8be55d73c952af7",
@@ -355,14 +355,14 @@
    "features/level_15.html": "adbd52a0795765354392cff894e763946cc450187a0680ae20caeca83772254d",
    "features/level_16.html": "be2f5aa246c4e14a3d2e77327c35f1b24f60ca2a94407c638746615b5472bf3b",
    "features/level_17.html": "3d120580b56ec5200426f6705b1ceb5874f0e524808aa65f110296a3f655e15b",
-   "full_character_sheet.html": "88bd34c3fcde2a653a2b773106072fdc85385e1923e3d44b9293319f4106c0f0",
+   "full_character_sheet.html": "dcccf0295e7f490cc9d899896750d35186c3935712622d0d6f4098707afc3157",
    "items.html": "7004f711c4981431f5130429187948309646a8a41e0ccf2530e522403d480f8f"
   }
  },
  "Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder": {
   "full": {
    "character.html": "f626860811d78ea27498a08cb24b533393a986610a256e779028647cbb35d74e",
-   "features/level_01.html": "72525a8b1f9261cb727d00f50383a3a5afecfc06f4badbbe66e64bd942424b6c",
+   "features/level_01.html": "a805ddb49d92806a0476ff183a1d5b700b47f28fc63257824de729b9064437fb",
    "features/level_02.html": "1e0c10a02ffc7f9aa583369faf18e0c6885b8a1ced84e47100c7bdaaf466f602",
    "features/level_03.html": "876f47afb4dee6992cf40d6a225eea96c1d97ce8272bfbc954bcdfd86cc2186e",
    "features/level_04.html": "15eda3d94ca5210dc5a74da6c2142674bb0d13940a2929b1fef419cee5166f74",
@@ -379,14 +379,14 @@
    "features/level_15.html": "10d7404add6e69aae25fef1f2407186e956be8a3d6bca7d8d62ae97cc416efa4",
    "features/level_16.html": "ef5884437ef021148f994424ba1e6185df965607aa2a1afb301d4d5ceef6e96a",
    "features/level_17.html": "4b11a76860b324c23619969765c848eb2509bafea2abf9d11f2aa987d8cbad4b",
-   "full_character_sheet.html": "16770f2cd0d88b07d4dc2ded9a4c635e424ff015767b483ae18134aeedbf7c93",
+   "full_character_sheet.html": "26cc40425cfb478538d301438617dfd6e51486c31e533b9bf84809c3a5789300",
    "items.html": "7dae733f1f4ef1d53a815b129f5c8168ed8d160a55f8c740eaece1053cdddd51"
   }
  },
  "Y2014ClericTempestStormWavecrestCharacterBuilder": {
   "full": {
    "character.html": "d45d23268f4c02ebb7542012c7f912999e795bb83d319caf8246a43b82aa3dc5",
-   "features/level_01.html": "116c48d79d4080b5840620b868332d628fd116217a2c37d04fc4568945cdf5a8",
+   "features/level_01.html": "14073248c30ab005bb618a39a3f2e53f4d877af36f09a9ad97e7ffefbd14b732",
    "features/level_02.html": "73288a95783c8bb777d9a67a520095032266997575765a5c20fb08c415de3829",
    "features/level_03.html": "c8caab90ebb4d30393f572e2bd4a2fd959eebf9c89cf11fdba3debbb7b7408c3",
    "features/level_04.html": "96f58a8f42e3f8f3e51440a081b6f58ce655a223ec7568ce4a857b2c5b72334e",
@@ -403,14 +403,14 @@
    "features/level_15.html": "eeb1f2f360046e52f85c6d680e83e9e48b615ba5f4c732bf9137d0576c5a29e5",
    "features/level_16.html": "545b7473195373269bf0ae0a073736c511fca6575687670a08dc3f58b7d659da",
    "features/level_17.html": "93ac140e8c4cd470d3f53e5c7b16b90492a0737ea2962aec99a147bfd2f30cf3",
-   "full_character_sheet.html": "79516b7fc65c72e4f22623e0d5938f4cf54055a08ddc779a5d0c55b1a7a755d7",
+   "full_character_sheet.html": "d644f0694955073b3959c82f4ac6f8d312381faed47403ad2b4e901641f78c83",
    "items.html": "704ed870c6f351ffb6fdf119806cfcd3109248dbd2e439c9625e3e44958bd5c6"
   }
  },
  "Y2014ClericTwilightVesperNightsongCharacterBuilder": {
   "full": {
    "character.html": "f26fe13965b1b61c2ed2de5980fec6f52ee58e865b031a9d4f8d7a9c5096fc80",
-   "features/level_01.html": "5cdd3c74540deaa84cd5638964c36d4c561f7a887da53ad46ca18830bdd38265",
+   "features/level_01.html": "3abb9514bf053a4aa522f6484b393c6fd36bf4a740addd3bd06db3e9d79c39e1",
    "features/level_02.html": "b1ab5d1304d03aa63e448f1a1aef12ac39c7cff850bd575ec52fbc7e24b1f7af",
    "features/level_03.html": "f9f4b2696e672c7613fc201da9d24621e6fa5f40dc961d1d54059fb8a7bf6862",
    "features/level_04.html": "b6748a7ed0b97a3492053a3381dec834b06ed50386175adc4c7d214f0e728dca",
@@ -427,7 +427,7 @@
    "features/level_15.html": "0fd1f250a4122cf41a4148edd1769717397e92738bce2a97a8b1dab7772002b5",
    "features/level_16.html": "083391d0cd9512320491d0ec3ac91396ceff996937d757e9e8106f701d6b7e98",
    "features/level_17.html": "2dacc0a645158699e20d84d4e941ae8f34e4ee6ba99e5aa903a201c6c0b6e137",
-   "full_character_sheet.html": "750332b7d3516ed80071005806a84da71b9809d353d85a9219fa4d437a226379",
+   "full_character_sheet.html": "40398e035c10e3f29f190b903c58d0dc6bf52fbd97eae72761b5fb08ce4dcbc9",
    "items.html": "457557e090c860063932db7f28f5e3ccabf2f3b08c1d23390126a910e3b5a997"
   }
  },
@@ -641,12 +641,12 @@
   "full": {
    "character.html": "408b21fd714a34c698a936b968f1999ac4265702ee3c9f0641bb24319bdc0b54",
    "features/level_01.html": "d2f2e00d74da273cece26aae0eebf1220afa307ca33fd4f7a435a4f858e566ef",
-   "features/level_02.html": "c10ba94c4d4ef88088126036acab38e8eb71e5b675043f5c77017f2a51437396",
+   "features/level_02.html": "835b544fad1c5275de0f188c02bfc21c6281633662b58ef4a7b28aa3077abcc4",
    "features/level_03.html": "b024d7d43d5ce0f07c92afba0762241d8159560e6a715a570bf6130cb6ca1dc5",
    "features/level_06.html": "50782bc51452104798bff46653f287ae9f5be2c1dbcf90e2f8fe9c2dd4222b86",
    "features/level_11.html": "f9cb78aa8c00aff89eafb8ad0d7062c2daf02ff1c1989bde0641edb44c6a34c5",
    "features/level_17.html": "5973bbc2ed99aba3d4fac3d485dfd47b0a0cb9986b02ed55db3dc33021cf9018",
-   "full_character_sheet.html": "a847cffe69463dc1740c5af1f983f2890efab2f31e98a03d0eff46347a30184b",
+   "full_character_sheet.html": "ca6cd0739e62ca4cf05d03320d28acbf48ca397a37a865132e14672e5cb63b4e",
    "items.html": "d32e798405ffae3c992009f3e52812bb3f1848cfe58f914143628a8ee5a773fb"
   }
  },
@@ -654,12 +654,12 @@
   "full": {
    "character.html": "cc29fa6101da23b10f861bfb3523b6e4a244cff633750b1bba8538ec12e244d5",
    "features/level_01.html": "369997d865b99ca357efca5d4d1297cdeaf35cca5464e45b45f0a170cf2b3997",
-   "features/level_02.html": "3b341bfc6143cac3dd40f2dabeeaeadc54450c6d7d322a6fc8f66d4467b68f1b",
+   "features/level_02.html": "2462147cd9e685835c6110a41f181f9efe77b9fdc8535c95cef7445b67cd8224",
    "features/level_03.html": "761e6f10bfb1230e9a58172fd5225435805d3d445ef55631d663277567a048a2",
    "features/level_06.html": "ac1d9215c709898ab29ad7aacecea23ad776bf14b1de2ea37aea2ccfd318622d",
    "features/level_11.html": "7eefafd2f69be137105effd1374e0408825b434d77a559f5a405154805cfb0b9",
    "features/level_17.html": "a0a5b960694a1b4fe771cd8e0c40b36daa49db2743916de2de3ce440e41c0459",
-   "full_character_sheet.html": "a8b28167fb7beaf5a1df0da3fa8e0c045d5f6173db6f4edf2d494b73dd96a380",
+   "full_character_sheet.html": "adc1b4477b3513a74fc2e127d1a65e278e5f183045472f4a1b4aa73386e435a1",
    "items.html": "8f7df8aa9ed316363d80af827c91ca775066d91d6252044e7590693640fcd0f6"
   }
  },
@@ -667,12 +667,12 @@
   "full": {
    "character.html": "9d06438e543f1fa5f01336f3df3f8fd73d2e77581c386724f91d7012119b9a26",
    "features/level_01.html": "df61ce66f17cb722765b5833bce16d9bf7413f4f0f814861402a410f3fceabde",
-   "features/level_02.html": "11df51da0e288e58233f384d654985a5a7d2053a37ee1fcb50efeb8170b33c83",
+   "features/level_02.html": "3282f7ccb76f179c0454a8f26ca03ce9e09e7957151b564e681bf1ff2a3a8d4c",
    "features/level_03.html": "4c5c75977b3ea3b0cbc420a99725eef94471b0cb52f281b09f93a9761e287d61",
    "features/level_06.html": "a4e3f8d439d9e0e34babd06f5ebe4d123c66356109c6d6ca42f0e23252ad4151",
    "features/level_11.html": "45a5d30fefcab0c60911492b91d5e1c1175115f873d073c9f2ac01911faea570",
    "features/level_17.html": "18265f3474be28466ab31d9657cf0e49102e582eac2769ace3aa8346bbd8144e",
-   "full_character_sheet.html": "a268b5c00bbbbad0856a866554eeea8e6b01685238c09d0ff584efb78c8d7e56",
+   "full_character_sheet.html": "3eb5f206ea3cbfdccf89780d87f9205d83027fff7b7905eaa1d993fc9d9cd229",
    "items.html": "1c8cce88db76b6c5775769325a65821973ec1d49aed2ab0be55df4ff8c794e4c"
   }
  },
@@ -680,12 +680,12 @@
   "full": {
    "character.html": "5337def3146c279174edf29d0e9b1489ef3b47f5c682e1916628a34a9c955eca",
    "features/level_01.html": "b6f1d9f3740f6e9b9ab932c54e9817381c252ccacbe3f0f3961618cd0386f2bc",
-   "features/level_02.html": "2a09cf790c9cb62fd818669eff4eb2b985acf363404ceaca7435104cff660980",
+   "features/level_02.html": "933145ef367ec71db757e3cbef8a65b23a5c6b5d28ad8b4fb8aa04295a50a7bf",
    "features/level_03.html": "5bb74bc997587d4c4a446d888897cca66d636ae59d1e571002da2de5c51a47f1",
    "features/level_06.html": "f519a6d95cee9d6dd847f1dbf9c5c3d0ddec95d89237f0b94bc64f918e23f243",
    "features/level_11.html": "5c9789a0a6903bca1c935a44a235de28c21807c384d30a956c39f0f673444f16",
    "features/level_17.html": "f4ece737fdbcee173e6f5fbaf7e0587a5e74d334b253ce3f3588f2d01b057ea0",
-   "full_character_sheet.html": "05eb8dfb44940d015139e454a39aba900425ede45a6a0670b57b2dfd0e4f4367",
+   "full_character_sheet.html": "9c56fb87ae693e1462bc4ae0f00e81e9ed04b4fe2a4cea521fcf63e78e39c789",
    "items.html": "209c2e18464564b3b109501fdf92ed39d70e0a6923e527df1362c0a1ad948ad3"
   }
  },
@@ -693,12 +693,12 @@
   "full": {
    "character.html": "68497351ae9e537deb4be3b0ee8962b4150220e3cd615c0537bdeae8bb7ef0f9",
    "features/level_01.html": "4cd97572b1e84100c38617aaf5d52b3c3fe6d932b80c9eb60329b82c8eed6871",
-   "features/level_02.html": "af3bafff306c282dd088cbda2594fa7bfa93d38a5663614a6f7700dbd2f3b18e",
+   "features/level_02.html": "1d1fc09ac3c705d090c6dbb2ca7b2ec110df0b743af834f96a702a7e85bd4bde",
    "features/level_03.html": "cb6d07521d91cf4999d6583c3c60b732971226140035cd0354f98fa1ce9155bc",
    "features/level_06.html": "72cbee1fcb6738b0900588f5fb99ac7f14a75ab378567c84bc2b44b612011be2",
    "features/level_11.html": "7f53169a71b6238b679d6a5783229146010f25748ed9397c5d5fa890945dea06",
    "features/level_17.html": "9e75e80492c270d834b2b5f0a6bb79999d285e04611734705c3e2c2f5a61a43a",
-   "full_character_sheet.html": "a6c892664f5bcd2346a5c7b629a15d4421523b8f362ae47b2a4e9267c4f04af1",
+   "full_character_sheet.html": "94dbb8b11c01ed93d7b94382aced9707f2edfd6f794b573d1d0e6c1100227f73",
    "items.html": "81e73a7ffc6052b35f84df0b6f37ff541d6c6cd70767c093525138420aa5d18a"
   }
  },
@@ -707,7 +707,7 @@
    "character.html": "add6eb2c936eecfc262da3c18030753d4dd485094c952189a82abb193490e703",
    "features/level_01.html": "8532ecb96c5f9a11bb3ab2916fec08e1a876f4bb5b47152bf7fbd3af098caaff",
    "features/level_02.html": "424b5f17e67eecbedaee9a1f685aeb07bdcae87f471a384774ffb16ae7729a3a",
-   "features/level_03.html": "8a9fffd1ada31c39349c3ba901f253fa3075a543d74141bfa0fe6413004d5554",
+   "features/level_03.html": "cef31a826e30b10d407ba58d408165830b005978781cb9b4b299351d1605c9b8",
    "features/level_04.html": "d9b8b25913e7b5de54239a18579a0161297d885215206a407519d3d532fdf594",
    "features/level_05.html": "c512a0cc6097cce522dd434fd6e36264ec03632862f6afa1354758a1d340f427",
    "features/level_06.html": "b05b5feb93f0c6b9ab34cd4b6fc71f17bf37752f65b42ab5b34d0e293ba2a7ff",
@@ -726,7 +726,7 @@
    "features/level_19.html": "9548e12fe15203b237dcd78c48053a48e058e115dd52d01225eaf9edfe4574e3",
    "features/level_20.html": "ffbc871486d98ceac7a190965626e4f21ffad6ca8ecd1c0b9dfb67b9dc1c31e0",
    "fighting_styles.html": "449a112b277cae78a90fd3acd95f805ae055ff954ecac4b528b37c22fb81fcb1",
-   "full_character_sheet.html": "1cc8e396d222276290c59772ed5868c95f14180e251e0b0784315936038cc564",
+   "full_character_sheet.html": "2bfb0b4ff808ced7b97a5ec17aa861360631414e8c2b5b22647335e4e36d04b1",
    "items.html": "be31811a8523eddc7301e0707078fcd9fd9c1a0cbff22c33e2a67a5923bf1aa9"
   }
  },
@@ -735,7 +735,7 @@
    "character.html": "20b3cdc2b44e36309ceaf43b6bf5d5668b0b6268e5a3404e63b293300e054a43",
    "features/level_01.html": "1675dc9b3c94e4d9753372d09a418f4be5e4220f0ca8cec21cdb83da9c18a299",
    "features/level_02.html": "7a5a758edc59f857e66c5ff469ca59d4ecdae0a695a072d937e31207485284d8",
-   "features/level_03.html": "6bd6fa47690300cc8f2e3e7f8e37be544cb2e73bebb882383a44ff25dcc2bd0a",
+   "features/level_03.html": "065f7fd10d3e1daf2cfe91f2568aeb5536ed3a13e3a7440c3586d74c0864f5d1",
    "features/level_04.html": "6f750fbd1eb1f2e425e1086832dd526e5b895450ab9dde15981d4b8a1b849473",
    "features/level_05.html": "347b51bd6bd2d6b2bd2b91807dc028d6ab9c2b2a1fa1d5e76bf312780099ed3e",
    "features/level_06.html": "f8a7416c46298ecc4743218a1c6db64892aa859196323a7927ee8afecac39a5c",
@@ -754,7 +754,7 @@
    "features/level_19.html": "2157f057b58a6568ababb4e6ca8ecc84819f4476f121e9a5df2233e8a6ca355b",
    "features/level_20.html": "96ab77dd68260be3828f8bb5bc3100ab42c98d0a99c7ab1190670af231bd4b63",
    "fighting_styles.html": "e6373612cba1aa83218d6f70908177596948a63975a51027a2726741a3b24268",
-   "full_character_sheet.html": "92b6f742b9f703be9b21ae1e3b835429a19f74f1b0c136a47060529a0480ac44",
+   "full_character_sheet.html": "a0146fdfc7e6d21e888ce12cd3661b90540566cb545046e5f87fb7611eaf995d",
    "items.html": "5b12f86fbdbaea289b3aadf540ab560e32b8df7631d4bfeaa35839543bbf2586"
   }
  },
@@ -763,7 +763,7 @@
    "character.html": "de562f1e3a35cdd7ddded06126f8068f577cb0ee11aafe776cdc291053551477",
    "features/level_01.html": "6e7de34ca6aeeb3b2679cb2fa030d4de8e84378154c0db5a01c4c063745ccc7a",
    "features/level_02.html": "e836e1d17f2a1f8508389b3a2204e6f2fc67e592835c83b40cd41e88ec5dfd0e",
-   "features/level_03.html": "1715d4c83d50daa1ad798950367fe17d7e1190d872beea6544fecce081cfa928",
+   "features/level_03.html": "31eb9bfbd99e54f9d957663e78de79eb63f0eaa3af17b4b6e03178dcd30dec20",
    "features/level_04.html": "b58414fcfaa3e943ed4f73b6cfbcf9959cac0e29214133c451d3dbb872d77123",
    "features/level_05.html": "2e0812932fa5d5847078e692f0a97c27f045e4771b8c6ed88d76cb2e34c397fd",
    "features/level_06.html": "a4227e15b78902efb2d913e6049a276323a28248fa9b2e6ab79fd7275420c721",
@@ -782,7 +782,7 @@
    "features/level_19.html": "c1292d2178728ad25c1a65a697f55997a53508bb89063d78c7763460b1299103",
    "features/level_20.html": "2cae51b6e06c6049eca8dac9add701a0624b6e4d0db52631020bb19749cc83a1",
    "fighting_styles.html": "844fd9bef09d7bf7f18bd1c48555876acf5963cf903ed4d721fba18c46932f4e",
-   "full_character_sheet.html": "9e28588cc7e7eeab83fa6406ad86bd55d23084f5fd4631aef57010eb554368f7",
+   "full_character_sheet.html": "dd837e9ca861a45c8a9d40e2ef677e5005acbf9025ce971adc0a61499cecfe5c",
    "items.html": "d2f181987287ffc20b6ff704ada0022e142e57efbba36741b731f27ed5748910"
   }
  },
@@ -791,7 +791,7 @@
    "character.html": "e9003308ef19a755ad206375fd94ab5d9c756d65bdf5b2f94172cd7843af1da4",
    "features/level_01.html": "90095420b915f9927c79babe7844e66ef0582d78a0c14454fe205404d2018c5b",
    "features/level_02.html": "a594ee8ef4d4ba74170892fdd52455dd9e8da4d8ec851c97a6b55921fd747457",
-   "features/level_03.html": "cdf9a246dcc3b7563a64ef9ee55bfadb863b3723b30ced18e535099c9ffd751f",
+   "features/level_03.html": "c39fe99d4e485f01298325f597da6ad819856d58d521ce6e38a740446fc7da88",
    "features/level_04.html": "fed88e86b1ae31e9d589f35dc156315a2c11400946fc90430d149005f16d2f08",
    "features/level_05.html": "ceb75cb1d2305b384a56b2cc990bf4dbda98935a8550313f59cad331211ebd88",
    "features/level_06.html": "b717ab3d1e34ee5144f8ec6e87715891e8c79d03707f050cbb26280a38bf227e",
@@ -810,7 +810,7 @@
    "features/level_19.html": "5cb8917fcccab1ab1bff856d3840de778fa080a5206ffa44e50292b42d7fd2d5",
    "features/level_20.html": "aca017dac85f28330c6862ad22d0534cd4c0bd0cae84368604df263fbe0dfb6f",
    "fighting_styles.html": "efefc4eaf1640c95aebf50703b9457bec9a1a98cda8458e67d1ddaf1bebef7b5",
-   "full_character_sheet.html": "e2276795690c27a1af09de1059734f09e1f7064adcd5260437c86a0122e2d97a",
+   "full_character_sheet.html": "19162b84c072fa9c08ef99e2f3731541fbf8ae2ce81e880a5ad13ea8cc79c561",
    "items.html": "c51ea5d9d4d3201beee2a56ba136f617b2130576466968b9e1f4b7b739dd4f3d"
   }
  },
@@ -819,7 +819,7 @@
    "character.html": "c32e3237c45f82feba2baef7cf37859690dd039d444a97b7c9fee413ce7b4b8e",
    "features/level_01.html": "5aea6195205ad45ca9b5315c94d9e09aafa65ce2abf42c6a57cfaee20059cf57",
    "features/level_02.html": "97be00f3bc016bc839aa96265f13e88b84ee1499881e56c2f120cc41f7c3f7e1",
-   "features/level_03.html": "409085b71467297a0758786fdad687df6db580daaa6bbecc9054e3df6e44fda0",
+   "features/level_03.html": "0ea3e882e38794b4f8b699222aae16d54263e7c88a2409dfaabb2ac702a37ac9",
    "features/level_04.html": "95edcabe900808592040b5fef21ca584491426d4852f69e6ad18f4629c28191c",
    "features/level_05.html": "c7c70f2a448b87ae98dcbc0dfde6c146208125fcd0f643136d48b69c89792cc0",
    "features/level_06.html": "d1051be1bd90fbf181faf5747195d54ae51450f7f739bb8a13c3ecb4334b900c",
@@ -838,7 +838,7 @@
    "features/level_19.html": "92993cec9e18ba20030b8bf075ad2153ece9f4b6ddcf1ae351aac70c60274aff",
    "features/level_20.html": "32827580dca7ed130a150479718f68fea5a3049d48dff90413376d4fcfa028ea",
    "fighting_styles.html": "cc40ac82d7bd994c2199654897f700ebfc9e0fb7d28360b9dd7f465609358721",
-   "full_character_sheet.html": "060e4d5cf97b702bd1424b824c05a0b7fcd04a936f970c791dfb4312446ef6a7",
+   "full_character_sheet.html": "17fcec62f796658ac4bef178c62de3d23a4f9d79b62b76a8ef861cce5c460d74",
    "items.html": "d8c985cc10c81059f0d247a0aa86c303f961dace6c53b431045d18ce5b8560ae"
   }
  },
@@ -947,7 +947,7 @@
    "character.html": "c98cf6caaeff9e882081ccf8eff46d9c1fa618987247d0935f89d924248cb052",
    "features/level_01.html": "77875c41f849cad652a24fb1d2efe11f46c490a7fea3b2b9cd1aad44156506ed",
    "features/level_02.html": "fbb0b395fb3be16ce9c0090eeb7426acc19036daf1160f4ba02c9628baf168b3",
-   "features/level_03.html": "b98f93d8aad5b8cf30dee719883ccc6e6026bb09276a8f6b6aa49a2ad409ce94",
+   "features/level_03.html": "f8ad3a22b8112f6e96baadce9f9fcf2b32c9b37725496106e304b158e22e8e49",
    "features/level_04.html": "ccf70a01847cec25271653025d75044ca5786058100aacd858461e2d04138341",
    "features/level_05.html": "b991511c1f169bd635449570b7cc9d182efc35726438d2e4839ab39e71730292",
    "features/level_06.html": "6e256af33fe50c1c09e2fecb8ef672fab61bd9122071b360b5fc394791f9c666",
@@ -962,7 +962,7 @@
    "features/level_15.html": "7777db39acf0b004941982ca5912ee3dc53aed767ee74a76390d565e92020a63",
    "features/level_16.html": "67069941787349fa91ad2c1fd318059bc9b2a81cdbc9c6447dbd1e06cab215ab",
    "features/level_17.html": "5058b0bce53e0c6899d8e7365ccf96540e0f8b70946f2f7898d0898bd5883306",
-   "full_character_sheet.html": "437702ccc7e82f758cd152fca69b83cd272b5c7140bdfe1dfd25fe50db9ab6b8",
+   "full_character_sheet.html": "6546efe5223b494a00a8616fd435eb90c360705a8655f3752be5f032142ce4c4",
    "items.html": "dba8f87722ee78c726f1ec9d824b2140b1244b8a52ebc20bcc682afb06ba7629"
   }
  },
@@ -971,7 +971,7 @@
    "character.html": "c437b9de4957b9742dc8dfe4536f4a35e6e1a9b5e831ef6bd148a63f76f1365d",
    "features/level_01.html": "bafba7d273895040f9f5246a1d41592445e4a0abec293946a34155a6e3ce54d7",
    "features/level_02.html": "287b1fab80d2b80bae8a2a473728e4e093d26f5799f1a67c5daf8d644bbe8883",
-   "features/level_03.html": "774dba698fae8e6123084939b87ecb6f79fcda6a655027e633888b8cd3f897e0",
+   "features/level_03.html": "402edfda16d321c7ec564d1aa49f0c25b895716c7445da6c8319d1922e17dcc2",
    "features/level_04.html": "5271f2fe1454d74645719014b2ce2bf09f7d485c1b1cd2e9b4f56564c533d5fb",
    "features/level_05.html": "fa30564914be4628eedab9361564a24c55b99c46357549243db9eaa4fc0577bc",
    "features/level_06.html": "56101a671be7781cd3d8165f49c20fa8130581b70dd7a172d93a275173b57415",
@@ -986,7 +986,7 @@
    "features/level_15.html": "3e22f8742222f9447eff45d7bafbe3597575e293db5deec4daedbd7e94ee6337",
    "features/level_16.html": "b818419febae22f45eccaf66b0f6c2fd33d19a0740af8c945909dba73c6f0a3f",
    "features/level_17.html": "06ce3ce937e44363740889b46d9aeb03acb93c5403b8ed37445d9494b937adfb",
-   "full_character_sheet.html": "be90b0a70eed7ce731ce3993d579b539ea663617466d5ba091bba4e12a2c696d",
+   "full_character_sheet.html": "49c7b508c205175ec3ab73f9d8df7d57f2ea30dc23a397ef40d22008b8ea8387",
    "items.html": "2c90e3a4bfb794d0c92833c06c14ad7f4315f34430a8cf43a4b38a8157bb8a5d"
   }
  },
@@ -995,7 +995,7 @@
    "character.html": "51e0b88698f7364c87fbe102d8ae0f563fa40eca61f54e3c10de06f18a3d869b",
    "features/level_01.html": "745623e6e66e342a0163eb710f99f50b59b82c7d9f9d5760d853f74dcb85ab4c",
    "features/level_02.html": "d66bd091c4e85e48659bb42a8c88890553f06b9ef841e71513294e782280ea04",
-   "features/level_03.html": "b91dcc00af054387d20d302fdef975a5460a65406517f5e140faf9965a2e45cd",
+   "features/level_03.html": "dee6775d31966d728f4564028ecf5f4d8e7fdfef51c84444f7abde13195b0c8b",
    "features/level_04.html": "f1fcd950911d4dee2f30de1181d77019fd5809bfbf15234eb9c6e67c59fe98c7",
    "features/level_05.html": "629385eeca3b33f6b46479f4f6cfda2cbb53b51297c09e6a97b14967eb936c9a",
    "features/level_06.html": "07facd7a3ae2d368eef89e3410af4b63f0e835b7b0ed3dcdaa7206a5fbbf81b1",
@@ -1010,7 +1010,7 @@
    "features/level_15.html": "7d760e369fe6a328718bc11a302d50f81b689b72631eaee31d77731d1ab6d95a",
    "features/level_16.html": "28321d949fdb18d761a8bb8c681c390a94014f96ed9f8946d7e5615ba2959fdc",
    "features/level_17.html": "274622ac7ae8d96845840abcd2c7dc38492a46b34c9ae77965fe6fe3a8183b3a",
-   "full_character_sheet.html": "aa81b450d9f92128709a0050e3492a558b354f3d8bde174bc20cf83c225468bc",
+   "full_character_sheet.html": "7ce20c39559604685cc4cad4335e5e8e80429a46595c36ee3af8c6721db4ba31",
    "items.html": "0eec06be03c67c95a0872a4f117de1a8541961701b7ca79b90de7a8c886eee10"
   }
  },
@@ -1333,29 +1333,29 @@
  "Y2024BardDanceSableQuickstepCharacterBuilder": {
   "full": {
    "character.html": "53ca16bdd8d7aefcc3d8b4a142d86024514a195920c44fe31cbd81bb80641a7a",
-   "features/level_01.html": "2b94fad980284341f26f6830d2d09b1b012a29591948f407f4fdde5eda1b6892",
+   "features/level_01.html": "f601723e3c8f405851d260b3bb6c6d2a88c73509a342c1f816338bc4674f511b",
    "features/level_02.html": "5cbcfb11575db1ff770eb0903e7d7a2be834647ee1451451980f7735bdcecfe5",
    "features/level_03.html": "f6c33349fe815e0bd7959a731a99bd5eb023ebe0fe3423972bb3dc00ab34c9f8",
    "features/level_04.html": "65778afb5af67008825853a1ecfebbe5958256a766d885f3eb9d76589da0d126",
-   "full_character_sheet.html": "1e707f198a794a030bf153dd88570a8db479b055ecc6fea480ba662fe46a4ae0",
+   "full_character_sheet.html": "2cd539afc4f59df975d16b946d9921c74369a0ebe3da9e681a5ae01d801f5993",
    "items.html": "1801d717cc10d29c41289f4d70713460830021e7f2e1e9cdb1f0d88e5f4b8cbc"
   }
  },
  "Y2024BardGlamourFaelanSilvertongueCharacterBuilder": {
   "full": {
    "character.html": "ef4cafc2e23883c55dd665bfd08e10d148612f9494baba4122d8de52a8c3f86d",
-   "features/level_01.html": "ad756978afc7cbe593008a3b627e83615941e45de5dad6437bc82128866545ed",
+   "features/level_01.html": "cb30ed8a302066831c9d71978548d27a72c2befc848e9ed2e5985f154256fe31",
    "features/level_02.html": "811f74f243f15d54c5ee17458ac5c1ef92bbffb6fab554db4c6be3e5375c7486",
    "features/level_03.html": "45dfe38c981d795006f7793cc9c52a0c665f10a25eceec3ca5285b3b9686f2eb",
    "features/level_04.html": "fe440d171e0a5bba0eccd2cbdf799604cf6bd2488c930eaac3e4d3abd3927413",
-   "full_character_sheet.html": "52db5cc07de015af8e1fae8392744f2071b5bfa826e13f134b5ca6f518fe0cd1",
+   "full_character_sheet.html": "0f2ebbdea46709eb9b41035840d3069a3e2cd31ca5b2ea2a7dd7fa4baf5e9ca9",
    "items.html": "521513a318a20da9a2b96b69d85169b2faa0460143d2e34948c81e914a46864d"
   }
  },
  "Y2024BardLoreOdalysVerseholtCharacterBuilder": {
   "full": {
    "character.html": "5e5e2b79d8d23038d941aab8049b7a9abdc7187e2c6ca0d66e7a563db4b311bc",
-   "features/level_01.html": "1607d31b19811a1885169fb616a544959661be10cffcb14c98f3ab811f4c38a5",
+   "features/level_01.html": "f7a7f64f75df06ede1d98da52d6413904f8fa351c94a81c79a3aba4efcf2481b",
    "features/level_02.html": "9b9c36dd1d9d5a361f6845bba49f0bd438fd4bdfd554f841db118cf885eb9f86",
    "features/level_03.html": "16245f0d7befe560353c20f683b68b899c6648580f6a79d5eeba8c0f0345feed",
    "features/level_04.html": "0255509675a2262853589394b851061769e9a5e8906bf874bdf05093c4cffb25",
@@ -1375,56 +1375,56 @@
    "features/level_18.html": "aa53f5c38271c01bae71325a3cad21d4f787da091777209298142838e768b17c",
    "features/level_19.html": "80f4c3dbd9b0c9c04a89af8f13d45ee5a98b2922d181fe732480d3e98c3f7fe3",
    "features/level_20.html": "9d724bc4fe8e1bc96c73f05fcf01d2d9cd7b80825e32c1c61757d746fb305734",
-   "full_character_sheet.html": "ce070590d113c761fc00724896aa8b8401c2706466214ebaa1aba150181743a3",
+   "full_character_sheet.html": "dbc064d3a2bf150a869c83938a77f6b673990ebdc299b4cbbad3dd7f8ecf9cfc",
    "items.html": "242ca1e20c995dc18b9e434ca79bf8e2ccb1b490dd07dee0cd6b6ff7eb6a813e"
   }
  },
  "Y2024BardSpiritsMarloweDuskfiddleCharacterBuilder": {
   "full": {
    "character.html": "af2726e76522d8322a55c62972f898b86e2b0ec36389fc7c3792042c8e79d291",
-   "features/level_01.html": "c4d3b19524bf83afd0944ce77e56ca5a320e4ab1f862cdde3293a70f01e1ad45",
+   "features/level_01.html": "99a0ba1122df8b1b6eafde22e282a012ca6366792ce4e65247a7a4db25777079",
    "features/level_02.html": "a0dbb8f2cc19b7af19c3d4bb0a36f8524d4a68717c3d977a52c8df263a313a21",
    "features/level_03.html": "249e06dbba33f17a578a4975d4c675d553431b4ed713614a1c2e50ada2442894",
    "features/level_04.html": "308f31b37fee7f3abb65cb715a565bea6e3777d579f186fbfeb18ff9511fcf5f",
-   "full_character_sheet.html": "527415308bf28dc0f6c1f9e519d08ec4c53a2cba2f4cb952689d7d2809250a13",
+   "full_character_sheet.html": "ab6b2fcbcc253fed741c5b2a66ed1a7f8e1a20c47a2c10dd05be957d3ea71852",
    "items.html": "efb63e15bf7b6cfcff5b92b15c69da07a632e4cf4b4b9bf24b18f21545a7550f"
   }
  },
  "Y2024ClericGraveAnselDuskvaleCharacterBuilder": {
   "full": {
    "character.html": "467ac366de67ae347a5428121112bcf7a5cef98d728cc38289b6b740d11a8765",
-   "features/level_01.html": "e771ff395d37fbe3941ff213359cb638e953d4bdd10f11682ffa95d7f95623a9",
+   "features/level_01.html": "1504c1e68435d9dcbc6e697db80d30a83e27b92e2daaf05b5010893760f831ea",
    "features/level_02.html": "d3e3d060740c17fb0b5957900c8abce4fd7afbb5b6ec78f5bf4b187375ebd6e9",
    "features/level_03.html": "2c4ea31e3b63cf463177ac878560a5ad64b379f3872052c3b5124a5a84b46265",
-   "full_character_sheet.html": "5cf300edadd260b87fa70ee76cebcee5243235901aaf67e3508156fb94c56216",
+   "full_character_sheet.html": "a9700ef867c47cc7accf8812ec05cb202e1c6bf559d7c646eedd68baef52be52",
    "items.html": "b8bdd3a23a5f1ed6cb90cdc22e443ca57030b86d3df195e5ae3f4e33d24fbd13"
   }
  },
  "Y2024ClericKnowledgeIolanthePagewellCharacterBuilder": {
   "full": {
    "character.html": "92b462c95d0ef77167e49d2abcd4868484301f62b0dce364b059d7f3ffe66db4",
-   "features/level_01.html": "88fb5895837a853f8702f3e6395d1d87952194413684a25c6e625f96902acaa7",
+   "features/level_01.html": "86f50c7e44b7dcd577916e74547ad5278992687aa7a44685db9bb16f42ade324",
    "features/level_02.html": "6a697afe4532e855989a088760a9a551e21c4a1251fc16ba55c74de7324229f6",
    "features/level_03.html": "91916fbaa831e5222836988def2ed28de059556e0e7175d3cd6ed3f5767d623f",
    "features/level_04.html": "e4da09e7366d367f7c9a86503bd16498028ccbec42b4c6a97fb4e73923827033",
-   "full_character_sheet.html": "53f2d4d6d9d9628abcc0aa0c435a6b9c39d6a4330b47cf62f3aa967904b0f0a4",
+   "full_character_sheet.html": "685f2c727b8e5a9afe6ffcd4b26c40431b4588b9f17596119914fa83c03fbadd",
    "items.html": "b98c2ae579e914c67a68f0794e4481f546687a00c3074884f0b6279a16aca2d5"
   }
  },
  "Y2024ClericLightAmaraSunkindleCharacterBuilder": {
   "full": {
    "character.html": "f67d9752a3b7ad5b96775a6f21d547b907a4c07630f5d81884fd0b4f369eebb1",
-   "features/level_01.html": "5f90ddd9e0746be499071bdd150a6dfaa41f44bdd796722fc95b78661e97b48b",
+   "features/level_01.html": "e6c1026bf58c6e6f6efacb206c5a77d9a4e937520c899aa6cbcdf152e7802fbc",
    "features/level_02.html": "315c529f8ab7cfd8a8758fa628eec4e6fe88710f7eba6851c171a3169274151d",
-   "features/level_03.html": "afaa344cf25ade1b35d05256509e7ab054cf56e5d4653dc15a0df691cb5a2482",
-   "full_character_sheet.html": "0c0946284e62336fab78c710a6025454baf864baba4903a612b98cb1c856d50c",
+   "features/level_03.html": "30b1d89a8f365e14859757659bf167fba7b121d9ff2e5c989871d06b8e832043",
+   "full_character_sheet.html": "4bcdccb3687b38e82a55a776cf0b3730d9bdd2040cf16228cf665d8a3901717d",
    "items.html": "13256a671d917724b0e260bf5f7a9a3e48effaef63a78a65dd4d7e047c4325de"
   }
  },
  "Y2024DruidLandRowanThistledownCharacterBuilder": {
   "full": {
    "character.html": "09c90ad386d56e4eaca84c5330bdac12553216da9341f35c2f76e0c4880dbe60",
-   "features/level_01.html": "98bd16d42eae24b2830700a4d3677d64a949f48b5942e5535b7da5dfe2804375",
+   "features/level_01.html": "d861c5101bdce0a3a55d369254fe8a64400228c483a51941c2b3485b9572b1c0",
    "features/level_02.html": "891294a2ea511a170f64a4cba23f3af3aa7c8eee04d86f276d6a51b244f1b403",
    "features/level_03.html": "30a22a0d7ecb29ee77d94517fa0b2e741af963a0e3f07b015843b805328be2fe",
    "features/level_04.html": "da9c0b8563d5c62dac3b4a57c2cb91b6e00d387123f9a940bda8c07437a9ba68",
@@ -1444,7 +1444,7 @@
    "features/level_18.html": "2911dd14a78ec9f607002f80605d87e7aabef43a3d435d2c9b05a5865835b0cf",
    "features/level_19.html": "c3b71a4c60e6919d8c68fc2fe30b632eddfc8a97fb1cd5fab67357ef5bd45263",
    "features/level_20.html": "e47f684a522cacfd8d37b94d2cb937e5b7a6edf5b12b735ae6bb4174e2d35ed2",
-   "full_character_sheet.html": "77acf2c74b1dce40ff82e294fdaab4ae659d8c403613bb6d6be7655da679cd61",
+   "full_character_sheet.html": "d32b08bb91545c5ab18791efb3e76a6ab6f8c45cb593e59f02464b96d8a43ab6",
    "items.html": "55aceb82feccc08e7e4017b4d267c64a231cf15698a08da861f5421afb947ab8"
   }
  },
@@ -1604,23 +1604,23 @@
   "full": {
    "character.html": "310f50465cd3bd0af3fe05fd7d801d7eb5aff20a853830628e3f96198da8210b",
    "features/level_01.html": "3fca259e9321913f552de21b35a9b7909894aefc681a1c0ca6970fdc953ab377",
-   "features/level_02.html": "ae87096d89787a39250a809a3de5fe5974fdccd526a04c73c227c9de84136592",
-   "features/level_03.html": "1c63f29489142af35d7c0d267d77515664a97840d583b6abf3cbdf81337d9d77",
+   "features/level_02.html": "a0f63dbcc43274ca08044f1037505dff37f6cfa38915c70cfd8a21dcadf56471",
+   "features/level_03.html": "33c5283fa7779a1451ce2c0c6ff3448d47d5931d586fa5e009c822ec21fa4d2d",
    "features/level_04.html": "3eacc3e7a86fc2be49e257f4a69b206d748d023eaf8add5c7b9f76cbceba8201",
    "features/level_05.html": "e6f73deebdf8480c26fb538349896ade45719340d2e3e8093077648c5889b80b",
-   "features/level_06.html": "6dc10ae1a93c5abf72697d2764eabaf6e247d8b9f9c88d40a75d79ed50adeee0",
+   "features/level_06.html": "438e9807af7c3b16f1ff2c55bb1bcb3767fc25349db143af76d80dc7ecc30a3d",
    "features/level_07.html": "5c82fc70ca66b66ec4ed038761c9c06d0bcc34000c106bb49e59da23da9926ed",
    "features/level_08.html": "db4479094f5dfb966e2cd2cc815590ffd486c501d1b0a1f9ae926eddd6b8cc7e",
    "features/level_09.html": "16c900486ade61a873285807314054c112b21493150c58f5d536f388b597e010",
    "features/level_10.html": "df59515df91d7d155467733b573e1b15c0880dff028e954201545696d9bb2191",
-   "features/level_11.html": "051a354eeb8ee391c03e335ae05dd3b8fe2f7702c9612ded89e6a4be6b2f4c39",
+   "features/level_11.html": "05b02b023d1e7d81b562245f6705906d5d9f100a91c6e71130135d3b75401b0a",
    "features/level_12.html": "3bf1cbf06612195a6d85f1d95614bf235d87cc82cbd5819d1b25dda596acfce7",
    "features/level_13.html": "15320bf3e21e4b7f3f31589509552bcd5d1e4dd511f3f3272cff0f48ab37eb44",
    "features/level_14.html": "25f09d607833a22ae4f898651961696c090cae0e6ca71679eae3a13d0dc06de5",
    "features/level_15.html": "faf7fed50c61972aef2112da773d3490c82022e83d115cc88191f8dfa8b3ddc3",
    "features/level_16.html": "bb362631dd3ed2501afe00e88c85919892650116e5d140c97fa244022c24d958",
    "features/level_17.html": "90fb8a4defa9deb3c0eab8069a2c4532736641455a32bf624c1e6a3f9565dde1",
-   "full_character_sheet.html": "ef519cc5b606a7f37b75cc665a60253f8ec9bd005818cd8b3346f6450bd41183",
+   "full_character_sheet.html": "e3b8310e260fcd46e112db218a1929da5a956f7a60ecc9a46e8b455b4c2ac51f",
    "items.html": "cda116470519f6a37b9fbe72c3f5b050860c55b68b5418878437d52e8a44ca6e"
   }
  },
@@ -1628,7 +1628,7 @@
   "full": {
    "character.html": "ab3a03631edc2285836f7b748b2c1d5008923f2fc6177f6b45b2180ee0476d85",
    "features/level_01.html": "1333d7abe045a6bc83de202bae10fc3993d92354f3aa45c05c0e3c9ecb2ed0f5",
-   "features/level_02.html": "35e0f0802f130abf1010ae1a1da01804592ec219cf2b5f67358d88d2ef28be9b",
+   "features/level_02.html": "3e038669a814fc60160f74aef2367c66fa74adadc297fa802c5102f3ba795b01",
    "features/level_03.html": "e90a7789f7f2c1268c77f26279356dfe8326c505e91df483ce7e4ecd0d79967b",
    "features/level_04.html": "42c9d0c2df248e05bd5fd80821eb2190399c119b2b2515ce57b1fe242f4b83b8",
    "features/level_05.html": "c2c1bd486b8c92be9df1eaa5a39cc7d71a065f9e75cf973377593734a694f835",
@@ -1644,7 +1644,7 @@
    "features/level_15.html": "b0589bbfbfb19fb07d072778c0066716fec4a8fe3853086f1c7e4aeb84a601b2",
    "features/level_16.html": "4309cb51cbe3ce4ded2015af0fc7230f9ca682d7ec06aa236814db66398a2985",
    "features/level_17.html": "dbe02f720f649b0ad2ebda1471e548b0ada2dbabdac052b23f8758d6dfe87833",
-   "full_character_sheet.html": "62abe89064eb1e72c2f4b9fa45e384d1280d666933bb61b0c3571f6c2b320b76",
+   "full_character_sheet.html": "3d732127a7442be11650aa6acd22742e428271005fc4b26821e7e1cfc919f16d",
    "items.html": "48655710962aed28b725c893293f75ed7b00b4b1f31f3b9480af5bda5a12b39a"
   }
  },
@@ -1652,7 +1652,7 @@
   "full": {
    "character.html": "731ded47ab21ca8dc4269a08d404a29402b800ffe35efc291e65460de4461a21",
    "features/level_01.html": "6ca18d373ce8975bb0e9849adbba9fd9d7a701d72d0a8d9fbc851c299bba4d0c",
-   "features/level_02.html": "1d1e8be050ffe98be2cc0152ecba3eb127cc5414cf93a4e42a8e6b48dd475878",
+   "features/level_02.html": "56109853cf7d692088aae13b6b4c877f327f11b6afc3eff63c757083c8a0cfcf",
    "features/level_03.html": "a87a2461302043e79004d258ca0b4b34354e9599bf8ce6ade763f5386f3c05dd",
    "features/level_04.html": "8e41cfc42c572b4b1b331dec63ca1fc21f63b31f2fbfe2c2b0d76aafb84eff50",
    "features/level_05.html": "7af165321f57646b1c89483e7be125b8952b8d83d04341f6bdde21308cbd6827",
@@ -1668,7 +1668,7 @@
    "features/level_15.html": "f5727ba292ead6cf7737ee3b278e0a2f43c8efd194ce34c6641406366702f782",
    "features/level_16.html": "81cef6bae2ea563167a680c5890430a0ee4fd067869e7f42581b4176758410f8",
    "features/level_17.html": "96053d197cc2d712fc187aa32fbc9fb15e135dc8c8c8d15bb6cfc2844c139de8",
-   "full_character_sheet.html": "974f06dc5814ab96f85f29c1a466db8e72ccd0b06fc7600531726e95a1a989f0",
+   "full_character_sheet.html": "7f92cc15ccd5065610d1b01ca4fe1512027b3c55f6d7634b01e36b61388fe038",
    "items.html": "60c43eb2336d36f763afd471c9d3e12fa999c332f6929e486a94fde7566968f5"
   }
  },
@@ -1676,7 +1676,7 @@
   "full": {
    "character.html": "34c16f2b866f2de7630b01e3910455d2f2314861d94f13c618004e0962f8ec7d",
    "features/level_01.html": "1dba829d72f94b2864cb21fc2f9385505fb1b8de74723222809ae2d807d0f71f",
-   "features/level_02.html": "1f880bc90d43a5e3ceee66a858b1983a52e6a5e1e98d0224bf5b4facd1aa6b2d",
+   "features/level_02.html": "e51af59d87346f55bc67847bb1d548a0e97909f336ea5024604d848d7cd9b0fa",
    "features/level_03.html": "1c8e20f7854e9a1137eb78a07e925cfe89e6296664041cedefa101ac9f335e43",
    "features/level_04.html": "8caf37838ea42d6b26db4207a287b937fed8aeacc04d85e5a94afa8a5c0fa4cb",
    "features/level_05.html": "e90a25d6c5639cad577eab385bdb8e1c4dfc9a3795efa187479dd9cb3bf87ae7",
@@ -1692,7 +1692,7 @@
    "features/level_15.html": "22a0075634d19f20eabd857835dd63be126c0e513cbb921952820c63f58ed5e6",
    "features/level_16.html": "eb2ab24b5922af39a0d67fe7fa149d3e48fb28581d2fba0ee74576b69d337c30",
    "features/level_17.html": "b3f2d3f1fdef3a937de719842181b1bb5de3a9074050181d01fdd4dc2f1e8f9b",
-   "full_character_sheet.html": "0e098023ca693475b0349ceb2495f70901aaeac1b0461e4025396560add1aa6a",
+   "full_character_sheet.html": "39233d1a52cdb5c8562e0f6b7465648e2120b7c875ed7f4f071fb8d2e91e6e10",
    "items.html": "f45397f66d726f69ddfd12698d9ab585fa0f314d3435d3ffe43462d2f9af9de0"
   }
  },
@@ -1700,9 +1700,9 @@
   "full": {
    "character.html": "6351d51f2bbe95b29a00640f74ee9e7cd9680d980b4e3c524b3ec486291dd6f3",
    "features/level_01.html": "86857da08d7f30dbc3573a41613ed9be74e8da45649fed56050646b1abc47de2",
-   "features/level_02.html": "2757da908f2b35040012f9d6882c57fc7329e4964deab7e83f18b1d08a4f43e9",
+   "features/level_02.html": "d6c68e82af291c2d77c6d309c9b20e5e661c8d4eeb3b77f062338802ff86794f",
    "features/level_03.html": "180619ecc4cbdbbaa7cc3e0da0210f4f1eb749d76fffb6315a05dd6c78a3233e",
-   "full_character_sheet.html": "c79d479d04ff88da3bebbbed6055ca1d7d917af898fb474c764042e654ec66e7",
+   "full_character_sheet.html": "556a334b1779b3174e0571095399baa293d634dbcc39e015224f619640483372",
    "items.html": "1df25d0868d891b5d0f5e7b024a1547484c432b4d58fddc63b8ff42e38960349"
   }
  },
@@ -1711,9 +1711,9 @@
    "character.html": "ac4e71b3812edda59f1e360da595afc074a2160eeb9e0efe7e9c586ddfea6185",
    "features/level_01.html": "3d80a1bce3fa07b3d46059243adb10d63e3a51e016be6704b13dd389ea60c1f4",
    "features/level_02.html": "b1bc918b694df0bad1df9d2627eb60c8aeb0642a235251a86b217d455d088718",
-   "features/level_03.html": "48e7cbf0b4d0871a9c53ef84673303303d8c7645cf1577faca50adfc1943d971",
+   "features/level_03.html": "31d917b708f3c502c1a8eb378649827d52d8564656dafd90abf8faeb93dd0b49",
    "fighting_styles.html": "3c5b3318fc18ab967cbb1fd052c696a1f409f3304abfb334b875f5becd7a4428",
-   "full_character_sheet.html": "3f312f626cea4c4a9406de1f1d0f8e979808846dc628187b331824cdbff27bb7",
+   "full_character_sheet.html": "e97686070b7c900cbc1feac824f836967fdd15c15f1df5948e3c0e15b338850c",
    "items.html": "89d0f283ccb4f0b5acd97f029b198290621aaeccd6793b351bc14a26f887a0ca"
   }
  },
@@ -1722,20 +1722,20 @@
    "character.html": "14e75829a6fef0a7d26434514af5830a5b9046cdb318b445c4a0647c3cf3d3e0",
    "features/level_01.html": "1d3078557975eb875d9f1af23e4ca744592f41d034166e2a5706bbcd20dde1c5",
    "features/level_02.html": "cbbed9b4ef2b1609e3edd31b0b22c59db10c7701c8a80c5501debea5cff75825",
-   "features/level_03.html": "d4d4cc0b05e70c40b57669f2cf6c71f9dc82ab9ae44564c95962d529c9f58565",
+   "features/level_03.html": "2a5887b8600b20930919be2d5da5d858096710ded174cd4b5426900ee0683c03",
    "fighting_styles.html": "2fe90ee2f9c76bd354da8fd55138bd5ae9a301178b8085bb9ba9e1682b006f59",
-   "full_character_sheet.html": "e9a1ab76f3071f5b62c0fc85288fc3254eb850bd126eef4da8132b698c83d3a3",
+   "full_character_sheet.html": "616c32a3cdd646eb29fcb5b78fba58117ca461c92be868f02b58254823ceca3b",
    "items.html": "1dd81dbc8870378bc5c5ed45b21f35bd7f86ceb90bcf17a6856c8c4a1186a553"
   }
  },
  "Y2024PaladinGenieJasmindraWindboundCharacterBuilder": {
   "full": {
    "character.html": "02828647b5c0a1b25d50ff37e6783e0ea53a469587ec945afc2aeac94feb9394",
-   "features/level_01.html": "6d1873267bf5d5fcc89267a13b6f6c4bb42c1bbe6311f7e52aefe7ff857c29e0",
+   "features/level_01.html": "d9c008b837e202399df79891dd2d0fb1b19895f34e82ca385f46a82df9d098e0",
    "features/level_02.html": "6490c011ac082989a6688a79bf111fcef282499768939aa915d0307d4b26710e",
-   "features/level_03.html": "99388a4596446b699ce8200d1eeab060ce97b94f26908f6673e0bf59cf992552",
+   "features/level_03.html": "46f45bafd0b9b351f9ad31e79e65baa96f19e0e2c6938018cd7291cbe326f6fe",
    "fighting_styles.html": "aa75febab75fd9971bb4cf5d23ac11a284c079b58e42498a63a490a31379eab4",
-   "full_character_sheet.html": "d3de2d8574e3d7b61874dd1c9b4ca8d9055cb4a13bd99379d2c4db069a36a51f",
+   "full_character_sheet.html": "3e041f665a4fa9e3c7916bb8125e694a37d454ec89f05e8fd0a0793c37423eea",
    "items.html": "ef050d9b3f7edb05ddc949569870ba339d7c36adff8df7b46f991cdddfffdb48"
   }
  },
@@ -1744,7 +1744,7 @@
    "character.html": "b896c7f38e4bc3f9f24918a94d84a3cb40e1be2fca0065aacfd1f05ff35299bc",
    "features/level_01.html": "2f3349b0b9cf219e5e122bdb451aff11d9e503c2664db3e87341f119b91551ff",
    "features/level_02.html": "45b29b33e0c69356840e2136a1e745b36486216cab8e00a4334c5bfcc0e12da6",
-   "features/level_03.html": "e1b85fea9e7feb214b0020e7b2219a7ff74ff81981edfc7f771799593facee20",
+   "features/level_03.html": "f7a27e71cae77865509e0d8e55b637d7029a39b2c7678cfbfa9ce33b900a521d",
    "features/level_04.html": "d5681d8022aa87db972931b832e4a8df0a00217bc255d4c68ea31622b45e0784",
    "features/level_05.html": "6188a069f9ac4f8e9fce1c22e8cc621d13912c6c4af41ba3f7c43284fbfe9024",
    "features/level_06.html": "a32a35d28a56e5196580d2deec5fca35da3b48ebc8e4d9b8a5d9d1f55ab498e3",
@@ -1763,18 +1763,18 @@
    "features/level_19.html": "86d4a2caa91f61f0ed73ddd8faeab6389c0775f1cfb941e863affa983cbe3f6b",
    "features/level_20.html": "6dd9d73799497177d7cc1c07866fb6395796a1533e05e3db5841bc77dd09b6f6",
    "fighting_styles.html": "3327c3c00f9b7cc4db9880c6e1333f2ddfc2c2d802b57a5f657a3f7dce7e81f4",
-   "full_character_sheet.html": "1af0b88cdf9b990966fe50d240712632d0a8d1c9ade1f66e42ba2c7b7b0e107d",
+   "full_character_sheet.html": "abe05d6ba316c4db1b208690bf38e584ef149726e6dea529457e8cb4b23897a5",
    "items.html": "c6f7544d9d3c66bb2d05d4844192d0b6192703af74ed476a98d759094e5fe5cf"
   }
  },
  "Y2024PaladinVengeanceSeraphineWrathboundCharacterBuilder": {
   "full": {
    "character.html": "4e4624b3fd7e55da8304920dc24cae5bbd010f46ccccefdd9afa60b3d11be839",
-   "features/level_01.html": "19295ad8589dd248b340e5ffb96ec319ed1b61c5e4992b9c784f840232655a25",
+   "features/level_01.html": "3dafa6cd9f6801789d0e0f7a4ed06326b78a5dc83b508eead7aef73d26472922",
    "features/level_02.html": "4730f7e607e36d66aa64fd0b87a25280f6ed533a7948cc02f025452c21c050ea",
-   "features/level_03.html": "46a5f3d6a53df2c5768c3e5409af46151d0ea52e7a37083641484cd58c6b4aad",
+   "features/level_03.html": "d78e8dbd9357433767719185cd9d28c3fb5677cdf87dcf08778c031e216634fb",
    "fighting_styles.html": "e05a26e8e455db48843a1e25be34307ebe13067af80433fc775b37d6826d8e10",
-   "full_character_sheet.html": "037973222d29ef7ce39ba5e8d05dd119d06ebb413a3f88f49889d013f0f304a1",
+   "full_character_sheet.html": "c19862bb038001e35a711ab5b9545a2e086f01549d102b329e87933f8f05ef30",
    "items.html": "1daea724372dbd1122057633c1942d07786f58d8d8264dbf0733c6cc049a1dc5"
   }
  },
@@ -1866,9 +1866,9 @@
    "character.html": "765fbe100de67b780bdfe8aee968026849bef6f74e81fa9971fca3e5e2959d8a",
    "features/level_01.html": "d989320fa3168dec9bd3d50b18bf6afd9e691923227de14fa5f3a747eff807c2",
    "features/level_02.html": "21be405c28178f119bb3d9a7ce41b0c700206d32781a0f4ff8017afea739b1fe",
-   "features/level_03.html": "b2e401cac86cfa0338d10c123f75636aa3cf148ca5f57e6f70d9ba68bb49a6c1",
+   "features/level_03.html": "2621f287a981a05fb086235909318d2e5a27febef3012c21286fae04803a9cce",
    "features/level_04.html": "e887b203544847e7eaf2a162f05c7ff4dd2a385870cc55f3da3ddcd0e1c20112",
-   "full_character_sheet.html": "ac23ffda0b4214573d9c50b6c6c844c7a98274a486c0a9e58c5432ce35449fa7",
+   "full_character_sheet.html": "fd1dcb69b144f349f801df1bdfa579af2acb1f9312ae44d4cd2f4fba90087e8f",
    "items.html": "2fba73163b4c6c4704238224409c852054d813136fb37deb00b2dcd218a87fb4"
   }
  },
@@ -1877,7 +1877,7 @@
    "character.html": "23a94e6ff22b10a4ad14a2b7b1930949a91dec9fff140729a965fc691b88866f",
    "features/level_01.html": "b4b9be6388bc85c5d45154a3a4ca957dd5114f71941949d617893d3e1110c694",
    "features/level_02.html": "c887a9fde84e4de0c263b9f07fb1dd7de3c88541f07ac56eaa2d4b4b0fbe2a1a",
-   "features/level_03.html": "c793f82e80e04636e8437a3b5d8104a1d5957ea4ba6cf86634be9ec62e8fef67",
+   "features/level_03.html": "838006a40527a1ebf197cc46492b79fd6851e49b46044e21c74ce7faaf649237",
    "features/level_04.html": "4ccfb396097d06d2fe0ffdedaa061c0a0478377f480da3c3bf50889c6696aa63",
    "features/level_05.html": "839b2b1ceffc68a6fc9265685f4b95e489a8e1335b0dd95de1b0bbc865748ef4",
    "features/level_06.html": "0b2003b1de0ea99b8bc3b35f829cfd6730b9671ddb8cf0faee112f9248a7c716",
@@ -1892,7 +1892,7 @@
    "features/level_15.html": "243d1ef1eb4481ff6de9d3d419a7534b2ba4684fdfab91a1654be7215d8aba54",
    "features/level_16.html": "e923cf1dc6fee6e5732f7714fdaa37babe39e84eaf27a9e7d8db3ded0efe06c4",
    "features/level_17.html": "33e6b13859a5ac08b0c1ced766d2eaf5495708893fabd83c09a8c9580c0544c9",
-   "full_character_sheet.html": "0da8fbaae43df9388eccd5720ede27593f4544ad22a47112020f36c3135159e8",
+   "full_character_sheet.html": "af7725291e90b9a60a78b4e26e726655de51fd97f017ff8ced1ad6d60629d532",
    "items.html": "d9344edb84fa3349e12a118493b2201da2e0c7ff6b71fff88acf26e709a19df0"
   }
  },
@@ -2026,18 +2026,18 @@
    "character.html": "f3a0390c8dc6e94f974de53c1a61f9d5e6d350c63c95d89877a10bdbb67e4d02",
    "features/level_01.html": "98c9beb218f4cbc1804be1b4eedbcd5eb739b606d31c0e8b123e260b95dafc22",
    "features/level_02.html": "3acd3480a1364a0a445acb6c2f8a08ab8147169296cb41ad1263145eeeab53a5",
-   "features/level_03.html": "e56eab6413d1276d12b421d583bb10d8b9597eda1deeb21b02afcd40c572c5e4",
-   "full_character_sheet.html": "8b2d268dd0ff05c228c9cf1cc202b04e4ab602d4cbfb7c4925b8b48efb674bd0",
+   "features/level_03.html": "46afae99cb6a8a3841c00558def809784da8430efc7ecb8f391f1e036c8c8cf1",
+   "full_character_sheet.html": "9222b29f1538bf3c01a7eccb664f402844fe6fb74720a626f792d74add0cd2a3",
    "items.html": "51ffc2c5b133073cca9251cfe60e36a4356f75498f88fbb9a9a626d54ddefbda"
   }
  },
  "Y2024_Artificer_Reanimator_Dessie": {
   "full": {
    "character.html": "1487dabc2dcb555c52b7ecb1752c70854f1a9274a17a9c9437f5dffa16abddb6",
-   "features/level_01.html": "52bf55c7e0b380e8dfa4ed1eb10341d95d1628e30b476c4f16640d6f9b889624",
+   "features/level_01.html": "0c193534043ae39dada9a9e0c9bc9ae4a82c5af22b8f217a4bb954b71f09a4a7",
    "features/level_02.html": "61ef7ea774985b8a494671f6f7b5a4366d4443af83152fceeb465b48a617ca21",
    "features/level_03.html": "ad058ba2997376ee5dd5271554cdc7e801d068aa3d32d979dc35e2fad4618767",
-   "full_character_sheet.html": "cbb81982cf01e9e602e109e667e89f485b281e717eb6c973593326e8f3cd213a",
+   "full_character_sheet.html": "838d065cd218b55a4a7d4652c14fe9f3ea5156c43eaac8c367514d798b54b1bf",
    "items.html": "d9469fd00dd65de7e1133cdc93e44e240c8926c1298754351b1b4458d9dad9be"
   }
  },
@@ -2065,18 +2065,18 @@
  "Y2024_Bard_Glamour_IselleMoonweave": {
   "full": {
    "character.html": "ec0598dbebb2e9370d747111ea26159ceea635e27e7d359c777949243a26f81f",
-   "features/level_01.html": "5287557e907663a1aa3c4243be70d2805bec911c77af0cbeeb8874d1df48e518",
+   "features/level_01.html": "9c7c57638bafe599970cf23d52b154c7503948285cc08914b6745a755efe94b3",
    "features/level_02.html": "8d11b9ae45bda96997ca6ca0f270925f552fe5e975c82085bd3ddb3423452f59",
    "features/level_03.html": "36d6faeb6538000c276948881906d93ccb3c4f94e5806f504cbcaf8b2136330d",
    "features/level_04.html": "4b494e8f8643bbc96d5e2c96250c1eb670d688380338019667550841bf5edd01",
-   "full_character_sheet.html": "dbe880dbf077177664ab80d9ddb0844450becd9337b1fe39453a4d31ed47cdc6",
+   "full_character_sheet.html": "172c82a3ac5d18b6d72c4d21311e892e8b1437a868c81a76e2a8a9ae02d1028a",
    "items.html": "462c220520451c4fd6504d3e105e8d8ba590e28ca804e1ccad8cfef51b207a55"
   }
  },
  "Y2024_Bard_Lore_TobiasGreyquill": {
   "full": {
    "character.html": "05e91bc76952bb128a60e8eea5389f89e62f17bde5e75a89342787510a97e8bb",
-   "features/level_01.html": "848938deeb760f5ff03959aebcdd17cc68c6f978fde6d49093f50f8ea64b091a",
+   "features/level_01.html": "572018319d814acbc924dc56eff54b89e8c7fffaef6018726fdde55057cfeafb",
    "features/level_02.html": "237496932d133b7513e13fc9746355e0b4aca89319cf63a674453c2510a91d21",
    "features/level_03.html": "bb26afc8671b8fda736fd976429d32800d7562b412bf70f4b5f661a17bb4e773",
    "features/level_04.html": "317ba47c75ad790b094b79a25cffecaa617ddbe828ee88e2ed0a801fac0490ea",
@@ -2096,48 +2096,48 @@
    "features/level_18.html": "8d2fce3dbe31a30fad055a029a93edb3b8f82db594853f48894082e1d3425db4",
    "features/level_19.html": "320721f7ad21847c1a892be65f0172d67491759a468724c40fe11f8a1e411cd2",
    "features/level_20.html": "53d0a8c25ff7d0685f865858c83d35180109cf7412d6983f23a044a66206e30c",
-   "full_character_sheet.html": "9fa5f6b94510015fc88ec2f77043f230113acc36bd5901f42bee8b41763a6137",
+   "full_character_sheet.html": "ad6fcfaee7efebd791dfebd527353b07583fe8b9726d6e257b958b766baa0348",
    "items.html": "833bc11acc8b3a0e605447996b6c3ab33aa298a5488c785d6cd670003d8ba884"
   }
  },
  "Y2024_Bard_Valor_Clover": {
   "full": {
    "character.html": "afc305eac89f033ab6ed6232ce03ff176ce7c147f461192c6b3dca8ce329a2d7",
-   "features/level_01.html": "3c3e7db27db95bf37fdd323acde113164a3d93b86327ca54af23f1a081cabd2b",
+   "features/level_01.html": "350f461e6b656e2335bbdae8237867318f39223ff31b1185784f7529eb3aec6a",
    "features/level_02.html": "2ef7cb3ca55619afc54c60c17d002b41246a9abeed24c29df2734a6ab5a21c27",
-   "features/level_03.html": "7286d2a741659d28e04373cd093c451aa22eb85dcad90a48445c53b0f225455e",
-   "full_character_sheet.html": "c21b49d4a52dbae8965c7a5b387233970489e2da0ae641eae34de078738953c8",
+   "features/level_03.html": "2c9da923d75b8f130058b41244917546b2cf833131aede0c727f6d63d3994031",
+   "full_character_sheet.html": "911fabfe4fe66e7a89379a8dfb5eee09f05a12175c1eced3cfdabfef45b52381",
    "items.html": "fa2de09edb55d7eb85555f0e8f5fc328c2c4ff7464eaaeefa9f2aaf704fc6302"
   }
  },
  "Y2024_Cleric_Knowledge_ThaddeusLoreweaver": {
   "full": {
    "character.html": "f9e6fc6d0fc7ad30ed1cbc1a2fba5fde50f2acd20d44f9b884e47bdc295df0ab",
-   "features/level_01.html": "63adb70e7856135192c6b7deddddb18a5a6e0a5e28e354fde544bdb408734bd8",
+   "features/level_01.html": "90085a8524e570d32ec985c3e3f1898f4824778f1102d683ec688ad780c16445",
    "features/level_02.html": "e4992179f544d11cc1e3d9d60a98ae3a5d6bd31666c9395887b395fa5d169289",
    "features/level_03.html": "10228582004e397cc563cff731b1865750b7e5dfdac5134e6f61837ba0d88438",
    "features/level_04.html": "52b658e8297017f8a740ea761f699928f4d97fa1dab1de9519d7ec7e9f96c457",
-   "full_character_sheet.html": "e3ad4ef771c8ef45b0697d30cf537bb3e254a078f17233946e31d88f4ee6fc50",
+   "full_character_sheet.html": "40086e14e64cc775d9140f4db99f9d07df378289327a9e410f54582a20fe8d06",
    "items.html": "97e2561c77b338ace65a19b68c1393f238843fd236b7f08d9a5c589afb1d1058"
   }
  },
  "Y2024_Cleric_Light_GabrielGreybeard": {
   "full": {
    "character.html": "6dfa4236e124f1f5d8e582989af1a36bb79ec6430ac6641563d391317f7dd72d",
-   "features/level_01.html": "46e123211c7eb22a3a87a57907fdc1a731de35cc77a83d9bb7682e5b4d186377",
+   "features/level_01.html": "9a4f47658e3be6761e8c1179ec6f27ecdc11788a4ea0de1e3b2f545240837884",
    "features/level_02.html": "30775dab9e0a6429d41efed4cc7d0060b07dd3ccfadd4e9f0c55cb34dbdc58a8",
-   "features/level_03.html": "b47b2308e93017ccda7e64fdc8d856ec37fe47349e9326a1e601e252633fe0a8",
-   "full_character_sheet.html": "d341287527971f37a715091f31254532b5c38c93ca4c336d1dc928b34abaf9ff",
+   "features/level_03.html": "c5afea0e5f35d6bcef0a5ad2ff70a6ef1a98cfe3ddce342ccfd0f3e2586afc7e",
+   "full_character_sheet.html": "cc5c01bbd00b15a57282bd8b6433fa53ab9f3f878cc52216b8e8708f4631a77b",
    "items.html": "1d7f075f8ff6aee3692ce6a46f21bd2d2bbd995d80e798f262694d3b186d4d19"
   }
  },
  "Y2024_Cleric_Light_SolenneBrightward": {
   "full": {
    "character.html": "1854cead3401cf6ccc35774d54a918564dd2c3947e638eb5c935d8d145e8ec90",
-   "features/level_01.html": "254cd62255f6150fe12414cd991e3f949e210bd37e49f148438f0930aeb8b55a",
+   "features/level_01.html": "286f45f14591329701625b3ad8376ad86023c3917d0f6216d5a1052a19581d90",
    "features/level_02.html": "10ad60395807bc5f7610816c7bd66f6741937b0ac1888cc29760db5fce755621",
-   "features/level_03.html": "af9746e62f9e5b7642e1a2fef4e37cadaefe320867b43336c9119798ebdc009d",
-   "full_character_sheet.html": "5eba72d75a321c9c911299e959870ed98d73520e5da340597331396af3877571",
+   "features/level_03.html": "1449f7197bb915b20c9ed1d7af68cea78f3d3d987da5e87df87b2062dd3f5409",
+   "full_character_sheet.html": "c7479a0d80f6ba3ed27dffc553ba0b9f8f9bc62680f25661c3a770c17f55397e",
    "items.html": "25e18f8a1fa6c822405722dc1c1b287ca9b90c3828542bb72362409c888d8be0"
   }
  },
@@ -2187,11 +2187,11 @@
  "Y2024_Fighter_Champion_TaliaSwiftguard": {
   "full": {
    "character.html": "5b806df8894cedd9fa51017d8d6db19428cfe8eb8074e150d80c2aa3bf386660",
-   "features/level_01.html": "e063e259bc33059c8e6ca86d5ed12cba8147848ccc7781297e6d875f1f776cc6",
+   "features/level_01.html": "d512a34fb9dd9111a7222cd14c61380d829fb34231dd03c133173e50c989b811",
    "features/level_02.html": "362f75c80fb544a6090fffe0f0b1e71c42b1c97006431b501893db61ad90550b",
    "features/level_03.html": "56daa9f035d594c04efb7f72929c10b51d68eebd4c6a10f48426e0fea818f9b9",
    "fighting_styles.html": "908d5c2e33e38c704b6e04bb56307a585a5e345b4a16b072596ea0918aff4ed8",
-   "full_character_sheet.html": "515c2da433b337751dc57be38acdd72094e12890a6d0c60dc730ef5d9f0eaeeb",
+   "full_character_sheet.html": "1f441196734fffbd8f689a33c828890f50c20e62b7b44d9bf5eb59682eea3b9b",
    "items.html": "6b40c9a0798acbb95ea41dcd3d849bd91d04543e5d2bd134e533c84f548d6c89"
   }
  },
@@ -2199,9 +2199,9 @@
   "full": {
    "character.html": "7127b3e1d0837b97e13b91665cf7720444c1fb6d28bc5de7e023b813b3ef1c15",
    "features/level_01.html": "55c4813c01aa926f811a581da9d9687ce8617573210728fc2fec48ee47319618",
-   "features/level_02.html": "5b7fa18a3fd1d53726bf2fa83c70874dbcd98f6675bd5c4a8a8d0c7b7a14b9d4",
-   "features/level_03.html": "05ecb449747b5a7102ad09658d0948bc26b8ce7c396f910d570cbf137980a139",
-   "full_character_sheet.html": "e94cec5b46a09265582645ba883e6050603f65846654a21f1c3bb5a319e07c3a",
+   "features/level_02.html": "e4f9691e3691a488affde089225fd4370327eb5e4c1f7066031d527f9cd84ef8",
+   "features/level_03.html": "8454eab2a1ee184fcccc5713b8dddb254f09db9819b0637f86bcd49ae86582fd",
+   "full_character_sheet.html": "31b591b685a83db72cbe914f28ce625a4480485e5c01d821c1e7459d45b65e6a",
    "items.html": "05e1886e5ca39ee16afceea696db07cbcf05e575ebf8e335f4d142354ea3ce56"
   }
  },
@@ -2209,9 +2209,9 @@
   "full": {
    "character.html": "5f41d3105d2f307f3b643b92f1fdbff303ddc425c33a1a43a141c0e76fb42287",
    "features/level_01.html": "2665e5732462073b1d345754387233f03f5344130cb40fb295ee49b04faec283",
-   "features/level_02.html": "3448030d658d63969042b9fa5b91ac60f738250c3952d2c163c82e64b466fea2",
-   "features/level_03.html": "819ac57dff16b2e4bef8627301f2840cc6abd22807e8687f5e7b0561fe483083",
-   "full_character_sheet.html": "bcdaa994307967375dbb227a2ab51eb5764f3bd6f47a045779e45469c2210542",
+   "features/level_02.html": "d0ea2d34ddcc9d3e4f1a2f7cb87890f08368cb3d18cfbd947222089f9ec4e388",
+   "features/level_03.html": "2b4b74697fefa75189a6bb3cebe73275d59f5c54f0650ec0d0cb1f1b5fd0b48a",
+   "full_character_sheet.html": "df6b7133a4d7e388d45008b24dff95b330dc0e998219676e54fc59ea02e5791f",
    "items.html": "2b62819bbe6870b77b10d5f394868a4c781c1c7a453107920c74cfdc99e35f9b"
   }
  },
@@ -2219,9 +2219,9 @@
   "full": {
    "character.html": "c986dc55e26dca58312538ebf961cbb3d037e222e76c7d2b0ceab43e44394157",
    "features/level_01.html": "75593196acced113c71be316208b9b89ce28180a96fc1f6e1db8cdc29bcb6d1a",
-   "features/level_02.html": "638414eb3c11a5ebf8c9ee248812083968779a5e6a3f52daf774694df08da95a",
+   "features/level_02.html": "1159f4688762257fad77e01e649d42382f4ac7561c4de2efc28baa25a4e9940b",
    "features/level_03.html": "db6c2e38d177401c8cbb7218deb15f13b26c30a2449f56f6582c690a2cf32e56",
-   "full_character_sheet.html": "ff443951cce12b9172ea6fca953139185c9e2cc1bac0279375fb63c22aabcbf4",
+   "full_character_sheet.html": "a84c4d1b41abdf75118a712fba4f94fc14adc5c2899de2bee79f44aa4d2d5469",
    "items.html": "64ce435d2432183d5f3e4fdd7938ccd0a01e323ef00f70442e7d9e523a853001"
   }
  },
@@ -2230,22 +2230,22 @@
    "character.html": "b78931cf589b643eefe044bedab9ab0246e519953a23eb2462cbe03bec84ef7b",
    "features/level_01.html": "814046ffbc178f1d6d95d4d9a319b9b6b7df5e47f32db59e502dbf0fae7596e8",
    "features/level_02.html": "6557325687f90f183ac83723bb261f35e7abfd2fdf2d805f40e07cb1b5edf198",
-   "features/level_03.html": "b6cc441e547334f28bfb6ca9fbf2809d97274bf3e68df3dffd137fad440d6455",
+   "features/level_03.html": "9492659e35340b83c92c8668f7bbad5e7bf65e94abea1e57c741b4cd4886ed0b",
    "fighting_styles.html": "7e332031fae16f9f844d1a9fa287d74b5b0805e6986d7bb321fa5cbc4db32ec9",
-   "full_character_sheet.html": "9f862d8535ae5121d008a42cef7f0ecdd30fddc8f9b1ed9121de3d98347e6e90",
+   "full_character_sheet.html": "c194198ed51eb41afbccc86f0b7642a48f291684f82daed34209ec86541812a4",
    "items.html": "f72f84f0b12b70041bc9a54b4d39c54a87133f7ba7187e025a20431862bab874"
   }
  },
  "Y2024_Paladin_Devotion_ElricPactsworn": {
   "full": {
    "character.html": "300c1b8fe18f2c56ec5e28f380d1914d221f7301330c6061b561db844d28f02a",
-   "features/level_01.html": "04c9d0c266c8db0c00810d002537ab9db2acbc8920b3fb1b6f90737702fb1d00",
+   "features/level_01.html": "0271fc2bab264bdea3aaceaf84256d5245ef308e60b22d457b1c50e55bca1968",
    "features/level_02.html": "a77741f2ecb6ff75b4288eceb150f7fc20b845309e8324ab12a9b0bfb4170818",
-   "features/level_03.html": "34b646f17d8fc188e04f8f698f7cdf99e262845cfbba2428c7c5701bdb1b381a",
+   "features/level_03.html": "f78f6c132ff2c0fff8c552aedc4e994fdba06338fea226c8ee49ebb4ff341b4e",
    "features/level_04.html": "747c99cc942e1979f8b91d307a602fb120115a95aedfc6e144a84a1fdfd542a4",
    "features/level_05.html": "4a6f3511c45c17884e49a19838f89f24b3a59f05905e15997c315303e87845eb",
    "features/level_06.html": "4724bf0f976e4a3283d9d51db6bc1457a736de93cc5baffdd423b9baa0e2f58b",
-   "features/level_07.html": "7f2279ae924374800227c66b6c8199d21b02a7fde2010d25c63b39b17cafb527",
+   "features/level_07.html": "d1c130a57cc321516011a43aa9cafe54879b1d86f276156b8a79de5ce3f79559",
    "features/level_08.html": "f1b739c5478f7af4326b8e5fd1bcf3ae8a967aeedc8da71e94d163333393681c",
    "features/level_09.html": "94c25eb51bc95ab4ec3b65038a73d309d5c07d9e53908f98f71f8894518b395e",
    "features/level_10.html": "1cd01532a1c586bb0be3c2aedb4a156ee8507895502b75813202d84e9afe8494",
@@ -2253,13 +2253,13 @@
    "features/level_12.html": "3aa163ecbac959e35c41e179114674d66b0122205092610ee7063d840d5fd7cb",
    "features/level_13.html": "0508d90ae56fec326ca337c73575e6d3a148e6005bebd81d8376e46989db6082",
    "features/level_14.html": "2211ff13dc24d9c9e75a769b91236a4b1fb0d96af3ed611de354af99277ee34e",
-   "features/level_15.html": "2612453b33834cf80b534742d23e2e0638667da8b2f92c9fb488b76fbbae1636",
+   "features/level_15.html": "db5a99a4707e93dc7cc5f3bfec6e922454b900beaf6f4ee24bd0989eea301337",
    "features/level_16.html": "1dde45272b25f6e06a4469149907d791de274b36b13f893528e4cb4fbcce1479",
    "features/level_17.html": "caed433f9ec0ea8cb901f06a0c110404df61ae7237c415dea782de76fb6fc765",
    "features/level_18.html": "3d0666725b73243454631ca423f2d9e97827ed6db6146a401ec621bf7c543aa6",
    "features/level_19.html": "34d636eff653674586534e88dadb19ba8d4a3ed36f721833548a63784fb83011",
    "fighting_styles.html": "fe29c3f81078ab3cb2ccaca1a4f59b826e439bfa298125f730bce337d243f5f2",
-   "full_character_sheet.html": "1154b79be128e366eccc36c40cb61e437d0152d1f4620d802596dbf7bfe8357e",
+   "full_character_sheet.html": "76ea6c17ea1ad9f5b6101b44a06b1f4ba5bf87b1109d887e402254eba640b814",
    "items.html": "3232cc22085a23f1e29371931a01da8115df44018cdb35ba9ddce0a05e04b554"
   }
  },
@@ -2268,7 +2268,7 @@
    "character.html": "c128d5cf571bd31f287f88101f12cd6de1f625b610d64597c48dba079a580fad",
    "features/level_01.html": "70aed4c7b71a36bcff966d764a04a07da9341214bd5c32e65285806ed0776169",
    "features/level_02.html": "5ac5f711c6fc0b4b9301b06f3d1a743d137b6784448385366134a23c497014bb",
-   "features/level_03.html": "afa21bd0a332a1b588915b32949da5067a84bbff3107b0e1403f60c73d82cdd3",
+   "features/level_03.html": "4a3eae5326ef187bf1960d05d42b874c59a233b49ec693a901f645b047d1fbd3",
    "features/level_04.html": "e0ecd20235e198b9def8a464b99ecff4c471293b670edc63dc71a00a5d25391d",
    "features/level_05.html": "bd72b24e098bffe3b44567b66ed74efeb1103332e9b041076e3935b9ee9ee205",
    "features/level_06.html": "560efd78587a6010466e088211615a74c39f7fce3b51e69bf65bf83ea201df51",
@@ -2287,18 +2287,18 @@
    "features/level_19.html": "ad1fd0fda45fd557fa6e1c50b59b22054a0f3794680b43c93d20c8974dfed871",
    "features/level_20.html": "225e7c03a61931e6bdf6a697acbf5ca155255ef616ad6389d7a27b156d25e9a6",
    "fighting_styles.html": "bc6fd60c515f769552addb613a52d6396da23f7b40151cd59e3cd683444e1de0",
-   "full_character_sheet.html": "8d94c3582945b7d732e268284f5ef7efce79a8d3c33006e89bfd4d2bcde4a11f",
+   "full_character_sheet.html": "1385ab618151ecd169aab91aeafb7a1d77962835306cf912cf67a8544058b486",
    "items.html": "0643dcbdc39a5548959ce5a8790a29f06510d6f6fb47bc34ae5dfb58ae5cffce"
   }
  },
  "Y2024_Paladin_Vengeance_NadiaIronvow": {
   "full": {
    "character.html": "5e96789f94979600e81356bca68a9c76b2d5d80d41e4ba2806066baafb56870d",
-   "features/level_01.html": "ddf6cc2da129e8abb072ecf7276e742f0d4f31a98ab5cd85d982e743a2409568",
+   "features/level_01.html": "e548d3fccfac663603579a6d3e07589dae59b2b3425fa2b67efd252cd36b479b",
    "features/level_02.html": "c743533a72311289a710177ab491860c0568a2ba6f87f9cbdf4d56b4497d6c60",
-   "features/level_03.html": "20aa88b96adbd2390261faa5182827e5e78f122dbab9015fc07605d72face985",
+   "features/level_03.html": "e6367482c504ba4de1db403bf6e6e89d4e259717e02ca0f81a3b774c931d0142",
    "fighting_styles.html": "1eeb06185670b96c44a4ced9bcffd03d339730e2bbfe6e6109f9b8b7b1045e5c",
-   "full_character_sheet.html": "c2235fee350ab0b36eebdce31aa6bd3122a2e655ffa1b4755f94c146b0e395e2",
+   "full_character_sheet.html": "afcec3152b45ace2cdced5fbd02f6ab1ae461c1a8a474d73def276e37d87377f",
    "items.html": "5bbd4ea73f342cff0d5c5dc25448c09a2076be717da85acc72f81739be44ce8a"
   }
  },
@@ -2357,8 +2357,8 @@
    "character.html": "1d7d987ceed29c8ebb7159fd6c951b191c5148f84fec0ef2eaf3904fec6412a1",
    "features/level_01.html": "1435e3e07fb351af42da9a47c1255d7a4cfd5e315eecf7e20552e08d5540c49b",
    "features/level_02.html": "98765dfd1013a74bfbdd1d1eb8cc15de3d501cc865dec3089ece2cbdebbae7df",
-   "features/level_03.html": "70c99fe04901223d738abaae5eb6975b084326bb20338d42ce502e769ebc6022",
-   "full_character_sheet.html": "4d984ff1f3f30fea69fb56d5864a700a888bce3e29bccad2092fd651f53206e2",
+   "features/level_03.html": "037c91fb67998c7dcb4879894aafa5eaadfd407a07e71fad3add246f0add2bf7",
+   "full_character_sheet.html": "43da239002721fd198ced65fbfb394ef5c89c0937a3e6f0a77f7de6894be87f2",
    "items.html": "5489eb5b50848e991bee6c4b8f79d5490ac8f249d511c42326131814db5efbef"
   }
  },
@@ -2367,9 +2367,9 @@
    "character.html": "a3239c0c06375806255ed3a45d6d0387d46dd771b4021d2ea543b030fd030ef7",
    "features/level_01.html": "5d5dea129f8ca709364f693a2d686df65c87bd754f5085d4974a96cea26bfc09",
    "features/level_02.html": "5c4c83af83ce2d704e7802a1b08df2976208d8d29075193c5b87f91c1ee37aea",
-   "features/level_03.html": "95ba91925f857a024d608b9a0a7c802b0c52a287b7d300b5db9ce5f5792d4876",
+   "features/level_03.html": "f7c59a2cbc32ac981e79ef9a23c67b95925d2a35349c7ceb155cee3e6a723459",
    "features/level_04.html": "c718598d96fede574fd34646dfccb3feeebe7c9843e2fbdf4c03c8143b4ce640",
-   "full_character_sheet.html": "07a929133e358fc4d659c9c9887043eebb47930919be0306a269cf4871c24303",
+   "full_character_sheet.html": "a0029a3ffd181442e4a57d2584fe3dc61189be5a63482ab13b106b8cff132300",
    "items.html": "6e413cf6696fe9589470f8b45f1e135511f6d657da26af5981a768c96ddac8f7"
   }
  },
@@ -2377,7 +2377,7 @@
   "full": {
    "character.html": "4da25ae73173a592d328b2a4fcf767000d1f2a26b127b2948e8d4d1dbeadb126",
    "features/level_01.html": "fc44a61ced300e69a19dd21f4dcc645aec00f9b8e87b0f9a7b400849976135df",
-   "features/level_02.html": "4dc70aa7a7b278f58f222f1f5453622c951aa484e13f7219369044fe1ec00381",
+   "features/level_02.html": "73d453f3b0c7445fc6409acdd00847037b245574d26e7206f97db6b064b2d0e7",
    "features/level_03.html": "1edf7786db62ff6a0266d9fc672adceead7c09edbb4d4e3f96716de5d0207ec6",
    "features/level_04.html": "8e96d5f4bda989c142ba768cda9caf8980b38ed21c7f05bdbe4ef08f2bf8d409",
    "features/level_05.html": "f62131961a5f4e6fd04c879b81087c74684e61eb0fda9834879d83e4553bdf6d",
@@ -2395,7 +2395,7 @@
    "features/level_17.html": "c1076d9fed40a7195baa195421e97cb6e6d203b7374a125e5ea4ea6333ce55c9",
    "features/level_18.html": "3230d082726e7775adfa3da8120aae86131d27240c15b9848f70c2329864b562",
    "features/level_19.html": "f968dc0ed11dc038e2927336cd049b1ad7bd1091658868e2b4a1ffc3d6ef0506",
-   "full_character_sheet.html": "9c30c9d77722faf3820906c7c6ea4f2aaa93b31043e8397a14471be0c9d5df4e",
+   "full_character_sheet.html": "d4d8735809b7febb987d0ff2df7187d5799b39ba7d0dd586c96c519cdfc57b4b",
    "items.html": "6ebd3f16b4062a779bd4fa70ac407881591e171fc497b70ed8ab94077df514b3"
   }
  },

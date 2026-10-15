@@ -142,6 +142,18 @@ class SteadyAim(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You haven't moved this turn"),
+                    ("Effect", "Advantage on your next attack roll this turn"),
+                    ("Cost", "Your Speed is 0 until the end of the turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "As a Bonus Action, you give yourself Advantage on your next attack roll on your current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn."
         return description

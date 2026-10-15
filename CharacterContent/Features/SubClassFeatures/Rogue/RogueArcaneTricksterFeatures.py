@@ -77,6 +77,23 @@ class MageHandLegerdemain(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Casting",
+                        "Cast Mage Hand as a Bonus Action, and you can make the hand Invisible",
+                    ),
+                    ("Control", "Bonus Action"),
+                    (
+                        "Sleight of Hand",
+                        "Make Dexterity (Sleight of Hand) checks through the hand",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast Mage Hand, you can cast it as a Bonus Action, and you can make the spectral hand Invisible. You can control the hand as a Bonus Action, and through it, you can make Dexterity (Sleight of Hand) checks."
         return description
@@ -92,6 +109,22 @@ class MagicalAmbush(Feature):
             origin="Arcane Trickster Rogue Level 9",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Requirement",
+                        "You have the Invisible condition when you cast a spell on a creature",
+                    ),
+                    (
+                        "Effect",
+                        "It has Disadvantage on saving throws against the spell this turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "If you have the Invisible condition when you cast a spell on a creature, it has Disadvantage on any saving throw it makes against the spell on the same turn."
@@ -109,6 +142,23 @@ class VersatileTrickster(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Distract targets with your Mage Hand."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You use the Trip option of Cunning Strike on a creature",
+                    ),
+                    (
+                        "Effect",
+                        "Also use Trip on another creature within 5 feet of the spectral hand",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain the ability to distract targets with your Mage Hand. When you use the Trip option of your Cunning Strike on a creature, you can also use that option on another creature within 5 feet of the spectral hand."

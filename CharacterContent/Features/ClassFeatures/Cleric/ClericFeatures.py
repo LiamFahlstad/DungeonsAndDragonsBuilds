@@ -29,6 +29,23 @@ class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Cleric Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Wisdom"),
+                    ("Save DC", dc_formula(Ability.WISDOM)),
+                    ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
+                    ("Cantrips", "Replace one whenever you gain a Cleric level"),
+                    (
+                        "Prepared spells",
+                        "Change them whenever you finish a Long Rest",
+                    ),
+                    ("Spell slots", "Regain all when you finish a Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Spellcasting:\n"

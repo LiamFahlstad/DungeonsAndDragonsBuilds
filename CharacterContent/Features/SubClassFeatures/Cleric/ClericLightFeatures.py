@@ -1,4 +1,4 @@
-from Core.Definitions import CLERIC_HIT_DIE
+from Core.Definitions import CLERIC_HIT_DIE, Ability
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class LightDomainSpells(Feature):
@@ -18,6 +18,23 @@ class LightDomainSpells(Feature):
         super().__init__(
             name="Light Domain Spells", origin="Light Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The spells ClericLight.py grants at each Cleric level.
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("3", "Burning Hands, Faerie Fire, Scorching Ray, See Invisibility"),
+                    ("5", "Daylight, Fireball"),
+                    ("7", "Arcane Eye, Wall of Fire"),
+                    ("9", "Flame Strike, Scrying"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Light Domain Spells table, you thereafter always have the listed spells prepared."
@@ -34,6 +51,29 @@ class RadianceOfTheDawn(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to burst with searing light."),
+            Facts(
+                (
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Action", "Magic action, presenting your Holy Symbol"),
+                    ("Area", "30-foot Emanation from you"),
+                    (
+                        "Darkness",
+                        "Any magical Darkness in the area (such as from the Darkness spell) is dispelled",
+                    ),
+                    ("Target", "Each creature of your choice in the area"),
+                    (
+                        "Save",
+                        f"Constitution save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    ("Failed", "2d10 + Cleric level Radiant damage"),
+                    ("Succeeded", "Half damage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to emit a flash of light in a 30-foot Emanation originating from yourself. Any magical Darkness—such as that created by the Darkness spell—in that area is dispelled. Additionally, each creature of your choice in that area must make a Constitution saving throw, taking Radiant damage equal to 2d10 plus your Cleric level on a failed save or half as much damage on a successful one."
@@ -59,6 +99,26 @@ class WardingFlare(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The uses panel doesn't give the minimum, so Uses spells it out.
+        return [
+            Paragraph("Flare light to throw off an attack."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 30 feet makes an attack roll",
+                    ),
+                    (
+                        "Effect",
+                        "Impose Disadvantage on that roll, before it hits or misses",
+                    ),
+                    ("Uses", "Wisdom modifier (minimum once) per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When a creature that you can see within 30 feet of yourself makes an attack roll, you can take a Reaction to impose Disadvantage on the attack roll, causing light to flare before it hits or misses.\n"
@@ -83,6 +143,22 @@ class ImprovedWardingFlare(Feature):
             origin="Light Domain Cleric Level 6",
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Recharge",
+                        "Warding Flare regains all its uses on a Short or Long Rest",
+                    ),
+                    (
+                        "Temporary HP",
+                        "When you use Warding Flare, you can give the target of the triggering attack 2d6 + Wisdom modifier Temporary Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -11,7 +11,7 @@ from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class LayOnHands(Feature):
@@ -161,6 +161,102 @@ class ChannelDivinity(Feature):
             f"{indent}You add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.\n"
             f"{indent}The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.\n"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses are in the panel below.
+        options: list[Block] = []
+        if "Divine Sense" in self.spells:
+            options.append(
+                Option(
+                    "Divine Sense (Paladin level 3)",
+                    (
+                        Facts(
+                            (
+                                ("Action", "Bonus Action"),
+                                ("Range", "60-foot radius"),
+                                ("Duration", "10 minutes"),
+                                (
+                                    "Effect",
+                                    "Know the location and creature type of Celestials, Fiends and Undead in range, and sense consecrated or desecrated places and objects",
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            )
+        if "Vow of Enmity" in self.spells:
+            options.append(
+                Option(
+                    "Vow of Enmity (Oath of Vengeance level 3)",
+                    (
+                        Facts(
+                            (
+                                ("Action", "No action, but used with the Attack action"),
+                                ("Range", "30 feet"),
+                                (
+                                    "Duration",
+                                    "1 minute, or until you use this feature again",
+                                ),
+                                ("Effect", "Advantage on attack rolls against the target"),
+                                (
+                                    "Transfer",
+                                    "If the target drops to 0 Hit Points before the vow ends, move the vow to another creature within 30 feet (no action required)",
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            )
+        if "Sacred Weapon" in self.spells:
+            options.append(
+                Option(
+                    "Sacred Weapon (Oath of Devotion level 3)",
+                    (
+                        Facts(
+                            (
+                                ("Action", "No action, but used with the Attack action"),
+                                ("Range", "30 feet"),
+                                (
+                                    "Duration",
+                                    "10 minutes, or until you use it again, turn it off (no action required) or aren't carrying the weapon",
+                                ),
+                                (
+                                    "Attack",
+                                    "Add your Charisma modifier (minimum +1) to attack rolls with the weapon",
+                                ),
+                                ("Damage", "Its normal damage type or Radiant, on each hit"),
+                                (
+                                    "Light",
+                                    "Bright Light in a 20-foot radius and Dim Light 20 feet beyond",
+                                ),
+                            )
+                        ),
+                    ),
+                )
+            )
+        # Listed at every level with its unlock level: the sheet is printed
+        # once and kept as the Paladin levels up.
+        options.append(
+            Option(
+                f"Abjure Foes (Paladin level {self.ABJURE_FOES_LEVEL})",
+                tuple(AbjureFoes().get_improved_description(character)),
+            )
+        )
+        return [
+            Paragraph(
+                "Each time you use Channel Divinity, choose which of this class's effects to create."
+            ),
+            Facts(
+                (
+                    ("Recharge", "Regain one use on a Short Rest, all on a Long Rest"),
+                    (
+                        "Save DC",
+                        f"Your Paladin spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                )
+            ),
+            *options,
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

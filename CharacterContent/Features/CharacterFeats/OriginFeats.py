@@ -308,6 +308,33 @@ class MagicInitiate(OriginFeat):
     def get_spell_casting_ability(self) -> Ability:
         return self.spell_casting_ability
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        spell_list = self.character_class.name.title()
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrips",
+                        f"{self.cantrip_1} and {self.cantrip_2} ({spell_list} list)",
+                    ),
+                    (
+                        "Level 1 spell",
+                        f"{self.spell}; cast it once per Long Rest without a spell slot",
+                    ),
+                    ("Prepared", "All three are always prepared"),
+                    ("Spellcasting ability", self.spell_casting_ability.value),
+                    (
+                        "Spell Change",
+                        f"Whenever you gain a level, replace one with another spell of the same level from the {spell_list} list",
+                    ),
+                    (
+                        "Repeatable",
+                        "You can take this feat again, choosing a different spell list",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         spells = (
             f"Cantrip 1: {self.cantrip_1}, Cantrip 2: {self.cantrip_2}, "
