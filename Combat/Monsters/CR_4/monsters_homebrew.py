@@ -1,4 +1,4 @@
-from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Core.Definitions import Ability, Condition, CreatureSize, DamageType, Skill
 from Model.Creatures.Combatants import (
     Alignment,
     DamageTypeEntry,
@@ -8,10 +8,14 @@ from Model.Creatures.Combatants import (
 from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
+    Illumination,
     MeleeAttack,
     MonsterAbility,
+    Multiattack,
+    RangedAttack,
+    SavingThrowEffect,
+    SiegeMonster,
 )
-from Core.Definitions import Ability
 
 
 class MarshalVirel(ExtendedCombatantData):
@@ -100,6 +104,127 @@ class MarshalVirel(ExtendedCombatantData):
                     description="Virel adds 2 to his AC against one melee attack that would hit him, potentially causing it to miss, provided he can see the attacker and is wielding a weapon.",
                 ),
             ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class ManifestationOfDurmor(ExtendedCombatantData):
+    """Molten avatar of the mountain Durmor. Built on the official Earth
+    Elemental (CR 5) -- Earth Glide, Siege Monster, tremorsense, Slam plus a
+    ranged rock attack -- scaled down to CR 4 and
+    given the Fire Elemental's fire immunity, Illumination and Water
+    Susceptibility, with a Molten Body retaliation trait and an Eruption
+    recharge in place of the Fire Elemental's always-on Fiery Aura."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Manifestation of Durmor",
+            hp=110,
+            ac=16,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 19,
+                Ability.DEXTERITY: 8,
+                Ability.CONSTITUTION: 17,
+                Ability.INTELLIGENCE: 5,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 8,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="4",
+            monster_type=MonsterType.ELEMENTAL,
+            monster_type_note="",
+            alignment=Alignment.NEUTRAL,
+            size=CreatureSize.LARGE,
+            ac_note="cooling stone crust",
+            hp_formula="13d10 + 39",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="burrow 20 ft.",
+            skills={},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.FIRE], note=""),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            condition_immunities=[
+                Condition.EXHAUSTION,
+                Condition.PARALYZED,
+                Condition.PETRIFIED,
+                Condition.POISONED,
+                Condition.UNCONSCIOUS,
+            ],
+            senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
+            languages="Primordial (Ignan, Terran)",
+            traits=[
+                MonsterAbility(
+                    name="Earth Glide",
+                    description="The manifestation can burrow through nonmagical, unworked earth and stone, leaving a glowing seam of cooling rock behind it.",
+                ),
+                Illumination(
+                    creature_name="manifestation", radius_ft=20, dim_radius_ft=20
+                ),
+                MonsterAbility(
+                    name="Molten Body",
+                    description="A creature that touches the manifestation or hits it with a melee attack while within 5 feet of it takes 4 (1d8) Fire damage.",
+                ),
+                SiegeMonster(creature_name="manifestation"),
+                MonsterAbility(
+                    name="Water Susceptibility",
+                    description="The manifestation takes 3 (1d6) Cold damage for every 5 feet it moves in water or for every gallon of water splashed on it, and its AC drops by 2 until the end of its next turn as its crust cracks.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="manifestation",
+                    attacks_text="two attacks, using Molten Slam or Lava Lob in any combination",
+                ),
+                MeleeAttack(
+                    name="Molten Slam",
+                    attack_bonus=6,
+                    reach_ft=10,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.BLUDGEONING,
+                    secondary_dice_count=1,
+                    secondary_dice_type=DiceType.D6,
+                    secondary_damage_type=DamageType.FIRE,
+                ),
+                RangedAttack(
+                    name="Lava Lob",
+                    attack_bonus=6,
+                    range_ft=60,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.BLUDGEONING,
+                    secondary_dice_count=1,
+                    secondary_dice_type=DiceType.D6,
+                    secondary_damage_type=DamageType.FIRE,
+                    additional_ruling="If the target is a Large or smaller creature, it has the Prone condition.",
+                ),
+                SavingThrowEffect(
+                    name="Eruption (Recharge 5-6)",
+                    ability=Ability.DEXTERITY,
+                    dc=14,
+                    target="each creature in a 15-foot Emanation originating from the manifestation",
+                    dice_count=3,
+                    dice_type=DiceType.D10,
+                    damage_type=DamageType.FIRE,
+                    success_effect="Half damage.",
+                    extra_ruling="The ground in the Emanation becomes Difficult Terrain until the end of the manifestation's next turn.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
             lair_actions=[],

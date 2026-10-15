@@ -11,6 +11,7 @@ from Model.Creatures.MonsterAbilities import (
     MeleeAttack,
     MonsterAbility,
     Multiattack,
+    RangedAttack,
 )
 from Core.Definitions import Ability
 
@@ -339,6 +340,94 @@ class Greypaw(ExtendedCombatantData):
             ],
             bonus_actions=[],
             reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class GoblinKing(ExtendedCombatantData):
+    """Scaled-up take on the official Goblin Boss (CR 1): same Scimitar/Shortbow
+    kit and Redirect Attack, pushed to CR 3 with a third
+    attack, more HP, and a Royal Command bonus action (in place of Nimble Escape) that spends his
+    rabble's Reactions."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Goblin King",
+            hp=60,
+            ac=17,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 12,
+                Ability.DEXTERITY: 16,
+                Ability.CONSTITUTION: 14,
+                Ability.INTELLIGENCE: 11,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 12,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="3",
+            monster_type=MonsterType.FEY,
+            monster_type_note="Goblinoid",
+            alignment=Alignment.CHAOTIC_NEUTRAL,
+            size=CreatureSize.SMALL,
+            ac_note="chain shirt, shield",
+            hp_formula="11d6 + 22",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.INTIMIDATION: 3, Skill.STEALTH: 7},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 10",
+            languages="Common, Goblin",
+            traits=[],
+            actions=[
+                Multiattack(
+                    creature_name="goblin",
+                    attacks_text="three attacks, using Scimitar or Shortbow in any combination",
+                ),
+                MeleeAttack(
+                    name="Scimitar",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.SLASHING,
+                    additional_ruling="If the attack roll had Advantage, the target takes an extra 5 (2d4) Slashing damage.",
+                ),
+                RangedAttack(
+                    name="Shortbow",
+                    attack_bonus=5,
+                    range_ft=80,
+                    long_range_ft=320,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.PIERCING,
+                    additional_ruling="If the attack roll had Advantage, the target takes an extra 5 (2d4) Piercing damage.",
+                ),
+            ],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Royal Command",
+                    description="The goblin barks an order at up to two allied goblins within 30 feet of it that can hear it. Each of them can take a Reaction to move up to half its Speed and make one weapon attack.",
+                ),
+            ],
+            reactions=[
+                MonsterAbility(
+                    name="Redirect Attack",
+                    description="Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead.",
+                ),
+            ],
             legendary_actions=[],
             legendary_resistances=0,
             lair_actions=[],

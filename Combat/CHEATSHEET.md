@@ -25,8 +25,12 @@ python RunCombatSimulator.py --player-log Combat/PlayerLogs/main_party.json
 | Scenario | Command |
 |---|---|
 | Ashelm Church | `python RunCombatSimulator.py --scenario ashelm_church --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/ashelm_church.json` |
+| Goblin Scouting Party (easier) | `python RunCombatSimulator.py --scenario goblin_scouting_party --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/goblin_scouting_party.json --absent Gabriel` |
+| Goblin Warband Ambush (bigger) | `python RunCombatSimulator.py --scenario goblin_warband_ambush --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/goblin_warband_ambush.json --absent Gabriel` |
+| Wrath of Durmor (difficult) | `python RunCombatSimulator.py --scenario wrath_of_durmor --player-log Combat/PlayerLogs/main_party.json --log Combat/CombatLogs/wrath_of_durmor.json --absent Gabriel` |
 
 ## Other flags
 
 - `--log <path>` — resume a persistent encounter log (non-player combatants only). Each scenario above is wired to its own file under `Combat/CombatLogs/`; drop the flag to start monsters fresh instead of resuming.
+- `--absent <name> [<name> ...]` — leave players out of the tracked party for this session (case-insensitive partial name match, e.g. `--absent Gabriel`). Their player-log history is kept and picks up again the next time they join. The goblin and Durmor encounters above are balanced for five players without Gabriel.
 - Omit `--player-log` entirely to run a one-off scenario without touching the persistent party (old behavior, defaults to `time_loop_square` if `--scenario` is also omitted).

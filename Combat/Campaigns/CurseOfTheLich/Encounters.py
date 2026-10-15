@@ -1,20 +1,27 @@
 from Combat import Combatants
+from Combat.Monsters.CR_0.monsters import GoblinMinion, GoblinWarrior
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
     ArmoredAccursed,
     PhysicalAccursed,
 )
+from Combat.Monsters.CR_1.monsters import GoblinBoss
 from Combat.Monsters.CR_1.monsters_homebrew import AccursedGroupOf3, CommonCultist
 from Combat.Monsters.CR_2.monsters_homebrew import (
     AccursedGroupOf5,
     PriestOfTheBlackTongues,
 )
+from Combat.Monsters.CR_3.monsters import GoblinHexer
 from Combat.Monsters.CR_3.monsters_homebrew import (
     CantorOfTheBlackChoir,
     GarronTheKindly,
+    GoblinKing,
     SerCaldusTheVowOfSilence,
 )
-from Combat.Monsters.CR_4.monsters_homebrew import MarshalVirel
+from Combat.Monsters.CR_4.monsters_homebrew import (
+    ManifestationOfDurmor,
+    MarshalVirel,
+)
 from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
 
 
@@ -108,3 +115,63 @@ def get_accursed_ambush_combatants() -> list[Combatants.BasicCombatantData]:
         accursed_group_of5_3,
         accursed_group_of3,
     ]
+
+
+def get_goblin_scouting_party_combatants() -> list[Combatants.BasicCombatantData]:
+    boss1 = GoblinBoss()
+    boss1.set_name("Goblin Boss 1")
+
+    boss2 = GoblinBoss()
+    boss2.set_name("Goblin Boss 2")
+
+    warriors = []
+    for i in range(1, 7):
+        warrior = GoblinWarrior()
+        warrior.set_name(f"Goblin Warrior {i}")
+        warriors.append(warrior)
+
+    minions = []
+    for i in range(1, 3):
+        minion = GoblinMinion()
+        minion.set_name(f"Goblin Minion {i}")
+        minions.append(minion)
+
+    return [boss1, boss2, *warriors, *minions]
+
+
+def get_goblin_warband_ambush_combatants() -> list[Combatants.BasicCombatantData]:
+    hexer = GoblinHexer()
+    hexer.set_name("Goblin Hexer")
+
+    boss = GoblinBoss()
+    boss.set_name("Goblin Boss")
+
+    warriors = []
+    for i in range(1, 4):
+        warrior = GoblinWarrior()
+        warrior.set_name(f"Goblin Warrior {i}")
+        warriors.append(warrior)
+
+    minions = []
+    for i in range(1, 4):
+        minion = GoblinMinion()
+        minion.set_name(f"Goblin Minion {i}")
+        minions.append(minion)
+
+    return [hexer, boss, *warriors, *minions]
+
+
+def get_wrath_of_durmor_combatants() -> list[Combatants.BasicCombatantData]:
+    durmor = ManifestationOfDurmor()
+    durmor.set_name("Manifestation of Durmor")
+
+    king = GoblinKing()
+    king.set_name("Goblin King")
+
+    minions = []
+    for i in range(1, 9):
+        minion = GoblinMinion()
+        minion.set_name(f"Goblin Minion {i}")
+        minions.append(minion)
+
+    return [durmor, king, *minions]

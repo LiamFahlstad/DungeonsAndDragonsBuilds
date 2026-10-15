@@ -48,7 +48,20 @@ if __name__ == "__main__":
         "levels: pass --player-log to source them from a tracked party, or use a scenario whose "
         "build_character_sheets provides them.",
     )
+    parser.add_argument(
+        "--absent",
+        nargs="+",
+        default=[],
+        metavar="NAME",
+        help="Leave these players out of the tracked party for this session (requires "
+        "--player-log). Matches case-insensitively on part of the character name, e.g. "
+        "--absent Gabriel. Their player-log history is kept and picked up again the next "
+        "time they're loaded.",
+    )
     args = parser.parse_args()
+
+    if args.absent and not args.player_log:
+        parser.error("--absent requires --player-log")
 
     if args.rest and not args.player_log:
         parser.error("--rest requires --player-log")
@@ -77,6 +90,13 @@ if __name__ == "__main__":
 
     if args.player_log:
         players_group = Players.get_players_group()
+        for absent in args.absent:
+            matches = [
+                cs for cs in players_group if absent.lower() in cs.character_name.lower()
+            ]
+            if not matches:
+                parser.error(f"--absent: no player name contains '{absent}'")
+            players_group = [cs for cs in players_group if cs not in matches]
         player_names = {cs.character_name for cs in players_group}
         character_sheets = [
             cs for cs in character_sheets if cs.character_name not in player_names
