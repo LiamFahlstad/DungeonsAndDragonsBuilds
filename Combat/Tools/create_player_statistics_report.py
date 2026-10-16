@@ -5,11 +5,13 @@ but as a shareable static file instead of a Qt dialog.
 Run from the repo root:
     python -m Combat.Tools.create_player_statistics_report
 
-Or specify a custom log and output:
-    python -m Combat.Tools.create_player_statistics_report --log Combat/PlayerLogs/main_party.json --output my_report.html
+Or pick another campaign, or a custom log and output:
+    python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
+    python -m Combat.Tools.create_player_statistics_report --log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --output my_report.html
 
-Writes Combat/Tools/player_statistics_report.html (or custom --output) with
-lifetime player statistics.
+Reads the campaign's PlayerLogs/main_party.json and writes
+player_statistics_report.html into the campaign's folder (or custom --log /
+--output) with lifetime player statistics.
 """
 
 import argparse
@@ -17,7 +19,8 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-import Combat.Campaigns.CurseOfTheLich.Players as Players
+import Combat.Scenarios as Scenarios
+from Combat.Campaign import Campaign
 from Combat.CombatUIQt.stats import (
     SPELL_SLOT_LEVELS,
     compute_player_log_stats,
@@ -28,11 +31,11 @@ from Combat.CombatUIQt.stats import (
 from Core.Definitions import DamageType
 
 
-def player_roster() -> list[str]:
-    """Load the canonical player roster (character names) from Players.
-    Skip and warn if a character builder raises."""
+def player_roster(campaign: Campaign) -> list[str]:
+    """Load the canonical player roster (character names) from the campaign's
+    Players group. Skip and warn if a character builder raises."""
     names = []
-    for cs in Players.get_players_group():
+    for cs in campaign.players():
         try:
             names.append(cs.character_name)
         except Exception as exc:
@@ -49,20 +52,32 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate an HTML report of lifetime player statistics from a player log."
     )
-    repo_root = Path(__file__).resolve().parent.parent.parent
+    parser.add_argument(
+        "--campaign",
+        choices=sorted(Scenarios.CAMPAIGNS.keys()),
+        default=Scenarios.DEFAULT_CAMPAIGN,
+        help=f"Campaign whose party the log tracks (default: {Scenarios.DEFAULT_CAMPAIGN})",
+    )
     parser.add_argument(
         "--log",
         type=Path,
-        default=repo_root / "Combat" / "PlayerLogs" / "main_party.json",
-        help="Path to the player log JSON file (default: Combat/PlayerLogs/main_party.json)",
+        default=None,
+        help="Path to the player log JSON file "
+        "(default: the campaign's PlayerLogs/main_party.json)",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=repo_root / "Combat" / "Tools" / "player_statistics_report.html",
-        help="Path to write the HTML report (default: Combat/Tools/player_statistics_report.html)",
+        default=None,
+        help="Path to write the HTML report "
+        "(default: player_statistics_report.html in the campaign's folder)",
     )
     args = parser.parse_args()
+    campaign = Scenarios.CAMPAIGNS[args.campaign]
+    if args.log is None:
+        args.log = campaign.default_player_log
+    if args.output is None:
+        args.output = campaign.folder / "player_statistics_report.html"
 
     # Validate input file exists
     if not args.log.exists():
@@ -73,7 +88,7 @@ def main() -> None:
 
     # Compute stats
     stats_by_name = compute_player_log_stats(log_data)
-    names = player_roster()
+    names = player_roster(campaign)
 
     # Session summary
     sessions = log_data.get("sessions", [])

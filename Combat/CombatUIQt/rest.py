@@ -33,7 +33,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-import Combat.Campaigns.CurseOfTheLich.Players as Players
+from Combat.Campaign import Campaign
 from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
 
@@ -51,13 +51,13 @@ def _rest_checkpoint_path(player_log_path: str, suffix: str) -> str:
     return str(src.with_name(f"{src.stem}_{suffix}_{timestamp}{src.suffix}"))
 
 
-def _build_party_state(player_log_path: str) -> CombatAppQt:
+def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
     """Headlessly replay player_log_path onto a fresh CombatAppQt instance
     (no window, no event loop — .run() is never called)."""
-    players = Players.get_players_group()
     return CombatAppQt(
         combatants=[],
-        character_sheets=players,
+        character_sheets=campaign.players(),
+        combat_log_dir=campaign.combat_log_dir,
         player_log_path=player_log_path,
         scenario_name=None,
     )
@@ -102,13 +102,13 @@ def apply_long_rest(player_log_path: str) -> str:
     return str(backup_path)
 
 
-def run_short_rest(player_log_path: str):
+def run_short_rest(player_log_path: str, campaign: Campaign):
     """Open a small standalone healing window (not the main combat window)
-    letting each tracked player be healed a manually-entered amount, and
-    automatically regain any short-rest-cadence feature uses. Heals and
-    regains are appended to the same player log passed in — no new file is
-    created."""
-    app = _build_party_state(player_log_path)
+    letting each of the campaign's tracked players be healed a
+    manually-entered amount, and automatically regain any short-rest-cadence
+    feature uses. Heals and regains are appended to the same player log
+    passed in — no new file is created."""
+    app = _build_party_state(player_log_path, campaign)
     players = [c for c in app.characters if c.get("_is_player")]
     for char in players:
         _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")

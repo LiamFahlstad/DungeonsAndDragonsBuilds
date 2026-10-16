@@ -1,7 +1,6 @@
 import argparse
 import sys
 
-import Combat.Campaigns.CurseOfTheLich.Players as Players
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 
@@ -17,13 +16,22 @@ if __name__ == "__main__":
     parser.add_argument(
         "--log",
         default=None,
-        help="Path to a Combat/CombatLogs/*.json file to resume from, "
+        help="Path to a Combat/Campaigns/<Campaign>/CombatLogs/*.json file to resume from, "
         "picking up the combatants' HP/conditions/round where that log left off",
+    )
+    parser.add_argument(
+        "--campaign",
+        choices=sorted(Scenarios.CAMPAIGNS.keys()),
+        default=None,
+        help="Campaign to run: its 'Players' group is what --player-log tracks, and new "
+        "encounter logs are written to its CombatLogs folder. Defaults to --scenario's "
+        f"campaign, or '{Scenarios.DEFAULT_CAMPAIGN}' when no scenario is given.",
     )
     parser.add_argument(
         "--player-log",
         default=None,
-        help="Path to a persistent player log JSON file (e.g. Combat/PlayerLogs/main_party.json). "
+        help="Path to a persistent player log JSON file "
+        "(e.g. Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json). "
         "The 'Players' combatant group is loaded, preloading HP/conditions/etc. from the most "
         "recent session, and every action taken against a player is appended to this file "
         "across runs. A new session entry ('encounter' if --scenario is given, else 'adventure') "
@@ -69,6 +77,16 @@ if __name__ == "__main__":
     if args.difficulty and args.rest:
         parser.error("--difficulty cannot be combined with --rest")
 
+    if args.scenario:
+        campaign = Scenarios.SCENARIO_CAMPAIGNS[args.scenario]
+        if args.campaign and args.campaign != campaign.name:
+            parser.error(
+                f"--scenario {args.scenario} belongs to campaign '{campaign.name}', "
+                f"not '{args.campaign}'"
+            )
+    else:
+        campaign = Scenarios.CAMPAIGNS[args.campaign or Scenarios.DEFAULT_CAMPAIGN]
+
     if args.rest:
         from Combat.CombatUIQt.rest import apply_long_rest, run_short_rest
 
@@ -78,11 +96,11 @@ if __name__ == "__main__":
                 f"Long rest applied. Player log reset; old session history backed up to: {backup_path}"
             )
         else:
-            run_short_rest(args.player_log)
+            run_short_rest(args.player_log, campaign)
         sys.exit(0)
 
     if args.scenario is None and not args.player_log:
-        args.scenario = "ashelm_church"
+        args.scenario = campaign.scenarios[0].name
 
     scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
     combatants = scenario.build_combatants() if scenario else []
@@ -90,7 +108,7 @@ if __name__ == "__main__":
     character_sheets = scenario.build_character_sheets() if scenario else []
 
     if args.player_log:
-        players_group = Players.get_players_group()
+        players_group = campaign.players()
         for absent in args.absent:
             matches = [
                 cs for cs in players_group if absent.lower() in cs.character_name.lower()
@@ -154,6 +172,7 @@ if __name__ == "__main__":
     app = CombatAppQt(
         combatants=allies + combatants,
         character_sheets=character_sheets,
+        combat_log_dir=campaign.combat_log_dir,
         combatants_per_column=scenario.combatants_per_column if scenario else 4,
         resume_log_path=args.log,
         player_log_path=args.player_log,

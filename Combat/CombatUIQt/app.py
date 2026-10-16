@@ -53,6 +53,7 @@ class CombatAppQt(
         self,
         combatants: list[BasicCombatantData],
         character_sheets: list,
+        combat_log_dir: str | Path,
         combatants_per_column: int = 4,
         resume_log_path: str | None = None,
         player_log_path: str | None = None,
@@ -87,8 +88,9 @@ class CombatAppQt(
         if self.player_log_file:
             self._init_player_log()
 
-        log_dir = Path("Combat/CombatLogs")
-        log_dir.mkdir(exist_ok=True)
+        # New, timestamped encounter logs go in the campaign's own CombatLogs folder.
+        log_dir = Path(combat_log_dir)
+        log_dir.mkdir(parents=True, exist_ok=True)
         if resume_log_path:
             # `run()` calls `_load_log_from_path` right after this, which reassigns
             # `self.log_file` to this same path once it's actually read — don't write

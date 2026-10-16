@@ -1,46 +1,29 @@
-"""Registry of runnable combat scenarios. Select one with `python RunCombatSimulator.py --scenario <name>`."""
+"""Registry of every campaign and its runnable combat scenarios. Select one with
+`python RunCombatSimulator.py --scenario <name>`.
 
-import Combat.Campaigns.CurseOfTheLich.Encounters as CurseOfTheLichEncounters
+Each campaign lives entirely in Combat/Campaigns/<Campaign>/ and declares its
+party and scenarios in that folder's Campaign.py. To add a campaign, create its
+folder and add its CAMPAIGN to the tuple below."""
+
+from Combat.Campaign import Campaign
+from Combat.Campaigns.CurseOfTheLich.Campaign import CAMPAIGN as CURSE_OF_THE_LICH
+from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN as TIME_LOOP_PR
 from Combat.Scenario import CombatScenario
 
+CAMPAIGNS: dict[str, Campaign] = {
+    campaign.name: campaign for campaign in (CURSE_OF_THE_LICH, TIME_LOOP_PR)
+}
+DEFAULT_CAMPAIGN = CURSE_OF_THE_LICH.name
+
+# Scenario name -> scenario, and scenario name -> the campaign it belongs to.
 SCENARIOS: dict[str, CombatScenario] = {}
-
-
-def _register(scenario: CombatScenario) -> CombatScenario:
-    SCENARIOS[scenario.name] = scenario
-    return scenario
-
-
-ASHELM_CHURCH = _register(
-    CombatScenario(
-        name="ashelm_church",
-        combatants=lambda: CurseOfTheLichEncounters.get_accursed_ambush_combatants(),
-    )
-)
-
-GOBLIN_SCOUTING_PARTY = _register(
-    CombatScenario(
-        name="goblin_scouting_party",
-        combatants=lambda: CurseOfTheLichEncounters.get_goblin_scouting_party_combatants(),
-        allies=lambda: CurseOfTheLichEncounters.get_stonehill_allies(),
-        combatants_per_column=5,
-    )
-)
-
-GOBLIN_WARBAND_AMBUSH = _register(
-    CombatScenario(
-        name="goblin_warband_ambush",
-        combatants=lambda: CurseOfTheLichEncounters.get_goblin_warband_ambush_combatants(),
-        allies=lambda: CurseOfTheLichEncounters.get_stonehill_allies(),
-        combatants_per_column=5,
-    )
-)
-
-WRATH_OF_DURMOR = _register(
-    CombatScenario(
-        name="wrath_of_durmor",
-        combatants=lambda: CurseOfTheLichEncounters.get_wrath_of_durmor_combatants(),
-        allies=lambda: CurseOfTheLichEncounters.get_stonehill_allies(),
-        combatants_per_column=5,
-    )
-)
+SCENARIO_CAMPAIGNS: dict[str, Campaign] = {}
+for _campaign in CAMPAIGNS.values():
+    for _scenario in _campaign.scenarios:
+        if _scenario.name in SCENARIOS:
+            raise ValueError(
+                f"Scenario '{_scenario.name}' is defined by both "
+                f"'{SCENARIO_CAMPAIGNS[_scenario.name].name}' and '{_campaign.name}'"
+            )
+        SCENARIOS[_scenario.name] = _scenario
+        SCENARIO_CAMPAIGNS[_scenario.name] = _campaign
