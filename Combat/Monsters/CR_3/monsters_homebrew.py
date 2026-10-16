@@ -265,7 +265,11 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
         )
 
 
-class Greypaw(ExtendedCombatantData):
+class GreypawCR3(ExtendedCombatantData):
+    """Greypaw's third and strongest tier (CR 3). Grows from GreypawCR1
+    (CR 1) and GreypawCR2 (CR 2); new at this tier: Bloodied Frenzy and
+    the heavier 2d8 Bite."""
+
     def __init__(self):
         super().__init__(
             combatant_type="Greypaw",
@@ -347,8 +351,9 @@ class Greypaw(ExtendedCombatantData):
         )
 
 
-class GoblinKing(ExtendedCombatantData):
-    """Scaled-up take on the official Goblin Boss (CR 1): same Scimitar/Shortbow
+class GoblinKingCR3(ExtendedCombatantData):
+    """The Goblin King's second tier (CR 3), grown from GoblinKingCR1.
+    Scaled-up take on the official Goblin Boss (CR 1): same Scimitar/Shortbow
     kit and Redirect Attack, pushed to CR 3 with a third
     attack, more HP, and a Royal Command bonus action (in place of Nimble Escape) that spends his
     rabble's Reactions."""

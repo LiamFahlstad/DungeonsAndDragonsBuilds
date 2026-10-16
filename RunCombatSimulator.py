@@ -86,6 +86,7 @@ if __name__ == "__main__":
 
     scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
     combatants = scenario.build_combatants() if scenario else []
+    allies = scenario.build_allies() if scenario else []
     character_sheets = scenario.build_character_sheets() if scenario else []
 
     if args.player_log:
@@ -114,7 +115,11 @@ if __name__ == "__main__":
                 "tracked party, or use a scenario whose build_character_sheets provides them"
             )
 
-        from Combat.EncounterDifficulty import evaluate_encounter_combatants
+        from Combat.EncounterDifficulty import (
+            classify_difficulty,
+            cr_to_xp,
+            evaluate_encounter_combatants,
+        )
 
         character_levels = [cs.character_level for cs in character_sheets]
         result = evaluate_encounter_combatants(character_levels, combatants)
@@ -122,6 +127,8 @@ if __name__ == "__main__":
         print(f"Scenario: {args.scenario}")
         print(f"Party levels: {character_levels}")
         print(f"Monsters: {[c.combatant_type for c in combatants]}")
+        if allies:
+            print(f"Allies: {[c.combatant_type for c in allies]}")
         print(f"Base XP: {result.base_xp}")
         print(f"Adjusted XP: {result.adjusted_xp}")
         print(
@@ -130,12 +137,22 @@ if __name__ == "__main__":
             f"Moderate: {result.thresholds.moderate}, "
             f"High: {result.thresholds.high}"
         )
-        print(f"Difficulty: {result.difficulty}")
+        if allies:
+            # Friendly NPCs offset the monsters: rate the fight on monster XP
+            # minus the allies' own XP value.
+            ally_xp = sum(cr_to_xp(a.cr) for a in allies)
+            net_xp = result.adjusted_xp - ally_xp
+            print(f"Difficulty (monsters only): {result.difficulty}")
+            print(f"Ally XP: -{ally_xp}")
+            print(f"Net XP (monsters - allies): {net_xp}")
+            print(f"Difficulty: {classify_difficulty(net_xp, result.thresholds)}")
+        else:
+            print(f"Difficulty: {result.difficulty}")
         print(f"XP awarded: {result.xp_awarded}")
         sys.exit(0)
 
     app = CombatAppQt(
-        combatants=combatants,
+        combatants=allies + combatants,
         character_sheets=character_sheets,
         combatants_per_column=scenario.combatants_per_column if scenario else 4,
         resume_log_path=args.log,

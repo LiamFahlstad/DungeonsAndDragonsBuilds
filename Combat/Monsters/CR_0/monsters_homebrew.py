@@ -1,5 +1,10 @@
 from Core.Definitions import Condition, CreatureSize, DamageType
-from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, MonsterType
+from Model.Creatures.Combatants import (
+    Alignment,
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
 from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
@@ -403,6 +408,85 @@ class CurseHighAccursed(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
                     additional_ruling="The target must succeed on a DC 11 Strength or Dexterity saving throw or the Curse-High Accursed attaches to its back. While attached, it moves with the target, cannot be targeted separately, and the target's speed is halved. At the start of the Accursed's turn, the target takes 3 (1d6) Psychic damage. The target can use its action to make a DC 11 Strength (Athletics) or Dexterity (Acrobatics) check to detach it; an adjacent creature can instead make a DC 8 Strength (Athletics) check.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class HaratCR1_2(ExtendedCombatantData):
+    """Young dwarf warrior of Stonehill, son of Clan Leader Harald. Built on the
+    official Tough (CR 1/2) -- a single sturdy melee attack, no multiattack --
+    with dwarven resilience and a stubbornness trait. Wields Thunder
+    (CharacterContent/Items/Weapons/Magic.py): +1 to attack and damage,
+    Bludgeoning or Thunder per hit. Thunder's Storm Charges only come from
+    hits with its twin, Lightning, so they're left off the stat block.
+    First of three tiers that level up with the party: grows into
+    HaratCR1 (CR 1) and HaratCR2 (CR 2)."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Harat, Son of Harald",
+            description="Young, headstrong heir of Harald, Clan Leader of the Stonehill dwarves. Too stubborn to retreat, too proud to ask for help.",
+            hp=32,
+            ac=14,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 14,
+                Ability.DEXTERITY: 10,
+                Ability.CONSTITUTION: 14,
+                Ability.INTELLIGENCE: 9,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 11,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1/2",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Dwarf",
+            alignment=Alignment.LAWFUL_GOOD,
+            size=CreatureSize.MEDIUM,
+            ac_note="scale mail",
+            hp_formula="5d8 + 10",
+            speed_ground_ft=25,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.ATHLETICS: 4},
+            damage_vulnerabilities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 10",
+            languages="Common, Dwarvish",
+            traits=[
+                MonsterAbility(
+                    name="Dwarven Resilience",
+                    description="Harat has Advantage on saving throws he makes to avoid or end the Poisoned condition.",
+                ),
+                MonsterAbility(
+                    name="Stubborn as Stone",
+                    description="Harat has Advantage on saving throws against the Charmed and Frightened conditions, and on Strength checks and saving throws made to resist being shoved, moved, or knocked Prone.",
+                ),
+            ],
+            actions=[
+                MeleeAttack(
+                    name="Thunder",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.BLUDGEONING,
+                    additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
                 ),
             ],
             bonus_actions=[],

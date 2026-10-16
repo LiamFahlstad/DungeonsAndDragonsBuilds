@@ -419,3 +419,249 @@ class CurseMindBroken(ExtendedCombatantData):
             lair_actions=[],
             mythic_actions=[],
         )
+
+
+class HaratCR1(ExtendedCombatantData):
+    """Harat's second tier (CR 1), between HaratCR1_2 (CR 1/2, built on
+    the official Tough) and HaratCR2 (CR 2, built toward the
+    official Berserker). New at this tier: a shield, Multiattack with Thunder,
+    and the Shield of Stonehill reaction to protect adjacent allies."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Harat, Shield of Stonehill",
+            description="Harald's son has started to earn his place in the clan: still stubborn, but now he plants himself in front of his friends instead of charging ahead.",
+            hp=39,
+            ac=16,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 15,
+                Ability.DEXTERITY: 10,
+                Ability.CONSTITUTION: 15,
+                Ability.INTELLIGENCE: 9,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 11,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Dwarf",
+            alignment=Alignment.LAWFUL_GOOD,
+            size=CreatureSize.MEDIUM,
+            ac_note="scale mail, shield",
+            hp_formula="6d8 + 12",
+            speed_ground_ft=25,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.ATHLETICS: 4},
+            damage_vulnerabilities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 10",
+            languages="Common, Dwarvish",
+            traits=[
+                MonsterAbility(
+                    name="Dwarven Resilience",
+                    description="Harat has Advantage on saving throws he makes to avoid or end the Poisoned condition.",
+                ),
+                MonsterAbility(
+                    name="Stubborn as Stone",
+                    description="Harat has Advantage on saving throws against the Charmed and Frightened conditions, and on Strength checks and saving throws made to resist being shoved, moved, or knocked Prone.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="Harat",
+                    attacks_text="two Thunder attacks",
+                    use_article=False,
+                ),
+                MeleeAttack(
+                    name="Thunder",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.BLUDGEONING,
+                    additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[
+                MonsterAbility(
+                    name="Shield of Stonehill",
+                    description="Trigger: A creature Harat can see makes an attack roll against an ally within 5 feet of him. Response: Harat interposes his shield, imposing Disadvantage on the attack roll.",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class GreypawCR1(ExtendedCombatantData):
+    """Greypaw's first tier (CR 1), built on the official Dire Wolf (CR 1):
+    a single prone-free Bite and the tracker's senses. Grows into GreypawCR2
+    (CR 2) and then GreypawCR3 (CR 3, CR_3/monsters_homebrew.py)."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Greypaw (Young)",
+            hp=30,
+            ac=13,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 16,
+                Ability.DEXTERITY: 13,
+                Ability.CONSTITUTION: 15,
+                Ability.INTELLIGENCE: 3,
+                Ability.WISDOM: 12,
+                Ability.CHARISMA: 5,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1",
+            monster_type=MonsterType.BEAST,
+            monster_type_note="Mutated",
+            alignment=Alignment.UNALIGNED,
+            size=CreatureSize.LARGE,
+            ac_note="Thick Hide",
+            hp_formula="4d10 + 8",
+            speed_ground_ft=40,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.PERCEPTION: 3,
+                Skill.SURVIVAL: 3,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="darkvision 60 ft., keen smell, Passive Perception 13",
+            languages="None",
+            traits=[
+                MonsterAbility(
+                    name="Keen Hearing and Smell",
+                    description="Greypaw has advantage on Wisdom (Perception) checks that rely on hearing or smell.",
+                ),
+                MonsterAbility(
+                    name="Relentless Tracker",
+                    description="Greypaw has advantage on Wisdom (Survival) checks made to track creatures. It can identify a creature by scent after smelling something it touched or wore.",
+                ),
+            ],
+            actions=[
+                MeleeAttack(
+                    name="Bite",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D10,
+                    damage_bonus=3,
+                    damage_type=DamageType.PIERCING,
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class GoblinKingCR1(ExtendedCombatantData):
+    """The Goblin King's first tier (CR 1), before he grows into GoblinKingCR3.
+    The official Goblin Boss (CR 1) stat block -- Scimitar/Shortbow
+    Multiattack and Redirect Attack -- with Royal Command (one goblin) in
+    place of Nimble Escape."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Goblin King (Upstart)",
+            hp=21,
+            ac=17,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 10,
+                Ability.DEXTERITY: 15,
+                Ability.CONSTITUTION: 10,
+                Ability.INTELLIGENCE: 10,
+                Ability.WISDOM: 8,
+                Ability.CHARISMA: 12,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1",
+            monster_type=MonsterType.FEY,
+            monster_type_note="Goblinoid",
+            alignment=Alignment.CHAOTIC_NEUTRAL,
+            size=CreatureSize.SMALL,
+            ac_note="chain shirt, shield",
+            hp_formula="6d6",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.INTIMIDATION: 3, Skill.STEALTH: 6},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 9",
+            languages="Common, Goblin",
+            traits=[],
+            actions=[
+                Multiattack(
+                    creature_name="goblin",
+                    attacks_text="two attacks, using Scimitar or Shortbow in any combination",
+                ),
+                MeleeAttack(
+                    name="Scimitar",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.SLASHING,
+                    additional_ruling="If the attack roll had Advantage, the target takes an extra 2 (1d4) Slashing damage.",
+                ),
+                RangedAttack(
+                    name="Shortbow",
+                    attack_bonus=4,
+                    range_ft=80,
+                    long_range_ft=320,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=2,
+                    damage_type=DamageType.PIERCING,
+                    additional_ruling="If the attack roll had Advantage, the target takes an extra 2 (1d4) Piercing damage.",
+                ),
+            ],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Royal Command",
+                    description="The goblin barks an order at one allied goblin within 30 feet of it that can hear it. That goblin can take a Reaction to move up to half its Speed and make one weapon attack.",
+                ),
+            ],
+            reactions=[
+                MonsterAbility(
+                    name="Redirect Attack",
+                    description="Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead.",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )

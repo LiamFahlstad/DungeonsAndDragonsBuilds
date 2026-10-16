@@ -10,6 +10,8 @@ from Model.Creatures.MonsterAbilities import (
     DiceType,
     MeleeAttack,
     MonsterAbility,
+    Multiattack,
+    SavingThrowEffect,
 )
 from Core.Definitions import Ability
 
@@ -242,6 +244,189 @@ class AccursedGroupOf5(ExtendedCombatantData):
                     description="The Accursed Group of 3 can dash as a bonus action on it's first turn of combat.",
                 ),
             ],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class HaratCR2(ExtendedCombatantData):
+    """Harat's third tier (CR 2), built toward the official Berserker (CR 2)'s
+    durability while keeping his shield. Keeps everything from
+    HaratCR1 (CR 1) and adds Thunderclap (a recharge area
+    shove that finally taps Thunder's namesake damage) and Too Stubborn to
+    Fall."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Harat, Thunder of Stonehill",
+            description="Harat has grown into the hammer his father entrusted him with. When Thunder strikes the ground, the whole battle line hears it.",
+            hp=45,
+            ac=16,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 16,
+                Ability.DEXTERITY: 10,
+                Ability.CONSTITUTION: 16,
+                Ability.INTELLIGENCE: 9,
+                Ability.WISDOM: 11,
+                Ability.CHARISMA: 11,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="2",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Dwarf",
+            alignment=Alignment.LAWFUL_GOOD,
+            size=CreatureSize.MEDIUM,
+            ac_note="scale mail, shield",
+            hp_formula="6d8 + 18",
+            speed_ground_ft=25,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.ATHLETICS: 5},
+            damage_vulnerabilities=[],
+            damage_resistances=[
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 10",
+            languages="Common, Dwarvish",
+            traits=[
+                MonsterAbility(
+                    name="Dwarven Resilience",
+                    description="Harat has Advantage on saving throws he makes to avoid or end the Poisoned condition.",
+                ),
+                MonsterAbility(
+                    name="Stubborn as Stone",
+                    description="Harat has Advantage on saving throws against the Charmed and Frightened conditions, and on Strength checks and saving throws made to resist being shoved, moved, or knocked Prone.",
+                ),
+                MonsterAbility(
+                    name="Too Stubborn to Fall (1/Day)",
+                    description="If Harat would be reduced to 0 Hit Points but not killed outright, he drops to 1 Hit Point instead.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="Harat",
+                    attacks_text="two Thunder attacks",
+                    use_article=False,
+                ),
+                MeleeAttack(
+                    name="Thunder",
+                    attack_bonus=6,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.BLUDGEONING,
+                    additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
+                ),
+                SavingThrowEffect(
+                    name="Thunderclap (Recharge 5-6)",
+                    ability=Ability.CONSTITUTION,
+                    dc=13,
+                    target="each creature of Harat's choice in a 10-foot Emanation originating from him",
+                    dice_count=2,
+                    dice_type=DiceType.D8,
+                    damage_type=DamageType.THUNDER,
+                    failure_effect="and the target is pushed 10 feet straight away from Harat and has the Prone condition",
+                    success_effect="Half damage only.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[
+                MonsterAbility(
+                    name="Shield of Stonehill",
+                    description="Trigger: A creature Harat can see makes an attack roll against an ally within 5 feet of him. Response: Harat interposes his shield, imposing Disadvantage on the attack roll.",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class GreypawCR2(ExtendedCombatantData):
+    """Greypaw's second tier (CR 2), between GreypawCR1 (CR 1, built on the
+    official Dire Wolf) and GreypawCR3 (CR 3). New at this tier: Multiattack
+    (two Bites) and the Bite's knock-Prone rider. Bloodied Frenzy and the
+    heavier 2d8 Bite come at CR 3."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Greypaw (Grown)",
+            hp=52,
+            ac=13,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 17,
+                Ability.DEXTERITY: 13,
+                Ability.CONSTITUTION: 16,
+                Ability.INTELLIGENCE: 3,
+                Ability.WISDOM: 13,
+                Ability.CHARISMA: 5,
+            },
+            saving_throws={
+                Ability.STRENGTH: 5,
+            },
+            spell_slots={},
+            cr="2",
+            monster_type=MonsterType.BEAST,
+            monster_type_note="Mutated",
+            alignment=Alignment.UNALIGNED,
+            size=CreatureSize.LARGE,
+            ac_note="Thick Hide",
+            hp_formula="7d10 + 14",
+            speed_ground_ft=40,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.PERCEPTION: 5,
+                Skill.SURVIVAL: 3,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="darkvision 60 ft., keen smell, Passive Perception 15",
+            languages="None",
+            traits=[
+                MonsterAbility(
+                    name="Keen Hearing and Smell",
+                    description="Greypaw has advantage on Wisdom (Perception) checks that rely on hearing or smell.",
+                ),
+                MonsterAbility(
+                    name="Relentless Tracker",
+                    description="Greypaw has advantage on Wisdom (Survival) checks made to track creatures. It can identify a creature by scent after smelling something it touched or wore.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="Greypaw",
+                    attacks_text="two Bite attacks",
+                    use_article=False,
+                ),
+                MeleeAttack(
+                    name="Bite",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D8,
+                    damage_bonus=3,
+                    damage_type=DamageType.PIERCING,
+                    additional_ruling="If the target is a Medium or smaller creature, it must succeed on a DC 12 Strength saving throw or be knocked Prone.",
+                ),
+            ],
+            bonus_actions=[],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,

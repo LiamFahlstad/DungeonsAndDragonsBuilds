@@ -6,7 +6,12 @@ from Combat.Monsters.CR_0.monsters_homebrew import (
     PhysicalAccursed,
 )
 from Combat.Monsters.CR_1.monsters import GoblinBoss
-from Combat.Monsters.CR_1.monsters_homebrew import AccursedGroupOf3, CommonCultist
+from Combat.Monsters.CR_1.monsters_homebrew import (
+    AccursedGroupOf3,
+    CommonCultist,
+    GoblinKingCR1,
+    GreypawCR1,
+)
 from Combat.Monsters.CR_2.monsters_homebrew import (
     AccursedGroupOf5,
     PriestOfTheBlackTongues,
@@ -15,7 +20,6 @@ from Combat.Monsters.CR_3.monsters import GoblinHexer
 from Combat.Monsters.CR_3.monsters_homebrew import (
     CantorOfTheBlackChoir,
     GarronTheKindly,
-    GoblinKing,
     SerCaldusTheVowOfSilence,
 )
 from Combat.Monsters.CR_4.monsters_homebrew import (
@@ -125,7 +129,7 @@ def get_goblin_scouting_party_combatants() -> list[Combatants.BasicCombatantData
     boss2.set_name("Goblin Boss 2")
 
     warriors = []
-    for i in range(1, 7):
+    for i in range(1, 5):
         warrior = GoblinWarrior()
         warrior.set_name(f"Goblin Warrior {i}")
         warriors.append(warrior)
@@ -143,11 +147,8 @@ def get_goblin_warband_ambush_combatants() -> list[Combatants.BasicCombatantData
     hexer = GoblinHexer()
     hexer.set_name("Goblin Hexer")
 
-    boss = GoblinBoss()
-    boss.set_name("Goblin Boss")
-
     warriors = []
-    for i in range(1, 4):
+    for i in range(1, 3):
         warrior = GoblinWarrior()
         warrior.set_name(f"Goblin Warrior {i}")
         warriors.append(warrior)
@@ -158,20 +159,32 @@ def get_goblin_warband_ambush_combatants() -> list[Combatants.BasicCombatantData
         minion.set_name(f"Goblin Minion {i}")
         minions.append(minion)
 
-    return [hexer, boss, *warriors, *minions]
+    return [hexer, *warriors, *minions]
 
 
 def get_wrath_of_durmor_combatants() -> list[Combatants.BasicCombatantData]:
     durmor = ManifestationOfDurmor()
     durmor.set_name("Manifestation of Durmor")
 
-    king = GoblinKing()
+    king = GoblinKingCR1()
     king.set_name("Goblin King")
 
     minions = []
-    for i in range(1, 9):
+    for i in range(1, 5):
         minion = GoblinMinion()
         minion.set_name(f"Goblin Minion {i}")
         minions.append(minion)
 
     return [durmor, king, *minions]
+
+
+def get_stonehill_allies() -> list[Combatants.BasicCombatantData]:
+    """Friendly NPCs fighting alongside the party in the goblin/Durmor encounters,
+    at their lowest tiers. Only Greypaw is helping out this time; add
+    HaratCR1_2() back to the list when Harat joins. They level up with the party: Harat CR 1/2 -> 1 -> 2
+    (HaratCR1_2 -> HaratCR1 -> HaratCR2),
+    Greypaw CR 1 -> 2 -> 3 (GreypawCR1 -> GreypawCR2 -> GreypawCR3)."""
+    greypaw = GreypawCR1()
+    greypaw.set_name("Greypaw (Ally)")
+
+    return [greypaw]

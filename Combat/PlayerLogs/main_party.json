@@ -1,3 +1,334 @@
 {
-  "sessions": []
+  "sessions": [
+    {
+      "type": "encounter",
+      "scenario": "goblin_scouting_party",
+      "started_at": "2026-10-15T18:54:57",
+      "round_number": 4,
+      "round_1": [
+        {
+          "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) takes 14 Bludgeoning damage from Kivi J\u00e4tti",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -14,
+            "temp_delta": 0,
+            "dmg": 14,
+            "damage_type": "Bludgeoning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Boss 1 (Goblin Boss)",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) gains Bloodied from Kivi J\u00e4tti",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Boss 1 (Goblin Boss)"
+          }
+        },
+        {
+          "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Edmund takes 3 Slashing damage from Goblin Boss 1 (Goblin Boss)",
+          "character": "Edmund",
+          "action": "damage",
+          "value": {
+            "hp_delta": -3,
+            "temp_delta": 0,
+            "dmg": 3,
+            "damage_type": "Slashing",
+            "source_name": "Goblin Boss 1 (Goblin Boss)",
+            "target_name": "Edmund",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ],
+      "round_2": [
+        {
+          "text": "--- Round 2 ---"
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Boss 1 (Goblin Boss) takes 5 Fire damage from Kivi J\u00e4tti",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -5,
+            "temp_delta": 0,
+            "dmg": 5,
+            "damage_type": "Fire",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Boss 1 (Goblin Boss)",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) takes 4 Force damage from Kivi J\u00e4tti",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -4,
+            "temp_delta": 0,
+            "dmg": 4,
+            "damage_type": "Force",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Boss 1 (Goblin Boss)",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) loses Bloodied from Kivi J\u00e4tti",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Boss 1 (Goblin Boss)"
+          }
+        },
+        {
+          "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) fails a death save (1/3 fails)",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) fails a death save (2/3 fails)",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) has died (3 failed death saves)",
+          "character": "Goblin Boss 1 (Goblin Boss)",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Clover's turn] Goblin Boss 2 (Goblin Boss) takes 6 Psychic damage from Clover",
+          "character": "Goblin Boss 2 (Goblin Boss)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -6,
+            "temp_delta": 0,
+            "dmg": 6,
+            "damage_type": "Psychic",
+            "source_name": "Clover",
+            "target_name": "Goblin Boss 2 (Goblin Boss)",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ],
+      "round_3": [
+        {
+          "text": "--- Round 3 ---"
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) takes 7 Cold damage from Kivi J\u00e4tti",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Cold",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Warrior 4 (Goblin Warrior)",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) gains Bloodied from Kivi J\u00e4tti",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "add_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Warrior 4 (Goblin Warrior)"
+          }
+        },
+        {
+          "text": "[Goblin Boss 2 (Goblin Boss)'s turn] Greypaw (Ally) (Greypaw (Young)) takes 3 Poison damage from Greypaw (Ally) (Greypaw (Young))",
+          "character": "Greypaw (Ally) (Greypaw (Young))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -3,
+            "temp_delta": 0,
+            "dmg": 3,
+            "damage_type": "Poison",
+            "source_name": "Greypaw (Ally) (Greypaw (Young))",
+            "target_name": "Greypaw (Ally) (Greypaw (Young))",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Goblin Warrior 2 (Goblin Warrior)'s turn] Clover takes 3 Piercing damage from Goblin Warrior 2 (Goblin Warrior)",
+          "character": "Clover",
+          "action": "damage",
+          "value": {
+            "hp_delta": -3,
+            "temp_delta": 0,
+            "dmg": 3,
+            "damage_type": "Piercing",
+            "source_name": "Goblin Warrior 2 (Goblin Warrior)",
+            "target_name": "Clover",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ],
+      "round_4": [
+        {
+          "text": "--- Round 4 ---"
+        },
+        {
+          "text": "[Edmund's turn] Edmund takes 7 Slashing damage from Goblin Warrior 4 (Goblin Warrior)",
+          "character": "Edmund",
+          "action": "damage",
+          "value": {
+            "hp_delta": -7,
+            "temp_delta": 0,
+            "dmg": 7,
+            "damage_type": "Slashing",
+            "source_name": "Goblin Warrior 4 (Goblin Warrior)",
+            "target_name": "Edmund",
+            "knockout": false,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] Goblin Minion 1 (Goblin Minion) takes 18 Slashing damage from Edmund",
+          "character": "Goblin Minion 1 (Goblin Minion)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -18,
+            "temp_delta": 0,
+            "dmg": 18,
+            "damage_type": "Slashing",
+            "source_name": "Edmund",
+            "target_name": "Goblin Minion 1 (Goblin Minion)",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Edmund's turn] Goblin Minion 1 (Goblin Minion) fails a death save (1/3 fails)",
+          "character": "Goblin Minion 1 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Edmund's turn] Goblin Minion 1 (Goblin Minion) fails a death save (2/3 fails)",
+          "character": "Goblin Minion 1 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Edmund's turn] Goblin Minion 1 (Goblin Minion) has died (3 failed death saves)",
+          "character": "Goblin Minion 1 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) takes 9 Lightning damage from Kivi J\u00e4tti",
+          "character": "Goblin Minion 2 (Goblin Minion)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -9,
+            "temp_delta": 0,
+            "dmg": 9,
+            "damage_type": "Lightning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Minion 2 (Goblin Minion)",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (1/3 fails)",
+          "character": "Goblin Minion 2 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (2/3 fails)",
+          "character": "Goblin Minion 2 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) has died (3 failed death saves)",
+          "character": "Goblin Minion 2 (Goblin Minion)",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) takes 4 Lightning damage from Kivi J\u00e4tti",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "damage",
+          "value": {
+            "hp_delta": -4,
+            "temp_delta": 0,
+            "dmg": 4,
+            "damage_type": "Lightning",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Warrior 4 (Goblin Warrior)",
+            "knockout": true,
+            "outcome": null
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) loses Bloodied from Kivi J\u00e4tti",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "remove_condition",
+          "value": {
+            "condition": "Bloodied",
+            "source_name": "Kivi J\u00e4tti",
+            "target_name": "Goblin Warrior 4 (Goblin Warrior)"
+          }
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (1/3 fails)",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (2/3 fails)",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "death_save_fail",
+          "value": false
+        },
+        {
+          "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) has died (3 failed death saves)",
+          "character": "Goblin Warrior 4 (Goblin Warrior)",
+          "action": "death_save_fail",
+          "value": true
+        },
+        {
+          "text": "[Greypaw (Ally) (Greypaw (Young))'s turn] Greypaw (Ally) (Greypaw (Young)) takes 4 Poison damage from Greypaw (Ally) (Greypaw (Young))",
+          "character": "Greypaw (Ally) (Greypaw (Young))",
+          "action": "damage",
+          "value": {
+            "hp_delta": -4,
+            "temp_delta": 0,
+            "dmg": 4,
+            "damage_type": "Poison",
+            "source_name": "Greypaw (Ally) (Greypaw (Young))",
+            "target_name": "Greypaw (Ally) (Greypaw (Young))",
+            "knockout": false,
+            "outcome": null
+          }
+        }
+      ]
+    }
+  ]
 }
