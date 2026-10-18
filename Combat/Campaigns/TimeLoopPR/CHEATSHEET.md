@@ -26,6 +26,7 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 
 | Scenario | Command |
 |---|---|
+| Outside the Gates (easy) | `python RunCombatSimulator.py --scenario time_loop_pr_outside_the_gates --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_outside_the_gates.json` |
 | The Drunk Oxe (moderate) | `python RunCombatSimulator.py --scenario time_loop_pr_drunk_oxe --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_drunk_oxe.json` |
 | The Square (about 3× the High budget) | `python RunCombatSimulator.py --scenario time_loop_pr_square --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_square.json` |
 

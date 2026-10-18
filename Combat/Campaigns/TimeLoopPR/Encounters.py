@@ -1,7 +1,27 @@
 from Combat import Combatants
+from Combat.Monsters.CR_0.monsters_homebrew import DwarfLifeCleric, ElfDruidOfTheLand
 from Combat.Monsters.CR_1.monsters import BugbearWarrior, Pirate, Tiger
+from Combat.Monsters.CR_1.monsters_homebrew import GoliathPaladinOfDevotion, OrcAssassin
 from Combat.Monsters.CR_2.monsters import Priest, Rhinoceros, SabertoothedTiger
 from Combat.Monsters.CR_6.monsters import Vrock
+
+
+def get_outside_the_gates_combatants() -> list[Combatants.BasicCombatantData]:
+    """An easy fight against a rival adventuring party: one tank, one healer,
+    one control, one DPS."""
+    paladin = GoliathPaladinOfDevotion()
+    paladin.set_name("Paladin")
+
+    cleric = DwarfLifeCleric()
+    cleric.set_name("Cleric")
+
+    druid = ElfDruidOfTheLand()
+    druid.set_name("Druid")
+
+    assassin = OrcAssassin()
+    assassin.set_name("Assassin")
+
+    return [paladin, cleric, druid, assassin]
 
 
 def get_drunk_oxe_combatants() -> list[Combatants.BasicCombatantData]:

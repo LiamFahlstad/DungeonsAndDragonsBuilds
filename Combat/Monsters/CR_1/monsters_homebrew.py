@@ -12,6 +12,7 @@ from Model.Creatures.MonsterAbilities import (
     MonsterAbility,
     Multiattack,
     RangedAttack,
+    SavingThrowEffect,
 )
 from Core.Definitions import Ability
 
@@ -660,6 +661,163 @@ class GoblinKingCR1(ExtendedCombatantData):
                     description="Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead.",
                 ),
             ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class GoliathPaladinOfDevotion(ExtendedCombatantData):
+    """Tank: a simplified level 3 Oath of Devotion Paladin (Goliath, Stone Giant
+    ancestry). Taunts with Compelled Duel, smites with a radiant longsword and
+    soaks hits with Stone's Endurance."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Goliath Paladin of Devotion",
+            hp=38,
+            ac=16,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 14,
+                Ability.DEXTERITY: 10,
+                Ability.CONSTITUTION: 13,
+                Ability.INTELLIGENCE: 8,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 12,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Goliath, Paladin",
+            alignment=Alignment.LAWFUL_GOOD,
+            size=CreatureSize.MEDIUM,
+            ac_note="scale mail, shield",
+            hp_formula="7d8 + 7",
+            speed_ground_ft=35,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.ATHLETICS: 4,
+                Skill.INTIMIDATION: 3,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Passive Perception 10",
+            languages="Common, Giant",
+            traits=[
+                MonsterAbility(
+                    name="Divine Smite (2/Day)",
+                    description="Immediately after the paladin hits a creature with a melee weapon, the target takes an extra 9 (2d8) Radiant damage.",
+                ),
+            ],
+            actions=[
+                MeleeAttack(
+                    name="Sacred Longsword",
+                    attack_bonus=4,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D8,
+                    damage_bonus=2,
+                    damage_type=DamageType.RADIANT,
+                ),
+                DcMonsterAbility(
+                    name="Compelled Duel (1/Day)",
+                    description="The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[
+                MonsterAbility(
+                    name="Stone's Endurance (2/Day)",
+                    description="When the paladin takes damage, it reduces the damage by 7 (1d12 + 1).",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class OrcAssassin(ExtendedCombatantData):
+    """DPS: a simplified level 3 Assassin Rogue (Orc). Strikes first with
+    Assassinate, darts in and out with Cunning Action, and shrugs off its
+    first killing blow with Relentless Endurance."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Orc Assassin",
+            hp=22,
+            ac=14,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 10,
+                Ability.DEXTERITY: 16,
+                Ability.CONSTITUTION: 12,
+                Ability.INTELLIGENCE: 8,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 10,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="1",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Orc, Rogue",
+            alignment=Alignment.NEUTRAL_EVIL,
+            size=CreatureSize.MEDIUM,
+            ac_note="leather armor",
+            hp_formula="4d8 + 4",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.ACROBATICS: 5,
+                Skill.PERCEPTION: 2,
+                Skill.STEALTH: 7,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 120 ft., Passive Perception 12",
+            languages="Common, Orc, Thieves' Cant",
+            traits=[
+                MonsterAbility(
+                    name="Assassinate and Sneak Attack",
+                    description="The assassin has Advantage on Initiative rolls, and during the first round of combat it has Advantage on attack rolls against any creature that hasn't taken a turn yet. Once per turn, it deals an extra 7 (2d6) damage when it hits with a weapon attack that has Advantage, or when the target is within 5 feet of one of its allies that doesn't have the Incapacitated condition.",
+                ),
+                MonsterAbility(
+                    name="Relentless Endurance (1/Day)",
+                    description="When the assassin is reduced to 0 Hit Points but not killed outright, it drops to 1 Hit Point instead.",
+                ),
+            ],
+            actions=[
+                MeleeAttack(
+                    name="Shortsword",
+                    attack_bonus=5,
+                    reach_ft=5,
+                    dice_count=1,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.PIERCING,
+                ),
+            ],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Cunning Action",
+                    description="The assassin takes the Dash, Disengage, or Hide action.",
+                ),
+            ],
+            reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
             lair_actions=[],

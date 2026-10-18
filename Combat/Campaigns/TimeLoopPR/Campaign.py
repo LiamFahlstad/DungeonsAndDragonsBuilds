@@ -14,6 +14,10 @@ CAMPAIGN = Campaign(
     players=Players.get_players_group,
     scenarios=[
         CombatScenario(
+            name="time_loop_pr_outside_the_gates",
+            combatants=lambda: Encounters.get_outside_the_gates_combatants(),
+        ),
+        CombatScenario(
             name="time_loop_pr_drunk_oxe",
             combatants=lambda: Encounters.get_drunk_oxe_combatants(),
         ),
