@@ -35,7 +35,9 @@ required for the core build engine above.
 | Character Creator GUI | `python RunCharacterCreatorUI.py` | included in `requirements.txt` (PyQt6) |
 | Combat simulator | `python RunCombatSimulator.py` | included in `requirements.txt` (PyQt6) |
 | Spell/subclass/monster scrapers (`Scrapers/`, `Combat/Tools/scrape_monsters.py`) | e.g. `python Scrapers/DnD2024SpellScraper.py` | `pip install beautifulsoup4 requests tqdm` |
-| Monster stat analysis | `python Combat/Tools/analyze_monster_stats.py` | `pip install matplotlib numpy` |
+| Monster power score (CR-relative) | `python Combat/Tools/monster_score.py "Air Elemental"` | none |
+
+For every runnable script and flag, see [HOWTO.md](HOWTO.md).
 
 ## Project layout
 

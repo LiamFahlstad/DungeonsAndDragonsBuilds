@@ -5,6 +5,7 @@ own cheat sheet with the exact commands to run it:
 
 - [Curse of the Lich](Campaigns/CurseOfTheLich/CHEATSHEET.md) (`curse_of_the_lich`, the default campaign)
 - [Time Loop PR (oneshot)](Campaigns/TimeLoopPR/CHEATSHEET.md) (`time_loop_pr`)
+- [Grim's Castle](Campaigns/GrimsCastle/CHEATSHEET.md) (`grims_castle`, placeholder party)
 
 ## Campaign layout
 

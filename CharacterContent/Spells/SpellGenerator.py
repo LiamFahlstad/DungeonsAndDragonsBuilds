@@ -2,7 +2,7 @@
 
 SpellFactory merges Spells/spells_dnd2024.json, spells_aidedd.json, and
 spells_dnd5e.json in that priority order. Run directly
-(`python Spells/SpellGenerator.py`) whenever any of those files change to
+(`python -m CharacterContent.Spells.SpellGenerator` from the repo root) whenever any of those files change to
 regenerate the per-class and per-school spell-name enums.
 """
 

@@ -2,7 +2,7 @@
 
 Spells are grouped by level (Cantrips first, then Level 1, 2, ...) and sorted
 alphabetically within each level. Run directly
-(`python Spells/SpellCompendiumGenerator.py`) to regenerate the output file.
+(`python Presentation/SpellCompendium.py`) to regenerate the output file.
 """
 
 import sys

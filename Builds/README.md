@@ -30,7 +30,7 @@ To start from an existing build and tweak it, either click **Load build…**
 or pass it on the command line:
 
 ```bash
-python RunCharacterCreatorUI.py --load-build Builds/Characters/OptimizedBarbarianBerserker.py
+python RunCharacterCreatorUI.py --load-build Builds/Characters/Y2024_Barbarian_Berserker_YmiraSkullcrusher.py
 ```
 
 Notes:
@@ -84,7 +84,7 @@ CharacterContent/Classes/BaseClasses/
 
 **Find valid subclasses** (after choosing your class):
 ```
-CharacterContent/Classes/SubClasses/
+CharacterContent/Classes/SubClasses2024/   (2014-only subclasses: SubClasses2014/)
 ├── FighterChampion.py        # Fighter subclass
 ├── FighterBattleMaster.py     # Fighter subclass
 ├── ClericKnowledge.py         # Cleric subclass

@@ -7,11 +7,13 @@ folder and add its CAMPAIGN to the tuple below."""
 
 from Combat.Campaign import Campaign
 from Combat.Campaigns.CurseOfTheLich.Campaign import CAMPAIGN as CURSE_OF_THE_LICH
+from Combat.Campaigns.GrimsCastle.Campaign import CAMPAIGN as GRIMS_CASTLE
 from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN as TIME_LOOP_PR
 from Combat.Scenario import CombatScenario
 
 CAMPAIGNS: dict[str, Campaign] = {
-    campaign.name: campaign for campaign in (CURSE_OF_THE_LICH, TIME_LOOP_PR)
+    campaign.name: campaign
+    for campaign in (CURSE_OF_THE_LICH, TIME_LOOP_PR, GRIMS_CASTLE)
 }
 DEFAULT_CAMPAIGN = CURSE_OF_THE_LICH.name
 

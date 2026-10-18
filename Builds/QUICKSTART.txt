@@ -18,14 +18,15 @@ Step-by-step instructions to create your first build:
    - Configure equipment
    - Set your character name
 
-3. REGISTER IN MAIN.PY
-   Add two lines to RunCharacterCreator.py:
-   
+3. REGISTER IN RunCharacterCreator.py
+   (The template's class is YourCharacterNameCharacterBuilder; rename it, e.g.
+   to MyNewCharacterBuilder.) Add two lines to RunCharacterCreator.py:
+
    a) At the top with other imports:
       from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
-   
-   b) In BuildSelector.builds() dict:
-      "MyNewBuild": MyNewCharacterBuilder(),
+
+   b) In BuildSelector.builds() dict (the class itself, no parentheses):
+      "MyNewBuild": MyNewCharacterBuilder,
 
 4. RUN YOUR BUILD
    Option A: Generate HTML for all builds
@@ -33,7 +34,7 @@ Step-by-step instructions to create your first build:
 
    Option B: Test just your build (faster)
    python -c "
-   import Definitions
+   import Core.Definitions as Definitions
    from Builds.Characters.MyNewBuild import MyNewCharacterBuilder
    from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
    HtmlCharacterSheetWriter().write_character_sheet(
@@ -43,7 +44,7 @@ Step-by-step instructions to create your first build:
    "
 
 5. FIND YOUR CHARACTER SHEET
-   Look in Output/ for a folder starting with your character name — it contains
+   Look in Output/ for a folder named <class>_<subclass>_<character name> — it contains
    character.html plus per-section pages (features/, fighting_styles.html, spells.html,
    items.html — the last of which includes your weapons)
 
@@ -51,14 +52,14 @@ REFERENCE FILES
 ===============
 - Builds/Examples/_TEMPLATE.py        ← Heavily commented template with all options
 - Builds/README.md                    ← Detailed guide with examples
-- Builds/Examples/ExampleNewBardBard.py  ← Real working example from the template
+- Builds/Examples/*.py                 ← A working example for every class/subclass
 
 HELP WITH CHOICES
 =================
 Classes:              CharacterContent/Classes/BaseClasses/*.py
-Subclasses:           CharacterContent/Classes/SubClasses/*.py
+Subclasses:           CharacterContent/Classes/SubClasses2024/*.py (2014-only: SubClasses2014/)
 Species:              CharacterContent/Species/*.py
-Abilities/Skills:     Definitions.py
+Abilities/Skills:     Core/Definitions.py
 Spells:               CharacterContent/Spells/SpellLists.py
 Feats:                CharacterContent/Features/CharacterFeats/*.py
 Equipment:            CharacterContent/Items/Armor/*.py, CharacterContent/Items/Weapons/*.py
