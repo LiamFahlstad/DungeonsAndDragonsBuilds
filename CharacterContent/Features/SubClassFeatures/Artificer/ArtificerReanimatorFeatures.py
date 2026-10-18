@@ -29,8 +29,9 @@ from Model.Content.FeatureText import (
     Facts,
     Option,
     Paragraph,
-    dc_formula,
     StatBlock,
+    Table,
+    dc_formula,
 )
 
 
@@ -39,6 +40,23 @@ class ReanimatorSpells(Feature):
         super().__init__(
             name="Reanimator Spells", origin="Reanimator Artificer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "False Life, Spare the Dying, Witch Bolt"),
+                    ("5", "Blindness/Deafness, Enhance Ability"),
+                    ("9", "Animate Dead, Lightning Bolt"),
+                    ("13", "Blight, Death Ward"),
+                    ("17", "Antilife Shell, Raise Dead"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -327,6 +345,19 @@ class ImprovedReanimation(Feature):
             origin="Reanimator Artificer Level 9",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Death Burst", "Its damage increases to 4d4"),
+                    (
+                        "Necrotic damage",
+                        "Necrotic damage your companion deals ignores Resistance",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The damage of your Reanimated Companion's Death Burst increases to 4d4. Necrotic damage dealt by your companion ignores Resistance."

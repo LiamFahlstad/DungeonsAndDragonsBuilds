@@ -85,6 +85,22 @@ class DestructiveTrance(Feature):
             usage_tags=["buff", "damage", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("When", "At the start of your turn"),
+                    ("Cost", "One Psionic Energy Die"),
+                    ("Duration", "10 minutes"),
+                    ("Flight", "A Fly Speed of 20 feet, and you can hover"),
+                    (
+                        "Damage",
+                        "When you cast a Psion spell that expends a spell slot, roll your Psionic Energy Die and add it to one damage roll (the roll doesn't expend the die)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At the start of your turn, you can expend one Psionic "
@@ -160,6 +176,21 @@ class EnhancedTelekineticCrush(Feature):
             usage_tags=["damage", "control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You cast Telekinetic Crush"),
+                    ("Cost", "One Psionic Energy Die"),
+                    (
+                        "Slow",
+                        "Whether a creature fails or succeeds on its save, its Speed is halved until the start of your next turn",
+                    ),
+                    ("Damage", "Roll the expended die and add it to one damage roll"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you cast Telekinetic Crush, you can expend one "
@@ -181,6 +212,22 @@ class HeightenedTelekinesis(Feature):
         super().__init__(
             name="Heightened Telekinesis", origin="Psykinetic Psion Level 14"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Free casting",
+                        "Cast Telekinesis by expending four Psionic Energy Dice instead of a spell slot",
+                    ),
+                    (
+                        "No Concentration",
+                        "Cast that way, it can skip Concentration: it lasts 1 minute, and you can concentrate on another spell",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

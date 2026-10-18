@@ -74,6 +74,24 @@ class PrimalLore(Feature):
         self._proficiency_choice.apply(ledger_writer)
         self._language.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Language", "Druidic"),
+                    (
+                        "Cantrip",
+                        "One Druid cantrip; it counts as a Bard spell and doesn't count against your cantrips known",
+                    ),
+                    (
+                        "Replacing",
+                        "Whenever you gain a Bard level, swap it for another Druid cantrip",
+                    ),
+                    ("Skill", f"Proficiency in {self._skill.value}"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn Druidic and one cantrip from the Druid spell list. It counts as a Bard spell for you but doesn't count against the number of cantrips you know. Whenever you gain a Bard level, you can replace this cantrip with another cantrip of your choice from the Druid spell list.\n"

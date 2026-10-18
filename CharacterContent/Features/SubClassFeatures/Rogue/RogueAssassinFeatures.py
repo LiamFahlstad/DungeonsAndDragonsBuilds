@@ -4,6 +4,8 @@ from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Core.Definitions import Ability
 
 
 class Assassinate(Feature):
@@ -19,6 +21,24 @@ class Assassinate(Feature):
         InitiativeRollCondition(Definitions.DiceRollCondition.ADVANTAGE).apply(
             ledger_writer
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You're adept at ambushing a target."),
+            Facts(
+                (
+                    ("Initiative", "Advantage on Initiative rolls"),
+                    (
+                        "Surprising Strikes",
+                        "During the first round of each combat, Advantage on attack rolls against any creature that hasn't taken a turn",
+                    ),
+                    (
+                        "Sneak Attack",
+                        "If your Sneak Attack hits during that round, the target takes extra damage of the weapon's type equal to your Rogue level",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -49,6 +69,19 @@ class InfiltrationExpertise(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Masterful Mimicry",
+                        "Unerringly mimic another person's speech, handwriting or both, after at least 1 hour studying them",
+                    ),
+                    ("Roving Aim", "Steady Aim doesn't reduce your Speed to 0"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You are an expert at the following techniques that aid your infiltrations.\n"
@@ -65,6 +98,19 @@ class EnvenomWeapons(Feature):
             origin="Assassin Rogue Level 13",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use the Poison option of your Cunning Strike"),
+                    (
+                        "Damage",
+                        "Whenever the target fails the save, it also takes 2d6 Poison damage, which ignores Resistance to Poison damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage."
@@ -84,6 +130,20 @@ class DeathStrike(Feature):
         dexterity_modifier = character.get_dexterity_modifier()
         proficiency_bonus = character.get_proficiency_bonus()
         return 8 + dexterity_modifier + proficiency_bonus
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit with your Sneak Attack on the first round of a combat",
+                    ),
+                    ("Save", f"Constitution save, DC {dc_formula(Ability.DEXTERITY)}"),
+                    ("Failed", "The attack's damage is doubled against the target"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target."

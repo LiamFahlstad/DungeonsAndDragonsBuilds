@@ -15,7 +15,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class FrigidExplorer(Feature):
@@ -29,6 +29,23 @@ class FrigidExplorer(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Biting Cold",
+                        "Damage from your weapon attacks, Ranger spells and Ranger features ignores Resistance to Cold damage",
+                    ),
+                    ("Frost Resistance", "Resistance to Cold damage"),
+                    (
+                        "Polar Strikes",
+                        "When you hit a creature with an attack roll using a weapon, deal an extra 1d4 Cold damage (1d6 from Ranger level 11). A target takes it only once per turn.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -48,6 +65,20 @@ class HuntersRime(Feature):
             usage_tags=["heal", "control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Ice rimes you and your prey."),
+            Facts(
+                (
+                    (
+                        "Casting Hunter's Mark",
+                        "Gain 1d10 + Ranger level Temporary Hit Points",
+                    ),
+                    ("Marked creature", "Can't take the Disengage action"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Ice rimes you and your prey, protecting you and hindering them. When you cast Hunter's Mark, you gain Temporary Hit Points equal to 1d10 plus your Ranger level.\n"
@@ -61,6 +92,23 @@ class WinterWalkerSpells(Feature):
         super().__init__(
             name="Winter Walker Spells", origin="Winter Walker Ranger Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Ranger level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Ranger level", "Spell"),
+                (
+                    ("3", "Ice Knife"),
+                    ("5", "Hold Person"),
+                    ("9", "Remove Curse"),
+                    ("13", "Ice Storm"),
+                    ("17", "Cone of Cold"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -87,6 +135,25 @@ class FortifyingSoul(Feature):
             usage_tags=["heal", "buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    (
+                        "Target",
+                        "Creatures you can see, up to your Wisdom modifier (minimum of one)",
+                    ),
+                    ("Heal", "1d10 + Ranger level Hit Points each"),
+                    (
+                        "Courage",
+                        "For 1 hour, Advantage on saving throws to avoid or end the Frightened condition",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -129,6 +196,25 @@ class ChillingRetribution(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature hits you with an attack roll"),
+                    (
+                        "Save",
+                        f"Wisdom save against your spell save DC ({dc_formula(Ability.WISDOM)})",
+                    ),
+                    (
+                        "Failed",
+                        "Stunned until the end of your next turn; its Speed is 0 while Stunned",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

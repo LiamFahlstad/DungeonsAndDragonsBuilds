@@ -11,7 +11,7 @@ from Core.Definitions import Ability, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ElementalSmite(Feature):
@@ -80,6 +80,23 @@ class GenieSpells(Feature):
             name="Genie Spells", origin="Oath of the Noble Genies Paladin Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Chromatic Orb, Elementalism, Thunderous Smite"),
+                    ("5", "Mirror Image, Phantasmal Force"),
+                    ("9", "Fly, Gaseous Form"),
+                    ("13", "Conjure Minor Elementals, Summon Elemental"),
+                    ("17", "Banishing Smite, Contact Other Plane"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you reach a Paladin level specified in the Genie Spells table, you thereafter always have the listed spells prepared\n"
@@ -123,6 +140,19 @@ class GeniesSplendor(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Armor Class",
+                        "10 + Dexterity modifier + Charisma modifier while you aren't wearing armor; you can still use a Shield",
+                    ),
+                    ("Skill", f"Proficiency in {self.skill.value}"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers. You can use a Shield and still gain this benefit.\n"
@@ -142,6 +172,23 @@ class AuraOfElementalShielding(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Area", "Your Aura of Protection"),
+                    (
+                        "Effect",
+                        "You and your allies have Resistance to one damage type: Acid, Cold, Fire, Lightning or Thunder",
+                    ),
+                    (
+                        "Changing",
+                        "At the start of each of your turns, switch to another listed type (no action required)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -222,6 +269,38 @@ class NobleScion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "10 minutes, or until you end it (no action required)",
+                    ),
+                    (
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 5 spell slot (no action required) to restore it",
+                    ),
+                )
+            ),
+            Option(
+                "While active",
+                (
+                    Facts(
+                        (
+                            ("Flight", "A Fly Speed of 60 feet, and you can hover"),
+                            (
+                                "Minor Wish",
+                                "Reaction: when you or an ally in your Aura of Protection fails a D20 Test, make it succeed instead",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

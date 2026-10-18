@@ -8,16 +8,32 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import GrantSense, SkillExpertiseChoice, SpeedBonus
 import Core.Definitions as Definitions
-from Core.Definitions import CharacterClass, Skill
+from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spell Casting", origin="Ranger Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Wisdom"),
+                    ("Save DC", dc_formula(Ability.WISDOM)),
+                    ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
+                    (
+                        "Prepared spells",
+                        "When you finish a Long Rest, replace one with another Ranger spell for which you have spell slots",
+                    ),
+                    ("Spell slots", "Regain all when you finish a Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -53,6 +69,20 @@ class FavoredEnemy(Feature):
                 gained_at=[1, 1, 5, 9, 13, 17],
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The free casts are the boxes in the panel below.
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Hunter's Mark"),
+                    (
+                        "Free casting",
+                        "Cast Hunter's Mark without expending a spell slot; each casting uses one of the Uses boxes below",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -131,6 +161,17 @@ class Roving(Feature):
         SpeedBonus(
             lambda cs: (0 if cs.worn_armor_type == Definitions.ArmorType.HEAVY else 10)
         ).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Speed", "+10 feet while you aren't wearing Heavy armor"),
+                    ("Climb Speed", "Equal to your Speed"),
+                    ("Swim Speed", "Equal to your Speed"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing Heavy Armor. You also have a Climb speed and a Swim Speed equal to your Speed."
@@ -246,6 +287,19 @@ class NaturesVeil(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph("Invoke spirits of nature to magically hide yourself."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Effect", "You have the Invisible condition"),
+                    ("Duration", "Until the end of your next turn"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

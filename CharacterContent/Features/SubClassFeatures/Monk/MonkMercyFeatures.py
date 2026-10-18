@@ -14,7 +14,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -74,6 +74,27 @@ class HandOfHarm(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, you hit a creature with an Unarmed Strike and deal damage",
+                    ),
+                    ("Cost", "1 Focus Point"),
+                    (
+                        "Damage",
+                        "Extra Necrotic damage: one roll of your Martial Arts die + Wisdom modifier",
+                    ),
+                    (
+                        "From Monk level 6",
+                        "You can also give the target the Poisoned condition until the end of your next turn (Physician's Touch)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier."
         return description
@@ -90,6 +111,26 @@ class HandOfHealing(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "1 Focus Point"),
+                    ("Target", "A creature you touch"),
+                    ("Heal", "One roll of your Martial Arts die + Wisdom modifier"),
+                    (
+                        "Flurry of Blows",
+                        "Replace one of its Unarmed Strikes with a use of this feature, at no Focus Point cost",
+                    ),
+                    (
+                        "From Monk level 6",
+                        "Also end one condition on the creature: Blinded, Deafened, Paralyzed, Poisoned or Stunned (Physician's Touch)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -109,6 +150,16 @@ class ImplementsOfMercy(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._skill_proficiencies.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Skills", "Proficiency in Insight and Medicine"),
+                    ("Tools", "Proficiency with the Herbalism Kit"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."
         return description
@@ -122,6 +173,23 @@ class PhysiciansTouch(Feature):
             activation=FeatureActivation(duration="Until End of Next Turn"),
             usage_tags=["control", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Hand of Harm and Hand of Healing improve."),
+            Facts(
+                (
+                    (
+                        "Hand of Harm",
+                        "Also give the creature the Poisoned condition until the end of your next turn",
+                    ),
+                    (
+                        "Hand of Healing",
+                        "Also end one condition on the creature you heal: Blinded, Deafened, Paralyzed, Poisoned or Stunned",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

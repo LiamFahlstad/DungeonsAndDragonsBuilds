@@ -15,7 +15,7 @@ from Model.Content.Improvements import (
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class DreadAmbusher(Feature):
@@ -78,6 +78,23 @@ class GloomStalkerSpells(Feature):
             name="Gloom Stalker Spells", origin="Gloom Stalker Ranger Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Ranger level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Ranger level", "Spell"),
+                (
+                    ("3", "Disguise Self"),
+                    ("5", "Rope Trick"),
+                    ("9", "Fear"),
+                    ("13", "Greater Invisibility"),
+                    ("17", "Seeming"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you reach a Ranger level specified in the Gloom Stalker spells table, you thereafter always have the listed spells prepared."
         return description
@@ -95,6 +112,22 @@ class UmbralSight(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._darkvision.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Darkvision",
+                        "60 feet, or +60 feet if you already have Darkvision",
+                    ),
+                    (
+                        "Unseen",
+                        "While entirely in Darkness, you're Invisible to any creature that relies on Darkvision to see you there",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -202,6 +235,21 @@ class ShadowyDodge(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature makes an attack roll against you"),
+                    ("Effect", "Impose Disadvantage on the roll"),
+                    (
+                        "Teleport",
+                        "Hit or miss, teleport up to 30 feet to an unoccupied space you can see",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can teleport up to 30 feet to an unoccupied space that you can see."

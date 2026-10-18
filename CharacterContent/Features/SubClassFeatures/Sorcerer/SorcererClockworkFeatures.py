@@ -10,12 +10,54 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class ClockworkSpells(Feature):
     def __init__(self):
         super().__init__(name="Clockwork Spells", origin="Clockwork Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Sorcerer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Sorcerer level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Aid, Alarm, Lesser Restoration, Protection from Evil and Good",
+                    ),
+                    ("5", "Dispel Magic, Protection from Energy"),
+                    ("7", "Freedom of Movement, Summon Construct"),
+                    ("9", "Greater Restoration, Wall of Force"),
+                ),
+            ),
+            Paragraph(
+                "Choose or roll how your connection to order manifests while you cast your Sorcerer spells."
+            ),
+            Table(
+                ("1d6", "Manifestation of Order"),
+                (
+                    ("1", "Spectral cogwheels hover behind you."),
+                    ("2", "The hands of a clock spin in your eyes."),
+                    ("3", "Your skin glows with a brassy sheen."),
+                    (
+                        "4",
+                        "Floating equations and geometric objects overlay your body.",
+                    ),
+                    (
+                        "5",
+                        "Your Spellcasting Focus temporarily takes the form of a Tiny clockwork mechanism.",
+                    ),
+                    (
+                        "6",
+                        "The ticking of gears or ringing of a clock can be heard by you and those affected by your magic.",
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -53,6 +95,22 @@ class RestoreBalance(Feature):
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Charisma modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph("Equalize chaotic moments with the plane of absolute order."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within 60 feet is about to roll a d20 with Advantage or Disadvantage",
+                    ),
+                    ("Effect", "The roll isn't affected by Advantage or Disadvantage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -127,6 +185,29 @@ class TranceOfOrder(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "Align your consciousness with the endless calculations of Mechanus."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "1 minute"),
+                    (
+                        "Defense",
+                        "Attack rolls against you can't benefit from Advantage",
+                    ),
+                    ("D20 Tests", "Treat a d20 roll of 9 or lower as a 10"),
+                    (
+                        "Restore",
+                        "Spend 5 Sorcery Points (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

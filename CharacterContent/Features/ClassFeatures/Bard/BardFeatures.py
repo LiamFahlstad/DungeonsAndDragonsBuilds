@@ -166,6 +166,22 @@ class JackOfAllTrades(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Ability checks",
+                        "Add half your Proficiency Bonus (round up) to any check that doesn't already use your Proficiency Bonus",
+                    ),
+                    (
+                        "Weapon damage",
+                        "You can also use this bonus when you use a weapon and add your Proficiency Bonus to the damage roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can add half your Proficiency Bonus (round up) to any ability check you make that doesn't already use your Proficiency Bonus. In addition, you can use this bonus when you use a weapon and add your Proficiency Bonus to the damage roll."
         return description
@@ -174,6 +190,22 @@ class JackOfAllTrades(Feature):
 class FontOfInspiration(Feature):
     def __init__(self):
         super().__init__(name="Font of Inspiration", origin="Bard Level 5")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Recharge",
+                        "Regain all expended Bardic Inspiration when you finish a Short or Long Rest",
+                    ),
+                    (
+                        "Spell slot",
+                        "Expend a spell slot (no action required) to regain one use of Bardic Inspiration",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -196,6 +228,23 @@ class Countercharm(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use musical notes or words of power to disrupt mind-influencing effects."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature within 30 feet fails a saving throw against an effect that applies the Charmed or Frightened condition",
+                    ),
+                    ("Effect", "The save is rerolled, with Advantage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use musical notes or words of power to disrupt mind-influencing effects. If you or a creature within 30 feet of you fails a saving throw against an effect that applies the Charmed or Frightened condition, you can take a Reaction to cause the save to be rerolled, and the new roll has Advantage."
@@ -250,6 +299,19 @@ class WordsOfCreation(Feature):
             origin="Bard Level 20",
             activation=FeatureActivation(range="10 Feet"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Power Word Heal and Power Word Kill"),
+                    (
+                        "Second target",
+                        "When you cast either, also target a creature within 10 feet of the first target",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have mastered two of the Words of Creation: the words of life and death. You therefore always have the Power Word: Heal and Power Word: Kill spells prepared. When you cast either spell, you can target a second creature with it if that creature is within 10 feet of the first target."

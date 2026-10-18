@@ -23,7 +23,7 @@ from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_LEVEL
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -179,6 +179,15 @@ class MonksFocus(Feature):
     # tile strip would be 19 tiles restating the boxes' current_formula.
     # Regaining is covered by the boxes' reset label, and the Focus Point
     # features themselves render below as extension blocks.
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The Focus Point boxes are in the panel below.
+        return [
+            Paragraph(
+                "Focus Points fuel your Monk features. You have a number of them equal to your Monk level."
+            ),
+            Facts((("Focus save DC", dc_formula(Ability.WISDOM)),)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Focus Point save DC: 8 plus your Wisdom modifier and Proficiency Bonus."
 
@@ -202,6 +211,18 @@ class FlurryOfBlows(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "1 Focus Point"),
+                    ("Effect", "Make two Unarmed Strikes"),
+                    ("From Monk level 10", "Make three Unarmed Strikes instead"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         if monk_level < 10:
@@ -219,6 +240,21 @@ class PatientDefense(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("No cost", "Take the Disengage action"),
+                    ("1 Focus Point", "Take both the Disengage and Dodge actions"),
+                    (
+                        "From Monk level 10",
+                        "When you spend the Focus Point, also gain Temporary Hit Points equal to two rolls of your Martial Arts die",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
@@ -306,6 +342,23 @@ class UnarmoredMovement(Feature):
             return LEVEL_TO_UNARMORED_MOVEMENT_BONUS.get(monk_level, 0)
 
         SpeedBonus(bonus).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your Speed increases while you aren't wearing armor or wielding a Shield."
+            ),
+            Table(
+                ("Monk level", "Speed bonus"),
+                (
+                    ("2", "+10 feet"),
+                    ("6", "+15 feet"),
+                    ("10", "+20 feet"),
+                    ("14", "+25 feet"),
+                    ("18", "+30 feet"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table."
@@ -430,6 +483,20 @@ class SlowFall(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You fall"),
+                    (
+                        "Effect",
+                        "Reduce the falling damage you take by five times your Monk level",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can take a Reaction when you fall to reduce any damage you take from the fall by an amount equal to five times your Monk level."
         return description
@@ -500,6 +567,24 @@ class Evasion(Feature):
     def __init__(self):
         super().__init__(name="Evasion", origin="Monk Level 7")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "An effect lets you make a Dexterity save to take only half damage",
+                    ),
+                    ("Succeeded", "No damage"),
+                    ("Failed", "Half damage"),
+                    (
+                        "Exception",
+                        "No benefit while you have the Incapacitated condition",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.\n"
@@ -566,6 +651,22 @@ class SelfRestoration(Feature):
             name="Self-Restoration", origin="Monk Level 10", usage_tags=["heal"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "End of each of your turns",
+                        "Remove one of these conditions from yourself: Charmed, Frightened or Poisoned",
+                    ),
+                    (
+                        "Food and drink",
+                        "Going without them doesn't give you levels of Exhaustion",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Through sheer force of will, you can remove one of the following conditions from yourself at the end of each of your turns: Charmed, Frightened, or Poisoned.\n"
@@ -618,6 +719,17 @@ class DisciplinedSurvivorMartialFocus(Feature):
             name="Disciplined Survivor", origin="Monk Level 14", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail a saving throw"),
+                    ("Cost", "1 Focus Point"),
+                    ("Effect", "Reroll the save; you must use the new roll"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you make a saving throw and fail, you can expend 1 Focus Point to reroll it, and you must use the new roll."
         return description
@@ -629,6 +741,22 @@ class DisciplinedSurvivorMartialFocus(Feature):
 class PerfectFocus(Feature):
     def __init__(self):
         super().__init__(name="Perfect Focus", origin="Monk Level 15")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You roll Initiative and don't use Uncanny Metabolism",
+                    ),
+                    (
+                        "Effect",
+                        "If you have 3 or fewer Focus Points, regain expended ones until you have 4",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll Initiative and don't use Uncanny Metabolism, you regain expended Focus Points until you have 4 if you have 3 or fewer."
@@ -646,6 +774,21 @@ class SuperiorDefense(Feature):
             activation=FeatureActivation(duration="1 Minute or Until Incapacitated"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("When", "At the start of your turn"),
+                    ("Cost", "3 Focus Points"),
+                    (
+                        "Duration",
+                        "1 minute, or until you have the Incapacitated condition",
+                    ),
+                    ("Effect", "Resistance to all damage except Force damage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "At the start of your turn, you can expend 3 Focus Points to bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have Resistance to all damage except Force damage."

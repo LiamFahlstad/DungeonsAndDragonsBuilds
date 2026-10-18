@@ -71,6 +71,19 @@ class PowerfulBuild(Feature):
             name="Powerful Build", origin="Goliath Trait", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Grappled", "Advantage on ability checks to end the condition"),
+                    (
+                        "Carrying capacity",
+                        "You count as one size larger when determining it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
 

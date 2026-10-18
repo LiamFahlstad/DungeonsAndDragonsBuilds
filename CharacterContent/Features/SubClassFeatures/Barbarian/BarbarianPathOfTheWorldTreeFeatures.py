@@ -111,6 +111,23 @@ class BatteringRoots(Feature):
             usage_tags=["buff", "control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Tendrils of the World Tree extend from you."),
+            Facts(
+                (
+                    (
+                        "Reach",
+                        "+10 feet during your turn with Melee weapons that have the Heavy or Versatile property",
+                    ),
+                    (
+                        "Mastery",
+                        "When you hit with such a weapon on your turn, also activate Push or Topple alongside the weapon's other mastery property",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "During your turn, your reach is 10 feet greater with any Melee weapon that has the Heavy or Versatile property, as tendrils of the World Tree extend from you. When you hit with such a weapon on your turn, you can activate the Push or Topple mastery property in addition to a different mastery property you're using with that weapon."
         return description
@@ -126,6 +143,23 @@ class TravelAlongTheTree(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "When",
+                        "When you activate your Rage, and as a Bonus Action while it's active",
+                    ),
+                    ("Teleport", "Up to 60 feet to an unoccupied space you can see"),
+                    (
+                        "Once per Rage",
+                        "Teleport up to 150 feet instead, bringing up to six willing creatures within 10 feet of you; each arrives in an unoccupied space of your choice within 10 feet of your destination",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you activate your Rage and as a Bonus Action while your Rage is active, you can teleport up to 60 feet to an unoccupied space you can see. In addition, once per Rage, you can increase the range of that teleport to 150 feet. When you do so, you can also bring up to six willing creatures who are within 10 feet of you. Each creature teleports to an unoccupied space of your choice within 10 feet of your destination space."

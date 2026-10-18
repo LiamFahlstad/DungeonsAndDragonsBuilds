@@ -217,6 +217,17 @@ class MysticalConnection(Feature):
             name="Mystical Connection", origin="College of Spirits Bard Level 14"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You roll on the Spirits from Beyond table"),
+                    ("Effect", "Roll the die twice and choose which effect to bestow"),
+                    ("Doubles", "If both dice match, choose any effect on the table"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain mastery over the spirits you call forth. Whenever you roll on the Spirits from Beyond table, you can roll the die twice and choose which of the two effects to bestow. If you roll the same number on both dice, you can instead choose any effect on the table."
         return description

@@ -20,7 +20,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class Rage(Feature):
@@ -64,7 +64,7 @@ class Rage(Feature):
                             ("Resistance", "Bludgeoning, Piercing and Slashing damage"),
                             (
                                 "Rage Damage",
-                                "+ your Rage Damage bonus (see Scaling below) when you deal damage with an attack using Strength, with a weapon or an Unarmed Strike",
+                                "When an attack using Strength (with a weapon or an Unarmed Strike) deals damage, add your Rage Damage bonus (see Scaling below)",
                             ),
                             (
                                 "Strength",
@@ -87,7 +87,6 @@ class Rage(Feature):
                                 "Extend",
                                 "On your turn, do one of: make an attack roll against an enemy, force an enemy to make a saving throw, or take a Bonus Action to extend it. Each extension lasts until the end of your next turn.",
                             ),
-                            ("Maximum", "10 minutes"),
                             (
                                 "Ends early",
                                 "You don Heavy armor or have the Incapacitated condition",
@@ -182,6 +181,25 @@ class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Barbarian Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use the mastery properties of your chosen kinds of Simple or Martial Melee weapons, such as Greataxes and Handaxes."
+            ),
+            Facts(
+                (
+                    (
+                        "Changing a choice",
+                        "When you finish a Long Rest, practice weapon drills to swap one kind",
+                    ),
+                )
+            ),
+            Table(
+                ("Barbarian level", "Weapon kinds"),
+                (("1", "2"), ("4", "3"), ("10", "4")),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your training with weapons allows you to use the mastery properties of two kinds of Simple or Martial Melee weapons of your choice, such as Greataxes and Handaxes. Whenever you finish a Long Rest, you can practice weapon drills and change one of those weapon choices.\n"
@@ -216,6 +234,23 @@ class RecklessAttack(Feature):
             activation=FeatureActivation(duration="Until Start of Your Next Turn"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You make your first attack roll on your turn"),
+                    (
+                        "Benefit",
+                        "Advantage on attack rolls using Strength until the start of your next turn",
+                    ),
+                    (
+                        "Drawback",
+                        "Attack rolls against you have Advantage until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can throw aside all concern for defense to attack with increased ferocity. When you make your first attack roll on your turn, you can decide to attack recklessly. Doing so gives you Advantage on attack rolls using Strength until the start of your next turn, but attack rolls against you have Advantage during that time."
@@ -259,6 +294,23 @@ class PrimalKnowledgeSkillProficiency(Feature):
 class PrimalKnowledge(Feature):
     def __init__(self):
         super().__init__(name="Primal Knowledge", origin="Barbarian Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Requirement", "Your Rage is active"),
+                    (
+                        "Effect",
+                        "Make a check with one of these skills as a Strength check, even if it normally uses another ability",
+                    ),
+                    (
+                        "Skills",
+                        "Acrobatics, Intimidation, Perception, Stealth and Survival",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "In addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses."
@@ -408,6 +460,28 @@ class RelentlessRage(Feature):
             name="Relentless Rage", origin="Barbarian Level 11", usage_tags=["heal"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Keep fighting despite grievous wounds."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You drop to 0 Hit Points while your Rage is active and don't die outright",
+                    ),
+                    ("Save", "DC 10 Constitution saving throw"),
+                    (
+                        "Succeeded",
+                        "Your Hit Points instead change to twice your Barbarian level",
+                    ),
+                    (
+                        "Repeated use",
+                        "The DC increases by 5 each time after the first, and resets to 10 when you finish a Short or Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your Rage can keep you fighting despite grievous wounds. If you drop to 0 Hit Points while your Rage is active and don't die outright, you can make a DC 10 Constitution saving throw. If you succeed, your Hit Points instead change to a number equal to twice your Barbarian level.\n"
@@ -427,6 +501,23 @@ class ImprovedBrutalStrikeLevel13(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Two new effects join your Brutal Strike options."),
+            Facts(
+                (
+                    (
+                        "Staggering Blow",
+                        "The target has Disadvantage on the next saving throw it makes, and it can't make Opportunity Attacks until the start of your next turn",
+                    ),
+                    (
+                        "Sundering Blow",
+                        "Before the start of your next turn, the next attack roll another creature makes against the target gains a +5 bonus. An attack roll gains only one Sundering Blow bonus.",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You have honed new ways to attack furiously. The following effects are now among your Brutal Strike options.\n"
@@ -442,6 +533,39 @@ class ImprovedBrutalStrikeLevel13(Feature):
 class PersistentRage(Feature):
     def __init__(self):
         super().__init__(name="Persistent Rage", origin="Barbarian Level 15")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Regain Rage",
+                (
+                    Facts(
+                        (
+                            ("Trigger", "You roll Initiative"),
+                            ("Effect", "Regain all expended uses of Rage"),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Unending Rage",
+                (
+                    Facts(
+                        (
+                            (
+                                "Duration",
+                                "Your Rage lasts 10 minutes without needing to be extended",
+                            ),
+                            (
+                                "Ends early",
+                                "You have the Unconscious condition (not just Incapacitated) or don Heavy armor",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -464,6 +588,19 @@ class ImprovedBrutalStrikeLevel17(Feature):
             origin="Barbarian Level 17",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Extra damage", "2d10 instead of 1d10"),
+                    (
+                        "Effects",
+                        "Cause two different Brutal Strike effects instead of one",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The extra damage of your Brutal Strike increases to 2d10. In addition, you can use two different Brutal Strike effects whenever you use your Brutal Strike feature."

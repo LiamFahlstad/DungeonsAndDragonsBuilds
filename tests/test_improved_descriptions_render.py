@@ -59,7 +59,12 @@ def _argument(cls, name, annotation, damage_type=DamageType.NECROTIC):
         valid = getattr(cls, "VALID_DAMAGE_TYPES", None) or [damage_type]
         return sorted(valid, key=lambda d: d.value)[0]
     if annotation is Skill:
-        return Skill.INSIGHT
+        # A feature limited to a few skills names them in SKILL_POOL or
+        # VALID_SKILLS; two skill parameters (skill_1, skill_2) must differ.
+        pool = getattr(cls, "SKILL_POOL", None) or getattr(cls, "VALID_SKILLS", None)
+        if not pool:
+            return Skill.INSIGHT
+        return pool[-1] if name.endswith("2") else pool[0]
     if annotation is str:
         return name
     options = typing.get_args(annotation) or (annotation,)
@@ -115,10 +120,24 @@ def _spell_arguments(cls, parameters) -> dict:
     return arguments
 
 
+# A list parameter's length is a rule of the feature (three skills, two
+# damage types), which its type can't tell either.
+_LIST_ARGUMENTS = {
+    "AbilityScoreImprovement": {"bonuses": [(Ability.STRENGTH, 2)]},
+    "BoonOfEnergyResistance": {"damage_types": [DamageType.COLD, DamageType.FIRE]},
+    "Crafter": {"artisans_tools": ["Carpenter", "Smith", "Weaver"]},
+    "FreeBackgroundAbilityBonus": {
+        "bonuses": [(Ability.STRENGTH, 2), (Ability.CONSTITUTION, 1)]
+    },
+    "FreeBackgroundSkillProficiency": {"skills": [Skill.ARCANA, Skill.HISTORY]},
+    "Skilled": {"skills": [Skill.ARCANA, Skill.HISTORY, Skill.NATURE]},
+}
+
+
 def _build_with(cls, damage_type):
     hints = typing.get_type_hints(cls.__init__)
     parameters = inspect.signature(cls.__init__).parameters
-    known = _spell_arguments(cls, parameters)
+    known = _spell_arguments(cls, parameters) | _LIST_ARGUMENTS.get(cls.__name__, {})
     kwargs = {
         name: known.get(name) or _argument(cls, name, hints.get(name), damage_type)
         for name, parameter in parameters.items()

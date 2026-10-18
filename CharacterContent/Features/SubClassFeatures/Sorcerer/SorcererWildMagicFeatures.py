@@ -7,11 +7,30 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class WildMagicSurge(Feature):
     def __init__(self):
         super().__init__(name="Wild Magic Surge", origin="Wild Magic Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your spellcasting can unleash surges of untamed magic."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, immediately after you cast a Sorcerer spell with a spell slot",
+                    ),
+                    ("Roll", "1d20; on a 20, roll on the Wild Magic Surge table"),
+                    (
+                        "Metamagic",
+                        "A spell the surge creates can't be affected by your Metamagic",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -26,6 +45,12 @@ class WildMagicSurgeTable(Feature):
         super().__init__(
             name="Wild Magic Surge Table", origin="Wild Magic Sorcerer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The rows come from the source text, so the two can't drift apart.
+        lines = self.get_description(character).splitlines()[2:]
+        rows = tuple(tuple(line.split("\t", 1)) for line in lines)
+        return [Table(("1d100", "Effect"), rows)]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -68,6 +93,23 @@ class TidesOfChaos(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Effect", "Advantage on one D20 Test, chosen before you roll"),
+                    (
+                        "Recharge",
+                        "Cast a Sorcerer spell with a spell slot, or finish a Long Rest",
+                    ),
+                    (
+                        "Surge",
+                        "If you recharge it by casting a Sorcerer spell with a spell slot, you automatically roll on the Wild Magic Surge table",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can manipulate chaos itself to give yourself Advantage on one D20 Test before you roll the d20. Once you do so, you must cast a Sorcerer spell with a spell slot or finish a Long Rest before you can use this feature again.\n"
@@ -87,6 +129,25 @@ class BendLuck(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Twist fate with your wild magic."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Cost", "1 Sorcery Point"),
+                    (
+                        "Trigger",
+                        "Immediately after another creature you can see rolls the d20 for a D20 Test",
+                    ),
+                    (
+                        "Effect",
+                        "Roll 1d4 and add or subtract it from the roll (your choice)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have the ability to twist fate using your wild magic. Immediately after another creature you can see rolls the d20 for a D20 Test, you can take a Reaction and spend 1 Sorcery Point to roll 1d4 and apply the number rolled as a bonus or penalty (your choice) to the d20 roll."
@@ -112,6 +173,27 @@ class TamedSurge(Feature):
             origin="Wild Magic Sorcerer Level 18",
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Immediately after you cast a Sorcerer spell with a spell slot",
+                    ),
+                    (
+                        "Effect",
+                        "Create an effect of your choice from the Wild Magic Surge table instead of rolling",
+                    ),
+                    (
+                        "Limits",
+                        "Any row except the last; if the effect involves a roll, you must make it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

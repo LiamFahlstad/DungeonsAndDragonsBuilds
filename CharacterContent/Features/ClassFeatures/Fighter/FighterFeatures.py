@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class FightingStyle(Feature):
@@ -83,6 +83,25 @@ class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Fighter Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use the mastery properties of your chosen kinds of Simple or Martial weapons."
+            ),
+            Facts(
+                (
+                    (
+                        "Changing a choice",
+                        "When you finish a Long Rest, practice weapon drills to swap one kind",
+                    ),
+                )
+            ),
+            Table(
+                ("Fighter level", "Weapon kinds"),
+                (("1", "3"), ("4", "4"), ("10", "5"), ("16", "6")),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your training with weapons allows you to use the mastery properties of three kinds of Simple or Martial weapons of your choice. Whenever you finish a Long Rest, you can practice weapon drills and change one of those weapon choices.\n"
@@ -104,6 +123,22 @@ class ActionSurge(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and their recharge are in the panel below.
+        return [
+            Paragraph("Push yourself beyond your normal limits for a moment."),
+            Facts(
+                (
+                    ("When", "On your turn"),
+                    ("Effect", "Take one additional action, except the Magic action"),
+                    (
+                        "From Fighter level 17",
+                        "Two uses before a rest, but only one on a turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the Magic action.\n"
@@ -124,6 +159,18 @@ class TacticalMind(Feature):
         super().__init__(
             name="Tactical Mind", origin="Fighter Level 2", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail an ability check"),
+                    ("Cost", "One use of Second Wind (no Hit Points regained)"),
+                    ("Effect", "Roll 1d10 and add it to the check"),
+                    ("Still fails", "The use of Second Wind isn't expended"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have a mind for tactics on and off the battlefield. When you fail an ability check, you can expend a use of your Second Wind to push yourself toward success. Rather than regaining Hit Points, you roll 1d10 and add the number rolled to the ability check, potentially turning it into a success. If the check still fails, this use of Second Wind isn’t expended."
@@ -164,6 +211,20 @@ class Indomitable(Feature):
                 gained_at=[9, 13, 17],
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and their recharge are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail a saving throw"),
+                    (
+                        "Effect",
+                        "Reroll it with a bonus equal to your Fighter level; you must use the new roll",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

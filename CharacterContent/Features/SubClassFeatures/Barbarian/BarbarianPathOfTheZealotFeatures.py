@@ -20,6 +20,22 @@ class DivineFury(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "On each of your turns while raging, the first creature you hit with a weapon or an Unarmed Strike",
+                    ),
+                    (
+                        "Damage",
+                        "Extra 1d6 + half your Barbarian level (round down), Necrotic or Radiant (choose each time)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can channel divine power into your strikes. On each of your turns while your Rage is active, the first creature you hit with a weapon or an Unarmed Strike takes extra damage equal to 1d6 plus half your Barbarian level (round down). The extra damage is Necrotic or Radiant; you choose the type each time you deal the damage."
         return description
@@ -48,6 +64,21 @@ class WarriorOfTheGods(Feature):
         level = character.get_class_level(Definitions.CharacterClass.BARBARIAN)
         return 4 + (level >= 6) + (level >= 12) + (level >= 17)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The pool of d12s and its recharge are in the panel below.
+        return [
+            Paragraph("A divine entity helps ensure you can continue the fight."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Heal",
+                        "Expend and roll any number of d12s from the pool; regain Hit Points equal to the total",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "A divine entity helps ensure you can continue the fight. You have a pool of four d12s that you can spend to heal yourself. As a Bonus Action, you can expend dice from the pool, roll them, and regain a number of Hit Points equal to the roll’s total.\n"
@@ -71,6 +102,20 @@ class FanaticalFocus(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail a saving throw"),
+                    (
+                        "Effect",
+                        "Reroll it with a bonus equal to your Rage Damage bonus; you must use the new roll",
+                    ),
+                    ("Limit", "Once per active Rage"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Once per active Rage, if you fail a saving throw, you can reroll it with a bonus equal to your Rage Damage bonus, and you must use the new roll."
         return description
@@ -92,6 +137,29 @@ class ZealousPresence(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Unleash a battle cry infused with divine energy."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Target",
+                        "Up to ten other creatures of your choice within 60 feet",
+                    ),
+                    (
+                        "Effect",
+                        "Advantage on attack rolls and saving throws until the start of your next turn",
+                    ),
+                    (
+                        "Restore",
+                        "Expend a use of Rage (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

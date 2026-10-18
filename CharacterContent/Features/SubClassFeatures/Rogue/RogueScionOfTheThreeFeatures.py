@@ -10,6 +10,8 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Core.Definitions import Ability
 
 
 class Bloodthirst(Feature):
@@ -27,6 +29,24 @@ class Bloodthirst(Feature):
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Intelligence modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "An enemy you can see within 30 feet takes damage and is Bloodied after it, but isn't killed outright",
+                    ),
+                    (
+                        "Effect",
+                        "Teleport to an unoccupied space you can see within 5 feet of that enemy, then make one melee attack",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When an enemy you can see within 30 feet of yourself takes damage and is Bloodied after taking that damage but not killed outright, you can take a Reaction and teleport to an unoccupied space you can see within 5 feet of that enemy. You can then make one melee attack. You can use this feature a number of times based on your Intelligence modifier, and you regain all expended uses when you finish a Long Rest."
@@ -49,6 +69,22 @@ class DreadAllegiance(Feature):
             origin="Scion of the Three Rogue Level 3",
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Choose one of the Dead Three for a damage Resistance and a cantrip. You can change your choice when you finish a Long Rest."
+            ),
+            Facts((("Cantrip spellcasting ability", "Intelligence"),)),
+            Table(
+                ("God", "Damage Resistance", "Cantrip"),
+                (
+                    ("Bane", "Psychic", "Minor Illusion"),
+                    ("Bhaal", "Poison", "Blade Ward"),
+                    ("Myrkul", "Necrotic", "Chill Touch"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -73,6 +109,32 @@ class StrikeFear(Feature):
             usage_tags=["buff", "control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Terrify (Cunning Strike, cost 1d6)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Save",
+                                f"Wisdom save against your Cunning Strike DC ({dc_formula(Ability.DEXTERITY)})",
+                            ),
+                            ("Failed", "Frightened for 1 minute"),
+                            (
+                                "While Frightened",
+                                "You have Advantage on attack rolls against it",
+                            ),
+                            (
+                                "Repeat save",
+                                "At the end of each of its turns, ending the effect on a success",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following Cunning Strike option.\n"
@@ -94,6 +156,23 @@ class AuraOfMalevolence(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Bloodthirst and teleport"),
+                    (
+                        "Area",
+                        "Each creature of your choice within 10 feet of the space you left or your destination (your choice)",
+                    ),
+                    (
+                        "Damage",
+                        "Your Intelligence modifier, of your Dread Allegiance Resistance's type; it ignores Resistance",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You radiate malignant power associated with one of the Dead Three. When you use Bloodthirst and teleport, each creature of your choice within 10 feet of either the space you left or your destination space (your choice) takes damage equal to your Intelligence modifier; the damage type is the same as the damage Resistance granted by your choice in the Dread Allegiance feature. Damage dealt by this feature ignores Resistance."
         return description
@@ -109,6 +188,22 @@ class DreadIncarnate(Feature):
             origin="Scion of the Three Rogue Level 17",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cutthroat",
+                        "Regain one expended use of Bloodthirst when you finish a Short Rest",
+                    ),
+                    (
+                        "Murderous Intent",
+                        "Treat a 1 or 2 on a Sneak Attack damage die as a 3",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

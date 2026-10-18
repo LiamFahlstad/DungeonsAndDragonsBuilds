@@ -12,7 +12,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import levels_gained
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class CelestialSpells(Feature):
@@ -20,6 +20,25 @@ class CelestialSpells(Feature):
         super().__init__(
             name="Celestial Spells", origin="Celestial Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Warlock level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Warlock level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Aid, Cure Wounds, Guiding Bolt, Lesser Restoration, Light, Sacred Flame",
+                    ),
+                    ("5", "Daylight, Revivify"),
+                    ("7", "Guardian of Faith, Wall of Fire"),
+                    ("9", "Greater Restoration, Summon Celestial"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Celestial Spells table, you thereafter always have the listed spells prepared."
@@ -61,7 +80,7 @@ class HealingLight(Feature):
                     ("Target", "You or one creature you can see"),
                     (
                         "Spend",
-                        "Up to Charisma modifier (minimum one) dice; it regains the total rolled in Hit Points",
+                        "Up to Charisma modifier (minimum one) dice from the pool; the target regains Hit Points equal to the total rolled",
                     ),
                 )
             ),
@@ -93,6 +112,19 @@ class RadiantSoul(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Radiant damage"),
+                    (
+                        "Damage",
+                        "Once per turn, when a spell you cast deals Radiant or Fire damage, add your Charisma modifier to its damage against one of its targets",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your link to your patron allows you to serve as a conduit for radiant energy. You have Resistance to Radiant damage. Once per turn, when a spell you cast deals Radiant or Fire damage, you can add your Charisma modifier to that spell's damage against one of the spell's targets."
         return description
@@ -105,6 +137,23 @@ class CelestialResilience(Feature):
             origin="Celestial Patron Warlock Level 10",
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You use Magical Cunning or finish a Short or Long Rest",
+                    ),
+                    ("You", "Warlock level + Charisma modifier Temporary Hit Points"),
+                    (
+                        "Others",
+                        "Up to five creatures you can see each gain half your Warlock level + Charisma modifier Temporary Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain Temporary Hit Points whenever you use your Magical Cunning feature or finish a Short or Long Rest. These Temporary Hit Points equal your Warlock level plus your Charisma modifier. Additionally, choose up to five creatures you can see when you gain the points. Those creatures each gain Temporary Hit Points equal to half your Warlock level plus your Charisma modifier."

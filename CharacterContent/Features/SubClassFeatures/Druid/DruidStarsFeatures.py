@@ -268,6 +268,24 @@ class TwinklingConstellations(Feature):
             usage_tags=["damage", "heal", "buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The constellations of your Starry Form improve."),
+            Facts(
+                (
+                    ("Archer and Chalice", "Their 1d8 becomes 2d8"),
+                    (
+                        "Dragon",
+                        "While it's active, you have a Fly Speed of 20 feet and can hover",
+                    ),
+                    (
+                        "Changing",
+                        "At the start of each of your turns in Starry Form, you can change which constellation glimmers on your body",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The constellations of your Starry Form improve. The 1d8 of the Archer and the Chalice becomes 2d8, and while the Dragon is active, you have a Fly Speed of 20 feet and can hover.\n"

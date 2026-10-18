@@ -70,6 +70,23 @@ class WhispersOfTheDead(Feature):
     def __init__(self):
         super().__init__(name="Whispers of the Dead", origin="Phantom Rogue Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("When", "You finish a Short or Long Rest"),
+                    (
+                        "Effect",
+                        "Gain one skill or tool proficiency you lack, shared by a ghostly presence",
+                    ),
+                    (
+                        "Duration",
+                        "Until you use this benefit again to choose a different proficiency",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you finish a Short or Long Rest, you can choose one skill or tool proficiency that you lack and gain it, as a ghostly presence shares its knowledge with you. You lose this proficiency when you use this benefit again to choose a different proficiency."
         return description
@@ -155,6 +172,23 @@ class VoiceOfDeath(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Free casting",
+                        "Cast Speak with Dead once without a spell slot or components; regain this when you finish a Short or Long Rest",
+                    ),
+                    ("Spellcasting modifier", "Dexterity"),
+                    (
+                        "Soul trinket",
+                        "Target one of your Tokens of the Departed instead of a corpse; the spirit of the creature tied to it answers",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can cast Speak with Dead once without a spell slot, requiring no spell components and using Dexterity as the spellcasting modifier. You regain the ability to cast it this way when you finish a Short or Long Rest.\n"
@@ -226,6 +260,22 @@ class DeathsFriend(Feature):
             origin="Phantom Rogue Level 17",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Death's Lament",
+                        "When you use Wails from the Grave, deal its Necrotic damage to both the first and the second creature",
+                    ),
+                    (
+                        "Draw of Death",
+                        "When you roll Initiative with no soul trinkets left, gain one for your Tokens of the Departed",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

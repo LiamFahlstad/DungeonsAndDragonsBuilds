@@ -4,7 +4,7 @@ from Core.Definitions import (
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class CircleOfTheSeaSpells(Feature):
@@ -12,6 +12,25 @@ class CircleOfTheSeaSpells(Feature):
         super().__init__(
             name="Circle of the Sea Spells", origin="Circle of the Sea Druid Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Druid level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Druid level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Fog Cloud, Gust of Wind, Ray of Frost, Thunderwave",
+                    ),
+                    ("5", "Lightning Bolt, Water Breathing"),
+                    ("7", "Control Water, Ice Storm"),
+                    ("9", "Conjure Elemental, Hold Monster"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you reach a Druid level specified in the Circle of the Sea Spells table, you thereafter always have the listed spells prepared."
@@ -94,6 +113,16 @@ class AquaticAffinity(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Wrath of the Sea", "Its Emanation grows to 10 feet"),
+                    ("Swim Speed", "Equal to your Speed"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The size of the Emanation created by your Wrath of the Sea increases to 10 feet.\n"
@@ -112,6 +141,17 @@ class Stormborn(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While your Wrath of the Sea is active:"),
+            Facts(
+                (
+                    ("Flight", "A Fly Speed equal to your Speed"),
+                    ("Resistance", "Cold, Lightning and Thunder damage"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -132,6 +172,26 @@ class OceanicGift(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Gift",
+                        "Manifest the Wrath of the Sea Emanation around one willing creature within 60 feet instead of yourself",
+                    ),
+                    (
+                        "Their aura",
+                        "They gain all its benefits, using your spell save DC and Wisdom modifier",
+                    ),
+                    (
+                        "Both of you",
+                        "Expend two uses of Wild Shape instead of one to manifest it around both of you",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

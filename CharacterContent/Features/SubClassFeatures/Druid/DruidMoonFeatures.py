@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class CircleForms(Feature):
@@ -23,6 +23,23 @@ class CircleForms(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Channel lunar magic when you assume a Wild Shape form. Your Wild Shape stat blocks already include these."
+            ),
+            Facts(
+                (
+                    ("Max Challenge Rating", "Druid level ÷ 3, rounded down"),
+                    (
+                        "Armor Class",
+                        "13 + Wisdom modifier, if higher than the Beast's AC, until you leave the form",
+                    ),
+                    ("Temporary Hit Points", "Three times your Druid level"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -39,6 +56,22 @@ class CircleOfTheMoonSpells(Feature):
         super().__init__(
             name="Circle of the Moon Spells", origin="Circle of the Moon Druid Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Druid level shown, you always have these spells prepared. You can cast them while in a Wild Shape form."
+            ),
+            Table(
+                ("Druid level", "Spells"),
+                (
+                    ("3", "Cure Wounds, Moonbeam, Starry Wisp"),
+                    ("5", "Conjure Animals"),
+                    ("7", "Fount of Moonlight"),
+                    ("9", "Mass Cure Wounds"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -58,6 +91,23 @@ class ImprovedCircleForms(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While in a Wild Shape form:"),
+            Facts(
+                (
+                    (
+                        "Lunar Radiance",
+                        "Each of your attacks can deal its normal damage type or Radiant damage (choose each time you hit)",
+                    ),
+                    (
+                        "Increased Toughness",
+                        "Add your Wisdom modifier to your Constitution saving throws",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -127,6 +177,22 @@ class LunarForm(Feature):
             origin="Circle of the Moon Druid Level 14",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Improved Lunar Radiance",
+                        "Once per turn, deal an extra 2d10 Radiant damage to a target you hit with a Wild Shape form's attack",
+                    ),
+                    (
+                        "Shared Moonlight",
+                        "When you use Moonlight Step, also teleport one willing creature within 10 feet of you to an unoccupied space you can see within 10 feet of your destination",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

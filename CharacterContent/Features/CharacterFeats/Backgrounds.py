@@ -4,6 +4,7 @@ from Model.Content.Improvements import AbilityScoreBonus, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_SCORE
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class FreeBackgroundAbilityBonus(Feature):
@@ -26,6 +27,19 @@ class FreeBackgroundAbilityBonus(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your background raises your ability scores by +3 in total: +1 to three abilities, or +2 to one and +1 to another."
+            ),
+            Facts(
+                tuple(
+                    (ability.value, f"+{bonus}")
+                    for ability, bonus in self._bonus.bonuses
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
@@ -56,6 +70,16 @@ class FreeBackgroundSkillProficiency(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Skill Proficiency", "Two skills of your choice"),
+                    ("Chosen", ", ".join(skill.value for skill in self._choice.skills)),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)

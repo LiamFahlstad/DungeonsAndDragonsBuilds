@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class GraveDomainSpells(Feature):
@@ -18,6 +18,25 @@ class GraveDomainSpells(Feature):
         super().__init__(
             name="Grave Domain Spells", origin="Grave Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Detect Evil and Good, False Life, Gentle Repose, Ray of Enfeeblement, Spare the Dying",
+                    ),
+                    ("5", "Revivify, Vampiric Touch"),
+                    ("7", "Blight, Death Ward"),
+                    ("9", "Dispel Evil and Good, Raise Dead"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -126,6 +145,25 @@ class SentinelAtDeathsDoor(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a Bloodied creature you can see within 60 feet is hit with an attack roll",
+                    ),
+                    ("Effect", "Halve the attack's damage (round down)"),
+                    (
+                        "Critical Hit",
+                        "Any effects triggered by the Critical Hit are canceled",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

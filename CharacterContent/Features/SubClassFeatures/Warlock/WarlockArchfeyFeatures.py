@@ -13,12 +13,31 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ArchfeySpells(Feature):
     def __init__(self):
         super().__init__(name="Archfey Spells", origin="Archfey Patron Warlock Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Warlock level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Warlock level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Calm Emotions, Faerie Fire, Misty Step, Phantasmal Force, Sleep",
+                    ),
+                    ("5", "Blink, Plant Growth"),
+                    ("7", "Dominate Beast, Greater Invisibility"),
+                    ("9", "Dominate Person, Seeming"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Archfey Spells table, you thereafter always have the listed spells prepared."
@@ -195,6 +214,22 @@ class BewitchingMagic(Feature):
         super().__init__(
             name="Bewitching Magic", origin="Archfey Patron Warlock Level 14"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Immediately after you cast an Enchantment or Illusion spell using an action and a spell slot",
+                    ),
+                    (
+                        "Effect",
+                        "Cast Misty Step as part of the same action, without expending a spell slot",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your patron grants you the ability to weave your magic with teleportation. Immediately after you cast an Enchantment or Illusion spell using an action and a spell slot, you can cast Misty Step as part of the same action and without expending a spell slot."

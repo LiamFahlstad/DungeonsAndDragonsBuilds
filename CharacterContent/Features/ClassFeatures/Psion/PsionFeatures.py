@@ -1,4 +1,4 @@
-from Core.Definitions import PSION_HIT_DIE
+from Core.Definitions import Ability, PSION_HIT_DIE
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class PsionicPower(Feature):
@@ -27,7 +27,10 @@ class PsionicPower(Feature):
             Facts(
                 (
                     ("Regain", "One die on a Short Rest; all on a Long Rest"),
-                    ("Save DC", "Your Psion spell save DC"),
+                    (
+                        "Save DC",
+                        f"Your Psion spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                    ),
                 )
             ),
             Option(
@@ -186,6 +189,17 @@ class PsionicRestoration(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Time", "1 minute of meditation"),
+                    ("Effect", "At the end of it, regain expended Psionic Energy Dice"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can perform a meditation that focuses the mind "
@@ -205,6 +219,18 @@ class PsionicSurge(Feature):
             name="Psionic Surge", origin="Psion Level 7", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Push your psionic powers with your life force."),
+            Facts(
+                (
+                    ("Trigger", "You roll one or more Psionic Energy Dice"),
+                    ("Cost", "One of your Hit Point Dice"),
+                    ("Effect", "Treat any 1, 2 or 3 on those dice as a 4"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can push your psionic powers using your life "
@@ -221,6 +247,19 @@ class PsionicReserves(Feature):
         super().__init__(
             name="Psionic Reserves", origin="Psion Level 18", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You roll Initiative"),
+                    (
+                        "Effect",
+                        "If you have fewer than four Psionic Energy Dice, regain expended ones until you have four",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -252,6 +291,24 @@ class EnkindledLifeForce(Feature):
         super().__init__(
             name="Enkindled Life Force", origin="Psion Level 20", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Burn your life force to achieve greater psionics."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, you roll one or more Psionic Energy Dice for a Psion feature or Psionic Discipline",
+                    ),
+                    ("Cost", "One or two of your Hit Point Dice"),
+                    (
+                        "Effect",
+                        "Roll one extra Psionic Energy Die per Hit Point Die and add it to the total. These rolls don't expend Psionic Energy Dice.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

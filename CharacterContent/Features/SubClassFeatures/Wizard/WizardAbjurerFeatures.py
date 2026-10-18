@@ -8,6 +8,23 @@ class AbjurationSavant(Feature):
     def __init__(self):
         super().__init__(name="Abjuration Savant", origin="Abjurer Wizard Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add Abjuration spells to your spellbook for free."),
+            Facts(
+                (
+                    (
+                        "Now",
+                        "Two Wizard Abjuration spells, each no higher than level 2",
+                    ),
+                    (
+                        "New spell slot levels",
+                        "Whenever you gain access to a new level of spell slots in this class, one Wizard Abjuration spell of a level you have slots for",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Choose two Wizard spells from the Abjuration school, each of which must be no higher than level 2, and add them to your spellbook for free.\n"
@@ -75,6 +92,25 @@ class ProjectedWard(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature you can see within 30 feet takes damage"),
+                    ("Effect", "Your Arcane Ward absorbs the damage"),
+                    (
+                        "Overflow",
+                        "If the ward drops to 0 Hit Points, the warded creature takes the rest",
+                    ),
+                    (
+                        "Resistances",
+                        "Apply the creature's Resistances and Vulnerabilities before reducing the ward",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When a creature that you can see within 30 feet of yourself takes damage, you can take a Reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 Hit Points, the warded creature takes any remaining damage. If the creature has any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points."
         return description
@@ -90,6 +126,23 @@ class SpellBreaker(Feature):
             origin="Abjurer Wizard Level 10",
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Counterspell and Dispel Magic"),
+                    (
+                        "Dispel Magic",
+                        "Cast it as a Bonus Action, and add your Proficiency Bonus to its ability check",
+                    ),
+                    (
+                        "Slot kept",
+                        "When you cast either with a spell slot and it fails to stop a spell, the slot isn't expended",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -66,6 +66,27 @@ class MagicalDiscoveries(Feature):
             name="Magical Discoveries", origin="College of Lore Bard Level 6"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Spells",
+                        "Two of your choice from the Cleric, Druid or Wizard spell lists, in any combination",
+                    ),
+                    (
+                        "Level",
+                        "Each must be a cantrip or a spell for which you have spell slots",
+                    ),
+                    ("Prepared", "You always have them prepared"),
+                    (
+                        "Replacing",
+                        "Whenever you gain a Bard level, replace one with another that meets these requirements",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn two spells of your choice. These spells can come from the Cleric, Druid, or Wizard spell list or any combination thereof (see a class's section for its spell list). A spell you choose must be a cantrip or a spell for which you have spell slots, as shown in the Bard Features table.\n"
@@ -81,6 +102,18 @@ class PeerlessSkill(Feature):
             origin="College of Lore Bard Level 14",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail an ability check or attack roll"),
+                    ("Cost", "One use of Bardic Inspiration"),
+                    ("Effect", "Roll the Bardic Inspiration die and add it to the d20"),
+                    ("Still fails", "The Bardic Inspiration isn't expended"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you make an ability check or attack roll and fail, you can expend one use of Bardic Inspiration; roll the Bardic Inspiration die, and add the number rolled to the d20, potentially turning a failure into a success. On a failure, the Bardic Inspiration isn't expended."

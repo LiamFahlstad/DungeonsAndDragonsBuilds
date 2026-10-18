@@ -11,7 +11,7 @@ from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class DreadfulStrikes(Feature):
@@ -21,6 +21,18 @@ class DreadfulStrikes(Feature):
             origin="Fey Wanderer Ranger Level 3",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Mind-scarring magic from the murky hollows of the Feywild."),
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with a weapon"),
+                    ("Damage", "Extra 1d4 Psychic damage (1d6 from Ranger level 11)"),
+                    ("Limit", "A target takes this extra damage only once per turn"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11."
@@ -35,6 +47,43 @@ class FeyWandererSpells(Feature):
         super().__init__(
             name="Fey Wanderer Spells", origin="Fey Wanderer Ranger Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Ranger level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Ranger level", "Spell"),
+                (
+                    ("3", "Charm Person"),
+                    ("5", "Misty Step"),
+                    ("9", "Summon Fey"),
+                    ("13", "Dimension Door"),
+                    ("17", "Mislead"),
+                ),
+            ),
+            Paragraph(
+                "You also have a fey blessing: choose a Feywild Gift or roll for it."
+            ),
+            Table(
+                ("1d6", "Feywild Gift"),
+                (
+                    (
+                        "1",
+                        "Illusory butterflies flutter around you while you take a Short or Long Rest.",
+                    ),
+                    ("2", "Flowers bloom from your hair each dawn."),
+                    (
+                        "3",
+                        "You faintly smell of cinnamon, lavender, nutmeg, or another comforting herb or spice.",
+                    ),
+                    ("4", "Your shadow dances while no one is looking directly at it."),
+                    ("5", "Horns or antlers sprout from your head."),
+                    ("6", "Your skin and hair change color each dawn."),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -86,6 +135,16 @@ class OtherworldlyGlamour(Feature):
             return max(1, cs.get_wisdom_modifier())
 
         return bonus
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Charisma checks", "+ Wisdom modifier (minimum +1)"),
+                    ("Skill", f"Proficiency in {self.skill.value}"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -157,6 +216,23 @@ class FeyReinforcements(Feature):
             name="Fey Reinforcements", origin="Fey Wanderer Ranger Level 11"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spell", "Summon Fey, without a Material component"),
+                    (
+                        "Free casting",
+                        "Cast it once without a spell slot; regain this when you finish a Long Rest",
+                    ),
+                    (
+                        "No Concentration",
+                        "When you start casting it, you can drop its Concentration; its duration becomes 1 minute for that casting",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can cast Summon Fey without a Material component. You can also cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest.\n"
@@ -183,6 +259,20 @@ class MistyWanderer(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Free casting", "Cast Misty Step without expending a spell slot"),
+                    (
+                        "Passenger",
+                        "When you cast Misty Step, bring one willing creature you can see within 5 feet; it teleports to an unoccupied space of your choice within 5 feet of your destination",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

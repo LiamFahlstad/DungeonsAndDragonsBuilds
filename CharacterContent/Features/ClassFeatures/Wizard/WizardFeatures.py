@@ -13,6 +13,22 @@ class RitualAdept(Feature):
             name="Ritual Adept", origin="Wizard Level 1", usage_tags=["utility"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Effect",
+                        "Cast any spell with the Ritual tag in your spellbook as a Ritual",
+                    ),
+                    (
+                        "Requirement",
+                        "It needn't be prepared, but you must read from the book",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You can cast any spell as a Ritual if that spell has the Ritual tag and the spell is in your spellbook. You needn't have the spell prepared, but you must read from the book to cast a spell in this way."
 
@@ -130,6 +146,23 @@ class SpellMastery(Feature):
 class SignatureSpells(Feature):
     def __init__(self):
         super().__init__(name="Signature Spells", origin="Wizard Level 20")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Choice",
+                        "Two level 3 spells in your spellbook. You always have them prepared.",
+                    ),
+                    (
+                        "Free casting",
+                        "Cast each once at level 3 without expending a spell slot; regain this when you finish a Short or Long Rest",
+                    ),
+                    ("Higher level", "Expend a spell slot as normal"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "Choose two level 3 spells in your spellbook as your signature spells. You always have these spells prepared, and you can cast each of them once at level 3 without expending a spell slot. When you do so, you can't cast them in this way again until you finish a Short or Long Rest. To cast either spell at a higher level, you must expend a spell slot."

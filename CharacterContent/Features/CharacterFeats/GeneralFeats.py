@@ -77,8 +77,8 @@ from Model.Content.FeatureText import (
     Block,
     Facts,
     Option,
-    Table,
     Paragraph,
+    Table,
     dc_formula,
 )
 
@@ -158,6 +158,19 @@ class AbilityScoreImprovement(GeneralFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Increase one ability score by 2, or two ability scores by 1 each, to a maximum of 20."
+            ),
+            Facts(
+                tuple(
+                    (ability.value, f"+{bonus}")
+                    for ability, bonus in self._bonus.bonuses
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(
             f"{ability.value} +{bonus}" for ability, bonus in self._bonus.bonuses
@@ -172,6 +185,23 @@ class AbilityScoreImprovement(GeneralFeat):
 class Actor(_AbilityScoreFeat):
     _NAME = "Actor"
     _ABILITIES = (Ability.CHARISMA,)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Impersonation",
+                        "While disguised as a real or fictional person, Advantage on Charisma (Deception or Performance) checks to convince others you're that person",
+                    ),
+                    (
+                        "Mimicry",
+                        "Mimic the sounds of other creatures, including speech. A listener sees through it with a Wisdom (Insight) check against DC 8 + Charisma modifier + Proficiency Bonus.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -213,6 +243,24 @@ class Athlete(_AbilityScoreFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Climb Speed", "Equal to your Speed"),
+                    (
+                        "Hop Up",
+                        "Right yourself from Prone with only 5 feet of movement",
+                    ),
+                    (
+                        "Jumping",
+                        "Make a running Long or High Jump after moving only 5 feet",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -329,6 +377,23 @@ class Crusher(_AbilityScoreFeat):
     _NAME = "Crusher"
     _ABILITIES = (Ability.STRENGTH, Ability.CONSTITUTION)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Push",
+                        "Once per turn, when you hit a creature with an attack that deals Bludgeoning damage, move it 5 feet to an unoccupied space, if it's no more than one size larger than you",
+                    ),
+                    (
+                        "Enhanced Critical",
+                        "When you score a Critical Hit that deals Bludgeoning damage, attack rolls against the creature have Advantage until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -345,6 +410,19 @@ class Crusher(_AbilityScoreFeat):
 class DefensiveDuelist(_AbilityScoreFeat):
     _NAME = "Defensive Duelist"
     _ABILITIES = (Ability.DEXTERITY,)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Parry",
+                        "Reaction, while holding a Finesse weapon, when another creature hits you with a melee attack: add your Proficiency Bonus to your AC against melee attacks until the start of your next turn, potentially causing the attack to miss",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -368,7 +446,7 @@ class DualWielder(_AbilityScoreFeat):
                 (
                     (
                         "Ability Score",
-                        "Increase your Strength or Dexterity by 1, to a maximum of 20",
+                        f"+1 {self.ability.value}, to a maximum of 20",
                     ),
                     (
                         "Enhanced Dual Wielding",
@@ -396,6 +474,20 @@ class Durable(_AbilityScoreFeat):
     _NAME = "Durable"
     _ABILITIES = (Ability.CONSTITUTION,)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Defy Death", "Advantage on Death Saving Throws"),
+                    (
+                        "Speedy Recovery",
+                        "Bonus Action: expend and roll one Hit Point Die and regain that many Hit Points",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -415,6 +507,20 @@ class ElementalAdept(_AbilityScoreFeat):
 
     _NAME = "Elemental Adept"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Energy Mastery",
+                        "Choose Acid, Cold, Fire, Lightning or Thunder. Your spells ignore Resistance to that type, and you treat any 1 on their damage dice of that type as a 2.",
+                    ),
+                    ("Repeatable", "Take it again with a different damage type"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -537,6 +643,16 @@ class HeavilyArmored(_AbilityScoreFeat):
         super().__init__(character_level, ability)
         self.passive = True
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Armor Training", "Heavy armor"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Medium Armor Training\n"
@@ -549,6 +665,19 @@ class HeavilyArmored(_AbilityScoreFeat):
 class HeavyArmorMaster(_AbilityScoreFeat):
     _NAME = "Heavy Armor Master"
     _ABILITIES = (Ability.CONSTITUTION, Ability.STRENGTH)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Damage Reduction",
+                        "While wearing Heavy armor, Bludgeoning, Piercing and Slashing damage from an attack that hits you is reduced by your Proficiency Bonus",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -595,6 +724,20 @@ class KeenMind(_AbilityScoreFeat):
     _NAME = "Keen Mind"
     _ABILITIES = (Ability.INTELLIGENCE,)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Lore Knowledge",
+                        "Choose Arcana, History, Investigation, Nature or Religion: proficiency in it, or Expertise if you're already proficient",
+                    ),
+                    ("Quick Study", "Take the Study action as a Bonus Action"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Intelligence 13+\n"
@@ -612,6 +755,16 @@ class LightlyArmored(_AbilityScoreFeat):
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
         self.passive = True
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Armor Training", "Light armor and Shields"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -671,6 +824,16 @@ class MartialWeaponTraining(_AbilityScoreFeat):
         # "Weapon Proficiency. You gain proficiency with Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Weapon Proficiency", "Martial weapons"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -683,6 +846,19 @@ class MartialWeaponTraining(_AbilityScoreFeat):
 class MediumArmorMaster(_AbilityScoreFeat):
     _NAME = "Medium Armor Master"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Dexterous Wearer",
+                        "While wearing Medium armor with a Dexterity score of 16 or higher, add 3 instead of 2 to your AC",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -700,6 +876,16 @@ class ModeratelyArmored(_AbilityScoreFeat):
     def __init__(self, character_level: int, ability: Ability):
         super().__init__(character_level, ability)
         self.passive = True
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Armor Training", "Medium armor"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -720,7 +906,7 @@ class MountedCombatant(_AbilityScoreFeat):
                 (
                     (
                         "Ability Score",
-                        "Increase your Strength, Dexterity or Wisdom by 1, to a maximum of 20",
+                        f"+1 {self.ability.value}, to a maximum of 20",
                     ),
                     (
                         "Mounted Strike",
@@ -753,6 +939,20 @@ class Observant(_AbilityScoreFeat):
     _NAME = "Observant"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Keen Observer",
+                        "Choose Insight, Investigation or Perception: proficiency in it, or Expertise if you're already proficient",
+                    ),
+                    ("Quick Search", "Take the Search action as a Bonus Action"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Intelligence or Wisdom 13+\n"
@@ -766,6 +966,23 @@ class Observant(_AbilityScoreFeat):
 class Piercer(_AbilityScoreFeat):
     _NAME = "Piercer"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Puncture",
+                        "Once per turn, when you hit a creature with an attack that deals Piercing damage, reroll one of its damage dice; you must use the new roll",
+                    ),
+                    (
+                        "Enhanced Critical",
+                        "When you score a Critical Hit that deals Piercing damage, roll one more damage die for the extra Piercing damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -913,6 +1130,16 @@ class Resilient(_AbilityScoreFeat):
         super().apply(ledger_writer)
         SavingThrowProficiency([self.ability]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Saving Throw Proficiency", f"{self.ability.value} saving throws"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -986,7 +1213,7 @@ class Sentinel(_AbilityScoreFeat):
                     ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
                     (
                         "Guardian",
-                        "Opportunity Attack when a creature within 5 feet takes the Disengage action or hits a target other than you",
+                        "Immediately after a creature within 5 feet of you takes the Disengage action or hits a target other than you, make an Opportunity Attack against it",
                     ),
                     (
                         "Halt",
@@ -1042,6 +1269,27 @@ class ShadowTouched(_AbilityScoreFeat):
 class Sharpshooter(_AbilityScoreFeat):
     _NAME = "Sharpshooter"
     _ABILITIES = (Ability.DEXTERITY,)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Bypass Cover",
+                        "Your ranged weapon attacks ignore Half Cover and Three-Quarters Cover",
+                    ),
+                    (
+                        "Firing in Melee",
+                        "No Disadvantage on Ranged weapon attacks for being within 5 feet of an enemy",
+                    ),
+                    (
+                        "Long Shots",
+                        "No Disadvantage on Ranged weapon attacks at long range",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1136,6 +1384,21 @@ class SkillExpert(_AbilityScoreFeat):
         self._proficiency.apply(ledger_writer)
         self._expertise.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Skill Proficiency", "One skill of your choice"),
+                    (
+                        "Expertise",
+                        "One skill you're proficient in but lack Expertise with",
+                    ),
+                    ("Chosen", self._expertise.skills[0].value),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+\n"
@@ -1158,6 +1421,24 @@ class Skulker(_AbilityScoreFeat):
         super().apply(ledger_writer)
         self._sense.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Blindsight", "10 feet"),
+                    (
+                        "Fog of War",
+                        "Advantage on Dexterity (Stealth) checks made as part of the Hide action during combat",
+                    ),
+                    (
+                        "Sniper",
+                        "If you attack while hidden and miss, the attack roll doesn't reveal your location",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity 13+\n"
@@ -1175,6 +1456,23 @@ class Skulker(_AbilityScoreFeat):
 class Slasher(_AbilityScoreFeat):
     _NAME = "Slasher"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Hamstring",
+                        "Once per turn, when you hit a creature with an attack that deals Slashing damage, reduce its Speed by 10 feet until the start of your next turn",
+                    ),
+                    (
+                        "Enhanced Critical",
+                        "When you score a Critical Hit that deals Slashing damage, the creature has Disadvantage on attack rolls until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1198,6 +1496,24 @@ class Speedy(_AbilityScoreFeat):
         # "Speed Increase. Your Speed increases by 10 feet."
         SpeedBonus(10).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    ("Speed Increase", "+10 feet"),
+                    (
+                        "Dash over Difficult Terrain",
+                        "When you Dash on your turn, Difficult Terrain costs no extra movement for the rest of that turn",
+                    ),
+                    (
+                        "Agile Movement",
+                        "Opportunity Attacks have Disadvantage against you",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 4+, Dexterity or Constitution 13+\n"
@@ -1215,6 +1531,27 @@ class Speedy(_AbilityScoreFeat):
 class SpellSniper(_AbilityScoreFeat):
     _NAME = "Spell Sniper"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Bypass Cover",
+                        "Your spell attack rolls ignore Half Cover and Three-Quarters Cover",
+                    ),
+                    (
+                        "Casting in Melee",
+                        "No Disadvantage on spell attack rolls for being within 5 feet of an enemy",
+                    ),
+                    (
+                        "Increased Range",
+                        "A spell with a range of 10+ feet that makes an attack roll gains 60 feet of range",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1339,7 +1676,7 @@ class WarCaster(_AbilityScoreFeat):
                 (
                     (
                         "Ability Score",
-                        "Increase your Intelligence, Wisdom or Charisma by 1, to a maximum of 20",
+                        f"+1 {self.ability.value}, to a maximum of 20",
                     ),
                     (
                         "Concentration",
@@ -1371,6 +1708,19 @@ class WarCaster(_AbilityScoreFeat):
 class WeaponMaster(_AbilityScoreFeat):
     _NAME = "Weapon Master"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Mastery Property",
+                        "Use the mastery property of one kind of Simple or Martial weapon you're proficient with; change the kind when you finish a Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1420,6 +1770,23 @@ class Dragonscarred(_AbilityScoreFeat):
     _NAME = "Dragonscarred"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.CONSTITUTION, Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Damage Resistance",
+                        "One of Acid, Cold, Fire, Lightning or Poison, chosen when you take the feat",
+                    ),
+                    (
+                        "Fearsome Power",
+                        "When you deal damage to a creature as part of the Attack or Magic action on your turn, use Dragon's Terror (Cult of the Dragon Initiate) as a Bonus Action this turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1567,6 +1934,23 @@ class HarperTeamwork(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Withering Wordplay",
+                        "When you Help an ally's attack roll against an enemy, that enemy also has Disadvantage on its first saving throw before the start of your next turn",
+                    ),
+                    (
+                        "Inspiring Willpower",
+                        "When you succeed on a save to end the Frightened or Paralyzed condition on yourself, end the same condition on one ally you can see within 30 feet",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Harper Agent Feat)\n"
@@ -1650,7 +2034,7 @@ class MythalTouched(_AbilityScoreFeat):
                 (
                     (
                         "Ability Score",
-                        "Increase your Intelligence, Wisdom or Charisma by 1, to a maximum of 20",
+                        f"+1 {self.ability.value}, to a maximum of 20",
                     ),
                 )
             ),
@@ -1732,6 +2116,23 @@ class OrdersResilience(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.WISDOM, Ability.CHARISMA)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Resurge",
+                        "Right yourself from Prone with only 5 feet of movement",
+                    ),
+                    (
+                        "Stronger Together",
+                        "While within 5 feet of an ally that isn't Incapacitated, you and that ally have Advantage on Strength saving throws (not while you're Incapacitated)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Tyro of the Gauntlet Feat)\n"
@@ -1793,6 +2194,23 @@ class SpellfireAdept(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Fueled Spellfire",
+                        "Once per turn, when a spell you cast deals Radiant damage, expend and roll up to two Hit Point Dice and add the total to one damage roll",
+                    ),
+                    (
+                        "Searing Spellfire",
+                        "Your Radiant damage rolls ignore Resistance to Radiant damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "General Feat (Prerequisite: Level 4+, Spellfire Spark Feat or the Spellcasting or Pact Magic Feature)\n"
@@ -1807,6 +2225,27 @@ class StreetJustice(_AbilityScoreFeat):
     _NAME = "Street Justice"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Headlock",
+                        "Your allies have Advantage on attack rolls against a creature you're grappling",
+                    ),
+                    (
+                        "Sturdy Knot",
+                        "When you bind a creature with Chain, Manacles or Rope, add your Proficiency Bonus to the DC to escape or burst it",
+                    ),
+                    (
+                        "Tough Talk",
+                        "A Hostile attitude doesn't impose Disadvantage on your Charisma (Intimidation) checks to influence a creature",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1823,6 +2262,23 @@ class ZhentarimTactics(_AbilityScoreFeat):
     _NAME = "Zhentarim Tactics"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.DEXTERITY, Ability.CHARISMA)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Retaliate",
+                        "Immediately after a creature within 5 feet hits you with a melee attack, make an Opportunity Attack against it",
+                    ),
+                    (
+                        "Versatile Merc",
+                        "When you finish a Long Rest, choose a skill you're proficient in: you have Expertise in it until you finish your next Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -2319,6 +2775,23 @@ class TouchOfDeath(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Death Touch",
+                        "You learn Chill Touch and can cast it without spell components; its Necrotic damage ignores Resistance",
+                    ),
+                    (
+                        "Spellcasting ability",
+                        "Intelligence, Wisdom or Charisma, chosen when you take this feat",
+                    ),
+                    ("Pull of the Grave", "Disadvantage on Death Saving Throws"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Deathly power resides within you, bursting out at the slightest provocation. You gain the following features.\n"
@@ -2551,6 +3024,8 @@ class _SchoolAdept(_AbilityScoreFeat):
         _NAME           – feat name, e.g. "Abjuration Adept"
         _SPELLS         – the always-prepared spell for spell slot levels 1-5, in order
         _SCHOOL_EFFECT  – the school-specific benefit text
+    and implement _school_facts(), that benefit as label/value rows for the
+    improved description.
     """
 
     _ABILITIES = _MENTAL_ABILITIES
@@ -2558,15 +3033,15 @@ class _SchoolAdept(_AbilityScoreFeat):
     _SPELLS: tuple[Level1Spells, Level2Spells, Level3Spells, Level4Spells, Level5Spells]
     _SCHOOL_EFFECT: str
 
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        """The school benefit as label/value rows."""
+        raise NotImplementedError
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
-        effect_name, effect_text = self._SCHOOL_EFFECT.split(". ", 1)
+        effect_name = self._SCHOOL_EFFECT.split(". ", 1)[0]
         return [
-            Facts(
-                (
-                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
-                    (effect_name, effect_text),
-                )
-            ),
+            Facts((("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),)),
+            Option(effect_name, (Facts(self._school_facts()),)),
             Option(
                 f"{self._NAME} Spells",
                 (
@@ -2612,6 +3087,13 @@ class AbjurationAdept(_SchoolAdept):
     )
     _SCHOOL_EFFECT = "Protective Ward. When you cast a spell from the Abjuration school using a spell slot, you or one creature you can see within 30 feet of yourself gains Temporary Hit Points equal to twice the level of spell slot expended."
 
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("Trigger", "You cast an Abjuration spell using a spell slot"),
+            ("Target", "You or one creature you can see within 30 feet"),
+            ("Effect", "Temporary Hit Points equal to twice the slot's level"),
+        )
+
 
 class ConjurationAdept(_SchoolAdept):
     _NAME = "Conjuration Adept"
@@ -2623,6 +3105,15 @@ class ConjurationAdept(_SchoolAdept):
         ConjurationLevel5Spells.CONJURE_ELEMENTAL,
     )
     _SCHOOL_EFFECT = "Persistent Conjuration. While maintaining Concentration on a spell from the Conjuration school, you gain a bonus to Constitution saving throws to maintain this Concentration. This bonus is equal to the ability modifier of the score increased by this feat."
+
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("While", "You're concentrating on a Conjuration spell"),
+            (
+                "Effect",
+                f"Add your {self.ability.value} modifier to Constitution saves to keep that Concentration",
+            ),
+        )
 
 
 class DivinationAdept(_SchoolAdept):
@@ -2637,6 +3128,17 @@ class DivinationAdept(_SchoolAdept):
     _SCHOOL_EFFECT = "Prescient Intervention. When a creature you can see within 60 feet of yourself makes a D20 Test, you can take a Reaction to give that creature Advantage or Disadvantage (your choice) on that roll. Once you use this benefit, you can't do so again until you finish a Long Rest. You can also regain use of this feature when you cast a spell from the Divination school using a spell slot."
     _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
 
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("Action", "Reaction"),
+            ("Trigger", "A creature you can see within 60 feet makes a D20 Test"),
+            ("Effect", "Give it Advantage or Disadvantage on the roll (your choice)"),
+            (
+                "Recharge",
+                "Once per Long Rest; casting a Divination spell with a spell slot also restores it",
+            ),
+        )
+
 
 class EnchantmentAdept(_SchoolAdept):
     _NAME = "Enchantment Adept"
@@ -2648,6 +3150,15 @@ class EnchantmentAdept(_SchoolAdept):
         EnchantmentLevel5Spells.MODIFY_MEMORY,
     )
     _SCHOOL_EFFECT = "Subtle Enchantments. When you cast a spell from the Enchantment school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell."
+
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("Trigger", "You cast an Enchantment spell using a spell slot"),
+            (
+                "Effect",
+                "Cast it without Verbal, Somatic or Material components, except costly or consumed Materials",
+            ),
+        )
 
 
 class EvocationAdept(_SchoolAdept):
@@ -2661,6 +3172,16 @@ class EvocationAdept(_SchoolAdept):
     )
     _SCHOOL_EFFECT = "Fueled Evocation. Once per turn when you cast an Evocation spell and deal damage, you can roll up to two of your unexpended Hit Point Dice and add the total rolled to one of the spell's damage rolls. Those Hit Point Dice are then expended."
 
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("Trigger", "Once per turn, an Evocation spell you cast deals damage"),
+            (
+                "Effect",
+                "Roll up to two unexpended Hit Point Dice and add the total to one of its damage rolls",
+            ),
+            ("Cost", "Those Hit Point Dice are expended"),
+        )
+
 
 class IllusionAdept(_SchoolAdept):
     _NAME = "Illusion Adept"
@@ -2672,6 +3193,18 @@ class IllusionAdept(_SchoolAdept):
         IllusionLevel5Spells.SEEMING,
     )
     _SCHOOL_EFFECT = "Masterful Illusions. When you cast a spell from the Illusion school using a spell slot, you can cast it without any Verbal, Somatic, or Material components, except Material components that are consumed by the spell or that have a cost specified in the spell. Additionally, creatures have Disadvantage on Intelligence (Investigation) checks made to discern the true nature of illusions created by your spells."
+
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            (
+                "Components",
+                "Cast Illusion spells with a spell slot without Verbal, Somatic or Material components, except costly or consumed Materials",
+            ),
+            (
+                "Convincing",
+                "Creatures have Disadvantage on Intelligence (Investigation) checks to discern your spells' illusions",
+            ),
+        )
 
 
 class NecromancyAdept(_SchoolAdept):
@@ -2685,6 +3218,16 @@ class NecromancyAdept(_SchoolAdept):
     )
     _SCHOOL_EFFECT = "Life Manipulation. When you cast a spell from the Necromancy school using a spell slot, you can immediately roll up to two of your unexpended Hit Point Dice. You regain Hit Points equal to the total rolled plus the level of spell slot expended. Those Hit Point Dice are then expended."
 
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            ("Trigger", "You cast a Necromancy spell using a spell slot"),
+            (
+                "Effect",
+                "Immediately roll up to two unexpended Hit Point Dice: regain the total + the slot's level in Hit Points",
+            ),
+            ("Cost", "Those Hit Point Dice are expended"),
+        )
+
 
 class TransmutationAdept(_SchoolAdept):
     _NAME = "Transmutation Adept"
@@ -2696,6 +3239,15 @@ class TransmutationAdept(_SchoolAdept):
         TransmutationLevel5Spells.ANIMATE_OBJECTS,
     )
     _SCHOOL_EFFECT = "Magical Augmentation. On your turn when you cast a spell from the Transmutation school using a spell slot, your Speed increases by a number of feet equal to five times the level of spell slot expended. This increase lasts until the end of the turn."
+
+    def _school_facts(self) -> tuple[tuple[str, str], ...]:
+        return (
+            (
+                "Trigger",
+                "On your turn, you cast a Transmutation spell using a spell slot",
+            ),
+            ("Effect", "Speed + 5 x the slot's level feet until the end of the turn"),
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -2776,22 +3328,26 @@ class OtherworldlyFamiliar(_AbilityScoreFeat):
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
-            Facts(
+            Facts((("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),)),
+            Option(
+                "Otherworldly Power",
                 (
-                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
-                    (
-                        "Otherworldly Power",
-                        "When you cast Find Familiar, imbue it until you cast the spell again:",
+                    Paragraph(
+                        "When you cast Find Familiar, you can imbue your familiar until you cast the spell again:"
                     ),
-                    (
-                        "Energy Resistance",
-                        f"Your familiar resists {self.damage_type.value} damage",
+                    Facts(
+                        (
+                            (
+                                "Energy Resistance",
+                                f"Resistance to {self.damage_type.value} damage",
+                            ),
+                            (
+                                "Phase Walk",
+                                "It moves through creatures and objects as Difficult Terrain; ending its turn in an object shunts it to its last unoccupied space",
+                            ),
+                        )
                     ),
-                    (
-                        "Phase Walk",
-                        "It moves through creatures and objects as Difficult Terrain; ending its turn in an object shunts it to its last unoccupied space",
-                    ),
-                )
+                ),
             ),
         ]
 

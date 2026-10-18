@@ -85,6 +85,22 @@ class ExceptionalTraining(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Bonus Action",
+                        "When you command your beast to take an action, also command it to Dash, Disengage, Dodge or Help with its Bonus Action",
+                    ),
+                    (
+                        "Force damage",
+                        "When it hits with an attack roll and deals damage, it can deal Force damage or its normal type (your choice)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you take a Bonus Action to command your Primal Companion beast to take an action, you can also command it to take the Dash, Disengage, Dodge, or Help action using its Bonus Action.\n"
@@ -103,6 +119,22 @@ class BestialFury(Feature):
             origin="Beast Master Ranger Level 11",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Beast's Strike",
+                        "When you command it, the beast can use it twice",
+                    ),
+                    (
+                        "Hunter's Mark",
+                        "The first time each turn it hits a creature marked by your Hunter's Mark, it deals extra Force damage equal to the spell's bonus damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

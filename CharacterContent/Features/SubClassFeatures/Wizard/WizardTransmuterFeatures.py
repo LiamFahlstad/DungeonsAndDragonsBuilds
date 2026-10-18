@@ -18,6 +18,23 @@ class TransmutationSavant(Feature):
             name="Transmutation Savant", origin="Transmuter Wizard Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add Transmutation spells to your spellbook for free."),
+            Facts(
+                (
+                    (
+                        "Now",
+                        "Two Wizard Transmutation spells, each no higher than level 2",
+                    ),
+                    (
+                        "New spell slot levels",
+                        "Whenever you gain access to a new level of spell slots in this class, one Wizard Transmutation spell of a level you have slots for",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Choose two Wizard spells from the Transmutation school, each of which must be no higher than level 2, and add them to your spellbook for free.\n"
@@ -148,6 +165,20 @@ class EmpoweredTransmutation(Feature):
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Intelligence modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You use a spell slot to cast a Transmutation spell that doesn't make an attack roll or force a saving throw, such as Fly or Magic Weapon",
+                    ),
+                    ("Effect", "Increase the spell's effective level by 1"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

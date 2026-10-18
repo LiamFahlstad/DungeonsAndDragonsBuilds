@@ -10,7 +10,7 @@ from Model.Content.Feature import (
     FeatureDice,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ToolsOfTheTrade(Feature):
@@ -20,6 +20,23 @@ class ToolsOfTheTrade(Feature):
             origin="Armorer Artificer Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Armor Training", "Heavy armor"),
+                    (
+                        "Tool Proficiency",
+                        "Smith's Tools, or another type of Artisan's Tools of your choice if you already have it",
+                    ),
+                    (
+                        "Armor Crafting",
+                        "Crafting nonmagical or magic armor takes half the time",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -34,6 +51,23 @@ class ToolsOfTheTrade(Feature):
 class Spells(Feature):
     def __init__(self):
         super().__init__(name="Armorer Spells", origin="Armorer Artificer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "Magic Missile, Thunderwave"),
+                    ("5", "Mirror Image, Shatter"),
+                    ("9", "Hypnotic Pattern, Lightning Bolt"),
+                    ("13", "Fire Shield, Greater Invisibility"),
+                    ("17", "Passwall, Wall of Force"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -166,11 +200,11 @@ class ArmorModel(Feature):
                         (
                             (
                                 "Force Demolisher",
-                                "Simple Melee weapon with Reach; Force damage. On a hit against a creature at least one size smaller than you, push it up to 10 feet away or pull it up to 10 feet toward you.",
+                                "Simple Melee weapon with Reach; Force damage (see Dice below). On a hit against a creature at least one size smaller than you, push it up to 10 feet away or pull it up to 10 feet toward you.",
                             ),
                             (
                                 "Giant Stature",
-                                "Bonus Action: for 1 minute your reach increases by 5 feet, and you become Large, with anything you're wearing, if you're smaller (if there's room)",
+                                "Bonus Action: for 1 minute your reach increases by 5 feet, and you become Large, with anything you're wearing, if you're smaller (if there's room). Intelligence modifier (minimum once) uses per Long Rest (boxes below).",
                             ),
                         )
                     ),
@@ -183,7 +217,7 @@ class ArmorModel(Feature):
                         (
                             (
                                 "Thunder Pulse",
-                                "Simple Melee weapon; Thunder damage. A creature hit has Disadvantage on attack rolls against targets other than you until the start of your next turn.",
+                                "Simple Melee weapon; Thunder damage (see Dice below). A creature hit has Disadvantage on attack rolls against targets other than you until the start of your next turn.",
                             ),
                             (
                                 "Defensive Field",
@@ -200,7 +234,7 @@ class ArmorModel(Feature):
                         (
                             (
                                 "Lightning Launcher",
-                                "Simple Ranged weapon, range 90/300 feet; Lightning damage. Once on each of your turns when you hit, +1d6 Lightning damage.",
+                                "Simple Ranged weapon, range 90/300 feet; Lightning damage (see Dice below). Once on each of your turns when you hit, +1d6 Lightning damage.",
                             ),
                             ("Powered Steps", "Speed +5 feet"),
                             (
@@ -285,6 +319,22 @@ class ImprovedArmorer(Feature):
             origin="Armorer Artificer Level 9",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Armor Replication",
+                        "Learn an extra Replicate Magic Item plan from the Armor category (replace it only with another Armor plan), and create one extra item, also Armor",
+                    ),
+                    (
+                        "Improved Arsenal",
+                        "+1 to attack and damage rolls with your Arcane Armor model's special weapon",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

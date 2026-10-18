@@ -12,6 +12,20 @@ class AnimalSpeaker(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spells", "Beast Sense and Speak with Animals, only as Rituals"),
+                    ("Spellcasting ability", "Wisdom"),
+                    (
+                        "From Barbarian level 10",
+                        "Commune with Nature too (Nature Speaker)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can cast the Beast Sense and Speak with Animals spells but only as Rituals. Wisdom is your spellcasting ability for them."
         return description
@@ -88,6 +102,23 @@ class AspectOfTheWilds(Feature):
             origin="Path Of The Wild Heart Barbarian Level 6",
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Gain one option of your choice. You can change it whenever you finish a Long Rest."
+            ),
+            Facts(
+                (
+                    (
+                        "Owl",
+                        "Darkvision with a range of 60 feet, or +60 feet if you already have it",
+                    ),
+                    ("Panther", "A Climb Speed equal to your Speed"),
+                    ("Salmon", "A Swim Speed equal to your Speed"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

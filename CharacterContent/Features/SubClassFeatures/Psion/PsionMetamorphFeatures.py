@@ -4,9 +4,9 @@ from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
     Facts,
+    Option,
     Paragraph,
     Table,
-    Option,
 )
 
 
@@ -181,6 +181,31 @@ class FleshWeaver(Feature):
             origin="Metamorph Psion Level 6",
             usage_tags=["buff", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Mutable Form"),
+                    ("Cost", "One additional Psionic Energy Die"),
+                    ("Duration", "While Mutable Form is active"),
+                )
+            ),
+            Option(
+                "Benefits",
+                (
+                    Facts(
+                        (
+                            ("Organic Defense", "+2 bonus to AC"),
+                            (
+                                "Empowered Healing",
+                                "When you cast a spell with a spell slot that restores Hit Points, expend and roll one Psionic Energy Die and add it to the Hit Points regained",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

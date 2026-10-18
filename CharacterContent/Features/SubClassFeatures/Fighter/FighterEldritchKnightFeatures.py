@@ -13,8 +13,8 @@ from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
     Facts,
-    Paragraph,
     Option,
+    Paragraph,
     dc_formula,
 )
 from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
@@ -121,6 +121,23 @@ class WarMagic(Feature):
     def __init__(self):
         super().__init__(name="War Magic", origin="Eldritch Knight Fighter Level 7")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action on your turn"),
+                    (
+                        "Effect",
+                        "Replace one attack with a casting of a Wizard cantrip that has a casting time of an action",
+                    ),
+                    (
+                        "From Fighter level 18",
+                        "Replace two attacks with a level 1 or 2 Wizard spell that has a casting time of an action (Improved War Magic)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you take the Attack action on your turn, you can replace one of the attacks with a casting of one of your Wizard cantrips that has a casting time of an action."
         return description
@@ -136,6 +153,19 @@ class EldritchStrike(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack using a weapon"),
+                    (
+                        "Effect",
+                        "It has Disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You learn how to make your weapon strikes undercut a creature's ability to withstand your spells. When you hit a creature with an attack using a weapon, that creature has Disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn."

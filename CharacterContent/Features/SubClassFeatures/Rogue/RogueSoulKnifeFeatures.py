@@ -254,6 +254,30 @@ class PsychicVeil(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Weave a veil of psychic static to mask yourself."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Effect", "You have the Invisible condition"),
+                    (
+                        "Duration",
+                        "1 hour, or until you dismiss it (no action required)",
+                    ),
+                    (
+                        "Ends early",
+                        "Immediately after you deal damage to a creature or force one to make a saving throw",
+                    ),
+                    (
+                        "Restore",
+                        "Expend a Psionic Energy Die (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can weave a veil of psychic static to mask yourself. As a Magic action, you gain the Invisible condition for 1 hour or until you dismiss the effect (no action required). This invisibility ends early immediately after you deal damage to a creature or you force a creature to make a saving throw.\n"

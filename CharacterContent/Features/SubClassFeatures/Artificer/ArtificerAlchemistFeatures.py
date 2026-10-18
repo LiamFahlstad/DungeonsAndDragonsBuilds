@@ -23,6 +23,22 @@ class ToolsOfTheTrade(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Tool Proficiency",
+                        "Alchemist's Supplies and the Herbalism Kit; for each you already have, another type of Artisan's Tools of your choice",
+                    ),
+                    (
+                        "Potion Crafting",
+                        "Brewing a potion with the Dungeon Master's Guide crafting rules takes half the time",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the following benefits.\n"
@@ -35,6 +51,23 @@ class ToolsOfTheTrade(Feature):
 class Spells(Feature):
     def __init__(self):
         super().__init__(name="Alchemist Spells", origin="Alchemist Artificer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "Healing Word, Ray of Sickness"),
+                    ("5", "Flaming Sphere, Melf's Acid Arrow"),
+                    ("9", "Gaseous Form, Mass Healing Word"),
+                    ("13", "Death Ward, Vitriolic Sphere"),
+                    ("17", "Cloudkill, Raise Dead"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -185,6 +218,23 @@ class AlchemicalSavant(Feature):
             usage_tags=["damage", "heal"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a spell using Alchemist's Supplies as the Spellcasting Focus",
+                    ),
+                    (
+                        "Roll",
+                        "One roll that restores Hit Points, or a damage roll dealing Acid, Fire or Poison damage",
+                    ),
+                    ("Bonus", "+ Intelligence modifier (minimum +1)"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1)."
         return description
@@ -202,6 +252,23 @@ class RestorativeReagents(Feature):
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Intelligence modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Free casting",
+                        "Cast Lesser Restoration without a spell slot and without preparing it",
+                    ),
+                    (
+                        "Requirement",
+                        "Use Alchemist's Supplies as the Spellcasting Focus",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest."

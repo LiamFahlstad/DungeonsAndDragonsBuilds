@@ -523,6 +523,28 @@ class FlashofGenius(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Intelligence modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within 30 feet fails an ability check or a saving throw",
+                    ),
+                    (
+                        "Effect",
+                        "Add your Intelligence modifier (minimum +1) to the roll",
+                    ),
+                    (
+                        "From Artificer level 14",
+                        "Regain one expended use when you finish a Short Rest (Advanced Artifice)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you or a creature you can see within 30 feet of you fails an ability check or a saving throw, you can take a Reaction to add a bonus to the roll, potentially causing it to succeed. The bonus equals your Intelligence modifier (minimum of +1).\n"
@@ -594,6 +616,19 @@ class SpellStoringItem(Feature):
 class AdvancedArtifice(Feature):
     def __init__(self):
         super().__init__(name="Advanced Artifice", origin="Artificer Level 14")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Magic Item Savant", "Attune to up to five magic items at once"),
+                    (
+                        "Refreshed Genius",
+                        "When you finish a Short Rest, regain one expended use of Flash of Genius",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

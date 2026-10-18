@@ -12,7 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class InspiringSmite(Feature):
@@ -27,6 +27,24 @@ class InspiringSmite(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "Immediately after you cast Divine Smite"),
+                    ("Cost", "One use of Channel Divinity"),
+                    (
+                        "Target",
+                        "Creatures of your choice within 30 feet, which can include you",
+                    ),
+                    (
+                        "Effect",
+                        "2d8 + Paladin level Temporary Hit Points, divided among them however you like",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and distribute Temporary Hit Points to creatures of your choice within 30 feet of yourself, which can include you. The total number of Temporary Hit Points equals 2d8 plus your Paladin level, divided among the chosen creatures however you like."
         return description
@@ -37,6 +55,23 @@ class GlorySpells(Feature):
         super().__init__(
             name="Oath of Glory Spells", origin="Oath of Glory Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Guiding Bolt, Heroism"),
+                    ("5", "Enhance Ability, Magic Weapon"),
+                    ("9", "Haste, Protection from Energy"),
+                    ("13", "Compulsion, Freedom of Movement"),
+                    ("17", "Legend Lore, Yolande's Regal Presence"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -66,6 +101,25 @@ class PeerlessAthlete(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Duration", "1 hour"),
+                    (
+                        "Checks",
+                        "Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks",
+                    ),
+                    (
+                        "Jumps",
+                        "Long and High Jumps go 10 feet farther (the extra distance costs movement as normal)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "As a Bonus Action, you can expend one use of your Channel Divinity to augment your athleticism. For 1 hour, you have Advantage on Strength (Athletics) and Dexterity (Acrobatics) checks, and the distance of your Long and High Jumps increases by 10 feet (this extra distance costs movement as normal)."
         return description
@@ -85,6 +139,19 @@ class AuraOfAlacrity(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Your Speed", "+10 feet"),
+                    (
+                        "Allies",
+                        "When an ally enters your Aura of Protection for the first time on a turn or starts its turn there, its Speed increases by 10 feet until the end of its next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -174,8 +241,8 @@ class LivingLegend(Feature):
                     ("Action", "Bonus Action"),
                     ("Duration", "10 minutes"),
                     (
-                        "Limit",
-                        "Once per Long Rest; expend a level 5 spell slot (no action required) to use it again",
+                        "Recharge",
+                        "Once per Long Rest, or expend a level 5 spell slot (no action required) to restore it",
                     ),
                 )
             ),

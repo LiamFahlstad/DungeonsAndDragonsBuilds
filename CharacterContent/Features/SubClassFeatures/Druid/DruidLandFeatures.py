@@ -16,7 +16,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 _LAND_TYPE_RESISTANCE: dict[Definitions.DruidLandType, str] = {
     Definitions.DruidLandType.ARID: "Fire",
@@ -32,6 +32,47 @@ class CircleOfTheLandSpells(Feature):
             name="Circle of the Land Spells", origin="Circle of the Land Druid Level 3"
         )
         self.land_type = land_type
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Whenever you finish a Long Rest, choose one type of land. You have its spells for your Druid level and lower prepared."
+            ),
+            Facts((("Current choice", f"{self.land_type.value} land"),)),
+            Table(
+                ("Land", "Druid level 3", "5", "7", "9"),
+                (
+                    (
+                        "Arid",
+                        "Blur, Burning Hands, Fire Bolt",
+                        "Fireball",
+                        "Blight",
+                        "Wall of Stone",
+                    ),
+                    (
+                        "Polar",
+                        "Fog Cloud, Hold Person, Ray of Frost",
+                        "Sleet Storm",
+                        "Ice Storm",
+                        "Cone of Cold",
+                    ),
+                    (
+                        "Temperate",
+                        "Misty Step, Shocking Grasp, Sleep",
+                        "Lightning Bolt",
+                        "Freedom of Movement",
+                        "Tree Stride",
+                    ),
+                    (
+                        "Tropical",
+                        "Acid Splash, Ray of Sickness, Web",
+                        "Stinking Cloud",
+                        "Polymorph",
+                        "Insect Plague",
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -161,6 +202,28 @@ class NaturesWard(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Immunity", "The Poisoned condition"),
+                    (
+                        "Resistance",
+                        f"{_LAND_TYPE_RESISTANCE[self.land_type]} damage, from your {self.land_type.value} land choice in Circle of the Land Spells",
+                    ),
+                )
+            ),
+            Table(
+                ("Land", "Resistance"),
+                (
+                    ("Arid", "Fire"),
+                    ("Polar", "Cold"),
+                    ("Temperate", "Lightning"),
+                    ("Tropical", "Poison"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         resistance = _LAND_TYPE_RESISTANCE[self.land_type]
         description = (
@@ -185,6 +248,32 @@ class NaturesSanctuary(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Raise spectral trees and vines that shelter you and your allies."
+            ),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "One use of Wild Shape"),
+                    ("Area", "A 15-foot Cube on the ground within 120 feet"),
+                    (
+                        "Duration",
+                        "1 minute, or until you have the Incapacitated condition or die",
+                    ),
+                    (
+                        "Effect",
+                        "You and your allies have Half Cover in the area, and your allies gain your Nature's Ward Resistance while there",
+                    ),
+                    (
+                        "Move",
+                        "Bonus Action: move the Cube up to 60 feet, to ground within 120 feet of you",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

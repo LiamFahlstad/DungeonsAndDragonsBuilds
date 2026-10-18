@@ -3,7 +3,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Option
 
 
 class KnightlyEnvoy(Feature):
@@ -56,6 +56,21 @@ class GroupRecovery(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Second Wind to regain Hit Points"),
+                    (
+                        "Target",
+                        "Allies in a 30-foot Emanation from you (60 feet from Fighter level 18), up to your Charisma modifier (minimum of one)",
+                    ),
+                    ("Heal", "1d4 + Fighter level Hit Points each"),
+                    ("Limit", "Once per Short or Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Second Wind to regain Hit Points, you can choose a number of allies within a 30-foot Emanation originating from yourself, up to a number of allies equal to your Charisma modifier (minimum of one). Each of those allies regains Hit Points equal to 1d4 plus your Fighter level. Once you use this ability, you can’t use it again until you finish a Short or Long Rest."
         return description
@@ -69,6 +84,19 @@ class TeamTactics(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Group Recovery"),
+                    (
+                        "Effect",
+                        "Each chosen ally has Advantage on D20 Tests until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use Group Recovery, each chosen ally has Advantage on D20 Tests until the start of your next turn."
@@ -85,6 +113,37 @@ class RallyingSurge(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Action Surge"),
+                    (
+                        "Target",
+                        "Allies in a 30-foot Emanation from you (60 feet from Fighter level 18), up to your Charisma modifier (minimum of one)",
+                    ),
+                    (
+                        "Effect",
+                        "Each can immediately take a Reaction for one option below",
+                    ),
+                )
+            ),
+            Option(
+                "Options",
+                (
+                    Facts(
+                        (
+                            ("Attack", "One attack with a weapon or an Unarmed Strike"),
+                            (
+                                "Move",
+                                "Up to half its Speed, without provoking Opportunity Attacks",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -109,6 +168,24 @@ class SharedResilience(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "An ally you can see within 60 feet fails a saving throw",
+                    ),
+                    ("Cost", "One use of Indomitable"),
+                    (
+                        "Effect",
+                        "The ally rerolls with a bonus equal to your Fighter level and must use the new roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When an ally you can see within 60 feet of yourself fails a saving throw, you can take a Reaction to expend a use of your Indomitable feature. The ally can immediately reroll the saving throw with a bonus equal to your Fighter level; the ally must use the new roll."
         return description
@@ -130,6 +207,22 @@ class InspiringCommander(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Bolstered Rally",
+                        "Group Recovery and Rallying Surge now use a 60-foot Emanation",
+                    ),
+                    (
+                        "Unshakable Bravery",
+                        "Immunity to the Charmed and Frightened conditions",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

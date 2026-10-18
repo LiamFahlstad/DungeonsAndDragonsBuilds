@@ -119,6 +119,23 @@ class TrainingInWarAndSong(Feature):
         ).apply(ledger_writer)
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Weapons",
+                        "Proficiency with Melee Martial weapons that don't have the Two-Handed or Heavy property",
+                    ),
+                    (
+                        "Focus",
+                        "Use a Melee weapon you're proficient with as a Spellcasting Focus for your Wizard spells",
+                    ),
+                    ("Skill", f"Proficiency in {self._choice.skills[0].value}"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.\n"
@@ -130,6 +147,19 @@ class TrainingInWarAndSong(Feature):
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Bladesinger Wizard Level 6")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Attack action", "Attack twice instead of once"),
+                    (
+                        "Cantrip",
+                        "Replace one of the attacks with a Wizard cantrip that has a casting time of an action",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice, instead of once, whenever you take the Attack action on your turn. Moreover, you can cast one of your Wizard cantrips that has a casting time of an action in place of one of those attacks."
@@ -144,6 +174,18 @@ class SongOfDefense(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage while your Bladesong is active"),
+                    ("Cost", "One spell slot"),
+                    ("Effect", "Reduce the damage by five times the slot's level"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take damage while your Bladesong is active, you can take a Reaction to expend one spell slot and reduce the damage taken by an amount equal to five times the spell slot's level."

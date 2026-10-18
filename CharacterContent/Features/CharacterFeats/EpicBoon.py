@@ -18,6 +18,7 @@ from Core.Definitions import Ability, DamageType, Sense, Skill
 from Core.Rules import ABSOLUTE_MAX_ABILITY_SCORE
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option
 
 
 class EpicBoon(Feature):
@@ -81,6 +82,20 @@ class BoonOfCombatProwess(_AbilityScoreEpicBoon):
     _NAME = "Boon of Combat Prowess"
     _ABILITIES = _ANY_ABILITY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Peerless Aim",
+                        "When you miss with an attack roll, you can hit instead",
+                    ),
+                    ("Limit", "Then not again until the start of your next turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+\n"
@@ -93,6 +108,19 @@ class BoonOfCombatProwess(_AbilityScoreEpicBoon):
 class BoonOfDimensionalTravel(_AbilityScoreEpicBoon):
     _NAME = "Boon of Dimensional Travel"
     _ABILITIES = _ANY_ABILITY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Blink Steps",
+                        "Immediately after you take the Attack or Magic action, teleport up to 30 feet to an unoccupied space you can see",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -141,6 +169,46 @@ class BoonOfEnergyResistance(_AbilityScoreEpicBoon):
             + character.get_proficiency_bonus()
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Energy Resistances",
+                        "Two of Acid, Cold, Fire, Lightning, Necrotic, Poison, Psychic, Radiant or Thunder; change them when you finish a Long Rest",
+                    ),
+                    (
+                        "Current choices",
+                        " and ".join(dt.value for dt in self.damage_types),
+                    ),
+                )
+            ),
+            Option(
+                "Energy Redirection",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            ("Trigger", "You take damage of one of your chosen types"),
+                            (
+                                "Target",
+                                "Another creature you can see within 60 feet that isn't behind Total Cover",
+                            ),
+                            (
+                                "Save",
+                                "Dexterity save, DC 8 + Constitution modifier + Proficiency Bonus",
+                            ),
+                            (
+                                "Failed",
+                                "2d12 + Constitution modifier damage of the same type",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         chosen = " and ".join(dt.value for dt in self.damage_types)
         return (
@@ -160,6 +228,23 @@ class BoonOfEruptingSpellpower(_AbilityScoreEpicBoon):
     # Also regained when you roll Initiative (see the description).
     _USES = FeatureUses(max_uses=1, regain_all_on="short or long rest")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Spell Overload",
+                        "When you cast a damaging spell with a spell slot, treat any 1 or 2 on its damage dice as a 3, and creatures it damages have the Prone condition",
+                    ),
+                    (
+                        "Recharge",
+                        "When you roll Initiative or finish a Short or Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+, Spellcasting or Pact Magic Feature\n"
@@ -174,6 +259,23 @@ class BoonOfFate(_AbilityScoreEpicBoon):
     _ABILITIES = _ANY_ABILITY
     # Also regained when you roll Initiative (see the description).
     _USES = FeatureUses(max_uses=1, regain_all_on="short or long rest")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Improve Fate",
+                        "When you or a creature within 60 feet succeeds on or fails a D20 Test, roll 2d4 and add or subtract it from the d20 roll",
+                    ),
+                    (
+                        "Recharge",
+                        "When you roll Initiative or finish a Short or Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -196,6 +298,20 @@ class BoonOfFortitude(_AbilityScoreEpicBoon):
         super().apply(ledger_writer)
         self._hit_points.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    ("Hit Point maximum", "+40"),
+                    (
+                        "Fortified Health",
+                        "When you regain Hit Points, regain extra Hit Points equal to your Constitution modifier; then not again until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+\n"
@@ -208,6 +324,23 @@ class BoonOfFortitude(_AbilityScoreEpicBoon):
 class BoonOfIrresistibleOffense(_AbilityScoreEpicBoon):
     _NAME = "Boon of Irresistible Offense"
     _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Overcome Defenses",
+                        "Your Bludgeoning, Piercing and Slashing damage always ignores Resistance",
+                    ),
+                    (
+                        "Overwhelming Strike",
+                        f"On a 20 on the d20 for an attack roll, deal extra damage of the attack's type equal to your {self.ability.value} score",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -239,6 +372,29 @@ class BoonOfMagicSchoolMastery(_AbilityScoreEpicBoon):
         self.rote_spell = rote_spell
         self.signature_spell = signature_spell
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    ("Mastered school", self.school.value),
+                    (
+                        "Rote Casting",
+                        f"{self.rote_spell} (level 1) is always prepared; cast it without a spell slot or components",
+                    ),
+                    (
+                        "Signature Arcanum",
+                        f"{self.signature_spell} (level 7 or lower) is always prepared; cast it once without a spell slot, regained when you finish a Long Rest",
+                    ),
+                    (
+                        "Spell slots",
+                        "You can also cast both with spell slots of the right level",
+                    ),
+                    ("Repeatable", "Take it again with a different school"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+, Spellcasting or Pact Magic Feature\n"
@@ -255,6 +411,23 @@ class BoonOfMagicSchoolMastery(_AbilityScoreEpicBoon):
 class BoonOfRecovery(_AbilityScoreEpicBoon):
     _NAME = "Boon of Recovery"
     _ABILITIES = _ANY_ABILITY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Last Stand",
+                        "When you'd drop to 0 Hit Points, drop to 1 instead and regain half your Hit Point maximum; once per Long Rest",
+                    ),
+                    (
+                        "Recover Vitality",
+                        "A pool of ten d10s. Bonus Action: expend and roll any number, regaining Hit Points equal to the total. The pool refills when you finish a Long Rest.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -283,6 +456,17 @@ class BoonOfSkill(_AbilityScoreEpicBoon):
         self._all_skills.apply(ledger_writer)
         self._expertise.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    ("All-Around Adept", "Proficiency in all skills"),
+                    ("Expertise", self.expertise_skill.value),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+\n"
@@ -305,6 +489,20 @@ class BoonOfSpeed(_AbilityScoreEpicBoon):
         super().apply(ledger_writer)
         self._speed.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Escape Artist",
+                        "Bonus Action: take the Disengage action, which also ends the Grappled condition on you",
+                    ),
+                    ("Quickness", "+30 feet Speed"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+\n"
@@ -319,6 +517,19 @@ class BoonOfSpellRecall(_AbilityScoreEpicBoon):
     _NAME = "Boon of Spell Recall"
     _ABILITIES = _MENTAL_ABILITIES
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Free Casting",
+                        "When you cast a spell with a level 1-4 slot, roll 1d4: if it matches the slot's level, the slot isn't expended",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+, Spellcasting or Pact Magic Feature\n"
@@ -332,6 +543,19 @@ class BoonOfTheIronMind(_AbilityScoreEpicBoon):
     _NAME = "Boon of the Iron Mind"
     _ABILITIES = _ANY_ABILITY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Unshakable Focus",
+                        "You lose Concentration only if you cast or activate another Concentration effect, have the Petrified or Unconscious condition, or die",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "Prerequisite: Level 19+\n"
@@ -344,6 +568,23 @@ class BoonOfTheIronMind(_AbilityScoreEpicBoon):
 class BoonOfTheNightSpirit(_AbilityScoreEpicBoon):
     _NAME = "Boon of the Night Spirit"
     _ABILITIES = _ANY_ABILITY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    (
+                        "Merge with Shadows",
+                        "In Dim Light or Darkness, give yourself the Invisible condition as a Bonus Action; it ends right after you take an action, Bonus Action or Reaction",
+                    ),
+                    (
+                        "Shadowy Form",
+                        "In Dim Light or Darkness, Resistance to all damage except Psychic and Radiant",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -366,6 +607,16 @@ class BoonOfTruesight(_AbilityScoreEpicBoon):
     def apply(self, ledger_writer: LedgerWriter):
         super().apply(ledger_writer)
         self._truesight.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 30"),
+                    ("Truesight", "60 feet"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (

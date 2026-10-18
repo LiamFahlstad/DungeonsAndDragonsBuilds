@@ -249,6 +249,19 @@ class GuardedMind(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Psychic damage"),
+                    (
+                        "Clear mind",
+                        "If you start your turn Charmed or Frightened, expend a Psionic Energy Die (no action required) to end every effect giving you those conditions",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You have Resistance to Psychic damage. Moreover, if you start your turn with the Charmed or Frightened condition, you can expend a Psionic Energy Die (no action required) and end every effect on yourself giving you those conditions."
         return description

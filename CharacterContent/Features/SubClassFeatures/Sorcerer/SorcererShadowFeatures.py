@@ -9,12 +9,28 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class ShadowSpells(Feature):
     def __init__(self):
         super().__init__(name="Shadow Spells", origin="Shadow Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Sorcerer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Sorcerer level", "Spells"),
+                (
+                    ("3", "Bane, Darkness, Inflict Wounds, Pass without Trace"),
+                    ("5", "Hunger of Hadar, Nondetection"),
+                    ("7", "Greater Invisibility, Phantasmal Killer"),
+                    ("9", "Contagion, Creation"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -98,7 +114,7 @@ class BeastsOfIllOmen(Feature):
                     ),
                     (
                         "No Concentration",
-                        "Optionally: the spell needs no Concentration, lasts 1 minute, and ends early if you cast it again",
+                        "When you cast it, you can drop its Concentration: it then lasts 1 minute and ends early if you cast it again",
                     ),
                 )
             ),
@@ -123,6 +139,20 @@ class ShadowWalk(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You're in Dim Light or Darkness"),
+                    (
+                        "Effect",
+                        "Teleport up to 120 feet to an unoccupied space you can see that's also in Dim Light or Darkness",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "While you are in Dim Light or Darkness, you can take a Bonus Action to teleport up to 120 feet to an unoccupied space you can see that is also in Dim Light or Darkness."

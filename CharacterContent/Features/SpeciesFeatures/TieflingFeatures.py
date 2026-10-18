@@ -4,7 +4,7 @@ from Model.Content.Feature import Feature
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Table
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -71,6 +71,9 @@ class FiendishLegacy(Feature):
             ),
         )
         return [
+            Paragraph(
+                "Your fiendish legacy grants these spells at the character levels shown."
+            ),
             Table(("Character level", "Spell"), chosen),
             Facts(
                 (

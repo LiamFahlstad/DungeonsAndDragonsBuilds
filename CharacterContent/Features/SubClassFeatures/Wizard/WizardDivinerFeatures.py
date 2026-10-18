@@ -7,11 +7,29 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class DivinationSavant(Feature):
     def __init__(self):
         super().__init__(name="Divination Savant", origin="Diviner Wizard Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add Divination spells to your spellbook for free."),
+            Facts(
+                (
+                    (
+                        "Now",
+                        "Two Wizard Divination spells, each no higher than level 2",
+                    ),
+                    (
+                        "New spell slot levels",
+                        "Whenever you gain access to a new level of spell slots in this class, one Wizard Divination spell of a level you have slots for",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -27,6 +45,25 @@ class Portent(Feature):
             name="Portent", origin="Diviner Wizard Level 3", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Glimpses of the future press on your awareness."),
+            Facts(
+                (
+                    (
+                        "Foretelling rolls",
+                        "When you finish a Long Rest, roll two d20s and record them (three from Wizard level 14, Greater Portent)",
+                    ),
+                    (
+                        "Use",
+                        "Replace a D20 Test made by you or a creature you can see with one of them, choosing before the roll",
+                    ),
+                    ("Limit", "Once per turn; each roll can be used only once"),
+                    ("Expiry", "Unused rolls are lost when you finish a Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Glimpses of the future begin to press on your awareness. Whenever you finish a Long Rest, roll two d20s and record the numbers rolled. You can replace any D20 Test made by you or a creature that you can see with one of these foretelling rolls. You must choose to do so before the roll, and you can replace a roll in this way only once per turn.\n"
@@ -41,6 +78,22 @@ class Portent(Feature):
 class ExpertDivination(Feature):
     def __init__(self):
         super().__init__(name="Expert Divination", origin="Diviner Wizard Level 6")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a Divination spell using a level 2+ spell slot",
+                    ),
+                    (
+                        "Effect",
+                        "Regain one expended spell slot of a lower level than the one you used, no higher than level 5",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Casting Divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a Divination spell using a level 2+ spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the slot you expended and can't be higher than level 5.\n"
@@ -60,6 +113,33 @@ class TheThirdEye(Feature):
             ),
             usage_tags=["buff", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Increase your powers of perception."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Duration", "Until you start a Short or Long Rest"),
+                    ("Limit", "Once per Short or Long Rest"),
+                )
+            ),
+            Option(
+                "Benefits (choose one)",
+                (
+                    Facts(
+                        (
+                            ("Darkvision", "Darkvision with a range of 120 feet"),
+                            ("Greater Comprehension", "You can read any language"),
+                            (
+                                "See Invisibility",
+                                "Cast See Invisibility without expending a spell slot",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

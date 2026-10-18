@@ -43,6 +43,19 @@ class DwarvenResilience(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Poison damage"),
+                    (
+                        "Advantage",
+                        "On saving throws to avoid or end the Poisoned condition",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
 

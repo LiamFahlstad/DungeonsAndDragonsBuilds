@@ -19,11 +19,18 @@ from Model.Content.Improvements import (
     GrantWeaponProficiency,
 )
 from Model.Creatures.Combatants import CreatureForm
-from Core.Definitions import CharacterClass, Language, Skill, ArmorType
+from Core.Definitions import Ability, CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    Option,
+    Paragraph,
+    StatBlock,
+    dc_formula,
+)
 
 
 class PrimalOrderType(str, Enum):
@@ -34,6 +41,23 @@ class PrimalOrderType(str, Enum):
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Druid Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Wisdom"),
+                    ("Save DC", dc_formula(Ability.WISDOM)),
+                    ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
+                    ("Cantrips", "Replace one whenever you gain a Druid level"),
+                    (
+                        "Prepared spells",
+                        "Replace one whenever you finish a Long Rest",
+                    ),
+                    ("Spell slots", "Regain all when you finish a Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -56,6 +80,20 @@ class Druidic(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Language", "Druidic, the secret language of Druids"),
+                    ("Always prepared", "Speak with Animals"),
+                    (
+                        "Hidden messages",
+                        "You and others who know Druidic spot them automatically. Others spot one with a successful DC 15 Intelligence (Investigation) check, but can't decipher it without magic.",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -85,6 +123,30 @@ class PrimalOrder(Feature):
 
         SkillBonus(Skill.ARCANA, bonus).apply(ledger_writer)
         SkillBonus(Skill.NATURE, bonus).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        if self.order == PrimalOrderType.WARDEN:
+            return [
+                Paragraph("Warden: trained for battle."),
+                Facts(
+                    (
+                        ("Weapons", "Proficiency with Martial weapons"),
+                        ("Armor", "Training with Medium armor"),
+                    )
+                ),
+            ]
+        return [
+            Paragraph("Magician: a mystical connection to nature."),
+            Facts(
+                (
+                    ("Extra cantrip", "One more cantrip from the Druid spell list"),
+                    (
+                        "Arcana and Nature",
+                        "+ Wisdom modifier (minimum +1) to Intelligence (Arcana or Nature) checks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         if self.order == PrimalOrderType.WARDEN:
@@ -167,6 +229,45 @@ class WildShape(Feature):
             ),
         }
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses and their recharge are in the panel below. The base rules,
+        # so the card reads the same for every Druid: Circle Forms' own card
+        # gives its Challenge Rating and Temporary Hit Points, and the stat
+        # blocks below already apply them.
+        rules = {
+            label: text
+            for label, text in self._rules(character).items()
+            if label != "Uses"
+        }
+        rules["Max Challenge Rating"] = (
+            "1/4, rising to 1/2 at Druid level 4 and 1 at Druid level 8"
+        )
+        rules["Temporary Hit Points"] = (
+            "Equal to your Druid level, gained when you assume a form"
+        )
+        groups = {
+            "Transforming": ("Action", "Duration", "Temporary Hit Points"),
+            "Forms": ("Known Forms", "Max Challenge Rating", "Fly Speed"),
+            "While shape-shifted": (
+                "You Keep",
+                "Skills and Saves",
+                "Spellcasting",
+                "Objects",
+            ),
+        }
+        return [
+            Paragraph("Shape-shift into a Beast form you have learned."),
+            *(
+                Option(name, (Facts(tuple((label, rules[label]) for label in labels)),))
+                for name, labels in groups.items()
+            ),
+            Paragraph("Your known forms:"),
+            *(
+                StatBlock(format_wild_shape_form(form, character))
+                for form in self.known_forms
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         known_forms_lines = "\n".join(
             format_wild_shape_form(form, character) for form in self.known_forms
@@ -213,6 +314,12 @@ class AdditionalWildShapeForms(Feature):
         super().__init__(name="Additional Known Forms", origin=origin)
         self.known_forms = known_forms
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            StatBlock(format_wild_shape_form(form, character))
+            for form in self.known_forms
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "\n".join(
             format_wild_shape_form(form, character) for form in self.known_forms
@@ -229,6 +336,22 @@ class WildCompanion(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Summon a nature spirit in an animal form to aid you."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "A spell slot or a use of Wild Shape"),
+                    ("Effect", "Cast Find Familiar without Material components"),
+                    (
+                        "Familiar",
+                        "It's Fey, and disappears when you finish a Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of Wild Shape to cast the Find Familiar spell without Material components.\n"
@@ -240,6 +363,45 @@ class WildCompanion(Feature):
 class WildResurgence(Feature):
     def __init__(self):
         super().__init__(name="Wild Resurgence", origin="Druid Level 5")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Trade spell slots and uses of Wild Shape."),
+            Option(
+                "Spell slot into Wild Shape",
+                (
+                    Facts(
+                        (
+                            ("Action", "No action required"),
+                            (
+                                "Requirement",
+                                "You have no uses of Wild Shape left",
+                            ),
+                            (
+                                "Effect",
+                                "Expend a spell slot to gain one use of Wild Shape",
+                            ),
+                            ("Limit", "Once on each of your turns"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Wild Shape into spell slot",
+                (
+                    Facts(
+                        (
+                            ("Action", "No action required"),
+                            (
+                                "Effect",
+                                "Expend one use of Wild Shape to gain a level 1 spell slot",
+                            ),
+                            ("Limit", "Once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -267,6 +429,23 @@ class PrimalStrike(Feature):
         super().__init__(
             name="Primal Strike", origin="Druid Level 7", usage_tags=["damage"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once on each of your turns, you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape",
+                    ),
+                    (
+                        "Damage",
+                        "Extra 1d8 Cold, Fire, Lightning or Thunder damage (choose when you hit)",
+                    ),
+                    ("From Druid level 15", "2d8 instead (Improved Primal Strike)"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

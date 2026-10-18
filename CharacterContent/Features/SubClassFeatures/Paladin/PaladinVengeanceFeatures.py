@@ -7,7 +7,7 @@ from Model.Content.Feature import (
     FeatureUses,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class OathOfVengeanceSpells(Feature):
@@ -15,6 +15,23 @@ class OathOfVengeanceSpells(Feature):
         super().__init__(
             name="Oath of Vengeance Spells", origin="Oath of Vengeance Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Bane, Hunter's Mark"),
+                    ("5", "Hold Person, Misty Step"),
+                    ("9", "Haste, Protection from Energy"),
+                    ("13", "Banishment, Dimension Door"),
+                    ("17", "Hold Monster, Scrying"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -44,6 +61,23 @@ class VowOfEnmity(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action"),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Target", "A creature you can see within 30 feet"),
+                    ("Duration", "1 minute, or until you use this feature again"),
+                    ("Effect", "Advantage on attack rolls against the target"),
+                    (
+                        "Transfer",
+                        "If the target drops to 0 Hit Points before the vow ends, move the vow to another creature within 30 feet (no action required)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You have Advantage on attack rolls against the creature for 1 minute or until you use this feature again.\n"
@@ -66,6 +100,21 @@ class RelentlessAvenger(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Close off a foe's retreat."),
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an Opportunity Attack"),
+                    ("Effect", "Its Speed becomes 0 until the end of the current turn"),
+                    (
+                        "Pursue",
+                        "Move up to half your Speed as part of the same Reaction, without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks."
         return description
@@ -82,6 +131,20 @@ class SoulOfVengeance(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature under your Vow of Enmity hits or misses with an attack roll",
+                    ),
+                    ("Effect", "Make a melee attack against it, if it's within range"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it's within range."

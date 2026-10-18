@@ -84,6 +84,20 @@ class RelentlessEndurance(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You're reduced to 0 Hit Points but not killed outright",
+                    ),
+                    ("Effect", "Drop to 1 Hit Point instead"),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         text = "When you are reduced to 0 Hit Points but not killed outright, you can drop to 1 Hit Point instead. Once you use this trait, you can't do so again until you finish a Long Rest."
         return text

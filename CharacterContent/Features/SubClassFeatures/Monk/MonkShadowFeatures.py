@@ -102,6 +102,28 @@ class ShadowStep(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You're entirely within Dim Light or Darkness"),
+                    (
+                        "Teleport",
+                        "Up to 60 feet to an unoccupied space you can see that's also in Dim Light or Darkness",
+                    ),
+                    (
+                        "Then",
+                        "Advantage on the next melee attack you make before the end of the turn",
+                    ),
+                    (
+                        "From Monk level 11",
+                        "Spend 1 Focus Point to drop the Dim Light or Darkness requirement, and make an Unarmed Strike right after teleporting (Improved Shadow Step)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "While entirely within Dim Light or Darkness, you can use a Bonus Action to teleport up to 60 feet to an unoccupied space you can see that is also in Dim Light or Darkness. You then have Advantage on the next melee attack you make before the end of the current turn."
         return description
@@ -114,6 +136,23 @@ class ImprovedShadowStep(Feature):
             origin="Warrior of Shadow Monk Level 11",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cost", "1 Focus Point, when you use Shadow Step"),
+                    (
+                        "Effect",
+                        "You needn't start and end in Dim Light or Darkness for that use",
+                    ),
+                    (
+                        "Strike",
+                        "As part of the Bonus Action, make an Unarmed Strike immediately after you teleport",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can draw on your Shadowfell connection to empower your teleportation. When you use your Shadow Step, you can expend 1 Focus Point to remove the requirement that you must start and end in Dim Light or Darkness for that use of the feature. As part of this Bonus Action, you can make an Unarmed Strike immediately after you teleport."

@@ -21,6 +21,20 @@ class Frenzy(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Reckless Attack while your Rage is active"),
+                    (
+                        "Damage",
+                        "The first target you hit on your turn with a Strength-based attack takes extra damage: a number of d6s equal to your Rage Damage bonus",
+                    ),
+                    ("Type", "Same as the weapon or Unarmed Strike used"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack."
         return description
@@ -36,6 +50,22 @@ class MindlessRage(Feature):
             origin="Path Of The Berserker Barbarian Level 6",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "While raging",
+                        "Immunity to the Charmed and Frightened conditions",
+                    ),
+                    (
+                        "Entering Rage",
+                        "If you're Charmed or Frightened, the condition ends",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you."
@@ -55,6 +85,20 @@ class Retaliation(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage from a creature within 5 feet of you"),
+                    (
+                        "Effect",
+                        "Make one melee attack against it, with a weapon or an Unarmed Strike",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike."

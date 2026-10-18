@@ -1,6 +1,7 @@
 from Core.Definitions import RANGER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class HuntersLore(Feature):
@@ -25,6 +26,20 @@ class ColossusSlayer(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature that's missing any of its Hit Points with a weapon",
+                    ),
+                    ("Damage", "Extra 1d8 damage from the weapon"),
+                    ("Limit", "Once per turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your tenacity can wear down even the most resilient foes. When you hit a creature with a weapon, the weapon deals an extra 1d8 damage to the target if it's missing any of its Hit Points. You can deal this extra damage only once per turn."
         return description
@@ -41,6 +56,20 @@ class HordeBreaker(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "Once on each of your turns, you attack with a weapon"),
+                    ("Effect", "Make another attack with the same weapon"),
+                    (
+                        "Target",
+                        "A different creature within 5 feet of the original target and within the weapon's range, that you haven't attacked this turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Once on each of your turns when you make an attack with a weapon, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target, that is within the weapon's range, and that you haven't attacked this turn."
@@ -89,6 +118,22 @@ class SuperiorHuntersPrey(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once per turn, you deal damage to a creature marked by your Hunter's Mark",
+                    ),
+                    (
+                        "Effect",
+                        "Also deal the spell's extra damage to a different creature you can see within 30 feet of the first",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Once per turn when you deal damage to a creature marked by your Hunter's Mark, you can also deal that spell's extra damage to a different creature that you can see within 30 feet of the first creature."
         return description
@@ -107,6 +152,20 @@ class SuperiorHuntersDefense(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage"),
+                    (
+                        "Effect",
+                        "Resistance to that damage and any other damage of the same type until the end of the current turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take damage, you can take a Reaction to give yourself Resistance to that damage and any other damage of the same type until the end of the current turn."

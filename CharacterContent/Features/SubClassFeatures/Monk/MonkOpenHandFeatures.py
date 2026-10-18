@@ -14,7 +14,7 @@ from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -74,6 +74,31 @@ class OpenHandTechnique(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature with an attack granted by Flurry of Blows",
+                    ),
+                    ("Effect", "Impose one of the effects below"),
+                    ("Save DC", f"Your Focus save DC ({dc_formula(Ability.WISDOM)})"),
+                )
+            ),
+            Table(
+                ("Effect", "Result"),
+                (
+                    (
+                        "Addle",
+                        "It can't make Opportunity Attacks until the start of its next turn",
+                    ),
+                    ("Push", "Strength save, or pushed up to 15 feet away from you"),
+                    ("Topple", "Dexterity save, or it has the Prone condition"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you hit a creature with an attack granted by your Flurry of Blows, you can impose one of the following effects on that target.\n"
@@ -101,6 +126,20 @@ class WholenessOfBody(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Heal",
+                        "Roll your Martial Arts die + Wisdom modifier (minimum of 1 Hit Point)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to heal yourself. As a Bonus Action, you can roll your Martial Arts die. You regain a number of Hit Points equal to the number rolled plus your Wisdom modifier (minimum of 1 Hit Point regained).\n"
@@ -120,6 +159,16 @@ class FleetStep(Feature):
         super().__init__(
             name="Fleet Step", origin="Warrior of the Open Hand Monk Level 11"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take a Bonus Action other than Step of the Wind"),
+                    ("Effect", "Use Step of the Wind immediately after it"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take a Bonus Action other than Step of the Wind, you can also use Step of the Wind immediately after that Bonus Action."

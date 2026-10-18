@@ -60,7 +60,7 @@ class MindLink(Feature):
         return [
             Facts(
                 (
-                    ("Telepathy", "Range: 10 feet x your character level"),
+                    ("Telepathy", "Range of 10 feet x your character level"),
                     (
                         "Two-way link",
                         "While speaking telepathically to a creature, take a Magic action to let it reply telepathically for 1 hour, or until you end it with another Magic action",

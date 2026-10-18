@@ -1,7 +1,7 @@
 from Core.Definitions import CLERIC_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class BlessingOfTheTrickster(Feature):
@@ -17,6 +17,21 @@ class BlessingOfTheTrickster(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Target", "You or a willing creature within 30 feet"),
+                    ("Effect", "Advantage on Dexterity (Stealth) checks"),
+                    (
+                        "Duration",
+                        "Until you finish a Long Rest or use this feature again",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "As a Magic action, you can choose yourself or a willing creature within 30 feet of yourself to have Advantage on Dexterity (Stealth) checks. This blessing lasts until you finish a Long Rest or you use this feature again."
         return description
@@ -30,6 +45,25 @@ class TrickeryDomainSpells(Feature):
         super().__init__(
             name="Trickery Domain Spells", origin="Trickery Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Charm Person, Disguise Self, Invisibility, Pass without Trace",
+                    ),
+                    ("5", "Hypnotic Pattern, Nondetection"),
+                    ("7", "Confusion, Dimension Door"),
+                    ("9", "Dominate Person, Modify Memory"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Trickery Domain Spells table, you thereafter always have the listed spells prepared."
@@ -119,6 +153,23 @@ class ImprovedDuplicity(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["buff", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Invoke Duplicity illusion grows more powerful."),
+            Facts(
+                (
+                    (
+                        "Shared Distraction",
+                        "You and your allies have Advantage on attack rolls against a creature within 5 feet of the illusion",
+                    ),
+                    (
+                        "Healing Illusion",
+                        "When the illusion ends, you or a creature of your choice within 5 feet of it regains Hit Points equal to your Cleric level",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

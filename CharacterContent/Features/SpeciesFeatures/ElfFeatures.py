@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -50,6 +51,22 @@ class KeenSenses(Feature):
 class Trance(Feature):
     def __init__(self):
         super().__init__(name="Trance", origin="Elf Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Sleep",
+                        "You don't need to sleep, and magic can't put you to sleep",
+                    ),
+                    (
+                        "Long Rest",
+                        "Finish one in 4 hours of trancelike meditation, during which you stay conscious",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = "You don't need to sleep, and magic can't put you to sleep. You can finish a Long Rest in 4 hours if you spend those hours in a trancelike meditation, during which you retain consciousness."

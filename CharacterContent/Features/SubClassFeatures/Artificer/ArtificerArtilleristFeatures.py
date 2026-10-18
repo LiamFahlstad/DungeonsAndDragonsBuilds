@@ -7,7 +7,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class ToolsOfTheTrade(Feature):
@@ -17,6 +17,20 @@ class ToolsOfTheTrade(Feature):
             origin="Artillerist Artificer Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ranged Weaponry", "Proficiency with Martial Ranged weapons"),
+                    (
+                        "Tool Proficiency",
+                        "Woodcarver's Tools, or another type of Artisan's Tools of your choice if you already have it",
+                    ),
+                    ("Wand Crafting", "Crafting a magic Wand takes half the time"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -33,6 +47,23 @@ class Spells(Feature):
         super().__init__(
             name="Artillerist Spells", origin="Artillerist Artificer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "Shield, Thunderwave"),
+                    ("5", "Scorching Ray, Shatter"),
+                    ("9", "Fireball, Wind Wall"),
+                    ("13", "Ice Storm, Wall of Fire"),
+                    ("17", "Cone of Cold, Wall of Force"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

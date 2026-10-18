@@ -15,11 +15,28 @@ from Model.Content.Improvements import (
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class DraconicSpells(Feature):
     def __init__(self):
         super().__init__(name="Draconic Spells", origin="Draconic Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Sorcerer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Sorcerer level", "Spells"),
+                (
+                    ("3", "Alter Self, Chromatic Orb, Command, Dragon's Breath"),
+                    ("5", "Fear, Fly"),
+                    ("7", "Arcane Eye, Charm Monster"),
+                    ("9", "Legend Lore, Summon Dragon"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -52,6 +69,23 @@ class DraconicResilience(Feature):
             )
         ).apply(ledger_writer)
         self._ac.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your draconic gift manifests as physical traits."),
+            Facts(
+                (
+                    (
+                        "Hit Point maximum",
+                        "+3 at Sorcerer level 3, and +1 for each Sorcerer level after",
+                    ),
+                    (
+                        "Armor Class",
+                        "10 + Dexterity modifier + Charisma modifier while you aren't wearing armor",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -87,6 +121,23 @@ class ElementalAffinity(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Damage type",
+                        f"{self.damage_type.value} (chosen from Acid, Cold, Fire, Lightning or Poison)",
+                    ),
+                    ("Resistance", f"{self.damage_type.value} damage"),
+                    (
+                        "Spells",
+                        f"When you cast a spell that deals {self.damage_type.value} damage, add your Charisma modifier to one of its damage rolls",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             f"Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison. You chose {self.damage_type.value}.\n"
@@ -107,6 +158,25 @@ class DragonWings(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Duration",
+                        "1 hour, or until you dismiss them (no action required)",
+                    ),
+                    ("Effect", "Draconic wings give you a Fly Speed of 60 feet"),
+                    (
+                        "Restore",
+                        "Spend 3 Sorcery Points (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a Bonus Action, you can cause draconic wings to appear on your back. The wings last for 1 hour or until you dismiss them (no action required). For the duration, you have a Fly Speed of 60 feet.\n"
@@ -121,6 +191,23 @@ class DragonWings(Feature):
 class DragonCompanion(Feature):
     def __init__(self):
         super().__init__(name="Dragon Companion", origin="Draconic Sorcerer Level 18")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spell", "Summon Dragon, without a Material component"),
+                    (
+                        "Free casting",
+                        "Cast it once without a spell slot; regain this when you finish a Long Rest",
+                    ),
+                    (
+                        "No Concentration",
+                        "When you start casting it, you can drop its Concentration; its duration becomes 1 minute for that casting",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

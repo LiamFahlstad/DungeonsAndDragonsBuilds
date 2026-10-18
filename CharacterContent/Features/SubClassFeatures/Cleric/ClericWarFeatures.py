@@ -12,6 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class GuidedStrike(Feature):
@@ -25,6 +26,24 @@ class GuidedStrike(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Action",
+                        "None for your own roll; a Reaction for another creature's",
+                    ),
+                    (
+                        "Trigger",
+                        "You or a creature within 30 feet misses with an attack roll",
+                    ),
+                    ("Cost", "One use of Channel Divinity"),
+                    ("Effect", "+10 bonus to the roll, potentially causing it to hit"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so."
         return description
@@ -36,6 +55,25 @@ class GuidedStrike(Feature):
 class WarDomainSpells(Feature):
     def __init__(self):
         super().__init__(name="War Domain Spells", origin="War Domain Cleric Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon",
+                    ),
+                    ("5", "Crusader's Mantle, Spirit Guardians"),
+                    ("7", "Fire Shield, Freedom of Movement"),
+                    ("9", "Hold Monster, Steel Wind Strike"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the War Domain Spells table, you thereafter always have the listed spells prepared."
@@ -55,6 +93,17 @@ class WarPriest(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Effect", "Make one attack with a weapon or an Unarmed Strike"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "As a Bonus Action, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest."
@@ -78,6 +127,21 @@ class WarGodsBlessing(Feature):
             activation=FeatureActivation(duration="1 Minute"),
             usage_tags=["buff", "damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cost", "One use of Channel Divinity instead of a spell slot"),
+                    ("Spells", "Shield of Faith or Spiritual Weapon"),
+                    ("Concentration", "Not required"),
+                    (
+                        "Duration",
+                        "1 minute; ends early if you cast that spell again, have the Incapacitated condition, or die",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can expend a use of your Channel Divinity to cast Shield of Faith or Spiritual Weapon rather than expending a spell slot. When you cast either spell in this way, the spell doesn't require Concentration. Instead the spell lasts for 1 minute, but it ends early if you cast that spell again, have the Incapacitated condition, or die."

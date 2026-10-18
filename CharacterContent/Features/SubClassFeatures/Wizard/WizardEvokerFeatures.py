@@ -1,12 +1,29 @@
 from Core.Definitions import Ability, WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class EvocationSavant(Feature):
     def __init__(self):
         super().__init__(name="Evocation Savant", origin="Evoker Wizard Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add Evocation spells to your spellbook for free."),
+            Facts(
+                (
+                    (
+                        "Now",
+                        "Two Wizard Evocation spells, each no higher than level 2",
+                    ),
+                    (
+                        "New spell slot levels",
+                        "Whenever you gain access to a new level of spell slots in this class, one Wizard Evocation spell of a level you have slots for",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -22,6 +39,22 @@ class PotentCantrip(Feature):
             name="Potent Cantrip", origin="Evoker Wizard Level 3", usage_tags=["damage"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a cantrip at a creature, and miss with the attack roll or it succeeds on its save",
+                    ),
+                    (
+                        "Effect",
+                        "It takes half the cantrip's damage (if any), but no additional effect",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip."
         return description
@@ -35,6 +68,24 @@ class SculptSpells(Feature):
         super().__init__(
             name="Sculpt Spells", origin="Evoker Wizard Level 6", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Create pockets of relative safety within your evocations."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast an Evocation spell that affects other creatures you can see",
+                    ),
+                    ("Protected", "1 + the spell's level of them, your choice"),
+                    (
+                        "Effect",
+                        "They automatically succeed on their saves, and take no damage where they'd take half on a success",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save."

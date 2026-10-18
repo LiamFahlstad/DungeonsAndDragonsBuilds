@@ -78,6 +78,31 @@ class FightingStyle(Feature):
     def __init__(self):
         super().__init__(name="Fighting Style", origin="Paladin Level 2")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Gain a Fighting Style feat of your choice, or take Blessed Warrior instead."
+            ),
+            Option(
+                "Blessed Warrior",
+                (
+                    Facts(
+                        (
+                            (
+                                "Cantrips",
+                                "Two Cleric cantrips of your choice (Guidance and Sacred Flame are recommended). They count as Paladin spells for you.",
+                            ),
+                            ("Spellcasting ability", "Charisma"),
+                            (
+                                "Replacing",
+                                "Whenever you gain a Paladin level, replace one with another Cleric cantrip",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a Fighting Style feat of your choice. Instead of choosing one of those feats, you can choose the option below.\n"
@@ -89,6 +114,19 @@ class FightingStyle(Feature):
 class PaladinsSmite(Feature):
     def __init__(self):
         super().__init__(name="Paladin's Smite", origin="Paladin Level 2")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Divine Smite"),
+                    (
+                        "Free casting",
+                        "Cast it once without expending a spell slot; regain this when you finish a Long Rest",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You always have the Divine Smite spell prepared. In addition, you can cast it without expending a spell slot, but you must finish a Long Rest before you can cast it in this way again."
@@ -191,13 +229,19 @@ class ChannelDivinity(Feature):
                     (
                         Facts(
                             (
-                                ("Action", "No action, but used with the Attack action"),
+                                (
+                                    "Action",
+                                    "No action, but used with the Attack action",
+                                ),
                                 ("Range", "30 feet"),
                                 (
                                     "Duration",
                                     "1 minute, or until you use this feature again",
                                 ),
-                                ("Effect", "Advantage on attack rolls against the target"),
+                                (
+                                    "Effect",
+                                    "Advantage on attack rolls against the target",
+                                ),
                                 (
                                     "Transfer",
                                     "If the target drops to 0 Hit Points before the vow ends, move the vow to another creature within 30 feet (no action required)",
@@ -214,7 +258,10 @@ class ChannelDivinity(Feature):
                     (
                         Facts(
                             (
-                                ("Action", "No action, but used with the Attack action"),
+                                (
+                                    "Action",
+                                    "No action, but used with the Attack action",
+                                ),
                                 ("Range", "30 feet"),
                                 (
                                     "Duration",
@@ -224,7 +271,10 @@ class ChannelDivinity(Feature):
                                     "Attack",
                                     "Add your Charisma modifier (minimum +1) to attack rolls with the weapon",
                                 ),
-                                ("Damage", "Its normal damage type or Radiant, on each hit"),
+                                (
+                                    "Damage",
+                                    "Its normal damage type or Radiant, on each hit",
+                                ),
                                 (
                                     "Light",
                                     "Bright Light in a 20-foot radius and Dim Light 20 feet beyond",
@@ -303,6 +353,20 @@ class FaithfulSteed(Feature):
     def __init__(self):
         super().__init__(name="Faithful Steed", origin="Paladin Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Call on the aid of an otherworldly steed."),
+            Facts(
+                (
+                    ("Always prepared", "Find Steed"),
+                    (
+                        "Free casting",
+                        "Cast it once without expending a spell slot; regain this when you finish a Long Rest",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.\n"
@@ -328,6 +392,28 @@ class AuraOfProtection(Feature):
             return max(1, cs.get_charisma_modifier())
 
         SavingThrowBonus(list(Ability), bonus).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You radiate a protective, unseeable aura."),
+            Facts(
+                (
+                    (
+                        "Area",
+                        "10-foot Emanation from you (30 feet from Paladin level 18)",
+                    ),
+                    (
+                        "Effect",
+                        "You and your allies in the aura add your Charisma modifier (minimum +1) to saving throws",
+                    ),
+                    ("Inactive", "While you have the Incapacitated condition"),
+                    (
+                        "Several Paladins",
+                        "A creature benefits from only one Aura of Protection at a time, choosing which while in them",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -421,6 +507,23 @@ class RestoringTouch(Feature):
         super().__init__(
             name="Restoring Touch", origin="Paladin Level 14", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Lay On Hands on a creature"),
+                    (
+                        "Effect",
+                        "Also remove one or more of these conditions: Blinded, Charmed, Deafened, Frightened, Paralyzed or Stunned",
+                    ),
+                    (
+                        "Cost",
+                        "5 Hit Points from the Lay On Hands pool per condition; those points don't also heal",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature."

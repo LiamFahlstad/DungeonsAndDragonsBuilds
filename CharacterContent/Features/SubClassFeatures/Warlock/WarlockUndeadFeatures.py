@@ -12,7 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class FormOfDread(Feature):
@@ -92,6 +92,25 @@ class FormOfDread(Feature):
 class UndeadSpells(Feature):
     def __init__(self):
         super().__init__(name="Undead Spells", origin="Undead Patron Warlock Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Warlock level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Warlock level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Bane, Blindness/Deafness, Phantasmal Force, Ray of Sickness",
+                    ),
+                    ("5", "Speak with Dead, Summon Undead"),
+                    ("7", "Greater Invisibility, Phantasmal Killer"),
+                    ("9", "Antilife Shell, Cloudkill"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

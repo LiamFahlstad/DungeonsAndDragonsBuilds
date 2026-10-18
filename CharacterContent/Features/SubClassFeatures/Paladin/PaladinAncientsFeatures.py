@@ -8,7 +8,8 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Core.Definitions import Ability
 
 
 class NaturesWrath(Feature):
@@ -25,6 +26,30 @@ class NaturesWrath(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Conjure spectral vines around nearby creatures."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    ("Cost", "One use of Channel Divinity"),
+                    (
+                        "Target",
+                        "Each creature of your choice you can see within 15 feet",
+                    ),
+                    (
+                        "Save",
+                        f"Strength save against your Paladin spell save DC ({dc_formula(Ability.CHARISMA)})",
+                    ),
+                    ("Failed", "Restrained for 1 minute"),
+                    (
+                        "Repeat save",
+                        "At the end of each of its turns, ending the effect on a success",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
@@ -36,6 +61,23 @@ class OathOfTheAncientsSpells(Feature):
             name="Oath of the Ancients Spells",
             origin="Oath of the Ancients Paladin Level 3",
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Ensnaring Strike, Speak with Animals"),
+                    ("5", "Misty Step, Moonbeam"),
+                    ("9", "Plant Growth, Protection from Energy"),
+                    ("13", "Ice Storm, Stoneskin"),
+                    ("17", "Commune with Nature, Tree Stride"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -62,6 +104,20 @@ class AuraOfWarding(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("An eldritch ward blunts energy from beyond the Material Plane."),
+            Facts(
+                (
+                    ("Area", "Your Aura of Protection"),
+                    (
+                        "Effect",
+                        "You and your allies have Resistance to Necrotic, Psychic and Radiant damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Ancient magic lies so heavily upon you that it forms an eldritch ward, blunting energy from beyond the Material Plane; you and your allies have Resistance to Necrotic, Psychic, and Radiant damage while in your Aura of Protection."
         return description
@@ -78,6 +134,41 @@ class UndyingSentinel(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Undying",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You're reduced to 0 Hit Points and not killed outright",
+                            ),
+                            (
+                                "Effect",
+                                "Drop to 1 Hit Point instead, then regain three times your Paladin level in Hit Points",
+                            ),
+                            ("Limit", "Once per Long Rest (box below)"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Ageless",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "You can't be aged magically, and you cease visibly aging",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

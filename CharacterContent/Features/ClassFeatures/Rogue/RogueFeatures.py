@@ -125,6 +125,16 @@ class CunningAction(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action, on your turn"),
+                    ("Options", "Take the Dash, Disengage or Hide action"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your quick thinking and agility allow you to move and act quickly. On your turn, you can take one of the following actions as a Bonus Action: Dash, Disengage, or Hide."
         return description
@@ -241,6 +251,17 @@ class UncannyDodge(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "An attacker you can see hits you with an attack roll"),
+                    ("Effect", "Halve the attack's damage against you (round down)"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When an attacker that you can see hits you with an attack roll, you can take a Reaction to halve the attack's damage against you (round down)."
         return description
@@ -252,6 +273,24 @@ class UncannyDodge(Feature):
 class Evasion(Feature):
     def __init__(self):
         super().__init__(name="Evasion", origin="Rogue Level 7", usage_tags=["buff"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "An effect lets you make a Dexterity save to take only half damage",
+                    ),
+                    ("Succeeded", "No damage"),
+                    ("Failed", "Half damage"),
+                    (
+                        "Exception",
+                        "Can't be used while you have the Incapacitated condition",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can nimbly dodge out of the way of certain dangers. When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail. You can't use this feature if you have the Incapacitated condition."
@@ -367,6 +406,17 @@ class StrokeOfLuck(Feature):
             origin="Rogue Level 20",
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Trigger", "You fail a d20 Test"),
+                    ("Effect", "Turn the roll into a 20"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

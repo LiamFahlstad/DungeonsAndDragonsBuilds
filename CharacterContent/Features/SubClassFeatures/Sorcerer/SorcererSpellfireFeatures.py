@@ -1,12 +1,31 @@
 from Core.Definitions import SORCERER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, FeatureUses
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class SpellfireSpells(Feature):
     def __init__(self):
         super().__init__(name="Spellfire Spells", origin="Spellfire Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Sorcerer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Sorcerer level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Cure Wounds, Guiding Bolt, Lesser Restoration, Scorching Ray",
+                    ),
+                    ("5", "Aura of Vitality, Dispel Magic"),
+                    ("7", "Fire Shield, Wall of Fire"),
+                    ("9", "Flame Strike, Greater Restoration"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -30,6 +49,50 @@ class SpellfireBurst(Feature):
             usage_tags=["heal", "damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You spend at least 1 Sorcery Point as part of a Magic action or a Bonus Action on your turn",
+                    ),
+                    ("Limit", "Once per turn"),
+                )
+            ),
+            Option(
+                "Bolstering Flames",
+                (
+                    Facts(
+                        (
+                            (
+                                "Target",
+                                "You or one creature you can see within 30 feet",
+                            ),
+                            (
+                                "Effect",
+                                "1d4 + Charisma modifier Temporary Hit Points (+ Sorcerer level from level 14, Honed Spellfire)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Radiant Fire",
+                (
+                    Facts(
+                        (
+                            ("Target", "One creature you can see within 30 feet"),
+                            (
+                                "Damage",
+                                "1d4 Fire or Radiant damage, your choice (1d8 from Sorcerer level 14, Honed Spellfire)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you spend at least 1 Sorcery Point as part of a Magic action or a Bonus Action on your turn, you can unleash one of the following magical effects of your choice. You can do so only once per turn.\n"
@@ -46,6 +109,19 @@ class AbsorbSpells(Feature):
     def __init__(self):
         super().__init__(name="Absorb Spells", origin="Spellfire Sorcerer Level 6")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Counterspell"),
+                    (
+                        "Absorb",
+                        "When a target fails its save against your Counterspell, regain 1d4 Sorcery Points",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You always have Counterspell prepared.\n"
@@ -57,6 +133,20 @@ class AbsorbSpells(Feature):
 class HonedSpellfire(Feature):
     def __init__(self):
         super().__init__(name="Honed Spellfire", origin="Spellfire Sorcerer Level 14")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Spellfire Burst improves."),
+            Facts(
+                (
+                    (
+                        "Bolstering Flames",
+                        "Add your Sorcerer level to the Temporary Hit Points",
+                    ),
+                    ("Radiant Fire", "Damage increases to 1d8"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your Spellfire Burst improves. You add your Sorcerer level to the Temporary Hit Points gained from Bolstering Flames, and the damage of your Radiant Fire increases to 1d8."

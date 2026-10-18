@@ -7,12 +7,28 @@ from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarge
 from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class FiendSpells(Feature):
     def __init__(self):
         super().__init__(name="Fiend Spells", origin="Fiend Patron Warlock Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Warlock level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Warlock level", "Spells"),
+                (
+                    ("3", "Burning Hands, Command, Scorching Ray, Suggestion"),
+                    ("5", "Fireball, Stinking Cloud"),
+                    ("7", "Fire Shield, Wall of Fire"),
+                    ("9", "Geas, Insect Plague"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Fiend Spells table, you thereafter always have the listed spells prepared."
@@ -26,6 +42,22 @@ class DarkOnesBlessing(Feature):
             origin="Fiend Patron Warlock Level 3",
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You reduce an enemy to 0 Hit Points, or someone else reduces an enemy within 10 feet of you to 0 Hit Points",
+                    ),
+                    (
+                        "Effect",
+                        "Charisma modifier + Warlock level Temporary Hit Points (minimum of 1)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you reduce an enemy to 0 Hit Points, you gain Temporary Hit Points equal to your Charisma modifier plus your Warlock level (minimum of 1 Temporary Hit Point). You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points."
@@ -47,6 +79,22 @@ class DarkOnesOwnLuck(Feature):
                 current_formula="Current amount: equal to your Charisma modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Charisma modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph("Call on your fiendish patron to alter fate in your favor."),
+            Facts(
+                (
+                    ("Trigger", "You make an ability check or a saving throw"),
+                    ("Effect", "Add 1d10 to the roll"),
+                    (
+                        "Timing",
+                        "After seeing the roll but before any of its effects occur; once per roll",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -72,6 +120,22 @@ class FiendishResilience(Feature):
             origin="Fiend Patron Warlock Level 10",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Choice",
+                        "One damage type other than Force, whenever you finish a Short or Long Rest",
+                    ),
+                    (
+                        "Effect",
+                        "Resistance to that type until you choose a different one",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Choose one damage type, other than Force, whenever you finish a Short or Long Rest. You have Resistance to that damage type until you choose a different one with this feature."

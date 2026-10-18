@@ -1,6 +1,7 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class Maneuver(Feature):
@@ -33,6 +34,20 @@ class Ambush(Maneuver):
     def __init__(self):
         super().__init__(name="Ambush:", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You make a Dexterity (Stealth) check or an Initiative roll, and aren't Incapacitated",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Effect", "Add the Superiority Die to the roll"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you make a Dexterity (Stealth) check or an Initiative roll, you can expend one Superiority Die and add the die to the roll, unless you have the Incapacitated condition."
 
@@ -47,6 +62,27 @@ class BaitAndSwitch(Maneuver):
             activation=FeatureActivation(duration="Until Start of Next Turn"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "On your turn, within 5 feet of a willing creature that isn't Incapacitated",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Spend at least 5 feet of movement to switch places with it, without provoking Opportunity Attacks",
+                    ),
+                    (
+                        "AC bonus",
+                        "Roll the die: you or the other creature (your choice) adds it to AC until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "When you're within 5 feet of a creature on your turn, you can expend one Superiority Die and switch places with that creature, provided you spend at least 5 feet of movement and the creature is willing and doesn't have the Incapacitated condition. This movement doesn't provoke Opportunity Attacks.\nRoll the Superiority Die. Until the start of your next turn, you or the other creature (your choice) gains a bonus to AC equal to the number rolled."
@@ -63,6 +99,24 @@ class Brace(Maneuver):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see moves into the reach of the melee weapon you're wielding",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Make one attack against it with that weapon; on a hit, add the die to the damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Brace: When a creature you can see moves into the reach you have with the melee weapon you're wielding, you can use your reaction to expend one superiority die and make one attack against the creature, using that weapon. If the attack hits, add the superiority die to the weapon's damage roll."
 
@@ -77,6 +131,24 @@ class CommandersStrike(Maneuver):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You take the Attack action on your turn: replace one attack",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Target", "A willing creature who can see or hear you"),
+                    (
+                        "Effect",
+                        "It can immediately use its Reaction to make one attack with a weapon or Unarmed Strike, adding the die to the damage on a hit",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you take the Attack action on your turn, you can replace one of your attacks to direct one of your companions to strike. When you do so, choose a willing creature who can see or hear you and expend one Superiority Die. That creature can immediately use its Reaction to make one attack with a weapon or an Unarmed Strike, adding the Superiority Die to the attack's damage roll on a hit."
 
@@ -88,6 +160,20 @@ class CommandingPresence(Maneuver):
     def __init__(self):
         super().__init__(name="Commanding Presence", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You make a Charisma (Intimidation, Performance or Persuasion) check",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Effect", "Add the Superiority Die to the roll"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you make a Charisma (Intimidation, Performance, or Persuasion) check, you can expend one Superiority Die and add that die to the roll."
 
@@ -98,6 +184,25 @@ class CommandingPresence(Maneuver):
 class DisarmingAttack(ManeuverWithSavingThrow):
     def __init__(self):
         super().__init__(name="Disarming Attack", usage_tags=["damage", "control"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Save",
+                        "Strength save, DC 8 + Strength or Dexterity modifier + Proficiency Bonus",
+                    ),
+                    (
+                        "Failed",
+                        "It drops one object of your choice that it's holding, in its space",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"When you hit a creature with an attack roll, you can expend one Superiority Die to attempt to disarm the target. Add the Superiority Die roll to the attack's damage roll. The target must succeed on a Strength saving throw (DC {self.get_saving_throw_dc(character)}) or drop one object of your choice that it's holding, with the object landing in its space."
@@ -114,6 +219,21 @@ class DistractingStrike(Maneuver):
             usage_tags=["damage", "buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Effect",
+                        "The next attack roll against the target by someone other than you, before the start of your next turn, has Advantage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you hit a creature with an attack roll, you can expend one Superiority Die to distract the target. Add the Superiority Die roll to the attack's damage roll. The next attack roll against the target by an attacker other than you has Advantage if the attack is made before the start of your next turn."
 
@@ -128,6 +248,20 @@ class EvasiveFootwork(Maneuver):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Take the Disengage action, and add the die roll to your AC until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "As a Bonus Action, you can expend one Superiority Die and take the Disengage action. You also roll the die and add the number rolled to your AC until the start of your next turn."
@@ -144,6 +278,21 @@ class FeintingAttack(Maneuver):
             usage_tags=["buff", "damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Superiority Die"),
+                    ("Target", "One creature within 5 feet"),
+                    (
+                        "Effect",
+                        "Advantage on your next attack roll against it this turn; on a hit, add the die to the damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "As a Bonus Action, you can expend one Superiority Die to feint, choosing one creature within 5 feet of yourself as your target. You have Advantage on your next attack roll against that target this turn. If that attack hits, add the Superiority Die to the attack's damage roll."
 
@@ -158,6 +307,25 @@ class GoadingAttack(ManeuverWithSavingThrow):
             activation=FeatureActivation(duration="Until End of Next Turn"),
             usage_tags=["damage", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Save",
+                        "Wisdom save, DC 8 + Strength or Dexterity modifier + Proficiency Bonus",
+                    ),
+                    (
+                        "Failed",
+                        "Disadvantage on attack rolls against targets other than you until the end of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"When you hit a creature with an attack roll, you can expend one Superiority Die to attempt to goad the target into attacking you. Add the Superiority Die to the attack's damage roll. The target must succeed on a Wisdom saving throw (DC {self.get_saving_throw_dc(character)}) or have Disadvantage on attack rolls against targets other than you until the end of your next turn."
@@ -174,6 +342,23 @@ class GrapplingStrike(Maneuver):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Immediately after you hit a creature with a melee attack on your turn",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Try to grapple the target as a Bonus Action, adding the die to your Strength (Athletics) check",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Grappling Strike: Immediately after you hit a creature with a melee attack on your turn, you can expend one superiority die and then try to grapple the target as a bonus action (see the Player's Handbook for rules on grappling). Add the superiority die to your Strength (Athletics) check."
 
@@ -189,6 +374,21 @@ class LungingAttack(Maneuver):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Superiority Die"),
+                    ("Effect", "Take the Dash action"),
+                    (
+                        "Damage",
+                        "If you move at least 5 feet in a straight line right before hitting with a melee attack as part of the Attack action this turn, add the die to its damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "As a Bonus Action, you can expend one Superiority Die and take the Dash action. If you move at least 5 feet in a straight line immediately before hitting with a melee attack as part of the Attack action on this turn, you can add the Superiority Die to the attack's damage roll."
 
@@ -199,6 +399,21 @@ class LungingAttack(Maneuver):
 class ManeuveringAttack(Maneuver):
     def __init__(self):
         super().__init__(name="Maneuvering Attack", usage_tags=["damage", "buff"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Effect",
+                        "A willing creature who can see or hear you can use its Reaction to move up to half its Speed without provoking Opportunity Attacks from the target",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "When you hit a creature with an attack roll, you can expend one Superiority Die to maneuver one of your comrades into another position. Add the Superiority Die roll to the attack's damage roll, and choose a willing creature who can see or hear you. That creature can use its Reaction to move up to half its Speed without provoking Opportunity Attacks from the target of your attack."
@@ -215,6 +430,22 @@ class MenacingAttack(ManeuverWithSavingThrow):
             usage_tags=["damage", "control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a creature with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Save",
+                        "Wisdom save, DC 8 + Strength or Dexterity modifier + Proficiency Bonus",
+                    ),
+                    ("Failed", "Frightened until the end of your next turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return f"When you hit a creature with an attack roll, you can expend one Superiority Die to attempt to frighten the target. Add the Superiority Die to the attack's damage roll. The target must succeed on a Wisdom saving throw (DC {self.get_saving_throw_dc(character)}) or have the Frightened condition until the end of your next turn."
 
@@ -230,6 +461,24 @@ class Parry(Maneuver):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Another creature damages you with a melee attack roll",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Reduce the damage by the die roll + Strength or Dexterity modifier (your choice)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When another creature damages you with a melee attack roll, you can take a Reaction and expend one Superiority Die to reduce the damage by the number you roll on your Superiority Die plus your Strength or Dexterity modifier (your choice)."
 
@@ -241,6 +490,20 @@ class PrecisionAttack(Maneuver):
     def __init__(self):
         super().__init__(name="Precision Attack", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You miss with an attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Add the die roll to the attack roll, potentially causing it to hit",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you miss with an attack roll, you can expend one Superiority Die, roll that die, and add it to the attack roll, potentially causing the attack to hit."
 
@@ -251,6 +514,25 @@ class PrecisionAttack(Maneuver):
 class PushingAttack(ManeuverWithSavingThrow):
     def __init__(self):
         super().__init__(name="Pushing Attack", usage_tags=["damage", "control"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature with an attack roll using a weapon or an Unarmed Strike",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Save",
+                        "Strength save (Large or smaller targets), DC 8 + Strength or Dexterity modifier + Proficiency Bonus",
+                    ),
+                    ("Failed", "Pushed up to 15 feet directly away from you"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"When you hit a creature with an attack roll using a weapon or an Unarmed Strike, you can expend one Superiority Die to attempt to drive the target back. Add the Superiority Die to the attack's damage roll. If the target is Large or smaller, it must succeed on a Strength saving throw (DC {self.get_saving_throw_dc(character)}) or be pushed up to 15 feet directly away from you."
@@ -267,6 +549,20 @@ class QuickToss(Maneuver):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Make a ranged attack with a Thrown weapon, drawing it as part of the attack; on a hit, add the die to the damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Quick Toss: As a bonus action, you can expend one superiority die and make a ranged attack with a weapon that has the thrown property. You can draw the weapon as part of making this attack. If you hit, add the superiority die to the weapon's damage roll."
 
@@ -281,6 +577,21 @@ class Rally(Maneuver):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "One Superiority Die"),
+                    ("Target", "An ally within 30 feet who can see or hear you"),
+                    (
+                        "Effect",
+                        "Temporary Hit Points equal to the die roll + half your Fighter level (round down)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"As a Bonus Action, you can expend one Superiority Die to bolster the resolve of a companion. Choose an ally of yours within 30 feet of yourself who can see or hear you. That creature gains Temporary Hit Points equal to the Superiority Die roll plus half your Fighter level (round down, currently {character.get_class_level(CharacterClass.FIGHTER) // 2})."
@@ -297,6 +608,21 @@ class Riposte(Maneuver):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature misses you with a melee attack roll"),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Effect",
+                        "Make a melee attack roll against it with a weapon or an Unarmed Strike; on a hit, add the die to the damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When a creature misses you with a melee attack roll, you can take a Reaction and expend one Superiority Die to make a melee attack roll with a weapon or an Unarmed Strike against the creature. If you hit, add the Superiority Die to the attack's damage."
 
@@ -307,6 +633,27 @@ class Riposte(Maneuver):
 class SweepingAttack(Maneuver):
     def __init__(self):
         super().__init__(name="Sweeping Attack", usage_tags=["damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature with a melee attack roll using a weapon or an Unarmed Strike",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    (
+                        "Target",
+                        "Another creature within 5 feet of the original target and within your reach",
+                    ),
+                    (
+                        "Effect",
+                        "If the original attack roll would hit it, it takes the die roll as damage, of the original attack's type",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "When you hit a creature with a melee attack roll using a weapon or an Unarmed Strike, you can expend one Superiority Die to attempt to damage another creature. Choose another creature within 5 feet of the original target and within your reach. If the original attack roll would hit the second creature, it takes damage equal to the number you roll on your Superiority Die. The damage is of the same type dealt by the original attack."
@@ -319,6 +666,20 @@ class TacticalAssessment(Maneuver):
     def __init__(self):
         super().__init__(name="Tactical Assessment", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You make an Intelligence (History or Investigation) or Wisdom (Insight) check",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Effect", "Add the Superiority Die to the check"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "When you make an Intelligence (History or Investigation) check or a Wisdom (Insight) check, you can expend one Superiority Die and add that die to the ability check."
 
@@ -329,6 +690,25 @@ class TacticalAssessment(Maneuver):
 class TripAttack(ManeuverWithSavingThrow):
     def __init__(self):
         super().__init__(name="Trip Attack", usage_tags=["damage", "control"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit a creature with an attack roll using a weapon or an Unarmed Strike",
+                    ),
+                    ("Cost", "One Superiority Die"),
+                    ("Damage", "Add the Superiority Die to the attack's damage roll"),
+                    (
+                        "Save",
+                        "Strength save (Large or smaller targets), DC 8 + Strength or Dexterity modifier + Proficiency Bonus",
+                    ),
+                    ("Failed", "It has the Prone condition"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"When you hit a creature with an attack roll using a weapon or an Unarmed Strike, you can expend one Superiority Die and add the die to the attack's damage roll. If the target is Large or smaller, it must succeed on a Strength saving throw (DC {self.get_saving_throw_dc(character)}) or have the Prone condition."

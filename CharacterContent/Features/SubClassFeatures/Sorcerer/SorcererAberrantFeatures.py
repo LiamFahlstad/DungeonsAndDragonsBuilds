@@ -14,6 +14,7 @@ from Model.Content.FeatureText import (
     Facts,
     Option,
     Paragraph,
+    Table,
     dc_formula,
 )
 
@@ -21,6 +22,25 @@ from Model.Content.FeatureText import (
 class PsionicSpells(Feature):
     def __init__(self):
         super().__init__(name="Psionic Spells", origin="Aberrant Sorcerer Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Sorcerer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Sorcerer level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Arms of Hadar, Calm Emotions, Detect Thoughts, Dissonant Whispers, Mind Sliver",
+                    ),
+                    ("5", "Hunger of Hadar, Sending"),
+                    ("7", "Evard's Black Tentacles, Summon Aberration"),
+                    ("9", "Rary's Telepathic Bond, Telekinesis"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -83,6 +103,23 @@ class PsionicSorcery(Feature):
     def __init__(self):
         super().__init__(name="Psionic Sorcery", origin="Aberrant Sorcerer Level 6")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spells", "Any level 1+ spell from your Psionic Spells feature"),
+                    (
+                        "Cost",
+                        "A spell slot as normal, or Sorcery Points equal to the spell's level",
+                    ),
+                    (
+                        "With Sorcery Points",
+                        "No Verbal or Somatic components, and no Material components unless the spell consumes them or they have a cost",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast any level 1+ spell from your Psionic Spells feature, you can cast it by expending a spell slot as normal or by spending a number of Sorcery Points equal to the spell’s level. If you cast the spell using Sorcery Points, it requires no Verbal or Somatic components, and it requires no Material components unless they are consumed by the spell or have a cost specified in it."
         return description
@@ -100,6 +137,19 @@ class PsychicDefenses(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Psychic damage"),
+                    (
+                        "Advantage",
+                        "On saving throws to avoid or end the Charmed or Frightened condition",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have Resistance to Psychic damage, and you have Advantage on saving throws to avoid or end the Charmed or Frightened condition."

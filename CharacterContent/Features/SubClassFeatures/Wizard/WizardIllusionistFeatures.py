@@ -14,6 +14,23 @@ class IllusionSavant(Feature):
     def __init__(self):
         super().__init__(name="Illusion Savant", origin="Illusionist Wizard Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Add Illusion spells to your spellbook for free."),
+            Facts(
+                (
+                    (
+                        "Now",
+                        "Two Wizard Illusion spells, each no higher than level 2",
+                    ),
+                    (
+                        "New spell slot levels",
+                        "Whenever you gain access to a new level of spell slots in this class, one Wizard Illusion spell of a level you have slots for",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Choose two Wizard spells from the Illusion school, each of which must be no higher than level 2, and add them to your spellbook for free.\n"
@@ -25,6 +42,24 @@ class IllusionSavant(Feature):
 class ImprovedIllusions(Feature):
     def __init__(self):
         super().__init__(name="Improved Illusions", origin="Illusionist Wizard Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Components", "Cast Illusion spells without Verbal components"),
+                    ("Range", "Illusion spells with a range of 10+ feet gain 60 feet"),
+                    (
+                        "Minor Illusion",
+                        "You know it (or another Wizard cantrip if you already do); it doesn't count against your cantrips known",
+                    ),
+                    (
+                        "Casting it",
+                        "Create both a sound and an image with one casting, and cast it as a Bonus Action",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -40,6 +75,23 @@ class PhantasmalCreatures(Feature):
             name="Phantasmal Creatures", origin="Illusionist Wizard Level 6"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Summon Beast and Summon Fey"),
+                    (
+                        "Illusion",
+                        "When you cast either, you can change its school to Illusion; the creature appears spectral",
+                    ),
+                    (
+                        "Free casting",
+                        "Cast the Illusion version of each without a spell slot, once per Long Rest; the creature has half its Hit Points",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You always have the Summon Beast and Summon Fey spells prepared. Whenever you cast either spell, you can change its school to Illusion, which causes the summoned creature to appear spectral. You can cast the Illusion version of each spell without expending a spell slot, but casting it without a slot halves the creature's Hit Points. Once you cast either spell without a spell slot, you must finish a Long Rest before you can cast the spell in that way again."
         return description
@@ -54,6 +106,25 @@ class IllusorySelf(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature hits you with an attack roll"),
+                    (
+                        "Effect",
+                        "An illusory duplicate interposes itself: the attack automatically misses, then the illusion dissipates",
+                    ),
+                    (
+                        "Restore",
+                        "Expend a level 2+ spell slot (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

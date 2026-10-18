@@ -8,6 +8,21 @@ class MindInfiltrator(Feature):
     def __init__(self):
         super().__init__(name="Mind Infiltrator", origin="Telepath Psion Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You cast Detect Thoughts"),
+                    ("Cost", "One Psionic Energy Die"),
+                    ("Effect", "The spell needs no components and no Concentration"),
+                    (
+                        "Read Thoughts",
+                        "A target that fails the Wisdom save doesn't know you're probing its mind",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you cast Detect Thoughts, you can expend one "
@@ -33,6 +48,24 @@ class TelepathicDistraction(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature you can see within range of your telepathy hits with an attack roll",
+                    ),
+                    (
+                        "Effect",
+                        "Roll one Psionic Energy Die and subtract it from the attack roll",
+                    ),
+                    ("Cost", "The die is expended only if the attack misses"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When a creature you can see within range of your "
@@ -56,6 +89,23 @@ class BulwarkMind(Feature):
             activation=FeatureActivation(duration="10 Minutes"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("When", "At the start of your turn"),
+                    ("Cost", "One Psionic Energy Die"),
+                    ("Duration", "10 minutes"),
+                    ("Resistance", "Psychic damage"),
+                    (
+                        "Mental saves",
+                        "Add a roll of your Psionic Energy Die to Intelligence, Wisdom and Charisma saves (the roll doesn't expend it)",
+                    ),
+                    ("Exception", "Not while you have the Incapacitated condition"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -83,6 +133,19 @@ class PotentThoughts(Feature):
             usage_tags=["damage", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Telepathy", "60 feet"),
+                    (
+                        "Cantrips",
+                        "Add your Intelligence modifier to Psion cantrip damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You have telepathy with a range of 60 feet. In "
@@ -100,6 +163,24 @@ class TelepathicBolstering(Feature):
             activation=FeatureActivation(action_type=ActionType.REACTION),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within range of your telepathy fails an ability check or misses with an attack roll",
+                    ),
+                    ("Effect", "Roll one Psionic Energy Die and add it to the d20"),
+                    (
+                        "Cost",
+                        "The die is expended only if the check succeeds or the attack hits",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -1,7 +1,7 @@
 from Core.Definitions import ROGUE_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class FastHands(Feature):
@@ -12,6 +12,23 @@ class FastHands(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("As a Bonus Action, do one of the following:"),
+            Facts(
+                (
+                    (
+                        "Sleight of Hand",
+                        "Make a Dexterity (Sleight of Hand) check to pick a lock or disarm a trap with Thieves' Tools, or to pick a pocket",
+                    ),
+                    (
+                        "Use an Object",
+                        "Take the Utilize action, or the Magic action to use a magic item that requires an action",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -33,6 +50,19 @@ class SecondStoryWork(Feature):
             usage_tags=["buff", "utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Climber", "A Climb Speed equal to your Speed"),
+                    (
+                        "Jumper",
+                        "Determine your jump distance with Dexterity instead of Strength",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You've trained to get into especially hard-to-reach places, granting you these benefits.\n"
@@ -50,6 +80,27 @@ class SupremeSneak(Feature):
         super().__init__(
             name="Supreme Sneak", origin="Thief Rogue Level 9", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Option(
+                "Stealth Attack (Cunning Strike, cost 1d6)",
+                (
+                    Facts(
+                        (
+                            (
+                                "Requirement",
+                                "You have the Hide action's Invisible condition",
+                            ),
+                            (
+                                "Effect",
+                                "This attack doesn't end the condition if you end the turn behind Three-Quarters Cover or Total Cover",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -105,6 +156,19 @@ class ThiefsReflexes(Feature):
         super().__init__(
             name="Thief's Reflexes", origin="Thief Rogue Level 17", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("When", "The first round of any combat"),
+                    (
+                        "Effect",
+                        "Take two turns: one at your normal Initiative and one at your Initiative minus 10",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You are adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal Initiative and your second turn at your Initiative minus 10."

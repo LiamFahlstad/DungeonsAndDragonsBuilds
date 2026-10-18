@@ -17,6 +17,7 @@ from Model.Content.FeatureText import (
     Block,
     Facts,
     Paragraph,
+    Table,
     dc_formula,
 )
 
@@ -26,6 +27,25 @@ class GreatOldOneSpells(Feature):
         super().__init__(
             name="Great Old One Spells", origin="Great Old One Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Warlock level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Warlock level", "Spells"),
+                (
+                    (
+                        "3",
+                        "Detect Thoughts, Dissonant Whispers, Phantasmal Force, Tasha's Hideous Laughter",
+                    ),
+                    ("5", "Clairvoyance, Hunger of Hadar"),
+                    ("7", "Confusion, Summon Aberration"),
+                    ("9", "Modify Memory, Telekinesis"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Great Old One Spells table, you thereafter always have the listed spells prepared."
@@ -81,6 +101,22 @@ class PsychicSpells(Feature):
         super().__init__(
             name="Psychic Spells", origin="Great Old One Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Damage",
+                        "When you cast a Warlock spell that deals damage, you can change its damage type to Psychic",
+                    ),
+                    (
+                        "Components",
+                        "Cast Warlock Enchantment and Illusion spells without Verbal or Somatic components",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast a Warlock spell that deals damage, you can change its damage type to Psychic. In addition, when you cast a Warlock spell that is an Enchantment or Illusion, you can do so without Verbal or Somatic components."
@@ -139,6 +175,19 @@ class EldritchHex(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Always prepared", "Hex"),
+                    (
+                        "Curse",
+                        "When you cast Hex and choose an ability, the target also has Disadvantage on saving throws of that ability for the spell's duration",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your alien patron grants you a powerful curse. You always have the Hex spell prepared. When you cast Hex and choose an ability, the target also has Disadvantage on saving throws of the chosen ability for the duration of the spell."
         return description
@@ -158,6 +207,23 @@ class ThoughtShield(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Shielded mind",
+                        "Your thoughts can't be read by telepathy or other means unless you allow it",
+                    ),
+                    ("Resistance", "Psychic damage"),
+                    (
+                        "Retaliation",
+                        "A creature that deals Psychic damage to you takes the same amount you take",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your thoughts can't be read by telepathy or other means unless you allow it. You also have Resistance to Psychic damage, and whenever a creature deals Psychic damage to you, that creature takes the same amount of damage that you take."

@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class HollowWardenSpells(Feature):
@@ -17,6 +17,23 @@ class HollowWardenSpells(Feature):
         super().__init__(
             name="Hollow Warden Spells", origin="Hollow Warden Ranger Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Ranger level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Ranger level", "Spell"),
+                (
+                    ("3", "Wrathful Smite"),
+                    ("5", "Alter Self"),
+                    ("9", "Phantom Steed"),
+                    ("13", "Dominate Beast"),
+                    ("17", "Steel Wind Strike"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -109,6 +126,19 @@ class HungeringMight(Feature):
             return max(1, cs.get_wisdom_modifier())
 
         SavingThrowBonus([Ability.CONSTITUTION], bonus).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Constitution saves", "+ Wisdom modifier (minimum +1)"),
+                    (
+                        "Feeding",
+                        "Once per turn, when you hit a creature with an attack roll while transformed by Wrath of the Wild and Bloodied, regain 1d10 + Wisdom modifier Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

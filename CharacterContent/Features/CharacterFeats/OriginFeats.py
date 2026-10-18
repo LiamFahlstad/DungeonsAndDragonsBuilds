@@ -39,6 +39,7 @@ from Model.Content.FeatureText import (
     Block,
     Facts,
     Option,
+    Table,
     dc_formula,
 )
 
@@ -88,6 +89,19 @@ class Skilled(OriginFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Skill Proficiency",
+                        "Any combination of three skills of your choice",
+                    ),
+                    ("Chosen", ", ".join(skill.value for skill in self._choice.skills)),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         choices = ", ".join(skill.value for skill in self._choice.skills)
         return (
@@ -103,6 +117,22 @@ class Alert(OriginFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._proficiency.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Initiative Proficiency",
+                        "Add your Proficiency Bonus to Initiative rolls",
+                    ),
+                    (
+                        "Initiative Swap",
+                        "Immediately after you roll Initiative, swap Initiative with one willing ally in the same combat (not if either of you is Incapacitated)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -140,6 +170,28 @@ class Crafter(OriginFeat):
             )
 
         return "\n".join(f"    * {tool_map[t]}" for t in self.artisans_tools)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        rows = tuple(
+            tuple(line.strip(" *").split("\t"))
+            for line in self.get_tool_choices().splitlines()
+        )
+        return [
+            Facts(
+                (
+                    (
+                        "Tool Proficiency",
+                        "Three different Artisan's Tools of your choice from the Fast Crafting table",
+                    ),
+                    ("Discount", "20 percent off every nonmagical item you buy"),
+                    (
+                        "Fast Crafting",
+                        "When you finish a Long Rest, craft one piece of gear from the table with tools you're proficient with. It falls apart when you finish another Long Rest.",
+                    ),
+                )
+            ),
+            Table(("Artisan's Tools", "Crafted gear"), rows),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -440,6 +492,19 @@ class SavageAttacker(OriginFeat):
     def __init__(self):
         super().__init__(name="Savage Attacker", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "Once per turn, you hit a target with a weapon"),
+                    (
+                        "Effect",
+                        "Roll the weapon's damage dice twice and use either roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You've trained to deal particularly damaging strikes.\n"
@@ -497,6 +562,18 @@ class Tough(OriginFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._hp.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Hit Point maximum",
+                        "+2 per character level, now and whenever you gain a level",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -697,6 +774,23 @@ class HarperAgent(OriginFeat):
     def __init__(self):
         super().__init__(name="Harper Agent", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Language", "Thieves' Cant"),
+                    (
+                        "Instrument Training",
+                        "Proficiency with a Musical Instrument of your choice",
+                    ),
+                    (
+                        "Distracting Melody",
+                        "When you Help an ally's attack roll, the enemy you distract can be within 30 feet of you instead of 5, if it can see or hear you",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -866,6 +960,22 @@ class ZhentarimRuffian(OriginFeat):
     def __init__(self):
         super().__init__(name="Zhentarim Ruffian", origin="Origin Feat")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Exploit Opening",
+                        "When you roll damage for an Opportunity Attack, roll the damage dice twice and use either roll",
+                    ),
+                    (
+                        "Family First",
+                        "When you roll Initiative with Heroic Inspiration, expend it to give yourself and your allies Advantage on that Initiative roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return (
             "You gain the following benefits.\n"
@@ -886,6 +996,20 @@ class SharpEye(OriginFeat):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Search or Study action"),
+                    (
+                        "Effect",
+                        "Advantage on any ability check made as part of that action",
+                    ),
+                    ("Still fails", "The use isn't expended"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take the Search or Study action, you can give yourself Advantage on any ability check made as part of that action. You can use this feature a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest. If the check fails, the use of this feature isn't expended."
@@ -1010,6 +1134,22 @@ class ArcaneArtist(_SpellcastingOriginFeat):
 class ArcaneEloquence(_SpellcastingOriginFeat):
     _NAME = "Arcane Eloquence"
     _SPELL = BardLevel0Spells.VICIOUS_MOCKERY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        f"Vicious Mockery; {self.spell_casting_ability.value} is your spellcasting ability for it",
+                    ),
+                    (
+                        "Smooth Talker",
+                        "Add 1d4 to Charisma (Deception, Intimidation or Persuasion) checks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return (
@@ -1375,6 +1515,19 @@ class TirelessReveler(OriginFeat):
             origin="Origin Feat",
             uses=_uses_per_proficiency_bonus("short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "An ally you can see within 60 feet expends Heroic Inspiration",
+                    ),
+                    ("Effect", "Gain Heroic Inspiration if you lack it"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "When an ally you can see within 60 feet of yourself expends Heroic Inspiration, you can gain Heroic Inspiration if you lack it. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Short or Long Rest."

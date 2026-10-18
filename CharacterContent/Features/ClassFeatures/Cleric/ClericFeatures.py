@@ -90,6 +90,23 @@ class DivineOrderThaumaturge(Feature):
         SkillBonus(Skill.ARCANA, bonus).apply(ledger_writer)
         SkillBonus(Skill.RELIGION, bonus).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("A mystical connection to the divine."),
+            Facts(
+                (
+                    (
+                        "Extra cantrip",
+                        f"{self.extra_cantrip}, from the Cleric spell list",
+                    ),
+                    (
+                        "Arcana and Religion",
+                        "+ Wisdom modifier (minimum +1) to Intelligence (Arcana or Religion) checks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = f"You know one extra cantrip from the Cleric spell list: {self.extra_cantrip}. Your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks equal to your Wisdom modifier (minimum bonus of +1)."
         return description
@@ -236,6 +253,20 @@ class SearUndead(Feature):
             name="Sear Undead", origin="Cleric Level 5", usage_tags=["damage"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Turn Undead"),
+                    (
+                        "Damage",
+                        "Roll a number of d8s equal to your Wisdom modifier (minimum 1d8). Each Undead that fails its save takes the total as Radiant damage.",
+                    ),
+                    ("Turning", "The damage doesn't end the turn effect"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect."
         return description
@@ -249,6 +280,23 @@ class DivineStrike(Feature):
         super().__init__(
             name="Divine Strike", origin="Cleric Level 7", usage_tags=["damage"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "Once on each of your turns, you hit a creature with an attack roll using a weapon",
+                    ),
+                    ("Damage", "Extra 1d8 Necrotic or Radiant damage (your choice)"),
+                    (
+                        "From Cleric level 14",
+                        "2d8 instead (Improved Divine Strike)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice)."
@@ -279,6 +327,29 @@ class DivineIntervention(Feature):
             activation=FeatureActivation(action_type=ActionType.ACTION),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Call on your deity or pantheon to intervene on your behalf."),
+            Facts(
+                (
+                    ("Action", "Magic action"),
+                    (
+                        "Spell",
+                        "Any Cleric spell of level 5 or lower that doesn't require a Reaction to cast",
+                    ),
+                    (
+                        "Effect",
+                        "Cast it as part of the same action, without expending a spell slot or needing Material components",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                    (
+                        "From Cleric level 20",
+                        "You can choose Wish; if you do, you can't use Divine Intervention again until you finish 2d4 Long Rests (Greater Divine Intervention)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can call on your deity or pantheon to intervene on your behalf. As a Magic action, choose any Cleric spell of level 5 or lower that doesn't require a Reaction to cast. As part of the same action, you cast that spell without expending a spell slot or needing Material components. You can't use this feature again until you finish a Long Rest."
         return description
@@ -308,6 +379,23 @@ class ImprovedPotentSpellcasting(Feature):
             activation=FeatureActivation(range="60 Feet"),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a Cleric cantrip and deal damage to a creature with it",
+                    ),
+                    ("Range", "Yourself or another creature within 60 feet"),
+                    (
+                        "Effect",
+                        "Temporary Hit Points equal to twice your Wisdom modifier",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier."

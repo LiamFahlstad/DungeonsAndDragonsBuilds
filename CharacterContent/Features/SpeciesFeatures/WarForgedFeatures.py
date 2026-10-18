@@ -7,6 +7,7 @@ from Model.Content.Improvements import (
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -25,6 +26,19 @@ class ConstructResilience(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Poison damage"),
+                    (
+                        "Advantage",
+                        "On saving throws to avoid or end the Poisoned condition",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws to avoid or end the Poisoned condition."
 
@@ -33,6 +47,22 @@ class SentrysRest(Feature):
     def __init__(self):
         super().__init__(name="Sentry's Rest", origin="Warforged Trait")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Sleep",
+                        "You don't need to sleep, and magic can't put you to sleep",
+                    ),
+                    (
+                        "Long Rest",
+                        "Finish one in 6 hours in an inactive, motionless state; you appear inert but stay conscious",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You don’t need to sleep, and magic can’t put you to sleep. You can finish a Long Rest in 6 hours if you spend those hours in an inactive, motionless state. During this time, you appear inert but remain conscious."
 
@@ -40,6 +70,18 @@ class SentrysRest(Feature):
 class Tireless(Feature):
     def __init__(self):
         super().__init__(name="Tireless", origin="Warforged Trait", usage_tags=["buff"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Exhaustion",
+                        "You don't gain Exhaustion levels from dehydration, malnutrition or suffocation",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "You don’t gain Exhaustion levels from dehydration, malnutrition, or suffocation."

@@ -30,6 +30,7 @@ from Model.Content.FeatureText import (
     Option,
     Paragraph,
     StatBlock,
+    Table,
 )
 
 
@@ -40,6 +41,22 @@ class ToolsOfTheTrade(Feature):
             origin="Battle Smith Artificer Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Tool Proficiency",
+                        "Smith's Tools, or another type of Artisan's Tools of your choice if you already have it",
+                    ),
+                    (
+                        "Weapon Crafting",
+                        "Crafting a nonmagical or magic weapon takes half the time",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -55,6 +72,23 @@ class Spells(Feature):
         super().__init__(
             name="Battle Smith spells", origin="Battle Smith Artificer Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Artificer level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Artificer level", "Spells"),
+                (
+                    ("3", "Heroism, Shield"),
+                    ("5", "Shining Smite, Warding Bond"),
+                    ("9", "Aura of Vitality, Conjure Barrage"),
+                    ("13", "Aura of Purity, Fire Shield"),
+                    ("17", "Banishing Smite, Mass Cure Wounds"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -77,6 +111,23 @@ class BattleReady(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         # "Weapon Knowledge. You gain proficiency with Martial weapons."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Arcane Empowerment",
+                        "With a magic weapon, use Intelligence instead of Strength or Dexterity for attack and damage rolls",
+                    ),
+                    ("Weapon Knowledge", "Proficiency with Martial weapons"),
+                    (
+                        "Focus",
+                        "Use a weapon you're proficient with as a Spellcasting Focus for your Artificer spells",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -231,6 +282,19 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Battle Smith Artificer Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Attack action", "Attack twice instead of once"),
+                    (
+                        "Steel Defender",
+                        "Forgo one of the attacks to command your Steel Defender to take the Force-Empowered Rend action",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn. You can forgo one of your attacks when you take the Attack action to command your Steel Defender to take the Force-Empowered Rend action."
         return description
@@ -328,6 +392,22 @@ class ImprovedDefender(Feature):
             origin="Battle Smith Artificer Level 15",
             usage_tags=["damage", "heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Improved Jolt",
+                        "Arcane Jolt's extra damage and healing become 4d6",
+                    ),
+                    (
+                        "Improved Deflection",
+                        "When your Steel Defender uses Deflect Attack, the attacker takes 1d4 + Intelligence modifier Force damage",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

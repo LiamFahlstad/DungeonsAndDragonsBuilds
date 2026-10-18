@@ -10,12 +10,26 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import levels_gained
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
 
 class Spellcasting(Feature):
     def __init__(self):
         super().__init__(name="Spellcasting", origin="Sorcerer Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spellcasting ability", "Charisma"),
+                    ("Save DC", dc_formula(Definitions.Ability.CHARISMA)),
+                    ("Spell attack", "Charisma modifier + Proficiency Bonus"),
+                    ("Cantrips", "Replace one whenever you gain a Sorcerer level"),
+                    ("Spells", "Replace one whenever you gain a Sorcerer level"),
+                    ("Spell slots", "Regain all when you finish a Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -229,6 +243,20 @@ class SorcerousRestoration(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Trigger", "You finish a Short Rest"),
+                    (
+                        "Effect",
+                        "Regain expended Sorcery Points, up to half your Sorcerer level (round down)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you finish a Short Rest, you can regain expended Sorcery Points, but no more than a number equal to half your Sorcerer level (round down). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
@@ -242,6 +270,22 @@ class SorceryIncarnate(Feature):
         super().__init__(
             name="Sorcery Incarnate", origin="Sorcerer Level 7", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Extra Innate Sorcery",
+                        "With no uses of Innate Sorcery left, spend 2 Sorcery Points when you take the Bonus Action to activate it",
+                    ),
+                    (
+                        "Metamagic",
+                        "While Innate Sorcery is active, use up to two Metamagic options on each spell you cast",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -124,6 +124,23 @@ class MysticFightingStyle(Feature):
             origin="Warrior of the Mystic Arts Monk Level 6",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action on your turn"),
+                    (
+                        "Effect",
+                        "Replace one Unarmed Strike with a Sorcerer cantrip that has a casting time of an action",
+                    ),
+                    (
+                        "From Monk level 17",
+                        "With Flurry of Blows, replace two Unarmed Strikes with a level 1 or 2 Sorcerer spell that has a casting time of an action (Improved Mystic Fighting Style)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you take the Attack action on your turn, you can replace one Unarmed Strike with a casting of one of your Sorcerer cantrips that has a casting time of an action."
         return description
@@ -210,6 +227,19 @@ class FocusedStrike(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Stunning Strike, whatever the save's result"),
+                    (
+                        "Effect",
+                        "The target has Disadvantage on saving throws against your spells until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Stunning Strike, whether the target succeeds or fails on the saving throw, the target has Disadvantage on saving throws against your spells until the start of your next turn."
         return description
@@ -221,6 +251,20 @@ class ImprovedMysticFightingStyle(Feature):
             name="Improved Mystic Fighting Style",
             origin="Warrior of the Mystic Arts Monk Level 17",
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Flurry of Blows"),
+                    (
+                        "Effect",
+                        "Replace two of its Unarmed Strikes with a level 1 or 2 Sorcerer spell that has a casting time of an action",
+                    ),
+                    ("Casting", "Part of the same Bonus Action as Flurry of Blows"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use Flurry of Blows, you can replace two of the Unarmed Strikes with a casting of one of your level 1 or 2 Sorcerer spells that has a casting time of an action, and you cast it as part of the same Bonus Action you use to activate Flurry of Blows."

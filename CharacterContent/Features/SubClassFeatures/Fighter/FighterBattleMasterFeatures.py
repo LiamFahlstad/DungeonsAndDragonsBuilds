@@ -46,6 +46,21 @@ class SuperiorityDice(Feature):
             return 5
         return 4
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The dice, their size by level and their recharge are in the panel
+        # below; the maneuvers follow as their own blocks.
+        return [
+            Paragraph("Expend Superiority Dice to fuel your maneuvers."),
+            Facts(
+                (
+                    (
+                        "Maneuver save DC",
+                        "8 + Strength or Dexterity modifier (your choice) + Proficiency Bonus",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         if character.get_class_level(CharacterClass.FIGHTER) < 10:
             superiority_die = "1d8"
@@ -134,6 +149,25 @@ class KnowYourEnemy(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Target", "A creature you can see within 30 feet"),
+                    (
+                        "Effect",
+                        "Learn whether it has any Immunities, Resistances or Vulnerabilities, and what they are",
+                    ),
+                    (
+                        "Restore",
+                        "Expend one Superiority Die (no action required) to regain the use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

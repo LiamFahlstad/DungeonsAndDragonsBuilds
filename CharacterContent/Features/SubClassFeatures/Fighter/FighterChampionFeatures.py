@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 
 class ImprovedCritical(Feature):
@@ -11,6 +12,19 @@ class ImprovedCritical(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Attacks", "Attack rolls with weapons and Unarmed Strikes"),
+                    (
+                        "Critical Hit",
+                        "On a 19 or 20 on the d20 (18-20 from Fighter level 15, Superior Critical)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your attack rolls with weapons and Unarmed Strikes can score a Critical Hit on a roll of 19 or 20 on the d20."
@@ -35,6 +49,22 @@ class RemarkableAthlete(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Advantage",
+                        "On Initiative rolls and Strength (Athletics) checks",
+                    ),
+                    (
+                        "After a Critical Hit",
+                        "Immediately move up to half your Speed without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -93,6 +123,22 @@ class Survivor(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Defy Death",
+                        "Advantage on Death Saving Throws, and a roll of 18-20 counts as a 20",
+                    ),
+                    (
+                        "Heroic Rally",
+                        "At the start of each of your turns, if you're Bloodied and have at least 1 Hit Point, regain 5 + Constitution modifier Hit Points",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

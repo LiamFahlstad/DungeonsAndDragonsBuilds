@@ -11,6 +11,27 @@ class ReplacingEldritchInvocations(Feature):
             name="Replacing Eldritch Invocations", origin="Warlock Level 1"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The number known at each level is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Replacing",
+                        "Whenever you gain a Warlock level, replace one invocation with another you qualify for. You can't replace one that's a prerequisite for another invocation you have.",
+                    ),
+                    (
+                        "Gaining",
+                        "Learn more at certain Warlock levels (see Scaling below)",
+                    ),
+                    (
+                        "Duplicates",
+                        "You can't take the same invocation twice unless its description says otherwise",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Replacing and Gaining Invocations. Whenever you gain a Warlock level, you can replace one of your invocations with another one for which you qualify. You can't replace an invocation if it's a prerequisite for another invocation that you have.\n"
@@ -57,6 +78,17 @@ class ReplacingCantripsAndSpells(Feature):
     def __init__(self):
         super().__init__(name="Replacing Cantrips and Spells", origin="Warlock Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Whenever you gain a Warlock level, you can replace:"),
+            Facts(
+                (
+                    ("A cantrip", "With another Warlock cantrip of your choice"),
+                    ("A spell", "With another Warlock spell of an eligible level"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Whenever you gain a Warlock level, you can replace one of your cantrips from this feature with another Warlock cantrip of your choice.\n"
@@ -86,6 +118,24 @@ class MagicalCunning(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Facts(
+                (
+                    ("Time", "1 minute, performing an esoteric rite"),
+                    (
+                        "Effect",
+                        "At the end of it, regain expended Pact Magic spell slots, up to half your maximum (round up)",
+                    ),
+                    (
+                        "From Warlock level 20",
+                        "Regain all your expended Pact Magic spell slots instead (Eldritch Master)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest."
         return description
@@ -97,6 +147,21 @@ class MagicalCunning(Feature):
 class ContactPatron(Feature):
     def __init__(self):
         super().__init__(name="Contact Patron", origin="Warlock Level 9")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Communicate with your patron directly."),
+            Facts(
+                (
+                    ("Always prepared", "Contact Other Plane"),
+                    (
+                        "Free casting",
+                        "Cast it without a spell slot to contact your patron, and automatically succeed on its saving throw",
+                    ),
+                    ("Limit", "Once per Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

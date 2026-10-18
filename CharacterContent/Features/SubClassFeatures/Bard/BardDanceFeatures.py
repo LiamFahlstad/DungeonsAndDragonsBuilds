@@ -70,6 +70,25 @@ class InspiringMovement(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "An enemy you can see ends its turn within 5 feet of you",
+                    ),
+                    ("Cost", "One use of Bardic Inspiration"),
+                    (
+                        "Effect",
+                        "Move up to half your Speed; then one ally of your choice within 30 feet can use its Reaction to move up to half its Speed",
+                    ),
+                    ("Safe", "None of this movement provokes Opportunity Attacks"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When an enemy you can see ends its turn within 5 feet of you, you can take a Reaction and expend one use of your Bardic Inspiration to move up to half your Speed. Then one ally of your choice within 30 feet of you can also move up to half their Speed using their Reaction.\n"
@@ -87,6 +106,23 @@ class TandemFootwork(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You roll Initiative and don't have the Incapacitated condition",
+                    ),
+                    ("Cost", "One use of Bardic Inspiration"),
+                    (
+                        "Effect",
+                        "Roll your Bardic Inspiration die; you and each ally within 30 feet who can see or hear you add it to Initiative",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll Initiative, you can expend one use of your Bardic Inspiration if you don't have the Incapacitated condition. When you do so, roll your Bardic Inspiration die; you and each ally within 30 feet of you who can see or hear you gains a bonus to Initiative equal to the number rolled."
         return description
@@ -103,6 +139,28 @@ class LeadingEvasion(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "An effect lets you make a Dexterity save to take only half damage",
+                    ),
+                    ("Succeeded", "No damage"),
+                    ("Failed", "Half damage"),
+                    (
+                        "Shared",
+                        "Creatures within 5 feet of you making the same save gain this benefit too",
+                    ),
+                    (
+                        "Exception",
+                        "Can't be used while you have the Incapacitated condition",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
