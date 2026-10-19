@@ -66,6 +66,9 @@ class ArcaneArcherLore(Feature):
         self._proficiency_choice.apply(ledger_writer)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skills = f"Proficiency in {self._skills[0].value} and {self._skills[1].value}"
+        if set(self._skills) != {Skill.ARCANA, Skill.NATURE}:
+            skills += " (a Fighter skill in place of Arcana or Nature you already had)"
         return [
             Paragraph("You learn magical theory and secrets of nature."),
             Facts(
@@ -74,10 +77,7 @@ class ArcaneArcherLore(Feature):
                         "Cantrip",
                         f"{self._cantrip.value}, with Intelligence as your spellcasting ability",
                     ),
-                    (
-                        "Skills",
-                        f"Proficiency in {self._skills[0].value} and {self._skills[1].value}",
-                    ),
+                    ("Skills", skills),
                 )
             ),
         ]
@@ -120,8 +120,12 @@ class ArcaneShot(Feature):
             Facts(
                 (
                     (
-                        "Trigger",
-                        "Once per turn, when you make a ranged attack using a weapon with the Ammunition property. Decide when you hit a creature and deal damage to it, unless the option doesn't involve an attack roll.",
+                        "When",
+                        "Once per turn, on a ranged attack with a weapon that has the Ammunition property",
+                    ),
+                    (
+                        "Decide",
+                        "After you hit a creature and deal damage to it; before the attack if the option makes no attack roll",
                     ),
                     (
                         "Options known",
@@ -194,7 +198,11 @@ class BanishingShot(ArcaneShotOption):
                     ("Save", "Charisma"),
                     (
                         "Failed",
-                        "Banished to a harmless demiplane: Incapacitated with a Speed of 0. At the end of its next turn it reappears in the space it left, or the nearest unoccupied space.",
+                        "Banished to a harmless demiplane until the end of its next turn, with the Incapacitated condition and a Speed of 0",
+                    ),
+                    (
+                        "Return",
+                        "In the space it left, or the nearest unoccupied space if that one is occupied",
                     ),
                 )
             ),
@@ -246,10 +254,12 @@ class BurstingShot(ArcaneShotOption):
         return [
             Facts(
                 (
+                    ("Trigger", "Immediately after you deal damage to the target"),
                     (
-                        "Effect",
-                        "Immediately after you deal damage, the target and each creature in a 10-foot Emanation from it take 2 Arcane Shot Dice of Force damage",
+                        "Area",
+                        "The target and each creature in a 10-foot Emanation from it",
                     ),
+                    ("Damage", "2 Arcane Shot Dice of Force damage to each"),
                 )
             ),
         ]
@@ -368,13 +378,18 @@ class SeekingShot(ArcaneShotOption):
             Facts(
                 (
                     ("Attack roll", "None"),
+                    ("Target", "One creature you have seen in the last minute"),
                     (
-                        "Target",
-                        "One creature you have seen in the last minute; the ammunition moves around corners, ignoring Half Cover and Three-Quarters Cover",
+                        "Path",
+                        "Moves around corners, ignoring Half Cover and Three-Quarters Cover",
                     ),
                     (
                         "Save",
-                        "Dexterity, if the target is within your weapon's long range; otherwise the ammunition disappears after traveling as far as it can",
+                        "Dexterity, if the target is within your weapon's long range",
+                    ),
+                    (
+                        "Out of range",
+                        "The ammunition disappears after traveling as far as it can",
                     ),
                 )
             ),
@@ -493,24 +508,44 @@ class MagicalAmmunition(Feature):
             Option(
                 "Darkening Ammunition",
                 (
-                    Paragraph(
-                        "Magical shadows fill a 15-foot Emanation from the ammunition for 1 minute. Nonmagical flames in it are extinguished, and creatures in it have a -5 penalty to Wisdom (Perception) checks and Passive Perception."
+                    Facts(
+                        (
+                            ("Area", "15-foot Emanation from the ammunition"),
+                            ("Duration", "1 minute"),
+                            (
+                                "Effect",
+                                "Magical shadows fill it. Nonmagical flames in it are extinguished, and creatures in it have a -5 penalty to Wisdom (Perception) checks and Passive Perception.",
+                            ),
+                        )
                     ),
                 ),
             ),
             Option(
                 "Unlocking Ammunition",
                 (
-                    Paragraph(
-                        "A burst of magic fills a 15-foot Emanation from the ammunition, with a loud knocking audible up to 300 feet away. Each object in it held shut by a nonmagical lock, or stuck or barred, becomes unlocked, unstuck or unbarred (only one lock of an object with several)."
+                    Facts(
+                        (
+                            ("Area", "15-foot Emanation from the ammunition"),
+                            (
+                                "Effect",
+                                "Each object in it that's held shut by a nonmagical lock, or stuck or barred, becomes unlocked, unstuck or unbarred. An object with several locks has only one unlocked.",
+                            ),
+                            ("Noise", "A loud knocking, audible up to 300 feet away"),
+                        )
                     ),
                 ),
             ),
             Option(
                 "Vine Ammunition",
                 (
-                    Paragraph(
-                        "A 120-foot-long vine grows from the ammunition that you and other creatures can climb. It withers away after 10 minutes."
+                    Facts(
+                        (
+                            ("Duration", "10 minutes, then the vine withers away"),
+                            (
+                                "Effect",
+                                "A 120-foot-long vine grows from the ammunition; you and other creatures can climb it",
+                            ),
+                        )
                     ),
                 ),
             ),

@@ -185,7 +185,7 @@ class WizardTransmuterLevel15(ClassBuilder.SubclassLevel15):
 
 @attr.dataclass
 class WizardTransmuterLevel17(ClassBuilder.SubclassLevel17):
-    spell: TransmutationSpellsUpTo8
+    spell: TransmutationSpellsUpTo9
 
     def add_features(
         self,

@@ -138,7 +138,7 @@ class DurableSummons(Feature):
                     ),
                     (
                         "Resistance",
-                        "While it has these Temporary Hit Points: every damage type except Force, Necrotic, Psychic and Radiant",
+                        "Every damage type except Force, Necrotic, Psychic and Radiant, while it has these Temporary Hit Points",
                     ),
                 )
             ),
@@ -191,12 +191,17 @@ class SplinteredSummons(Feature):
                     ),
                     (
                         "Effect",
-                        "Summon two creatures instead of one, each of the same kind and using the spell's stat block and rules, in different unoccupied spaces of your choice within the spell's range",
+                        "Summon two creatures of the same kind instead of one, each using the spell's stat block and rules",
+                    ),
+                    (
+                        "Placement",
+                        "Different unoccupied spaces of your choice within the spell's range",
                     ),
                     (
                         "Drawback",
-                        "Each creature's Hit Point maximum and current Hit Points are halved. If you lose Concentration, both disappear.",
+                        "Each one's Hit Point maximum and current Hit Points are halved",
                     ),
+                    ("Concentration", "If you lose it, both creatures disappear"),
                     (
                         "Restore",
                         "Expend a level 5+ spell slot (no action required)",

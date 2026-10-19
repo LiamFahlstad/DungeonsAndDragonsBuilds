@@ -52,14 +52,13 @@ class WarlockVestigeLevel5(ClassBuilder.SubclassLevel5):
 
 @attr.dataclass
 class WarlockVestigeLevel6(ClassBuilder.SubclassLevel6):
-    vestige_type: WarlockVestigeType
 
     def add_features(
         self,
         data: Grants,
     ) -> None:
         data.add_feature(
-            WarlockVestigeFeatures.VestigePower(self.vestige_type),
+            WarlockVestigeFeatures.VestigePower(),
             extends=WarlockVestigeFeatures.VestigeCompanion,
         )
 
@@ -98,13 +97,12 @@ class WarlockVestigeLevel10(ClassBuilder.SubclassLevel10):
 
 @attr.dataclass
 class WarlockVestigeLevel14(ClassBuilder.SubclassLevel14):
-    vestige_type: WarlockVestigeType
 
     def add_features(
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(WarlockVestigeFeatures.SemblanceOfLife(self.vestige_type))
+        data.add_feature(WarlockVestigeFeatures.SemblanceOfLife())
 
 
 class WarlockVestigeCustomStarterClassArgs(WarlockCustomStarterClassArgs):

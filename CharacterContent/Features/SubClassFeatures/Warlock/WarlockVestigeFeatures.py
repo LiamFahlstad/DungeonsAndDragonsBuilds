@@ -153,6 +153,11 @@ _SEMBLANCE_SPIRITS = {
 }
 
 
+def _with_article(word: str) -> str:
+    """'an Undead', 'a Fiend'."""
+    return f"{'an' if word[0] in 'AEIOU' else 'a'} {word}"
+
+
 def _build_vestige(
     character: CharacterView, vestige_type: WarlockVestigeType
 ) -> ExtendedCombatantData:
@@ -162,9 +167,9 @@ def _build_vestige(
     proficiency_bonus = character.get_proficiency_bonus()
     damage_type = VESTIGE_DAMAGE_TYPE[vestige_type]
     divine_power_name, divine_power_text = _DIVINE_POWER[vestige_type]
-    regains = "Once per Long Rest"
+    divine_power = divine_power_text
     if character.has_feature(VestigePower):
-        regains = "Regains its use when you finish a Short or Long Rest or use Magical Cunning"
+        divine_power += " It regains its use whenever you finish a Short or Long Rest or use Magical Cunning (Vestige Power)."
     return ExtendedCombatantData(
         combatant_type="Vestige Companion",
         hp=4 + 4 * warlock_level,
@@ -224,8 +229,8 @@ def _build_vestige(
         ],
         bonus_actions=[
             MonsterAbility(
-                name=f"Divine Power: {divine_power_name}",
-                description=f"{divine_power_text} {regains}.",
+                name=f"Divine Power (1/Day): {divine_power_name}",
+                description=divine_power,
             ),
         ],
         reactions=[],
@@ -254,7 +259,7 @@ class VestigeCompanion(Feature):
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Paragraph(
-                f"A dying god's vestige manifests, drawing strength from your pact. Yours is a {self.vestige_type.value}; you choose its look, which bears signs of its supernatural origin."
+                f"A dying god's vestige manifests, drawing strength from your pact. Yours is {_with_article(self.vestige_type.value)}; you choose its look, which bears signs of its supernatural origin."
             ),
             Facts(
                 (
@@ -264,19 +269,31 @@ class VestigeCompanion(Feature):
                     ),
                     (
                         "In combat",
-                        "Acts on your turn. It moves and uses its Reaction on its own, but its only action is Dodge unless you take a Bonus Action to command it to take an action in its stat block or another action. If you have the Incapacitated condition, it acts on its own and isn't limited to Dodge.",
+                        "Acts on your turn. It moves and uses its Reaction on its own; its only action is Dodge unless you command it.",
+                    ),
+                    (
+                        "Command",
+                        "Bonus Action: it takes an action in its stat block or another action",
                     ),
                     (
                         "Attack",
-                        "When you take the Attack action, sacrifice one of your attacks to command it to take the Vestige's Strike action",
+                        "When you take the Attack action, sacrifice one of your attacks to have it take the Vestige's Strike action",
+                    ),
+                    (
+                        "You're Incapacitated",
+                        "It acts on its own and isn't limited to Dodge",
                     ),
                     (
                         "At 0 Hit Points",
-                        "It disappears, leaving behind what it wore or carried. A 1-minute magical ceremony manifests it again with full Hit Points within 5 feet of you.",
+                        "It disappears. A 1-minute magical ceremony manifests it again with full Hit Points within 5 feet of you.",
                     ),
                     (
                         "Dismiss",
                         "Magic action: send it to a pocket dimension, or call it back to an unoccupied space within 30 feet of you",
+                    ),
+                    (
+                        "Left behind",
+                        "Whatever it wore or carried, when it drops to 0 Hit Points or goes to the pocket dimension",
                     ),
                     (
                         "New form",
@@ -330,17 +347,15 @@ class VestigeSpells(Feature):
 
 
 class VestigePower(Feature):
-    def __init__(self, vestige_type: WarlockVestigeType):
+    def __init__(self):
         super().__init__(
             name="Vestige Power",
             origin="Vestige Patron Warlock Level 6",
             activation=FeatureActivation(range="30 Feet"),
             usage_tags=["buff"],
         )
-        self.vestige_type = vestige_type
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
-        damage_type = VESTIGE_DAMAGE_TYPE[self.vestige_type].value
         return [
             Facts(
                 (
@@ -350,7 +365,7 @@ class VestigePower(Feature):
                     ),
                     (
                         "Resistance",
-                        f"While within 30 feet of your vestige, you have Resistance to the same damage types as it ({damage_type} for a {self.vestige_type.value})",
+                        "While within 30 feet of your vestige, you resist the same damage types as it: Radiant (Celestial), Fire (Fiend) or Necrotic (Undead)",
                     ),
                 )
             ),
@@ -405,7 +420,7 @@ class VestigeRecovery(Feature):
 
 
 class SemblanceOfLife(Feature):
-    def __init__(self, vestige_type: WarlockVestigeType):
+    def __init__(self):
         super().__init__(
             name="Semblance of Life",
             origin="Vestige Patron Warlock Level 14",
@@ -415,26 +430,20 @@ class SemblanceOfLife(Feature):
             usage_tags=["buff", "summon"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
-        self.vestige_type = vestige_type
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The once-per-Long-Rest box is in the panel below.
-        spirit, spell = _SEMBLANCE_SPIRITS[self.vestige_type]
         return [
             Paragraph(
-                "Help your Vestige Companion briefly adopt a more powerful form."
+                "Help your Vestige Companion briefly shape-shift into a more powerful spirit form."
             ),
             Facts(
                 (
                     ("Action", "Magic action, with the vestige within 90 feet of you"),
                     ("Duration", "1 hour"),
                     (
-                        "Form",
-                        f"{spirit} (your vestige is a {self.vestige_type.value}; see the {spell} spell in the Player's Handbook)",
-                    ),
-                    (
-                        "Spell level",
-                        "Half your Warlock level (round down; maximum level 9)",
+                        "Statistics",
+                        "Replaced by the spirit's stat block (table below), at a spell level of half your Warlock level (round down; maximum level 9)",
                     ),
                     (
                         "Keeps",
@@ -442,16 +451,16 @@ class SemblanceOfLife(Feature):
                     ),
                     (
                         "Temporary Hit Points",
-                        "Equal to the spirit form's Hit Points; any left vanish after 1 hour, and the transformation ends early once it has none left",
+                        "Equal to the spirit form's Hit Points; any left vanish after 1 hour",
                     ),
+                    ("Ends early", "When it has no Temporary Hit Points left"),
                 )
             ),
-            Option(
-                "Other forms",
-                (
-                    Paragraph(
-                        "Celestial vestige: Celestial Spirit (Summon Celestial). Fiend vestige: Fiendish Spirit (Summon Fiend). Undead vestige: Undead Spirit (Summon Undead)."
-                    ),
+            Table(
+                ("Vestige", "Form", "Stat block (Player's Handbook)"),
+                tuple(
+                    (vestige_type.value, spirit, f"{spell} spell")
+                    for vestige_type, (spirit, spell) in _SEMBLANCE_SPIRITS.items()
                 ),
             ),
         ]

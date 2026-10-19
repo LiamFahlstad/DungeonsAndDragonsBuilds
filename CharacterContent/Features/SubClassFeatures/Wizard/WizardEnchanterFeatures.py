@@ -11,7 +11,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class EnchantingConversationalist(Feature):
@@ -232,9 +232,10 @@ class InstinctiveCharm(Feature):
                         "Save",
                         f"The attacker makes a Wisdom save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
                     ),
+                    ("Failed", "The attack misses you instead"),
                     (
-                        "Failed",
-                        "The attack misses instead. If another creature other than the attacker is within the attack's range, the attacker targets it with the same attack roll (you choose which one if several are)",
+                        "Redirect",
+                        "If another creature besides the attacker is within the attack's range, the attack targets it with the same attack roll (you choose which, if several are)",
                     ),
                     (
                         "Restore",
@@ -279,19 +280,34 @@ class AlterMemories(Feature):
                         "Trigger",
                         "You cast an Enchantment spell that imposes the Charmed condition using a spell slot",
                     ),
-                    (
-                        "Unaware",
-                        "Choose one creature targeted by the spell: it remains unaware of being Charmed by you",
-                    ),
-                    (
-                        "Erase memories",
-                        "Once before the spell ends, take a Magic action: the chosen creature makes an Intelligence save against your spell save DC",
-                    ),
-                    (
-                        "Failed",
-                        "It loses up to 1 + your Intelligence modifier hours of memories (minimum of 1 hour), no more than the spell's duration",
-                    ),
+                    ("Target", "One creature targeted by the spell"),
                 )
+            ),
+            Option(
+                "Unaware",
+                (Paragraph("The target remains unaware of being Charmed by you."),),
+            ),
+            Option(
+                "Erase Memories",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action, once before the spell ends"),
+                            (
+                                "Save",
+                                f"Intelligence save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                            ),
+                            (
+                                "Failed",
+                                "It loses 1 + your Intelligence modifier hours of memories (minimum of 1 hour)",
+                            ),
+                            (
+                                "Limit",
+                                "You can make it forget less; never more than the Enchantment spell's duration",
+                            ),
+                        )
+                    ),
+                ),
             ),
         ]
 
