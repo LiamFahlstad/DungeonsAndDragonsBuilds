@@ -1,4 +1,4 @@
-"""Example build: Fighter Arcane Archer (2014 rules). Demonstrates the subclass up through level 15."""
+"""Example build: Fighter Arcane Archer. Built to character level 18 to exercise every subclass feature."""
 
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses.FighterBase import (
@@ -17,16 +17,21 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterLevel13,
     FighterLevel14,
     FighterLevel15,
+    FighterLevel16,
+    FighterLevel17,
+    FighterLevel18,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import (
     BaseClassLevelFeatures,
     StarterClassBuilder,
 )
-from CharacterContent.Classes.SubClasses2014.FighterArcaneArcher import (
+from CharacterContent.Classes.SubClasses2024.FighterArcaneArcher import (
     FighterArcaneArcherCustomStarterClassArgs,
     FighterArcaneArcherLevel3,
     FighterArcaneArcherLevel7,
+    FighterArcaneArcherLevel10,
     FighterArcaneArcherLevel15,
+    FighterArcaneArcherLevel18,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
@@ -35,6 +40,9 @@ from CharacterContent.Features.CharacterFeats import (
     OriginFeats,
 )
 from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Features.SubClassFeatures.Fighter import (
+    FighterArcaneArcherFeatures,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
@@ -49,7 +57,7 @@ def get_starter_class_builder():
                 Skill.PERCEPTION,
             ],
         ),
-        base_class_level=15,
+        base_class_level=18,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilityScores(
             strength=10,
@@ -134,20 +142,43 @@ def get_starter_class_builder():
                     ),
                 ),
                 15: FighterLevel15(),
+                16: FighterLevel16(
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.WISDOM, 2),
+                        ]
+                    ),
+                    weapon_mastery=Weapons.Handaxe(),
+                ),
+                17: FighterLevel17(),
+                18: FighterLevel18(),
             },
             subclass_features_by_level={
                 3: FighterArcaneArcherLevel3(
-                    skill=Skill.ARCANA,
                     cantrip=TransmutationLevel0Spells.PRESTIDIGITATION,
+                    arcane_shot_option_1=FighterArcaneArcherFeatures.BurstingShot(),
+                    arcane_shot_option_2=FighterArcaneArcherFeatures.GraspingShot(),
+                    # Already proficient in Nature (Skilled), so a Fighter skill instead.
+                    skill_2=Skill.INSIGHT,
                 ),
-                7: FighterArcaneArcherLevel7(),
-                15: FighterArcaneArcherLevel15(),
+                7: FighterArcaneArcherLevel7(
+                    arcane_shot_option=FighterArcaneArcherFeatures.SeekingShot(),
+                ),
+                10: FighterArcaneArcherLevel10(
+                    arcane_shot_option=FighterArcaneArcherFeatures.BanishingShot(),
+                ),
+                15: FighterArcaneArcherLevel15(
+                    arcane_shot_option=FighterArcaneArcherFeatures.PiercingShot(),
+                ),
+                18: FighterArcaneArcherLevel18(
+                    arcane_shot_option=FighterArcaneArcherFeatures.ShadowShot(),
+                ),
             },
         ),
     )
 
 
-class Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder(CharacterBuilder):
+class Y2024FighterArcaneArcherSylvaineFarshotCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Sylvaine Farshot",

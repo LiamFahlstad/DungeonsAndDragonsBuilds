@@ -788,3 +788,232 @@ class TestPromisedPassiveBenefits:
             sources.add_effect(feature)
         character = Character(sources)
         assert WeaponProficiency.MARTIAL in character.weapon_proficiencies()
+
+
+class TestArcanaUnleashedSubclasses:
+    """Subclasses from Arcana Unleashed (SourceTexts/SubclassTexts2024/)."""
+
+    def test_arcana_domain_spells_by_cleric_level(self):
+        # arcana_domain.txt - Arcana Domain Spells table:
+        # 3: Detect Magic, Magic Missile, Magic Weapon, Nystul's Magic Aura
+        # 5: Counterspell, Dispel Magic
+        # 7: Arcane Eye, Leomund's Secret Chest
+        # 9: Bigby's Hand, Teleportation Circle
+        from CharacterContent.Classes.SubClasses2024 import ClericArcana
+        from CharacterContent.Spells.SpellLists import WizardLevel0Spells
+
+        sources = _cleric_data_with_channel_divinity()
+        apply_level(
+            ClericArcana.ClericArcanaLevel3(
+                Skill.ARCANA, WizardLevel0Spells.FIRE_BOLT, WizardLevel0Spells.MAGE_HAND
+            ),
+            sources,
+        )
+        for level in (
+            ClericArcana.ClericArcanaLevel5(),
+            ClericArcana.ClericArcanaLevel7(),
+            ClericArcana.ClericArcanaLevel9(),
+        ):
+            apply_level(level, sources)
+        assert sorted(_names_and_levels(Character(sources))) == sorted(
+            [
+                ("Detect Magic", 3),
+                ("Magic Missile", 3),
+                ("Magic Weapon", 3),
+                ("Nystul's Magic Aura", 3),
+                # Student of Arcana: "You learn two Wizard cantrips of your choice."
+                ("Fire Bolt", 3),
+                ("Mage Hand", 3),
+                ("Counterspell", 5),
+                ("Dispel Magic", 5),
+                ("Arcane Eye", 7),
+                ("Leomund's Secret Chest", 7),
+                ("Bigby's Hand", 9),
+                ("Teleportation Circle", 9),
+            ]
+        )
+
+    def test_student_of_arcana_grants_arcana_or_a_cleric_skill(self, make_sources):
+        # arcana_domain.txt: "You gain proficiency in the Arcana skill or one
+        # skill of your choice from the skills available to Clerics at level 1."
+        from CharacterContent.Features.SubClassFeatures.Cleric import (
+            ClericArcanaFeatures,
+        )
+
+        sources = make_sources()
+        sources.add_effect(
+            ClericArcanaFeatures.StudentOfArcana(Skill.ARCANA, "Fire Bolt", "Mage Hand")
+        )
+        assert Character(sources).is_proficient_in_skill(Skill.ARCANA)
+        sources = make_sources()
+        sources.add_effect(
+            ClericArcanaFeatures.StudentOfArcana(
+                Skill.MEDICINE, "Fire Bolt", "Mage Hand"
+            )
+        )
+        assert Character(sources).is_proficient_in_skill(Skill.MEDICINE)
+        # Stealth isn't one of the Cleric's level 1 skills.
+        with pytest.raises(ValueError):
+            ClericArcanaFeatures.StudentOfArcana(
+                Skill.STEALTH, "Fire Bolt", "Mage Hand"
+            )
+
+    def test_arcane_archer_lore_grants_arcana_and_nature(self, make_sources):
+        # arcane_archer.txt: "You gain proficiency in the Arcana and Nature skills."
+        from CharacterContent.Features.SubClassFeatures.Fighter import (
+            FighterArcaneArcherFeatures,
+        )
+        from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
+
+        sources = make_sources()
+        sources.add_effect(
+            FighterArcaneArcherFeatures.ArcaneArcherLore(
+                TransmutationLevel0Spells.DRUIDCRAFT, Skill.ARCANA, Skill.NATURE
+            )
+        )
+        character = Character(sources)
+        assert character.is_proficient_in_skill(Skill.ARCANA)
+        assert character.is_proficient_in_skill(Skill.NATURE)
+        # A replacement must come from the Fighter's level 1 skills.
+        with pytest.raises(ValueError):
+            FighterArcaneArcherFeatures.ArcaneArcherLore(
+                TransmutationLevel0Spells.DRUIDCRAFT, Skill.ARCANA, Skill.STEALTH
+            )
+
+    def test_arcane_archer_lore_cantrip_is_druidcraft_or_prestidigitation(self):
+        # arcane_archer.txt: "You know either the Druidcraft or the
+        # Prestidigitation cantrip."
+        from CharacterContent.Classes.SubClasses2024 import FighterArcaneArcher
+        from CharacterContent.Features.SubClassFeatures.Fighter import (
+            FighterArcaneArcherFeatures,
+        )
+        from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
+
+        with pytest.raises(ValueError):
+            FighterArcaneArcher.FighterArcaneArcherLevel3(
+                cantrip=TransmutationLevel0Spells.CONTROL_FLAMES,
+                arcane_shot_option_1=FighterArcaneArcherFeatures.BurstingShot(),
+                arcane_shot_option_2=FighterArcaneArcherFeatures.ShadowShot(),
+            )
+
+    @pytest.mark.parametrize("intelligence, uses", [(16, 3), (8, 1)])
+    def test_arcane_shot_uses_and_save_dc(self, make_character, intelligence, uses):
+        # arcane_archer.txt: "a number of times equal to your Intelligence
+        # modifier (minimum of once)"; "the DC equals 8 plus your Intelligence
+        # modifier and Proficiency Bonus". Fighter level 18: Proficiency Bonus +6.
+        from CharacterContent.Features.SubClassFeatures.Fighter import (
+            FighterArcaneArcherFeatures,
+        )
+
+        character = make_character(
+            intelligence=intelligence, levels={CharacterClass.FIGHTER: 18}
+        )
+        arcane_shot = FighterArcaneArcherFeatures.ArcaneShot()
+        assert arcane_shot.number_of_uses(character) == uses
+        modifier = (intelligence - 10) // 2
+        assert arcane_shot.calculate_dc(character) == 8 + modifier + 6
+
+    def test_arcane_shot_die_by_fighter_level(self):
+        # arcane_archer.txt: "Your Arcane Shot Die is a d6 ... The die becomes
+        # a d8 at level 10, a d10 at level 15, and a d12 at level 18."
+        from CharacterContent.Features.SubClassFeatures.Fighter.FighterArcaneArcherFeatures import (
+            ARCANE_SHOT_DIE,
+        )
+
+        expected = {
+            3: "d6",
+            9: "d6",
+            10: "d8",
+            14: "d8",
+            15: "d10",
+            17: "d10",
+            18: "d12",
+        }
+        for level, die in expected.items():
+            assert ARCANE_SHOT_DIE.at_level(level) == die
+
+    def test_necromancy_spellbook_grants_necrotic_resistance(self, make_sources):
+        # necromancer.txt: "Necrotic Resistance. You have Resistance to
+        # Necrotic damage."
+        from CharacterContent.Features.SubClassFeatures.Wizard import (
+            WizardNecromancerFeatures,
+        )
+
+        sources = make_sources()
+        sources.add_effect(WizardNecromancerFeatures.NecromancySpellbook())
+        character = Character(sources)
+        assert character.is_resistant_to_damage(DamageType.NECROTIC)
+        assert not character.is_resistant_to_damage(DamageType.RADIANT)
+
+    @pytest.mark.parametrize("intelligence, expected", [(18, 4), (8, 1)])
+    def test_enchanting_conversationalist_skill_bonus(
+        self, make_character, intelligence, expected
+    ):
+        # enchanter.txt: "You gain proficiency in one of the following skills
+        # of your choice: Deception, Intimidation, or Persuasion. ... you gain a
+        # bonus to the check equal to your Intelligence modifier (minimum of +1)."
+        from CharacterContent.Features.SubClassFeatures.Wizard import (
+            WizardEnchanterFeatures,
+        )
+
+        character = apply_features(
+            make_character(intelligence=intelligence),
+            [WizardEnchanterFeatures.EnchantingConversationalist(Skill.DECEPTION)],
+        )
+        assert character.is_proficient_in_skill(Skill.DECEPTION)
+        assert character.get_skill_bonus(Skill.DECEPTION) == expected
+        assert character.get_skill_bonus(Skill.PERSUASION) == 0
+        with pytest.raises(ValueError):
+            WizardEnchanterFeatures.EnchantingConversationalist(Skill.ARCANA)
+
+    def test_vestige_spells_war_domain_at_warlock_level_3(self):
+        # vestige_patron.txt: "if you chose the War Domain for this feature,
+        # when you reach Warlock level 3, you would have the Guiding Bolt, Magic
+        # Weapon, Shield of Faith, and Spiritual Weapon spells prepared."
+        from CharacterContent.Classes.SubClasses2024 import WarlockVestige
+        from Core.Definitions import WarlockVestigeDomain, WarlockVestigeType
+
+        sources = CharacterSources(spell_casting_ability=Ability.CHARISMA)
+        apply_level(
+            WarlockVestige.WarlockVestigeLevel3(
+                WarlockVestigeType.FIEND, WarlockVestigeDomain.WAR
+            ),
+            sources,
+        )
+        assert sorted(_names_and_levels(Character(sources))) == sorted(
+            [
+                ("Guiding Bolt", 3),
+                ("Magic Weapon", 3),
+                ("Shield of Faith", 3),
+                ("Spiritual Weapon", 3),
+            ]
+        )
+
+    @pytest.mark.parametrize(
+        "vestige_type, damage_type",
+        [
+            ("CELESTIAL", DamageType.RADIANT),
+            ("FIEND", DamageType.FIRE),
+            ("UNDEAD", DamageType.NECROTIC),
+        ],
+    )
+    def test_vestige_companion_stat_block(
+        self, make_character, vestige_type, damage_type
+    ):
+        # vestige_patron.txt stat block: "Armor Class: 13 plus your Charisma
+        # modifier"; "Hit Points: 4 + four times your Warlock level";
+        # "Resistances Fire (Fiend only), Necrotic (Undead only), Radiant
+        # (Celestial only)". Charisma 16 (+3), Warlock level 5.
+        from CharacterContent.Features.SubClassFeatures.Warlock.WarlockVestigeFeatures import (
+            _build_vestige,
+        )
+        from Core.Definitions import WarlockVestigeType
+
+        character = make_character(charisma=16, levels={CharacterClass.WARLOCK: 5})
+        vestige = _build_vestige(character, WarlockVestigeType[vestige_type])
+        assert vestige.ac == 16
+        assert vestige.hp == 24
+        assert vestige.damage_resistances is not None
+        assert [entry.damage_types for entry in vestige.damage_resistances] == [
+            [damage_type]
+        ]

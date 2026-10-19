@@ -267,10 +267,10 @@ class ClericSubclass(str, Enum):
     TRICKERY = "Trickery"
     DEATH = "Death"
     GRAVE = "Grave"
+    ARCANA = "Arcana"
 
 
 class ClericSubclass2014(str, Enum):
-    ARCANA = "Arcana"
     FORGE = "Forge"
     DEATH = "Death"
     NATURE = "Nature"
@@ -343,12 +343,12 @@ class WizardSubclass(str, Enum):
     ILLUSIONIST = "Illusionist"
     BLADESINGER = "Bladesinger"
     TRANSMUTER = "Transmuter"
+    CONJURER = "Conjurer"
+    ENCHANTER = "Enchanter"
+    NECROMANCER = "Necromancer"
 
 
 class WizardSubclass2014(str, Enum):
-    NECROMANCY = "Necromancy"
-    CONJURATION = "Conjuration"
-    ENCHANTMENT = "Enchantment"
     ORDER_OF_SCRIBES = "Order of Scribes"
     CHRONURGY = "Chronurgy"
     GRAVITURGY = "Graviturgy"
@@ -376,6 +376,7 @@ class WarlockSubclass(str, Enum):
     THE_GREAT_OLD_ONE = "The Great Old One"
     THE_UNDEAD = "The Undead"
     THE_CELESTIAL = "The Celestial"
+    THE_VESTIGE = "The Vestige"
 
 
 class WarlockSubclass2014(str, Enum):
@@ -392,18 +393,31 @@ class WarlockGenieKind(str, Enum):
     MARID = "Marid"
 
 
+class WarlockVestigeType(str, Enum):
+    CELESTIAL = "Celestial"
+    FIEND = "Fiend"
+    UNDEAD = "Undead"
+
+
+class WarlockVestigeDomain(str, Enum):
+    LIFE = "Life"
+    LIGHT = "Light"
+    TRICKERY = "Trickery"
+    WAR = "War"
+
+
 class FighterSubclass(str, Enum):
     BANNERET = "Banneret"
     BATTLE_MASTER = "Battle Master"
     CHAMPION = "Champion"
     ELDRITCH_KNIGHT = "Eldritch Knight"
     PSI_WARRIOR = "Psi Warrior"
+    ARCANE_ARCHER = "Arcane Archer"
 
 
 class FighterSubclass2014(str, Enum):
     RUNE_KNIGHT = "Rune Knight"
     CAVALIER = "Cavalier"
-    ARCANE_ARCHER = "Arcane Archer"
     ECHO_KNIGHT = "Echo Knight"
     SAMURAI = "Samurai"
 

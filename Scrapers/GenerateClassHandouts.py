@@ -250,6 +250,11 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "who can also stand in the front line."
     ),
     # --- Cleric ---
+    "ClericArcana": (
+        "A spell-tinkering Domain: bonus Wizard cantrips and always-prepared Wizard spells, and "
+        "Channel Divinity can modify a spell as you cast it (temporary HP or a weakened save). "
+        "Later adds a free Dispel Magic after healing and four high-level Wizard spells."
+    ),
     "ClericGrave": (
         "A death-and-undead-focused Domain: guarantees maximum healing to creatures at 0 HP, "
         "detects undead, and later punishes enemies who land killing blows near you. Plays as a "
@@ -305,6 +310,12 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "resource spending without becoming a melee beast."
     ),
     # --- Fighter ---
+    "FighterArcaneArcher": (
+        "A magical archer: a pool of Arcane Shot uses (Intelligence-based) adds options like "
+        "Banishing, Bursting, Grasping or Seeking Shot to ranged ammunition attacks, plus "
+        "Curving Shot to redirect misses and utility Magical Ammunition. Intelligence matters "
+        "more than for most Fighters."
+    ),
     "FighterBanneret": (
         "A leadership subclass: Rallying Cry lets your Second Wind heal nearby allies too, and "
         "later features boost your and your allies' social/leadership rolls. A support-flavored "
@@ -508,6 +519,11 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "granting resistance and a fear aura, plus later features let you ignore Exhaustion and "
         "stabilize automatically. Best for a Warlock built to keep fighting through punishment."
     ),
+    "WarlockVestige": (
+        "A companion Patron: a dying god's vestige (Celestial, Fiend or Undead) fights beside "
+        "you with its own strike and a once-per-rest Divine Power, and you borrow a Cleric "
+        "domain's spell list. Later features protect it and let it take a summoned-spirit form."
+    ),
     # --- Wizard ---
     "WizardAbjurer": (
         "The defensive School: Arcane Ward is a temporary-HP-style shield that recharges whenever "
@@ -519,10 +535,20 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "armed and armored, letting you cast spells and fight in melee at the same time without "
         "penalty. The Wizard subclass built to skip the 'stay at range' assumption entirely."
     ),
+    "WizardConjurer": (
+        "The teleport-and-summon School: Benign Transposition is a bonus-action teleport or "
+        "ally swap, summoned creatures get temporary HP and resistances, and later damage can't "
+        "break Concentration on Conjuration spells. Built for summoners who reposition freely."
+    ),
     "WizardDiviner": (
         "The battlefield-prediction School: Portent lets you replace any attack roll, save, or "
         "check — yours or an enemy's — with a pre-rolled die a couple of times per rest, turning "
         "bad luck into good on demand."
+    ),
+    "WizardEnchanter": (
+        "The charm School: a boosted social skill, Hypnotic Presence to stun-charm a nearby "
+        "creature, extra targets for Enchantment spells, and a reaction that redirects an attack "
+        "that hits you. Strong for control and face characters."
     ),
     "WizardEvoker": (
         "The blaster School: Sculpt Spells lets you carve allies out of your own damaging spell's "
@@ -535,11 +561,16 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "features let you alter illusions after casting or even make part of one briefly real. "
         "Built for control and misdirection rather than direct damage."
     ),
+    "WizardNecromancer": (
+        "The undead-master School: Necrotic resistance, an undead familiar, free Animate Dead "
+        "with tougher, harder-hitting thralls, and later a reaction that drains a minion to heal "
+        "you. Built for a Wizard who fights alongside a growing undead retinue."
+    ),
     "WizardTransmuter": (
-        "The utility/transformation School: can temporarily change nonmagical objects between "
-        "materials and later create a Transmuter's Stone granting a party member a chosen minor "
-        "benefit (darkvision, speed, save proficiency, or resistance). Broad out-of-combat and "
-        "support utility."
+        "The transformation School: a Transmuter's Stone grants its bearer Constitution save "
+        "proficiency plus a chosen benefit (darkvision, speed, or resistance), Alter Self and "
+        "later Polymorph are free once per rest with extra benefits, and buff-style Transmutation "
+        "spells can be upcast for free. Broad support and utility."
     ),
 }
 
@@ -589,11 +620,6 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "magic ally. A subtle control/damage Path emphasizing illicit whispers and obfuscation."
     ),
     # --- Cleric ---
-    "ClericArcana": (
-        "Bonus Wizard cantrips and spells, plus the ability to cast an Abjuration or Evocation spell "
-        "as a bonus action by spending Channel Divinity. A spellcasting-centric Domain adding versatility "
-        "and extra arcane options."
-    ),
     "ClericDeath": (
         "Reaper of the Dead adds a second melee attack to your Toll the Dead cantrip against undead/fiends, "
         "and Channel Divinity forces undead/fiends to make a save or be turned. An anti-undead-focused Domain "
@@ -651,11 +677,6 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "commanding a semi-autonomous fire elemental."
     ),
     # --- Fighter ---
-    "FighterArcaneArcher": (
-        "Arcane Shot lets you spend Superiority Dice to fire magical arrows (force damage, knockback, "
-        "invisibility, etc.), adding spellcaster-style versatility to weapon attacks. A control/utility "
-        "subclass turning you into a magical archer."
-    ),
     "FighterCavalier": (
         "Bonus proficiency with mounted combat plus Unwavering Mark to force enemies who damage your allies "
         "to make a save against your retaliation. A tank/leadership Fighter focused on mounted charge damage "
@@ -801,25 +822,10 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "Future grants advantage on a roll (once per short rest). A time-manipulation Tradition for a Wizard "
         "who bends causality."
     ),
-    "WizardConjuration": (
-        "Conjuration Savant makes your summoned creatures more durable and grants them temp HP, plus "
-        "Benign Transposition lets you swap positions with a summoned creature. A summoning-focused Tradition "
-        "emphasizing minion control and battlefield positioning."
-    ),
-    "WizardEnchantment": (
-        "Enchantment Savant adds your Int to charm save DCs and lets you use a reaction to cause an "
-        "enchanted creature to use disadvantage on saves. A charm/mind-control Tradition for a Wizard who "
-        "dominates through subtle magic."
-    ),
     "WizardGraviturgy": (
         "Gravity Well lets you pull/push creatures short distances after casting a spell, and you can "
         "calculate precise gravitational effects (damage, fall height). A gravity-manipulation Tradition "
         "for force-and-fall themed spellcasting."
-    ),
-    "WizardNecromancy": (
-        "Undead Thralls turn some of your spell slots into undead minions (skeletons/zombies) with "
-        "bonus HP, and Grim Harvest lets you regain HP when undead die. A necromancy/summoning Tradition "
-        "emphasizing undead companion control."
     ),
     "WizardOrderOfScribes": (
         "Awakened Spellbook is your spellbook familiar, giving it AC and HP, plus Manifest Mind lets the "
@@ -922,6 +928,7 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("BardValor", "College of Valor", _s2024("college_of_valor")),
     ],
     "Cleric": [
+        ("ClericArcana", "Arcana Domain", _s2024("arcana_domain")),
         ("ClericGrave", "Grave Domain", _s2014("grave")),
         ("ClericKnowledge", "Knowledge Domain", _s2024("knowledge_domain")),
         ("ClericLife", "Life Domain", _s2024("life_domain")),
@@ -936,6 +943,7 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("DruidStars", "Circle of the Stars", _s2024("circle_of_the_stars")),
     ],
     "Fighter": [
+        ("FighterArcaneArcher", "Arcane Archer", _s2024("arcane_archer")),
         ("FighterBanneret", "Banneret", _s2014("banneret")),
         ("FighterBattleMaster", "Battle Master", _s2024("battle_master")),
         ("FighterChampion", "Champion", _s2024("champion")),
@@ -998,14 +1006,18 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("WarlockFiend", "The Fiend", _s2024("fiend_patron")),
         ("WarlockGreatOldOne", "The Great Old One", _s2024("great_old_one_patron")),
         ("WarlockUndead", "The Undead", _s2024("undead_patron")),
+        ("WarlockVestige", "The Vestige", _s2024("vestige_patron")),
     ],
     "Wizard": [
         ("WizardAbjurer", "Abjurer", _s2024("abjurer")),
         ("WizardBladesinger", "Bladesinger", _s2024("bladesinger")),
+        ("WizardConjurer", "Conjurer", _s2024("conjurer")),
         ("WizardDiviner", "Diviner", _s2024("diviner")),
+        ("WizardEnchanter", "Enchanter", _s2024("enchanter")),
         ("WizardEvoker", "Evoker", _s2024("evoker")),
         ("WizardIllusionist", "Illusionist", _s2024("illusionist")),
-        ("WizardTransmuter", "Transmuter", _s2014("transmutation")),
+        ("WizardNecromancer", "Necromancer", _s2024("necromancer")),
+        ("WizardTransmuter", "Transmuter", _s2024("transmuter")),
     ],
 }
 
@@ -1052,7 +1064,6 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
         _legacy2014("BardWhispers", "College of Whispers", "whispers"),
     ],
     "Cleric": [
-        _legacy2014("ClericArcana", "Arcana Domain", "arcana"),
         _legacy2014("ClericDeath", "Death Domain", "death"),
         _legacy2014("ClericForge", "Forge Domain", "forge"),
         _legacy2014("ClericNature", "Nature Domain", "nature"),
@@ -1068,7 +1079,6 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
         _legacy2014("DruidWildfire", "Circle of Wildfire", "wildfire"),
     ],
     "Fighter": [
-        _legacy2014("FighterArcaneArcher", "Arcane Archer", "arcane_archer"),
         _legacy2014("FighterCavalier", "Cavalier", "cavalier"),
         _legacy2014("FighterEchoKnight", "Echo Knight", "echo_knight"),
         _legacy2014("FighterRuneKnight", "Rune Knight", "rune_knight"),
@@ -1111,10 +1121,7 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
     ],
     "Wizard": [
         _legacy2014("WizardChronurgy", "Chronurgy Magic", "chronurgy"),
-        _legacy2014("WizardConjuration", "School of Conjuration", "conjuration"),
-        _legacy2014("WizardEnchantment", "School of Enchantment", "enchantment"),
         _legacy2014("WizardGraviturgy", "Graviturgy Magic", "graviturgy"),
-        _legacy2014("WizardNecromancy", "School of Necromancy", "necromancy"),
         _legacy2014("WizardOrderOfScribes", "Order of Scribes", "order_of_scribes"),
     ],
 }

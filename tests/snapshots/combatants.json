@@ -1603,204 +1603,6 @@
    "Dagger  1d20+7  dmg 1d4 +2"
   ]
  },
- "Y2014ClericArcanaPeregrineStarbindCharacterBuilder": {
-  "Ability Scores": {
-   "CHA": 8,
-   "CON": 16,
-   "DEX": 13,
-   "INT": 13,
-   "STR": 10,
-   "WIS": 20
-  },
-  "Saving Throws": {
-   "CHA": 5,
-   "CON": 3,
-   "DEX": 1,
-   "INT": 1,
-   "STR": 0,
-   "WIS": 11
-  },
-  "ac": "16 (with Shield) and 14 (without Shield)",
-  "class_levels": {
-   "Cleric": 17
-  },
-  "conditions": [],
-  "create_name": "Peregrine Starbind",
-  "death_saves_fail": 0,
-  "death_saves_success": 0,
-  "features": [
-   "Free Background Ability Bonus",
-   "Free Background Skill Proficiency",
-   "Tough",
-   "Spell Slots",
-   "Cleric Proficiencies",
-   "Class Skill Proficiencies",
-   "Spellcasting",
-   "Divine Order: Protector",
-   "Channel Divinity",
-   "Ability Score Improvement",
-   "Divine Strike",
-   "Ability Score Improvement",
-   "Divine Intervention",
-   "Ability Score Improvement",
-   "War Caster",
-   "Arcane Initiate",
-   "Arcana Domain Spells",
-   "Channel Divinity: Arcane Abjuration",
-   "Spell Breaker",
-   "Resourceful",
-   "Skillful",
-   "Versatile",
-   "Skilled"
-  ],
-  "hp": 173,
-  "invocations": [],
-  "max_hp": 173,
-  "name": "Peregrine Starbind",
-  "proficiency_bonus": 6,
-  "size": "Medium",
-  "speed": 30,
-  "spell_slots": {
-   "1": 4,
-   "2": 3,
-   "3": 3,
-   "4": 3,
-   "5": 2,
-   "6": 1,
-   "7": 1,
-   "8": 1,
-   "9": 1
-  },
-  "spells_with_level": [
-   [
-    "Bless",
-    1,
-    "Wisdom"
-   ],
-   [
-    "Detect Evil and Good",
-    1,
-    "Wisdom"
-   ],
-   [
-    "Detect Magic",
-    1,
-    "Wisdom"
-   ],
-   [
-    "Guidance",
-    0,
-    "Wisdom"
-   ],
-   [
-    "Light",
-    0,
-    "Wisdom"
-   ],
-   [
-    "Sacred Flame",
-    0,
-    "Wisdom"
-   ],
-   [
-    "Shield of Faith",
-    1,
-    "Wisdom"
-   ],
-   [
-    "Ceremony",
-    1,
-    "Wisdom"
-   ],
-   [
-    "Spiritual Weapon",
-    2,
-    "Wisdom"
-   ],
-   [
-    "Silence",
-    2,
-    "Wisdom"
-   ],
-   [
-    "Spare the Dying",
-    0,
-    "Wisdom"
-   ],
-   [
-    "Dispel Magic",
-    3,
-    "Wisdom"
-   ],
-   [
-    "Remove Curse",
-    3,
-    "Wisdom"
-   ],
-   [
-    "Magic Circle",
-    3,
-    "Wisdom"
-   ],
-   [
-    "Divination",
-    4,
-    "Wisdom"
-   ],
-   [
-    "Banishment",
-    4,
-    "Wisdom"
-   ],
-   [
-    "Planar Binding",
-    5,
-    "Wisdom"
-   ],
-   [
-    "Scrying",
-    5,
-    "Wisdom"
-   ],
-   [
-    "Hallow",
-    5,
-    "Wisdom"
-   ],
-   [
-    "Resistance",
-    0,
-    "Wisdom"
-   ],
-   [
-    "Heal",
-    6,
-    "Wisdom"
-   ],
-   [
-    "Plane Shift",
-    7,
-    "Wisdom"
-   ],
-   [
-    "Holy Aura",
-    8,
-    "Wisdom"
-   ],
-   [
-    "Gate",
-    9,
-    "Wisdom"
-   ]
-  ],
-  "subclass": "Arcana",
-  "temp_hp": 0,
-  "visibility_states": [],
-  "weapons": [
-   "Unarmed Strike  1d20+6  dmg 1d1 +0",
-   "Mace  1d20+6  dmg 1d6 +0"
-  ]
- },
  "Y2014ClericDeathMortimerGrimvaleCharacterBuilder": {
   "Ability Scores": {
    "CHA": 12,
@@ -3940,76 +3742,6 @@
    "Unarmed Strike  1d20+4  dmg 1d1 -1",
    "Sickle  1d20+4  dmg 1d4 -1",
    "Quarterstaff  1d20+4  dmg 1d6 -1"
-  ]
- },
- "Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder": {
-  "Ability Scores": {
-   "CHA": 8,
-   "CON": 16,
-   "DEX": 20,
-   "INT": 16,
-   "STR": 10,
-   "WIS": 12
-  },
-  "Saving Throws": {
-   "CHA": -1,
-   "CON": 8,
-   "DEX": 5,
-   "INT": 3,
-   "STR": 5,
-   "WIS": 1
-  },
-  "ac": "17 (no Shield)",
-  "class_levels": {
-   "Fighter": 15
-  },
-  "conditions": [],
-  "create_name": "Sylvaine Farshot",
-  "death_saves_fail": 0,
-  "death_saves_success": 0,
-  "features": [
-   "Free Background Ability Bonus",
-   "Free Background Skill Proficiency",
-   "Alert",
-   "Fighter Proficiencies",
-   "Class Skill Proficiencies",
-   "Second Wind",
-   "Fighting Style",
-   "Weapon Mastery",
-   "Action Surge",
-   "Sharpshooter",
-   "Extra Attack",
-   "Ability Score Improvement",
-   "Ability Score Improvement",
-   "Indomitable",
-   "Ability Score Improvement",
-   "Studied Attacks",
-   "Ability Score Improvement",
-   "Arcane Archer Lore",
-   "Arcane Shot",
-   "Magic Arrow",
-   "Curving Shot",
-   "Resourceful",
-   "Skillful",
-   "Versatile",
-   "Skilled"
-  ],
-  "hp": 139,
-  "invocations": [],
-  "max_hp": 139,
-  "name": "Sylvaine Farshot",
-  "proficiency_bonus": 5,
-  "size": "Medium",
-  "speed": 30,
-  "spell_slots": {},
-  "spells_with_level": [],
-  "subclass": "Arcane Archer",
-  "temp_hp": 0,
-  "visibility_states": [],
-  "weapons": [
-   "Unarmed Strike  1d20+5  dmg 1d1 +0",
-   "Longbow  1d20+12  dmg 1d8 +5",
-   "Shortsword  1d20+10  dmg 1d6 +5"
   ]
  },
  "Y2014FighterCavalierPercivalSteelmountCharacterBuilder": {
@@ -8234,406 +7966,6 @@
    "Quarterstaff  1d20+4  dmg 1d6 -1"
   ]
  },
- "Y2014WizardConjurationPortiaRiftcallerCharacterBuilder": {
-  "Ability Scores": {
-   "CHA": 12,
-   "CON": 17,
-   "DEX": 13,
-   "INT": 20,
-   "STR": 8,
-   "WIS": 10
-  },
-  "Saving Throws": {
-   "CHA": 1,
-   "CON": 3,
-   "DEX": 1,
-   "INT": 10,
-   "STR": -1,
-   "WIS": 5
-  },
-  "ac": "11 (no Shield)",
-  "class_levels": {
-   "Wizard": 14
-  },
-  "conditions": [],
-  "create_name": "Portia Riftcaller",
-  "death_saves_fail": 0,
-  "death_saves_success": 0,
-  "features": [
-   "Free Background Ability Bonus",
-   "Free Background Skill Proficiency",
-   "Alert",
-   "Spell Slots",
-   "Wizard Proficiencies",
-   "Class Skill Proficiencies",
-   "Ritual Adept",
-   "Arcane Recovery",
-   "Scholar",
-   "Ability Score Improvement",
-   "Memorize Spell",
-   "Ability Score Improvement",
-   "Ability Score Improvement",
-   "Conjuration Savant",
-   "Minor Conjuration",
-   "Benign Transportation",
-   "Focused Conjuration",
-   "Durable Summons",
-   "Darkvision",
-   "Gnomish Cunning",
-   "Rock Gnome Prestidigitation"
-  ],
-  "hp": 100,
-  "invocations": [],
-  "max_hp": 100,
-  "name": "Portia Riftcaller",
-  "proficiency_bonus": 5,
-  "size": "Small",
-  "speed": 30,
-  "spell_slots": {
-   "1": 4,
-   "2": 3,
-   "3": 3,
-   "4": 3,
-   "5": 2,
-   "6": 1,
-   "7": 1
-  },
-  "spells_with_level": [
-   [
-    "Detect Magic",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Find Familiar",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Fire Bolt",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Grease",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Mage Armor",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Mage Hand",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Mending",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Prestidigitation",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Prestidigitation",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Unseen Servant",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Web",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Melf's Acid Arrow",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Ray of Frost",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Fly",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Summon Fey",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Stinking Cloud",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Conjure Minor Elementals",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Dimension Door",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Cloudkill",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Conjure Elemental",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Frostbite",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Teleportation Circle",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Create Undead",
-    6,
-    "Intelligence"
-   ],
-   [
-    "Plane Shift",
-    7,
-    "Intelligence"
-   ],
-   [
-    "Forcecage",
-    7,
-    "Intelligence"
-   ]
-  ],
-  "subclass": "Conjuration",
-  "temp_hp": 0,
-  "visibility_states": [],
-  "weapons": [
-   "Unarmed Strike  1d20+4  dmg 1d1 -1",
-   "Dagger  1d20+6  dmg 1d4 +1",
-   "Quarterstaff  1d20+4  dmg 1d6 -1"
-  ]
- },
- "Y2014WizardEnchantmentCharlotteMindweaveCharacterBuilder": {
-  "Ability Scores": {
-   "CHA": 15,
-   "CON": 14,
-   "DEX": 13,
-   "INT": 20,
-   "STR": 8,
-   "WIS": 10
-  },
-  "Saving Throws": {
-   "CHA": 2,
-   "CON": 2,
-   "DEX": 1,
-   "INT": 10,
-   "STR": -1,
-   "WIS": 5
-  },
-  "ac": "11 (no Shield)",
-  "class_levels": {
-   "Wizard": 14
-  },
-  "conditions": [],
-  "create_name": "Charlotte Mindweave",
-  "death_saves_fail": 0,
-  "death_saves_success": 0,
-  "features": [
-   "Free Background Ability Bonus",
-   "Free Background Skill Proficiency",
-   "Alert",
-   "Spell Slots",
-   "Wizard Proficiencies",
-   "Class Skill Proficiencies",
-   "Ritual Adept",
-   "Arcane Recovery",
-   "Scholar",
-   "Ability Score Improvement",
-   "Memorize Spell",
-   "Ability Score Improvement",
-   "Ability Score Improvement",
-   "Enchantment Savant",
-   "Hypnotic Gaze",
-   "Instinctive Charm",
-   "Split Enchantment",
-   "Alter Memories",
-   "Darkvision",
-   "Gnomish Cunning",
-   "Rock Gnome Prestidigitation"
-  ],
-  "hp": 86,
-  "invocations": [],
-  "max_hp": 86,
-  "name": "Charlotte Mindweave",
-  "proficiency_bonus": 5,
-  "size": "Small",
-  "speed": 30,
-  "spell_slots": {
-   "1": 4,
-   "2": 3,
-   "3": 3,
-   "4": 3,
-   "5": 2,
-   "6": 1,
-   "7": 1
-  },
-  "spells_with_level": [
-   [
-    "Charm Person",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Comprehend Languages",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Detect Magic",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Fire Bolt",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Friends",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Mage Hand",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Mending",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Prestidigitation",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Sleep",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Tasha's Hideous Laughter",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Hold Person",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Mind Sliver",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Suggestion",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Fear",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Hypnotic Pattern",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Slow",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Charm Monster",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Confusion",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Dominate Person",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Modify Memory",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Message",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Seeming",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Mass Suggestion",
-    6,
-    "Intelligence"
-   ],
-   [
-    "Project Image",
-    7,
-    "Intelligence"
-   ],
-   [
-    "Mirage Arcane",
-    7,
-    "Intelligence"
-   ]
-  ],
-  "subclass": "Enchantment",
-  "temp_hp": 0,
-  "visibility_states": [],
-  "weapons": [
-   "Unarmed Strike  1d20+4  dmg 1d1 -1",
-   "Dagger  1d20+6  dmg 1d4 +1",
-   "Quarterstaff  1d20+4  dmg 1d6 -1"
-  ]
- },
  "Y2014WizardGraviturgyOrbeckGravewellCharacterBuilder": {
   "Ability Scores": {
    "CHA": 12,
@@ -8830,217 +8162,6 @@
   "weapons": [
    "Unarmed Strike  1d20+4  dmg 1d1 -1",
    "Dagger  1d20+7  dmg 1d4 +2",
-   "Quarterstaff  1d20+4  dmg 1d6 -1"
-  ]
- },
- "Y2014WizardNecromancyVashtiBonecallerCharacterBuilder": {
-  "Ability Scores": {
-   "CHA": 12,
-   "CON": 17,
-   "DEX": 13,
-   "INT": 20,
-   "STR": 8,
-   "WIS": 10
-  },
-  "Saving Throws": {
-   "CHA": 1,
-   "CON": 3,
-   "DEX": 1,
-   "INT": 10,
-   "STR": -1,
-   "WIS": 5
-  },
-  "ac": "11 (no Shield)",
-  "class_levels": {
-   "Wizard": 14
-  },
-  "conditions": [],
-  "create_name": "Vashti Bonecaller",
-  "death_saves_fail": 0,
-  "death_saves_success": 0,
-  "features": [
-   "Free Background Ability Bonus",
-   "Free Background Skill Proficiency",
-   "Alert",
-   "Spell Slots",
-   "Wizard Proficiencies",
-   "Class Skill Proficiencies",
-   "Ritual Adept",
-   "Arcane Recovery",
-   "Scholar",
-   "Ability Score Improvement",
-   "Memorize Spell",
-   "Ability Score Improvement",
-   "Ability Score Improvement",
-   "Necromancy Savant",
-   "Grim Harvest",
-   "Undead Thralls",
-   "Inured to Undeath",
-   "Command Undead",
-   "Fey Ancestry",
-   "Keen Senses",
-   "Trance",
-   "Darkvision"
-  ],
-  "hp": 100,
-  "invocations": [],
-  "max_hp": 100,
-  "name": "Vashti Bonecaller",
-  "proficiency_bonus": 5,
-  "size": "Medium",
-  "speed": 30,
-  "spell_slots": {
-   "1": 4,
-   "2": 3,
-   "3": 3,
-   "4": 3,
-   "5": 2,
-   "6": 1,
-   "7": 1
-  },
-  "spells_with_level": [
-   [
-    "Chill Touch",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Detect Magic",
-    1,
-    "Intelligence"
-   ],
-   [
-    "False Life",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Mage Hand",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Magic Missile",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Misty Step",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Prestidigitation",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Prestidigitation",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Ray of Sickness",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Shield",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Mage Armor",
-    1,
-    "Intelligence"
-   ],
-   [
-    "Ray of Enfeeblement",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Blindness/Deafness",
-    2,
-    "Intelligence"
-   ],
-   [
-    "Toll the Dead",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Bestow Curse",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Vampiric Touch",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Animate Dead",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Fear",
-    3,
-    "Intelligence"
-   ],
-   [
-    "Blight",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Phantasmal Killer",
-    4,
-    "Intelligence"
-   ],
-   [
-    "Dominate Person",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Enervation",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Cloudkill",
-    5,
-    "Intelligence"
-   ],
-   [
-    "Frostbite",
-    0,
-    "Intelligence"
-   ],
-   [
-    "Circle of Death",
-    6,
-    "Intelligence"
-   ],
-   [
-    "Finger of Death",
-    7,
-    "Intelligence"
-   ],
-   [
-    "Simulacrum",
-    7,
-    "Intelligence"
-   ]
-  ],
-  "subclass": "Necromancy",
-  "temp_hp": 0,
-  "visibility_states": [],
-  "weapons": [
-   "Unarmed Strike  1d20+4  dmg 1d1 -1",
-   "Dagger  1d20+6  dmg 1d4 +1",
    "Quarterstaff  1d20+4  dmg 1d6 -1"
   ]
  },
@@ -10082,6 +9203,286 @@
   "weapons": [
    "Unarmed Strike  1d20+1  dmg 1d1 -1",
    "Dagger  1d20+3  dmg 1d4 +1"
+  ]
+ },
+ "Y2024ClericArcanaMaelisRunewardCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 12,
+   "CON": 17,
+   "DEX": 8,
+   "INT": 10,
+   "STR": 14,
+   "WIS": 20
+  },
+  "Saving Throws": {
+   "CHA": 7,
+   "CON": 3,
+   "DEX": -1,
+   "INT": 0,
+   "STR": 2,
+   "WIS": 11
+  },
+  "ac": "19 (with Shield) and 17 (without Shield)",
+  "class_levels": {
+   "Cleric": 17
+  },
+  "conditions": [],
+  "create_name": "Maelis Runeward",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Cleric Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Divine Order: Protector",
+   "Channel Divinity",
+   "War Caster",
+   "Divine Strike",
+   "Ability Score Improvement",
+   "Divine Intervention",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Student of Arcana",
+   "Dispelling Recovery",
+   "Magical Mastery",
+   "Construct Resilience",
+   "Sentry's Rest",
+   "Tireless",
+   "Integrated Protection",
+   "Specialized Design"
+  ],
+  "hp": 173,
+  "invocations": [],
+  "max_hp": 173,
+  "name": "Maelis Runeward",
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 2,
+   "6": 1,
+   "7": 1,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Augury",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Bless",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Cure Wounds",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Guidance",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Guiding Bolt",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Sacred Flame",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Toll the Dead",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Sanctuary",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Detect Magic",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Fire Bolt",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Mage Hand",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Magic Missile",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Magic Weapon",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Nystul's Magic Aura",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Spiritual Weapon",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Aid",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Spare the Dying",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Aura of Vitality",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Bestow Curse",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Counterspell",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Revivify",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Arcane Eye",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Leomund's Secret Chest",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Lesser Restoration",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Bigby's Hand",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Flame Strike",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Geas",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Teleportation Circle",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Circle of Power",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Mending",
+    0,
+    "Wisdom"
+   ],
+   [
+    "True Seeing",
+    6,
+    "Wisdom"
+   ],
+   [
+    "Conjure Celestial",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Regenerate",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Gate",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Globe of Invulnerability",
+    6,
+    "Wisdom"
+   ],
+   [
+    "Mind Blank",
+    8,
+    "Wisdom"
+   ],
+   [
+    "Prismatic Spray",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Time Stop",
+    9,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Arcana",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+8  dmg 1d1 +2",
+   "Mace  1d20+8  dmg 1d6 +2",
+   "Warhammer  1d20+8  dmg 1d8 +2",
+   "Maul  1d20+8  dmg 2d6 +2"
   ]
  },
  "Y2024ClericGraveAnselDuskvaleCharacterBuilder": {
@@ -11178,6 +10579,84 @@
    "Unarmed Strike  1d20+1  dmg 1d1 -1",
    "Sickle  1d20+1  dmg 1d4 -1",
    "Quarterstaff  1d20+1  dmg 1d6 -1"
+  ]
+ },
+ "Y2024FighterArcaneArcherSylvaineFarshotCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 8,
+   "CON": 16,
+   "DEX": 20,
+   "INT": 16,
+   "STR": 10,
+   "WIS": 14
+  },
+  "Saving Throws": {
+   "CHA": -1,
+   "CON": 9,
+   "DEX": 5,
+   "INT": 3,
+   "STR": 6,
+   "WIS": 2
+  },
+  "ac": "17 (no Shield)",
+  "class_levels": {
+   "Fighter": 18
+  },
+  "conditions": [],
+  "create_name": "Sylvaine Farshot",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Fighter Proficiencies",
+   "Class Skill Proficiencies",
+   "Second Wind",
+   "Fighting Style",
+   "Weapon Mastery",
+   "Action Surge",
+   "Sharpshooter",
+   "Extra Attack",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Indomitable",
+   "Ability Score Improvement",
+   "Studied Attacks",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Arcane Archer Lore",
+   "Arcane Shot",
+   "Curving Shot",
+   "Magical Ammunition",
+   "Masterful Shots",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 166,
+  "invocations": [],
+  "max_hp": 166,
+  "name": "Sylvaine Farshot",
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {},
+  "spells_with_level": [
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ]
+  ],
+  "subclass": "Arcane Archer",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+6  dmg 1d1 +0",
+   "Longbow  1d20+13  dmg 1d8 +5",
+   "Shortsword  1d20+11  dmg 1d6 +5"
   ]
  },
  "Y2024FighterBanneretRoderickVanguardCharacterBuilder": {
@@ -14358,6 +13837,219 @@
    "Dagger  1d20+6  dmg 1d4 +1"
   ]
  },
+ "Y2024WarlockVestigeOrsolyaHollowvowCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 20,
+   "CON": 17,
+   "DEX": 12,
+   "INT": 10,
+   "STR": 8,
+   "WIS": 14
+  },
+  "Saving Throws": {
+   "CHA": 10,
+   "CON": 3,
+   "DEX": 1,
+   "INT": 0,
+   "STR": -1,
+   "WIS": 7
+  },
+  "ac": "12 (no Shield)",
+  "class_levels": {
+   "Warlock": 14
+  },
+  "conditions": [],
+  "create_name": "Orsolya Hollowvow",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Lucky",
+   "Spell Slots",
+   "Warlock Proficiencies",
+   "Class Skill Proficiencies",
+   "Replacing Eldritch Invocations",
+   "Replacing Cantrips and Spells",
+   "Regaining Spell Slots",
+   "Magical Cunning",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Contact Patron",
+   "Mystic Arcanum",
+   "Ability Score Improvement",
+   "Vestige Companion",
+   "Vestige Spells",
+   "Vestige Recovery",
+   "Semblance of Life",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 115,
+  "invocations": [
+   "Armor of Shadows",
+   "Agonizing Blast",
+   "Repelling Blast",
+   "Ascendant Step",
+   "Gaze of Two Minds",
+   "Whispers of the Grave",
+   "Lifedrinker",
+   "Devouring Blade"
+  ],
+  "max_hp": 115,
+  "name": "Orsolya Hollowvow",
+  "proficiency_bonus": 5,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {},
+  "spells_with_level": [
+   [
+    "Charm Person",
+    1,
+    "Charisma"
+   ],
+   [
+    "Chill Touch",
+    0,
+    "Charisma"
+   ],
+   [
+    "Eldritch Blast",
+    0,
+    "Charisma"
+   ],
+   [
+    "Hex",
+    1,
+    "Charisma"
+   ],
+   [
+    "Armor of Agathys",
+    1,
+    "Charisma"
+   ],
+   [
+    "Guiding Bolt",
+    1,
+    "Charisma"
+   ],
+   [
+    "Magic Weapon",
+    2,
+    "Charisma"
+   ],
+   [
+    "Shield of Faith",
+    1,
+    "Charisma"
+   ],
+   [
+    "Spiritual Weapon",
+    2,
+    "Charisma"
+   ],
+   [
+    "Suggestion",
+    2,
+    "Charisma"
+   ],
+   [
+    "Minor Illusion",
+    0,
+    "Charisma"
+   ],
+   [
+    "Ray of Enfeeblement",
+    2,
+    "Charisma"
+   ],
+   [
+    "Crusader's Mantle",
+    3,
+    "Charisma"
+   ],
+   [
+    "Fear",
+    3,
+    "Charisma"
+   ],
+   [
+    "Spirit Guardians",
+    3,
+    "Charisma"
+   ],
+   [
+    "Hypnotic Pattern",
+    3,
+    "Charisma"
+   ],
+   [
+    "Charm Monster",
+    4,
+    "Charisma"
+   ],
+   [
+    "Fire Shield",
+    4,
+    "Charisma"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Charisma"
+   ],
+   [
+    "Dimension Door",
+    4,
+    "Charisma"
+   ],
+   [
+    "Contact Other Plane",
+    5,
+    "Charisma"
+   ],
+   [
+    "Hold Monster",
+    5,
+    "Charisma"
+   ],
+   [
+    "Steel Wind Strike",
+    5,
+    "Charisma"
+   ],
+   [
+    "Synaptic Static",
+    5,
+    "Charisma"
+   ],
+   [
+    "True Strike",
+    0,
+    "Charisma"
+   ],
+   [
+    "Eyebite",
+    6,
+    "Charisma"
+   ],
+   [
+    "Finger of Death",
+    7,
+    "Charisma"
+   ]
+  ],
+  "subclass": "The Vestige",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+4  dmg 1d1 -1",
+   "Sickle  1d20+4  dmg 1d4 -1",
+   "Dagger  1d20+6  dmg 1d4 +1"
+  ]
+ },
  "Y2024WizardBladesingerLitheaSongbladeCharacterBuilder": {
   "Ability Scores": {
    "CHA": 10,
@@ -14476,6 +14168,293 @@
    "Dagger  1d20+5  dmg 1d4 +3",
    "Quarterstaff  1d20+1  dmg 1d6 -1",
    "Longsword  1d20+4  dmg 1d8 +2"
+  ]
+ },
+ "Y2024WizardConjurationCorvinFarsummonCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 18,
+   "DEX": 13,
+   "INT": 20,
+   "STR": 8,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 4,
+   "DEX": 1,
+   "INT": 11,
+   "STR": -1,
+   "WIS": 7
+  },
+  "ac": "11 (no Shield)",
+  "class_levels": {
+   "Wizard": 20
+  },
+  "conditions": [],
+  "create_name": "Corvin Farsummon",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Wizard Proficiencies",
+   "Class Skill Proficiencies",
+   "Ritual Adept",
+   "Arcane Recovery",
+   "Scholar",
+   "Ability Score Improvement",
+   "Memorize Spell",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Spell Mastery",
+   "Epic Boon",
+   "Signature Spells",
+   "Benign Transposition",
+   "Conjuration Savant",
+   "Durable Summons",
+   "Focused Conjuration",
+   "Splintered Summons",
+   "Darkvision",
+   "Gnomish Cunning",
+   "Rock Gnome Prestidigitation"
+  ],
+  "hp": 202,
+  "invocations": [],
+  "max_hp": 202,
+  "name": "Corvin Farsummon",
+  "proficiency_bonus": 6,
+  "size": "Small",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 3,
+   "6": 2,
+   "7": 2,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Feather Fall",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Fire Bolt",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Mage Armor",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mage Hand",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Magic Missile",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mending",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Shield",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Find Familiar",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Cloud of Daggers",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Grease",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mirror Image",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Misty Step",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Ray of Frost",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Counterspell",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Haste",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Summon Fey",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Dimension Door",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Summon Aberration",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Banishment",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Cloudkill",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Conjure Elemental",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Wall of Force",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Shocking Grasp",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Teleportation Circle",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Chain Lightning",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Summon Fiend",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Plane Shift",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Teleport",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Forcecage",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Dominate Monster",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Maze",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Antimagic Field",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Mind Blank",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Gate",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Meteor Swarm",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Foresight",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Wish",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Time Stop",
+    9,
+    "Intelligence"
+   ]
+  ],
+  "subclass": "Conjurer",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Dagger  1d20+7  dmg 1d4 +1",
+   "Quarterstaff  1d20+5  dmg 1d6 -1",
+   "Quarterstaff  1d20+11  dmg 1d6 +5"
   ]
  },
  "Y2024WizardDivinationElowenFatereaderCharacterBuilder": {
@@ -14606,6 +14585,589 @@
    "Dagger  1d20+4  dmg 1d4 +2",
    "Quarterstaff  1d20+1  dmg 1d6 -1",
    "Light Crossbow  1d20+5  dmg 1d8 +3"
+  ]
+ },
+ "Y2024WizardEnchantmentSeraphineSilvertongueCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 18,
+   "DEX": 13,
+   "INT": 20,
+   "STR": 8,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 4,
+   "DEX": 1,
+   "INT": 11,
+   "STR": -1,
+   "WIS": 7
+  },
+  "ac": "11 (no Shield)",
+  "class_levels": {
+   "Wizard": 20
+  },
+  "conditions": [],
+  "create_name": "Seraphine Silvertongue",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Wizard Proficiencies",
+   "Class Skill Proficiencies",
+   "Ritual Adept",
+   "Arcane Recovery",
+   "Scholar",
+   "Ability Score Improvement",
+   "Memorize Spell",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Spell Mastery",
+   "Epic Boon",
+   "Signature Spells",
+   "Enchanting Conversationalist",
+   "Enchantment Savant",
+   "Hypnotic Presence",
+   "Split Enchantment",
+   "Instinctive Charm",
+   "Alter Memories",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance",
+   "Darkvision"
+  ],
+  "hp": 202,
+  "invocations": [],
+  "max_hp": 202,
+  "name": "Seraphine Silvertongue",
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 3,
+   "6": 2,
+   "7": 2,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Detect Magic",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Feather Fall",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Fire Bolt",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Mage Armor",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mage Hand",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Magic Missile",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Misty Step",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Shield",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Find Familiar",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Hold Person",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Mirror Image",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Sleep",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Misty Step",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Ray of Frost",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Counterspell",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Enemies Abound",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Haste",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Charm Monster",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Dimension Door",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Banishment",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Cloudkill",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Dominate Person",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Wall of Force",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Shocking Grasp",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Teleportation Circle",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Chain Lightning",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Mass Suggestion",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Power Word Pain",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Teleport",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Forcecage",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Dominate Monster",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Feeblemind",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Antimagic Field",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Mind Blank",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Meteor Swarm",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Power Word Kill",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Foresight",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Wish",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Time Stop",
+    9,
+    "Intelligence"
+   ]
+  ],
+  "subclass": "Enchanter",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Dagger  1d20+7  dmg 1d4 +1",
+   "Quarterstaff  1d20+5  dmg 1d6 -1",
+   "Quarterstaff  1d20+11  dmg 1d6 +5"
+  ]
+ },
+ "Y2024WizardNecromancyMordecaiAshgraveCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 18,
+   "DEX": 13,
+   "INT": 20,
+   "STR": 8,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 4,
+   "DEX": 1,
+   "INT": 11,
+   "STR": -1,
+   "WIS": 7
+  },
+  "ac": "11 (no Shield)",
+  "class_levels": {
+   "Wizard": 20
+  },
+  "conditions": [],
+  "create_name": "Mordecai Ashgrave",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Wizard Proficiencies",
+   "Class Skill Proficiencies",
+   "Ritual Adept",
+   "Arcane Recovery",
+   "Scholar",
+   "Ability Score Improvement",
+   "Memorize Spell",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Spell Mastery",
+   "Epic Boon",
+   "Signature Spells",
+   "Necromancy Savant",
+   "Necromancy Spellbook",
+   "Grave Power",
+   "Undead Thralls",
+   "Harvest Undead",
+   "Death's Master",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 202,
+  "invocations": [],
+  "max_hp": 202,
+  "name": "Mordecai Ashgrave",
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 3,
+   "6": 2,
+   "7": 2,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Feather Fall",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Fire Bolt",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Mage Armor",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mage Hand",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Magic Missile",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Shield",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Chromatic Orb",
+    1,
+    "Intelligence"
+   ],
+   [
+    "False Life",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Find Familiar",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Mirror Image",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Ray of Enfeeblement",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Misty Step",
+    2,
+    "Intelligence"
+   ],
+   [
+    "Ray of Frost",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Counterspell",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Haste",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Vampiric Touch",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Animate Dead",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Intelligence"
+   ],
+   [
+    "Blight",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Dimension Door",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Banishment",
+    4,
+    "Intelligence"
+   ],
+   [
+    "Cloudkill",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Enervation",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Wall of Force",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Shocking Grasp",
+    0,
+    "Intelligence"
+   ],
+   [
+    "Teleportation Circle",
+    5,
+    "Intelligence"
+   ],
+   [
+    "Chain Lightning",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Create Undead",
+    6,
+    "Intelligence"
+   ],
+   [
+    "Finger of Death",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Teleport",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Forcecage",
+    7,
+    "Intelligence"
+   ],
+   [
+    "Clone",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Dominate Monster",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Antimagic Field",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Mind Blank",
+    8,
+    "Intelligence"
+   ],
+   [
+    "Astral Projection",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Meteor Swarm",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Foresight",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Wish",
+    9,
+    "Intelligence"
+   ],
+   [
+    "Time Stop",
+    9,
+    "Intelligence"
+   ]
+  ],
+  "subclass": "Necromancer",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Dagger  1d20+7  dmg 1d4 +1",
+   "Quarterstaff  1d20+5  dmg 1d6 -1",
+   "Quarterstaff  1d20+11  dmg 1d6 +5"
   ]
  },
  "Y2024WizardTransmutationAlistairFormbendCharacterBuilder": {

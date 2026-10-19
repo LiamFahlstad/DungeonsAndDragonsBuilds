@@ -92,6 +92,10 @@ LAYER_ALLOWLIST: set[tuple[str, str]] = {
         "CharacterContent/Features/SubClassFeatures/Artificer/ArtificerReanimatorFeatures.py",
         "presentation",
     ),
+    (
+        "CharacterContent/Features/SubClassFeatures/Warlock/WarlockVestigeFeatures.py",
+        "presentation",
+    ),
 }
 
 TYPE_CHECKING_ALLOWLIST: set[str] = set()

@@ -520,7 +520,7 @@ def test_dropped_gear_does_not_leave_bonuses_on_weapons():
     # to the bow after the bracers were dropped and the character rebuilt.
     # Weapons are now shared between a builder and every sheet it builds, so
     # this also proves nothing writes into them.
-    builder = ALL_BUILDS["Y2014FighterArcaneArcherSylvaineFarshotCharacterBuilder"]()
+    builder = ALL_BUILDS["Y2024FighterArcaneArcherSylvaineFarshotCharacterBuilder"]()
     bracers = BracersOfArchery()
     builder.add_adventuring_gear("Loot", items=[(bracers, 1)])
 

@@ -1,4 +1,4 @@
-"""Example build: Cleric Arcana Domain (2014 rules). Demonstrates the subclass up through level 17."""
+"""Example build: Cleric Arcana Domain. Built to character level 17 to exercise every subclass feature."""
 
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
@@ -21,23 +21,31 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel15,
     ClericLevel16,
     ClericLevel17,
+    ClericLevel18,
+    ClericLevel19,
+    ClericLevel20,
     DivineOrderProtectorChoice,
     DivineOrderThaumaturgeChoice,
     DivineStrikeChoice,
 )
-from CharacterContent.Classes.SubClasses2014.ClericArcana import (
+from CharacterContent.Classes.SubClasses2024.ClericArcana import (
     ClericArcanaCustomStarterClassArgs,
     ClericArcanaLevel3,
+    ClericArcanaLevel5,
     ClericArcanaLevel6,
+    ClericArcanaLevel7,
+    ClericArcanaLevel9,
     ClericArcanaLevel17,
 )
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,
+    EpicBoon,
     GeneralFeats,
     OriginFeats,
 )
-from CharacterContent.Species import Human
+from CharacterContent.Items import Armor, Weapons
+from CharacterContent.Species import Warforged
 from CharacterContent.Spells.SpellLists import (
     ClericLevel0Spells,
     ClericLevel1Spells,
@@ -47,8 +55,12 @@ from CharacterContent.Spells.SpellLists import (
     ClericLevel5Spells,
     ClericLevel6Spells,
     ClericLevel7Spells,
-    ClericLevel8Spells,
     ClericLevel9Spells,
+    WizardLevel0Spells,
+    WizardLevel6Spells,
+    WizardLevel7Spells,
+    WizardLevel8Spells,
+    WizardLevel9Spells,
 )
 from Model.AbilityScores import StandardArrayAbilityScores
 
@@ -57,136 +69,161 @@ def get_starter_class_builder():
     return StarterClassBuilder(
         non_generic_arguments=ClericArcanaCustomStarterClassArgs(
             skills=[
+                Skill.HISTORY,
                 Skill.INSIGHT,
-                Skill.RELIGION,
             ],
         ),
         base_class_level=17,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=StandardArrayAbilityScores(
-            strength=10,
-            dexterity=13,
+            strength=13,
+            dexterity=8,
             constitution=14,
-            intelligence=12,
+            intelligence=10,
             wisdom=15,
-            charisma=8,
+            charisma=12,
         ),
         background_ability_bonuses=Backgrounds.FreeBackgroundAbilityBonus(
             [
                 (Ability.WISDOM, 2),
-                (Ability.INTELLIGENCE, 1),
+                (Ability.STRENGTH, 1),
             ]
         ),
         background_skill_proficiencies=Backgrounds.FreeBackgroundSkillProficiency(
             [
-                Skill.HISTORY,
-                Skill.INVESTIGATION,
+                Skill.SURVIVAL,
+                Skill.PERCEPTION,
             ]
         ),
         add_default_equipment=True,
         origin_feat=OriginFeats.Tough(),
-        armor=[],
-        weapons=[],
+        armor=[
+            Armor.ChainMailArmor(),
+        ],
+        weapons=[
+            Weapons.Warhammer(player_has_mastery=False),
+            Weapons.Maul(player_has_mastery=False),
+        ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
                 1: ClericLevel1(
                     cantrip_1=ClericLevel0Spells.GUIDANCE,
-                    cantrip_2=ClericLevel0Spells.SACRED_FLAME,
-                    cantrip_3=ClericLevel0Spells.LIGHT,
-                    spell_1=ClericLevel1Spells.SHIELD_OF_FAITH,
+                    cantrip_2=ClericLevel0Spells.TOLL_THE_DEAD,
+                    cantrip_3=ClericLevel0Spells.SACRED_FLAME,
+                    spell_1=ClericLevel1Spells.HEALING_WORD,
                     spell_2=ClericLevel1Spells.BLESS,
-                    spell_3=ClericLevel1Spells.DETECT_EVIL_AND_GOOD,
-                    spell_4=ClericLevel1Spells.DETECT_MAGIC,
+                    spell_3=ClericLevel1Spells.CURE_WOUNDS,
+                    spell_4=ClericLevel1Spells.GUIDING_BOLT,
                     divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
-                    spell=ClericLevel1Spells.CEREMONY,
+                    spell=ClericLevel1Spells.SANCTUARY,
                 ),
                 3: ClericLevel3(
                     spell=ClericLevel2Spells.SPIRITUAL_WEAPON,
                 ),
                 4: ClericLevel4(
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.WISDOM, 2),
-                        ]
+                    general_feat=GeneralFeats.WarCaster(
+                        character_level=4,
+                        ability=Ability.WISDOM,
                     ),
                     cantrip=ClericLevel0Spells.SPARE_THE_DYING,
-                    spell=ClericLevel2Spells.SILENCE,
+                    spell=ClericLevel2Spells.AID,
                 ),
                 5: ClericLevel5(
-                    spell_1=ClericLevel3Spells.DISPEL_MAGIC,
-                    spell_2=ClericLevel3Spells.REMOVE_CURSE,
+                    spell_1=ClericLevel3Spells.BESTOW_CURSE,
+                    spell_2=ClericLevel3Spells.AURA_OF_VITALITY,
                 ),
                 6: ClericLevel6(
-                    spell=ClericLevel3Spells.MAGIC_CIRCLE,
+                    spell=ClericLevel3Spells.REVIVIFY,
                 ),
                 7: ClericLevel7(
-                    spell=ClericLevel4Spells.DIVINATION,
+                    spell=ClericLevel2Spells.LESSER_RESTORATION,
                     blessed_strikes=DivineStrikeChoice(),
                 ),
                 8: ClericLevel8(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
-                            (Ability.WISDOM, 2),
+                            (Ability.CONSTITUTION, 2),
                         ]
                     ),
-                    spell=ClericLevel4Spells.BANISHMENT,
+                    spell=ClericLevel4Spells.FREEDOM_OF_MOVEMENT,
                 ),
                 9: ClericLevel9(
-                    spell_1=ClericLevel5Spells.PLANAR_BINDING,
-                    spell_2=ClericLevel5Spells.SCRYING,
+                    spell_1=ClericLevel5Spells.FLAME_STRIKE,
+                    spell_2=ClericLevel5Spells.GEAS,
                 ),
                 10: ClericLevel10(
-                    cantrip=ClericLevel0Spells.RESISTANCE,
-                    spell=ClericLevel5Spells.HALLOW,
+                    cantrip=ClericLevel0Spells.MENDING,
+                    spell=ClericLevel5Spells.CIRCLE_OF_POWER,
                 ),
                 11: ClericLevel11(
-                    spell=ClericLevel6Spells.HEAL,
+                    spell=ClericLevel6Spells.TRUE_SEEING,
                 ),
                 12: ClericLevel12(
                     general_feat=GeneralFeats.AbilityScoreImprovement(
                         [
-                            (Ability.CONSTITUTION, 2),
+                            (Ability.WISDOM, 1),
+                            (Ability.CONSTITUTION, 1),
                         ]
                     ),
                 ),
                 13: ClericLevel13(
-                    spell=ClericLevel7Spells.PLANE_SHIFT,
+                    spell=ClericLevel7Spells.CONJURE_CELESTIAL,
                 ),
                 14: ClericLevel14(),
                 15: ClericLevel15(
-                    spell=ClericLevel8Spells.HOLY_AURA,
+                    spell=ClericLevel7Spells.REGENERATE,
                 ),
                 16: ClericLevel16(
-                    general_feat=GeneralFeats.WarCaster(
-                        character_level=16,
-                        ability=Ability.WISDOM,
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.WISDOM, 2),
+                        ]
                     ),
                 ),
                 17: ClericLevel17(
                     spell=ClericLevel9Spells.GATE,
                 ),
+                19: ClericLevel19(
+                    epic_boon=EpicBoon.DummyEpicBoon(),
+                    spell=ClericLevel9Spells.MASS_HEAL,
+                ),
+                18: ClericLevel18(
+                    spell=ClericLevel9Spells.POWER_WORD_HEAL,
+                ),
+                20: ClericLevel20(
+                    spell=ClericLevel9Spells.ASTRAL_PROJECTION,
+                ),
             },
             subclass_features_by_level={
-                3: ClericArcanaLevel3(),
+                3: ClericArcanaLevel3(
+                    skill=Skill.ARCANA,
+                    cantrip_1=WizardLevel0Spells.FIRE_BOLT,
+                    cantrip_2=WizardLevel0Spells.MAGE_HAND,
+                ),
+                5: ClericArcanaLevel5(),
                 6: ClericArcanaLevel6(),
-                17: ClericArcanaLevel17(),
+                7: ClericArcanaLevel7(),
+                9: ClericArcanaLevel9(),
+                17: ClericArcanaLevel17(
+                    spell_6=WizardLevel6Spells.GLOBE_OF_INVULNERABILITY,
+                    spell_7=WizardLevel7Spells.PRISMATIC_SPRAY,
+                    spell_8=WizardLevel8Spells.MIND_BLANK,
+                    spell_9=WizardLevel9Spells.TIME_STOP,
+                ),
             },
         ),
-        replace_spells={},
+        replace_spells={ClericLevel1Spells.HEALING_WORD: ClericLevel2Spells.AUGURY},
     )
 
 
-class Y2014ClericArcanaPeregrineStarbindCharacterBuilder(CharacterBuilder):
+class Y2024ClericArcanaMaelisRunewardCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
-            name="Peregrine Starbind",
+            name="Maelis Runeward",
             starter_class_builder=get_starter_class_builder(),
-            species_builder=Human.HumanSpeciesBuilder(
-                skill_proficiency=Skill.PERCEPTION,
-                origin_feat=OriginFeats.Skilled(
-                    [Skill.ANIMAL_HANDLING, Skill.MEDICINE, Skill.SURVIVAL]
-                ),
+            species_builder=Warforged.WarforgedSpeciesBuilder(
+                skill=Skill.MEDICINE,
             ),
         )

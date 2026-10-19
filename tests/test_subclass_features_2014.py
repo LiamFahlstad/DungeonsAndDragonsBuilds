@@ -71,8 +71,8 @@ from CharacterContent.Features.SubClassFeatures2014.Sorcerer import (
 from CharacterContent.Classes.SubClasses2014.WarlockHexblade import (
     WarlockHexbladeLevel3,
 )
-from CharacterContent.Classes.SubClasses2014.WizardNecromancy import (
-    WizardNecromancyLevel3,
+from CharacterContent.Classes.SubClasses2014.WizardOrderOfScribes import (
+    WizardOrderOfScribesLevel3,
 )
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockFathomlessFeatures,
@@ -80,14 +80,13 @@ from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockTheGenieFeatures,
 )
 from CharacterContent.Features.SubClassFeatures2014.Wizard import (
-    WizardNecromancyFeatures,
+    WizardOrderOfScribesFeatures,
 )
 from CharacterContent.Classes.SubClasses2014.BardSwords import BardSwordsLevel3
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfTheStormHeraldFeatures,
 )
-from CharacterContent.Features.SubClassFeatures2014.Cleric import ClericArcanaFeatures
 from CharacterContent.Items.Weapons import MartialMelee
 from Model.Content.Weapon import is_proficient_with
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
@@ -161,9 +160,9 @@ class TestSubclassesStartAtLevel3:
                 WarlockHexbladeFeatures.HexbladesCurse,
             ),
             (
-                WizardNecromancyLevel3,
+                WizardOrderOfScribesLevel3,
                 CharacterClass.WIZARD,
-                WizardNecromancyFeatures.GrimHarvest,
+                WizardOrderOfScribesFeatures.WizardlyQuill,
             ),
             (
                 DruidDreamsLevel3,
@@ -245,7 +244,6 @@ class TestBlessedStrikesComesFromBaseClassOnly:
     @pytest.mark.parametrize(
         "example",
         [
-            "Y2014_Cleric_Arcana_PeregrineStarbind",
             "Y2014_Cleric_Death_MortimerGrimvale",
             "Y2014_Cleric_Forge_BrennaHearthforge",
             "Y2014_Cleric_Nature_WillowdaleFernstep",
@@ -521,13 +519,6 @@ class TestPromisedProficienciesGranted:
         assert MartialMelee.Scimitar().is_proficient(character)
         assert not MartialMelee.Longsword().is_proficient(character)
 
-    def test_arcana_domain_arcane_initiate(self, make_sources):
-        # "You gain proficiency in the Arcana skill..."
-        sources = make_sources()
-        sources.add_effect(ClericArcanaFeatures.ArcaneInitiate())
-        character = Character(sources)
-        assert character.is_proficient_in_skill(Skill.ARCANA)
-
 
 class TestPromisedPassiveBenefits:
     """Always-on benefits in the feature text that used to be description-only."""
@@ -552,13 +543,6 @@ class TestPromisedPassiveBenefits:
         sources.add_effect(WarlockFathomlessFeatures.OceanicSoul())
         character = Character(sources)
         assert character.is_resistant_to_damage(DamageType.COLD)
-
-    def test_inured_to_undeath_necrotic_resistance(self, make_sources):
-        # "You have resistance to necrotic damage..."
-        sources = make_sources()
-        sources.add_effect(WizardNecromancyFeatures.InuredToUndeath())
-        character = Character(sources)
-        assert character.is_resistant_to_damage(DamageType.NECROTIC)
 
     @pytest.mark.parametrize(
         "kind, damage_type",
