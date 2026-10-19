@@ -221,6 +221,7 @@ class Healer(OriginFeat):
                                 "Utilize action, expending one use of a Healer's Kit",
                             ),
                             ("Range", "5 feet"),
+                            ("Target", "A creature you tend"),
                             (
                                 "Effect",
                                 "The creature can expend one Hit Point Die; you roll it, and it regains the roll + your Proficiency Bonus Hit Points",
@@ -229,13 +230,18 @@ class Healer(OriginFeat):
                     ),
                 ),
             ),
-            Facts(
+            Option(
+                "Healing Rerolls",
                 (
-                    (
-                        "Healing Rerolls",
-                        "Reroll a 1 on a die that restores Hit Points with a spell or Battle Medic; use the new roll",
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "Reroll a 1 on a die that restores Hit Points with a spell or Battle Medic; you must use the new roll",
+                            ),
+                        )
                     ),
-                )
+                ),
             ),
         ]
 

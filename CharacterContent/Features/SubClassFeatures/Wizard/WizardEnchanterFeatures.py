@@ -114,7 +114,9 @@ class HypnoticPresence(Feature):
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Uses (Intelligence modifier, minimum of once) are in the panel below.
         return [
-            Paragraph("Enthrall a creature with charming words and an enchanting gaze."),
+            Paragraph(
+                "Enthrall a creature with charming words and an enchanting gaze."
+            ),
             Facts(
                 (
                     ("Action", "Magic action"),

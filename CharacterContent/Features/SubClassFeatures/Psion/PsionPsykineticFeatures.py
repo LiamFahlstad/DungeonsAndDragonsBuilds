@@ -1,7 +1,7 @@
-from Core.Definitions import PSION_HIT_DIE
+from Core.Definitions import PSION_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class StrongerTelekinesis(Feature):
@@ -136,7 +136,10 @@ class ReboundingField(Feature):
                         "Your Shield, cast when hit by an attack roll, makes the attack miss",
                     ),
                     ("Cost", "One Psionic Energy Die; roll it"),
-                    ("Save", "The attacker makes a Dexterity save"),
+                    (
+                        "Save",
+                        f"The attacker makes a Dexterity save against your spell save DC ({dc_formula(Ability.INTELLIGENCE)})",
+                    ),
                     (
                         "Failed",
                         "Force damage equal to the roll + Intelligence modifier",

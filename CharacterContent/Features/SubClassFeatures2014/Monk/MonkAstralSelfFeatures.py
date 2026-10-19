@@ -1,7 +1,7 @@
-from Core.Definitions import MONK_HIT_DIE
+from Core.Definitions import MONK_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class ArmsOfTheAstralSelf(Feature):
@@ -26,7 +26,7 @@ class ArmsOfTheAstralSelf(Feature):
                     ("Cost", "1 ki point"),
                     (
                         "When summoned",
-                        "Each creature of your choice you can see within 10 feet makes a Dexterity save or takes Force damage equal to two rolls of your Martial Arts die",
+                        f"Each creature of your choice you can see within 10 feet makes a Dexterity save ({dc_formula(Ability.WISDOM)}) or takes Force damage equal to two rolls of your Martial Arts die",
                     ),
                     (
                         "Duration",

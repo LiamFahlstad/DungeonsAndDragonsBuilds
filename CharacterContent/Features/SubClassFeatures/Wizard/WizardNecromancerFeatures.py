@@ -86,7 +86,10 @@ class NecromancySpellbook(Feature):
                 (
                     Facts(
                         (
-                            ("Trigger", "You cast a Necromancy spell using a spell slot"),
+                            (
+                                "Trigger",
+                                "You cast a Necromancy spell using a spell slot",
+                            ),
                             ("Range", "60 feet"),
                             ("Target", "One Undead creature you can see"),
                             (

@@ -200,6 +200,14 @@ class MasterScriviner(Feature):
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
+            Facts(
+                (
+                    (
+                        "Spell scrolls",
+                        "Crafting spell scrolls (Dungeon Master's Guide) with your Wizardly Quill takes half the gold and time",
+                    ),
+                )
+            ),
             Option(
                 "Enhanced scroll",
                 (
@@ -224,14 +232,6 @@ class MasterScriviner(Feature):
                         )
                     ),
                 ),
-            ),
-            Facts(
-                (
-                    (
-                        "Spell scrolls",
-                        "Crafting spell scrolls (Dungeon Master's Guide) with your Wizardly Quill takes half the gold and time",
-                    ),
-                )
             ),
         ]
 

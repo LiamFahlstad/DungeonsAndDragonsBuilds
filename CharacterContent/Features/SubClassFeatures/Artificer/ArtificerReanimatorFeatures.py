@@ -98,6 +98,14 @@ class ReanimatorSkillSet(Feature):
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Jolt to Life's uses are in the panel below.
         return [
+            Facts(
+                (
+                    (
+                        "Reanimator's Tools",
+                        "Proficiency with Alchemist's Supplies, or another Artisan's Tools if you already have it",
+                    ),
+                )
+            ),
             Option(
                 "Jolt to Life",
                 (
@@ -126,14 +134,6 @@ class ReanimatorSkillSet(Feature):
                         )
                     ),
                 ),
-            ),
-            Facts(
-                (
-                    (
-                        "Reanimator's Tools",
-                        "Proficiency with Alchemist's Supplies, or another Artisan's Tools if you already have it",
-                    ),
-                )
             ),
         ]
 

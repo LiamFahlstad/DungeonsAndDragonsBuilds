@@ -63,7 +63,10 @@ class RuneCarver(Feature):
                         "Inscribe",
                         "After a Long Rest, touch as many objects as runes you know (a weapon, armor, shield, jewelry or another worn or held item) and put a different rune on each. It lasts until your next Long Rest.",
                     ),
-                    ("Invoke", "Each rune once per Short or Long Rest"),
+                    (
+                        "Invoke",
+                        "Each rune once per Short or Long Rest (twice from Fighter level 15, Master of Runes)",
+                    ),
                     ("Save DC", dc_formula(Ability.CONSTITUTION)),
                 )
             ),

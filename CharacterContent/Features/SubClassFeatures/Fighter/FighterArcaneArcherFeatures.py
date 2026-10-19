@@ -135,7 +135,7 @@ class ArcaneShot(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to unleash special magical effects with your shots.\n"
-            "Arcane Shot Options. You learn two Arcane Shot options of your choice from the \"Arcane Shot Options\" section later in this subclass's description.\n"
+            'Arcane Shot Options. You learn two Arcane Shot options of your choice from the "Arcane Shot Options" section later in this subclass\'s description.\n'
             "You learn an additional Arcane Shot option of your choice when you reach Fighter levels 7, 10, 15, and 18. Each time you learn a new Arcane Shot option, you can also replace one option you know with a different one.\n"
             "Using Arcane Shot. Once per turn when you make a ranged attack using a weapon with the Ammunition property, you can apply one of your Arcane Shot options to that attack. You decide to use the option when you hit a creature and deal damage to it unless the option doesn't involve an attack roll.\n"
             "You can use this feature a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest.\n"
@@ -535,7 +535,9 @@ class MagicalAmmunition(Feature):
 
 class EverReadyShot(Feature):
     def __init__(self):
-        super().__init__(name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 10")
+        super().__init__(
+            name="Ever-Ready Shot", origin="Arcane Archer Fighter Level 10"
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -601,7 +603,10 @@ class MasterfulShots(Feature):
             Facts(
                 (
                     ("Action", "Reaction"),
-                    ("Trigger", "A creature you can see misses you with an attack roll"),
+                    (
+                        "Trigger",
+                        "A creature you can see misses you with an attack roll",
+                    ),
                     (
                         "Move",
                         "Up to half your Speed away from the attacker, without provoking Opportunity Attacks",

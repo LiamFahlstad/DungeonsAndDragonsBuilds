@@ -85,7 +85,7 @@ class MageHandLegerdemain(Feature):
                         "Casting",
                         "Cast Mage Hand as a Bonus Action, and you can make the hand Invisible",
                     ),
-                    ("Control", "Bonus Action"),
+                    ("Control", "Move and use the hand as a Bonus Action"),
                     (
                         "Sleight of Hand",
                         "Make Dexterity (Sleight of Hand) checks through the hand",

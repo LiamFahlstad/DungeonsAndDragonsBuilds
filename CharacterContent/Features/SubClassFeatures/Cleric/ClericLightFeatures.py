@@ -208,7 +208,6 @@ class CoronaOfLight(Feature):
                         "Effect",
                         "Enemies in the Bright Light have Disadvantage on saves against Radiance of the Dawn and spells that deal Fire or Radiant damage",
                     ),
-                    ("Uses", "Based on your Wisdom modifier, per Long Rest"),
                 )
             ),
         ]

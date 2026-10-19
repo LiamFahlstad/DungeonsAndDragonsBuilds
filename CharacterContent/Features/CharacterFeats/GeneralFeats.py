@@ -1389,12 +1389,8 @@ class SkillExpert(_AbilityScoreFeat):
             Facts(
                 (
                     ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
-                    ("Skill Proficiency", "One skill of your choice"),
-                    (
-                        "Expertise",
-                        "One skill you're proficient in but lack Expertise with",
-                    ),
-                    ("Chosen", self._expertise.skills[0].value),
+                    ("Skill Proficiency", self._proficiency.skills[0].value),
+                    ("Expertise", self._expertise.skills[0].value),
                 )
             ),
         ]
@@ -3481,7 +3477,15 @@ class ShiftingCombatant(_AbilityScoreFeat):
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
-            Facts((("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),)),
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Fearless Leap",
+                        "After a Long Jump with a 10-foot run-up, if you land within 5 feet of two or more enemies, attack rolls against you have Disadvantage until the start of your next turn",
+                    ),
+                )
+            ),
             Option(
                 "Domino Strike",
                 (
@@ -3499,14 +3503,6 @@ class ShiftingCombatant(_AbilityScoreFeat):
                         )
                     ),
                 ),
-            ),
-            Facts(
-                (
-                    (
-                        "Fearless Leap",
-                        "After a Long Jump with a 10-foot run-up, if you land within 5 feet of two or more enemies, attack rolls against you have Disadvantage until the start of your next turn",
-                    ),
-                )
             ),
         ]
 
@@ -3550,7 +3546,7 @@ class TacticalCombatant(_AbilityScoreFeat):
                     ),
                     (
                         "Recharge",
-                        "Each once, until you roll Initiative or finish a Short or Long Rest",
+                        "Each benefit once; regain it when you roll Initiative or finish a Short or Long Rest",
                     ),
                 )
             ),

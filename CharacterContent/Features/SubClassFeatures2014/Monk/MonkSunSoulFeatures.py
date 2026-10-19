@@ -4,7 +4,8 @@ from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Core.Definitions import Ability
 
 
 class RadiantSunBolt(Feature):
@@ -112,7 +113,7 @@ class SearingSunburst(Feature):
                     ("Area", "20-foot-radius sphere"),
                     (
                         "Save",
-                        "Constitution; a creature behind opaque total cover doesn't need to save",
+                        f"Constitution ({dc_formula(Ability.WISDOM)}); a creature behind opaque total cover doesn't need to save",
                     ),
                     ("Failed", "2d6 radiant damage"),
                     ("Empower", "Spend up to 3 ki points: +2d6 damage each"),
