@@ -9,7 +9,7 @@ Run from the repo root. Everything for this oneshot lives in
 - `PlayerLogs/`: the party's log
 - `CombatLogs/`: one encounter log per scenario
 
-Party: Dessie (Artificer), Hanna (Ranger), Maggie (Druid), all level 3, tracked in
+Party: Dessie (Artificer), Hanna (Ranger), Maggie (Druid), Thomas (Bard), all level 3, tracked in
 `PlayerLogs/main_party.json`. Each scenario has its own persistent encounter log
 in `CombatLogs/`. `--log` resumes it, and dropping `--log` starts monsters fresh.
 
