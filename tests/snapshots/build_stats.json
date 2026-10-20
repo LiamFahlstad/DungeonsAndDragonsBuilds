@@ -19552,6 +19552,183 @@
    ]
   ]
  },
+ "Y2024_Bard_Glamour_Thomas": {
+  "ac": 15,
+  "carry": 2,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   false,
+   true,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 24,
+  "immune": [],
+  "init": 5,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   true,
+   false,
+   false,
+   false,
+   true
+  ],
+  "saves": [
+   -1,
+   5,
+   2,
+   -1,
+   0,
+   5
+  ],
+  "scores": [
+   8,
+   16,
+   14,
+   8,
+   10,
+   17
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ]
+  ],
+  "skills": [
+   5,
+   1,
+   0,
+   0,
+   5,
+   0,
+   2,
+   4,
+   0,
+   1,
+   0,
+   4,
+   5,
+   7,
+   0,
+   4,
+   4,
+   1
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    1,
+    -1
+   ]
+  ]
+ },
  "Y2024_Bard_Lore_TobiasGreyquill": {
   "ac": 15,
   "carry": 10,
@@ -19763,6 +19940,193 @@
    ]
   ]
  },
+ "Y2024_Bard_Swords_Thomas": {
+  "ac": 16,
+  "carry": 2,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   false,
+   true,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 24,
+  "immune": [],
+  "init": 3,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   true,
+   false,
+   false,
+   false,
+   true
+  ],
+  "saves": [
+   -1,
+   5,
+   2,
+   -1,
+   0,
+   5
+  ],
+  "scores": [
+   8,
+   16,
+   14,
+   8,
+   10,
+   17
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.DISADVANTAGE['Scale Mail Armor']",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ]
+  ],
+  "skills": [
+   5,
+   1,
+   0,
+   0,
+   5,
+   0,
+   2,
+   4,
+   0,
+   1,
+   0,
+   4,
+   5,
+   7,
+   0,
+   4,
+   4,
+   1
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    1,
+    -1
+   ],
+   [
+    "Scimitar",
+    5,
+    3
+   ],
+   [
+    "Scimitar",
+    5,
+    3
+   ]
+  ]
+ },
  "Y2024_Bard_Valor_Clover": {
   "ac": 18,
   "carry": 10,
@@ -19944,6 +20308,197 @@
    ],
    [
     "Longbow",
+    5,
+    3
+   ]
+  ]
+ },
+ "Y2024_Bard_Valor_Thomas": {
+  "ac": 18,
+  "carry": 2,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   true,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 24,
+  "immune": [],
+  "init": 3,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   true,
+   false,
+   false,
+   false,
+   true
+  ],
+  "saves": [
+   -1,
+   5,
+   2,
+   -1,
+   1,
+   5
+  ],
+  "scores": [
+   8,
+   16,
+   14,
+   8,
+   12,
+   16
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    60
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [],
+   [
+    "1:Jack of All Trades"
+   ],
+   [],
+   [],
+   [
+    "1:Jack of All Trades"
+   ]
+  ],
+  "skills": [
+   5,
+   3,
+   0,
+   0,
+   4,
+   0,
+   3,
+   4,
+   1,
+   2,
+   1,
+   2,
+   7,
+   7,
+   0,
+   5,
+   5,
+   2
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    1,
+    -1
+   ],
+   [
+    "Shortsword",
+    5,
+    3
+   ],
+   [
+    "Scimitar",
+    5,
+    3
+   ],
+   [
+    "Light Crossbow",
     5,
     3
    ]

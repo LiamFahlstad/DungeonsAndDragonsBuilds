@@ -2115,6 +2115,16 @@
    "items.html": "462c220520451c4fd6504d3e105e8d8ba590e28ca804e1ccad8cfef51b207a55"
   }
  },
+ "Y2024_Bard_Glamour_Thomas": {
+  "full": {
+   "character.html": "d65616a689329be00fa280c8da6603e955ec52d4a9ca3787ad58caf065db62a1",
+   "features/level_01.html": "50c8ecd6f459cba6c9c77c62234b0485c369e0f3d1e117648d78a0e6abc3db47",
+   "features/level_02.html": "bde92aad25f51e11c341cb605a94903ef99f9a868f96d4cd7f36ae19a8860e00",
+   "features/level_03.html": "8a3216fdd4a0a18d9ee97cab1ca86e4a108fc72b2578b2efe6ef9e86003bd0a4",
+   "full_character_sheet.html": "46fc4560f1949ac4abdd45ddd298167464738fef279801f0fc4f7a0a0745a002",
+   "items.html": "7a28072b40237fc6a3db6ecfb5ce44db7cb7000b51b26e8f37d95a2762a5ebff"
+  }
+ },
  "Y2024_Bard_Lore_TobiasGreyquill": {
   "full": {
    "character.html": "05e91bc76952bb128a60e8eea5389f89e62f17bde5e75a89342787510a97e8bb",
@@ -2142,6 +2152,17 @@
    "items.html": "833bc11acc8b3a0e605447996b6c3ab33aa298a5488c785d6cd670003d8ba884"
   }
  },
+ "Y2024_Bard_Swords_Thomas": {
+  "full": {
+   "character.html": "386ffa0d8875be4aa53eb376ba3a6b6b9f7620bf887e3037979779ad65b7d1ea",
+   "features/level_01.html": "718cd6a8db1c370f2f38d71a7c63a75031da3fcc60dff72d3e6a5ded67b3e971",
+   "features/level_02.html": "33500293b96d16f96e19f507066e4bce6cd19ef29754132b3ba0b3c71e32810a",
+   "features/level_03.html": "c0580eee58c5dd5d8b1f8a5c375b928282769bda587b5d11cc3dff6d3cfec32e",
+   "fighting_styles.html": "d436bb2917a36bbd995a00865f955d50f21623ca006fea88cb17c08986d33f45",
+   "full_character_sheet.html": "1034ede4710f7d317061ec84986ab40292d3801481a9021c3d3e6cfcd089c359",
+   "items.html": "01e796356e9d448aa17387724a5da672744b078978b9e4070334edbaaa89f7da"
+  }
+ },
  "Y2024_Bard_Valor_Clover": {
   "full": {
    "character.html": "afc305eac89f033ab6ed6232ce03ff176ce7c147f461192c6b3dca8ce329a2d7",
@@ -2150,6 +2171,16 @@
    "features/level_03.html": "2c9da923d75b8f130058b41244917546b2cf833131aede0c727f6d63d3994031",
    "full_character_sheet.html": "9151cd734333d5cff974a712cdd9a0a79cfa505341053d7c674ffe16497f8aa4",
    "items.html": "fa2de09edb55d7eb85555f0e8f5fc328c2c4ff7464eaaeefa9f2aaf704fc6302"
+  }
+ },
+ "Y2024_Bard_Valor_Thomas": {
+  "full": {
+   "character.html": "5eda08d2a2a4c945f77349fca3fc43aba60dd7eec2abdd9619e449b064865295",
+   "features/level_01.html": "e3b27713088b5f0c6a21b6779ac0529092e80e9f1f01090705947584c14a8637",
+   "features/level_02.html": "59683011a6345dbc996cea9f1d32d4fd901d3c9ececdeadacebbbca11f5ab4d5",
+   "features/level_03.html": "ad75c3344ca97c21f81d0096377889452f40cb67ee83f8a42236237be8d3fa8b",
+   "full_character_sheet.html": "738ce7a086b9d1acbb252303cb0fcd891f50bef2d5558537e81935b3f3a3a39e",
+   "items.html": "0373e6539c41e1b35a639f0a66a6eaa2d954bd0eae30a98bd9c5ec3ce21cb96e"
   }
  },
  "Y2024_Cleric_Knowledge_ThaddeusLoreweaver": {

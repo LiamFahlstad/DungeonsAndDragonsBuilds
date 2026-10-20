@@ -16060,6 +16060,119 @@
    "Dagger  1d20+4  dmg 1d4 +2"
   ]
  },
+ "Y2024_Bard_Glamour_Thomas": {
+  "Ability Scores": {
+   "CHA": 17,
+   "CON": 14,
+   "DEX": 16,
+   "INT": 8,
+   "STR": 8,
+   "WIS": 10
+  },
+  "Saving Throws": {
+   "CHA": 5,
+   "CON": 2,
+   "DEX": 5,
+   "INT": -1,
+   "STR": -1,
+   "WIS": 0
+  },
+  "ac": "15 (no Shield)",
+  "class_levels": {
+   "Bard": 3
+  },
+  "conditions": [],
+  "create_name": "Thomas",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Musician",
+   "Spell Slots",
+   "Bard Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Bardic Inspiration",
+   "Jack of All Trades",
+   "Expertise",
+   "Beguiling Magic",
+   "Mantle of Inspiration",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Alert"
+  ],
+  "hp": 24,
+  "invocations": [],
+  "max_hp": 24,
+  "name": "Thomas",
+  "proficiency_bonus": 2,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 2
+  },
+  "spells_with_level": [
+   [
+    "Dissonant Whispers",
+    1,
+    "Charisma"
+   ],
+   [
+    "Faerie Fire",
+    1,
+    "Charisma"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Charisma"
+   ],
+   [
+    "Longstrider",
+    1,
+    "Charisma"
+   ],
+   [
+    "Minor Illusion",
+    0,
+    "Charisma"
+   ],
+   [
+    "Vicious Mockery",
+    0,
+    "Charisma"
+   ],
+   [
+    "Shatter",
+    2,
+    "Charisma"
+   ],
+   [
+    "Charm Person",
+    1,
+    "Charisma"
+   ],
+   [
+    "Mirror Image",
+    2,
+    "Charisma"
+   ],
+   [
+    "Suggestion",
+    2,
+    "Charisma"
+   ]
+  ],
+  "subclass": "College of Glamour",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+1  dmg 1d1 -1"
+  ]
+ },
  "Y2024_Bard_Lore_TobiasGreyquill": {
   "Ability Scores": {
    "CHA": 20,
@@ -16299,6 +16412,111 @@
    "Dagger  1d20+10  dmg 1d4 +4"
   ]
  },
+ "Y2024_Bard_Swords_Thomas": {
+  "Ability Scores": {
+   "CHA": 17,
+   "CON": 14,
+   "DEX": 16,
+   "INT": 8,
+   "STR": 8,
+   "WIS": 10
+  },
+  "Saving Throws": {
+   "CHA": 5,
+   "CON": 2,
+   "DEX": 5,
+   "INT": -1,
+   "STR": -1,
+   "WIS": 0
+  },
+  "ac": "16 (no Shield)",
+  "class_levels": {
+   "Bard": 3
+  },
+  "conditions": [],
+  "create_name": "Thomas",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Musician",
+   "Spell Slots",
+   "Bard Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Bardic Inspiration",
+   "Jack of All Trades",
+   "Expertise",
+   "Bonus Proficiencies",
+   "Blade Flourish",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Lucky"
+  ],
+  "hp": 24,
+  "invocations": [],
+  "max_hp": 24,
+  "name": "Thomas",
+  "proficiency_bonus": 2,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 2
+  },
+  "spells_with_level": [
+   [
+    "Dissonant Whispers",
+    1,
+    "Charisma"
+   ],
+   [
+    "Faerie Fire",
+    1,
+    "Charisma"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Charisma"
+   ],
+   [
+    "Minor Illusion",
+    0,
+    "Charisma"
+   ],
+   [
+    "Tasha's Hideous Laughter",
+    1,
+    "Charisma"
+   ],
+   [
+    "Vicious Mockery",
+    0,
+    "Charisma"
+   ],
+   [
+    "Heat Metal",
+    2,
+    "Charisma"
+   ],
+   [
+    "Shatter",
+    2,
+    "Charisma"
+   ]
+  ],
+  "subclass": "College of Swords",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+1  dmg 1d1 -1",
+   "Scimitar  1d20+5  dmg 1d6 +3",
+   "Scimitar  1d20+5  dmg 1d6 +3"
+  ]
+ },
  "Y2024_Bard_Valor_Clover": {
   "Ability Scores": {
    "CHA": 17,
@@ -16417,6 +16635,117 @@
    "Shortsword  1d20+5  dmg 1d6 +3",
    "Scimitar  1d20+5  dmg 1d6 +3",
    "Longbow  1d20+5  dmg 1d8 +3"
+  ]
+ },
+ "Y2024_Bard_Valor_Thomas": {
+  "Ability Scores": {
+   "CHA": 16,
+   "CON": 14,
+   "DEX": 16,
+   "INT": 8,
+   "STR": 8,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 5,
+   "CON": 2,
+   "DEX": 5,
+   "INT": -1,
+   "STR": -1,
+   "WIS": 1
+  },
+  "ac": "18 (with Shield) and 16 (without Shield)",
+  "class_levels": {
+   "Bard": 3
+  },
+  "conditions": [],
+  "create_name": "Thomas",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Skilled",
+   "Spell Slots",
+   "Bard Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Bardic Inspiration",
+   "Jack of All Trades",
+   "Expertise",
+   "Martial Training",
+   "Darkvision",
+   "Fey Ancestry",
+   "Fey Gift",
+   "Lethargy Resilience",
+   "Skill Versatility"
+  ],
+  "hp": 24,
+  "invocations": [],
+  "max_hp": 24,
+  "name": "Thomas",
+  "proficiency_bonus": 2,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 2
+  },
+  "spells_with_level": [
+   [
+    "Dissonant Whispers",
+    1,
+    "Charisma"
+   ],
+   [
+    "Faerie Fire",
+    1,
+    "Charisma"
+   ],
+   [
+    "Friends",
+    0,
+    "Charisma"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Charisma"
+   ],
+   [
+    "Tasha's Hideous Laughter",
+    1,
+    "Charisma"
+   ],
+   [
+    "True Strike",
+    0,
+    "Charisma"
+   ],
+   [
+    "Vicious Mockery",
+    0,
+    "Charisma"
+   ],
+   [
+    "Aid",
+    2,
+    "Charisma"
+   ],
+   [
+    "Suggestion",
+    2,
+    "Charisma"
+   ]
+  ],
+  "subclass": "College of Valor",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+1  dmg 1d1 -1",
+   "Shortsword  1d20+5  dmg 1d6 +3",
+   "Scimitar  1d20+5  dmg 1d6 +3",
+   "Light Crossbow  1d20+5  dmg 1d8 +3"
   ]
  },
  "Y2024_Cleric_Knowledge_ThaddeusLoreweaver": {
