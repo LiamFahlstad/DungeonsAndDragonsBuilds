@@ -10,7 +10,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType, CharacterClass
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class HexbladeExpandedSpells(Feature):
@@ -18,6 +18,23 @@ class HexbladeExpandedSpells(Feature):
         super().__init__(
             name="Expanded Spell List", origin="Hexblade Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "These spells are added to the Warlock spell list for you when you learn a Warlock spell."
+            ),
+            Table(
+                ("Spell level", "Spells"),
+                (
+                    ("1", "Shield, Wrathful Smite"),
+                    ("2", "Blur, Branding Smite"),
+                    ("3", "Blink, Elemental Weapon"),
+                    ("4", "Phantasmal Killer, Staggering Smite"),
+                    ("5", "Banishing Smite, Cone of Cold"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -187,6 +204,24 @@ class ArmorOfHexes(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your hex grows more powerful."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "The target cursed by your Hexblade's Curse hits you with an attack roll",
+                    ),
+                    (
+                        "Effect",
+                        "Roll a d6; on a 4 or higher, the attack misses you instead",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your hex grows more powerful. If the target cursed by your Hexblade's Curse hits you with an attack roll, you can use your Reaction to roll a d6. On a 4 or higher, the attack instead misses you, regardless of its roll."
         return description
@@ -203,6 +238,25 @@ class MasterOfHexes(Feature):
             activation=FeatureActivation(range="30 Feet"),
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Spread your Hexblade's Curse from a slain creature to another."),
+            Facts(
+                (
+                    ("Trigger", "The creature cursed by your Hexblade's Curse dies"),
+                    (
+                        "Effect",
+                        "Apply the curse to a different creature you can see within 30 feet",
+                    ),
+                    ("Requirement", "You don't have the Incapacitated condition"),
+                    (
+                        "Drawback",
+                        "You don't regain Hit Points from the death of the previously cursed creature",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can spread your Hexblade's Curse from a slain creature to another creature. When the creature cursed by your Hexblade's Curse dies, you can apply the curse to a different creature you can see within 30 feet of yourself, provided you don't have the Incapacitated condition. When you apply the curse in this way, you don't regain Hit Points from the death of the previously cursed creature."

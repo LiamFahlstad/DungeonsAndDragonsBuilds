@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -80,6 +80,23 @@ class AgileParry(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You make an Unarmed Strike as part of the Attack action on your turn while holding a melee kensei weapon",
+                    ),
+                    ("Effect", "+2 AC until the start of your next turn"),
+                    (
+                        "Requirement",
+                        "The weapon is in your hand and you aren't Incapacitated",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, "
@@ -104,6 +121,20 @@ class KenseiShot(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    (
+                        "Effect",
+                        "Any target you hit with a ranged attack using a kensei weapon takes an extra 1d4 damage of the weapon's type",
+                    ),
+                    ("Duration", "Until the end of the current turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use a bonus action on your turn to make your ranged attacks with a kensei weapon more deadly. "
@@ -122,6 +153,18 @@ class WayOfTheBrush(Feature):
             name="Way of the Brush", origin="Way of the Kensei Monk Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Tool proficiency",
+                        "Calligrapher's Supplies or Painter's Supplies (your choice)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with your choice of calligrapher's supplies or painter's supplies."
         return description
@@ -135,6 +178,18 @@ class MagicKenseiWeapons(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Magical",
+                        "Your attacks with kensei weapons count as magical for overcoming Resistance and Immunity to nonmagical attacks and damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your attacks with your kensei weapons count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage."
         return description
@@ -147,6 +202,18 @@ class DeftStrike(Feature):
             origin="Way of the Kensei Monk Level 6",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You hit a target with a kensei weapon"),
+                    ("Cost", "1 ki point"),
+                    ("Extra damage", "Your Martial Arts die"),
+                    ("Frequency", "Once on each of your turns"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -172,6 +239,26 @@ class SharpenTheBlade(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Cost", "Up to 3 ki points"),
+                    ("Target", "One kensei weapon you touch"),
+                    (
+                        "Effect",
+                        "Bonus to attack and damage rolls with it equal to the ki points spent",
+                    ),
+                    ("Duration", "1 minute, or until you use this feature again"),
+                    (
+                        "Exception",
+                        "No effect on a magic weapon that already has a bonus to attack and damage rolls",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As a bonus action, you can expend up to 3 ki points to grant one kensei weapon you touch a bonus to attack and damage rolls "
@@ -191,6 +278,21 @@ class UnearringAccuracy(Feature):
             origin="Way of the Kensei Monk Level 17",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your mastery of weapons grants you extraordinary accuracy."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You miss with an attack roll using a Monk weapon on your turn",
+                    ),
+                    ("Effect", "Reroll it"),
+                    ("Frequency", "Once on each of your turns"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

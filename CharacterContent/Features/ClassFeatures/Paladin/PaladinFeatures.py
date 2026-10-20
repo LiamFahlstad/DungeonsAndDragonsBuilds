@@ -66,6 +66,22 @@ class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Paladin Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Mastery",
+                        "Use the mastery properties of two kinds of weapons you're proficient with (e.g. Longswords and Javelins)",
+                    ),
+                    (
+                        "Long Rest",
+                        "Change the kinds of weapons you chose (e.g. to Halberds and Flails)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your training with weapons allows you to use the mastery properties of two kinds of weapons of your choice with which you have proficiency, such as Longswords and Javelins.\n"
@@ -344,6 +360,9 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Paladin Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
@@ -480,6 +499,20 @@ class AuraOfCourage(Feature):
             name="Aura of Courage", origin="Paladin Level 10", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Area", "Your Aura of Protection"),
+                    ("Effect", "You and your allies have Immunity to Frightened"),
+                    (
+                        "Already Frightened",
+                        "An ally who enters the aura ignores the condition while there",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You and your allies have Immunity to the Frightened condition while in your Aura of Protection. If a Frightened ally enters the aura, that condition has no effect on that ally while there."
         return description
@@ -493,6 +526,20 @@ class RadiantStrikes(Feature):
         super().__init__(
             name="Radiant Strikes", origin="Paladin Level 11", usage_tags=["damage"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your strikes now carry supernatural power."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You hit with an attack roll using a Melee weapon or an Unarmed Strike",
+                    ),
+                    ("Extra damage", "1d8 Radiant"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage."
@@ -536,6 +583,9 @@ class RestoringTouch(Feature):
 class AuraExpansion(Feature):
     def __init__(self):
         super().__init__(name="Aura Expansion", origin="Paladin Level 18")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Aura of Protection", "30-foot Emanation"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your Aura of Protection is now a 30-foot Emanation."

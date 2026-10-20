@@ -32,6 +32,16 @@ class BonusProficiencies(Feature):
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Weapon proficiency", "Martial weapons"),
+                    ("Armor proficiency", "Heavy armor"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
         return description
@@ -42,6 +52,23 @@ class TwilightDomainSpells(Feature):
         super().__init__(
             name="Twilight Domain Spells", origin="Twilight Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("1", "Faerie Fire, Sleep"),
+                    ("3", "Moonbeam, See Invisibility"),
+                    ("5", "Aura of Vitality, Leomund's Tiny Hut"),
+                    ("7", "Aura of Life, Greater Invisibility"),
+                    ("9", "Circle of Power, Mislead"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -117,6 +144,22 @@ class VigilantBlessing(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The night has taught you to be vigilant."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Target", "One creature you touch (can be yourself)"),
+                    ("Effect", "Advantage on its next Initiative roll"),
+                    (
+                        "Ends",
+                        "Immediately after that roll, or if you use this feature again",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The night has taught you to be vigilant. As an action, you give one creature you touch (including possibly yourself) advantage on the next initiative roll the creature makes. This benefit ends immediately after the roll or if you use this feature again."
@@ -207,6 +250,20 @@ class StepsOfNight(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Proficiency Bonus per Long Rest) are in the panel below.
+        return [
+            Paragraph("Draw on the mystical power of night to rise into the air."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You're in dim light or darkness"),
+                    ("Effect", "A Fly Speed equal to your walking speed"),
+                    ("Duration", "1 minute"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can draw on the mystical power of night to rise into the air. As a bonus action when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
         return description
@@ -225,6 +282,19 @@ class TwilightShroud(Feature):
             origin="Twilight Domain Cleric Level 17",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The twilight that you summon offers a protective embrace."),
+            Facts(
+                (
+                    (
+                        "Effect",
+                        "You and your allies have Half Cover while in your Twilight Sanctuary sphere",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The twilight that you summon offers a protective embrace: you and your allies have half cover while in the sphere created by your Twilight Sanctuary."

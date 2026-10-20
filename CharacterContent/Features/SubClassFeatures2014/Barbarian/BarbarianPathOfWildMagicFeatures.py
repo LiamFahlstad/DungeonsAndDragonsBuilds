@@ -31,6 +31,26 @@ class MagicAwareness(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Proficiency Bonus per Long Rest) are in the panel below.
+        return [
+            Paragraph("Open your awareness to the presence of concentrated magic."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Duration", "Until the end of your next turn"),
+                    (
+                        "Effect",
+                        "Know the location of any spell or magic item within 60 feet that isn't behind Total Cover",
+                    ),
+                    (
+                        "Spells",
+                        "You also learn which school of magic a sensed spell belongs to",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you choose this path at 3rd level, as an action, you can open your awareness to the presence of concentrated magic. Until the end of your next turn, you know the location of any spell or magic item within 60 feet of you that isn't behind total cover. When you sense a spell, you learn which school of magic it belongs to.\n"
@@ -210,6 +230,26 @@ class UnstableBacklash(Feature):
             activation=FeatureActivation(action_type="reaction"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "When you're imperiled during your rage, the magic within you can lash out."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Immediately after you take damage or fail a saving throw while raging",
+                    ),
+                    (
+                        "Effect",
+                        "Roll on the Wild Magic table and immediately produce the effect; it replaces your current Wild Magic effect",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "At 10th level, when you are imperiled during your rage, the magic within you can lash out; immediately after you take damage or fail a saving throw while raging, you can use your reaction to roll on the Wild Magic table and immediately produce the effect rolled. This effect replaces your current Wild Magic effect."
         return description
@@ -222,6 +262,19 @@ class ControlledSurge(Feature):
             origin="Path Of Wild Magic Barbarian Level 14",
             usage_tags=["damage", "heal", "buff", "control", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Wild Magic table",
+                        "Whenever you roll on it, roll twice and choose which effect to unleash",
+                    ),
+                    ("Doubles", "If both dice match, choose any effect on the table"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "At 14th level, whenever you roll on the Wild Magic table, you can roll the die twice and choose which of the two effects to unleash. If you roll the same number on both dice, you can ignore the number and choose any effect on the table."

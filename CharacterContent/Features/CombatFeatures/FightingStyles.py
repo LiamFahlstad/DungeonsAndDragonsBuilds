@@ -39,6 +39,16 @@ class Archery(FightStyleModifier):
     def description(self):
         return "Archery: You gain a +2 bonus to attack rolls you make with Ranged weapons. (calculated automatically)"
 
+    def get_improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Effect", "+2 to attack rolls with Ranged weapons"),
+                    ("On this sheet", "Already added to your Ranged weapons' attacks"),
+                )
+            ),
+        ]
+
 
 class BlindFighting(FightingStyle):
     name = "Blind Fighting"
@@ -48,6 +58,9 @@ class BlindFighting(FightingStyle):
 
     def description(self):
         return "Blind Fighting: You have Blindsight with a range of 10 feet."
+
+    def get_improved_description(self) -> list[Block]:
+        return [Facts((("Blindsight", "10 feet"),))]
 
 
 class Defense(FightStyleModifier):
@@ -59,6 +72,17 @@ class Defense(FightStyleModifier):
 
     def description(self):
         return "Defense: While you're wearing Light, Medium, or Heavy armor, you gain a +1 bonus to Armor Class. (calculated automatically)"
+
+    def get_improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Effect", "+1 to Armor Class"),
+                    ("Requirement", "You're wearing Light, Medium or Heavy armor"),
+                    ("On this sheet", "Already added to your Armor Class"),
+                )
+            ),
+        ]
 
 
 def _is_one_handed_melee_weapon(weapon: WeaponTraits) -> bool:
@@ -82,6 +106,23 @@ class Dueling(FightStyleModifier):
 
     def description(self):
         return "Dueling: When you're holding a Melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon. (calculated automatically)"
+
+    def get_improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Effect", "+2 to damage rolls with that weapon"),
+                    (
+                        "Requirement",
+                        "You're holding a Melee weapon in one hand and no other weapons",
+                    ),
+                    (
+                        "On this sheet",
+                        "Already added to every one-handed Melee weapon's damage; leave it out while you're also holding another weapon",
+                    ),
+                )
+            ),
+        ]
 
 
 class GreatWeaponFighting(FightingStyle):
@@ -346,3 +387,20 @@ class ProneFighting(FightingStyle):
 
     def description(self):
         return "Prone Fighting: While you have the Prone condition, you don't have Disadvantage due to the Prone condition on attack rolls, and the Prone condition doesn't grant Advantage on attack rolls made against you."
+
+    def get_improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Requirement", "You have the Prone condition"),
+                    (
+                        "Your attacks",
+                        "Being Prone doesn't give you Disadvantage on attack rolls",
+                    ),
+                    (
+                        "Attacks against you",
+                        "Being Prone doesn't grant Advantage on attack rolls against you",
+                    ),
+                )
+            ),
+        ]

@@ -51,6 +51,8 @@ def _argument(cls, name, annotation, damage_type=DamageType.NECROTIC):
     """A valid value for one constructor parameter."""
     if name == "character_level":
         return 20
+    if name == "distance":
+        return 60
     if name == "ability" and hasattr(cls, "_ABILITIES"):
         return cls._ABILITIES[0]
     if annotation is Ability:
@@ -60,10 +62,13 @@ def _argument(cls, name, annotation, damage_type=DamageType.NECROTIC):
         return sorted(valid, key=lambda d: d.value)[0]
     if annotation is Skill:
         # A feature limited to a few skills names them in SKILL_POOL or
-        # VALID_SKILLS; two skill parameters (skill_1, skill_2) must differ.
+        # VALID_SKILLS; numbered skill parameters (skill_1, skill_2, ...)
+        # must differ.
         pool = getattr(cls, "SKILL_POOL", None) or getattr(cls, "VALID_SKILLS", None)
         if not pool:
-            return Skill.INSIGHT
+            if not name[-1].isdigit():
+                return Skill.INSIGHT
+            return list(Skill)[int(name[-1]) - 1]
         return pool[-1] if name.endswith("2") else pool[0]
     if annotation is str:
         return name
@@ -121,10 +126,13 @@ def _spell_arguments(cls, parameters) -> dict:
 
 
 # A list parameter's length is a rule of the feature (three skills, two
-# damage types), which its type can't tell either.
+# damage types), which its type can't tell either; nor can a damage type
+# passed as its plain name.
 _LIST_ARGUMENTS = {
     "AbilityScoreImprovement": {"bonuses": [(Ability.STRENGTH, 2)]},
     "BoonOfEnergyResistance": {"damage_types": [DamageType.COLD, DamageType.FIRE]},
+    "ChangelingInstincts": {"skills": [Skill.DECEPTION, Skill.INSIGHT]},
+    "FiendishResistance": {"damage_type": DamageType.FIRE.value},
     "Crafter": {"artisans_tools": ["Carpenter", "Smith", "Weaver"]},
     "FreeBackgroundAbilityBonus": {
         "bonuses": [(Ability.STRENGTH, 2), (Ability.CONSTITUTION, 1)]

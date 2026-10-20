@@ -100,6 +100,9 @@ class IntegratedProtection(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Armor Class", "+1"),))]
+
     def get_description(self, character: CharacterView) -> str:
         return "Your Armor Class increases by 1."
 
@@ -118,6 +121,9 @@ class SpecializedDesign(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Skill proficiency", self.skill.value),))]
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

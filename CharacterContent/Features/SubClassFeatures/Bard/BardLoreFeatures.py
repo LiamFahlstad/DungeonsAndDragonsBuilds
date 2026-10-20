@@ -20,6 +20,10 @@ class BonusProficiencies(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._proficiency.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        *first, last = [skill.value for skill in self._proficiency.skills]
+        return [Facts((("Skill proficiency", f"{', '.join(first)} and {last}"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with three skills of your choice."
         return description

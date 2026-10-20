@@ -301,6 +301,19 @@ class ArcaneApotheosis(Feature):
             name="Arcane Apotheosis", origin="Sorcerer Level 20", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Requirement", "Your Innate Sorcery is active"),
+                    (
+                        "Effect",
+                        "Use one Metamagic option on each of your turns without spending Sorcery Points on it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points on it."
         return description

@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class OathbreakerSpells(Feature):
@@ -17,6 +17,23 @@ class OathbreakerSpells(Feature):
         super().__init__(
             name="Oathbreaker Spells", origin="Oathbreaker Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Hellish Rebuke, Inflict Wounds"),
+                    ("5", "Crown of Madness, Darkness"),
+                    ("9", "Animate Dead, Bestow Curse"),
+                    ("13", "Blight, Confusion"),
+                    ("17", "Contagion, Dominate Person"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -43,6 +60,25 @@ class ControlUndead(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Action, expending one use of Channel Divinity"),
+                    ("Target", "One Undead you can see within 30 feet"),
+                    ("Save", "Wisdom"),
+                    (
+                        "Failed save",
+                        "It must obey your commands for 24 hours, or until you use this option again",
+                    ),
+                    (
+                        "Immune",
+                        "Undead whose challenge rating is equal to or greater than your Paladin level",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As an action, you can expend one use of your Channel Divinity to target one undead creature you can see within 30 feet of you.\n"
@@ -65,6 +101,28 @@ class DreadfulAspect(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Channel the darkest emotions and focus them into a burst of magical menace."
+            ),
+            Facts(
+                (
+                    ("Action", "Action, expending one use of Channel Divinity"),
+                    (
+                        "Target",
+                        "Each creature of your choice within 30 feet that can see you",
+                    ),
+                    ("Save", "Wisdom"),
+                    ("Failed save", "Frightened of you for 1 minute"),
+                    (
+                        "Repeat save",
+                        "If it ends its turn more than 30 feet away from you, ending the effect on a success",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "As an action, you can expend one use of your Channel Divinity to channel the darkest emotions and focus them into a burst of magical menace.\n"
@@ -85,6 +143,24 @@ class AuraOfHate(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Area", "10 feet"),
+                    ("Affects", "You, and any Fiends and Undead within the aura"),
+                    (
+                        "Bonus",
+                        "+ Charisma modifier (minimum +1) to melee weapon damage rolls",
+                    ),
+                    (
+                        "Limit",
+                        "A creature can benefit from only one Paladin's Aura of Hate at a time",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You, as well as any fiends and undead within 10 feet of you, gain a bonus to melee weapon damage rolls equal to your Charisma modifier (minimum of +1).\n"
@@ -104,6 +180,9 @@ class AuraOfHateExpansion(Feature):
             name="Aura of Hate Expansion", origin="Oathbreaker Paladin Level 18"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Aura of Hate range", "30 feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The range of your Aura of Hate increases to 30 feet."
         return description
@@ -116,6 +195,18 @@ class SupernaturalResistance(Feature):
             origin="Oathbreaker Paladin Level 15",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Resistance",
+                        "Bludgeoning, Piercing and Slashing damage from nonmagical weapons",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain resistance to bludgeoning, piercing, and slashing damage from nonmagical weapons."

@@ -18,6 +18,20 @@ class BonusProficiencies(Feature):
         GrantWeaponProficiency([WeaponProficiency.SCIMITAR]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.MEDIUM]).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Armor proficiency", "Medium armor"),
+                    ("Weapon proficiency", "Scimitar"),
+                    (
+                        "Spellcasting focus",
+                        "Any Simple or Martial melee weapon you're proficient with, for your Bard spells",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you join the College of Swords at 3rd level, you gain proficiency with medium armor and the scimitar.\n"
@@ -101,6 +115,9 @@ class ExtraAttack(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 6th level, you can attack twice, instead of once, whenever you take the Attack action on your turn."
         return description
@@ -113,6 +130,19 @@ class MastersFlourish(Feature):
             origin="College of Swords Bard Level 14",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use a Blade Flourish option"),
+                    (
+                        "Effect",
+                        "Roll a d6 and use it instead of expending a Bardic Inspiration die",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die."

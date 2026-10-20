@@ -9,7 +9,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class ConquestSpells(Feature):
@@ -17,6 +17,23 @@ class ConquestSpells(Feature):
         super().__init__(
             name="Oath of Conquest Spells", origin="Oath of Conquest Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Armor of Agathys, Command"),
+                    ("5", "Hold Person, Spiritual Weapon"),
+                    ("9", "Bestow Curse, Fear"),
+                    ("13", "Dominate Beast, Stoneskin"),
+                    ("17", "Cloudkill, Dominate Person"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -43,6 +60,26 @@ class ConqueringPresence(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to exude a terrifying presence."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Target",
+                        "Each creature of your choice you can see within 30 feet",
+                    ),
+                    ("Save", "Wisdom"),
+                    ("Failed save", "Frightened of you for 1 minute"),
+                    (
+                        "Repeat save",
+                        "At the end of each of its turns, ending the effect on itself on a success",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to exude a terrifying presence. As an action, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success."
         return description
@@ -58,6 +95,21 @@ class GuidedStrike(Feature):
             origin="Oath of Conquest Paladin Level 3",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to strike with supernatural accuracy."),
+            Facts(
+                (
+                    ("Trigger", "You make an attack roll"),
+                    ("Effect", "+10 to the roll"),
+                    (
+                        "Timing",
+                        "After you see the roll, but before the DM says whether it hits or misses",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses."
@@ -75,6 +127,34 @@ class AuraOfConquest(Feature):
             activation=FeatureActivation(range="10 Feet (30 at 18th Level)"),
             usage_tags=["damage", "control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You constantly emanate a menacing aura."),
+            Facts(
+                (
+                    (
+                        "Area",
+                        "10 feet from you in every direction (30 feet from Paladin level 18), not through Total Cover",
+                    ),
+                    ("Requirement", "You aren't Incapacitated"),
+                )
+            ),
+            Option(
+                "A creature Frightened of you",
+                (
+                    Facts(
+                        (
+                            ("Speed", "Reduced to 0 while in the aura"),
+                            (
+                                "Psychic damage",
+                                "Half your Paladin level, if it starts its turn in the aura",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -99,6 +179,9 @@ class AuraOfConquestExpansion(Feature):
             origin="Oath of Conquest Paladin Level 18",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Aura of Conquest range", "30 feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The range of your Aura of Conquest increases to 30 feet."
         return description
@@ -111,6 +194,23 @@ class ScornfulRebuke(Feature):
             origin="Oath of Conquest Paladin Level 15",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Those who dare to strike you are psychically punished for their audacity."
+            ),
+            Facts(
+                (
+                    ("Trigger", "A creature hits you with an attack"),
+                    (
+                        "Psychic damage",
+                        "Charisma modifier (minimum 1), to that creature",
+                    ),
+                    ("Requirement", "You aren't Incapacitated"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1 hp) if you're not incapacitated."

@@ -10,13 +10,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Option,
-    Paragraph,
-    dc_formula,
-)
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
     spellcasting_table,
 )
@@ -184,6 +178,20 @@ class ArcaneCharge(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Action Surge"),
+                    (
+                        "Effect",
+                        "Teleport up to 30 feet to an unoccupied space you can see",
+                    ),
+                    ("Timing", "Before or after the additional action"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Action Surge, you can teleport up to 30 feet to an unoccupied space you can see. You can teleport before or after the additional action."
         return description
@@ -194,6 +202,19 @@ class ImprovedWarMagic(Feature):
         super().__init__(
             name="Improved War Magic", origin="Eldritch Knight Fighter Level 18"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action on your turn"),
+                    (
+                        "Effect",
+                        "Replace two of the attacks with casting one of your level 1 or 2 Wizard spells that has a casting time of an action",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you take the Attack action on your turn, you can replace two of the attacks with a casting of one of your level 1 or level 2 Wizard spells that has a casting time of an action."

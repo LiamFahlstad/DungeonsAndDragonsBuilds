@@ -127,6 +127,17 @@ class SubtleTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Subtle Telekinesis", origin="Psion Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cantrip", "Mage Hand"),
+                    ("Components", "You can cast it without Somatic components"),
+                    ("Hand", "You can make the spectral hand Invisible"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You know the Mage Hand cantrip. You can cast it "
@@ -276,6 +287,16 @@ class PsionicReserves(Feature):
 class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Psion Level 19")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Feat", "An Epic Boon feat or another feat you qualify for"),
+                    ("Recommended", "Boon of Energy Resistance"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -204,6 +204,20 @@ class SongOfVictory(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Trigger",
+                        "After you cast a spell that has a casting time of an action",
+                    ),
+                    ("Effect", "Make one attack with a weapon"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a Bonus Action."
         return description

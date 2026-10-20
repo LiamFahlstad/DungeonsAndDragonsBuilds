@@ -34,6 +34,9 @@ class Darkvision(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._sense.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Darkvision", f"{self.distance} feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
 
@@ -170,6 +173,9 @@ class BestialInstincts(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Skill proficiency", self.skill.value),))]
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."

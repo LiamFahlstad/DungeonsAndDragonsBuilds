@@ -73,6 +73,24 @@ class SpiritShield(Feature):
             dice=SPIRIT_SHIELD_DICE,
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The damage reduction dice by Barbarian level are in the panel below.
+        return [
+            Paragraph(
+                "The guardian spirits that aid you provide supernatural protection to those you defend."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "While you're raging, another creature you can see within 30 feet takes damage",
+                    ),
+                    ("Effect", "Reduce that damage by your Spirit Shield dice (below)"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Beginning at 6th level, the guardian spirits that aid you can provide supernatural protection to those you defend. If you are raging and another creature you can see within 30 feet of you takes damage, you can use your reaction to reduce that damage by 2d6.\n"
@@ -134,6 +152,23 @@ class VengefulAncestors(Feature):
             origin="Path Of The Ancestral Guardian Barbarian Level 14",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your ancestral spirits grow powerful enough to retaliate."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You use Spirit Shield to reduce the damage of an attack",
+                    ),
+                    (
+                        "Damage",
+                        "The attacker takes Force damage equal to the damage Spirit Shield prevents",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "At 14th level, your ancestral spirits grow powerful enough to retaliate. When you use your Spirit Shield to reduce the damage of an attack, the attacker takes an amount of force damage that your Spirit Shield prevents."

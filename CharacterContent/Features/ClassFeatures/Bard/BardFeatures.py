@@ -133,6 +133,20 @@ class ExpertiseLevel1(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skill_names = " and ".join(skill.value for skill in self._choice.skills)
+        return [
+            Facts(
+                (
+                    ("Expertise", skill_names),
+                    (
+                        "Effect",
+                        "Add double your Proficiency Bonus to ability checks using these skills",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with two skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
         return description
@@ -147,6 +161,20 @@ class ExpertiseLevel9(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skill_names = " and ".join(skill.value for skill in self._choice.skills)
+        return [
+            Facts(
+                (
+                    ("Expertise", skill_names),
+                    (
+                        "Effect",
+                        "Add double your Proficiency Bonus to ability checks using these skills",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with two more skills of your choice. When you make an ability check using a proficient skill, you add double your Proficiency Bonus to the check instead of adding the Proficiency Bonus once."
@@ -283,6 +311,19 @@ class MagicalSecrets(Feature):
 class SuperiorInspiration(Feature):
     def __init__(self):
         super().__init__(name="Superior Inspiration", origin="Bard Level 18")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You roll Initiative"),
+                    (
+                        "Effect",
+                        "Regain expended uses of Bardic Inspiration until you have two",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll Initiative, you regain expended uses of Bardic Inspiration until you have two if you have fewer than that."

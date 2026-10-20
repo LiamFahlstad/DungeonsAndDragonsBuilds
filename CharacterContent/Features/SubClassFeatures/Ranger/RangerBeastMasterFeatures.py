@@ -7,12 +7,7 @@ from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
 )
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Paragraph,
-    StatBlock,
-)
+from Model.Content.FeatureText import Block, Facts, Paragraph, StatBlock
 
 
 class PrimalCompanion(Feature):
@@ -154,6 +149,20 @@ class ShareSpells(Feature):
             origin="Beast Master Ranger Level 15",
             activation=FeatureActivation(range="30 Feet"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You cast a spell targeting yourself"),
+                    (
+                        "Effect",
+                        "The spell can also affect your Primal Companion beast",
+                    ),
+                    ("Range", "The beast is within 30 feet of you"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast a spell targeting yourself, you can also affect your Primal Companion beast with the spell if the beast is within 30 feet of you."

@@ -56,6 +56,18 @@ class AssassinsTools(Feature):
     def __init__(self):
         super().__init__(name="Assassin's Tools", origin="Assassin Rogue Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Tools",
+                        "You gain a Disguise Kit and a Poisoner's Kit, and proficiency with both",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them."
         return description

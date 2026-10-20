@@ -8,6 +8,7 @@ from Model.Content.Improvements import (
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class Skirmisher(Feature):
@@ -20,6 +21,21 @@ class Skirmisher(Feature):
             ),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You're difficult to pin down during a fight."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "An enemy ends its turn within 5 feet of you"),
+                    (
+                        "Effect",
+                        "Move up to half your Speed without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn't provoke opportunity attacks."
@@ -39,6 +55,22 @@ class Survivalist(Feature):
         self._proficiency.apply(ledger_writer)
         self._expertise.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Skill proficiency",
+                        "Nature and Survival, if you don't already have it",
+                    ),
+                    (
+                        "Expertise",
+                        "Double your Proficiency Bonus for ability checks using either",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies."
         return description
@@ -55,6 +87,19 @@ class SuperiorMobility(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._speed.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Walking speed", "+10 feet"),
+                    (
+                        "Climb and Swim",
+                        "The increase also applies to these speeds, if you have them",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well."
@@ -77,6 +122,24 @@ class AmbushMaster(Feature):
         # "You have advantage on initiative rolls."
         InitiativeRollCondition(DiceRollCondition.ADVANTAGE).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You excel at leading ambushes and acting first in a fight."),
+            Facts(
+                (
+                    ("Advantage", "On Initiative rolls"),
+                    (
+                        "Marked",
+                        "The first creature you hit in the first round of combat",
+                    ),
+                    (
+                        "Effect",
+                        "Attack rolls against it, yours and others', have Advantage until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 13th level, you excel at leading ambushes and acting first in a fight.\n"
@@ -94,6 +157,22 @@ class SuddenStrike(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Strike with deadly speed."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Trigger", "You take the Attack action on your turn"),
+                    ("Effect", "Make one additional attack"),
+                    (
+                        "Sneak Attack",
+                        "It can apply even if you already used it this turn, but not against the same target more than once a turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack as a bonus action. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn."

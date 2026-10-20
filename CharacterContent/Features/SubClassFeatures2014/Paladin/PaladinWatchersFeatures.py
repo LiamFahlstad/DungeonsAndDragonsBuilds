@@ -12,7 +12,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import InitiativeProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class WatchersSpells(Feature):
@@ -21,6 +21,23 @@ class WatchersSpells(Feature):
             name="Oath of the Watchers Spells",
             origin="Oath of the Watchers Paladin Level 3",
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Alarm, Detect Magic"),
+                    ("5", "Moonbeam, See Invisibility"),
+                    ("9", "Counterspell, Nondetection"),
+                    ("13", "Aura of Purity, Banishment"),
+                    ("17", "Hold Monster, Scrying"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -46,6 +63,27 @@ class WatchersWill(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use Channel Divinity to invest your presence with the warding power of your faith."
+            ),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Target",
+                        "You, plus up to Charisma modifier (minimum one) creatures you can see within 30 feet",
+                    ),
+                    (
+                        "Effect",
+                        "Advantage on Intelligence, Wisdom and Charisma saving throws",
+                    ),
+                    ("Duration", "1 minute"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to invest your presence with the warding power of your faith. As an action, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws."
@@ -113,6 +151,21 @@ class AuraOfTheSentinel(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         InitiativeProficiency().apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You emit an aura of alertness."),
+            Facts(
+                (
+                    ("Area", "10 feet (30 feet from Paladin level 18)"),
+                    ("Requirement", "You aren't Incapacitated"),
+                    (
+                        "Effect",
+                        "When you and any creatures of your choice in the aura roll Initiative, you all add your Proficiency Bonus to it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You emit an aura of alertness while you aren't incapacitated. When you and any creatures of your choice within 10 feet of you roll initiative, you all gain a bonus to initiative equal to your proficiency bonus.\n"
@@ -131,6 +184,9 @@ class AuraOfTheSentinelExpansion(Feature):
             origin="Oath of the Watchers Paladin Level 18",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Aura of the Sentinel range", "30 feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The range of your Aura of the Sentinel increases to 30 feet."
         return description
@@ -146,6 +202,26 @@ class VigilantRebuke(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Chastise anyone who dares wield beguilements against you and your wards."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see within 30 feet succeeds on an Intelligence, Wisdom or Charisma saving throw",
+                    ),
+                    (
+                        "Force damage",
+                        "2d8 + Charisma modifier, to the creature that forced the save",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw."

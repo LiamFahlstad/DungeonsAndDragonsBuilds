@@ -32,6 +32,16 @@ class BonusProficiencies(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Tool proficiency", "Smith's Tools"),
+                    ("Language", "Speak, read and write Giant"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with smith's tools, and you learn to speak, read, and write Giant."
         return description
@@ -258,6 +268,25 @@ class RunicShield(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Proficiency Bonus per Long Rest) are in the panel below.
+        return [
+            Paragraph("Invoke your rune magic to protect your allies."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "Another creature you can see within 60 feet is hit by an attack roll",
+                    ),
+                    (
+                        "Effect",
+                        "The attacker rerolls the d20 and must use the new roll",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to invoke your rune magic to protect your allies. When another creature you can see within 60 feet of you is hit by an attack roll, you can use your reaction to force the attacker to reroll the d20 and use the new roll.\n"
@@ -283,6 +312,20 @@ class GreatStature(Feature):
             origin="Rune Knight Fighter Level 10",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The magic of your runes permanently alters you."),
+            Facts(
+                (
+                    (
+                        "Height",
+                        "When you gain this feature, roll 3d4 and grow that many inches",
+                    ),
+                    ("Giant's Might extra damage", "1d8"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The magic of your runes permanently alters you. When you gain this feature, roll 3d4. You grow a number of inches in height equal to the roll (determine the exact result as you wish).\n"
@@ -302,6 +345,16 @@ class MasterOfRunes(Feature):
             origin="Rune Knight Fighter Level 15",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Rune Carver", "Invoke each rune you know twice instead of once"),
+                    ("Recharge", "Regain all expended uses on a Short or Long Rest"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can invoke each rune you know from your Rune Carver feature twice, rather than once, and you regain all expended uses when you finish a short or long rest."
         return description
@@ -316,6 +369,18 @@ class RunicJuggernaut(Feature):
             name="Runic Juggernaut",
             origin="Rune Knight Fighter Level 18",
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Amplify your rune-powered transformation."),
+            Facts(
+                (
+                    ("Giant's Might extra damage", "1d10"),
+                    ("Size", "Giant's Might can make you Huge"),
+                    ("Reach", "+5 feet while you're Huge"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You learn how to amplify your rune-powered transformation. As a result, the extra damage you deal with the Giant's Might feature increases to 1d10. Moreover, when you use that feature, your size can increase to Huge, and while you are that size, your reach increases by 5 feet."

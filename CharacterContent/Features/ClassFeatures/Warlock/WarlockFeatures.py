@@ -101,6 +101,18 @@ class RegainingSpellSlots(Feature):
     def __init__(self):
         super().__init__(name="Regaining Spell Slots", origin="Warlock Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Short or Long Rest",
+                        "Regain all expended Pact Magic spell slots",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest."
         return description
@@ -214,6 +226,18 @@ class MysticArcanum(Feature):
 class EldritchMaster(Feature):
     def __init__(self):
         super().__init__(name="Eldritch Master", origin="Warlock Level 20")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Magical Cunning",
+                        "Regain all your expended Pact Magic spell slots when you use it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Magical Cunning feature, you regain all your expended Pact Magic spell slots."

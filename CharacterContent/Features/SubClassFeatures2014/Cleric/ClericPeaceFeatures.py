@@ -10,7 +10,7 @@ from Model.Content.Feature import (
 from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class PeaceDomainSpells(Feature):
@@ -18,6 +18,23 @@ class PeaceDomainSpells(Feature):
         super().__init__(
             name="Peace Domain Spells", origin="Peace Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("1", "Heroism, Sanctuary"),
+                    ("3", "Aid, Warding Bond"),
+                    ("5", "Beacon of Hope, Sending"),
+                    ("7", "Aura of Purity, Otiluke's Resilient Sphere"),
+                    ("9", "Greater Restoration, Rary's Telepathic Bond"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -38,6 +55,18 @@ class ImplementOfPeace(Feature):
         super().__init__(
             name="Implement of Peace", origin="Peace Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Skill proficiency",
+                        "Insight, Performance or Persuasion (your choice)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in the Insight, Performance, or Persuasion skill (your choice)."
@@ -142,6 +171,29 @@ class ProtectiveBond(Feature):
             activation=FeatureActivation(action_type="reaction"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "The bond you forge between people helps them protect each other."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "A creature affected by your Emboldening Bond is about to take damage",
+                    ),
+                    (
+                        "Who",
+                        "A second bonded creature within 30 feet of the first, using its Reaction",
+                    ),
+                    (
+                        "Effect",
+                        "It teleports to an unoccupied space within 5 feet of the first creature and takes all the damage instead",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The bond you forge between people helps them protect each other. When a creature affected by your Emboldening Bond feature is about to take damage, a second bonded creature within 30 feet of the first can use its reaction to teleport to an unoccupied space within 5 feet of the first creature. The second creature then takes all the damage instead."
         return description
@@ -154,6 +206,22 @@ class ExpansiveBond(Feature):
             origin="Peace Domain Cleric Level 17",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Range",
+                        "Emboldening Bond and Protective Bond work when the creatures are within 60 feet of each other",
+                    ),
+                    (
+                        "Protective Bond",
+                        "The creature taking someone else's damage has Resistance to it",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The benefits of your Emboldening Bond and Protective Bond features now work when the creatures are within 60 feet of each other. Moreover, when a creature uses Protective Bond to take someone else's damage, the creature has resistance to that damage."

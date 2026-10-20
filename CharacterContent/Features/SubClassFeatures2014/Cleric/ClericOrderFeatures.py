@@ -12,6 +12,7 @@ from Model.Content.Improvements import GrantArmorTraining
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class BonusProficiencies(Feature):
@@ -23,6 +24,16 @@ class BonusProficiencies(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         # "You gain proficiency with heavy armor." (the skill choice isn't modelled)
         GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Armor proficiency", "Heavy armor"),
+                    ("Skill proficiency", "Intimidation or Persuasion (your choice)"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice)."
@@ -40,6 +51,28 @@ class VoiceOfAuthority(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Invoke the power of law to embolden an ally to attack."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You cast a spell with a level 1+ spell slot that targets an ally",
+                    ),
+                    (
+                        "Ally's attack",
+                        "Immediately after the spell, it can use its Reaction to make one weapon attack",
+                    ),
+                    ("Attack target", "A creature of your choice that you can see"),
+                    (
+                        "Several allies",
+                        "If the spell targets more than one ally, you choose which one attacks",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can invoke the power of law to embolden an ally to attack. If you cast a spell with a spell slot of 1st level or higher and target an ally with the spell, that ally can use their reaction immediately after the spell to make one weapon attack against a creature of your choice that you can see.\n"
@@ -53,6 +86,23 @@ class OrderDomainSpells(Feature):
         super().__init__(
             name="Order Domain Spells", origin="Order Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("1", "Command, Heroism"),
+                    ("3", "Hold Person, Zone of Truth"),
+                    ("5", "Mass Healing Word, Slow"),
+                    ("7", "Compulsion, Locate Creature"),
+                    ("9", "Commune, Dominate Person"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -84,6 +134,28 @@ class OrdersDemandChannelDivinity(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use Channel Divinity to exert an intimidating presence over others."
+            ),
+            Facts(
+                (
+                    ("Action", "Action, presenting your holy symbol"),
+                    (
+                        "Target",
+                        "Each creature of your choice within 30 feet that can see or hear you",
+                    ),
+                    ("Save", "Wisdom"),
+                    (
+                        "Failed save",
+                        "Charmed by you until the end of your next turn or until it takes any damage",
+                    ),
+                    ("Disarm", "You can also make it drop what it's holding"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use your Channel Divinity to exert an intimidating presence over others.\n"
@@ -104,6 +176,26 @@ class EmbodimentOfTheLaw(Feature):
                 current_formula="Current amount: equal to your Wisdom modifier.",
             ),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Wisdom modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph(
+                "You become remarkably adept at channeling magical energy to compel others."
+            ),
+            Facts(
+                (
+                    (
+                        "Applies to",
+                        "Enchantment spells cast with a level 1+ spell slot whose casting time is normally 1 action",
+                    ),
+                    (
+                        "Effect",
+                        "Change the casting time to 1 Bonus Action for this casting",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -128,6 +220,30 @@ class OrdersWrath(Feature):
             usage_tags=["damage", "control"],
             activation=FeatureActivation(duration="Until Start of Your Next Turn"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Enemies you designate for destruction wilt under the combined efforts of you and your allies."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You deal your Divine Strike damage to a creature on your turn",
+                    ),
+                    (
+                        "Curse",
+                        "The creature is cursed until the start of your next turn",
+                    ),
+                    (
+                        "Effect",
+                        "The next time an ally hits it with an attack, it also takes 2d8 Psychic damage and the curse ends",
+                    ),
+                    ("Frequency", "Once per turn"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn."

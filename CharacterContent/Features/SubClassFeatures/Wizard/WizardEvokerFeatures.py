@@ -103,6 +103,19 @@ class EmpoweredEvocation(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Applies to", "Wizard spells from the Evocation school"),
+                    (
+                        "Effect",
+                        "Add your Intelligence modifier to one damage roll of the spell",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell."
         return description

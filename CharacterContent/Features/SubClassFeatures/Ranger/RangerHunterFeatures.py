@@ -1,7 +1,7 @@
 from Core.Definitions import RANGER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class HuntersLore(Feature):
@@ -9,6 +9,22 @@ class HuntersLore(Feature):
         super().__init__(
             name="Hunter's Lore", origin="Hunter Ranger Level 3", usage_tags=["utility"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Call upon the forces of nature to reveal certain strengths and weaknesses of your prey."
+            ),
+            Facts(
+                (
+                    ("Target", "A creature marked by your Hunter's Mark"),
+                    (
+                        "You learn",
+                        "Whether it has any Immunities, Resistances or Vulnerabilities, and what they are",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can call upon the forces of nature to reveal certain strengths and weaknesses of your prey. While a creature is marked by your Hunter's Mark, you know whether the creature has any Immunities, Resistances, or Vulnerabilities, and if the creature has any, you know what they are."
@@ -85,6 +101,9 @@ class EscapeTheHorde(Feature):
             name="Escape the Horde", origin="Hunter Ranger Level 7", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Disadvantage", "On Opportunity Attacks against you"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Opportunity Attacks have Disadvantage against you."
         return description
@@ -100,6 +119,19 @@ class MultiattackDefense(Feature):
             origin="Hunter Ranger Level 7",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "A creature hits you with an attack roll"),
+                    (
+                        "Effect",
+                        "That creature has Disadvantage on all other attack rolls against you this turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "When a creature hits you with an attack roll, that creature has Disadvantage on all other attack rolls against you this turn."

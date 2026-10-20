@@ -25,6 +25,9 @@ class Darkvision(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._sense.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Darkvision", "120 feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Darkvision with a range of 120 feet."
 

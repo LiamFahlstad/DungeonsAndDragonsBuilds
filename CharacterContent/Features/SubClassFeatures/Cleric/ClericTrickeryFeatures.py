@@ -140,6 +140,19 @@ class TrickstersTransposition(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You take the Bonus Action to create or move the illusion of Invoke Duplicity",
+                    ),
+                    ("Effect", "Teleport, swapping places with the illusion"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you take the Bonus Action to create or move the illusion of your Invoke Duplicity, you can teleport, swapping places with the illusion."
         return description

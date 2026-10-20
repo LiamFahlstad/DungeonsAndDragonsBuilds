@@ -4,7 +4,7 @@ from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from Core.Definitions import Ability
 
 
@@ -145,6 +145,35 @@ class SunShield(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You become wreathed in a luminous, magical aura."),
+            Facts(
+                (
+                    (
+                        "Light",
+                        "Bright light in a 30-foot radius and dim light for an additional 30 feet",
+                    ),
+                    ("Toggle", "Extinguish or restore the light as a Bonus Action"),
+                )
+            ),
+            Option(
+                "Retaliate",
+                (
+                    Facts(
+                        (
+                            ("Action", "Reaction"),
+                            (
+                                "Trigger",
+                                "A creature hits you with a melee attack while the light shines",
+                            ),
+                            ("Radiant damage", "5 + Wisdom modifier, to that creature"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

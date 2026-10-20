@@ -1,18 +1,24 @@
 from Core.Definitions import PSION_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Option,
-    Paragraph,
-    Table,
-)
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class MetamorphSpells(Feature):
     def __init__(self):
         super().__init__(name="Metamorph Spells", origin="Metamorph Psion Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Always prepared",
+                        "The spells in the Metamorph Spells table, from the Psion level listed for each",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

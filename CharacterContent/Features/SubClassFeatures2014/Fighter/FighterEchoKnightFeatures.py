@@ -101,6 +101,21 @@ class UnleashIncarnation(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_constitution_modifier())
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Constitution modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph("Heighten your echo's fury."),
+            Facts(
+                (
+                    ("Trigger", "You take the Attack action"),
+                    (
+                        "Effect",
+                        "Make one additional melee attack from the echo's position",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 3rd level, you can heighten your echo's fury. Whenever you take the Attack action, you can make one additional melee attack from the echo's position.\n"
@@ -129,6 +144,26 @@ class EchoAvatar(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Temporarily transfer your consciousness to your echo."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Effect",
+                        "See through your echo's eyes and hear through its ears",
+                    ),
+                    ("Drawback", "You're Blinded and Deafened while you do"),
+                    ("Duration", "Up to 10 minutes; end it at any time (no action)"),
+                    (
+                        "Range",
+                        "Your echo can be up to 1,000 feet away without being destroyed",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 7th level, you can temporarily transfer your consciousness to your echo. As an action, you can see through your echo's eyes and hear through its ears. During this time, you are deafened and blinded. You can sustain this effect for up to 10 minutes, and you can end it at any time (requires no action). While your echo is being used in this way, it can be up to 1,000 feet away from you without being destroyed."
         return description
@@ -148,6 +183,27 @@ class ShadowMartyr(Feature):
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Short-or-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "Make your echo throw itself in front of an attack directed at another creature."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction, before the attack roll is made"),
+                    (
+                        "Trigger",
+                        "An attack is directed at another creature you can see",
+                    ),
+                    (
+                        "Effect",
+                        "Teleport the echo to an unoccupied space within 5 feet of the targeted creature; the attack roll is made against the echo instead",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 10th level, you can make your echo throw itself in front of an attack directed at another creature that you can see. Before the attack roll is made, you can use your reaction to teleport the echo to an unoccupied space within 5 feet of the targeted creature. The attack roll that triggered the reaction is instead made against your echo.\n\nOnce you use this feature, you can't use it again until you finish a short or long rest."
@@ -173,6 +229,19 @@ class ReclaimPotential(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_constitution_modifier())
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Constitution modifier, minimum of once) are in the panel below.
+        return [
+            Paragraph("Absorb the fleeting magic of your echo."),
+            Facts(
+                (
+                    ("Trigger", "An echo of yours is destroyed by taking damage"),
+                    ("Temporary HP", "2d6 + Constitution modifier"),
+                    ("Requirement", "You don't already have Temporary Hit Points"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "By 15th level, you've learned to absorb the fleeting magic of your echo. When an echo of yours is destroyed by taking damage, you can gain a number of temporary hit points equal to 2d6 + your Constitution modifier, provided you don't already have temporary hit points.\n"
@@ -197,6 +266,27 @@ class LegionOfOne(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["damage", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Two echoes",
+                        "As a Bonus Action, create two echoes with Manifest Echo; they can co-exist",
+                    ),
+                    ("Third echo", "Creating one destroys the previous two"),
+                    (
+                        "Either position",
+                        "Anything you can do from one echo's position can be done from the other's instead",
+                    ),
+                    (
+                        "Initiative",
+                        "If you have no uses of Unleash Incarnation left, regain one",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

@@ -10,7 +10,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class UndyingExpandedSpells(Feature):
@@ -18,6 +18,23 @@ class UndyingExpandedSpells(Feature):
         super().__init__(
             name="Expanded Spell List", origin="The Undying Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "These spells are added to the Warlock spell list for you when you learn a Warlock spell."
+            ),
+            Table(
+                ("Spell level", "Spells"),
+                (
+                    ("1", "False Life, Ray of Sickness"),
+                    ("2", "Blindness/Deafness, Silence"),
+                    ("3", "Feign Death, Speak with Dead"),
+                    ("4", "Aura of Life, Death Ward"),
+                    ("5", "Contagion, Legend Lore"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -85,6 +102,23 @@ class DefyDeath(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph(
+                "Give yourself vitality when you cheat death or help someone else cheat it."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You succeed on a Death Saving Throw, or stabilize a creature with Spare the Dying",
+                    ),
+                    ("Healing", "1d8 + Constitution modifier (minimum 1)"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Starting at 6th level, you can give yourself vitality when you cheat death or when you help someone else cheat it. You can regain hit points equal to 1d8 + your Constitution modifier (minimum of 1 hit point) when you succeed on a death saving throw or when you stabilize a creature with Spare the Dying.\n"
@@ -106,6 +140,24 @@ class UndyingNature(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Breath", "You can hold your breath indefinitely"),
+                    ("Needs", "You don't require food, water or sleep"),
+                    (
+                        "Rest",
+                        "You still need rest to reduce Exhaustion, and still benefit from Short and Long Rests",
+                    ),
+                    (
+                        "Aging",
+                        "Your body ages 1 year for every 10 that pass, and you're immune to being magically aged",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Beginning at 10th level, you can hold your breath indefinitely, and you don't require food, water, or sleep, although you still require rest to reduce exhaustion and still benefit from finishing short and long rests.\n"
@@ -124,6 +176,22 @@ class IndestructibleLife(Feature):
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Short-or-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Partake of some of the true secrets of the Undying."),
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    ("Healing", "1d8 + Warlock level"),
+                    (
+                        "Severed parts",
+                        "A severed body part of yours held back in place reattaches",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

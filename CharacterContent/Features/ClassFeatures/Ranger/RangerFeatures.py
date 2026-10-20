@@ -52,6 +52,18 @@ class ReplacingWeaponMasteries(Feature):
     def __init__(self):
         super().__init__(name="Replacing Weapon Masteries", origin="Ranger Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Long Rest",
+                        "Change the kinds of weapons you chose for Weapon Mastery",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you finish a Long Rest, you can change the kinds of weapons you chose."
         return description
@@ -120,6 +132,9 @@ class DeftExplorerExpertise(Feature):
             [skill], list(Skill), count=1, error_prefix="Deft Explorer Expertise"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Expertise", self.skill.value),))]
+
     def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill.value} skill."
 
@@ -131,6 +146,18 @@ class DeftExplorerLanguages(Feature):
     def __init__(self):
         super().__init__(name="Deft Explorer", origin="Ranger Level 2")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Languages",
+                        "Two of your choice from the language tables in chapter 2",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Languages.: You know two languages of your choice from the language tables in chapter 2."
         return description
@@ -139,6 +166,9 @@ class DeftExplorerLanguages(Feature):
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Ranger Level 5")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
@@ -189,6 +219,11 @@ class Expertise(Feature):
         self._choice = SkillExpertiseChoice(
             [skill_1, skill_2], list(Skill), count=2, error_prefix="Ranger Expertise"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts((("Expertise", f"{self.skill_1.value} and {self.skill_2.value}"),))
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return f"You gain Expertise with the {self.skill_1.value} and {self.skill_2.value} skills."
@@ -266,6 +301,18 @@ class RelentlessHunter(Feature):
     def __init__(self):
         super().__init__(name="Relentless Hunter", origin="Ranger Level 13")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Hunter's Mark",
+                        "Taking damage can't break your Concentration on it",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Taking damage can't break your Concentration on Hunter's Mark."
         return description
@@ -324,6 +371,18 @@ class PreciseHunter(Feature):
             name="Precise Hunter", origin="Ranger Level 17", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Advantage",
+                        "On attack rolls against the creature currently marked by your Hunter's Mark",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You have Advantage on attack rolls against the creature currently marked by your Hunter's Mark."
         return description
@@ -344,6 +403,9 @@ class FeralSenses(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._blindsight.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Blindsight", "30 feet"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to the forces of nature grants you Blindsight with a range of 30 feet."
         return description
@@ -357,6 +419,9 @@ class FoeSlayer(Feature):
         super().__init__(
             name="Foe Slayer", origin="Ranger Level 20", usage_tags=["damage"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Hunter's Mark damage die", "d10 (instead of d6)"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The damage die of your Hunter's Mark is a d10 rather than a d6."

@@ -8,6 +8,16 @@ class StrongerTelekinesis(Feature):
     def __init__(self):
         super().__init__(name="Stronger Telekinesis", origin="Psykinetic Psion Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Mage Hand range", "+30 feet"),
+                    ("Mage Hand carry limit", "Up to 20 pounds"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "When you cast Mage Hand, its range increases by 30 "

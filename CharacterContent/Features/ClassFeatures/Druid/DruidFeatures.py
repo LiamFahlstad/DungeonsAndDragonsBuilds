@@ -417,6 +417,9 @@ class PotentSpellcasting(Feature):
             name="Potent Spellcasting", origin="Druid Level 7", usage_tags=["damage"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Druid cantrip damage", "+ Wisdom modifier"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Add your Wisdom modifier to the damage you deal with any Druid cantrip."
@@ -463,6 +466,16 @@ class ImprovedPotentSpellcasting(Feature):
     def __init__(self):
         super().__init__(name="Improved Potent Spellcasting", origin="Druid Level 15")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Applies to", "Druid cantrips with a range of 10 feet or greater"),
+                    ("Range", "+300 feet"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet."
         return description
@@ -476,6 +489,9 @@ class ImprovedPrimalStrike(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Primal Strike extra damage", "2d8"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The extra damage of your Primal Strike increases to 2d8."
         return description
@@ -487,6 +503,19 @@ class ImprovedPrimalStrike(Feature):
 class BeastSpells(Feature):
     def __init__(self):
         super().__init__(name="Beast Spells", origin="Druid Level 18")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Wild Shape", "You can cast spells in Beast form"),
+                    (
+                        "Exception",
+                        "Spells with a Material component that has a cost or is consumed",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "While using Wild Shape, you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component."

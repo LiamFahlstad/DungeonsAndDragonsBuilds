@@ -8,12 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Paragraph,
-    dc_formula,
-)
+from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
 
 
 class ChronalShift(Feature):
@@ -58,6 +53,9 @@ class ChronalShift(Feature):
 class TemporalAwareness(Feature):
     def __init__(self):
         super().__init__(name="Temporal Awareness", origin="Chronurgy Wizard Level 3")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Initiative", "+ Intelligence modifier"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 2nd level, you can add your Intelligence modifier to your initiative rolls."

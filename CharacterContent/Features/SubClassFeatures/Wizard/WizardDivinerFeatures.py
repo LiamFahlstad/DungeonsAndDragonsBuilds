@@ -162,6 +162,14 @@ class GreaterPortent(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "The visions in your dreams intensify and paint a more accurate picture of what is to come."
+            ),
+            Facts((("Portent", "Roll three d20s instead of two"),)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The visions in your dreams intensify and paint a more accurate picture in your mind of what is to come. Roll three d20s for your Portent feature rather than two."
         return description

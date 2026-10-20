@@ -32,6 +32,20 @@ class Expertise(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skill_names = " and ".join(skill.value for skill in self._choice.skills)
+        return [
+            Facts(
+                (
+                    ("Expertise", skill_names),
+                    (
+                        "Effect",
+                        "Add double your Proficiency Bonus to ability checks using these skills",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         skill_names = " and ".join(skill.value for skill in self._choice.skills)
         description = f"You have Expertise in {skill_names}. When you make an ability check using one of these skills, you add double your Proficiency Bonus to the ability check instead of adding your Proficiency Bonus once."
@@ -100,6 +114,21 @@ class ThievesCant(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You picked up various languages in the communities where you plied your roguish talents."
+            ),
+            Facts(
+                (
+                    (
+                        "Languages",
+                        "Thieves' Cant, plus one other of your choice from the language tables in Chapter 2",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2."
         return description
@@ -108,6 +137,22 @@ class ThievesCant(Feature):
 class WeaponMastery(Feature):
     def __init__(self):
         super().__init__(name="Weapon Mastery", origin="Rogue Level 1")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Mastery",
+                        "Use the mastery properties of two kinds of weapons you're proficient with (e.g. Daggers and Shortbows)",
+                    ),
+                    (
+                        "Long Rest",
+                        "Change the kinds of weapons you chose (e.g. to Scimitars and Shortswords)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -304,6 +349,19 @@ class ReliableTalent(Feature):
     def __init__(self):
         super().__init__(name="Reliable Talent", origin="Rogue Level 7")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Applies to",
+                        "Ability checks that use one of your skill or tool proficiencies",
+                    ),
+                    ("Effect", "Treat a d20 roll of 9 or lower as a 10"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you make an ability check that uses one of your skill or tool proficiencies, you can treat a d20 roll of 9 or lower as a 10."
         return description
@@ -312,6 +370,18 @@ class ReliableTalent(Feature):
 class ImprovedCunningStrike(Feature):
     def __init__(self):
         super().__init__(name="Improved Cunning Strike", origin="Rogue Level 11")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Cunning Strike",
+                        "Use up to two effects when you deal Sneak Attack damage, paying the die cost for each",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use up to two Cunning Strike effects when you deal Sneak Attack damage, paying the die cost for each effect."
@@ -383,6 +453,12 @@ class SlipperyMind(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your mind is exceptionally difficult to control."),
+            Facts((("Saving throw proficiency", "Wisdom and Charisma"),)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "Your mind is exceptionally difficult to control. You gain proficiency in Wisdom and Charisma saving throws."
 
@@ -390,6 +466,19 @@ class SlipperyMind(Feature):
 class Elusive(Feature):
     def __init__(self):
         super().__init__(name="Elusive", origin="Rogue Level 18", usage_tags=["buff"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You're so evasive that attackers rarely gain the upper hand against you."
+            ),
+            Facts(
+                (
+                    ("Effect", "No attack roll can have Advantage against you"),
+                    ("Exception", "Not while you have the Incapacitated condition"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You're so evasive that attackers rarely gain the upper hand against you. No attack roll can have advantage against you unless you have the Incapacitated condition."

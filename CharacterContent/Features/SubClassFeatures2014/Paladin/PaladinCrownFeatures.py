@@ -8,7 +8,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class CrownSpells(Feature):
@@ -16,6 +16,23 @@ class CrownSpells(Feature):
         super().__init__(
             name="Oath of the Crown Spells", origin="Oath of the Crown Paladin Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Paladin level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Paladin level", "Spells"),
+                (
+                    ("3", "Command, Compelled Duel"),
+                    ("5", "Warding Bond, Zone of Truth"),
+                    ("9", "Aura of Vitality, Spirit Guardians"),
+                    ("13", "Banishment, Guardian of Faith"),
+                    ("17", "Circle of Power, Geas"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -42,6 +59,31 @@ class ChampionChallenge(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use Channel Divinity to issue a challenge that compels other creatures to do battle with you."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Target",
+                        "Each creature of your choice you can see within 30 feet",
+                    ),
+                    ("Save", "Wisdom"),
+                    (
+                        "Failed save",
+                        "It can't willingly move more than 30 feet away from you",
+                    ),
+                    (
+                        "Ends",
+                        "If you're Incapacitated or die, or the creature is more than 30 feet away from you",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to issue a challenge that compels other creatures to do battle with you. As a bonus action, each creature of your choice that you can see within 30 feet of you must make a Wisdom saving throw. On a failed save, a creature can't willingly move more than 30 feet away from you. This effect ends on the creature if you are incapacitated or die or if the creature is more than 30 feet away from you."
         return description
@@ -60,6 +102,21 @@ class TurnTheTide(Feature):
             ),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use Channel Divinity to bolster injured creatures."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    (
+                        "Target",
+                        "Each creature of your choice within 30 feet that can hear you and has no more than half its Hit Points",
+                    ),
+                    ("Healing", "1d6 + Charisma modifier (minimum 1) Hit Points"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to bolster injured creatures. As a bonus action, each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1 hp) if it has no more than half of its hit points."
@@ -80,6 +137,24 @@ class DivineAllegiance(Feature):
             ),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "A creature within 5 feet of you takes damage"),
+                    (
+                        "Effect",
+                        "That creature doesn't take the damage; you take it instead",
+                    ),
+                    (
+                        "Limit",
+                        "The damage to you can't be reduced or prevented in any way",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When a creature within 5 feet of you takes damage, you can use your reaction to magically substitute your own health for that of the target creature, causing that creature not to take the damage. Instead, you take the damage. This damage to you can't be reduced or prevented in any way."
         return description
@@ -95,6 +170,18 @@ class UnyieldingSaint(Feature):
             origin="Oath of the Crown Paladin Level 15",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Advantage",
+                        "On saving throws to avoid becoming Paralyzed or Stunned",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have advantage on saving throws to avoid becoming paralyzed or stunned."

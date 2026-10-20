@@ -141,6 +141,16 @@ class UnarmoredDefenseText(Feature):
     def __init__(self):
         super().__init__(name="Unarmored Defense", origin="Monk Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Base AC", "10 + Dexterity modifier + Wisdom modifier"),
+                    ("Requirement", "You aren't wearing armor or wielding a Shield"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Wisdom modifiers."
         return description
@@ -509,6 +519,9 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Monk Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
@@ -558,6 +571,18 @@ class EmpoweredStrikes(Feature):
     def __init__(self):
         super().__init__(name="Empowered Strikes", origin="Monk Level 6")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Unarmed Strike damage",
+                        "Your choice of Force or its normal damage type",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you deal damage with your Unarmed Strike, it can deal your choice of Force damage or its normal damage type."
         return description
@@ -601,6 +626,19 @@ class AcrobaticMovement(Feature):
         super().__init__(
             name="Acrobatic Movement", origin="Monk Level 9", usage_tags=["utility"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Movement",
+                        "Move along vertical surfaces and across liquids on your turn without falling during the movement",
+                    ),
+                    ("Requirement", "You aren't wearing armor or wielding a Shield"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "While you aren't wearing armor or wielding a Shield, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the movement."
@@ -682,6 +720,18 @@ class DeflectEnergy(Feature):
     def __init__(self):
         super().__init__(name="Deflect Energy", origin="Monk Level 13")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Deflect Attacks",
+                        "Works against attacks of any damage type, not just Bludgeoning, Piercing or Slashing",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing."
         return description
@@ -707,6 +757,9 @@ class DisciplinedSurvivorSavingThrows(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._proficiencies.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Proficiency", "All saving throws"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your physical and mental discipline grant you proficiency in all saving throws.\n"
@@ -812,6 +865,17 @@ class BodyAndMind(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonuses.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You have developed your body and mind to new heights."),
+            Facts(
+                (
+                    ("Dexterity", "+4 (maximum 25)"),
+                    ("Wisdom", "+4 (maximum 25)"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have developed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4, to a maximum of 25."

@@ -12,7 +12,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 from Core.Definitions import CharacterClass
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class ExpandedSpellList(Feature):
@@ -20,6 +20,23 @@ class ExpandedSpellList(Feature):
         super().__init__(
             name="Expanded Spell List", origin="The Fathomless Patron Warlock Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "These spells are added to the Warlock spell list for you when you learn a Warlock spell."
+            ),
+            Table(
+                ("Spell level", "Spells"),
+                (
+                    ("1", "Create or Destroy Water, Thunderwave"),
+                    ("2", "Gust of Wind, Silence"),
+                    ("3", "Lightning Bolt, Sleet Storm"),
+                    ("4", "Control Water, Summon Elemental (Water only)"),
+                    ("5", "Bigby's Hand (appears as a tentacle), Cone of Cold"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -128,6 +145,16 @@ class GiftOfTheSea(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Swim Speed", "40 feet"),
+                    ("Breathing", "You can breathe underwater"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a swimming speed of 40 feet, and you can breathe underwater."
@@ -150,6 +177,20 @@ class OceanicSoul(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You are now even more at home in the depths."),
+            Facts(
+                (
+                    ("Resistance", "Cold damage"),
+                    (
+                        "Underwater speech",
+                        "While you're fully submerged, any fully submerged creature can understand your speech, and you can understand theirs",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You are now even more at home in the depths. You gain resistance to cold damage. In addition, when you are fully submerged, any creature that is also fully submerged can understand your speech, and you can understand theirs."
@@ -181,6 +222,27 @@ class GuardianCoil(Feature):
             dice=GUARDIAN_COIL_DICE,
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The damage reduction die by Warlock level is in the panel below.
+        return [
+            Paragraph(
+                "Your Tentacle of the Deep interposes itself between you or others and harm."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "You or a creature you can see takes damage while within 10 feet of the tentacle",
+                    ),
+                    (
+                        "Effect",
+                        "Reduce the damage to one of those creatures by your Guardian Coil die (below)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your Tentacle of the Deep can defend you and others, interposing itself between them and harm. When you or a creature you can see takes damage while within 10 feet of the tentacle, you can use your reaction to choose one of those creatures and reduce the damage to that creature by 1d8. When you reach 10th level in this class, the damage reduced by the tentacle increases to 2d8."
         return description
@@ -197,6 +259,25 @@ class GraspingTentacles(Feature):
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest free casting is in the panel below.
+        return [
+            Facts(
+                (
+                    (
+                        "Spell",
+                        "Evard's Black Tentacles; a Warlock spell for you that doesn't count against your spells known",
+                    ),
+                    ("Free casting", "Cast it once without a spell slot"),
+                    (
+                        "Temporary HP",
+                        "Equal to your Warlock level, whenever you cast it",
+                    ),
+                    ("Concentration", "Damage can't break your Concentration on it"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

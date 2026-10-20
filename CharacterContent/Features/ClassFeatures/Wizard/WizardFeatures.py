@@ -96,6 +96,18 @@ class Scholar(Feature):
             error_prefix="Scholar skill must be one of: Arcana, History, Investigation, Medicine, Nature, Religion",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Expertise",
+                        f"{self._expertise.skills[0].value}, the field you specialized in while studying magic",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return f"While studying magic, you specialized in {self._expertise.skills[0].value}. You have Expertise in it."
 
@@ -106,6 +118,18 @@ class Scholar(Feature):
 class MemorizeSpell(Feature):
     def __init__(self):
         super().__init__(name="Memorize Spell", origin="Wizard Level 5")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Short Rest",
+                        "Study your spellbook and replace one prepared level 1+ Wizard spell with another level 1+ spell from the book",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "Whenever you finish a Short Rest, you can study your spellbook and replace one of the level 1+ Wizard spells you have prepared for your Spellcasting feature with another level 1+ spell from the book."

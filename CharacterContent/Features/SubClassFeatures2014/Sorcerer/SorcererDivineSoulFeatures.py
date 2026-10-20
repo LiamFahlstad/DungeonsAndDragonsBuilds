@@ -9,7 +9,7 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Table
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
 class DivineMagic(Feature):
@@ -72,6 +72,21 @@ class FavoredByTheGods(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Short-or-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Divine power guards your destiny."),
+            Facts(
+                (
+                    ("Trigger", "You fail a saving throw or miss with an attack roll"),
+                    (
+                        "Effect",
+                        "Roll 2d4 and add it to the total, possibly changing the outcome",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Divine power guards your destiny. If you fail a saving throw or miss with an attack roll, you can roll 2d4 and add it to the total, possibly changing the outcome.\n"
@@ -96,6 +111,25 @@ class EmpoweredHealing(Feature):
             usage_tags=["buff", "heal"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "The divine energy coursing through you can empower healing spells."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You or an ally within 5 feet rolls dice for the Hit Points a spell restores",
+                    ),
+                    ("Cost", "1 Sorcery Point"),
+                    ("Effect", "Reroll any number of those dice once"),
+                    ("Requirement", "You aren't Incapacitated"),
+                    ("Frequency", "Once per turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn."
         return description
@@ -116,6 +150,29 @@ class AngelicForm(Feature):
             ),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Manifest a pair of spectral wings from your back."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Fly Speed", "30 feet while the wings are present"),
+                    (
+                        "Duration",
+                        "Until you're Incapacitated, you die, or you dismiss them as a Bonus Action",
+                    ),
+                )
+            ),
+            Table(
+                ("Divine Magic affinity", "Wings"),
+                (
+                    ("Good or law", "Eagle"),
+                    ("Evil or chaos", "Bat"),
+                    ("Neutrality", "Dragonfly"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -140,6 +197,19 @@ class UnearthlyRecovery(Feature):
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Overcome grievous injuries."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Requirement", "You have fewer than half your Hit Points"),
+                    ("Healing", "Half your Hit Point maximum"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

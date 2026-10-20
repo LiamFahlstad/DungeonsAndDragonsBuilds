@@ -17,7 +17,7 @@ from Model.Content.Improvements import (
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class BonusProficiency(Feature):
@@ -41,6 +41,24 @@ class BonusProficiency(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         if self._proficiency_choice is not None:
             self._proficiency_choice.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        if self._skill is not None:
+            return [Facts((("Skill proficiency", self._skill.value),))]
+        if self._language is not None:
+            return [Facts((("Language", self._language),))]
+        return [
+            Paragraph("Choose one:"),
+            Facts(
+                (
+                    (
+                        "Skill proficiency",
+                        "History, Insight, Performance or Persuasion",
+                    ),
+                    ("Or a language", "One language of your choice"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in one of the following skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."
@@ -125,6 +143,24 @@ class ElegantCourtier(Feature):
             ledger_writer
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        saving_throw = (
+            f"{self._alternate_saving_throw.value} (you already had Wisdom)"
+            if self._alternate_saving_throw is not None
+            else "Wisdom; if you already have it, Intelligence or Charisma (your choice)"
+        )
+        return [
+            Paragraph(
+                "Your discipline and attention to detail let you excel in social situations."
+            ),
+            Facts(
+                (
+                    ("Charisma (Persuasion)", "+ Wisdom modifier to the check"),
+                    ("Saving throw proficiency", saving_throw),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your discipline and attention to detail allow you to excel in social situations. Whenever you make a Charisma (Persuasion) check, you gain a bonus to the check equal to your Wisdom modifier.\n"
@@ -145,6 +181,19 @@ class TirelessSpirit(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You roll Initiative with no uses of Fighting Spirit left",
+                    ),
+                    ("Effect", "Regain one use"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll initiative and have no uses of Fighting Spirit remaining, you regain one use."
         return description
@@ -157,6 +206,24 @@ class RapidStrike(Feature):
             origin="Samurai Fighter Level 15",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Trade accuracy for swift strikes."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You take the Attack action on your turn and have Advantage on an attack roll against a target",
+                    ),
+                    (
+                        "Effect",
+                        "Forgo the Advantage to make an additional weapon attack against that target, as part of the same action",
+                    ),
+                    ("Frequency", "Once per turn"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You learn to trade accuracy for swift strikes. If you take the Attack action on your turn and have advantage on an attack roll against one of the targets, you can forgo the advantage for that roll to make an additional weapon attack against that target, as part of the same action. You can do so no more than once per turn."

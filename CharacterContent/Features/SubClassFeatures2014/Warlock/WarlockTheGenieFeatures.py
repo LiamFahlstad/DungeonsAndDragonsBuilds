@@ -10,7 +10,7 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 _WRATH_DAMAGE_TYPE = {
     Definitions.WarlockGenieKind.DAO: "bludgeoning",
@@ -32,6 +32,60 @@ class GenieExpandedSpells(Feature):
             name="Expanded Spell List", origin="The Genie Patron Warlock Level 3"
         )
         self.kind = kind
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        kind_spells = {
+            Definitions.WarlockGenieKind.DAO: (
+                "Sanctuary",
+                "Spike Growth",
+                "Meld into Stone",
+                "Stone Shape",
+                "Wall of Stone",
+            ),
+            Definitions.WarlockGenieKind.DJINNI: (
+                "Thunderwave",
+                "Gust of Wind",
+                "Wind Wall",
+                "Greater Invisibility",
+                "Seeming",
+            ),
+            Definitions.WarlockGenieKind.EFREETI: (
+                "Burning Hands",
+                "Scorching Ray",
+                "Fireball",
+                "Fire Shield",
+                "Flame Strike",
+            ),
+            Definitions.WarlockGenieKind.MARID: (
+                "Fog Cloud",
+                "Blur",
+                "Sleet Storm",
+                "Control Water",
+                "Cone of Cold",
+            ),
+        }[self.kind]
+        genie_spells = (
+            "Detect Evil and Good",
+            "Phantasmal Force",
+            "Create Food and Water",
+            "Phantasmal Killer",
+            "Creation",
+        )
+        return [
+            Paragraph(
+                f"The Genie spells and your patron's {self.kind.value} spells are added to the Warlock spell list for you."
+            ),
+            Table(
+                ("Spell level", "Genie", self.kind.value),
+                tuple(
+                    (str(level), genie, kind)
+                    for level, genie, kind in zip(
+                        range(1, 6), genie_spells, kind_spells
+                    )
+                )
+                + (("9", "Wish", "-"),),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

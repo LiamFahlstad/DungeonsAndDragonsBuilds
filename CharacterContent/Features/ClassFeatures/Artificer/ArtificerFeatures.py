@@ -9,14 +9,7 @@ from Model.Content.Feature import (
 from Core.Rules import MAX_ABILITY_MODIFIER, MAX_LEVEL
 from Model.View import CharacterView
 from Utils import StringUtils
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Option,
-    Paragraph,
-    Table,
-    dc_formula,
-)
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Core.Definitions import Ability
 
 
@@ -566,6 +559,9 @@ class MagicItemAdept(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Adept", origin="Artificer Level 10")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attunement", "Up to four magic items at once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can now attune to up to four magic items at once."
         return description
@@ -642,6 +638,9 @@ class AdvancedArtifice(Feature):
 class MagicItemMaster(Feature):
     def __init__(self):
         super().__init__(name="Magic Item Master", origin="Artificer Level 18")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attunement", "Up to six magic items at once"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can now attune to up to six magic items at once."

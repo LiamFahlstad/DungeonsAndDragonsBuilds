@@ -17,6 +17,20 @@ class BonusProficiency(Feature):
     def __init__(self):
         super().__init__(name="Bonus Proficiency", origin="Cavalier Fighter Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Choose one:"),
+            Facts(
+                (
+                    (
+                        "Skill proficiency",
+                        "Animal Handling, History, Insight, Performance or Persuasion",
+                    ),
+                    ("Or a language", "One language of your choice"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in one of the following skills of your choice: Animal Handling, History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice."
         return description
@@ -29,6 +43,24 @@ class BornToTheSaddle(Feature):
             origin="Cavalier Fighter Level 3",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your mastery as a rider becomes apparent."),
+            Facts(
+                (
+                    ("Advantage", "On saving throws to avoid falling off your mount"),
+                    (
+                        "Falling",
+                        "If you fall off your mount and descend no more than 10 feet, you land on your feet unless you're Incapacitated",
+                    ),
+                    (
+                        "Mount or dismount",
+                        "Costs only 5 feet of movement instead of half your Speed",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -182,6 +214,23 @@ class HoldTheLine(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You become a master of locking down your enemies."),
+            Facts(
+                (
+                    (
+                        "Opportunity Attacks",
+                        "Creatures provoke one from you when they move 5 feet or more while within your reach",
+                    ),
+                    (
+                        "On a hit",
+                        "The target's Speed is reduced to 0 until the end of the current turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You become a master of locking down your enemies. Creatures provoke an opportunity attack from you when they move 5 feet or more while within your reach, and if you hit a creature with an opportunity attack, the target's speed is reduced to 0 until the end of the current turn."
         return description
@@ -197,6 +246,22 @@ class FerociousCharger(Feature):
             origin="Cavalier Fighter Level 15",
             usage_tags=["control"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Run down your foes, whether you're mounted or not."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You move at least 10 feet in a straight line right before attacking a creature and hit it",
+                    ),
+                    ("Save", "Strength, DC 8 + Strength modifier + Proficiency Bonus"),
+                    ("Failed save", "Knocked Prone"),
+                    ("Frequency", "Once on each of your turns"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can run down your foes, whether you're mounted or not. If you move at least 10 feet in a straight line right before attacking a creature and you hit it with the attack, that target must succeed on a Strength saving throw (DC 8 + your proficiency bonus + your Strength modifier) or be knocked prone. You can use this feature only once on each of your turns."
@@ -218,6 +283,24 @@ class VigilantDefender(Feature):
             origin="Cavalier Fighter Level 18",
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You respond to danger with extraordinary vigilance."),
+            Facts(
+                (
+                    (
+                        "Special reaction",
+                        "In combat, take it once on every creature's turn except your own",
+                    ),
+                    ("Use", "Only to make an Opportunity Attack"),
+                    (
+                        "Limit",
+                        "Not on the same turn that you take your normal Reaction",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You respond to danger with extraordinary vigilance. In combat, you get a special reaction that you can take once on every creature's turn, except your turn. You can use this special reaction only to make an opportunity attack, and you can't use it on the same turn that you take your normal reaction."

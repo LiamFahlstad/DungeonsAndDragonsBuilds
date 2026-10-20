@@ -52,6 +52,16 @@ class DamageResistance(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", f"{self.damage_type.value} damage"),
+                    ("Draconic Ancestry", f"{self.color.value} dragon"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance against {self.damage_type.value} damage because your Draconic Ancestry is {self.color.value} dragon."
 

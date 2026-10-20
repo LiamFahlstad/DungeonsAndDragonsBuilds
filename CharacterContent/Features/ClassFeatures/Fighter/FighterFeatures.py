@@ -15,6 +15,20 @@ class FightingStyle(Feature):
     def __init__(self):
         super().__init__(name="Fighting Style", origin="Fighter Level 1")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Feat", "A Fighting Style feat of your choice (see chapter 5)"),
+                    ("Recommended", "Defense"),
+                    (
+                        "Swap",
+                        "Whenever you gain a Fighter level, replace it with a different Fighting Style feat",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain a Fighting Style feat of your choice (see chapter 5). Defense is recommended.\n"
@@ -181,6 +195,9 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
@@ -189,6 +206,19 @@ class ExtraAttack(Feature):
 class TacticalShift(Feature):
     def __init__(self):
         super().__init__(name="Tactical Shift", origin="Fighter Level 5")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You activate Second Wind with a Bonus Action"),
+                    (
+                        "Effect",
+                        "Move up to half your Speed without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you activate your Second Wind with a Bonus Action, you can move up to half your Speed without provoking Opportunity Attacks."
@@ -253,6 +283,22 @@ class TacticalMaster(Feature):
     def __init__(self):
         super().__init__(name="Tactical Master", origin="Fighter Level 9")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You attack with a weapon whose mastery property you can use",
+                    ),
+                    (
+                        "Effect",
+                        "Replace that property with Push, Sap or Slow for that attack",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you attack with a weapon whose mastery property you can use, you can replace that property with the Push, Sap, or Slow property for that attack."
         return description
@@ -261,6 +307,9 @@ class TacticalMaster(Feature):
 class TwoExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Two Extra Attacks", origin="Fighter Level 11")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack three times instead of once"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack three times instead of once whenever you take the Attack action on your turn."
@@ -272,6 +321,20 @@ class StudiedAttacks(Feature):
         super().__init__(
             name="Studied Attacks", origin="Fighter Level 13", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You study your opponents and learn from each attack you make."),
+            Facts(
+                (
+                    ("Trigger", "You make an attack roll against a creature and miss"),
+                    (
+                        "Effect",
+                        "Advantage on your next attack roll against that creature before the end of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You study your opponents and learn from each attack you make. If you make an attack roll against a creature and miss, you have Advantage on your next attack roll against that creature before the end of your next turn."
@@ -285,6 +348,16 @@ class EpicBoon(Feature):
     def __init__(self):
         super().__init__(name="Epic Boon", origin="Fighter Level 19")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Feat", "An Epic Boon feat or another feat you qualify for"),
+                    ("Recommended", "Boon of Combat Prowess"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain an Epic Boon feat or another feat of your choice for which you qualify. Boon of Combat Prowess is recommended."
         return description
@@ -293,6 +366,9 @@ class EpicBoon(Feature):
 class ThreeExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Three Extra Attacks", origin="Fighter Level 20")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack four times instead of once"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack four times instead of once whenever you take the Attack action on your turn."

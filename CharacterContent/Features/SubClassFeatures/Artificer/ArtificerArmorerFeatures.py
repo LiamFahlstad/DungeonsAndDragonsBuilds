@@ -307,6 +307,9 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Armorer Artificer Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description

@@ -21,13 +21,7 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Paragraph,
-    StatBlock,
-    dc_formula,
-)
+from Model.Content.FeatureText import Block, Facts, Paragraph, StatBlock, dc_formula
 
 
 def _build_drake(
@@ -140,6 +134,27 @@ class DraconicGift(Feature):
             usage_tags=["utility"],
         )
         self._language = language
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        language = (
+            self._language
+            if self._language is not None
+            else "Draconic or one other language of your choice"
+        )
+        return [
+            Paragraph(
+                "The bond you share with your drake connects you to dragonkind, granting you understanding and empowering your presence."
+            ),
+            Facts(
+                (
+                    (
+                        "Thaumaturgy",
+                        "You learn the cantrip; it's a Ranger spell for you",
+                    ),
+                    ("Tongue of Dragons", f"Speak, read and write {language}"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

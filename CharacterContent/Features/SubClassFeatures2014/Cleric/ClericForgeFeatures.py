@@ -18,7 +18,7 @@ from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class BonusProficiencies(Feature):
@@ -31,6 +31,16 @@ class BonusProficiencies(Feature):
         # "You gain proficiency with heavy armor and smith's tools."
         GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
         GrantToolProficiency([SmithsTools()]).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Armor proficiency", "Heavy armor"),
+                    ("Tool proficiency", "Smith's Tools"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with heavy armor and smith's tools."
@@ -52,6 +62,29 @@ class BlessingOfTheForge(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Imbue magic into a weapon or armor."),
+            Facts(
+                (
+                    ("When", "At the end of a Long Rest"),
+                    (
+                        "Target",
+                        "One nonmagical suit of armor or Simple or Martial weapon you touch",
+                    ),
+                    ("Armor", "Becomes a magic item with +1 to AC"),
+                    (
+                        "Weapon",
+                        "Becomes a magic item with +1 to attack and damage rolls",
+                    ),
+                    (
+                        "Duration",
+                        "Until the end of your next Long Rest or until you die",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain the ability to imbue magic into a weapon or armor. At the end of a long rest, you can touch one nonmagical object that is a suit of armor or a simple or martial weapon. Until the end of your next long rest or until you die, the object becomes a magic item, granting a +1 bonus to AC if it's armor or a +1 bonus to attack and damage rolls if it's a weapon.\n"
@@ -68,6 +101,23 @@ class ForgeDomainSpells(Feature):
         super().__init__(
             name="Forge Domain Spells", origin="Forge Domain Cleric Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("1", "Identify, Searing Smite"),
+                    ("3", "Heat Metal, Magic Weapon"),
+                    ("5", "Elemental Weapon, Protection from Energy"),
+                    ("7", "Fabricate, Wall of Fire"),
+                    ("9", "Animate Objects, Creation"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -143,6 +193,16 @@ class SoulOfTheForge(Feature):
             lambda cs: 1 if cs.worn_armor_type == ArmorType.HEAVY else 0
         ).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Resistance", "Fire damage"),
+                    ("AC", "+1 while wearing Heavy armor"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your mastery of the forge grants you special abilities.\n"
@@ -168,6 +228,19 @@ class SaintOfForgeAndFire(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Immunity", "Fire damage"),
+                    (
+                        "Resistance",
+                        "Bludgeoning, Piercing and Slashing damage from nonmagical attacks, while wearing Heavy armor",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

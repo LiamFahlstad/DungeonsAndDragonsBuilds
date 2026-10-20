@@ -23,8 +23,9 @@ from Model.Content.FeatureText import (
     Block,
     Facts,
     Paragraph,
-    dc_formula,
     StatBlock,
+    Table,
+    dc_formula,
 )
 
 
@@ -108,6 +109,33 @@ class CircleSpells(Feature):
         super().__init__(
             name="Circle Spells", origin="Circle of Wildfire Druid Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your bond with a wildfire spirit, a primal being of creation and destruction, grants you spells."
+            ),
+            Facts(
+                (
+                    ("Always prepared", "The spells below, from the Druid level shown"),
+                    ("Prepared limit", "They don't count against your prepared spells"),
+                    (
+                        "Spell list",
+                        "They're Druid spells for you, even if not on the Druid list",
+                    ),
+                )
+            ),
+            Table(
+                ("Druid level", "Spells"),
+                (
+                    ("2", "Burning Hands, Cure Wounds"),
+                    ("3", "Flaming Sphere, Scorching Ray"),
+                    ("5", "Plant Growth, Revivify"),
+                    ("7", "Aura of Life, Fire Shield"),
+                    ("9", "Flame Strike, Mass Cure Wounds"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -198,6 +226,26 @@ class EnhancedBond(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your bond with your wildfire spirit enhances your destructive and restorative spells."
+            ),
+            Facts(
+                (
+                    ("Requirement", "Your wildfire spirit is summoned"),
+                    (
+                        "Fire or healing",
+                        "When you cast a spell that deals Fire damage or restores Hit Points, roll a d8 and add it to one damage or healing roll of the spell",
+                    ),
+                    (
+                        "Origin",
+                        "A spell with a range other than Self can originate from you or your wildfire spirit",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "The bond with your wildfire spirit enhances your destructive and restorative spells. Whenever you cast a spell that deals fire damage or restores hit points while your wildfire spirit is summoned, roll a d8, and you gain a bonus equal to the number rolled to one damage or healing roll of the spell.\n"
@@ -267,6 +315,24 @@ class BlazingRevival(Feature):
             activation=FeatureActivation(range="120 Feet"),
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Your bond with your wildfire spirit can save you from death."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You're reduced to 0 Hit Points and fall Unconscious while the spirit is within 120 feet",
+                    ),
+                    (
+                        "Effect",
+                        "The spirit drops to 0 Hit Points; you regain half your Hit Points and immediately rise to your feet",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

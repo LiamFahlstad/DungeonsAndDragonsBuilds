@@ -3,6 +3,7 @@ from Model.Content.Feature import Feature
 from Core.SpellcastingRules import CasterType
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class SpellSlots(Feature):
@@ -16,6 +17,35 @@ class SpellSlots(Feature):
             origin=f"{character_class.value} Spellcasting",
             passive=True,
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        progression = {
+            CasterType.FULL_CASTER: ("Full caster", "From the full caster table"),
+            CasterType.HALF_CASTER: (
+                "Half caster",
+                "From half your class level (rounded up)",
+            ),
+            CasterType.WARLOCK_CASTER: (
+                "Pact Magic",
+                "Pact Magic slots, regained on a Short or Long Rest",
+            ),
+            CasterType.THIRD_CASTER: (
+                "One-third caster",
+                "From one-third of your class level",
+            ),
+        }
+        if self.caster_type not in progression:
+            return [Paragraph("You gain spell slots for spellcasting.")]
+        caster, slots = progression[self.caster_type]
+        return [
+            Facts(
+                (
+                    ("Class", self.character_class.value),
+                    ("Caster type", caster),
+                    ("Spell slots", slots),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         caster_map = {

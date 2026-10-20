@@ -26,6 +26,28 @@ class SpeechOfTheWoods(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Converse with beasts and many fey."),
+            Facts(
+                (
+                    ("Language", "Speak, read and write Sylvan"),
+                    (
+                        "Beasts",
+                        "Beasts understand your speech, and you can decipher their noises and motions",
+                    ),
+                    (
+                        "Limits",
+                        "Most beasts can't convey or understand sophisticated concepts, but a friendly one could relay what it has recently seen or heard",
+                    ),
+                    (
+                        "Friendship",
+                        "Not granted; curry favor with gifts as you would with any nonplayer character",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "At 2nd level, you gain the ability to converse with beasts and many fey.\n"
@@ -150,6 +172,22 @@ class MightySummoner(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Beasts and fey summoned or created by a spell you cast are more resilient than normal."
+            ),
+            Facts(
+                (
+                    ("Hit Points", "+2 per Hit Die the creature has"),
+                    (
+                        "Natural weapons",
+                        "Their damage counts as magical for overcoming Immunity and Resistance to nonmagical attacks and damage",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Beasts and fey that you conjure are more resilient than normal. Any beast or fey summoned or created by a spell that you cast gains two benefits:\n"
@@ -167,6 +205,22 @@ class GuardianSpirit(Feature):
             origin="Circle of the Shepherd Druid Level 10",
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your Spirit Totem safeguards the beasts and fey you call forth with your magic."
+            ),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "A Beast or Fey you summoned or created with a spell ends its turn in your Spirit Totem aura",
+                    ),
+                    ("Healing", "Half your Druid level"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your Spirit Totem safeguards the beasts and fey that you call forth with your magic. When a beast or fey that you summoned or created with a spell ends its turn in your Spirit Totem aura, that creature regains a number of hit points equal to half your druid level."

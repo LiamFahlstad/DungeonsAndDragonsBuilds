@@ -82,6 +82,23 @@ class GravityWell(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You cast a spell on a creature"),
+                    (
+                        "Requirement",
+                        "The target is willing to move, the spell hits it with an attack, or it fails a saving throw against the spell",
+                    ),
+                    (
+                        "Effect",
+                        "Move the target 5 feet to an unoccupied space of your choice",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you reach 6th level, whenever you cast a spell on a creature, you can move the target 5 feet to an unoccupied space of your choice if the target is willing to move, the spell hits it with an attack, or it fails a saving throw against the spell."
         return description

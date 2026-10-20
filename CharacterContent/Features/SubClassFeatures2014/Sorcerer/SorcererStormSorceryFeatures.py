@@ -10,7 +10,7 @@ from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLa
 from Core.Definitions import Ability, CharacterClass, DamageType, Language
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
 class WindSpeaker(Feature):
@@ -25,6 +25,20 @@ class WindSpeaker(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The arcane magic you command is infused with elemental air."),
+            Facts(
+                (
+                    ("Language", "Speak, read and write Primordial"),
+                    (
+                        "Dialects",
+                        "You understand and are understood by speakers of Aquan, Auran, Ignan and Terran",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran."
         return description
@@ -38,6 +52,23 @@ class TempestuousMagic(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    (
+                        "Timing",
+                        "Immediately before or after you cast a level 1+ spell",
+                    ),
+                    (
+                        "Effect",
+                        "Whirling gusts surround you; fly up to 10 feet without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can use a bonus action on your turn to cause whirling gusts of elemental air to briefly surround you, immediately before or after you cast a spell of 1st level or higher. Doing so allows you to fly up to 10 feet without provoking opportunity attacks."
@@ -63,6 +94,32 @@ class HeartOfTheStorm(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         for resistance in self._resistances:
             resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts((("Resistance", "Lightning and Thunder damage"),)),
+            Option(
+                "Stormy eruption",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You start casting a level 1+ spell that deals Lightning or Thunder damage",
+                            ),
+                            (
+                                "Target",
+                                "Creatures of your choice you can see within 10 feet",
+                            ),
+                            (
+                                "Damage",
+                                "Half your Sorcerer level, Lightning or Thunder (choose each time)",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level."
@@ -124,6 +181,22 @@ class StormsFury(Feature):
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.CHARISMA)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You're hit by a melee attack"),
+                    ("Lightning damage", "Your Sorcerer level, to the attacker"),
+                    ("Save", f"Strength, DC {dc_formula(Ability.CHARISMA)}"),
+                    (
+                        "Failed save",
+                        "The attacker is pushed in a straight line up to 20 feet away from you",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you."
         level = character.get_class_level(CharacterClass.SORCERER)
@@ -152,6 +225,36 @@ class WindSoul(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Immunity", "Lightning and Thunder damage"),
+                    ("Fly Speed", "60 feet (magical)"),
+                )
+            ),
+            Option(
+                "Share flight",
+                (
+                    Facts(
+                        (
+                            ("Action", "Action"),
+                            (
+                                "Target",
+                                "Up to 3 + Charisma modifier creatures within 30 feet",
+                            ),
+                            (
+                                "Effect",
+                                "They gain a magical Fly Speed of 30 feet; yours drops to 30 feet",
+                            ),
+                            ("Duration", "1 hour"),
+                            ("Recharge", "Once per Short or Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

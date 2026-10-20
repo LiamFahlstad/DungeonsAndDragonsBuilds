@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class HorizonWalkerSpells(Feature):
@@ -15,6 +16,29 @@ class HorizonWalkerSpells(Feature):
         super().__init__(
             name="Horizon Walker Spells", origin="Horizon Walker Ranger Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Learned", "The spells below, from the Ranger level shown"),
+                    (
+                        "Spells known",
+                        "They're Ranger spells for you but don't count against your Ranger spells known",
+                    ),
+                )
+            ),
+            Table(
+                ("Ranger level", "Spell"),
+                (
+                    ("3", "Protection from Evil and Good"),
+                    ("5", "Misty Step"),
+                    ("9", "Haste"),
+                    ("13", "Banishment"),
+                    ("17", "Teleportation Circle"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -39,6 +63,25 @@ class DetectPortal(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Short-or-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Magically sense the presence of a planar portal."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Effect",
+                        "Learn the distance and direction to the closest planar portal within 1 mile",
+                    ),
+                    (
+                        "Examples",
+                        'See "Planar Travel" in chapter 2 of the Dungeon Master\'s Guide',
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -73,6 +116,23 @@ class PlanarWarrior(Feature):
             dice=PLANAR_WARRIOR_DICE,
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The extra damage die by Ranger level is in the panel below.
+        return [
+            Paragraph("Draw on the energy of the multiverse to augment your attacks."),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Target", "One creature you can see within 30 feet"),
+                    (
+                        "Effect",
+                        "The next time you hit it this turn with a weapon attack, all the attack's damage becomes Force damage",
+                    ),
+                    ("Extra Force damage", "Your Planar Warrior die (below)"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to draw on the energy of the multiverse to augment your attacks.\n"
@@ -101,6 +161,19 @@ class EtherealStep(Feature):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Short-or-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Step through the Ethereal Plane."),
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    ("Spell", "Etherealness, without expending a spell slot"),
+                    ("Duration", "The spell ends at the end of the current turn"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn to step through the Ethereal Plane. As a bonus action on your turn, you can cast the Etherealness spell with this feature, without expending a spell slot, but the spell ends at the end of the current turn.\n"
@@ -119,6 +192,23 @@ class DistantStrike(Feature):
             origin="Horizon Walker Ranger Level 11",
             usage_tags=["damage", "utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Pass between the planes in the blink of an eye."),
+            Facts(
+                (
+                    (
+                        "Teleport",
+                        "When you use the Attack action, teleport up to 10 feet before each attack to an unoccupied space you can see",
+                    ),
+                    (
+                        "Extra attack",
+                        "If you attack at least two different creatures with the action, make one additional attack against a third creature",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -141,6 +231,23 @@ class SpectralDefense(Feature):
             ),
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Slip through the planar boundaries to lessen the harm done to you in battle."
+            ),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage from an attack"),
+                    (
+                        "Effect",
+                        "Resistance to all of that attack's damage on this turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn."

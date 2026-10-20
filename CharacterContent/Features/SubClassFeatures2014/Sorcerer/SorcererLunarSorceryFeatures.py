@@ -8,14 +8,7 @@ from Model.Content.Feature import (
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Option,
-    Paragraph,
-    dc_formula,
-    Table,
-)
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Core.Definitions import Ability
 
 
@@ -92,6 +85,23 @@ class MoonFire(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Call down the radiant light of the moon on command."),
+            Facts(
+                (
+                    (
+                        "Cantrip",
+                        "Sacred Flame; it doesn't count against your Sorcerer cantrips known",
+                    ),
+                    (
+                        "Targets",
+                        "One creature as normal, or two within range that are within 5 feet of each other",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can call down the radiant light of the moon on command. You learn the Sacred Flame spell, which doesn't count against the number of sorcerer cantrips you know. When you cast the spell, you can target one creature as normal or target two creatures within range that are within 5 feet of each other."
         return description
@@ -154,6 +164,41 @@ class WaxingAndWaning(Feature):
             activation=FeatureActivation(action_type=ActionType.BONUS_ACTION),
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You gain greater control over the phases of your lunar magic."),
+            Option(
+                "Change phase",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            ("Cost", "1 Sorcery Point"),
+                            ("Effect", "Change your current Lunar Embodiment phase"),
+                        )
+                    ),
+                ),
+            ),
+            Option(
+                "Free lunar spells",
+                (
+                    Facts(
+                        (
+                            (
+                                "Effect",
+                                "Cast one level 1 spell from each lunar phase of the Lunar Spells table without a spell slot",
+                            ),
+                            (
+                                "Requirement",
+                                "Your current phase matches the spell's lunar phase",
+                            ),
+                            ("Recharge", "Each phase's spell once per Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

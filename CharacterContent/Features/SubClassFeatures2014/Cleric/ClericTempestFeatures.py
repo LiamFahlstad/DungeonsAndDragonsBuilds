@@ -13,7 +13,7 @@ from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class BonusProficiencies(Feature):
@@ -26,6 +26,16 @@ class BonusProficiencies(Feature):
         # "You gain proficiency with martial weapons and heavy armor."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Weapon proficiency", "Martial weapons"),
+                    ("Armor proficiency", "Heavy armor"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with martial weapons and heavy armor."
@@ -95,6 +105,23 @@ class TempestDomainSpells(Feature):
             name="Tempest Domain Spells", origin="Tempest Domain Cleric Level 3"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "From the Cleric level shown, you always have these spells prepared."
+            ),
+            Table(
+                ("Cleric level", "Spells"),
+                (
+                    ("1", "Fog Cloud, Thunderwave"),
+                    ("3", "Gust of Wind, Shatter"),
+                    ("5", "Call Lightning, Sleet Storm"),
+                    ("7", "Control Water, Ice Storm"),
+                    ("9", "Destructive Wave, Insect Plague"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Tempest Domain Spells table, you thereafter always have the listed spells prepared.\n"
@@ -116,6 +143,19 @@ class DestructiveWrathChannelDivinity(Feature):
             origin="Tempest Domain Cleric Level 3",
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Use Channel Divinity to wield the power of the storm with unchecked ferocity."
+            ),
+            Facts(
+                (
+                    ("Trigger", "You roll Lightning or Thunder damage"),
+                    ("Effect", "Deal maximum damage instead of rolling"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can use your Channel Divinity to wield the power of the storm with unchecked ferocity.\nWhen you roll lightning or thunder damage, you can use your Channel Divinity to deal maximum damage, instead of rolling."
         return description
@@ -130,6 +170,19 @@ class ThunderousStrike(Feature):
             activation=FeatureActivation(range="10 Feet"),
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You deal Lightning damage to a Large or smaller creature",
+                    ),
+                    ("Effect", "Push it up to 10 feet away from you"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "When you deal lightning damage to a Large or smaller creature, you can also push it up to 10 feet away from you."
         return description
@@ -142,6 +195,16 @@ class Stormborn(Feature):
             origin="Tempest Domain Cleric Level 17",
             usage_tags=["utility"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Fly Speed", "Equal to your current walking speed"),
+                    ("Requirement", "You aren't underground or indoors"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You have a flying speed equal to your current walking speed whenever you are not underground or indoors."

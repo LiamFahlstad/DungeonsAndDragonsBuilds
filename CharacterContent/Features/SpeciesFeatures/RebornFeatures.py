@@ -15,6 +15,9 @@ class EscapedDeath(Feature):
             name="Escaped Death", origin="Reborn Trait", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Advantage", "On Death Saving Throws"),))]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on Death Saving Throws."
 
@@ -98,6 +101,9 @@ class RebornKnowledgeSkill(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Skill proficiency", self.skill.value),))]
+
     def get_description(self, character: CharacterView) -> str:
         return f"You gain proficiency in the {self.skill.value} skill."
 
@@ -119,6 +125,9 @@ class StrangeEndurance(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Resistance", f"{self.damage_type.value} damage"),))]
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance to {self.damage_type.value} damage."

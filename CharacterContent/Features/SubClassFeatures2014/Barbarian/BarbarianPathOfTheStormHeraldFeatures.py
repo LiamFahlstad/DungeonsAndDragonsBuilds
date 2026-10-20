@@ -245,6 +245,19 @@ class ShieldingStorm(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use your mastery of the storm to protect others."),
+            Facts(
+                (
+                    (
+                        "Effect",
+                        "Each creature of your choice in your Storm Aura has the damage Resistance you gained from Storm Soul",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You learn to use your mastery of the storm to protect others. Each creature of your choice has the damage resistance you gained from the Storm Soul feature while the creature is in your Storm Aura."
         return description

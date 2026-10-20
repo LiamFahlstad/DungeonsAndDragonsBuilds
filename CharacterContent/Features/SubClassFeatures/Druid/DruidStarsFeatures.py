@@ -305,6 +305,12 @@ class FullOfStars(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("While in your Starry Form, you become partially incorporeal."),
+            Facts((("Resistance", "Bludgeoning, Piercing and Slashing damage"),)),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "While in your Starry Form, you become partially incorporeal, giving you Resistance to Bludgeoning, Piercing, and Slashing damage."
         return description

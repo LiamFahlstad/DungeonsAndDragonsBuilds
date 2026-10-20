@@ -3,7 +3,7 @@ from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class ImprovedCritical(Feature):
@@ -80,6 +80,9 @@ class AdditionalFightingStyle(Feature):
             name="Additional Fighting Style", origin="Champion Fighter Level 7"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Feat", "Another Fighting Style feat of your choice"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain another Fighting Style feat of your choice."
         return description
@@ -96,6 +99,20 @@ class HeroicWarrior(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The thrill of battle drives you toward victory."),
+            Facts(
+                (
+                    (
+                        "When",
+                        "During combat, you start your turn without Heroic Inspiration",
+                    ),
+                    ("Effect", "Give yourself Heroic Inspiration"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The thrill of battle drives you toward victory. During combat, you can give yourself Heroic Inspiration whenever you start your turn without it."
         return description
@@ -107,6 +124,16 @@ class SuperiorCritical(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Critical Hit", "On a roll of 18-20 on the d20"),
+                    ("Applies to", "Attack rolls with weapons and Unarmed Strikes"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your attack rolls with weapons and Unarmed Strikes can now score a Critical Hit on a roll of 18-20 on the d20."

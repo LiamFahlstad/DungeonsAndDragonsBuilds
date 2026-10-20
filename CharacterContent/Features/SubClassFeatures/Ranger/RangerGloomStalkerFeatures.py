@@ -156,6 +156,20 @@ class IronMind(Feature):
             Ability.WISDOM, [Ability.INTELLIGENCE, Ability.CHARISMA]
         ).apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You have honed your ability to resist mind-altering powers."),
+            Facts(
+                (
+                    ("Saving throw proficiency", "Wisdom"),
+                    (
+                        "Already proficient",
+                        "Instead gain proficiency in Intelligence or Charisma saving throws (your choice)",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You have honed your ability to resist mind-altering powers. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice)."
         return description

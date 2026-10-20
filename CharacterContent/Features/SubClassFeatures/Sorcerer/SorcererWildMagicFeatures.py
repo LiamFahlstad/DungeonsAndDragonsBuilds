@@ -161,6 +161,21 @@ class ControlledChaos(Feature):
     def __init__(self):
         super().__init__(name="Controlled Chaos", origin="Wild Magic Sorcerer Level 14")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "You gain a modicum of control over the surges of your wild magic."
+            ),
+            Facts(
+                (
+                    (
+                        "Wild Magic Surge table",
+                        "Whenever you roll on it, roll twice and use either number",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain a modicum of control over the surges of your wild magic. Whenever you roll on the Wild Magic Surge table, you can roll twice and use either number."
         return description

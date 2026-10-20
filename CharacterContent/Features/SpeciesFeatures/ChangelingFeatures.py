@@ -30,6 +30,10 @@ class ChangelingInstincts(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._choice.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        skill_names = " and ".join(skill.value for skill in self._choice.skills)
+        return [Facts((("Skill proficiency", skill_names),))]
+
     def get_description(self, character: CharacterView) -> str:
         if len(self._choice.skills) == 2:
             skill_text = (

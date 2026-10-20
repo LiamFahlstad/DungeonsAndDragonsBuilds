@@ -21,6 +21,9 @@ class FiendishResistance(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Resistance", f"{self.damage_type} damage"),))]
+
     def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance to {self.damage_type} damage."
 
@@ -33,6 +36,9 @@ class Darkvision(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._sense.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Darkvision", f"{self.distance} feet"),))]
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
@@ -99,6 +105,19 @@ class FiendishLegacy(Feature):
 class OtherworldlyPresence(Feature):
     def __init__(self):
         super().__init__(name="Otherworldly Presence", origin="Tiefling Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Cantrip", "Thaumaturgy"),
+                    (
+                        "Spellcasting ability",
+                        "The same one you use for your Fiendish Legacy trait",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "You know the Thaumaturgy cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your Fiendish Legacy trait."

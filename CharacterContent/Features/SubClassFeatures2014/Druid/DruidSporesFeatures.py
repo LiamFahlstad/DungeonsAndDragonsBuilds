@@ -12,7 +12,7 @@ from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
-from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
 
 
 class CircleSporesSpells(Feature):
@@ -20,6 +20,33 @@ class CircleSporesSpells(Feature):
         super().__init__(
             name="Circle of Spores Spells", origin="Circle of Spores Druid Level 3"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your symbiotic link to fungi and the cycle of life and death grants you spells."
+            ),
+            Facts(
+                (
+                    ("Cantrip", "Chill Touch"),
+                    ("Always prepared", "The spells below, from the Druid level shown"),
+                    ("Prepared limit", "They don't count against your prepared spells"),
+                    (
+                        "Spell list",
+                        "They're Druid spells for you, even if not on the Druid list",
+                    ),
+                )
+            ),
+            Table(
+                ("Druid level", "Spells"),
+                (
+                    ("3", "Blindness/Deafness, Gentle Repose"),
+                    ("5", "Animate Dead, Gaseous Form"),
+                    ("7", "Blight, Confusion"),
+                    ("9", "Cloudkill, Contagion"),
+                ),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -279,6 +306,23 @@ class FungalBody(Feature):
     def apply(self, ledger_writer: LedgerWriter):
         for immunity in self._immunities:
             immunity.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("The fungal spores in your body alter you."),
+            Facts(
+                (
+                    (
+                        "Condition immunity",
+                        "Blinded, Deafened, Frightened and Poisoned",
+                    ),
+                    (
+                        "Critical Hits",
+                        "Any Critical Hit against you counts as a normal hit, unless you're Incapacitated",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "The fungal spores in your body alter you: you can't be blinded, deafened, frightened, or poisoned, and any critical hit against you counts as a normal hit instead, unless you're incapacitated."

@@ -166,6 +166,9 @@ class AvatarOfBattle(Feature):
         for resistance in self._resistances:
             resistance.apply(ledger_writer)
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Resistance", "Bludgeoning, Piercing and Slashing damage"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You gain Resistance to Bludgeoning, Piercing, and Slashing damage."

@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 )
 from Utils import StringUtils
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph
 
 
 class SilverTongue(Feature):
@@ -20,6 +21,20 @@ class SilverTongue(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You're a master at saying the right thing at the right time."),
+            Facts(
+                (
+                    (
+                        "Applies to",
+                        "Charisma (Persuasion) and Charisma (Deception) checks",
+                    ),
+                    ("Effect", "Treat a d20 roll of 9 or lower as a 10"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -45,6 +60,24 @@ class UnsettlingWords(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Spin words laced with magic that unsettle a creature and cause it to doubt itself."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action, expending one use of Bardic Inspiration"),
+                    ("Target", "One creature you can see within 60 feet"),
+                    ("Effect", "Roll the Bardic Inspiration die"),
+                    (
+                        "Penalty",
+                        "The creature subtracts the roll from the next saving throw it makes before the start of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can spin words laced with magic that unsettle a creature and cause it to doubt itself. "
@@ -65,6 +98,19 @@ class UnfailingInspiration(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "A creature adds your Bardic Inspiration die to an ability check, attack roll or saving throw and the roll fails",
+                    ),
+                    ("Effect", "The creature keeps the Bardic Inspiration die"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -89,6 +135,27 @@ class UniversalSpeech(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.CREATURE
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The once-per-Long-Rest box is in the panel below.
+        return [
+            Paragraph("Make your speech intelligible to any creature."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    (
+                        "Target",
+                        "Up to Charisma modifier (minimum one) creatures within 60 feet",
+                    ),
+                    (
+                        "Effect",
+                        "They magically understand you, regardless of the language you speak",
+                    ),
+                    ("Duration", "1 hour"),
+                    ("Recharge", "Expend a spell slot to use it again"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -119,6 +186,23 @@ class InfectiousInspiration(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    (
+                        "Trigger",
+                        "A creature within 60 feet adds your Bardic Inspiration die to an ability check, attack roll or saving throw and succeeds",
+                    ),
+                    (
+                        "Effect",
+                        "Give a Bardic Inspiration die to a different creature (not you) within 60 feet that can hear you, without expending a use",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

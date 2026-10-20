@@ -56,6 +56,17 @@ class RecklessAbandon(Feature):
             usage_tags=["heal"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You use Reckless Attack while raging"),
+                    ("Temporary HP", "Constitution modifier (minimum 1)"),
+                    ("Duration", "Any left vanish when your rage ends"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Beginning at 6th level, when you use Reckless Attack while raging, you also gain temporary hit points equal to your Constitution modifier (minimum of 1). They vanish if any of them are left when your rage ends."
         return description
@@ -73,6 +84,16 @@ class BattleragerCharge(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Dash", "Take the Dash action as a Bonus Action"),
+                    ("Requirement", "You're raging"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Beginning at 10th level, you can take the Dash action as a bonus action while you are raging."
         return description
@@ -86,6 +107,23 @@ class SpikedRetribution(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "A creature within 5 feet of you hits you with a melee attack",
+                    ),
+                    ("Piercing damage", "3, to the attacker"),
+                    (
+                        "Requirement",
+                        "You're raging, aren't Incapacitated, and are wearing spiked armor",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Starting at 14th level, when a creature within 5 feet of you hits you with a melee attack, the attacker takes 3 piercing damage if you are raging, aren't incapacitated, and are wearing spiked armor."

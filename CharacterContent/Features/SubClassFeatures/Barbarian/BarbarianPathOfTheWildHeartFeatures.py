@@ -141,6 +141,16 @@ class NatureSpeaker(Feature):
             usage_tags=["utility"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Spell", "Commune with Nature, only as a Ritual"),
+                    ("Spellcasting ability", "Wisdom"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can cast the Commune with Nature spell but only as a Ritual. Wisdom is your spellcasting ability for it."
         return description

@@ -160,6 +160,16 @@ class SpellResistance(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Advantage", "On saving throws against spells"),
+                    ("Resistance", "Damage from spells"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You have Advantage on saving throws against spells, and you have Resistance to the damage of spells."
         return description

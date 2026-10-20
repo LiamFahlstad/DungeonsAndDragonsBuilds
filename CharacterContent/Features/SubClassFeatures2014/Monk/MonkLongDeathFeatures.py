@@ -1,6 +1,7 @@
 from Core.Definitions import Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
 
 class TouchOfDeath(Feature):
@@ -11,6 +12,23 @@ class TouchOfDeath(Feature):
             activation=FeatureActivation(range="5 Feet"),
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Extract vitality from another creature as it nears its demise."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You reduce a creature within 5 feet of you to 0 Hit Points",
+                    ),
+                    (
+                        "Temporary HP",
+                        "Wisdom modifier + Monk level (minimum 1)",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your study of death allows you to extract vitality from another creature as it nears its demise. When you reduce a creature within 5 feet of you to 0 hit points, you gain temporary hit points equal to your Wisdom modifier + your monk level (minimum of 1 temporary hit point)."
@@ -33,6 +51,24 @@ class HourOfReaping(Feature):
             usage_tags=["control"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your soul has been touched by the shadow of death, letting you unsettle or terrify those around you."
+            ),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Target", "Each creature within 30 feet that can see you"),
+                    ("Save", "Wisdom"),
+                    (
+                        "Failed save",
+                        "Frightened of you until the end of your next turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain the ability to unsettle or terrify those around you as an action, for your soul has been touched by the shadow of death. When you take this action, each creature within 30 feet of you that can see you must succeed on a Wisdom saving throw or be frightened of you until the end of your next turn."
         return description
@@ -48,6 +84,18 @@ class MasteryOfDeath(Feature):
             origin="Way of the Long Death Monk Level 11",
             usage_tags=["heal"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Use your familiarity with death to escape its grasp."),
+            Facts(
+                (
+                    ("Trigger", "You're reduced to 0 Hit Points"),
+                    ("Cost", "1 ki point (no action required)"),
+                    ("Effect", "You have 1 Hit Point instead"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You use your familiarity with death to escape its grasp. When you are reduced to 0 hit points, you can expend 1 ki point (no action required) to have 1 hit point instead."
@@ -67,6 +115,23 @@ class TouchOfTheLongDeath(Feature):
             ),
             usage_tags=["damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Channel the energy of death into a creature."),
+            Facts(
+                (
+                    ("Action", "Action"),
+                    ("Target", "One creature within 5 feet that you touch"),
+                    ("Cost", "1 to 10 ki points"),
+                    ("Save", "Constitution"),
+                )
+            ),
+            Table(
+                ("Failed save", "Successful save"),
+                (("2d10 Necrotic damage per ki point spent", "Half as much damage"),),
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your touch can channel the energy of death into a creature. As an action, you touch one creature within 5 feet of you, and you expend 1 to 10 ki points. The target must make a Constitution saving throw, and it takes 2d10 necrotic damage per ki point spent on a failed save, or half as much damage on a successful one."

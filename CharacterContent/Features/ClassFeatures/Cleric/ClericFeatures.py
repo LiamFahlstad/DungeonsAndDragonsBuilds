@@ -14,13 +14,7 @@ from Model.Content.Improvements import (
 )
 from Core.Definitions import Ability, CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
-from Model.Content.FeatureText import (
-    Block,
-    Facts,
-    Option,
-    Paragraph,
-    dc_formula,
-)
+from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 
@@ -68,6 +62,16 @@ class DivineOrderProtector(Feature):
         # "...proficiency with Martial weapons and training with Heavy armor."
         GrantWeaponProficiency([WeaponProficiency.MARTIAL]).apply(ledger_writer)
         GrantArmorTraining([ArmorType.HEAVY]).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Weapon proficiency", "Martial weapons"),
+                    ("Armor training", "Heavy armor"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
@@ -312,6 +316,9 @@ class PotentSpellcasting(Feature):
             name="Potent Spellcasting", origin="Cleric Level 7", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Cleric cantrip damage", "+ Wisdom modifier"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Add your Wisdom modifier to the damage you deal with any Cleric cantrip."
@@ -363,6 +370,9 @@ class ImprovedDivineStrike(Feature):
             usage_tags=["damage"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Divine Strike extra damage", "2d8"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "The extra damage of your Divine Strike increases to 2d8."
         return description
@@ -408,6 +418,23 @@ class ImprovedPotentSpellcasting(Feature):
 class GreaterDivineIntervention(Feature):
     def __init__(self):
         super().__init__(name="Greater Divine Intervention", origin="Cleric Level 20")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You can call on even more powerful divine intervention."),
+            Facts(
+                (
+                    (
+                        "Divine Intervention",
+                        "You can choose Wish when you select a spell",
+                    ),
+                    (
+                        "Cooldown",
+                        "If you choose Wish, you can't use Divine Intervention again until you finish 2d4 Long Rests",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests."

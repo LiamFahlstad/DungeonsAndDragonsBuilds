@@ -130,6 +130,19 @@ class StudentOfWar(Feature):
     def __init__(self):
         super().__init__(name="Student of War", origin="Battle Master Fighter Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Tool proficiency", "One type of Artisan's Tools of your choice"),
+                    (
+                        "Skill proficiency",
+                        "One of your choice from the skills available to Fighters at level 1",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency with one type of Artisan’s Tools of your choice, and you gain proficiency in one skill of your choice from the skills available to Fighters at level 1."
         return description
@@ -183,6 +196,9 @@ class ImprovedCombatSuperiority(Feature):
             name="Improved Combat Superiority", origin="Battle Master Fighter Level 10"
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Superiority Die", "d10"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "Your Superiority Die becomes a d10."
         return description
@@ -191,6 +207,19 @@ class ImprovedCombatSuperiority(Feature):
 class Relentless(Feature):
     def __init__(self):
         super().__init__(name="Relentless", origin="Battle Master Fighter Level 15")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Frequency", "Once per turn, when you use a maneuver"),
+                    (
+                        "Effect",
+                        "Roll 1d8 and use the number rolled instead of expending a Superiority Die",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Once per turn, when you use a maneuver, you can roll 1d8 and use the number rolled instead of expending a Superiority Die."
@@ -202,6 +231,9 @@ class UltimateCombatSuperiority(Feature):
         super().__init__(
             name="Ultimate Combat Superiority", origin="Battle Master Fighter Level 18"
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Superiority Die", "d12"),))]
 
     def get_description(self, character: CharacterView) -> str:
         description = "Your Superiority Die becomes a d12."

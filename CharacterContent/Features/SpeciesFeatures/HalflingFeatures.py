@@ -1,6 +1,7 @@
 from Core.Definitions import CreatureSize
 from Model.Content.Feature import Feature
 from Model.View import CharacterView
+from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.SMALL  # Given by your species
@@ -10,6 +11,18 @@ class Brave(Feature):
     def __init__(self):
         super().__init__(name="Brave", origin="Halfling Trait", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Advantage",
+                        "On saving throws to avoid or end the Frightened condition",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on saving throws you make to avoid or end the Frightened condition."
 
@@ -17,6 +30,19 @@ class Brave(Feature):
 class HalflingNimbleness(Feature):
     def __init__(self):
         super().__init__(name="Halfling Nimbleness", origin="Halfling Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Movement",
+                        "Move through the space of any creature that is a size larger than you",
+                    ),
+                    ("Limit", "You can't stop in the same space"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         return "You can move through the space of any creature that is a size larger than you, but you can't stop in the same space."
@@ -26,6 +52,16 @@ class Luck(Feature):
     def __init__(self):
         super().__init__(name="Luck", origin="Halfling Trait", usage_tags=["buff"])
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You roll a 1 on the d20 of a D20 Test"),
+                    ("Effect", "Reroll the die; you must use the new roll"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         text = "When you roll a 1 on the d20 of a D20 Test, you can reroll the die, and you must use the new roll."
         return text
@@ -34,6 +70,18 @@ class Luck(Feature):
 class NaturallyStealthy(Feature):
     def __init__(self):
         super().__init__(name="Naturally Stealthy", origin="Halfling Trait")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Hide action",
+                        "You can take it even when obscured only by a creature at least one size larger than you",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         text = "You can take the Hide action even when you are obscured only by a creature that is at least one size larger than you."

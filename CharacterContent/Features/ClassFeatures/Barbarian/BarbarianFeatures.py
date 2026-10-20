@@ -159,6 +159,17 @@ class UnarmoredDefenseText(Feature):
             name="Unarmored Defense", origin="Barbarian Level 1", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Base AC", "10 + Dexterity modifier + Constitution modifier"),
+                    ("Requirement", "You aren't wearing any armor"),
+                    ("Shield", "Allowed; you still gain this benefit"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "While you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Constitution modifiers. You can use a Shield and still gain this benefit."
         return description
@@ -211,6 +222,19 @@ class WeaponMastery(Feature):
 class DangerSenseText(Feature):
     def __init__(self):
         super().__init__(name="Danger Sense", origin="Barbarian Level 2")
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "An uncanny sense of when things aren't as they should be gives you an edge when you dodge perils."
+            ),
+            Facts(
+                (
+                    ("Advantage", "On Dexterity saving throws"),
+                    ("Exception", "Not while you have the Incapacitated condition"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You gain an uncanny sense of when things aren't as they should be, giving you an edge when you dodge perils. You have Advantage on Dexterity saving throws unless you have the Incapacitated condition."
@@ -321,6 +345,9 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Barbarian Level 5")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Attack action", "Attack twice instead of once"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = "You can attack twice instead of once whenever you take the Attack action on your turn."
         return description
@@ -331,6 +358,16 @@ class FastMovement(Feature):
         super().__init__(
             name="Fast Movement", origin="Barbarian Level 5", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Speed", "+10 feet"),
+                    ("Requirement", "You aren't wearing Heavy armor"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -372,6 +409,9 @@ class FeralInstinct(Feature):
             ledger_writer
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [Facts((("Advantage", "On Initiative rolls"),))]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Your instincts are so honed that you have Advantage on Initiative rolls."
@@ -387,6 +427,19 @@ class InstinctivePounce(Feature):
         super().__init__(
             name="Instinctive Pounce", origin="Barbarian Level 7", usage_tags=["buff"]
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Trigger", "You take the Bonus Action to enter your Rage"),
+                    (
+                        "Effect",
+                        "As part of that Bonus Action, move up to half your Speed",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "As part of the Bonus Action you take to enter your Rage, you can move up to half your Speed."
@@ -616,6 +669,19 @@ class IndomitableMight(Feature):
             name="Indomitable Might", origin="Barbarian Level 18", usage_tags=["buff"]
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Applies to", "Strength checks and Strength saving throws"),
+                    (
+                        "Effect",
+                        "If your total is less than your Strength score, use the score in place of the total",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "If your total for a Strength check or Strength saving throw is less than your Strength score, you can use that score in place of the total."
         return description
@@ -640,6 +706,17 @@ class PrimalChampion(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonuses.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("You embody primal power."),
+            Facts(
+                (
+                    ("Strength", "+4 (maximum 25)"),
+                    ("Constitution", "+4 (maximum 25)"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = "You embody primal power. Your Strength and Constitution scores increase by 4, to a maximum of 25."

@@ -22,6 +22,23 @@ class FancyFootwork(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Land a strike and then slip away without reprisal."),
+            Facts(
+                (
+                    (
+                        "Trigger",
+                        "You make a melee attack against a creature on your turn",
+                    ),
+                    (
+                        "Effect",
+                        "That creature can't make Opportunity Attacks against you for the rest of your turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You learn how to land a strike and then slip away without reprisal. During your turn, "
@@ -45,6 +62,21 @@ class RakishAudacity(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         InitiativeBonus(lambda cs: cs.get_charisma_modifier()).apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your confidence propels you into battle."),
+            Facts(
+                (
+                    ("Initiative", "+ Charisma modifier"),
+                    (
+                        "Sneak Attack",
+                        "No Advantage needed if you're within 5 feet of the target, no other creatures are within 5 feet of you, and you don't have Disadvantage",
+                    ),
+                    ("Other rules", "All other Sneak Attack rules still apply"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -139,6 +171,19 @@ class ElegantManeuver(Feature):
             usage_tags=["buff"],
         )
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Action", "Bonus Action on your turn"),
+                    (
+                        "Effect",
+                        "Advantage on the next Dexterity (Acrobatics) or Strength (Athletics) check you make during the same turn",
+                    ),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "You can use a bonus action on your turn to gain advantage on the next Dexterity (Acrobatics) "
@@ -157,6 +202,20 @@ class MasterDuelist(Feature):
             origin="Swashbuckler Rogue Level 17",
             usage_tags=["buff"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph(
+                "Your mastery of the blade lets you turn failure into success in combat."
+            ),
+            Facts(
+                (
+                    ("Trigger", "You miss with an attack roll"),
+                    ("Effect", "Roll it again with Advantage"),
+                    ("Frequency", "Once per Short or Long Rest"),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

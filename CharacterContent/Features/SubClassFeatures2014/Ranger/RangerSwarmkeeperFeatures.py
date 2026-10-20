@@ -75,6 +75,33 @@ class SwarmkeeperMagic(Feature):
     def __init__(self):
         super().__init__(name="Swarmkeeper Magic", origin="Swarmkeeper Ranger Level 3")
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Mage Hand",
+                        "You learn it if you don't already know it; the hand takes the form of your swarming nature spirits",
+                    ),
+                    ("Learned", "The spells below, from the Ranger level shown"),
+                    (
+                        "Spells known",
+                        "They're Ranger spells for you but don't count against your Ranger spells known",
+                    ),
+                )
+            ),
+            Table(
+                ("Ranger level", "Spells"),
+                (
+                    ("3", "Faerie Fire, Mage Hand"),
+                    ("5", "Web"),
+                    ("9", "Gaseous Form"),
+                    ("13", "Arcane Eye"),
+                    ("17", "Insect Plague"),
+                ),
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Also at 3rd level, you learn the Mage Hand cantrip if you don't already know it. When you cast it, the hand takes the form of your swarming nature spirits.\n"
@@ -112,6 +139,21 @@ class WrithingTide(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Proficiency Bonus per Long Rest) are in the panel below.
+        return [
+            Paragraph(
+                "Condense part of your swarm into a focused mass that lifts you up."
+            ),
+            Facts(
+                (
+                    ("Action", "Bonus Action"),
+                    ("Effect", "Fly Speed of 10 feet, and you can hover"),
+                    ("Duration", "1 minute, or until you're Incapacitated"),
+                )
+            ),
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Beginning at 7th level, you can condense part of your swarm into a focused mass that lifts you up. As a bonus action, you gain a flying speed of 10 feet and can hover. This effect lasts for 1 minute or until you are incapacitated.\n"
@@ -134,6 +176,24 @@ class MightySwarm(Feature):
             origin="Swarmkeeper Ranger Level 11",
             usage_tags=["buff", "control", "damage"],
         )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Paragraph("Your Gathered Swarm grows mightier."),
+            Facts(
+                (
+                    ("Damage", "Gathered Swarm's damage increases to 1d8"),
+                    (
+                        "Prone",
+                        "A creature that fails its save against being moved by the swarm can also be knocked Prone",
+                    ),
+                    (
+                        "Cover",
+                        "When the swarm moves you, you have Half Cover until the start of your next turn",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
@@ -164,6 +224,23 @@ class SwarmingDispersal(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Uses (Proficiency Bonus per Long Rest) are in the panel below.
+        return [
+            Paragraph("Discorporate into your swarm, avoiding danger."),
+            Facts(
+                (
+                    ("Action", "Reaction"),
+                    ("Trigger", "You take damage"),
+                    ("Effect", "Resistance to that damage"),
+                    (
+                        "Teleport",
+                        "You vanish into your swarm and reappear in an unoccupied space you can see within 30 feet",
+                    ),
+                )
+            ),
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (
