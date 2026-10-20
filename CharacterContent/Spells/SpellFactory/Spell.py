@@ -4,7 +4,12 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from Model.Content.Feature import FeatureTarget
+from Model.Content.FeatureText import Block, Option
 from .Enums import CastingTimeType, School
+
+# The Option an improved description puts a spell's upcasting rules in,
+# named as the source text's own paragraph is (2024, then 2014 wording).
+UPCAST_OPTION_NAMES = ("Using a Higher-Level Spell Slot", "At Higher Levels")
 
 
 class Spell(ABC):
@@ -129,6 +134,27 @@ class Spell(ABC):
         Defaults to None for any Spell subclass that doesn't provide its own data for this.
         """
         return None
+
+    @property
+    def improved_description(self) -> Optional[list[Block]]:
+        """The spell's rules laid out for reading at a glance (see
+        Model/Content/FeatureText.py), shown on the card instead of
+        `description`, or None to show `description`. Upcasting goes in an
+        Option named one of UPCAST_OPTION_NAMES, so a scroll (cast at its
+        own level) can leave it out."""
+        return None
+
+    def improved_description_at_fixed_level(self) -> Optional[list[Block]]:
+        """The improved description without its upcasting option, for a
+        scroll, which always casts the spell at its own level."""
+        blocks = self.improved_description
+        if blocks is None:
+            return None
+        return [
+            block
+            for block in blocks
+            if not (isinstance(block, Option) and block.name in UPCAST_OPTION_NAMES)
+        ]
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #
 

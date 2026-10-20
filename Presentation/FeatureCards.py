@@ -17,6 +17,86 @@ from Presentation.FeatureOrder import ordered_extensions
 _LEVEL_LABEL = re.compile(r"^(.*\S)\s+Level (\d+)$")
 
 
+# The improved-description boxes and tables (Model/Content/FeatureText.py),
+# shared with spell cards, whose descriptions use the same blocks.
+IMPROVED_DESCRIPTION_CSS = """        /* Improved descriptions (Feature.get_improved_description): the
+           same rules as the source text, laid out for reading at a glance.
+           Facts and each option are a contained, bordered table - a label
+           column and a value column - so the card reads as a few tidy
+           boxes rather than loose lines. Kept whole across page breaks. */
+        .feature-box {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #c9b48e;
+            margin: 0.45rem 0;
+            font-size: 0.84rem;
+            break-inside: avoid;
+        }
+
+        .feature-box th,
+        .feature-box td {
+            padding: 4px 8px;
+            border-top: 1px solid #ebe0cb;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        /* One label width for every box, so values line up down the card. */
+        .feature-box .feature-box-label {
+            width: 6.5rem;
+            font-weight: 700;
+            color: #6a5636;
+        }
+
+        /* An option's name, as the box's header row. */
+        .feature-box .feature-box-header {
+            border-top: none;
+            border-bottom: 1.5px solid #b89060;
+            padding: 5px 8px;
+        }
+
+        .feature-option-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #3a2c1c;
+            margin-right: 0.45rem;
+        }
+
+        .feature-box td p {
+            margin: 0;
+        }
+
+        .feature-box .feature-table {
+            margin: 0;
+        }
+
+        /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            margin: 0.4rem 0;
+        }
+
+        .feature-table td,
+        .feature-table th {
+            border: 1px solid var(--border-color);
+            padding: 3px 7px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .feature-table th {
+            color: #3a2c1c;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #9a7040;
+        }
+
+"""
+
 FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
         .features {
             max-width: 100%;
@@ -373,83 +453,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             color: #6a5636;
         }
 
-        /* Improved descriptions (Feature.get_improved_description): the
-           same rules as the source text, laid out for reading at a glance.
-           Facts and each option are a contained, bordered table - a label
-           column and a value column - so the card reads as a few tidy
-           boxes rather than loose lines. Kept whole across page breaks. */
-        .feature-box {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #c9b48e;
-            margin: 0.45rem 0;
-            font-size: 0.84rem;
-            break-inside: avoid;
-        }
-
-        .feature-box th,
-        .feature-box td {
-            padding: 4px 8px;
-            border-top: 1px solid #ebe0cb;
-            vertical-align: top;
-            text-align: left;
-        }
-
-        /* One label width for every box, so values line up down the card. */
-        .feature-box .feature-box-label {
-            width: 6.5rem;
-            font-weight: 700;
-            color: #6a5636;
-        }
-
-        /* An option's name, as the box's header row. */
-        .feature-box .feature-box-header {
-            border-top: none;
-            border-bottom: 1.5px solid #b89060;
-            padding: 5px 8px;
-        }
-
-        .feature-option-name {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #3a2c1c;
-            margin-right: 0.45rem;
-        }
-
-        .feature-box td p {
-            margin: 0;
-        }
-
-        .feature-box .feature-table {
-            margin: 0;
-        }
-
-        /* Tables embedded inside feature descriptions (e.g. item/plan lists) */
-        .feature-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            margin: 0.4rem 0;
-        }
-
-        .feature-table td,
-        .feature-table th {
-            border: 1px solid var(--border-color);
-            padding: 3px 7px;
-            vertical-align: top;
-            text-align: left;
-        }
-
-        .feature-table th {
-            color: #3a2c1c;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            border-bottom: 2px solid #9a7040;
-        }
-
-        /* Feature upgrade blocks (nested inside .feature-body) */
+""" + IMPROVED_DESCRIPTION_CSS + """        /* Feature upgrade blocks (nested inside .feature-body) */
         .feature-upgrade {
             margin-top: 0.5rem;
             border-left: 3px solid #9abbe0;

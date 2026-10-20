@@ -21,6 +21,7 @@ from Presentation.WeaponCards import (
     write_weapons_to_file,
 )
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory.Spell import UPCAST_OPTION_NAMES
 from Presentation.SpellCards import (
     SPELL_CARD_CSS,
     spell_source_label,
@@ -903,7 +904,7 @@ class HtmlCharacterSheetWriter:
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                write_spell_to_file(spell, file)
+                write_spell_to_file(spell, file, source_text=self.source_text)
 
         file.write("</div>\n")
 
@@ -1273,8 +1274,7 @@ class HtmlCharacterSheetWriter:
             file.write("</div>\n")
         return written_ids
 
-    @staticmethod
-    def _write_scroll_body(file: TextIO, scroll: Items.Item):
+    def _write_scroll_body(self, file: TextIO, scroll: Items.Item):
         if not isinstance(scroll, Items.Scroll):
             # A generic Spell Scroll, with no one spell to lay out.
             Html.write_gear_meta_line(file, *Html.item_type_rarity_price(scroll))
@@ -1301,12 +1301,18 @@ class HtmlCharacterSheetWriter:
         )
         # A scroll always casts at its own level, so the spell's upcasting
         # paragraph doesn't apply and is left out.
+        improved = (
+            None if self.source_text else spell.improved_description_at_fixed_level()
+        )
+        if improved is not None:
+            file.write(
+                f"<div class='gear-desc'>{improved_description_to_html(improved)}</div>\n"
+            )
+            return
         paragraphs = [
             paragraph
             for paragraph in spell.description.split("\n")
-            if not paragraph.startswith(
-                ("Using a Higher-Level Spell Slot", "At Higher Levels")
-            )
+            if not paragraph.startswith(UPCAST_OPTION_NAMES)
         ]
         description = Html.boxes_to_html("\n".join(paragraphs)).replace("\n", "<br>")
         file.write(f"<div class='gear-desc'>{description}</div>\n")

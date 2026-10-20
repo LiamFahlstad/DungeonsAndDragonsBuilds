@@ -140,9 +140,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--source-text",
         action="store_true",
-        help="Print each feature's source rules text instead of its improved "
-        "description (a clearer layout of the same rules that some features "
-        "have).",
+        help="Print each feature's and spell's source rules text instead of "
+        "its improved description (a clearer layout of the same rules that "
+        "some features and spells have).",
     )
     parser.add_argument(
         "--probability-tables",

@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 import Core.Definitions as Definitions
 from Model.Content.Feature import FeatureTarget
+from Model.Content.FeatureText import Block, blocks_from_json
 from .Spell import Spell
 
 
@@ -93,6 +94,18 @@ class DataSpell(Spell):
                 f"Invalid usage_tags value for spell {self.name!r}: {value!r}"
             )
         return value
+
+    @property
+    def improved_description(self) -> Optional[list[Block]]:
+        value = self._data.get("improved_description")
+        if value is None:
+            return None
+        try:
+            return blocks_from_json(value)
+        except (ValueError, KeyError, TypeError) as error:
+            raise ValueError(
+                f"Invalid improved description for spell {self.name!r}: {error}"
+            ) from error
 
     @property
     def target(self) -> Optional[FeatureTarget]:

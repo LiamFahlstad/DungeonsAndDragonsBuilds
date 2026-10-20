@@ -43,9 +43,27 @@ class SpellFactory:
                 for name, extra_fields in extended_data.items():
                     if name in source_data:
                         source_data[name].update(extra_fields)
+                # Improved descriptions (blocks, as JSON) belong to this
+                # source's wording of the spell, so they ride on its record.
+                for name, blocks in cls._load_improved(path).items():
+                    if name in source_data:
+                        source_data[name]["improved_description"] = blocks
                 merged.update(source_data)
             cls._cache = merged
         return cls._cache
+
+    @staticmethod
+    def improved_path(path: str) -> str:
+        """spells_dnd2024.json -> spells_dnd2024_improved.json"""
+        return path[:-5] + "_improved.json"
+
+    @classmethod
+    def _load_improved(cls, path: str) -> dict[str, Any]:
+        try:
+            with open(cls.improved_path(path), "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
 
     @classmethod
     def create(

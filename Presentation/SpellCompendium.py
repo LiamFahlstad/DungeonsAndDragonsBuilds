@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from Presentation.FeatureCards import IMPROVED_DESCRIPTION_CSS
 from Presentation.SpellCards import (
     SPELL_CARD_CSS,
     write_spell_to_file,
@@ -93,7 +94,9 @@ def _get_css_style() -> str:
         break-inside: avoid;
     }"""
 
-    return Html.render_style_block(page_css, SPELL_CARD_CSS, page_overrides_css)
+    return Html.render_style_block(
+        page_css, SPELL_CARD_CSS, IMPROVED_DESCRIPTION_CSS, page_overrides_css
+    )
 
 
 def write_spell_compendium(output_path: str = OUTPUT_HTML):

@@ -28,9 +28,14 @@ improved version is checked against, and RunCharacterCreator.py
 
 This module only holds the structure; Presentation/FeatureCards.py renders
 it.
+
+Spells use the same blocks, written as JSON (blocks_from_json) in a
+spells_<source>_improved.json beside each spell source; see
+CharacterContent/Spells/IMPROVED_DESCRIPTIONS.md.
 """
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from Core.Definitions import Ability
 
@@ -86,6 +91,47 @@ class StatBlock:
 
 
 Block = Paragraph | Facts | Table | Option | StatBlock
+
+
+def blocks_from_json(data: list[Any]) -> list[Block]:
+    """Blocks from their JSON form, as spells_<source>_improved.json holds
+    them: each block is an object with one key naming its type -
+
+        {"paragraph": "text"}
+        {"facts": [["label", "value"], ...]}
+        {"table": {"columns": ["A", "B"], "rows": [["1", "2"], ...]}}
+        {"option": {"name": "Name", "blocks": [<block>, ...]}}
+
+    A StatBlock has no JSON form: it's HTML of a creature at the
+    character's current level, which a spell's data can't know."""
+    if not isinstance(data, list):
+        raise ValueError(f"Improved description must be a list of blocks: {data!r}")
+    return [_block_from_json(item) for item in data]
+
+
+def _block_from_json(item: Any) -> Block:
+    if not isinstance(item, dict) or len(item) != 1:
+        raise ValueError(f"A block must be an object with one key: {item!r}")
+    ((kind, value),) = item.items()
+    if kind == "paragraph":
+        if not isinstance(value, str):
+            raise ValueError(f"A paragraph must be a string: {value!r}")
+        return Paragraph(value)
+    if kind == "facts":
+        rows = tuple(tuple(row) for row in value)
+        if any(len(row) != 2 for row in rows):
+            raise ValueError(f"Every fact must be a [label, value] pair: {value!r}")
+        return Facts(rows)  # type: ignore[arg-type]
+    if kind == "table":
+        return Table(
+            tuple(value["columns"]), tuple(tuple(row) for row in value["rows"])
+        )
+    if kind == "option":
+        return Option(
+            value["name"],
+            tuple(_block_from_json(inner) for inner in value.get("blocks", [])),
+        )
+    raise ValueError(f"Unknown block type {kind!r} in {item!r}")
 
 
 def dc_formula(ability: Ability) -> str:

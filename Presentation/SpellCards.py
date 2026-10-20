@@ -1,7 +1,7 @@
 from typing import Optional, TextIO
 
 from Presentation import Html
-from Presentation.FeatureCards import _LEVEL_LABEL
+from Presentation.FeatureCards import _LEVEL_LABEL, improved_description_to_html
 
 from CharacterContent.Spells.SpellFactory.Spell import Spell
 from Core.Definitions import CharacterClass
@@ -214,18 +214,26 @@ def write_spell_to_file(
     spell: Spell,
     file: TextIO,
     show_classes: bool = False,
+    source_text: bool = False,
 ):  # writes HTML
+    """source_text shows the spell's source text instead of its improved
+    description (RunCharacterCreator.py --source-text)."""
     # ── Detect special tags ──────────────────────────────────────────────
     is_concentration = spell.is_concentration
     is_ritual = spell.is_ritual
 
     # ── Process description ──────────────────────────────────────────────
     description = spell.description.strip()
+    improved = None if source_text else spell.improved_description
 
     # Split off the higher-level note, if present
     higher_level_marker = "Using a Higher-Level Spell Slot."
     higher_level_html = ""
-    if higher_level_marker in description:
+    if improved is not None:
+        # The improved description holds the upcasting rules as an Option
+        # of its own.
+        main_desc = improved_description_to_html(improved)
+    elif higher_level_marker in description:
         main_desc, higher_rest = description.split(higher_level_marker, 1)
         main_desc = Html.boxes_to_html(main_desc.strip())
         main_desc = Html.bolden_text_html(main_desc).replace("\n", "<br>")
