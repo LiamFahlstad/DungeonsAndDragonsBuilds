@@ -75,6 +75,25 @@ class TestEveryImprovedDescription:
             if heading in description:
                 assert heading in option_names, f"{name}: no {heading!r} Option"
 
+    def test_its_flavor_is_quoted_from_the_source(self, path, name, blocks):
+        # A Flavor row quotes the source text (or the aidedd text when the
+        # source's is missing); it never paraphrases or adds flavor. Its
+        # first letter may be capitalized and a period added, nothing more.
+        source = _source(path)[name]["description"] or _source(
+            "CharacterContent/Spells/spells_aidedd.json"
+        ).get(name, {}).get("description", "")
+        source = source.replace("�", "'").replace("’", "'").replace("‘", "'")
+        for block in blocks:
+            for label, value in block.get("facts", ()):
+                if label != "Flavor":
+                    continue
+                assert block is blocks[0], f"{name}: Flavor isn't the card's first row"
+                for sentence in value.rstrip(".").split(". "):
+                    sentence = sentence.rstrip(".")
+                    assert (
+                        sentence in source or sentence[0].lower() + sentence[1:] in source
+                    ), f"{name}: Flavor isn't verbatim: {sentence!r}"
+
     def test_it_is_the_one_the_factory_loads(self, path, name, blocks):
         # A higher-priority source holding the same spell wins outright, so
         # this entry would never be shown.
@@ -94,8 +113,13 @@ class TestSpellCard:
 
     def test_it_replaces_the_source_text(self):
         html = _card(SpellFactory.create("Fireball"))
-        assert "low roar" not in html
+        assert "makes a Dexterity saving throw, taking 8d6" not in html
         assert "spell-higher" not in html
+
+    def test_its_flavor_is_kept_word_for_word(self):
+        html = _card(SpellFactory.create("Fireball"))
+        assert "<th class='feature-box-label'>Flavor</th>" in html
+        assert "blossoms with a low roar into a fiery explosion" in html
 
     def test_source_text_flag_prints_the_source_instead(self):
         html = _card(SpellFactory.create("Fireball"), source_text=True)
@@ -104,9 +128,13 @@ class TestSpellCard:
         assert "feature-box" not in html
 
     def test_spells_without_one_keep_their_source_text(self):
-        spell = SpellFactory.create("Magic Missile")
-        assert spell.improved_description is None
-        assert "feature-box" not in _card(spell)
+        # Fireball's record with its improved description taken out, so the
+        # test doesn't depend on which spells have one yet.
+        data = dict(SpellFactory.create("Fireball")._data)
+        del data["improved_description"]
+        html = _card(DataSpell(data))
+        assert "low roar" in html
+        assert "feature-box" not in html
 
 
 def test_a_scroll_leaves_out_the_upcasting_option():

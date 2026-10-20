@@ -1,0 +1,2306 @@
+{
+  "Absorb Elements": [
+    {"facts": [
+      ["Flavor", "The spell captures some of the incoming energy, lessening its effect on you and storing it for your next melee attack."],
+      ["Trigger", "You take acid, cold, fire, lightning, or thunder damage"],
+      ["Resistance", "To the triggering damage type until the start of your next turn"],
+      ["Stored energy", "The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of the triggering type, and the spell ends"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Extra damage", "+1d6 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Aganazzar's Scorcher": [
+    {"facts": [
+      ["Flavor", "A line of roaring flame 30 feet long and 5 feet wide emanates from you in a direction you choose."],
+      ["Area", "A line 30 feet long and 5 feet wide, in a direction you choose"],
+      ["Save", "Dexterity, made by each creature in the line"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d8 Fire damage", "Half as much damage"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Air Bubble": [
+    {"facts": [
+      ["Flavor", "You create a spectral globe around the head of a willing creature you can see within range."],
+      ["Target", "A willing creature you can see within range"],
+      ["Effect", "The globe is filled with fresh air that lasts until the spell ends"],
+      ["Several heads", "The globe appears around only one of its heads, which is all the creature needs to avoid suffocation, assuming that all its heads share the same respiratory system"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Globes", "+2 globes for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Antagonize": [
+    {"facts": [
+      ["Flavor", "You whisper magical words that antagonize one creature of your choice within range."],
+      ["Target", "One creature of your choice within range"],
+      ["Save", "Wisdom"]
+    ]},
+    {"option": {"name": "Failed Save", "blocks": [
+      {"facts": [
+        ["Damage", "4d4 Psychic damage"],
+        ["Reaction", "It must immediately use its reaction to make a melee attack against another creature of your choice that you can see"],
+        ["Can't attack", "If it can't make this attack (for example, because there is no one within its reach or because its reaction is unavailable), it instead has Disadvantage on the next attack roll it makes before the start of your next turn"]
+      ]}
+    ]}},
+    {"facts": [
+      ["Successful save", "Half as much damage only"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d4 for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Ashardalon's Stride": [
+    {"facts": [
+      ["Flavor", "The billowing flames of a dragon blast from your feet, granting you explosive speed."],
+      ["Speed", "For the duration, your speed increases by 20 feet"],
+      ["Opportunity", "Moving doesn't provoke opportunity attacks"],
+      ["Trail of heat", "When you move within 5 feet of a creature or an object that isn't being worn or carried, it takes 1d6 Fire damage"],
+      ["Limit", "A creature or object can take this damage only once during a turn"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Speed", "+5 feet for each spell slot level above 3rd"],
+        ["Damage", "+1d6 Fire damage for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Beast Bond": [
+    {"paragraph": "You establish a telepathic link with a beast."},
+    {"facts": [
+      ["Target", "One beast you touch that is friendly to you or charmed by you"],
+      ["Fails if", "The beast's Intelligence is 4 or higher"],
+      ["Link", "Active until the spell ends, while you and the beast are within line of sight of each other"],
+      ["Telepathy", "The beast can understand your telepathic messages to it, and it can telepathically communicate simple emotions and concepts back to you"],
+      ["Advantage", "While the link is active, the beast gains Advantage on attack rolls against any creature within 5 feet of you that you can see"]
+    ]}
+  ],
+  "Bones of the Earth": [
+    {"facts": [
+      ["Pillars", "Up to six pillars of stone burst from places on the ground that you can see within range"],
+      ["Shape", "Each pillar is a cylinder that has a diameter of 5 feet and a height of up to 30 feet"],
+      ["Ground", "The ground where a pillar appears must be wide enough for its diameter, and you can target ground under a creature if that creature is Medium or smaller"],
+      ["Each pillar", "AC 5 and 30 hit points"],
+      ["Rubble", "When reduced to 0 hit points, a pillar crumbles into rubble, which creates an area of Difficult Terrain with a 10-foot radius"],
+      ["Cleared", "The rubble lasts until cleared"]
+    ]},
+    {"option": {"name": "Pillar Under a Creature", "blocks": [
+      {"facts": [
+        ["Save", "Dexterity, made by a creature under which a pillar is created"],
+        ["Failed save", "The creature is lifted by the pillar"],
+        ["Successful save", "No effect"],
+        ["Choosing", "A creature can choose to fail the save"]
+      ]}
+    ]}},
+    {"option": {"name": "Pillar Blocked From Full Height", "blocks": [
+      {"facts": [
+        ["Condition", "A pillar is prevented from reaching its full height because of a ceiling or other obstacle"],
+        ["Effect", "A creature on the pillar takes 6d6 Bludgeoning damage and is Restrained, pinched between the pillar and the obstacle"],
+        ["Escape", "The Restrained creature can use an action to make a Strength or Dexterity check (the creature's choice) against the spell's saving throw DC"],
+        ["On a success", "The creature is no longer Restrained and must either move off the pillar or fall off it"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Pillars", "When you cast this spell using a spell slot of 7th level or higher, you can create two additional pillars for each slot level above 6th"]
+      ]}
+    ]}}
+  ],
+  "Booming Blade": [
+    {"paragraph": "You brandish the weapon used in the spell's casting and make a melee attack with it."},
+    {"facts": [
+      ["Target", "One creature within 5 feet of you"],
+      ["Attack", "A melee attack with the weapon"],
+      ["On a hit", "The target suffers the weapon attack's normal effects and becomes sheathed in booming energy until the start of your next turn"],
+      ["If it moves", "If the target willingly moves 5 feet or more before then, it takes 1d8 Thunder damage, and the spell ends"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Extra Thunder damage on a hit", "Damage for moving"], "rows": [
+        ["1", "None", "1d8"],
+        ["5", "1d8", "2d8"],
+        ["11", "2d8", "3d8"],
+        ["17", "3d8", "4d8"]
+      ]}}
+    ]}}
+  ],
+  "Borrowed Knowledge": [
+    {"facts": [
+      ["Flavor", "You draw on knowledge from spirits of the past."],
+      ["Skill", "Choose one skill in which you lack proficiency"],
+      ["Effect", "For the spell's duration, you have proficiency in the chosen skill"],
+      ["Ends early", "If you cast this spell again"]
+    ]}
+  ],
+  "Branding Smite": [
+    {"facts": [
+      ["Flavor", "The weapon gleams with astral radiance as you strike."],
+      ["Trigger", "The next time you hit a creature with a weapon attack before this spell ends"],
+      ["Damage", "The attack deals an extra 2d6 Radiant damage to the target"],
+      ["Revealed", "The target becomes visible if it is invisible, and it sheds dim light in a 5-foot radius and can't become invisible until the spell ends"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Extra damage", "+1d6 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Catapult": [
+    {"paragraph": "You hurl a small object through the air."},
+    {"facts": [
+      ["Target", "One object weighing 1 to 5 pounds within range that isn't being worn or carried"],
+      ["Flight", "It flies in a straight line up to 90 feet in a direction you choose before falling to the ground, stopping early if it impacts against a solid surface"],
+      ["Creature in path", "If the object would strike a creature, that creature makes a Dexterity saving throw; on a failed save, the object strikes it and stops moving"],
+      ["Impact", "When the object strikes something, the object and what it strikes each take 3d8 Bludgeoning damage"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Maximum weight", "+5 pounds for each slot level above 1st"],
+        ["Damage", "+1d8 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Catnap": [
+    {"facts": [
+      ["Flavor", "You make a calming gesture."],
+      ["Targets", "Up to three willing creatures of your choice that you can see within range"],
+      ["Effect", "They fall Unconscious for the spell's duration"],
+      ["Waking", "The spell ends on a target early if it takes damage or someone uses an action to shake or slap it awake"],
+      ["Full duration", "A target that remains unconscious for the full duration gains the benefit of a short rest, and it can't be affected by this spell again until it finishes a long rest"]
+    ]}
+  ],
+  "Cause Fear": [
+    {"facts": [
+      ["Flavor", "You awaken the sense of mortality in one creature you can see within range."],
+      ["Target", "One creature you can see within range; a construct or an undead is immune"],
+      ["Save", "Wisdom"],
+      ["Failed save", "Frightened of you until the spell ends"],
+      ["Repeat save", "At the end of each of its turns, ending the effect on itself on a success"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 1st"],
+        ["Spacing", "The creatures must be within 30 feet of each other when you target them"]
+      ]}
+    ]}}
+  ],
+  "Ceremony": [
+    {"paragraph": "You perform one of several religious ceremonies, chosen when you cast the spell."},
+    {"facts": [
+      ["Range", "The target must be within 10 feet of you throughout the casting"]
+    ]},
+    {"table": {"columns": ["Ceremony", "You touch", "Effect"], "rows": [
+      ["Atonement", "One willing creature whose alignment has changed", "You make a DC 20 Wisdom (Insight) check; on a success, you restore the target to its original alignment"],
+      ["Bless Water", "One vial of water", "It becomes holy water"],
+      ["Coming of Age", "One humanoid who is a young adult", "For the next 24 hours, whenever it makes an ability check, it can roll a d4 and add the number rolled; a creature can benefit from this rite only once"],
+      ["Dedication", "One humanoid who wishes to be dedicated to your god's service", "For the next 24 hours, whenever it makes a saving throw, it can roll a d4 and add the number rolled; a creature can benefit from this rite only once"],
+      ["Funeral Rite", "One corpse", "For the next 7 days, it can't become undead by any means short of a Wish spell"],
+      ["Wedding", "Adult humanoids willing to be bonded together in marriage", "For the next 7 days, each gains a +2 bonus to AC while they are within 30 feet of each other; a creature can benefit from this rite again only if widowed"]
+    ]}}
+  ],
+  "Chaos Bolt": [
+    {"facts": [
+      ["Flavor", "You hurl an undulating, warbling mass of chaotic energy at one creature in range."],
+      ["Target", "One creature in range"],
+      ["Attack", "Ranged spell attack"],
+      ["On a hit", "2d8 + 1d6 damage"],
+      ["Damage type", "Choose one of the d8s; the number rolled on that die determines the damage type"]
+    ]},
+    {"table": {"columns": ["d8", "Damage type"], "rows": [
+      ["1", "Acid"],
+      ["2", "Cold"],
+      ["3", "Fire"],
+      ["4", "Force"],
+      ["5", "Lightning"],
+      ["6", "Poison"],
+      ["7", "Psychic"],
+      ["8", "Thunder"]
+    ]}},
+    {"option": {"name": "Leap", "blocks": [
+      {"facts": [
+        ["Trigger", "You roll the same number on both d8s"],
+        ["New target", "A different creature of your choice within 30 feet of the target; make a new attack roll and a new damage roll, which could cause the chaotic energy to leap again"],
+        ["Each creature", "Can be targeted only once by each casting of this spell"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Extra damage", "Each target takes 1d6 extra damage of the type rolled for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Control Flames": [
+    {"paragraph": "You choose nonmagical flame that you can see within range and that fits within a 5-foot Cube, and affect it in one of these ways."},
+    {"table": {"columns": ["Effect", "Lasts"], "rows": [
+      ["Expand the flame 5 feet in one direction, provided that wood or other fuel is present in the new location", "Instantaneous"],
+      ["Extinguish the flames within the Cube", "Instantaneous"],
+      ["Double or halve the area of Bright Light and Dim Light cast by the flame, change its color, or both", "1 hour"],
+      ["Simple shapes, such as the vague form of a creature, an inanimate object, or a location, appear within the flames and animate as you like", "1 hour"]
+    ]}},
+    {"facts": [
+      ["Active effects", "Up to three of its non-instantaneous effects at a time, from multiple castings"],
+      ["Dismiss", "As an action, you can dismiss such an effect"]
+    ]}
+  ],
+  "Control Winds": [
+    {"facts": [
+      ["Area", "A 100-foot cube of air that you can see within range"],
+      ["Effect", "Choose one of the following effects when you cast the spell"],
+      ["Lasts", "The effect lasts for the spell's duration, unless you use your action on a later turn to switch to a different effect"],
+      ["Halting", "You can also use your action to temporarily halt the effect or to restart one you've halted"]
+    ]},
+    {"option": {"name": "Gusts", "blocks": [
+      {"facts": [
+        ["Wind", "A wind picks up within the cube, continually blowing in a horizontal direction that you choose"],
+        ["Intensity", "You choose the intensity of the wind: calm, moderate, or strong"],
+        ["Ranged attacks", "If the wind is moderate or strong, ranged weapon attacks that pass through it or that are made against targets within the cube have Disadvantage on their attack rolls"],
+        ["Strong wind", "If the wind is strong, any creature moving against the wind must spend 1 extra foot of movement for each foot moved"]
+      ]}
+    ]}},
+    {"option": {"name": "Downdraft", "blocks": [
+      {"facts": [
+        ["Wind", "A sustained blast of strong wind blows downward from the top of the cube"],
+        ["Ranged attacks", "Ranged weapon attacks that pass through the cube or that are made against targets within it have Disadvantage on their attack rolls"],
+        ["Save", "Strength, made by a creature if it flies into the cube for the first time on a turn or starts its turn there flying"],
+        ["Failed save", "The creature is knocked Prone"],
+        ["Successful save", "No effect"]
+      ]}
+    ]}},
+    {"option": {"name": "Updraft", "blocks": [
+      {"facts": [
+        ["Wind", "A sustained updraft within the cube, rising upward from the cube's bottom edge"],
+        ["Falling", "Creatures that end a fall within the cube take only half damage from the fall"],
+        ["Jumping", "When a creature in the cube makes a vertical jump, the creature can jump up to 10 feet higher than normal"]
+      ]}
+    ]}}
+  ],
+  "Create Bonfire": [
+    {"paragraph": "You create a bonfire on ground that you can see within range."},
+    {"facts": [
+      ["Area", "5-foot Cube, until the spell ends"],
+      ["Save", "Dexterity, made by any creature in the bonfire's space when you cast the spell, and by a creature when it enters the space for the first time on a turn or ends its turn there"],
+      ["Failed save", "1d8 Fire damage"],
+      ["Successful save", "No damage"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d8"],
+        ["5", "2d8"],
+        ["11", "3d8"],
+        ["17", "4d8"]
+      ]}}
+    ]}}
+  ],
+  "Create Homunculus": [
+    {"facts": [
+      ["Cost", "While speaking an intricate incantation, you cut yourself with a jewel-encrusted dagger, taking 2d4 Piercing damage that can't be reduced in any way"],
+      ["Creating", "You then drip your blood on the spell's other components and touch them, transforming them into a special construct called a homunculus"],
+      ["Statistics", "The statistics of the homunculus are in the Monster Manual"],
+      ["Companion", "It is your faithful companion, and it dies if you die"],
+      ["Only one", "You can have only one homunculus at a time. If you cast this spell while your homunculus lives, the spell fails"]
+    ]},
+    {"option": {"name": "Sharing Hit Points", "blocks": [
+      {"facts": [
+        ["When", "Whenever you finish a long rest, you can spend up to half your Hit Dice if the homunculus is on the same plane of existence as you"],
+        ["Roll", "When you do so, roll each die and add your Constitution modifier to it"],
+        ["Effect", "Your hit point maximum is reduced by the total, and the homunculus's hit point maximum and current hit points are both increased by it"],
+        ["Minimum", "This process can reduce you to no lower than 1 hit point"],
+        ["Lasts", "The change to your and the homunculus's hit points ends when you finish your next long rest"],
+        ["Removal", "The reduction to your hit point maximum can't be removed by any means before then, except by the homunculus's death"]
+      ]}
+    ]}}
+  ],
+  "Create Magen": [
+    {"facts": [
+      ["Casting", "While casting the spell, you place a vial of quicksilver in the chest of a life-sized human doll stuffed with ash or dust"],
+      ["Stitching", "You then stitch up the doll and drip your blood on it"],
+      ["Transforming", "At the end of the casting, you tap the doll with a crystal rod, transforming it into a magen clothed in whatever the doll was wearing"],
+      ["Type", "The type of magen is chosen by you during the casting of the spell"],
+      ["Cost", "When the magen appears, your hit point maximum decreases by an amount equal to the magen's challenge rating (minimum reduction of 1)"],
+      ["Undoing", "Only a Wish spell can undo this reduction to your hit point maximum"],
+      ["Obedience", "Any magen you create with this spell obeys your commands without question"]
+    ]}
+  ],
+  "Create Spelljamming Helm": [
+    {"facts": [
+      ["Target", "A Large or smaller chair that is unoccupied, which you touch while holding the rod used in the casting of the spell"],
+      ["Effect", "The rod disappears, and the chair is transformed into a Spelljamming Helm"]
+    ]}
+  ],
+  "Crown of Stars": [
+    {"facts": [
+      ["Flavor", "Seven star-like motes of light appear and orbit your head until the spell ends."],
+      ["Motes", "Seven, which orbit your head until the spell ends"],
+      ["Sending one", "You can use a bonus action to send one of the motes streaking toward one creature or object within 120 feet of you"],
+      ["Attack", "When you do so, make a ranged spell attack"],
+      ["On a hit", "The target takes 4d12 radiant damage"],
+      ["Expended", "Whether you hit or miss, the mote is expended"],
+      ["Ends early", "The spell ends early if you expend the last mote"]
+    ]},
+    {"table": {"columns": ["Motes remaining", "Light"], "rows": [
+      ["Four or more", "Bright light in a 30-foot radius and dim light for an additional 30 feet"],
+      ["One to three", "Dim light in a 30-foot radius"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Slot", "When you cast this spell using a spell slot of 8th level or higher"],
+        ["Motes", "The number of motes created increases by two for each slot level above 7th"]
+      ]}
+    ]}}
+  ],
+  "Danse Macabre": [
+    {"facts": [
+      ["Flavor", "Threads of dark power leap from your fingers to pierce up to five Small or Medium corpses you can see within range."],
+      ["Targets", "Up to five Small or Medium corpses you can see within range"],
+      ["Rising", "Each corpse immediately stands up and becomes undead"],
+      ["Kind", "You decide whether it is a zombie or a skeleton (the statistics for zombies and skeletons are in the Monster Manual), and it gains a bonus to its attack and damage rolls equal to your spellcasting ability modifier"],
+      ["Control", "The creatures are under your control until the spell ends, after which they become inanimate once more"]
+    ]},
+    {"option": {"name": "Commanding", "blocks": [
+      {"facts": [
+        ["Command", "You can use a bonus action to mentally command the creatures you make with this spell, issuing the same command to all of them"],
+        ["Range", "To receive the command, a creature must be within 60 feet of you"],
+        ["Orders", "You decide what action the creatures will take and where they will move during their next turn, or you can issue a general command, such as to guard a chamber or passageway against your foes"],
+        ["No command", "If you issue no commands, the creatures do nothing except defend themselves against hostile creatures"],
+        ["Following", "Once given an order, the creatures continue to follow it until their task is complete"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Corpses", "You animate up to two additional corpses for each slot level above 5th"]
+      ]}
+    ]}}
+  ],
+  "Dawn": [
+    {"facts": [
+      ["Flavor", "The light of dawn shines down on a location you specify within range."],
+      ["Location", "A location you specify within range"],
+      ["Area", "A 30-foot-radius, 40-foot-high cylinder of bright light glimmers there until the spell ends"],
+      ["Light", "This light is sunlight"],
+      ["Save", "Constitution, made by each creature in the cylinder when it appears, and whenever a creature ends its turn in the cylinder"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["4d10 Radiant damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Moving", "If you're within 60 feet of the cylinder, you can move it up to 60 feet as a bonus action on your turn"]
+    ]}
+  ],
+  "Distort Value": [
+    {"paragraph": "You change an object's perceived value with illusion."},
+    {"facts": [
+      ["Target", "An object no more than 1 foot on a side"],
+      ["Effect", "Double its perceived value by adding illusionary flourish, or halve it with illusionary dents and scratches"],
+      ["Examining", "Anyone examining the object must roll an Investigation check against your spell DC"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Object size", "+1 foot for each spell slot over 1st"]
+      ]}
+    ]}}
+  ],
+  "Draconic Transformation": [
+    {"facts": [
+      ["Flavor", "With a roar, you draw on the magic of dragons to transform yourself, taking on draconic features."],
+      ["Benefits", "You gain the following benefits until the spell ends"]
+    ]},
+    {"option": {"name": "Blindsight", "blocks": [
+      {"facts": [
+        ["Blindsight", "You have blindsight with a range of 30 feet"],
+        ["Within range", "Within that range, you can effectively see anything that isn't behind total cover, even if you're blinded or in darkness"],
+        ["Invisible", "Moreover, you can see an invisible creature, unless the creature successfully hides from you"]
+      ]}
+    ]}},
+    {"option": {"name": "Breath Weapon", "blocks": [
+      {"facts": [
+        ["When", "When you cast this spell, and as a bonus action on subsequent turns for the duration, you can exhale shimmering energy in a 60-foot cone"],
+        ["Save", "Dexterity, made by each creature in that area"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["6d8 force damage", "Half as much damage"]
+      ]}}
+    ]}},
+    {"option": {"name": "Wings", "blocks": [
+      {"facts": [
+        ["Wings", "Incorporeal wings sprout from your back, giving you a flying speed of 60 feet"]
+      ]}
+    ]}}
+  ],
+  "Dream of the Blue Veil": [
+    {"facts": [
+      ["Flavor", "The visions conclude with each of you encountering and pulling back a mysterious blue curtain."],
+      ["Targets", "You and up to eight willing creatures within range"],
+      ["Effect", "All of you fall unconscious for the spell's duration and experience visions of another world on the Material Plane, such as Oerth, Toril, Krynn, or Eberron"],
+      ["Full duration", "If the spell reaches its full duration, the spell then ends with you mentally and physically transported to the world that was in the visions"],
+      ["Requirement", "To cast this spell, you must have a magic item that originated on the world you wish to reach, and you must be aware of the world's existence, even if you don't know the world's name"],
+      ["Destination", "Your destination in the other world is a safe location within 1 mile of where the magic item was created"],
+      ["Alternatively", "You can cast the spell if one of the affected creatures was born on the other world, which causes your destination to be a safe location within 1 mile of where that creature was born"]
+    ]},
+    {"option": {"name": "Damage Ends the Spell", "blocks": [
+      {"facts": [
+        ["A creature", "The spell ends early on a creature if that creature takes any damage, and the creature isn't transported"],
+        ["You", "If you take any damage, the spell ends for you and all other creatures, with none of you being transported"]
+      ]}
+    ]}}
+  ],
+  "Druid Grove": [
+    {"facts": [
+      ["Flavor", "You invoke the spirits of nature to protect an area outdoors or underground."],
+      ["Area", "An area outdoors or underground, as small as a 30-foot cube or as large as a 90-foot cube; buildings and other structures are excluded from the affected area"],
+      ["Permanent", "If you cast this spell in the same area every day for a year, the spell lasts until dispelled"],
+      ["Effects", "The spell creates the following effects within the area"],
+      ["Friends", "When you cast this spell, you can specify creatures as friends who are immune to the effects"],
+      ["Password", "You can also specify a password that, when spoken aloud, makes the speaker immune to these effects"],
+      ["Magic", "The entire warded area radiates magic"],
+      ["Dispel Magic", "A dispel magic cast on the area, if successful, removes only one of the following effects, not the entire area"],
+      ["Which effect", "That spell's caster chooses which effect to end"],
+      ["Dispelled", "Only when all its effects are gone is this spell dispelled"]
+    ]},
+    {"option": {"name": "Solid Fog", "blocks": [
+      {"facts": [
+        ["Fog", "You can fill any number of 5-foot squares on the ground with thick fog, making them Heavily Obscured"],
+        ["Height", "The fog reaches 10 feet high"],
+        ["Movement", "Every foot of movement through the fog costs 2 extra feet"],
+        ["Immune creatures", "To a creature immune to this effect, the fog obscures nothing and looks like soft mist, with motes of green light floating in the air"]
+      ]}
+    ]}},
+    {"option": {"name": "Grasping Undergrowth", "blocks": [
+      {"facts": [
+        ["Weeds", "You can fill any number of 5-foot squares on the ground that aren't filled with fog with grasping weeds and vines, as if they were affected by an entangle spell"],
+        ["Immune creatures", "To a creature immune to this effect, the weeds and vines feel soft and reshape themselves to serve as temporary seats or beds"]
+      ]}
+    ]}},
+    {"option": {"name": "Grove Guardians", "blocks": [
+      {"facts": [
+        ["Trees", "You can animate up to four trees in the area, causing them to uproot themselves from the ground"],
+        ["Statistics", "These trees have the same statistics as an awakened tree, which appears in the Monster Manual, except they can't speak, and their bark is covered with druidic symbols"],
+        ["Intruders", "If any creature not immune to this effect enters the warded area, the grove guardians fight until they have driven off or slain the intruders"],
+        ["Commands", "The grove guardians also obey your spoken commands (no action required by you) that you issue while in the area"],
+        ["No commands", "If you don't give them commands and no intruders are present, the grove guardians do nothing"],
+        ["Leaving", "The grove guardians can't leave the warded area"],
+        ["Ending", "When the spell ends, the magic animating them disappears, and the trees take root again if possible"]
+      ]}
+    ]}},
+    {"option": {"name": "Additional Spell Effect", "blocks": [
+      {"facts": [
+        ["Choose one", "You can place your choice of one of the following magical effects within the warded area"]
+      ]},
+      {"table": {"columns": ["Effect", "Locations"], "rows": [
+        ["A constant gust of wind", "Two locations of your choice"],
+        ["Spike growth", "One location of your choice"],
+        ["Wind wall", "Two locations of your choice"]
+      ]}},
+      {"facts": [
+        ["Immune creatures", "To a creature immune to this effect, the winds are a fragrant, gentle breeze, and the area of spike growth is harmless"]
+      ]}
+    ]}}
+  ],
+  "Dust Devil": [
+    {"facts": [
+      ["Flavor", "An elemental force that resembles a dust devil appears in the cube and lasts for the spell's duration."],
+      ["Appears", "In an unoccupied 5-foot cube of air that you can see within range"],
+      ["Save", "Strength, made by any creature that ends its turn within 5 feet of the dust devil"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["1d8 Bludgeoning damage, and pushed 10 feet away", "Half as much damage, and not pushed"]
+    ]}},
+    {"option": {"name": "Moving It", "blocks": [
+      {"facts": [
+        ["Action", "A bonus action"],
+        ["Movement", "Up to 30 feet in any direction"],
+        ["Debris", "If it moves over sand, dust, loose dirt, or small gravel, it sucks up the material and forms a 10-foot-radius cloud of debris around itself that lasts until the start of your next turn; the cloud heavily obscures its area"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Earth Tremor": [
+    {"paragraph": "You cause a tremor in the ground around you."},
+    {"facts": [
+      ["Area", "10-foot radius"],
+      ["Save", "Dexterity, made by each creature other than you in the area"],
+      ["Failed save", "1d6 Bludgeoning damage, and knocked Prone"],
+      ["Successful save", "No effect"],
+      ["Ground", "If the ground in the area is loose earth or stone, it becomes Difficult Terrain until cleared"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d6 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Earthbind": [
+    {"facts": [
+      ["Flavor", "Yellow strips of magical energy loop around the creature."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Strength"],
+      ["Failed save", "Its flying speed (if any) is reduced to 0 feet for the spell's duration"],
+      ["Airborne", "An airborne creature affected by this spell descends at 60 feet per round until it reaches the ground or the spell ends"]
+    ]}
+  ],
+  "Elemental Bane": [
+    {"facts": [
+      ["Target", "One creature you can see within range"],
+      ["Damage type", "Acid, cold, fire, lightning, or thunder (your choice)"],
+      ["Save", "Constitution"],
+      ["Failed save", "Affected by the spell for its duration"],
+      ["Extra damage", "The first time each turn the affected target takes damage of the chosen type, it takes an extra 2d6 damage of that type"],
+      ["Resistance", "The target loses any resistance to that damage type until the spell ends"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 4th"],
+        ["Spacing", "The creatures must be within 30 feet of each other when you target them"]
+      ]}
+    ]}}
+  ],
+  "Encode Thoughts": [
+    {"facts": [
+      ["Flavor", "You pull a memory, an idea, or a message from your mind and transform it into a tangible string of glowing energy called a thought strand, which persists for the duration or until you cast this spell again."],
+      ["Thought strand", "A Tiny, weightless, semisolid object that can be held and carried like a ribbon; it is otherwise stationary"],
+      ["Appears", "In an unoccupied space within 5 feet of you"],
+      ["Lasts", "For the duration, or until you cast this spell again"],
+      ["Others' thoughts", "If you cast it while concentrating on a spell or an ability that lets you read or manipulate the thoughts of others (such as Detect Thoughts or Modify Memory), you can make a strand from the thoughts or memories you read instead of your own"],
+      ["Reading one", "Casting this spell while holding a thought strand lets you instantly receive the memory, idea, or message it contains; casting Detect Thoughts on the strand has the same effect"]
+    ]}
+  ],
+  "Enemies Abound": [
+    {"facts": [
+      ["Flavor", "You reach into the mind of one creature you can see."],
+      ["Target", "One creature you can see"],
+      ["Save", "Intelligence; a creature automatically succeeds if it is immune to being frightened"],
+      ["Failed save", "The target loses the ability to distinguish friend from foe, regarding all creatures it can see as enemies until the spell ends"],
+      ["Repeat save", "Each time the target takes damage, it can repeat the saving throw, ending the effect on itself on a success"],
+      ["Choosing targets", "Whenever it chooses another creature as a target, it must choose at random from among the creatures it can see within range of the attack, spell, or other ability it's using"],
+      ["Opportunity attacks", "If an enemy provokes an opportunity attack from it, it must make that attack if it is able to"]
+    ]}
+  ],
+  "Enervation": [
+    {"facts": [
+      ["Flavor", "A tendril of inky darkness reaches out from you, touching a creature you can see within range to drain life from it."],
+      ["Target", "A creature you can see within range"],
+      ["Save", "Dexterity"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["4d8 Necrotic damage, and until the spell ends, you can use your action on each of your turns to automatically deal 4d8 Necrotic damage to the target", "2d8 Necrotic damage, and the spell ends"]
+    ]}},
+    {"facts": [
+      ["Ends early", "The spell ends if you use your action to do anything else, if the target is ever outside the spell's range, or if the target has total cover from you"],
+      ["Healing", "Whenever the spell deals damage to a target, you regain hit points equal to half the amount of Necrotic damage the target takes"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 5th"]
+      ]}
+    ]}}
+  ],
+  "Erupting Earth": [
+    {"facts": [
+      ["Flavor", "A fountain of churned earth and stone erupts in a 20-foot cube centered on that point."],
+      ["Area", "20-foot cube centered on a point you can see on the ground within range"],
+      ["Save", "Dexterity, made by each creature in the area"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d12 Bludgeoning damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Terrain", "The ground in the area becomes Difficult Terrain until cleared away; each 5-foot-square portion requires at least 1 minute to clear by hand"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d12 for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Far Step": [
+    {"facts": [
+      ["Teleport", "You teleport up to 60 feet to an unoccupied space you can see"],
+      ["Again", "On each of your turns before the spell ends, you can use a bonus action to teleport in this way again"]
+    ]}
+  ],
+  "Fast Friends": [
+    {"paragraph": "You charm a humanoid into performing services for you."},
+    {"facts": [
+      ["Target", "One humanoid within range that can see and hear you, and that can understand you"],
+      ["Save", "Wisdom"],
+      ["Failed save", "Charmed by you for the duration"],
+      ["Services", "While charmed this way, it undertakes to perform any services or activities you ask of it in a friendly manner, to the best of its ability"],
+      ["New tasks", "You can set the creature new tasks when a previous task is completed, or if you decide to end its current task"],
+      ["Resisting", "If the service or activity might cause harm to the creature, or conflicts with its normal activities and desires, it can make another Wisdom saving throw to try to end the effect, with Advantage if you or your companions are fighting it"],
+      ["Certain death", "If the activity would result in certain death for the creature, the spell ends"],
+      ["Afterward", "When the spell ends, the creature knows it was charmed by you"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Find Greater Steed": [
+    {"facts": [
+      ["Flavor", "You summon a spirit that assumes the form of a loyal, majestic mount."],
+      ["Appears", "In an unoccupied space within range"],
+      ["Forms", "A griffon, a pegasus, a peryton, a dire wolf, a rhinoceros, or a saber-toothed tiger"],
+      ["Statistics", "Those provided in the Monster Manual for the chosen form, though it is a celestial, a fey, or a fiend (your choice) instead of its normal creature type"],
+      ["Intelligence", "If it has an Intelligence score of 5 or lower, its Intelligence becomes 6, and it gains the ability to understand one language of your choice that you speak"],
+      ["Control", "You control the mount in combat"],
+      ["Telepathy", "While the mount is within 1 mile of you, you can communicate with it telepathically"],
+      ["Shared spells", "While mounted on it, you can make any spell you cast that targets only you also target the mount"],
+      ["One mount", "You can't have more than one mount bonded by this spell or find steed at the same time"]
+    ]},
+    {"option": {"name": "Disappearance", "blocks": [
+      {"facts": [
+        ["Temporarily", "The mount disappears temporarily when it drops to 0 hit points or when you dismiss it as an action"],
+        ["Re-summoning", "Casting this spell again re-summons the bonded mount, with all its hit points restored and any conditions removed"],
+        ["Releasing", "As an action, you can release a mount from its bond, causing it to disappear permanently"],
+        ["Its gear", "Whenever the mount disappears, it leaves behind any objects it was wearing or carrying"]
+      ]}
+    ]}}
+  ],
+  "Fizban's Platinum Shield": [
+    {"facts": [
+      ["Flavor", "You create a field of silvery light that surrounds a creature of your choice within range (you can choose yourself)."],
+      ["Target", "A creature of your choice within range (you can choose yourself)"],
+      ["Light", "The field sheds dim light out to 5 feet"],
+      ["Benefits", "While surrounded by the field, a creature gains the following benefits"],
+      ["Cover", "The creature has half cover"],
+      ["Resistance", "The creature has resistance to Acid, Cold, Fire, Lightning, and Poison damage"],
+      ["Evasion", "If the creature is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the creature instead takes no damage if it succeeds on the saving throw, and only half damage if it fails"],
+      ["Moving it", "As a bonus action on subsequent turns, you can move the field to another creature within 60 feet of the field"]
+    ]}
+  ],
+  "Flame Arrows": [
+    {"paragraph": "You touch a quiver containing arrows or bolts."},
+    {"facts": [
+      ["Extra damage", "When a target is hit by a ranged weapon attack using a piece of ammunition drawn from the quiver, it takes an extra 1d6 Fire damage"],
+      ["Each piece", "The spell's magic ends on the piece of ammunition when it hits or misses"],
+      ["Ends", "When twelve pieces of ammunition have been drawn from the quiver"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Ammunition", "+2 pieces for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Flock of Familiars": [
+    {"paragraph": "You temporarily summon three familiars, spirits that take animal forms of your choice."},
+    {"facts": [
+      ["Rules", "Each familiar uses the same rules and options as a familiar conjured by the Find Familiar spell"],
+      ["Type", "All of them must be the same type of creature (celestials, fey, or fiends; your choice)"],
+      ["Existing familiar", "If you already have a familiar conjured by the Find Familiar spell or similar means, one fewer familiar is conjured"],
+      ["Telepathy", "While within 1 mile of you, they can telepathically communicate with you and share their visual or auditory senses"],
+      ["Touch spells", "One of them can deliver a spell with a range of touch, as normal, but you can cast a touch spell through only one familiar per turn"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Familiars", "+1 familiar for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Fortune's Favor": [
+    {"facts": [
+      ["Flavor", "You impart latent luck to yourself or one willing creature you can see within range."],
+      ["Target", "You or one willing creature you can see within range"],
+      ["Its rolls", "When it makes an attack roll, an ability check, or a saving throw before the spell ends, it can dismiss this spell on itself to roll an additional d20 and choose which of the d20s to use"],
+      ["Attacked", "Alternatively, when an attack roll is made against it, it can dismiss this spell on itself to roll a d20 and choose which of the d20s to use, the one it rolled or the one the attacker rolled"],
+      ["Advantage", "If the original d20 roll has advantage or disadvantage, the creature rolls the additional d20 after advantage or disadvantage has been applied to the original roll"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Frost Fingers": [
+    {"facts": [
+      ["Flavor", "Freezing cold blasts from your fingertips in a 15-foot cone."],
+      ["Area", "15-foot cone"],
+      ["Save", "Constitution, made by each creature in the area"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["2d8 Cold damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Liquids", "The cold freezes nonmagical liquids in the area that aren't being worn or carried"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Frostbite": [
+    {"facts": [
+      ["Flavor", "You cause numbing frost to form on one creature that you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Constitution"],
+      ["Failed save", "1d6 Cold damage, and Disadvantage on the next weapon attack roll it makes before the end of its next turn"],
+      ["Successful save", "No effect"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d6"],
+        ["5", "2d6"],
+        ["11", "3d6"],
+        ["17", "4d6"]
+      ]}}
+    ]}}
+  ],
+  "Galder's Speedy Courier": [
+    {"paragraph": "You summon a Small air elemental carrying a chest, which delivers its contents to a creature you name."},
+    {"facts": [
+      ["Elemental", "It appears at a spot within range; it is formless, nearly transparent, immune to all damage, and can't interact with other creatures or objects"],
+      ["Chest", "Open and empty, with interior dimensions of 3 feet on each side; while the spell lasts, you can deposit as many items inside as will fit"],
+      ["Recipient", "A living creature you have met and seen at least once before, or any creature for which you possess a body part, lock of hair, clipping from a nail, or similar portion of its body"]
+    ]},
+    {"option": {"name": "Delivery", "blocks": [
+      {"facts": [
+        ["Sending", "As soon as the lid of the chest is closed, the elemental and the chest disappear, then reappear adjacent to the target creature"],
+        ["Can't reach", "If the target creature is on another plane, or if it is proofed against magical detection or location, the contents of the chest reappear on the ground at your feet"],
+        ["Recipient knows", "The target creature is made aware of the chest's contents before it chooses whether or not to open it, and knows how much of the spell's duration remains in which it can retrieve them"],
+        ["Only the recipient", "No other creature can open the chest and retrieve its contents"],
+        ["Ends", "When the spell expires or when all the contents of the chest have been removed, the elemental and the chest disappear; the elemental also disappears if the target creature orders it to return the items to you"],
+        ["Leftovers", "When the elemental disappears, any items not taken from the chest reappear on the ground at your feet"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["8th-level slot", "You can send the chest to a creature on a different plane of existence from you"]
+      ]}
+    ]}}
+  ],
+  "Galder's Tower": [
+    {"paragraph": "You conjure a two-story tower made of stone, wood, or similar suitably sturdy materials."},
+    {"facts": [
+      ["Shape", "Round or square"],
+      ["Each level", "10 feet tall, with an area of up to 100 square feet; access between levels is a simple ladder and hatch"],
+      ["Interior", "Warm and dry, regardless of conditions outside"],
+      ["Furnishings", "Any equipment or furnishings conjured with the tower dissipate into smoke if removed from it"],
+      ["Spell ends", "All creatures and objects within the tower that were not created by the spell appear safely outside on the ground, and all traces of the tower and its furnishings disappear"],
+      ["Extending", "You can cast this spell again while it is active to maintain the tower's existence for another 24 hours"],
+      ["Permanent", "You can create a permanent tower by casting this spell in the same location and with the same configuration every day for one year"]
+    ]},
+    {"table": {"columns": ["Level form", "Contents"], "rows": [
+      ["Bedroom", "A bed, chairs, chest, and magical fireplace"],
+      ["Study", "Desks, books, bookshelves, parchments, ink, and ink pens"],
+      ["Dining space", "A table, chairs, magical fireplace, containers, and cooking utensils"],
+      ["Lounge", "Couches, armchairs, side tables, and footstools"],
+      ["Washroom", "Toilets, washtubs, a magical brazier, and sauna benches"],
+      ["Observatory", "A telescope and maps of the night sky"],
+      ["Empty", "An unfurnished, empty room"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Stories", "+1 story for each slot level beyond 3rd"]
+      ]}
+    ]}}
+  ],
+  "Gate Seal": [
+    {"facts": [
+      ["Flavor", "You fortify the fabric of the planes within a 30-foot cube you can see within range."],
+      ["Area", "A 30-foot cube you can see within range; the cube is stationary"],
+      ["Portals", "Within that area, portals close and can't be opened for the duration"],
+      ["Planar travel", "Spells and other effects that allow planar travel or open portals, such as gate or plane shift, fail if used to enter or leave the area"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["6th level or higher", "The spell lasts until dispelled"]
+      ]}
+    ]}}
+  ],
+  "Gift of Alacrity": [
+    {"facts": [
+      ["Target", "A willing creature you touch"],
+      ["Effect", "For the duration, it can add 1d8 to its initiative rolls"]
+    ]}
+  ],
+  "Gift of Gab": [
+    {"facts": [
+      ["Flavor", "You skillfully reshape the memories of listeners in your immediate area."],
+      ["Trigger", "You speak to another creature"],
+      ["Targets", "Each creature of your choice within 5 feet of you"],
+      ["Effect", "They forget everything you said within the last 6 seconds, then remember that you actually said the words you speak as the verbal component of the spell"]
+    ]}
+  ],
+  "Gravity Fissure": [
+    {"facts": [
+      ["Area", "You manifest a ravine of gravitational energy in a line originating from you that is 100 feet long and 5 feet wide"]
+    ]},
+    {"option": {"name": "Creatures in the Line", "blocks": [
+      {"facts": [
+        ["Save", "Constitution, made by each creature in that line"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["8d8 Force damage", "Half as much damage"]
+      ]}}
+    ]}},
+    {"option": {"name": "Creatures Near the Line", "blocks": [
+      {"facts": [
+        ["Targets", "Each creature within 10 feet of the line but not in it"],
+        ["Save", "Constitution"],
+        ["Failed save", "The creature takes 8d8 Force damage and is pulled toward the line until the creature is in its area"],
+        ["Successful save", "No effect"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "When you cast this spell using a spell slot of 7th level or higher, the damage increases by 1d8 for each slot level above 6th"]
+      ]}
+    ]}}
+  ],
+  "Gravity Sinkhole": [
+    {"facts": [
+      ["Flavor", "A 20-foot-radius sphere of crushing force forms at a point you can see within range and tugs at the creatures there."],
+      ["Area", "20-foot-radius sphere at a point you can see within range"],
+      ["Save", "Constitution, made by each creature in the sphere"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["5d10 Force damage, and pulled in a straight line toward the center of the sphere, ending in an unoccupied space as close to the center as possible (even if that space is in the air)", "Half as much damage, and not pulled"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d10 for each slot level above 4th"]
+      ]}
+    ]}}
+  ],
+  "Green-Flame Blade": [
+    {"paragraph": "You brandish the weapon used in the spell's casting and make a melee attack with it, and green fire can leap to a second creature."},
+    {"facts": [
+      ["Target", "One creature within 5 feet of you"],
+      ["Attack", "A melee attack with the weapon"],
+      ["On a hit", "The target suffers the weapon attack's normal effects"],
+      ["Leap", "On a hit, green fire can leap from the target to a different creature of your choice that you can see within 5 feet of it"],
+      ["Second creature", "Fire damage equal to your spellcasting ability modifier"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Extra Fire damage to the target on a hit", "Fire damage to the second creature"], "rows": [
+        ["1", "None", "Spellcasting ability modifier"],
+        ["5", "1d8", "1d8 + spellcasting ability modifier"],
+        ["11", "2d8", "2d8 + spellcasting ability modifier"],
+        ["17", "3d8", "3d8 + spellcasting ability modifier"]
+      ]}}
+    ]}}
+  ],
+  "Guardian of Nature": [
+    {"facts": [
+      ["Flavor", "A nature spirit answers your call and transforms you into a powerful guardian."]
+    ]},
+    {"paragraph": "The transformation lasts until the spell ends. Choose one of the forms below."},
+    {"option": {"name": "Primal Beast", "blocks": [
+      {"facts": [
+        ["Appearance", "Bestial fur covers your body, and your facial features become feral"],
+        ["Speed", "Your walking speed increases by 10 feet"],
+        ["Darkvision", "You gain darkvision with a range of 120 feet"],
+        ["Strength attacks", "You make Strength-based attack rolls with Advantage"],
+        ["Melee", "Your melee weapon attacks deal an extra 1d6 Force damage on a hit"]
+      ]}
+    ]}},
+    {"option": {"name": "Great Tree", "blocks": [
+      {"facts": [
+        ["Appearance", "Your skin appears barky, and leaves sprout from your hair"],
+        ["Temporary hit points", "You gain 10 temporary hit points"],
+        ["Constitution saves", "You make Constitution saving throws with Advantage"],
+        ["Dex and Wis attacks", "You make Dexterity and Wisdom-based attack rolls with Advantage"],
+        ["Terrain", "While you are on the ground, the ground within 15 feet of you is Difficult Terrain for your enemies"]
+      ]}
+    ]}}
+  ],
+  "Gust": [
+    {"facts": [
+      ["Flavor", "You seize the air and compel it to create one of the following effects at a point you can see within range."],
+      ["Point", "A point you can see within range"]
+    ]},
+    {"option": {"name": "Push a Creature", "blocks": [
+      {"facts": [
+        ["Target", "One Medium or smaller creature that you choose"],
+        ["Save", "Strength"],
+        ["Failed save", "Pushed up to 5 feet away from you"]
+      ]}
+    ]}},
+    {"option": {"name": "Push an Object", "blocks": [
+      {"facts": [
+        ["Target", "One object that is neither held nor carried and that weighs no more than 5 pounds"],
+        ["Effect", "A small blast of air pushes it up to 10 feet away from you, without enough force to cause damage"]
+      ]}
+    ]}},
+    {"option": {"name": "Sensory Effect", "blocks": [
+      {"facts": [
+        ["Effect", "A harmless sensory effect using air, such as causing leaves to rustle, wind to slam shutters shut, or your clothing to ripple in a breeze"]
+      ]}
+    ]}}
+  ],
+  "Healing Spirit": [
+    {"facts": [
+      ["Flavor", "You call forth a nature spirit to soothe the wounded."],
+      ["Spirit", "Intangible, in a space that is a 5-foot cube you can see within range; it looks like a transparent beast or fey (your choice)"],
+      ["Healing", "Until the spell ends, whenever you or a creature you can see moves into its space for the first time on a turn or starts its turn there, you can cause it to restore 1d6 hit points to that creature (no action required)"],
+      ["Can't heal", "Constructs or undead"],
+      ["Move", "As a bonus action on your turn, you can move the spirit up to 30 feet to a space you can see"],
+      ["Uses", "It can heal a number of times equal to 1 + your spellcasting ability modifier (minimum of twice); after that, it disappears"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Healing", "+1d6 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Holy Weapon": [
+    {"facts": [
+      ["Flavor", "You imbue a weapon you touch with holy power."],
+      ["Weapon", "A weapon you touch"],
+      ["Light", "Until the spell ends, the weapon emits bright light in a 30-foot radius and dim light for an additional 30 feet"],
+      ["Extra damage", "Weapon attacks made with it deal an extra 2d8 Radiant damage on a hit"],
+      ["Magic", "If the weapon isn't already a magic weapon, it becomes one for the duration"]
+    ]},
+    {"option": {"name": "Dismissing the Spell", "blocks": [
+      {"facts": [
+        ["Action", "As a bonus action on your turn, you can dismiss this spell and cause the weapon to emit a burst of radiance"],
+        ["Targets", "Each creature of your choice that you can see within 30 feet of the weapon"],
+        ["Save", "Constitution"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["4d8 Radiant damage, and it is Blinded for 1 minute", "Half as much damage and isn't Blinded"]
+      ]}},
+      {"facts": [
+        ["Repeat save", "At the end of each of its turns, a Blinded creature can make a Constitution saving throw, ending the effect on itself on a success"]
+      ]}
+    ]}}
+  ],
+  "Immolation": [
+    {"facts": [
+      ["Flavor", "Flames wreathe one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Dexterity"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["8d6 Fire damage, and the target also burns for the spell's duration", "Half as much damage"]
+    ]}},
+    {"option": {"name": "Burning Target", "blocks": [
+      {"facts": [
+        ["Light", "The burning target sheds bright light in a 30-foot radius and dim light for an additional 30 feet"],
+        ["Repeat save", "Dexterity, at the end of each of its turns"],
+        ["Failed save", "4d6 Fire damage"],
+        ["Successful save", "The spell ends"],
+        ["Flames", "These magical flames can't be extinguished by nonmagical means"]
+      ]}
+    ]}},
+    {"facts": [
+      ["Ash", "If damage from this spell kills a target, the target is turned to ash"]
+    ]}
+  ],
+  "Immovable Object": [
+    {"paragraph": "You touch an object that weighs no more than 10 pounds and cause it to become magically fixed in place."},
+    {"facts": [
+      ["Exceptions", "You and the creatures you designate when you cast this spell can move the object normally"],
+      ["Password", "You can set a password that, when spoken within 5 feet of the object, suppresses this spell for 1 minute"],
+      ["In the air", "If the object is fixed in the air, it can hold up to 4,000 pounds of weight; more weight causes it to fall"],
+      ["Otherwise", "A creature can use an action to make a Strength check against your spell save DC; on a success, it can move the object up to 10 feet"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Slot level", "DC to move it", "Weight it can carry", "Duration"], "rows": [
+        ["2nd-3rd", "Your spell save DC", "4,000 pounds", "1 hour"],
+        ["4th-5th", "+5", "8,000 pounds", "24 hours"],
+        ["6th+", "+10", "20,000 pounds", "Permanent until dispelled"]
+      ]}}
+    ]}}
+  ],
+  "Incite Greed": [
+    {"paragraph": "When you cast this spell, you present the gem used as the material component."},
+    {"facts": [
+      ["Targets", "Any number of creatures within range that can see you"],
+      ["Save", "Wisdom"],
+      ["Failed save", "Charmed by you until the spell ends, or until you or your companions do anything harmful to it"],
+      ["Charmed", "It can do nothing but use its movement to approach you in a safe manner; while within 5 feet of you, it can't move, but simply stares greedily at the gem you present"],
+      ["Repeat save", "At the end of each of its turns; if it succeeds, the effect ends for that target"]
+    ]}
+  ],
+  "Infernal Calling": [
+    {"facts": [
+      ["Flavor", "Uttering a dark incantation, you summon a devil from the Nine Hells."],
+      ["Devil", "You choose the devil's type, which must be one of challenge rating 6 or lower, such as a barbed devil or a bearded devil"],
+      ["Appears", "In an unoccupied space that you can see within range"],
+      ["Disappears", "When it drops to 0 hit points or when the spell ends"],
+      ["Attitude", "The devil is unfriendly toward you and your companions"],
+      ["Initiative", "Roll initiative for the devil, which has its own turns"],
+      ["Control", "It is under the Dungeon Master's control and acts according to its nature on each of its turns, which might result in its attacking you if it thinks it can prevail, or trying to tempt you to undertake an evil act in exchange for limited service"],
+      ["Statistics", "The DM has the creature's statistics"]
+    ]},
+    {"option": {"name": "Commanding the Devil", "blocks": [
+      {"facts": [
+        ["Command", "On each of your turns, you can try to issue a verbal command to the devil (no action required by you)"],
+        ["Obeys", "It obeys the command if the likely outcome is in accordance with its desires, especially if the result would draw you toward evil"],
+        ["Otherwise", "You must make a Charisma (Deception, Intimidation, or Persuasion) check contested by its Wisdom (Insight) check"],
+        ["True name", "You make the check with Advantage if you say the devil's true name"],
+        ["Check fails", "The devil becomes immune to your verbal commands for the duration of the spell, though it can still carry out your commands if it chooses"],
+        ["Check succeeds", "The devil carries out your command - such as \"attack my enemies,\" \"explore the room ahead,\" or \"bear this message to the queen\" - until it completes the activity, at which point it returns to you to report having done so"]
+      ]}
+    ]}},
+    {"option": {"name": "If Your Concentration Ends", "blocks": [
+      {"facts": [
+        ["Immune devil", "If your concentration ends before the spell reaches its full duration, the devil doesn't disappear if it has become immune to your verbal commands"],
+        ["Instead", "It acts in whatever manner it chooses for 3d6 minutes, and then it disappears"]
+      ]}
+    ]}},
+    {"option": {"name": "Devil's Talisman", "blocks": [
+      {"facts": [
+        ["Talisman", "If you possess an individual devil's talisman, you can summon that devil if it is of the appropriate challenge rating plus 1, and it obeys all your commands, with no Charisma checks required"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Challenge rating", "+1 for each slot level above 5th"]
+      ]}
+    ]}}
+  ],
+  "Infestation": [
+    {"facts": [
+      ["Flavor", "You cause a cloud of mites, fleas, and other parasites to appear momentarily on one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Constitution"],
+      ["Failed save", "1d6 Poison damage, and the target moves 5 feet in a random direction if it can move and its speed is at least 5 feet"],
+      ["Successful save", "No effect"]
+    ]},
+    {"table": {"columns": ["d4", "Direction"], "rows": [
+      ["1", "North"],
+      ["2", "South"],
+      ["3", "East"],
+      ["4", "West"]
+    ]}},
+    {"facts": [
+      ["Movement", "Doesn't provoke opportunity attacks; if the direction rolled is blocked, the target doesn't move"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d6"],
+        ["5", "2d6"],
+        ["11", "3d6"],
+        ["17", "4d6"]
+      ]}}
+    ]}}
+  ],
+  "Intellect Fortress": [
+    {"facts": [
+      ["Target", "You or one willing creature you can see within range"],
+      ["Effect", "For the duration, Resistance to Psychic damage, and Advantage on Intelligence, Wisdom, and Charisma saving throws"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 3rd"],
+        ["Spacing", "The creatures must be within 30 feet of each other when you target them"]
+      ]}
+    ]}}
+  ],
+  "Investiture of Flame": [
+    {"facts": [
+      ["Flavor", "Flames race across your body."],
+      ["Light", "The flames shed bright light in a 30-foot radius and dim light for an additional 30 feet for the spell's duration"],
+      ["Harmless", "The flames don't harm you"],
+      ["Benefits", "Until the spell ends, you gain the following benefits"],
+      ["Resistances", "You are immune to Fire damage and have resistance to Cold damage"],
+      ["Aura", "Any creature that moves within 5 feet of you for the first time on a turn or ends its turn there takes 1d10 Fire damage"]
+    ]},
+    {"option": {"name": "Line of Fire", "blocks": [
+      {"facts": [
+        ["Use", "You can use your action to create a line of fire 15 feet long and 5 feet wide extending from you in a direction you choose"],
+        ["Save", "Dexterity, made by each creature in the line"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["4d8 Fire damage", "Half as much damage"]
+      ]}}
+    ]}}
+  ],
+  "Investiture of Ice": [
+    {"facts": [
+      ["Flavor", "Ice rimes your body."],
+      ["Benefits", "Until the spell ends, you gain the following benefits"],
+      ["Resistances", "You are immune to Cold damage and have resistance to Fire damage"],
+      ["Movement", "You can move across difficult terrain created by ice or snow without spending extra movement"],
+      ["Ground", "The ground in a 10-foot radius around you is icy and is difficult terrain for creatures other than you. The radius moves with you"]
+    ]},
+    {"option": {"name": "Freezing Wind", "blocks": [
+      {"facts": [
+        ["Use", "You can use your action to create a 15-foot cone of freezing wind extending from your outstretched hand in a direction you choose"],
+        ["Save", "Constitution, made by each creature in the cone"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["4d6 Cold damage, and its speed is halved until the start of your next turn", "Half as much damage"]
+      ]}}
+    ]}}
+  ],
+  "Investiture of Stone": [
+    {"facts": [
+      ["Flavor", "Bits of rock spread across your body."],
+      ["Benefits", "Until the spell ends, you gain the following benefits"],
+      ["Resistance", "You have resistance to Bludgeoning, Piercing, and Slashing damage from nonmagical weapons"],
+      ["Movement", "You can move across difficult terrain made of earth or stone without spending extra movement"],
+      ["Burrowing", "You can move through solid earth or stone as if it was air and without destabilizing it, but you can't end your movement there"],
+      ["Ejected", "If you do so, you are ejected to the nearest unoccupied space, this spell ends, and you are Stunned until the end of your next turn"]
+    ]},
+    {"option": {"name": "Earthquake", "blocks": [
+      {"facts": [
+        ["Use", "You can use your action to create a small earthquake on the ground in a 15-foot radius centered on you"],
+        ["Targets", "Other creatures on that ground"],
+        ["Save", "Dexterity"],
+        ["Failed save", "The creature is knocked Prone"],
+        ["Successful save", "No effect"]
+      ]}
+    ]}}
+  ],
+  "Investiture of Wind": [
+    {"facts": [
+      ["Flavor", "Wind whirls around you."],
+      ["Benefits", "Until the spell ends, you gain the following benefits"],
+      ["Defense", "Ranged weapon attacks made against you have Disadvantage on the attack roll"],
+      ["Flying", "You gain a flying speed of 60 feet"],
+      ["Falling", "If you are still flying when the spell ends, you fall, unless you can somehow prevent it"]
+    ]},
+    {"option": {"name": "Swirling Wind", "blocks": [
+      {"facts": [
+        ["Use", "You can use your action to create a 15-foot cube of swirling wind centered on a point you can see within 60 feet of you"],
+        ["Save", "Constitution, made by each creature in that area"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["2d10 Bludgeoning damage, and a Large or smaller creature is also pushed up to 10 feet away from the center of the cube", "Half as much damage"]
+      ]}}
+    ]}}
+  ],
+  "Jim's Glowing Coin": [
+    {"paragraph": "You hurl a glowing coin that distracts creatures around it."},
+    {"facts": [
+      ["Coin", "You hurl the coin that is the spell's material component to any spot within range; it lights up as if under the effect of a light spell"],
+      ["Targets", "Each creature of your choice that you can see within 30 feet of the coin"],
+      ["Save", "Wisdom"],
+      ["Failed save", "Distracted for the duration; while distracted, it has Disadvantage on Wisdom (Perception) checks and initiative rolls"]
+    ]}
+  ],
+  "Jim's Magic Missile": [
+    {"facts": [
+      ["Flavor", "You create three twisting, whistling, hypoallergenic, gluten-free darts of magical force."],
+      ["Darts", "Three"],
+      ["Targets", "Each dart can target a creature of your choice that you can see within range"],
+      ["Attack", "A ranged spell attack for each missile"],
+      ["On a hit", "2d4 Force damage"],
+      ["Critical hit", "5d4 Force damage, instead of the 4d4 you would normally get on a critical"],
+      ["Natural 1", "If any of the attack rolls is a natural 1, all missiles turn around and hit the caster for 1 Force damage per missile"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Darts", "+1 dart for each slot level above 1st"],
+        ["Tax", "+1 gp for each spell slot over 1st"]
+      ]}
+    ]}}
+  ],
+  "Kinetic Jaunt": [
+    {"facts": [
+      ["Flavor", "You magically empower your movement with dancelike steps."],
+      ["Speed", "Your walking speed increases by 10 feet"],
+      ["Opportunity", "You don't provoke opportunity attacks"],
+      ["Moving through", "You can move through the space of another creature, and it doesn't count as Difficult Terrain"],
+      ["Ending there", "If you end your turn in another creature's space, you are shunted to the last unoccupied space you occupied, and you take 1d8 Force damage"]
+    ]}
+  ],
+  "Life Transference": [
+    {"facts": [
+      ["Flavor", "You sacrifice some of your health to mend another creature's injuries."],
+      ["Cost", "You take 4d8 Necrotic damage, which can't be reduced in any way"],
+      ["Target", "One creature of your choice that you can see within range"],
+      ["Healing", "It regains hit points equal to twice the Necrotic damage you take"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Lightning Lure": [
+    {"facts": [
+      ["Flavor", "You create a lash of lightning energy that strikes at one creature of your choice that you can see within 15 feet of you."],
+      ["Target", "One creature of your choice that you can see within 15 feet of you"],
+      ["Save", "Strength"],
+      ["Failed save", "Pulled up to 10 feet in a straight line toward you, then takes 1d8 Lightning damage if it is within 5 feet of you"],
+      ["Successful save", "No effect"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d8"],
+        ["5", "2d8"],
+        ["11", "3d8"],
+        ["17", "4d8"]
+      ]}}
+    ]}}
+  ],
+  "Maelstrom": [
+    {"facts": [
+      ["Area", "A mass of 5-foot-deep water appears and swirls in a 30-foot radius centered on a point you can see within range; the point must be on ground or in a body of water"],
+      ["Terrain", "Until the spell ends, that area is Difficult Terrain"],
+      ["Save", "Strength, made by any creature that starts its turn there"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["6d6 Bludgeoning damage, and the creature is pulled 10 feet toward the center", "No effect"]
+    ]}}
+  ],
+  "Magic Stone": [
+    {"paragraph": "You touch one to three pebbles and imbue them with magic."},
+    {"facts": [
+      ["Who attacks", "You or someone else can make a ranged spell attack with one of the pebbles, by throwing it or hurling it with a sling"],
+      ["Range", "60 feet if thrown"],
+      ["Attack roll", "The attacker adds your spellcasting ability modifier, not the attacker's"],
+      ["On a hit", "Bludgeoning damage equal to 1d6 + your spellcasting ability modifier"],
+      ["After", "Hit or miss, the spell then ends on the stone"],
+      ["Ends early", "If you cast this spell again, it ends on any pebbles still affected by it"]
+    ]}
+  ],
+  "Magnify Gravity": [
+    {"facts": [
+      ["Flavor", "The gravity in a 10-foot-radius sphere centered on a point you can see within range increases for a moment."],
+      ["Area", "10-foot-radius sphere centered on a point you can see within range"],
+      ["Save", "Constitution, made by each creature in the sphere on the turn when you cast the spell"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["2d8 Force damage, and its speed is halved until the end of its next turn", "Half as much damage, and no reduction to its speed"]
+    ]}},
+    {"facts": [
+      ["Objects", "Until the start of your next turn, any object in the sphere that isn't being worn or carried requires a successful Strength check against your spell save DC to pick up or move"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Maximillian's Earthen Grasp": [
+    {"paragraph": "A Medium hand made from compacted soil rises from the ground and reaches for a creature."},
+    {"facts": [
+      ["Hand", "Rises in a 5-foot-square unoccupied space on the ground that you can see within range"],
+      ["Target", "One creature you can see within 5 feet of the hand"],
+      ["Save", "Strength"],
+      ["Failed save", "2d6 Bludgeoning damage, and Restrained for the spell's duration"],
+      ["Successful save", "No effect"]
+    ]},
+    {"option": {"name": "Crush", "blocks": [
+      {"facts": [
+        ["Action", "As an action, you can cause the hand to crush the restrained target"],
+        ["Save", "Strength, made by the restrained target"],
+        ["Failed save", "2d6 Bludgeoning damage"],
+        ["Successful save", "Half as much damage"]
+      ]}
+    ]}},
+    {"option": {"name": "Breaking Out", "blocks": [
+      {"facts": [
+        ["Action", "The restrained target can use its action to make a Strength check against your spell save DC"],
+        ["On a success", "It escapes and is no longer restrained by the hand"]
+      ]}
+    ]}},
+    {"option": {"name": "Reach or Move", "blocks": [
+      {"facts": [
+        ["Action", "As an action, you can cause the hand to reach for a different creature or to move to a different unoccupied space within range"],
+        ["Release", "The hand releases a restrained target if you do either"]
+      ]}
+    ]}}
+  ],
+  "Melf's Minute Meteors": [
+    {"facts": [
+      ["Flavor", "You create six tiny meteors in your space. They float in the air and orbit you for the spell's duration."],
+      ["Meteors", "Six, in your space; they orbit you for the spell's duration"],
+      ["Launching", "When you cast the spell, and as a bonus action on each of your turns thereafter, you can expend one or two meteors, sending them streaking toward a point or points you choose within 120 feet of you"],
+      ["Explosion", "A meteor explodes once it reaches its destination or impacts against a solid surface"],
+      ["Save", "Dexterity, made by each creature within 5 feet of the point where the meteor explodes"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["2d6 Fire damage", "Half as much damage"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Meteors", "+2 meteors for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Mental Prison": [
+    {"facts": [
+      ["Flavor", "You attempt to bind a creature within an illusory cell that only it perceives."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Intelligence"],
+      ["Automatic", "The target succeeds automatically if it is immune to being Charmed"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["5d10 Psychic damage, and you make the area immediately around the target's space appear dangerous to it in some way", "5d10 Psychic damage, and the spell ends"]
+    ]}},
+    {"option": {"name": "The Illusion", "blocks": [
+      {"facts": [
+        ["Examples", "You might cause the target to perceive itself as being surrounded by fire, floating razors, or hideous maws filled with dripping teeth"],
+        ["Effect", "Whatever form the illusion takes, the target can't see or hear anything beyond it and is Restrained for the spell's duration"],
+        ["Breaking it", "If the target is moved out of the illusion, makes a melee attack through it, or reaches any part of its body through it, the target takes 10d10 Psychic damage, and the spell ends"]
+      ]}
+    ]}}
+  ],
+  "Mold Earth": [
+    {"paragraph": "You choose a portion of dirt or stone that you can see within range and that fits within a 5-foot Cube, and manipulate it in one of these ways."},
+    {"table": {"columns": ["Effect", "Lasts"], "rows": [
+      ["Excavate an area of loose earth, move it along the ground, and deposit it up to 5 feet away; this movement doesn't have enough force to cause damage", "Instantaneous"],
+      ["Shapes, colors, or both appear on the dirt or stone, spelling out words, creating images, or shaping patterns", "1 hour"],
+      ["Dirt or stone on the ground becomes Difficult Terrain, or ground that is already Difficult Terrain becomes normal terrain", "1 hour"]
+    ]}},
+    {"facts": [
+      ["Active effects", "No more than two of its non-instantaneous effects at a time, from multiple castings"],
+      ["Dismiss", "As an action, you can dismiss such an effect"]
+    ]}
+  ],
+  "Motivational Speech": [
+    {"facts": [
+      ["Targets", "Up to five creatures within range that can hear you"],
+      ["Temporary hit points", "For the duration, each gains 5 temporary hit points"],
+      ["Saves", "Advantage on Wisdom saving throws"],
+      ["When hit", "If an affected creature is hit by an attack, it has Advantage on the next attack roll it makes"],
+      ["Ends", "Once an affected creature loses the temporary hit points granted by this spell, the spell ends for that creature"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Temporary hit points", "+5 for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Nathair's Mischief": [
+    {"facts": [
+      ["Flavor", "You fill a 20-foot cube you can see within range with fey and draconic magic."],
+      ["Area", "A 20-foot cube you can see within range"],
+      ["Effect", "Roll on the Mischievous Surge table to determine the magical effect produced, and roll again at the start of each of your turns until the spell ends"],
+      ["Moving", "You can move the cube up to 10 feet before you roll"],
+      ["Table", "The Mischievous Surge table isn't included in this spell's data"]
+    ]}
+  ],
+  "Negative Energy Flood": [
+    {"facts": [
+      ["Flavor", "You send ribbons of negative energy at one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Constitution, unless the target is undead"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["5d12 Necrotic damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Zombie", "A target killed by this damage rises up as a zombie at the start of your next turn; the zombie pursues whatever creature it can see that is closest to it"],
+      ["Statistics", "Statistics for the zombie are in the Monster Manual"],
+      ["Undead target", "If you target an undead with this spell, the target doesn't make a saving throw; instead, roll 5d12, and the target gains half the total as temporary hit points"]
+    ]}
+  ],
+  "Power Word Pain": [
+    {"facts": [
+      ["Flavor", "You speak a word of power that causes waves of intense pain to assail one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Hit points", "If the target has 100 hit points or fewer, it is subject to crippling pain. Otherwise, the spell has no effect on it"],
+      ["Unaffected", "A target is also unaffected if it is immune to being charmed"]
+    ]},
+    {"option": {"name": "Crippling Pain", "blocks": [
+      {"facts": [
+        ["Speed", "Any speed the target has can be no higher than 10 feet"],
+        ["Disadvantage", "The target also has disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws"],
+        ["Spellcasting", "Finally, if the target tries to cast a spell, it must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted"],
+        ["Repeat save", "Constitution, which a target suffering this pain can make at the end of each of its turns"],
+        ["Successful save", "The pain ends"]
+      ]}
+    ]}}
+  ],
+  "Primal Savagery": [
+    {"facts": [
+      ["Flavor", "You channel primal magic to cause your teeth or fingernails to sharpen, ready to deliver a corrosive attack."],
+      ["Target", "One creature within 5 feet of you"],
+      ["Attack", "Melee spell attack"],
+      ["On a hit", "1d10 Acid damage"],
+      ["After", "Your teeth or fingernails return to normal after you make the attack"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d10"],
+        ["5", "2d10"],
+        ["11", "3d10"],
+        ["17", "4d10"]
+      ]}}
+    ]}}
+  ],
+  "Primordial Ward": [
+    {"facts": [
+      ["Resistance", "You have resistance to Acid, Cold, Fire, Lightning, and Thunder damage for the spell's duration"],
+      ["Trigger", "You take damage of one of those types"],
+      ["Reaction", "You can use your reaction to gain immunity to that type of damage, including against the triggering damage"],
+      ["Then", "If you do so, the resistances end, and you have the immunity until the end of your next turn, at which time the spell ends"]
+    ]}
+  ],
+  "Pulse Wave": [
+    {"paragraph": "You create intense pressure and unleash it in a cone, deciding whether it pulls or pushes."},
+    {"facts": [
+      ["Area", "30-foot cone"],
+      ["Save", "Constitution, made by each creature in the cone"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["6d6 Force damage, and pulled 15 feet toward you or pushed 15 feet away from you (your choice for the spell)", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Objects", "Unsecured objects that are completely within the cone are likewise pulled or pushed 15 feet"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d6 for each slot level above 3rd"],
+        ["Distance", "+5 feet pulled or pushed for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Pyrotechnics": [
+    {"paragraph": "You transform a flame into fireworks or smoke."},
+    {"facts": [
+      ["Target", "An area of flame that you can see and that can fit within a 5-foot cube within range"],
+      ["Extinguish", "You can extinguish the fire in that area"]
+    ]},
+    {"option": {"name": "Fireworks", "blocks": [
+      {"facts": [
+        ["Effect", "The target explodes with a dazzling display of colors"],
+        ["Targets", "Each creature within 10 feet of the target"],
+        ["Save", "Constitution"],
+        ["Failed save", "Blinded until the end of your next turn"]
+      ]}
+    ]}},
+    {"option": {"name": "Smoke", "blocks": [
+      {"facts": [
+        ["Area", "Thick black smoke spreads out from the target in a 20-foot radius, moving around corners"],
+        ["Visibility", "The area of the smoke is heavily obscured"],
+        ["Lasts", "1 minute, or until a strong wind disperses it"]
+      ]}
+    ]}}
+  ],
+  "Raulothim's Psychic Lance": [
+    {"facts": [
+      ["Flavor", "You unleash a shimmering lance of psychic power from your forehead at a creature that you can see within range."],
+      ["Target", "A creature that you can see within range"],
+      ["By name", "Alternatively, you can utter a creature's name; if the named target is within range, it becomes the spell's target even if you can't see it, and if it isn't within range, the lance dissipates without effect"],
+      ["Save", "Intelligence"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["7d6 Psychic damage, and incapacitated until the start of your next turn", "Half as much damage, and not incapacitated"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d6 for each slot level above 4th"]
+      ]}
+    ]}}
+  ],
+  "Rime's Binding Ice": [
+    {"facts": [
+      ["Flavor", "A burst of cold energy emanates from you in a 30-foot cone."],
+      ["Area", "30-foot cone"],
+      ["Save", "Constitution, made by each creature in the area"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d8 Cold damage, and hindered by ice formations for 1 minute, or until it or another creature within reach of it uses an action to break away the ice", "Half as much damage, and not hindered by ice"]
+    ]}},
+    {"facts": [
+      ["Hindered", "A creature hindered by ice has its speed reduced to 0"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Cold damage", "+1d8 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Sapping Sting": [
+    {"facts": [
+      ["Flavor", "You sap the vitality of one creature you can see in range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Constitution"],
+      ["Failed save", "1d4 Necrotic damage, and the target falls Prone"],
+      ["Successful save", "No effect"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d4"],
+        ["5", "2d4"],
+        ["11", "3d4"],
+        ["17", "4d4"]
+      ]}}
+    ]}}
+  ],
+  "Scatter": [
+    {"facts": [
+      ["Flavor", "The air quivers around up to five creatures of your choice that you can see within range."],
+      ["Targets", "Up to five creatures of your choice that you can see within range"],
+      ["Save", "Wisdom, made by an unwilling creature to resist this spell"],
+      ["Teleport", "You teleport each affected target to an unoccupied space that you can see within 120 feet of you"],
+      ["Space", "That space must be on the ground or on a floor"]
+    ]}
+  ],
+  "Shadow Blade": [
+    {"facts": [
+      ["Flavor", "You weave together threads of shadow to create a sword of solidified gloom in your hand."],
+      ["Weapon", "A magic sword that lasts until the spell ends; it counts as a simple melee weapon with which you are proficient"],
+      ["Damage", "2d8 Psychic damage on a hit"],
+      ["Properties", "Finesse, light, and thrown (range 20/60)"],
+      ["Advantage", "When you use the sword to attack a target that is in dim light or darkness, you make the attack roll with Advantage"],
+      ["Dropped or thrown", "It dissipates at the end of the turn; thereafter, while the spell persists, you can use a bonus action to cause it to reappear in your hand"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Slot level", "Damage"], "rows": [
+        ["2nd", "2d8"],
+        ["3rd-4th", "3d8"],
+        ["5th-6th", "4d8"],
+        ["7th+", "5d8"]
+      ]}}
+    ]}}
+  ],
+  "Shadow of Moil": [
+    {"facts": [
+      ["Flavor", "Flame-like shadows wreathe your body until the spell ends."],
+      ["Obscured", "You are heavily obscured to others"],
+      ["Light", "The shadows turn dim light within 10 feet of you into darkness, and bright light in the same area to dim light"],
+      ["Resistance", "Until the spell ends, you have resistance to Radiant damage"],
+      ["Lashing", "Whenever a creature within 10 feet of you hits you with an attack, the shadows lash out at that creature, dealing it 2d8 Necrotic damage"]
+    ]}
+  ],
+  "Shape Water": [
+    {"paragraph": "You choose an area of water that you can see within range and that fits within a 5-foot Cube, and manipulate it in one of these ways."},
+    {"table": {"columns": ["Effect", "Lasts"], "rows": [
+      ["Move or otherwise change the flow of the water as you direct, up to 5 feet in any direction; this movement doesn't have enough force to cause damage", "Instantaneous"],
+      ["The water forms into simple shapes and animates at your direction", "1 hour"],
+      ["Change the water's color or opacity; it must be changed in the same way throughout", "1 hour"],
+      ["Freeze the water, provided that there are no creatures in it", "Unfreezes in 1 hour"]
+    ]}},
+    {"facts": [
+      ["Active effects", "No more than two of its non-instantaneous effects at a time, from multiple castings"],
+      ["Dismiss", "As an action, you can dismiss such an effect"]
+    ]}
+  ],
+  "Sickening Radiance": [
+    {"facts": [
+      ["Flavor", "Dim, greenish light spreads within a 30-foot-radius sphere centered on a point you choose within range."],
+      ["Area", "30-foot-radius sphere centered on a point you choose within range; the light spreads around corners and lasts until the spell ends"],
+      ["Save", "Constitution, when a creature moves into the spell's area for the first time on a turn or starts its turn there"],
+      ["Failed save", "4d10 Radiant damage; the creature suffers one level of exhaustion and emits a dim, greenish light in a 5-foot radius"],
+      ["Successful save", "No effect"],
+      ["Glowing", "This light makes it impossible for the creature to benefit from being invisible"],
+      ["Spell ends", "The light and any levels of exhaustion caused by this spell go away"]
+    ]}
+  ],
+  "Silvery Barbs": [
+    {"facts": [
+      ["Flavor", "You magically distract the triggering creature and turn its momentary uncertainty into encouragement for another creature."],
+      ["Trigger", "A creature you can see within 60 feet of yourself succeeds on an attack roll, an ability check, or a saving throw"],
+      ["Reroll", "The triggering creature must reroll the d20 and use the lower roll"],
+      ["Encourage", "You can then choose a different creature you can see within range (you can choose yourself); it has Advantage on the next attack roll, ability check, or saving throw it makes within 1 minute"],
+      ["Limit", "A creature can be empowered by only one use of this spell at a time"]
+    ]}
+  ],
+  "Skill Empowerment": [
+    {"facts": [
+      ["Flavor", "Your magic deepens a creature's understanding of its own talent."],
+      ["Target", "One willing creature you touch"],
+      ["Effect", "You give it expertise in one skill of your choice; until the spell ends, the creature doubles its proficiency bonus for ability checks it makes that use the chosen skill"],
+      ["Requirement", "You must choose a skill in which the target is proficient and that isn't already benefiting from an effect, such as Expertise, that doubles its proficiency bonus"]
+    ]}
+  ],
+  "Skywrite": [
+    {"paragraph": "You cause words to form in the sky."},
+    {"facts": [
+      ["Words", "Up to ten words, in a part of the sky you can see"],
+      ["Appearance", "Made of cloud, remaining in place for the spell's duration"],
+      ["Ends", "The words dissipate when the spell ends; a strong wind can disperse the clouds and end the spell early"]
+    ]}
+  ],
+  "Snare": [
+    {"paragraph": "You use the rope to create a circle with a 5-foot radius on the ground or the floor. When you finish casting, the rope disappears and the circle becomes a magic trap."},
+    {"facts": [
+      ["Spotting it", "The trap is nearly invisible, requiring a successful Intelligence (Investigation) check against your spell save DC to be discerned"],
+      ["Trigger", "A Small, Medium, or Large creature moves onto the ground or the floor in the spell's radius"],
+      ["Save", "Dexterity"],
+      ["Failed save", "The creature is magically hoisted into the air, left hanging upside down 3 feet above the ground or the floor, and is Restrained there until the spell ends"]
+    ]},
+    {"facts": [
+      ["Repeat save", "A Restrained creature can make a Dexterity saving throw at the end of each of its turns, ending the effect on itself on a success"],
+      ["Freeing it", "The creature or someone else who can reach it can use an action to make an Intelligence (Arcana) check against your spell save DC; on a success, the Restrained effect ends"],
+      ["Ends", "After the trap is triggered, the spell ends when no creature is Restrained by it"]
+    ]}
+  ],
+  "Snilloc's Snowball Swarm": [
+    {"facts": [
+      ["Flavor", "A flurry of magic snowballs erupts from a point you choose within range."],
+      ["Area", "5-foot-radius sphere centered on a point you choose within range"],
+      ["Save", "Dexterity, made by each creature in the sphere"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d6 Cold damage", "Half as much damage"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d6 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Soul Cage": [
+    {"facts": [
+      ["Trigger", "A humanoid you can see within 60 feet of you dies"],
+      ["Soul", "This spell snatches the soul of a humanoid as it dies and traps it inside the tiny cage you use for the material component"],
+      ["Remains", "A stolen soul remains inside the cage until the spell ends or until you destroy the cage, which ends the spell"],
+      ["Using it", "While you have a soul inside the cage, you can exploit it in any of the ways described below"],
+      ["Uses", "You can use a trapped soul up to six times. Once you exploit a soul for the sixth time, it is released, and the spell ends"],
+      ["Revival", "While a soul is trapped, the dead humanoid it came from can't be revived"]
+    ]},
+    {"option": {"name": "Steal Life", "blocks": [
+      {"facts": [
+        ["Use", "You can use a bonus action to drain vigor from the soul"],
+        ["Healing", "You regain 2d8 hit points"]
+      ]}
+    ]}},
+    {"option": {"name": "Query Soul", "blocks": [
+      {"facts": [
+        ["Use", "You ask the soul a question (no action required) and receive a brief telepathic answer, which you can understand regardless of the language used"],
+        ["Truthful", "The soul knows only what it knew in life, but it must answer you truthfully and to the best of its ability"],
+        ["Answer", "The answer is no more than a sentence or two and might be cryptic"]
+      ]}
+    ]}},
+    {"option": {"name": "Borrow Experience", "blocks": [
+      {"facts": [
+        ["Use", "You can use a bonus action to bolster yourself with the soul's life experience, making your next attack roll, ability check, or saving throw with Advantage"],
+        ["Lost", "If you don't use this benefit before the start of your next turn, it is lost"]
+      ]}
+    ]}},
+    {"option": {"name": "Eyes of the Dead", "blocks": [
+      {"facts": [
+        ["Use", "You can use an action to name a place the humanoid saw in life, which creates an invisible sensor somewhere in that place if it is on the plane of existence you're currently on"],
+        ["Duration", "The sensor remains for as long as you concentrate, up to 10 minutes (as if you were concentrating on a spell)"],
+        ["Senses", "You receive visual and auditory information from the sensor as if you were in its space using your senses"],
+        ["Seen", "A creature that can see the sensor (such as one using see invisibility or truesight) sees a translucent image of the tormented humanoid whose soul you caged"]
+      ]}
+    ]}}
+  ],
+  "Spirit Shroud": [
+    {"facts": [
+      ["Flavor", "You call forth spirits of the dead, which flit around you for the spell's duration."],
+      ["Spirits", "Intangible and invulnerable"],
+      ["Extra damage", "Until the spell ends, any attack you make deals 1d8 extra damage when you hit a creature within 10 feet of you"],
+      ["Damage type", "Radiant, Necrotic, or Cold (your choice when you cast the spell)"],
+      ["No healing", "Any creature that takes this damage can't regain hit points until the start of your next turn"],
+      ["Slowing", "Any creature of your choice that you can see that starts its turn within 10 feet of you has its speed reduced by 10 feet until the start of your next turn"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Slot level", "Extra damage"], "rows": [
+        ["3rd-4th", "1d8"],
+        ["5th-6th", "2d8"],
+        ["7th-8th", "3d8"],
+        ["9th", "4d8"]
+      ]}}
+    ]}}
+  ],
+  "Spirit of Death": [
+    {"facts": [
+      ["Flavor", "You call forth a spirit that embodies death."],
+      ["Appears", "In an unoccupied space you can see within range"],
+      ["Stat block", "Reaper spirit (not included in this spell's data)"],
+      ["Disappears", "When it is reduced to 0 hit points or when the spell ends"]
+    ]},
+    {"option": {"name": "Combat", "blocks": [
+      {"facts": [
+        ["Allegiance", "An ally to you and your companions"],
+        ["Initiative", "It shares your initiative count and takes its turn immediately after yours"],
+        ["Commands", "It obeys your verbal commands (no action required by you); if you don't issue it any commands, it takes the Dodge action and uses its movement to avoid danger"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Stat block", "Use the higher level wherever the spell's level appears in the reaper spirit stat block"]
+      ]}
+    ]}}
+  ],
+  "Spray of Cards": [
+    {"facts": [
+      ["Flavor", "You spray a 15-foot cone of spectral cards."],
+      ["Area", "15-foot cone"],
+      ["Save", "Dexterity, made by each creature in the area"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["2d10 Force damage, and Blinded until the end of its next turn", "Half as much damage only"]
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d10 for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Storm Sphere": [
+    {"paragraph": "A 20-foot-radius sphere of whirling air springs into existence centered on a point you choose within range, and remains for the spell's duration."},
+    {"facts": [
+      ["Terrain", "The sphere's space is Difficult Terrain"],
+      ["Save", "Strength, made by each creature in the sphere when it appears or that ends its turn there"],
+      ["Failed save", "2d6 Bludgeoning damage"],
+      ["Successful save", "No damage"],
+      ["Hearing", "Creatures within 30 feet of the sphere have Disadvantage on Wisdom (Perception) checks made to listen"]
+    ]},
+    {"option": {"name": "Lightning Bolt", "blocks": [
+      {"facts": [
+        ["Action", "Until the spell ends, you can use a bonus action on each of your turns to cause a bolt of lightning to leap from the center of the sphere toward one creature you choose within 60 feet of the center"],
+        ["Attack", "Ranged spell attack, with Advantage if the target is in the sphere"],
+        ["On a hit", "4d6 Lightning damage"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "The damage for each of its effects increases by 1d6 for each slot level above 4th"]
+      ]}
+    ]}}
+  ],
+  "Summon Draconic Spirit": [
+    {"paragraph": "You call forth a draconic spirit."},
+    {"facts": [
+      ["Appears", "In an unoccupied space that you can see within range"],
+      ["Form", "This corporeal form uses the Draconic Spirit stat block"],
+      ["Family", "Chromatic, gem, or metallic, chosen when you cast this spell; the creature resembles a dragon of the chosen family, which determines certain traits in its stat block"],
+      ["Stat block", "Draconic Spirit (not included in this spell's data)"],
+      ["Disappears", "When it drops to 0 hit points or when the spell ends"]
+    ]},
+    {"option": {"name": "Combat", "blocks": [
+      {"facts": [
+        ["Allegiance", "An ally to you and your companions"],
+        ["Initiative", "In combat, the creature shares your initiative count, but it takes its turn immediately after yours"],
+        ["Commands", "It obeys your verbal commands (no action required by you); if you don't issue any, it takes the Dodge action and uses its move to avoid danger"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Stat block", "Use the higher level wherever the spell's level appears in the stat block"]
+      ]}
+    ]}}
+  ],
+  "Summon Greater Demon": [
+    {"facts": [
+      ["Flavor", "You utter foul words, summoning one demon from the chaos of the Abyss."],
+      ["Demon", "You choose the demon's type, which must be one of challenge rating 5 or lower, such as a shadow demon or a barlgura"],
+      ["Appears", "In an unoccupied space you can see within range"],
+      ["Disappears", "When it drops to 0 hit points or when the spell ends"],
+      ["Initiative", "Roll initiative for the demon, which has its own turns"],
+      ["Commands", "When you summon it and on each of your turns thereafter, you can issue a verbal command to it (requiring no action on your part), telling it what it must do on its next turn"],
+      ["No command", "It spends its turn attacking any creature within reach that has attacked it"]
+    ]},
+    {"option": {"name": "Keeping Control", "blocks": [
+      {"facts": [
+        ["Save", "At the end of each of the demon's turns, it makes a Charisma saving throw, with Disadvantage if you say its true name"],
+        ["Failed save", "The demon continues to obey you"],
+        ["Successful save", "Your control of the demon ends for the rest of the duration, and it spends its turns pursuing and attacking the nearest non-demons to the best of its ability"],
+        ["Concentration", "If you stop concentrating on the spell before it reaches its full duration, an uncontrolled demon doesn't disappear for 1d6 rounds if it still has hit points"]
+      ]}
+    ]}},
+    {"option": {"name": "Blood Circle", "blocks": [
+      {"facts": [
+        ["Circle", "As part of casting the spell, you can form a circle on the ground with the blood used as a material component, large enough to encompass your space"],
+        ["Protection", "While the spell lasts, the summoned demon can't cross the circle or harm it, and it can't target anyone within it"],
+        ["Component", "Using the material component in this manner consumes it when the spell ends"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Challenge rating", "+1 for each slot level above 4th"]
+      ]}
+    ]}}
+  ],
+  "Summon Lesser Demons": [
+    {"facts": [
+      ["Flavor", "You utter foul words, summoning demons from the chaos of the Abyss."]
+    ]},
+    {"paragraph": "Roll on the table to determine what appears."},
+    {"table": {"columns": ["d6", "Demons summoned"], "rows": [
+      ["1-2", "Two demons of challenge rating 1 or lower"],
+      ["3-4", "Four demons of challenge rating 1/2 or lower"],
+      ["5-6", "Eight demons of challenge rating 1/4 or lower"]
+    ]}},
+    {"facts": [
+      ["Choosing", "The DM chooses the demons, such as manes or dretches, and you choose the unoccupied spaces you can see within range where they appear"],
+      ["Disappear", "A summoned demon disappears when it drops to 0 hit points or when the spell ends"],
+      ["Hostile", "The demons are hostile to all creatures, including you"],
+      ["Initiative", "Roll initiative for the summoned demons as a group, which has its own turns"],
+      ["Behavior", "They pursue and attack the nearest non-demons to the best of their ability"]
+    ]},
+    {"option": {"name": "Blood Circle", "blocks": [
+      {"facts": [
+        ["Circle", "As part of casting the spell, you can form a circle on the ground with the blood used as a material component, large enough to encompass your space"],
+        ["Protection", "While the spell lasts, the summoned demons can't cross the circle or harm it, and they can't target anyone within it"],
+        ["Component", "Using the material component in this manner consumes it when the spell ends"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Slot level", "Demons"], "rows": [
+        ["6th-7th", "Twice as many"],
+        ["8th-9th", "Three times as many"]
+      ]}}
+    ]}}
+  ],
+  "Summon Shadowspawn": [
+    {"paragraph": "You call forth a shadowy spirit."},
+    {"facts": [
+      ["Appears", "In an unoccupied space that you can see within range"],
+      ["Emotion", "Fury, Despair, or Fear, chosen when you cast the spell; the creature resembles a misshapen biped marked by that emotion, which determines certain traits in its stat block"],
+      ["Stat block", "Shadow Spirit (not included in this spell's data)"],
+      ["Disappears", "When it drops to 0 hit points or when the spell ends"]
+    ]},
+    {"option": {"name": "Combat", "blocks": [
+      {"facts": [
+        ["Allegiance", "An ally to you and your companions"],
+        ["Initiative", "It shares your initiative count, but it takes its turn immediately after yours"],
+        ["Commands", "It obeys your verbal commands (no action required by you); if you don't issue any, it takes the Dodge action and uses its move to avoid danger"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Stat block", "Use the higher level wherever the spell's level appears on the stat block"]
+      ]}
+    ]}}
+  ],
+  "Sword Burst": [
+    {"facts": [
+      ["Flavor", "You create a momentary circle of spectral blades that sweep around you."],
+      ["Targets", "All other creatures within 5 feet of you"],
+      ["Save", "Dexterity"],
+      ["Failed save", "1d6 Force damage"],
+      ["Successful save", "No damage"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"table": {"columns": ["Character level", "Damage"], "rows": [
+        ["1", "1d6"],
+        ["5", "2d6"],
+        ["11", "3d6"],
+        ["17", "4d6"]
+      ]}}
+    ]}}
+  ],
+  "Tasha's Caustic Brew": [
+    {"facts": [
+      ["Flavor", "A stream of acid emanates from you in a line 30 feet long and 5 feet wide in a direction you choose."],
+      ["Area", "A line 30 feet long and 5 feet wide, in a direction you choose"],
+      ["Save", "Dexterity, made by each creature in the line"],
+      ["Failed save", "Covered in acid for the spell's duration, or until a creature uses its action to scrape or wash the acid off itself or another creature"],
+      ["Covered", "A creature covered in the acid takes 2d4 Acid damage at the start of each of its turns"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+2d4 for each slot level above 1st"]
+      ]}
+    ]}}
+  ],
+  "Tasha's Mind Whip": [
+    {"facts": [
+      ["Flavor", "You psychically lash out at one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Intelligence"]
+    ]},
+    {"option": {"name": "Failed Save", "blocks": [
+      {"facts": [
+        ["Damage", "3d6 Psychic damage"],
+        ["Reaction", "It can't take a reaction until the end of its next turn"],
+        ["Its next turn", "It must choose whether it gets a move, an action, or a bonus action; it gets only one of the three"]
+      ]}
+    ]}},
+    {"facts": [
+      ["Successful save", "Half as much damage, and none of the spell's other effects"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "+1 creature for each slot level above 2nd"],
+        ["Spacing", "The creatures must be within 30 feet of each other when you target them"]
+      ]}
+    ]}}
+  ],
+  "Tasha's Otherworldly Guise": [
+    {"facts": [
+      ["Flavor", "Uttering an incantation, you draw on the magic of the Lower Planes or Upper Planes (your choice) to transform yourself."],
+      ["Planes", "Lower Planes or Upper Planes (your choice)"],
+      ["Benefits", "You gain the following benefits until the spell ends"]
+    ]},
+    {"table": {"columns": ["Planes", "Immune to damage", "Immune to condition"], "rows": [
+      ["Lower Planes", "Fire and Poison", "Poisoned"],
+      ["Upper Planes", "Radiant and Necrotic", "Charmed"]
+    ]}},
+    {"facts": [
+      ["Wings", "Spectral wings appear on your back, giving you a flying speed of 40 feet"],
+      ["AC", "You have a +2 bonus to AC"],
+      ["Weapons", "All your weapon attacks are magical, and when you make a weapon attack, you can use your spell casting ability modifier instead of Strength or Dexterity for the attack and damage rolls"],
+      ["Attacks", "You can attack twice, instead of once, when you take the Attack action on your turn"],
+      ["Not stacking", "You ignore this benefit if you already have a feature, like Extra Attack, that lets you attack more than once when you take the Attack action on your turn"]
+    ]}
+  ],
+  "Temple of the Gods": [
+    {"facts": [
+      ["Flavor", "You cause a temple to shimmer into existence on ground you can see within range."],
+      ["Placement", "On ground you can see within range"],
+      ["Duration", "The temple remains until the spell ends"],
+      ["Size", "The temple must fit within an unoccupied cube of space, up to 120 feet on each side"],
+      ["Dedication", "It is dedicated to whatever god, pantheon, or philosophy is represented by the holy symbol used in the casting"],
+      ["Appearance", "You make all decisions about the temple's appearance"],
+      ["Enclosure", "The interior is enclosed by a floor, walls, and a roof, with one door granting access to the interior and as many windows as you wish"],
+      ["Door", "Only you and any creatures you designate when you cast the spell can open or close the door"],
+      ["Interior", "The temple's interior is an open space with an idol or altar at one end"],
+      ["Light", "You decide whether the temple is illuminated and whether that illumination is bright light or dim light"],
+      ["Air", "The smell of burning incense fills the air within, and the temperature is mild"]
+    ]},
+    {"option": {"name": "Opposed Creatures", "blocks": [
+      {"facts": [
+        ["Opposes", "The temple opposes types of creatures you choose when you cast this spell. Choose one or more of the following: celestials, elementals, fey, fiends, or undead"],
+        ["Entering", "If a creature of the chosen type attempts to enter the temple, that creature must make a Charisma saving throw"],
+        ["Failed save", "It can't enter the temple for 24 hours"],
+        ["Hindered", "Even if the creature can enter the temple, the magic there hinders it; whenever it makes an attack roll, an ability check, or a saving throw inside the temple, it must roll a d4 and subtract the number rolled from the d20 roll"]
+      ]}
+    ]}},
+    {"option": {"name": "Divination", "blocks": [
+      {"facts": [
+        ["Sensors", "The sensors created by divination spells can't appear inside the temple"],
+        ["Targets", "Creatures within can't be targeted by divination spells"]
+      ]}
+    ]}},
+    {"option": {"name": "Healing", "blocks": [
+      {"facts": [
+        ["Extra healing", "Whenever any creature in the temple regains hit points from a spell of 1st level or higher, the creature regains additional hit points equal to your Wisdom modifier (minimum 1 hit point)"]
+      ]}
+    ]}},
+    {"option": {"name": "The Temple's Walls", "blocks": [
+      {"facts": [
+        ["Made of", "The temple is made from opaque magical force that extends into the Ethereal Plane, thus blocking ethereal travel into the temple's interior"],
+        ["Exterior", "Nothing can physically pass through the temple's exterior"],
+        ["Immune", "It can't be dispelled by dispel magic, and antimagic field has no effect on it"],
+        ["Destroyed", "A disintegrate spell destroys the temple instantly"],
+        ["Permanent", "Casting this spell on the same spot every day for a year makes this effect permanent"]
+      ]}
+    ]}}
+  ],
+  "Temporal Shunt": [
+    {"facts": [
+      ["Trigger", "A creature you see makes an attack roll or starts to cast a spell"],
+      ["Target", "The triggering creature"],
+      ["Save", "Wisdom"],
+      ["Failed save", "The target vanishes, being thrown to another point in time and causing the attack to miss or the spell to be wasted"],
+      ["Successful save", "No effect"],
+      ["Returns", "At the start of its next turn, the target reappears where it was or in the closest unoccupied space"],
+      ["Memory", "The target doesn't remember you casting the spell or being affected by it"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Targets", "You can target one additional creature for each slot level above 5th"],
+        ["Distance", "All targets must be within 30 feet of each other"]
+      ]}
+    ]}}
+  ],
+  "Tenser's Transformation": [
+    {"facts": [
+      ["Flavor", "You endow yourself with endurance and martial prowess fueled by magic."],
+      ["Spells", "Until the spell ends, you can't cast spells"],
+      ["Benefits", "Until the spell ends, you gain the following benefits"],
+      ["Temp. hit points", "You gain 50 temporary hit points"],
+      ["Lost", "If any of these remain when the spell ends, they are lost"],
+      ["Advantage", "You have Advantage on attack rolls that you make with simple and martial weapons"],
+      ["Extra damage", "When you hit a target with a weapon attack, that target takes an extra 2d12 Force damage"],
+      ["Proficiencies", "You have proficiency with all armor, shields, simple weapons, and martial weapons"],
+      ["Saves", "You have proficiency in Strength and Constitution saving throws"],
+      ["Attacks", "You can attack twice, instead of once, when you take the Attack action on your turn"],
+      ["Not stacking", "You ignore this benefit if you already have a feature, like Extra Attack, that gives you extra attacks"]
+    ]},
+    {"option": {"name": "When the Spell Ends", "blocks": [
+      {"facts": [
+        ["Save", "Constitution (DC 15), made by you immediately after the spell ends"],
+        ["Failed save", "You suffer one level of Exhaustion"],
+        ["Successful save", "No effect"]
+      ]}
+    ]}}
+  ],
+  "Tether Essence": [
+    {"facts": [
+      ["Targets", "Two creatures you can see within range"],
+      ["Save", "Constitution, made by both creatures, with disadvantage if they are within 30 feet of each other"],
+      ["Willingly", "Either creature can willingly fail the save"],
+      ["Successful save", "If either save succeeds, the spell has no effect"],
+      ["Both fail", "If both saves fail, the creatures are magically linked for the duration, regardless of the distance between them"],
+      ["Damage", "When damage is dealt to one of them, the same damage is dealt to the other one"],
+      ["Healing", "If hit points are restored to one of them, the same number of hit points are restored to the other one"],
+      ["Ends early", "If either of the tethered creatures is reduced to 0 hit points, the spell ends on both"],
+      ["Ends on one", "If the spell ends on one creature, it ends on both"]
+    ]}
+  ],
+  "Thunder Step": [
+    {"facts": [
+      ["Flavor", "Immediately after you disappear, a thunderous boom sounds."],
+      ["Teleport", "To an unoccupied space you can see within range"],
+      ["Boom", "Immediately after you disappear, each creature within 10 feet of the space you left makes a Constitution saving throw"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d10 Thunder damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Sound", "The thunder can be heard from up to 300 feet away"],
+      ["Objects", "You can bring along objects as long as their weight doesn't exceed what you can carry"],
+      ["Passenger", "You can also teleport one willing creature of your size or smaller who is carrying gear up to its carrying capacity"],
+      ["Its conditions", "It must be within 5 feet of you when you cast this spell, and there must be an unoccupied space within 5 feet of your destination space for it to appear in; otherwise, it is left behind"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d10 for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Tidal Wave": [
+    {"facts": [
+      ["Flavor", "You conjure up a wave of water that crashes down on an area within range."],
+      ["Area", "Up to 30 feet long, up to 10 feet wide, and up to 10 feet tall"],
+      ["Save", "Dexterity, made by each creature in the area"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["4d8 Bludgeoning damage, and knocked Prone", "Half as much damage, and not knocked Prone"]
+    ]}},
+    {"facts": [
+      ["Flames", "The water then spreads out across the ground in all directions, extinguishing unprotected flames in its area and within 30 feet of it"]
+    ]}
+  ],
+  "Tiny Servant": [
+    {"facts": [
+      ["Flavor", "The target animates and sprouts little arms and legs."],
+      ["Target", "One Tiny, nonmagical object you touch that isn't attached to another object or a surface and isn't being carried by another creature"],
+      ["Effect", "It becomes a creature under your control until the spell ends or the creature drops to 0 hit points"],
+      ["Stat block", "Tiny Servant (not included in this spell's data)"],
+      ["0 hit points", "It reverts to its original form, and any remaining damage carries over to that form"]
+    ]},
+    {"option": {"name": "Commanding", "blocks": [
+      {"facts": [
+        ["Command", "As a bonus action, you can mentally command the creature if it is within 120 feet of you"],
+        ["Several", "If you control multiple creatures with this spell, you can command any or all of them at the same time, issuing the same command to each one"],
+        ["Orders", "You decide what action it will take and where it will move during its next turn, or you can issue a simple, general command, such as to fetch a key, stand watch, or stack some books; once given an order, it continues to follow that order until its task is complete"],
+        ["No command", "The servant does nothing other than defend itself against hostile creatures"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Objects", "+2 objects for each slot level above 3rd"]
+      ]}
+    ]}}
+  ],
+  "Transmute Rock": [
+    {"facts": [
+      ["Area", "You choose an area of stone or mud that you can see that fits within a 40-foot cube and that is within range"],
+      ["Effect", "Choose one of the following effects"]
+    ]},
+    {"option": {"name": "Transmute Rock to Mud", "blocks": [
+      {"facts": [
+        ["Effect", "Nonmagical rock of any sort in the area becomes an equal volume of thick and flowing mud that remains for the spell's duration"],
+        ["Ground", "If you cast the spell on an area of ground, it becomes muddy enough that creatures can sink into it"],
+        ["Movement", "Each foot that a creature moves through the mud costs 4 feet of movement"],
+        ["Save", "Strength, made by any creature on the ground when you cast the spell, and by a creature the first time it enters the area on a turn or ends its turn there"],
+        ["Failed save", "A creature sinks into the mud and is Restrained, though it can use an action to end the Restrained condition on itself by pulling itself free of the mud"],
+        ["Successful save", "No effect"],
+        ["Ceiling", "If you cast the spell on a ceiling, the mud falls"],
+        ["Falling mud", "Any creature under the mud when it falls must make a Dexterity saving throw"]
+      ]},
+      {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+        ["4d8 Bludgeoning damage", "Half as much damage"]
+      ]}}
+    ]}},
+    {"option": {"name": "Transmute Mud to Rock", "blocks": [
+      {"facts": [
+        ["Effect", "Nonmagical mud or quicksand in the area no more than 10 feet deep transforms into soft stone for the spell's duration"],
+        ["Save", "Dexterity, made by any creature in the mud when it transforms"],
+        ["Failed save", "A creature becomes Restrained by the rock; the Restrained creature can use an action to try to break free by succeeding on a Strength check (DC 20) or by dealing 25 damage to the rock around it"],
+        ["Successful save", "A creature is shunted safely to the surface to an unoccupied space"]
+      ]}
+    ]}}
+  ],
+  "Vortex Warp": [
+    {"facts": [
+      ["Flavor", "You magically twist space around another creature you can see within range."],
+      ["Target", "Another creature you can see within range"],
+      ["Save", "Constitution; the target can choose to fail"],
+      ["Failed save", "Teleported to an unoccupied space of your choice that you can see within range"],
+      ["Destination", "The space must be on a surface or in a liquid that can support the target without the target having to squeeze"]
+    ]},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Range", "+30 feet for each slot level above 2nd"]
+      ]}
+    ]}}
+  ],
+  "Wall of Light": [
+    {"facts": [
+      ["Flavor", "A shimmering wall of bright light appears at a point you choose within range."],
+      ["Appears", "At a point you choose within range"],
+      ["Orientation", "The wall appears in any orientation you choose: horizontally, vertically, or diagonally; it can be free floating, or it can rest on a solid surface"],
+      ["Size", "The wall can be up to 60 feet long, 10 feet high, and 5 feet thick"],
+      ["Blocking", "The wall blocks line of sight, but creatures and objects can pass through it"],
+      ["Light", "It emits bright light out to 120 feet and dim light for an additional 120 feet"],
+      ["Save", "Constitution, made by each creature in its area when the wall appears"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["4d8 Radiant damage, and it is Blinded for 1 minute", "Half as much damage and isn't Blinded"]
+    ]}},
+    {"facts": [
+      ["Repeat save", "A Blinded creature can make a Constitution saving throw at the end of each of its turns, ending the effect on itself on a success"],
+      ["In the wall", "A creature that ends its turn in the wall's area takes 4d8 Radiant damage"]
+    ]},
+    {"option": {"name": "Beam of Radiance", "blocks": [
+      {"facts": [
+        ["Action", "Until the spell ends, you can use an action to launch a beam of radiance from the wall at one creature you can see within 60 feet of it"],
+        ["Attack", "Ranged spell attack"],
+        ["On a hit", "The target takes 4d8 Radiant damage"],
+        ["Wall shrinks", "Whether you hit or miss, reduce the length of the wall by 10 feet"],
+        ["Ends", "If the wall's length drops to 0 feet, the spell ends"]
+      ]}
+    ]}},
+    {"option": {"name": "At Higher Levels", "blocks": [
+      {"facts": [
+        ["Damage", "+1d8 for each slot level above 5th"]
+      ]}
+    ]}}
+  ],
+  "Wall of Sand": [
+    {"paragraph": "You conjure up a wall of swirling sand on the ground at a point you can see within range."},
+    {"facts": [
+      ["Size", "Up to 30 feet long, 10 feet high, and 10 feet thick; it vanishes when the spell ends"],
+      ["Sight", "It blocks line of sight but not movement"],
+      ["Inside", "A creature is blinded while in the wall's space and must spend 3 feet of movement for every 1 foot it moves there"]
+    ]}
+  ],
+  "Wall of Water": [
+    {"paragraph": "You conjure up a wall of water on the ground at a point you can see within range."},
+    {"facts": [
+      ["Shape", "A wall up to 30 feet long, 10 feet high, and 1 foot thick, or a ringed wall up to 20 feet in diameter, 20 feet high, and 1 foot thick; it vanishes when the spell ends"],
+      ["Terrain", "The wall's space is Difficult Terrain"],
+      ["Ranged attacks", "Any ranged weapon attack that enters the wall's space has Disadvantage on the attack roll"],
+      ["Fire", "Fire damage is halved if the fire effect passes through the wall to reach its target"],
+      ["Cold", "Spells that deal cold damage that pass through the wall cause the area of the wall they pass through to freeze solid (at least a 5-foot-square section)"],
+      ["Frozen sections", "Each 5-foot-square frozen section has AC 5 and 15 hit points; reducing one to 0 hit points destroys it, and the wall's water doesn't fill it"]
+    ]}
+  ],
+  "Warding Wind": [
+    {"paragraph": "A strong wind (20 miles per hour) blows around you in a 10-foot radius for the duration, moving with you and remaining centered on you."},
+    {"facts": [
+      ["Deafens", "You and other creatures in its area"],
+      ["Flames", "It extinguishes unprotected flames in its area that are torch-sized or smaller"],
+      ["Terrain", "The area is Difficult Terrain for creatures other than you"],
+      ["Ranged attacks", "The attack rolls of ranged weapon attacks have Disadvantage if they pass in or out of the wind"],
+      ["Gas", "It hedges out vapor, gas, and fog that can be dispersed by strong wind"]
+    ]}
+  ],
+  "Warp Sense": [
+    {"paragraph": "For the duration, you sense the presence of portals, even inactive ones, within 30 feet of yourself."},
+    {"facts": [
+      ["Study", "If you detect a portal, you can use your action to study it: make a DC 15 ability check using your spellcasting ability"],
+      ["Success", "You learn the destination plane of the portal and what portal key it requires, then the spell ends"],
+      ["Failure", "You learn nothing and can't study that portal again using this spell until you cast it again"],
+      ["Blocked by", "The spell can penetrate most barriers but is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt"]
+    ]}
+  ],
+  "Watery Sphere": [
+    {"paragraph": "You conjure up a sphere of water with a 5-foot radius on a point you can see within range, and it remains for the spell's duration."},
+    {"facts": [
+      ["Hovering", "The sphere can hover in the air, but no more than 10 feet off the ground"],
+      ["Save", "Strength, made by any creature in the sphere's space; a Huge or larger creature succeeds automatically"],
+      ["Failed save", "The creature is restrained by the sphere and engulfed by the water"],
+      ["Successful save", "The creature is ejected from that space to the nearest unoccupied space outside it"],
+      ["Repeat save", "At the end of each of its turns, a restrained target can repeat the saving throw"],
+      ["Capacity", "A maximum of four Medium or smaller creatures or one Large creature"],
+      ["Overflow", "If the sphere restrains a creature in excess of these numbers, a random creature that was already restrained by the sphere falls out of it and lands Prone in a space within 5 feet of it"]
+    ]},
+    {"option": {"name": "Moving the Sphere", "blocks": [
+      {"facts": [
+        ["Action", "As an action, you can move the sphere up to 30 feet in a straight line"],
+        ["Drops", "If it moves over a pit, cliff, or other drop, it safely descends until it is hovering 10 feet over ground"],
+        ["Passengers", "Any creature restrained by the sphere moves with it"],
+        ["Ramming", "You can ram the sphere into creatures, forcing them to make the saving throw, but no more than once per turn"]
+      ]}
+    ]}},
+    {"facts": [
+      ["Spell ends", "The sphere falls to the ground and extinguishes all normal flames within 30 feet of it; any creature restrained by the sphere is knocked Prone in the space where it falls"]
+    ]}
+  ],
+  "Whirlwind": [
+    {"facts": [
+      ["Flavor", "A whirlwind howls down to a point on the ground you specify."],
+      ["Point", "A point on the ground you specify"],
+      ["Area", "10-foot-radius, 30-foot-high cylinder centered on that point"],
+      ["Moving", "Until the spell ends, you can use your action to move the whirlwind up to 30 feet in any direction along the ground"],
+      ["Objects", "The whirlwind sucks up any Medium or smaller objects that aren't secured to anything and that aren't worn or carried by anyone"],
+      ["Save", "Dexterity, made by a creature the first time on a turn that it enters the whirlwind or that the whirlwind enters its space, including when the whirlwind first appears"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["10d6 bludgeoning damage", "Half as much damage"]
+    ]}},
+    {"option": {"name": "Restrained in the Whirlwind", "blocks": [
+      {"facts": [
+        ["Who", "A Large or smaller creature that fails the Dexterity save"],
+        ["Save", "Strength"],
+        ["Failed save", "The creature becomes restrained in the whirlwind until the spell ends"],
+        ["Successful save", "Not restrained"],
+        ["Rising", "When a creature starts its turn restrained by the whirlwind, the creature is pulled 5 feet higher inside it, unless the creature is at the top"],
+        ["Falling", "A restrained creature moves with the whirlwind and falls when the spell ends, unless the creature has some means to stay aloft"],
+        ["Escape", "A restrained creature can use an action to make a Strength or Dexterity check against your spell save DC"],
+        ["If successful", "The creature is no longer restrained by the whirlwind and is hurled 3d6 × 10 feet away from it in a random direction"]
+      ]}
+    ]}}
+  ],
+  "Wrath of Nature": [
+    {"facts": [
+      ["Flavor", "You call out to the spirits of nature to rouse them against your enemies."],
+      ["Area", "A 60-foot cube centered on a point you can see within range"],
+      ["Effect", "The spirits cause trees, rocks, and grasses in the cube to become animated until the spell ends"]
+    ]},
+    {"option": {"name": "Grasses and Undergrowth", "blocks": [
+      {"facts": [
+        ["Terrain", "Any area of ground in the cube that is covered by grass or undergrowth is Difficult Terrain for your enemies"]
+      ]}
+    ]}},
+    {"option": {"name": "Trees", "blocks": [
+      {"facts": [
+        ["When", "At the start of each of your turns, each of your enemies within 10 feet of any tree in the cube"],
+        ["Save", "Dexterity"],
+        ["Failed save", "4d6 Slashing damage from whipping branches"],
+        ["Successful save", "No damage"]
+      ]}
+    ]}},
+    {"option": {"name": "Roots and Vines", "blocks": [
+      {"facts": [
+        ["When", "At the end of each of your turns, one creature of your choice that is on the ground in the cube"],
+        ["Save", "Strength"],
+        ["Failed save", "Restrained until the spell ends"],
+        ["Successful save", "No effect"],
+        ["Escape", "A Restrained creature can use an action to make a Strength (Athletics) check against your spell save DC, ending the effect on itself on a success"]
+      ]}
+    ]}},
+    {"option": {"name": "Rocks", "blocks": [
+      {"facts": [
+        ["Action", "As a bonus action on your turn, you can cause a loose rock in the cube to launch at a creature you can see in the cube"],
+        ["Attack", "Ranged spell attack"],
+        ["On a hit", "3d8 nonmagical Bludgeoning damage, and the target must succeed on a Strength saving throw or fall Prone"]
+      ]}
+    ]}}
+  ],
+  "Wristpocket": [
+    {"facts": [
+      ["Flavor", "You flick your wrist, causing one object in your hand to vanish."],
+      ["Object", "One that only you are holding, weighing no more than 5 pounds"],
+      ["Retrieve", "Until the spell ends, you can use your action to summon the object to your free hand, and you can use your action to return it to the extradimensional space"],
+      ["Spell ends", "An object still in the pocket plane appears in your space, at your feet"]
+    ]}
+  ],
+  "Zephyr Strike": [
+    {"facts": [
+      ["Flavor", "You move like the wind."],
+      ["Movement", "For the duration, your movement doesn't provoke opportunity attacks"]
+    ]},
+    {"option": {"name": "Once Before the Spell Ends", "blocks": [
+      {"facts": [
+        ["Advantage", "You can give yourself Advantage on one weapon attack roll on your turn"],
+        ["On a hit", "That attack deals an extra 1d8 Force damage"],
+        ["Hit or miss", "Your walking speed increases by 30 feet until the end of that turn"]
+      ]}
+    ]}}
+  ]
+}
