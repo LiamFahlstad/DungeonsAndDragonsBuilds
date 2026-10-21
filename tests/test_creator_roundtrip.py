@@ -44,6 +44,7 @@ NOT_REPRODUCED = {
     ),
     "Y2024_Artificer_Cartographer_ObmarStalskagg": _ADVENTURING_GEAR,
     "Y2024_Bard_Valor_Clover": _ADVENTURING_GEAR,
+    "Y2024_Bard_Valor_Thomas": _ADVENTURING_GEAR,
     "Y2024_Cleric_Light_GabrielGreybeard": _ADVENTURING_GEAR,
     "Y2024_Paladin_Devotion_Edmund": _ADVENTURING_GEAR,
     "Y2024_Rogue_ArcaneTrickster_ThumSchtock": _ADVENTURING_GEAR,

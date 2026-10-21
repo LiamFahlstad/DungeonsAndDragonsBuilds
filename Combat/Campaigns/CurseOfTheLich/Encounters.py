@@ -1,5 +1,5 @@
 from Combat import Combatants
-from Combat.Monsters.CR_0.monsters import GoblinMinion, GoblinWarrior
+from Combat.Monsters.CR_0.monsters import GoblinMinion, GoblinWarrior, Worg
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
     ArmoredAccursed,
@@ -9,7 +9,6 @@ from Combat.Monsters.CR_1.monsters import GoblinBoss
 from Combat.Monsters.CR_1.monsters_homebrew import (
     AccursedGroupOf3,
     CommonCultist,
-    GoblinKingCR1,
     GreypawCR1,
 )
 from Combat.Monsters.CR_2.monsters_homebrew import (
@@ -20,6 +19,7 @@ from Combat.Monsters.CR_3.monsters import GoblinHexer
 from Combat.Monsters.CR_3.monsters_homebrew import (
     CantorOfTheBlackChoir,
     GarronTheKindly,
+    GoblinKingCR3,
     SerCaldusTheVowOfSilence,
 )
 from Combat.Monsters.CR_4.monsters_homebrew import (
@@ -144,38 +144,58 @@ def get_goblin_scouting_party_combatants() -> list[Combatants.BasicCombatantData
 
 
 def get_goblin_warband_ambush_combatants() -> list[Combatants.BasicCombatantData]:
-    hexer = GoblinHexer()
-    hexer.set_name("Goblin Hexer")
+    """Moderate for the full party (6x level 4): 2500 XP, 2300 net of Greypaw."""
+    hexers = []
+    for i in range(1, 3):
+        hexer = GoblinHexer()
+        hexer.set_name(f"Goblin Hexer {i}")
+        hexers.append(hexer)
+
+    bosses = []
+    for i in range(1, 4):
+        boss = GoblinBoss()
+        boss.set_name(f"Goblin Boss {i}")
+        bosses.append(boss)
+
+    worgs = []
+    for i in range(1, 3):
+        worg = Worg()
+        worg.set_name(f"Worg {i}")
+        worgs.append(worg)
 
     warriors = []
-    for i in range(1, 3):
+    for i in range(1, 7):
         warrior = GoblinWarrior()
         warrior.set_name(f"Goblin Warrior {i}")
         warriors.append(warrior)
 
-    minions = []
-    for i in range(1, 4):
-        minion = GoblinMinion()
-        minion.set_name(f"Goblin Minion {i}")
-        minions.append(minion)
-
-    return [hexer, *warriors, *minions]
+    return [*hexers, *bosses, *worgs, *warriors]
 
 
 def get_wrath_of_durmor_combatants() -> list[Combatants.BasicCombatantData]:
+    """High for the full party (6x level 4): 3200 XP, 3000 net of Greypaw."""
     durmor = ManifestationOfDurmor()
     durmor.set_name("Manifestation of Durmor")
 
-    king = GoblinKingCR1()
+    king = GoblinKingCR3()
     king.set_name("Goblin King")
 
-    minions = []
-    for i in range(1, 5):
-        minion = GoblinMinion()
-        minion.set_name(f"Goblin Minion {i}")
-        minions.append(minion)
+    hexer = GoblinHexer()
+    hexer.set_name("Goblin Hexer")
 
-    return [durmor, king, *minions]
+    bosses = []
+    for i in range(1, 3):
+        boss = GoblinBoss()
+        boss.set_name(f"Goblin Boss {i}")
+        bosses.append(boss)
+
+    warriors = []
+    for i in range(1, 7):
+        warrior = GoblinWarrior()
+        warrior.set_name(f"Goblin Warrior {i}")
+        warriors.append(warrior)
+
+    return [durmor, king, hexer, *bosses, *warriors]
 
 
 def get_stonehill_allies() -> list[Combatants.BasicCombatantData]:

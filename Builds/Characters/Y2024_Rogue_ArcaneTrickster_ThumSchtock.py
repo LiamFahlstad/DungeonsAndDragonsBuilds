@@ -5,12 +5,14 @@ from CharacterContent.Classes.BaseClasses.RogueBase import (
     RogueLevel1,
     RogueLevel2,
     RogueLevel3,
+    RogueLevel4,
 )
 from CharacterContent.Classes.SubClasses2024.RogueArcaneTrickster import (
     RogueArcaneTricksterCustomStarterClassArgs,
     RogueArcaneTricksterLevel3,
+    RogueArcaneTricksterLevel4,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow
@@ -35,7 +37,7 @@ def get_starter_class_builder():
                 Skill.STEALTH,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         # Point buy: scores 8-15, total cost must equal 27.
         abilities=PointBuyAbilityScores(
             strength=11,
@@ -89,6 +91,14 @@ def get_starter_class_builder():
                 ),
                 2: RogueLevel2(),
                 3: RogueLevel3(),
+                4: RogueLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.DEXTERITY, 2),
+                        ]
+                    ),
+                ),
             },
             subclass_features_by_level={
                 3: RogueArcaneTricksterLevel3(
@@ -97,6 +107,9 @@ def get_starter_class_builder():
                     spell_1=WizardLevel1Spells.SLEEP,
                     spell_2=WizardLevel1Spells.SILENT_IMAGE,
                     spell_3=WizardLevel1Spells.FOG_CLOUD,
+                ),
+                4: RogueArcaneTricksterLevel4(
+                    spell=WizardLevel1Spells.SHIELD,
                 ),
             },
         ),

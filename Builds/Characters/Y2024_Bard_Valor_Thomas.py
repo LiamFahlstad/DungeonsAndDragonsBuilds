@@ -4,7 +4,7 @@ Build for Thomas, a level 3 College of Valor Bard.
 Based on Clover's build (Y2024_Bard_Valor_Clover) with the species changed
 from Human to Khoravar (the 2024 Eberron half-elf). Ability scores,
 background and Skilled origin feat are unchanged; spells and armor/weapons
-(Breastplate + Shield, Shortsword + Scimitar, Light Crossbow) were picked
+(Breastplate + Shield, Shortsword + Scimitar, Heavy Crossbow) were picked
 for Thomas.
 
 Species changes vs. Clover:
@@ -42,7 +42,7 @@ from Model.AbilityScores import PointBuyAbilityScores
 # - Use Faerie Fire against groups to give the party advantage on attacks.
 # - Use Dissonant Whispers to damage and force an enemy to flee, potentially triggering allies' opportunity attacks.
 # - Use Tasha's Hideous Laughter or Suggestion to take a single dangerous enemy out of the fight.
-# - Cast Aid before tough fights to raise the party's max HP.
+# - Cast Invisibility to scout ahead or get himself or an ally out of trouble.
 # - Use Healing Word to revive fallen allies without sacrificing your action.
 # - When no important spell is needed, attack with your shortsword and True Strike.
 # - Stay at medium range when possible
@@ -89,38 +89,11 @@ def get_starter_class_builder():
                 Skill.ACROBATICS,
             ]
         ),
-        # Breastplate: the best medium armor without Stealth disadvantage
-        # (keeps Skill Versatility's Stealth worth having), and doesn't
-        # duplicate Dessie's Scale Mail. AC 14 + Dex (max +2) + Shield = 18.
-        armor=[
-            Armor.BreastplateArmor(),
-            Armor.ShieldArmor(),
-        ],
-        # Not Martial/medium-armor proficient yet at level 1 (that's a Valor
-        # Bard 3 feature - see BardValorLevel3.add_features), but by the time
-        # equipment is applied at the end of CharacterBuilder.build() he's
-        # already level 3, so the auto-proficiency check picks this up on
-        # its own - no override needed. Two light finesse weapons off his +3
-        # Dex: Shortsword (Vex) + Shield when he needs AC, or drop the shield
-        # and dual-wield with the Scimitar (Nick) for a bonus-action attack.
-        weapons=[
-            Weapons.Shortsword(),
-            Weapons.Scimitar(),
-            Weapons.LightCrossbow(),
-        ],
-        # One-shot party role: the face and frontline inspirer. Only gear that
-        # can matter on the adventure; tools and light are left to Dessie,
-        # healing and maps to Maggie, climbing gear to Hanna. Fine clothes
-        # and perfume (advantage on Persuasion vs. Indifferent creatures) get
-        # him through doors the others can't; ball bearings are a Sleight of
-        # Hand trick for covering a retreat.
-        items=[
-            (Items.Lute(), 1),  # spellcasting focus
-            (Items.CrossbowBolts(), 1),  # one case of 20 bolts
-            (Items.FineClothes(), 1),
-            (Items.Perfume(), 2),
-            (Items.BallBearings(), 1),
-        ],
+        # No Starting Equipment: all his gear is issued by the Kingdom Saving
+        # Agency instead (see __init__), so none of it is paid for out of his
+        # starting gold.
+        armor=[],
+        weapons=[],
         tool_proficiencies=[
             Lute(),
         ],
@@ -136,7 +109,7 @@ def get_starter_class_builder():
                 ),
                 2: BardLevel2(
                     # Only 1st-level slots at Bard 2, so Sleep is prepared
-                    # here and swapped for Aid at level 3 (replace_spells).
+                    # here and swapped for Invisibility at level 3 (replace_spells).
                     spell=BardLevel1Spells.SLEEP,
                     skill_expertise_1=Skill.PERSUASION,
                     skill_expertise_2=Skill.PERFORMANCE,
@@ -150,7 +123,7 @@ def get_starter_class_builder():
             },
         ),
         replace_spells={
-            BardLevel1Spells.SLEEP: BardLevel2Spells.AID,
+            BardLevel1Spells.SLEEP: BardLevel2Spells.INVISIBILITY,
         },
     )
 
@@ -167,14 +140,43 @@ class Y2024BardValorThomasCharacterBuilder(CharacterBuilder):
             ),
         )
         # Kingdom Saving Agency mission issue (the agency that recruited the
-        # party): Thomas is the party's negotiator. A Potion of Disguise for
-        # talking his way in as someone else, and a bigger purse than the
-        # others' travel money for bribes and buying information.
+        # party): Thomas is the party's negotiator. Issued, not bought, so
+        # none of it comes out of his starting gold.
+        #
+        # Breastplate: the best medium armor without Stealth disadvantage
+        # (keeps Skill Versatility's Stealth worth having), and doesn't
+        # duplicate Dessie's Scale Mail. AC 14 + Dex (max +2) + Shield = 18.
+        # Two light finesse weapons off his +3 Dex: Shortsword (Vex) + Shield
+        # when he needs AC, or drop the shield and dual-wield with the
+        # Scimitar (Nick) for a bonus-action attack. Heavy Crossbow requested
+        # by the player: Martial (covered by Valor), and his 16 Dex clears
+        # the Heavy property's Dex 13 requirement.
+        #
+        # Only gear that can matter on the adventure; tools and light are
+        # left to Dessie, healing and maps to Maggie, climbing gear to Hanna.
+        # Fine clothes and perfume (advantage on Persuasion vs. Indifferent
+        # creatures) get him through doors the others can't; ball bearings
+        # are a Sleight of Hand trick for covering a retreat. Two Potions of
+        # Healing, and a bigger purse than the others' travel money for
+        # bribes and buying information.
         self.add_adventuring_gear(
             "Kingdom Saving Agency",
+            armor=[
+                Armor.BreastplateArmor(),
+                Armor.ShieldArmor(),
+            ],
+            weapons=[
+                Weapons.Shortsword(),
+                Weapons.Scimitar(),
+                Weapons.HeavyCrossbow(),
+            ],
             items=[
-                (Items.PotionOfDisguise(), 1),
-                (Items.PotionOfHealing(), 1),
+                (Items.Lute(), 1),  # spellcasting focus
+                (Items.Quiver(), 1),  # ammunition isn't tracked in this campaign
+                (Items.FineClothes(), 1),
+                (Items.Perfume(), 2),
+                (Items.BallBearings(), 1),
+                (Items.PotionOfHealing(), 2),
             ],
             gold=25,  # travel expenses + bribe purse
         )

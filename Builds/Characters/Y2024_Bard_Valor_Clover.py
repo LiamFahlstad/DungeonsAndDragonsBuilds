@@ -1,5 +1,5 @@
 """
-Build for Klover's Bard (level 3, College of Valor), based on the
+Build for Klover's Bard (level 4, College of Valor), based on the
 2026-08-18 planning chat with the player.
 
 Two picks weren't answered in that chat and are assumed here (flagged
@@ -23,13 +23,14 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
+    BardLevel4,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterContent.Classes.SubClasses2024.BardValor import (
     BardValorCustomStarterClassArgs,
     BardValorLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
@@ -61,7 +62,7 @@ def get_starter_class_builder():
                 Skill.PERSUASION,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         abilities=PointBuyAbilityScores(
             strength=8,
             dexterity=15,
@@ -141,6 +142,18 @@ def get_starter_class_builder():
                 ),
                 3: BardLevel3(
                     spell=BardLevel2Spells.HOLD_PERSON,
+                ),
+                4: BardLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.CHARISMA, 1),
+                            (Ability.CONSTITUTION, 1),
+                        ]
+                    ),
+                    cantrip=BardLevel0Spells.MINOR_ILLUSION,
+                    # Faerie Fire is already in her Tactics notes above.
+                    spell=BardLevel1Spells.FAERIE_FIRE,
                 ),
             },
             subclass_features_by_level={

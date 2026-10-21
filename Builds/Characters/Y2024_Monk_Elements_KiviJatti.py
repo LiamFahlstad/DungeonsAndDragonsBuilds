@@ -1,5 +1,5 @@
 """
-Skeleton build for Kivi Jätti's Monk (level 3, Way of the Four Elements).
+Skeleton build for Kivi Jätti's Monk (level 4, Way of the Four Elements).
 
 This is a minimal starting point, not a finished build. Every line marked
 TODO is a placeholder value you should replace with your own choice. See
@@ -14,12 +14,17 @@ from CharacterContent.Classes.BaseClasses.MonkBase import (
     MonkLevel1,
     MonkLevel2,
     MonkLevel3,
+    MonkLevel4,
 )
 from CharacterContent.Classes.SubClasses2024.MonkElements import (
     MonkElementsCustomStarterClassArgs,
     MonkElementsLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
 from CharacterContent.Features.SpeciesFeatures import GoliathFeatures
 from CharacterContent.Items import Items, Weapons
@@ -31,7 +36,7 @@ from Model.AbilityScores import PointBuyAbilityScores
 
 
 def get_starter_class_builder():
-    monk_level = 3
+    monk_level = 4
     martial_arts_die = MonkFeatures.LEVEL_TO_MARTIAL_ARTS_DIE[monk_level]
     return StarterClassBuilder(
         non_generic_arguments=MonkElementsCustomStarterClassArgs(
@@ -101,6 +106,13 @@ def get_starter_class_builder():
                 1: MonkLevel1(),
                 2: MonkLevel2(),
                 3: MonkLevel3(),
+                4: MonkLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.Grappler(
+                        character_level=4,
+                        ability=Ability.DEXTERITY,
+                    ),
+                ),
             },
             subclass_features_by_level={
                 3: MonkElementsLevel3(),

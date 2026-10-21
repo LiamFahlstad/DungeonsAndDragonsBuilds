@@ -1,5 +1,5 @@
 """
-Build for Edmund's Paladin (level 3, Oath of Devotion), based on the
+Build for Edmund's Paladin (level 4, Oath of Devotion), based on the
 2026-08-16 planning chat with the player.
 
 The background's ability bonus is only pinned down as "+1 Strength" in that
@@ -16,12 +16,17 @@ from CharacterContent.Classes.BaseClasses.PaladinBase import (
     PaladinLevel1,
     PaladinLevel2,
     PaladinLevel3,
+    PaladinLevel4,
 )
 from CharacterContent.Classes.SubClasses2024.PaladinDevotion import (
     PaladinDevotionCustomStarterClassArgs,
     PaladinDevotionLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Tiefling
@@ -39,7 +44,7 @@ def get_starter_class_builder():
                 Skill.INSIGHT,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         abilities=PointBuyAbilityScores(
             strength=15,
             dexterity=12,
@@ -95,6 +100,14 @@ def get_starter_class_builder():
                 ),
                 3: PaladinLevel3(
                     spell=PaladinLevel1Spells.BLESS,
+                ),
+                4: PaladinLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.Sentinel(
+                        character_level=4,
+                        ability=Ability.STRENGTH,
+                    ),
+                    spell=PaladinLevel1Spells.COMMAND,
                 ),
             },
             subclass_features_by_level={

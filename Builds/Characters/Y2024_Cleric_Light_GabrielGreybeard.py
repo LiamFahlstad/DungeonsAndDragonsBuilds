@@ -1,5 +1,5 @@
 """
-Gabriel Gråskägg - Dwarf Cleric (level 3, Light Domain).
+Gabriel Gråskägg - Dwarf Cleric (level 4, Light Domain).
 
 Mål: Hitta tillbaka till sin tro i den mörka tiden efter lichen! Vill få nog
 kraft att göra sin egen ward så han kan lämna Stonehill.
@@ -16,13 +16,14 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel1,
     ClericLevel2,
     ClericLevel3,
+    ClericLevel4,
     DivineOrderProtectorChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
     ClericLightLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
@@ -43,7 +44,7 @@ def get_starter_class_builder():
                 Skill.PERSUASION,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         # Point buy (27 pts): WIS 15 (9) + CON 14 (7) + CHA 13 (5) + DEX 12 (4)
         # + INT 10 (2) + STR 8 (0) = 27. These are the pre-background scores;
         # the Sage background bonuses below bring WIS/CON to 16/16.
@@ -91,6 +92,16 @@ def get_starter_class_builder():
                 ),
                 3: ClericLevel3(
                     spell=ClericLevel2Spells.ZONE_OF_TRUTH,
+                ),
+                4: ClericLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.WISDOM, 2),
+                        ]
+                    ),
+                    cantrip=ClericLevel0Spells.TOLL_THE_DEAD,
+                    spell=ClericLevel2Spells.AID,
                 ),
             },
             subclass_features_by_level={

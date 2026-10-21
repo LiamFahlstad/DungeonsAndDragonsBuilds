@@ -4,13 +4,18 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerLevel1,
     ArtificerLevel2,
     ArtificerLevel3,
+    ArtificerLevel4,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
 from CharacterContent.Classes.SubClasses2024.ArtificerCartographer import (
     ArtificerCartographerCustomStarterClassArgs,
     ArtificerCartographerLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -34,7 +39,7 @@ def get_starter_class_builder():
                 Skill.HISTORY,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=PointBuyAbilityScores(
             strength=14,
@@ -89,6 +94,15 @@ def get_starter_class_builder():
                 ),
                 3: ArtificerLevel3(
                     spell=SpellDefinitions.ArtificerLevel1Spells.LONGSTRIDER,
+                ),
+                4: ArtificerLevel4(
+                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
+                    general_feat=GeneralFeats.AbilityScoreImprovement(
+                        [
+                            (Ability.INTELLIGENCE, 2),
+                        ]
+                    ),
+                    spell=SpellDefinitions.ArtificerLevel1Spells.DETECT_MAGIC,
                 ),
             },
             subclass_features_by_level={

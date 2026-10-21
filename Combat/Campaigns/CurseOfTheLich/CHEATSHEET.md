@@ -36,10 +36,11 @@ python RunCombatSimulator.py --player-log Combat/Campaigns/CurseOfTheLich/Player
 |---|---|
 | Ashelm Church | `python RunCombatSimulator.py --scenario ashelm_church --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/ashelm_church.json` |
 | Goblin Scouting Party (easier) | `python RunCombatSimulator.py --scenario goblin_scouting_party --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/goblin_scouting_party.json --absent Gabriel Obmar Thum` |
-| Goblin Warband Ambush (bigger) | `python RunCombatSimulator.py --scenario goblin_warband_ambush --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/goblin_warband_ambush.json --absent Gabriel Obmar Thum` |
-| Wrath of Durmor (difficult) | `python RunCombatSimulator.py --scenario wrath_of_durmor --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/wrath_of_durmor.json --absent Gabriel Obmar Thum` |
+| Goblin Warband Ambush (moderate) | `python RunCombatSimulator.py --scenario goblin_warband_ambush --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/goblin_warband_ambush.json` |
+| Wrath of Durmor (high) | `python RunCombatSimulator.py --scenario wrath_of_durmor --player-log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --log Combat/Campaigns/CurseOfTheLich/CombatLogs/wrath_of_durmor.json` |
 
-- The goblin and Durmor encounters are balanced for three players (Edmund, Clover, Kivi), with Gabriel, Obmar and Thum absent.
+- The Goblin Scouting Party (already played) was balanced for three level 3 players (Edmund, Clover, Kivi), with Gabriel, Obmar and Thum absent.
+- The Goblin Warband Ambush and Wrath of Durmor are balanced for the full party of six level 4 players: Moderate (2500 XP, 2300 net of Greypaw) and High (3200 XP, 3000 net of Greypaw).
 - They also bring a friendly NPC, **Greypaw (Ally)**, shown alongside the monsters. `--difficulty` subtracts allies' XP from the monsters' XP and rates the fight on that net value (the monsters-only rating is printed too).
 
 ## Rests and stats
