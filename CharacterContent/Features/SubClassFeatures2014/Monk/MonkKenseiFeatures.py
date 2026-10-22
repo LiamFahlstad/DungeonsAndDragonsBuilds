@@ -1,13 +1,10 @@
-from Core.Definitions import MONK_HIT_DIE
 from Model.Content.Feature import (
-    FeatureUses,
     Feature,
     FeatureActivation,
     ActionType,
     FeatureTarget,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 

@@ -1,9 +1,8 @@
-from typing import Optional, Type, TypeAlias
+from typing import Optional, TypeAlias
 
 import attr
 
 import Core.Definitions as Definitions
-from Model.Creatures.Combatants import ExtendedCombatantData
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Model.CharacterSources import SpellSource
 from Core.Definitions import Ability, CharacterClass, Skill

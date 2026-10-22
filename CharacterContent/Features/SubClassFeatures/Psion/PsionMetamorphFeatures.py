@@ -1,4 +1,3 @@
-from Core.Definitions import PSION_HIT_DIE, Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table

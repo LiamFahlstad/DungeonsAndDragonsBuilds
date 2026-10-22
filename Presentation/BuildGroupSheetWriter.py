@@ -177,7 +177,7 @@ def _write_items_page(
     with open(path, "w", encoding="utf-8") as file:
         file.write(writer._get_css_style())
         file.write(f"<h1>{group_name} - Items</h1>\n")
-        for character, stat_block in prepared:
+        for character, _stat_block in prepared:
             non_empty_entries = [
                 entry
                 for entry in character.equipment_entries

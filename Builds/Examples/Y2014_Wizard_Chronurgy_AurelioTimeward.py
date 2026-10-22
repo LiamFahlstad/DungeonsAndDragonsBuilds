@@ -1,6 +1,5 @@
 """Example build: Wizard School of Chronurgy (2014 rules). Demonstrates the subclass through level 14."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder

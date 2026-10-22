@@ -1,8 +1,7 @@
-from Core.Definitions import Ability, DamageType, Skill
+from Core.Definitions import Ability, DamageType
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import DamageResistance, SavingThrowAdvantage
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts
 

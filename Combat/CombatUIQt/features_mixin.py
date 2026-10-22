@@ -20,6 +20,7 @@ from Presentation.FeatureCards import feature_label
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 from .state import CombatWindowState
+from .tree_filter import filter_category_tree
 
 
 class FeaturesMixin(CombatWindowState):
@@ -249,19 +250,11 @@ class FeaturesMixin(CombatWindowState):
         tree.itemSelectionChanged.connect(on_selection_changed)
 
         def apply_filter(query: str):
-            query = query.strip().lower()
-            for category, cat_item in category_items.items():
-                any_visible = False
-                for i in range(cat_item.childCount()):
-                    child = cat_item.child(i)
-                    assert child is not None, i
-                    feature = child.data(0, Qt.ItemDataRole.UserRole)
-                    visible = query in feature.name.lower()
-                    child.setHidden(not visible)
-                    any_visible = any_visible or visible
-                cat_item.setHidden(not any_visible)
-                if query:
-                    cat_item.setExpanded(any_visible)
+            filter_category_tree(
+                category_items,
+                query.strip().lower(),
+                lambda feature, q: q in feature.name.lower(),
+            )
 
         search_box.textChanged.connect(apply_filter)
 

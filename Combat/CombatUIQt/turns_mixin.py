@@ -310,7 +310,7 @@ class TurnsMixin(CombatWindowState):
             return None
 
         result = list(order_with_initiative)
-        for start, end, lw in list_widgets:
+        for start, _end, lw in list_widgets:
             init_val = result[start][0]
             for i in range(lw.count()):
                 item = lw.item(i)

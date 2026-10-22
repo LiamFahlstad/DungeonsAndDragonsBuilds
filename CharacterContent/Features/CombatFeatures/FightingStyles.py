@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from Core.Definitions import Ability, Sense
 from Core.Weapons import WeaponProperty, WeaponTraits

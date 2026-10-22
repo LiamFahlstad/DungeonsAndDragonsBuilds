@@ -1,4 +1,4 @@
-from Core.Definitions import RANGER_HIT_DIE, Ability, Skill
+from Core.Definitions import Ability, Skill
 from Model.Content.Feature import (
     Feature,
     FeatureUses,

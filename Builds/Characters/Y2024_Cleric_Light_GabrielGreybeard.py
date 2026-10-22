@@ -23,7 +23,11 @@ from CharacterContent.Classes.SubClasses2024.ClericLight import (
     ClericLightCustomStarterClassArgs,
     ClericLightLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (

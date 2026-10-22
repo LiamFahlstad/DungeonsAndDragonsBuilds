@@ -23,7 +23,6 @@ from CharacterContent.Classes.BaseClasses.ClericBase import (
     ClericLevel19,
     ClericLevel20,
     DivineOrderProtectorChoice,
-    DivineOrderThaumaturgeChoice,
     DivineStrikeChoice,
 )
 from CharacterContent.Classes.SubClasses2024.ClericKnowledge import (

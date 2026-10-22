@@ -257,6 +257,6 @@ if __name__ == "__main__":
     with open(main_init_file, "w", encoding="utf-8") as f:
         f.write(main_init_content)
 
-    print(f"\nGeneration complete!")
+    print("\nGeneration complete!")
     print(f"Generated {total_files} files with {total_classes} monster classes")
     print(f"Output directory: {monsters_dir}")

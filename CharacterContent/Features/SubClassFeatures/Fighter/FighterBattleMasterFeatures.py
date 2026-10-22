@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CharacterClass, FIGHTER_HIT_DIE
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -8,7 +8,6 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureDice,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 

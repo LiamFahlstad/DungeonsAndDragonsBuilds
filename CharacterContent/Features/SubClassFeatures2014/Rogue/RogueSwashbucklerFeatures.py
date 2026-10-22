@@ -1,6 +1,4 @@
-from Core.Definitions import ROGUE_HIT_DIE
 from Model.Content.Feature import (
-    FeatureUses,
     Feature,
     FeatureActivation,
     ActionType,
@@ -8,7 +6,6 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import InitiativeBonus
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 

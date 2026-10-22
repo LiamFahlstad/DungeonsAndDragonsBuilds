@@ -42,7 +42,7 @@ class FeyAncestry(Feature):
         ]
 
     def get_description(self, character: CharacterView) -> str:
-        text = f"You have Advantage on saving throws you make to avoid or end the Charmed condition."
+        text = "You have Advantage on saving throws you make to avoid or end the Charmed condition."
         return text
 
 

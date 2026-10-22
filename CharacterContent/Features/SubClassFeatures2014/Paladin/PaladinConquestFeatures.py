@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, CharacterClass, PALADIN_HIT_DIE
+from Core.Definitions import CharacterClass
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -7,7 +7,6 @@ from Model.Content.Feature import (
     FeatureUses,
     FeatureTarget,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 

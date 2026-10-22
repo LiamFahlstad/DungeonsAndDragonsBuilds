@@ -1,10 +1,7 @@
 from Core.Definitions import (
-    WARLOCK_HIT_DIE,
     Ability,
 )
-import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula

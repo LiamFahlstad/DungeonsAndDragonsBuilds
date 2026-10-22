@@ -15,7 +15,6 @@ from Model.Content.Improvements import (
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Core.Definitions import ArmorType, CharacterClass
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table

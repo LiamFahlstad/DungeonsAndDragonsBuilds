@@ -1,4 +1,4 @@
-from Core.Definitions import ARTIFICER_HIT_DIE, Ability, CharacterClass
+from Core.Definitions import Ability, CharacterClass
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.Content.Feature import (
     ActionType,

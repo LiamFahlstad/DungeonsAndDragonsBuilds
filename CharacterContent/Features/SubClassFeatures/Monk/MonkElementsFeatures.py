@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    MONK_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget

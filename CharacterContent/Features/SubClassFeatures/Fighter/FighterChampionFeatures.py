@@ -1,4 +1,4 @@
-from Core.Definitions import DiceRollCondition, FIGHTER_HIT_DIE, Skill
+from Core.Definitions import DiceRollCondition, Skill
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter

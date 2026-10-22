@@ -1,4 +1,3 @@
-from Core.Definitions import WIZARD_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,

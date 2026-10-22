@@ -12,7 +12,7 @@ from Model.Character import Character
 from Model.CharacterSources import CharacterSources
 from Builds.Tests.SpellSlotTestPaladin5 import SpellSlotTestPaladin5CharacterBuilder
 from Model.Content.Feature import Feature
-from Model.Content.Improvements import AbilityScoreBonus, SkillBonus, SkillProficiency
+from Model.Content.Improvements import AbilityScoreBonus, SkillProficiency
 from CharacterContent.Items import Items
 from Core.Definitions import Ability, CharacterClass, Skill
 from Model.Ledger.Ledger import Ledger

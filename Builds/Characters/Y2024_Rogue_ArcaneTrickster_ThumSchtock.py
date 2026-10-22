@@ -12,7 +12,11 @@ from CharacterContent.Classes.SubClasses2024.RogueArcaneTrickster import (
     RogueArcaneTricksterLevel3,
     RogueArcaneTricksterLevel4,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow

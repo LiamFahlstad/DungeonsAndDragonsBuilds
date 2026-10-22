@@ -1,4 +1,4 @@
-from Core.Definitions import MONK_HIT_DIE, Ability
+from Core.Definitions import Ability
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula

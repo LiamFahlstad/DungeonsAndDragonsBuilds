@@ -1,6 +1,5 @@
 import Core.Definitions as Definitions
 from Core.Definitions import (
-    DRUID_HIT_DIE,
     Ability,
     CharacterClass,
     Condition,

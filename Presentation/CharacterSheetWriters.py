@@ -13,8 +13,6 @@ from CharacterContent.Items import Armor, Items
 from Presentation.ArmorCards import ARMOR_CARD_CSS, write_armors_to_file
 from CharacterContent.Items.Weapons import (
     AbstractWeapon,
-    UnarmedStrike,
-    WeaponProficiency,
 )
 from Presentation.WeaponCards import (
     WEAPON_CARD_CSS,

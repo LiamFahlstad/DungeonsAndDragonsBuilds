@@ -35,9 +35,6 @@ from CharacterContent.Classes.SubClasses2014.FighterSamurai import (
     FighterSamuraiLevel15,
     FighterSamuraiLevel18,
 )
-from CharacterContent.Features.SubClassFeatures2014.Fighter import (
-    FighterSamuraiFeatures,
-)
 from Core.Definitions import Ability, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,

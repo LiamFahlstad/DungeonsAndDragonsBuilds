@@ -1,4 +1,4 @@
-from Core.Definitions import FIGHTER_HIT_DIE, Condition
+from Core.Definitions import Condition
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter

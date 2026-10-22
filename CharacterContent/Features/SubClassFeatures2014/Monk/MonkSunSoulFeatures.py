@@ -1,8 +1,4 @@
-from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
-    LEVEL_TO_MARTIAL_ARTS_DIE,
-)
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
-from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from Core.Definitions import Ability

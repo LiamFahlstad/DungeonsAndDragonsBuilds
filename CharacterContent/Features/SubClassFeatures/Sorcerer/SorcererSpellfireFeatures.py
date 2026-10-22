@@ -1,4 +1,3 @@
-from Core.Definitions import SORCERER_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget, FeatureUses
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table

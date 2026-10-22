@@ -1,6 +1,5 @@
 """Example build: Bard College of Eloquence (2014 rules). Demonstrates the subclass up through level 14."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -33,7 +32,6 @@ from CharacterContent.Features.CharacterFeats import (
     OriginFeats,
 )
 from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
-from CharacterContent.Items import Items
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,

@@ -419,7 +419,7 @@ def write_item_cards(
 def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
     file.write("<div class='slot-grid'>\n")
     for level, count in slots.items():
-        file.write(f"  <div class='slot-level'>\n")
+        file.write("  <div class='slot-level'>\n")
         file.write(f"    <div class='slot-level-label'>Level {level}</div>\n")
         boxes_html = (
             '<div class="slot-box-group">'
@@ -427,7 +427,7 @@ def write_slot_table(slots: dict[int, int], file: TextIO, reset_label: str):
             + "</div>"
         )
         file.write(f"    {boxes_html}\n")
-        file.write(f"  </div>\n")
+        file.write("  </div>\n")
     file.write("</div>\n")
     file.write(f"<span class='slot-reset-label'>{reset_label}</span>\n")
 

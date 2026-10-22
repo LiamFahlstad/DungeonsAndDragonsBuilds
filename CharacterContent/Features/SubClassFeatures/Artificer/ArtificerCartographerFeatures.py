@@ -1,4 +1,3 @@
-from Core.Definitions import ARTIFICER_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -6,7 +5,6 @@ from Model.Content.Feature import (
     FeatureTarget,
     RegainedOn,
 )
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table

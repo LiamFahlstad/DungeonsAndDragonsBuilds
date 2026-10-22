@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    FIGHTER_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import (

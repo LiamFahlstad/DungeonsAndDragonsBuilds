@@ -252,13 +252,18 @@ def evaluate_encounter_combatants(
     (e.g. `ExtendedCombatantData` instances from Combat/Monsters/CR_*/) --
     pulls each monster's `.cr` attribute rather than requiring the caller
     to extract CR strings by hand."""
-    crs = []
-    for monster in monsters:
-        cr = getattr(monster, "cr", None)
-        if not cr:
-            raise ValueError(f"Combatant {monster!r} has no usable `cr` attribute")
-        crs.append(cr)
-    return evaluate_encounter(character_levels, crs)
+    return evaluate_encounter(
+        character_levels, [combatant_cr(monster) for monster in monsters]
+    )
+
+
+def combatant_cr(combatant) -> str:
+    """A combatant's CR string. Only `ExtendedCombatantData` stat blocks carry
+    one, so a plain `BasicCombatantData` raises ValueError."""
+    cr = getattr(combatant, "cr", None)
+    if not cr:
+        raise ValueError(f"Combatant {combatant!r} has no usable `cr` attribute")
+    return cr
 
 
 if __name__ == "__main__":

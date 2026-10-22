@@ -1240,8 +1240,9 @@ def _instantiate_feature(cls: type):
     kwargs = _auto_fill_args(cls)
     try:
         return cls(**kwargs)
-    except Exception:
-        pass
+    except Exception as error:
+        # `error` is unbound once the except block ends; keep it to re-raise.
+        first_error = error
 
     sig = inspect.signature(cls.__init__)
     skill_params = [
@@ -1250,7 +1251,7 @@ def _instantiate_feature(cls: type):
         if param.default is inspect.Parameter.empty and param.annotation is Skill
     ]
     if not skill_params:
-        raise
+        raise first_error
 
     from itertools import permutations
 

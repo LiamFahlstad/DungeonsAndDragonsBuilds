@@ -12,7 +12,6 @@ from Model.Creatures.MonsterAbilities import (
     MonsterAbility,
     Multiattack,
     RangedAttack,
-    SavingThrowEffect,
 )
 from Core.Definitions import Ability
 

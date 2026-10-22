@@ -1,5 +1,5 @@
 import Core.Definitions as Definitions
-from Core.Definitions import Skill, WIZARD_HIT_DIE
+from Core.Definitions import Skill
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn
 from Model.Content.Improvements import SkillExpertiseChoice
 from Model.Ledger.LedgerWriter import LedgerWriter

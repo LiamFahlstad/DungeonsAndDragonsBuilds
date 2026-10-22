@@ -15,7 +15,6 @@ from CharacterContent.Spells.SpellLists import (
     SorcererLevel2Spells,
     SorcererLevel3Spells,
     SorcererLevel4Spells,
-    SorcererLevel5Spells,
     BardLevel1Spells,
     WizardLevel4Spells,
     WizardLevel5Spells,

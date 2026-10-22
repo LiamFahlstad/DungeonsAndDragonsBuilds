@@ -1,6 +1,5 @@
 """Example build: Monk Way of the Sun Soul (2014 edition). Demonstrates radiant ranged ki attacks."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder

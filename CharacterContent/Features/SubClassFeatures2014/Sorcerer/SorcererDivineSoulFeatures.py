@@ -1,5 +1,3 @@
-import Core.Definitions as Definitions
-from Core.Definitions import SORCERER_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureUses,

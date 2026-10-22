@@ -1,4 +1,4 @@
-from Core.Definitions import DamageType, SORCERER_HIT_DIE, Ability
+from Core.Definitions import DamageType, Ability
 from Model.Content.Feature import (
     ActionType,
     Feature,

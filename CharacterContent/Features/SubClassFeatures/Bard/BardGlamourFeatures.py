@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    BARD_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import (

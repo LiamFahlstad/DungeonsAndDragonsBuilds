@@ -60,7 +60,6 @@ from CharacterContent.Species.Reborn import RebornSpeciesBuilder
 from CharacterContent.Species.Shifter import ShifterSpeciesBuilder
 from CharacterContent.Species.SpeciesBuilder import SpeciesBuilder
 from CharacterContent.Species.Tiefling import FiendishLineage, TieflingSpeciesBuilder
-from CharacterContent.Species.Warforged import WarforgedSpeciesBuilder
 from Core.Definitions import (
     Ability,
     CharacterClass,

@@ -7,15 +7,13 @@ from Model.Grants import Grants
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from Core.Definitions import Ability, CharacterClass, Skill
 from CharacterContent.Features.CharacterFeats import (
-    Backgrounds,
     EpicBoon,
     GeneralFeats,
-    OriginFeats,
 )
 from CharacterContent.Features.ClassFeatures import SpellSlots
 from CharacterContent.Features.ClassFeatures.Artificer import ArtificerFeatures
 from CharacterContent.Items import Armor, Weapons
-from CharacterContent.Items import Items, Packs
+from CharacterContent.Items import Packs
 from CharacterContent.Spells.SpellLists import (
     ArtificerLevel0Spells,
     ArtificerLevel1Spells,

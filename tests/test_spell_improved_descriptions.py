@@ -91,7 +91,8 @@ class TestEveryImprovedDescription:
                 for sentence in value.rstrip(".").split(". "):
                     sentence = sentence.rstrip(".")
                     assert (
-                        sentence in source or sentence[0].lower() + sentence[1:] in source
+                        sentence in source
+                        or sentence[0].lower() + sentence[1:] in source
                     ), f"{name}: Flavor isn't verbatim: {sentence!r}"
 
     def test_it_is_the_one_the_factory_loads(self, path, name, blocks):
@@ -130,7 +131,9 @@ class TestSpellCard:
     def test_spells_without_one_keep_their_source_text(self):
         # Fireball's record with its improved description taken out, so the
         # test doesn't depend on which spells have one yet.
-        data = dict(SpellFactory.create("Fireball")._data)
+        fireball = SpellFactory.create("Fireball")
+        assert isinstance(fireball, DataSpell)
+        data = dict(fireball._data)
         del data["improved_description"]
         html = _card(DataSpell(data))
         assert "low roar" in html

@@ -2,7 +2,6 @@
 Tests for Core/Definitions.py - enums and constants for D&D mechanics.
 """
 
-import pytest
 from Core.Definitions import (
     Ability,
     Skill,

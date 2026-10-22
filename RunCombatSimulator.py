@@ -111,7 +111,9 @@ if __name__ == "__main__":
         players_group = campaign.players()
         for absent in args.absent:
             matches = [
-                cs for cs in players_group if absent.lower() in cs.character_name.lower()
+                cs
+                for cs in players_group
+                if absent.lower() in cs.character_name.lower()
             ]
             if not matches:
                 parser.error(f"--absent: no player name contains '{absent}'")
@@ -135,6 +137,7 @@ if __name__ == "__main__":
 
         from Combat.EncounterDifficulty import (
             classify_difficulty,
+            combatant_cr,
             cr_to_xp,
             evaluate_encounter_combatants,
         )
@@ -158,7 +161,7 @@ if __name__ == "__main__":
         if allies:
             # Friendly NPCs offset the monsters: rate the fight on monster XP
             # minus the allies' own XP value.
-            ally_xp = sum(cr_to_xp(a.cr) for a in allies)
+            ally_xp = sum(cr_to_xp(combatant_cr(a)) for a in allies)
             net_xp = result.adjusted_xp - ally_xp
             print(f"Difficulty (monsters only): {result.difficulty}")
             print(f"Ally XP: -{ally_xp}")

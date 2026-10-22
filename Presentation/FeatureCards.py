@@ -127,7 +127,8 @@ IMPROVED_DESCRIPTION_CSS = """        /* Improved descriptions (Feature.get_impr
 
 """
 
-FEATURE_CARD_CSS = """/* ── Feature cards ───────────────────────────────────────────────── */
+FEATURE_CARD_CSS = (
+    """/* ── Feature cards ───────────────────────────────────────────────── */
         .features {
             max-width: 100%;
         }
@@ -483,7 +484,9 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
             color: #6a5636;
         }
 
-""" + IMPROVED_DESCRIPTION_CSS + """        /* Feature upgrade blocks (nested inside .feature-body) */
+"""
+    + IMPROVED_DESCRIPTION_CSS
+    + """        /* Feature upgrade blocks (nested inside .feature-body) */
         .feature-upgrade {
             margin-top: 0.5rem;
             border-left: 3px solid #9abbe0;
@@ -518,6 +521,7 @@ FEATURE_CARD_CSS = """/* ── Feature cards ───────────�
         }
 
         """
+)
 
 
 # ── Labels ───────────────────────────────────────────────────────────────────

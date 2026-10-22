@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import ArmorType
 from Model.Content.Feature import (
     Feature,

@@ -1,4 +1,3 @@
-from Core.Definitions import Ability
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -7,7 +6,6 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table

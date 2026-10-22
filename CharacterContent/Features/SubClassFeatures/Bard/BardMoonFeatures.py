@@ -1,4 +1,4 @@
-from Core.Definitions import BARD_HIT_DIE, Language, Skill
+from Core.Definitions import Language, Skill
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,

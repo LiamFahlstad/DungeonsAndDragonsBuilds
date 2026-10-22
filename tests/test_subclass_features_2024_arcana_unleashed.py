@@ -19,7 +19,7 @@ at level 3).
 """
 
 import importlib
-from collections import Counter
+from typing import Any
 
 import pytest
 
@@ -66,7 +66,7 @@ from tests._grants import apply_level
 def build_example(module_name: str, class_level: int | None = None) -> Character:
     """Build an example character, optionally capping the starter class level."""
     module = importlib.import_module(f"Builds.Examples.{module_name}")
-    builder_class = [
+    builder_class: type[Any] = [
         value
         for value in vars(module).values()
         if isinstance(value, type)
@@ -499,10 +499,12 @@ def _annotation_levels(builder_class, field_name):
     import re
 
     annotation = attr.fields_dict(builder_class)[field_name].type
+    assert annotation is not None, field_name
     members = getattr(annotation, "__args__", None) or (annotation,)
     levels = set()
     for member in members:
         match = re.search(r"Level(\d)Spells", member.__name__)
+        assert match, member
         levels.add(int(match.group(1)))
     return levels
 
@@ -929,6 +931,8 @@ def test_vestige_stat_block_matches_the_text(
     # strike damage 1d6+3+3 = 1d6 + 6.
     character = make_character(charisma=16, levels={CharacterClass.WARLOCK: 5})
     vestige = WarlockVestigeFeatures._build_vestige(character, vestige_type)
+    assert vestige.ability_scores and vestige.saving_throws
+    assert vestige.actions and vestige.bonus_actions
     assert (vestige.ac, vestige.hp) == (16, 24)
     assert [vestige.ability_scores[a.short_name] for a in Ability] == [
         1,
@@ -970,6 +974,7 @@ def test_vestige_power_changes_the_divine_power_text_only_from_level_6(vestige_t
     after = WarlockVestigeFeatures._build_vestige(
         build_example(VESTIGE, 6), vestige_type
     )
+    assert before.bonus_actions and after.bonus_actions
     assert "Short or Long Rest" not in before.bonus_actions[0].description
     assert "Short or Long Rest" in after.bonus_actions[0].description
 

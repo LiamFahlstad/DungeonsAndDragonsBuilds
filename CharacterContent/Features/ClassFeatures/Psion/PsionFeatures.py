@@ -1,4 +1,4 @@
-from Core.Definitions import Ability, PSION_HIT_DIE
+from Core.Definitions import Ability
 from Model.Content.Feature import (
     ActionType,
     Feature,

@@ -1,4 +1,4 @@
-from Core.Definitions import RANGER_HIT_DIE, Ability, Condition
+from Core.Definitions import Ability, Condition
 from Model.Content.Feature import (
     ActionType,
     Feature,

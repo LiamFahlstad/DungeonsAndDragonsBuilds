@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    MONK_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import (
@@ -11,7 +10,6 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula

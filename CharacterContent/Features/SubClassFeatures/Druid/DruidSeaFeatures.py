@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    DRUID_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget

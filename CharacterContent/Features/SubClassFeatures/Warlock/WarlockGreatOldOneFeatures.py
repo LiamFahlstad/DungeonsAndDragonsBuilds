@@ -1,6 +1,5 @@
 from Core.Definitions import (
     DamageType,
-    WARLOCK_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import (

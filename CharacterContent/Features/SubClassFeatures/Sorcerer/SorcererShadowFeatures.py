@@ -1,4 +1,4 @@
-from Core.Definitions import SORCERER_HIT_DIE, Sense
+from Core.Definitions import Sense
 from Model.Content.Feature import (
     ActionType,
     Feature,

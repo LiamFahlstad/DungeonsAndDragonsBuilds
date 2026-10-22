@@ -1,9 +1,7 @@
 from Core.Definitions import (
     CharacterClass,
-    ROGUE_HIT_DIE,
     Ability,
 )
-import Core.Definitions as Definitions
 from Core.Rules import PSIONIC_ENERGY_DICE_GAINED_AT, psionic_energy_dice
 from Model.Content.Feature import (
     Feature,
@@ -14,7 +12,6 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureDice,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,

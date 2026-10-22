@@ -53,7 +53,6 @@ from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Content.FeatureText import (
     Block,
     Facts,
-    Option,
     Paragraph,
     StatBlock,
     Table,

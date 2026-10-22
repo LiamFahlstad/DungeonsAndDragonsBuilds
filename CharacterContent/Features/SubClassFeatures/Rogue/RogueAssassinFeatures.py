@@ -1,4 +1,3 @@
-from Core.Definitions import ROGUE_HIT_DIE
 import Core.Definitions as Definitions
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition

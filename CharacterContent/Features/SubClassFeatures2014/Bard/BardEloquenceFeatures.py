@@ -1,4 +1,3 @@
-from Core.Definitions import BARD_HIT_DIE
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -6,7 +5,6 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 

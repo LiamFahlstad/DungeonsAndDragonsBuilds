@@ -1,6 +1,5 @@
 import Core.Definitions as Definitions
 from Core.Definitions import (
-    BARBARIAN_HIT_DIE,
     Ability,
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget

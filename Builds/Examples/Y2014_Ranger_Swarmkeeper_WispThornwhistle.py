@@ -41,7 +41,7 @@ from CharacterContent.Features.CharacterFeats import (
 )
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Weapons
-from CharacterContent.Species import Elf, Human
+from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
     RangerLevel1Spells,
     RangerLevel2Spells,

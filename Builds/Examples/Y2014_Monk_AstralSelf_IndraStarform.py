@@ -1,6 +1,5 @@
 """Example build: Monk Way of the Astral Self (2014 rules). Demonstrates the subclass up through level 17."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder

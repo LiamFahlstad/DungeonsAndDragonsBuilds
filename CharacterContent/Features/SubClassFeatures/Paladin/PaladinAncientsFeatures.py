@@ -1,4 +1,3 @@
-from Core.Definitions import PALADIN_HIT_DIE
 from Model.Content.Feature import (
     ActionType,
     Feature,

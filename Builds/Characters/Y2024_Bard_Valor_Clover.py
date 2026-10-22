@@ -30,7 +30,11 @@ from CharacterContent.Classes.SubClasses2024.BardValor import (
     BardValorCustomStarterClassArgs,
     BardValorLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, GeneralFeats, OriginFeats
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (

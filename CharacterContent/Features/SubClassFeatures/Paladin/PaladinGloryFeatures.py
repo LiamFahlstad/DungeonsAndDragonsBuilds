@@ -1,4 +1,3 @@
-from Core.Definitions import PALADIN_HIT_DIE
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -9,7 +8,6 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SpeedBonus
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table

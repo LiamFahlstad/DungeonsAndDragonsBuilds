@@ -27,7 +27,6 @@ from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.SubClasses2014.ClericDeath import ClericDeathLevel3
 from CharacterContent.Classes.SubClasses2014.ClericForge import (
     ClericForgeLevel3,
-    ClericForgeLevel6,
 )
 from CharacterContent.Classes.SubClasses2014.ClericNature import ClericNatureLevel3
 from CharacterContent.Classes.SubClasses2014.ClericOrder import ClericOrderLevel3
@@ -45,11 +44,8 @@ from CharacterContent.Classes.SubClasses2014.FighterRuneKnight import (
 )
 from CharacterContent.Features.SubClassFeatures2014.Bard import BardWhispersFeatures
 from CharacterContent.Features.SubClassFeatures2014.Cleric import (
-    ClericDeathFeatures,
     ClericForgeFeatures,
-    ClericNatureFeatures,
     ClericOrderFeatures,
-    ClericTempestFeatures,
     ClericTwilightFeatures,
 )
 from CharacterContent.Features.SubClassFeatures2014.Druid import (
@@ -88,7 +84,6 @@ from CharacterContent.Features.SubClassFeatures2014.Barbarian import (
     BarbarianPathOfTheStormHeraldFeatures,
 )
 from CharacterContent.Items.Weapons import MartialMelee
-from Model.Content.Weapon import is_proficient_with
 from CharacterContent.Features.ClassFeatures.Cleric import ClericFeatures
 from CharacterContent.Items import Armor
 from Core.Weapons import WeaponProficiency
@@ -332,7 +327,6 @@ class TestPromisedPassiveBonusNeverApplied:
 
     def test_survivalist_proficiency_and_expertise_are_applied(self, make_sources):
         # Control: the earlier Scout feature correctly wires both grants.
-        from Core.Definitions import Skill
 
         sources = make_sources(
             intelligence=10, wisdom=10, levels={CharacterClass.ROGUE: 3}

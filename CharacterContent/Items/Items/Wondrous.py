@@ -47,10 +47,10 @@ class DramaticRainBottle(Item):
             category=ItemCategory.WONDROUS,
             slots=2,
             description_text=(
-                f"Uncorking this bottle summons a personal raincloud that follows you "
-                f"for 60 minutes, raining gently and dramatically—even indoors. "
-                f"The rain causes no harm but is perfect for brooding, monologues, or emotional exits. "
-                f"Purely theatrical."
+                "Uncorking this bottle summons a personal raincloud that follows you "
+                "for 60 minutes, raining gently and dramatically—even indoors. "
+                "The rain causes no harm but is perfect for brooding, monologues, or emotional exits. "
+                "Purely theatrical."
             ),
         )
 

@@ -1,4 +1,4 @@
-from Core.Definitions import CLERIC_HIT_DIE, Ability
+from Core.Definitions import Ability
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -7,7 +7,6 @@ from Model.Content.Feature import (
     FeatureTarget,
     RegainedOn,
 )
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
@@ -28,7 +27,10 @@ class LightDomainSpells(Feature):
             Table(
                 ("Cleric level", "Spells"),
                 (
-                    ("3", "Burning Hands, Faerie Fire, Scorching Ray, See Invisibility"),
+                    (
+                        "3",
+                        "Burning Hands, Faerie Fire, Scorching Ray, See Invisibility",
+                    ),
                     ("5", "Daylight, Fireball"),
                     ("7", "Arcane Eye, Wall of Fire"),
                     ("9", "Flame Strike, Scrying"),

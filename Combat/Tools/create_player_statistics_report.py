@@ -16,7 +16,6 @@ player_statistics_report.html into the campaign's folder (or custom --log /
 
 import argparse
 import json
-from datetime import datetime
 from pathlib import Path
 
 import Combat.Scenarios as Scenarios

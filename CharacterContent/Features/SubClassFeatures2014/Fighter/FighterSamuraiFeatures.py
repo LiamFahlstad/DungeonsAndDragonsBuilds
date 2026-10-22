@@ -15,7 +15,6 @@ from Model.Content.Improvements import (
     SkillProficiencyChoice,
 )
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 

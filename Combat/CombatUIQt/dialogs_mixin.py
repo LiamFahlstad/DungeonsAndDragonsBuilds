@@ -36,6 +36,7 @@ from .stats import (
 from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
+from .tree_filter import filter_category_tree
 
 
 def _display(value) -> str:
@@ -445,14 +446,14 @@ class DialogsMixin(CombatWindowState):
                     if has_exp:
                         name_html = f"<b>{skill.value}</b>"
                         prof_html = (
-                            f"<span style='color:#d4a747;font-weight:bold'>Exp</span>"
+                            "<span style='color:#d4a747;font-weight:bold'>Exp</span>"
                         )
                     elif is_prof:
                         name_html = f"<b>{skill.value}</b>"
-                        prof_html = f"<span style='color:#7ecb7e'>Prof</span>"
+                        prof_html = "<span style='color:#7ecb7e'>Prof</span>"
                     else:
                         name_html = skill.value
-                        prof_html = f"<span style='color:#555'>—</span>"
+                        prof_html = "<span style='color:#555'>—</span>"
                     skill_rows += (
                         f"<tr>"
                         f"<td style='{td}'>{name_html}</td>"
@@ -1008,19 +1009,11 @@ class DialogsMixin(CombatWindowState):
         tree.itemSelectionChanged.connect(on_selection_changed)
 
         def apply_filter(query: str):
-            query = query.strip().lower()
-            for category, cat_item in category_items.items():
-                any_visible = False
-                for i in range(cat_item.childCount()):
-                    child = cat_item.child(i)
-                    assert child is not None, i
-                    rule = child.data(0, Qt.ItemDataRole.UserRole)
-                    visible = rule.matches(query)
-                    child.setHidden(not visible)
-                    any_visible = any_visible or visible
-                cat_item.setHidden(not any_visible)
-                if query:
-                    cat_item.setExpanded(any_visible)
+            filter_category_tree(
+                category_items,
+                query.strip().lower(),
+                lambda rule, q: rule.matches(q),
+            )
 
         search_box.textChanged.connect(apply_filter)
 

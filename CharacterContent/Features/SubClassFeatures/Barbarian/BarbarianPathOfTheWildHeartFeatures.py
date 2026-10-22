@@ -1,4 +1,3 @@
-from Core.Definitions import BARBARIAN_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph

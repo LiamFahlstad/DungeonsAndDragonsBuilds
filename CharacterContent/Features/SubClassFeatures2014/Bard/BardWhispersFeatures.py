@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    BARD_HIT_DIE,
     CharacterClass,
     Ability,
 )
@@ -11,7 +10,6 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureDice,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 

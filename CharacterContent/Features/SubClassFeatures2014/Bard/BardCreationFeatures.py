@@ -7,7 +7,6 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 

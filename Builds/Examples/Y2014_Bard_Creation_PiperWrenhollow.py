@@ -1,6 +1,5 @@
 """Example build: Bard College of Creation (2014 rules). Demonstrates the subclass up through level 14."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
@@ -32,7 +31,6 @@ from CharacterContent.Features.CharacterFeats import (
     GeneralFeats,
     OriginFeats,
 )
-from CharacterContent.Features.CharacterFeats import OriginFeats as SpeciesOriginFeats
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,

@@ -1,4 +1,3 @@
-from Core.Definitions import WARLOCK_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, FeatureUses, RegainedOn
 from Utils import StringUtils
 from Model.View import CharacterView

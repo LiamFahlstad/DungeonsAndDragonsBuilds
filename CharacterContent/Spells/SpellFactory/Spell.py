@@ -179,7 +179,7 @@ class Spell(ABC):
         except ValueError:
             raise ValueError(
                 f"Unknown school of magic for spell {self.name!r}: {self.school!r}"
-            )
+            ) from None
 
     def _has_component_letter(self, letter: str) -> bool:
         prefix = self.components.split("(", 1)[0]

@@ -1,5 +1,4 @@
 from Core.Definitions import (
-    ARTIFICER_HIT_DIE,
     Ability,
     CharacterClass,
     Condition,
@@ -21,7 +20,6 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import (

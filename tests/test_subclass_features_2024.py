@@ -50,7 +50,6 @@ from CharacterContent.Features.SubClassFeatures.Ranger import (
 )
 from CharacterContent.Features.SubClassFeatures.Bard import BardLoreFeatures
 from CharacterContent.Features.SubClassFeatures.Druid import DruidLandFeatures
-from CharacterContent.Features.SubClassFeatures.Wizard import WizardBladesingerFeatures
 
 from CharacterContent.Classes.SubClasses2024 import ArtificerBattleSmith, DruidLand
 from CharacterContent.Features.ClassFeatures.Ranger import RangerFeatures

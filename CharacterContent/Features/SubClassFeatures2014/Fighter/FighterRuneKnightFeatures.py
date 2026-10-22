@@ -14,7 +14,6 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula

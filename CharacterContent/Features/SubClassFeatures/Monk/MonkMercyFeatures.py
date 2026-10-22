@@ -1,5 +1,4 @@
-import Core.Definitions as Definitions
-from Core.Definitions import MONK_HIT_DIE, Skill
+from Core.Definitions import Skill
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -11,7 +10,6 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import SkillProficiency
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph

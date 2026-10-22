@@ -1,6 +1,5 @@
 """Example build: Monk Way of the Kensei (2014 edition). Demonstrates this classic sword-and-technique subclass."""
 
-import Core.Definitions as Definitions
 from Builds.CharacterBuilder import CharacterBuilder
 from CharacterContent.Classes.BaseClasses import ClassBuilder
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder

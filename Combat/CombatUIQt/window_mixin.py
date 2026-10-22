@@ -1,6 +1,5 @@
 """Window/UI construction mixin for CombatAppQt."""
 
-import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
@@ -14,14 +13,12 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
     QScrollArea,
-    QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
 
 from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
-from .styles import QSS
 from .state import CombatWindowState
 
 

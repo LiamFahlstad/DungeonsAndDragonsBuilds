@@ -1,4 +1,4 @@
-from Core.Definitions import ROGUE_HIT_DIE, DiceRollCondition, Skill
+from Core.Definitions import DiceRollCondition, Skill
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import (
     InitiativeRollCondition,

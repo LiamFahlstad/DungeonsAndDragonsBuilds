@@ -1,4 +1,4 @@
-from Core.Definitions import BARD_HIT_DIE, Skill
+from Core.Definitions import Skill
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter

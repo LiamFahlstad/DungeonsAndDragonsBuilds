@@ -1,4 +1,4 @@
-from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Core.Definitions import Condition, CreatureSize, DamageType
 from Model.Creatures.Combatants import (
     Alignment,
     DamageTypeEntry,

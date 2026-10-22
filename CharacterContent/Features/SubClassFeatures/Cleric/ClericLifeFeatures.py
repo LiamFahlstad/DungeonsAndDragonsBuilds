@@ -1,4 +1,3 @@
-from Core.Definitions import CLERIC_HIT_DIE
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table

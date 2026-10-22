@@ -19,6 +19,7 @@ from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
+from .tree_filter import filter_category_tree
 
 
 class SpellsMixin(CombatWindowState):
@@ -246,19 +247,11 @@ class SpellsMixin(CombatWindowState):
         tree.itemSelectionChanged.connect(on_selection_changed)
 
         def apply_filter(query: str):
-            query = query.strip().lower()
-            for category, cat_item in category_items.items():
-                any_visible = False
-                for i in range(cat_item.childCount()):
-                    child = cat_item.child(i)
-                    assert child is not None, i
-                    spell = child.data(0, Qt.ItemDataRole.UserRole)
-                    visible = query in spell.name.lower()
-                    child.setHidden(not visible)
-                    any_visible = any_visible or visible
-                cat_item.setHidden(not any_visible)
-                if query:
-                    cat_item.setExpanded(any_visible)
+            filter_category_tree(
+                category_items,
+                query.strip().lower(),
+                lambda spell, q: q in spell.name.lower(),
+            )
 
         search_box.textChanged.connect(apply_filter)
 

@@ -1,4 +1,4 @@
-from Core.Definitions import WARLOCK_HIT_DIE, DamageType
+from Core.Definitions import DamageType
 import Core.Definitions as Definitions
 from Model.Content.Feature import (
     Feature,

@@ -1,4 +1,3 @@
-from Core.Definitions import Ability, WIZARD_HIT_DIE
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph

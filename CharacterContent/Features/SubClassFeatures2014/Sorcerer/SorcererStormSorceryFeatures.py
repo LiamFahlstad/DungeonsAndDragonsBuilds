@@ -1,9 +1,7 @@
 from Model.Content.Feature import (
     Feature,
-    FeatureUses,
     FeatureActivation,
     ActionType,
-    RegainedOn,
     FeatureTarget,
 )
 from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLanguage

@@ -8,7 +8,7 @@
 # AncientRedDragon.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-from Core.Definitions import Condition, CreatureSize, DamageType, Skill
+from Core.Definitions import CreatureSize, DamageType, Skill
 from Model.Creatures.Combatants import (
     Alignment,
     DamageTypeEntry,

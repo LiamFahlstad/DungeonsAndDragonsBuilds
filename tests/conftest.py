@@ -3,7 +3,6 @@ Shared pytest fixtures and configuration for D&D character sheet builder tests.
 """
 
 import pytest
-from Core.Definitions import Ability
 from Model.AbilityScores import StandardArrayAbilityScores
 from Model.Ledger.ArmorClass import ArmorClass
 from Model.Ledger.CarryingCapacity import CarryingCapacity

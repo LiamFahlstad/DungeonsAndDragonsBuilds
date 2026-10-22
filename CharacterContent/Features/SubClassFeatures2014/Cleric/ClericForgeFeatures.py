@@ -1,4 +1,3 @@
-import Core.Definitions as Definitions
 from Core.Definitions import ArmorType, DamageType
 from Model.Content.Feature import (
     Feature,
@@ -16,7 +15,6 @@ from Model.Content.Improvements import (
 )
 from CharacterContent.ToolProficiencies.Proficiencies import SmithsTools
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 

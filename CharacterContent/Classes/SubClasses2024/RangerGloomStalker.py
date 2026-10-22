@@ -11,15 +11,11 @@ from Model.Grants import Grants
 from Core.Definitions import RangerSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Ranger import RangerGloomStalkerFeatures
 from CharacterContent.Spells.SpellLists import (
-    BardLevel4Spells,
-    ClericLevel4Spells,
     IllusionLevel1Spells,
     IllusionLevel3Spells,
     IllusionLevel4Spells,
     IllusionLevel5Spells,
     TransmutationLevel2Spells,
-    WizardLevel3Spells,
-    WizardLevel5Spells,
 )
 
 
