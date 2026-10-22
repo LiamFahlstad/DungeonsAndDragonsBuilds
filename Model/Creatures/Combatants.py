@@ -3,11 +3,11 @@
 stat block). Shared by the monster catalog (Combat/Monsters), companions and
 wild shapes (CharacterContent) and the combat engine."""
 
-from dataclasses import dataclass as dataclass_decorator
+from dataclasses import dataclass
 from enum import Enum
 from typing import Callable, Optional
 
-from attr import dataclass
+import attr
 
 from Core.Definitions import Ability, Condition, CreatureSize, DamageType, Skill
 from Model.Creatures.MonsterAbilities import MonsterAbility
@@ -79,7 +79,9 @@ class Visibility(str, Enum):
         return [vis.value for vis in Visibility]
 
 
-@dataclass_decorator
+# A stdlib dataclass (not attrs) so the combat log's JSON encoder can
+# dataclasses.asdict() it.
+@dataclass
 class DamageTypeEntry:
     """One resistance/immunity/vulnerability entry from a monster's stat block,
     e.g. "Bludgeoning, Piercing, and Slashing from Nonmagical Attacks" becomes
@@ -90,7 +92,7 @@ class DamageTypeEntry:
     note: str = ""
 
 
-@dataclass
+@attr.dataclass
 class BasicCombatantData:
     combatant_type: str
     hp: int
@@ -150,7 +152,7 @@ class BasicCombatantData:
         self.create_name = new_create_name
 
 
-@dataclass
+@attr.dataclass
 class ExtendedCombatantData(BasicCombatantData):
     """Extended combatant data with additional monster stat block information."""
 
