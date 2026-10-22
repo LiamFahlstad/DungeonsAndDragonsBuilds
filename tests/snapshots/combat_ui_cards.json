@@ -1,0 +1,4143 @@
+{
+ "arcanaloth": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Arcanaloth",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         175,
+         175,
+         "175 / 175",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 18   Speed: 30 ft., fly 30 ft. (hover)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Cold; Fire; Lightning",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Acid; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Poisoned",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Arcanaloth"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "conditions": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Shadow Demon",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         66,
+         66,
+         "66 / 66",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 14   Speed: 30 ft., fly 30 ft. (hover)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "alignment": 1,
+      "items": [
+       {
+        "context_menu": "CustomContextMenu",
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #1a5c1a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #1a5c1acc; }",
+        "text": "Poisoned",
+        "type": "QPushButton"
+       },
+       {
+        "context_menu": "CustomContextMenu",
+        "cursor": "PointingHandCursor",
+        "margins": [
+         4,
+         1,
+         4,
+         1
+        ],
+        "mouse_transparent": true,
+        "style": "background-color: #7a5c00; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px;",
+        "text": "Hexed",
+        "type": "QLabel"
+       },
+       {
+        "context_menu": "CustomContextMenu",
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #123456; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #123456cc; }",
+        "text": "Bless",
+        "tooltip": "Add 1d4 to attacks and saves.",
+        "type": "QPushButton"
+       },
+       {
+        "context_menu": "CustomContextMenu",
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #1a3a7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #1a3a7acc; }",
+        "text": "Concentrating",
+        "type": "QPushButton"
+       },
+       {
+        "context_menu": "CustomContextMenu",
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #4c7ac9; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #4c7ac9cc; }",
+        "text": "Free Background Ability Bonus",
+        "tooltip": "<b style='color:#c9a84c; font-size:14px;'>Free Background Ab... [615 chars, sha1 1107c7b960bf]",
+        "type": "QPushButton"
+       },
+       {
+        "type": "spacer"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 3,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #e74c3c; font-size: 10px;",
+      "text": "Vulnerable: Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Acid; Bludgeoning; Cold; Fire; Lightning; Piercing; Slashing; Thunder",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Necrotic; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR -5/-5  DEX +3/+5  CON +1/+1",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +2/+2  WIS +1/+1  CHA +2/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Shadow Demon"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Shadow Demon"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Shadow Demon"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "Poisoned"
+   ],
+   [
+    "_show_condition_info",
+    [
+     "Poisoned"
+    ],
+    {}
+   ],
+   [
+    "context_menu",
+    "Poisoned"
+   ],
+   [
+    "_remove_condition_from",
+    [
+     "Shadow Demon",
+     "Poisoned"
+    ],
+    {}
+   ],
+   [
+    "context_menu",
+    "Hexed"
+   ],
+   [
+    "_remove_condition_from",
+    [
+     "Shadow Demon",
+     "Hexed"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "Bless"
+   ],
+   [
+    "_show_rule_popup",
+    [
+     "Bless",
+     "Bless",
+     "Add 1d4 to attacks and saves."
+    ],
+    {}
+   ],
+   [
+    "context_menu",
+    "Bless"
+   ],
+   [
+    "_remove_condition_from",
+    [
+     "Shadow Demon",
+     "Bless"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "Concentrating"
+   ],
+   [
+    "_show_condition_info",
+    [
+     "Concentrating"
+    ],
+    {}
+   ],
+   [
+    "context_menu",
+    "Concentrating"
+   ],
+   [
+    "_remove_condition_from",
+    [
+     "Shadow Demon",
+     "Concentrating"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "Free Background Ability Bonus"
+   ],
+   [
+    "_show_rule_popup",
+    [
+     "Free Background Ability Bonus",
+     "Free Background Ability Bonus",
+     "<b style='color:#c9a84c; font-size:14px;'>Free Background Ability Bonus</b><br><span style='color:#a0a0b0;'>Background</span><br><br><span style='color:#7a9fd4;'><b>Action Type:</b> None</span><br><span style='color:#7a9fd4;'><b>Target:</b> None</span><br><span style='color:#7a9fd4;'><b>Duration:</b> None</span><br><span style='color:#7a9fd4;'><b>Recovery:</b> None</span><br><span style='color:#7a9fd4;'><b>Uses:</b> None</span><br><br>Your background grants an Ability Score bonus: either +1 to three different abilities or +2 to one ability and +1 to another, totaling +3.\nChoices: Constitution +1, Charisma +2"
+    ],
+    {}
+   ],
+   [
+    "context_menu",
+    "Free Background Ability Bonus"
+   ],
+   [
+    "_remove_condition_from",
+    [
+     "Shadow Demon",
+     "Free Background Ability Bonus"
+    ],
+    {}
+   ]
+  ]
+ },
+ "dead": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "style": "color: #555; font-weight: bold; font-size: 13px;",
+      "text": "\u2620 Draven Curseblade",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         143,
+         0,
+         "0 / 143",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 12 (no Shield)   Speed: 30 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "true",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "draconic_spirit": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "style": "color: #b070e0; font-weight: bold; font-size: 13px;",
+      "text": "\ud83d\udc80 Draconic Spirit",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-size: 11px; letter-spacing: 2px;",
+      "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cb\u25cb\u25cb</span>",
+      "text_format": "RichText",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathFailBtn",
+        "text": "\u2717 Fail",
+        "type": "QPushButton"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathSuccessBtn",
+        "text": "\u2713 Save",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         1,
+         0,
+         "0 / 0",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 14   Speed: 30 ft., fly 60 ft. (swim 30 ft.)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Acid; Cold; Fire; Lightning; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened, Poisoned",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +4  DEX +2  CON +3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +0  WIS +2  CHA +2",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "true",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draconic Spirit"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draconic Spirit"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "\u2717 Fail"
+   ],
+   [
+    "_apply_failed_death_save",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "\u2713 Save"
+   ],
+   [
+    "_apply_success_death_save",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ]
+  ]
+ },
+ "dying": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "style": "color: #b070e0; font-weight: bold; font-size: 13px;",
+      "text": "\ud83d\udc80 Draven Curseblade",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-size: 11px; letter-spacing: 2px;",
+      "text": "<span style='color:#c04040'>\u25cf\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cf\u25cf\u25cb</span>",
+      "text_format": "RichText",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathFailBtn",
+        "text": "\u2717 Fail",
+        "type": "QPushButton"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathSuccessBtn",
+        "text": "\u2713 Save",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         143,
+         0,
+         "0 / 143",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 12 (no Shield)   Speed: 30 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "true",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "\u2717 Fail"
+   ],
+   [
+    "_apply_failed_death_save",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "\u2713 Save"
+   ],
+   [
+    "_apply_success_death_save",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ]
+  ]
+ },
+ "hp_half": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         99,
+         "99 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #e67e22; border-radius: 3px; }",
+        "type": "QProgressBar"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "object_name": "secondary",
+        "style": "color: #5bc8f5; font-size: 10px;",
+        "text": "(+5 temp)",
+        "type": "QLabel"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "hp_quarter": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         49,
+         "49 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #e74c3c; border-radius: 3px; }",
+        "type": "QProgressBar"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "object_name": "secondary",
+        "style": "color: #5bc8f5; font-size: 10px;",
+        "text": "(+5 temp)",
+        "type": "QLabel"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "modifier_scores": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "style": "color: #b070e0; font-weight: bold; font-size: 13px;",
+      "text": "\ud83d\udc80 Draconic Spirit",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-size: 11px; letter-spacing: 2px;",
+      "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cb\u25cb\u25cb</span>",
+      "text_format": "RichText",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathFailBtn",
+        "text": "\u2717 Fail",
+        "type": "QPushButton"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 24,
+        "object_name": "deathSuccessBtn",
+        "text": "\u2713 Save",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         1,
+         0,
+         "0 / 0",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 14   Speed: 30 ft., fly 60 ft. (swim 30 ft.)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Acid; Cold; Fire; Lightning; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened, Poisoned",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +2  DEX -1  CON +0",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +1  WIS +3",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "true",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draconic Spirit"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draconic Spirit"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "\u2717 Fail"
+   ],
+   [
+    "_apply_failed_death_save",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "\u2713 Save"
+   ],
+   [
+    "_apply_success_death_save",
+    [
+     "Draconic Spirit"
+    ],
+    {}
+   ]
+  ]
+ },
+ "player": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Draven Curseblade",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         143,
+         143,
+         "143 / 143",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 12 (no Shield)   Speed: 30 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "resumed_arcanaloth": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Arcanaloth",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         175,
+         175,
+         "175 / 175",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 18   Speed: 30 ft., fly 30 ft. (hover)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Cold; Fire; Lightning",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Acid; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Poisoned",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Arcanaloth"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_a": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "true",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_at": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "true",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_s": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "true",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_sa": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "true",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_sat": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "true",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_st": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "true",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "selection_t": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "true"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "shadow_demon": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Shadow Demon",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         66,
+         66,
+         "66 / 66",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 14   Speed: 30 ft., fly 30 ft. (hover)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #e74c3c; font-size: 10px;",
+      "text": "Vulnerable: Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Acid; Bludgeoning; Cold; Fire; Lightning; Piercing; Slashing; Thunder",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Necrotic; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR -5/-5  DEX +3/+5  CON +1/+1",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +2/+2  WIS +1/+1  CHA +2/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Shadow Demon"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Shadow Demon"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Shadow Demon"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "sphinx": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Sphinx of Valor",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         199,
+         199,
+         "199 / 199",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 17   Speed: 40 ft., fly 60 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Necrotic; Radiant",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Psychic",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Frightened",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Sphinx of Valor"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "stabilized": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "style": "color: #4a9080; font-weight: bold; font-size: 13px;",
+      "text": "\ud83d\ude34 Draven Curseblade",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-size: 11px; letter-spacing: 2px;",
+      "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cf\u25cf\u25cf</span>",
+      "text_format": "RichText",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         143,
+         0,
+         "0 / 143",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 12 (no Shield)   Speed: 30 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "true",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": true
+    }
+   ]
+  ]
+ },
+ "timed_and_action_uses": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Draven Curseblade",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         143,
+         143,
+         "143 / 143",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 12 (no Shield)   Speed: 30 ft.",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Slots:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "LV1(2)  LV3(1)",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Active Spells:",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "color: #a0c4ff; font-size: 10px;",
+        "text": "Hex",
+        "type": "QLabel"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 16,
+        "fixed_width": 16,
+        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "text": "\u00d7",
+        "tooltip": "Dismiss Hex",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "bar": [
+       0,
+       3600,
+       42,
+       "42s",
+       true
+      ],
+      "cursor": "PointingHandCursor",
+      "fixed_height": 14,
+      "mouse_transparent": true,
+      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "type": "QProgressBar"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "color: #a0c4ff; font-size: 10px;",
+        "text": "Shield",
+        "type": "QLabel"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 16,
+        "fixed_width": 16,
+        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "text": "\u00d7",
+        "tooltip": "Dismiss Shield",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "bar": [
+       0,
+       1,
+       0,
+       "-1s",
+       true
+      ],
+      "cursor": "PointingHandCursor",
+      "fixed_height": 14,
+      "mouse_transparent": true,
+      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "type": "QProgressBar"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Active Features:",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "color: #a0c4ff; font-size: 10px;",
+        "text": "Hexblade's Curse",
+        "type": "QLabel"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "fixed_height": 16,
+        "fixed_width": 16,
+        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "text": "\u00d7",
+        "tooltip": "Dismiss Hexblade's Curse",
+        "type": "QPushButton"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "bar": [
+       0,
+       10,
+       10,
+       "10s",
+       true
+      ],
+      "cursor": "PointingHandCursor",
+      "fixed_height": 14,
+      "mouse_transparent": true,
+      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "type": "QProgressBar"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Used:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "2x Action, Reaction",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Draven Curseblade"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Draven Curseblade"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "\u00d7"
+   ],
+   [
+    "_remove_active_spell",
+    [
+     "Draven Curseblade",
+     "Hex"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "\u00d7"
+   ],
+   [
+    "_remove_active_spell",
+    [
+     "Draven Curseblade",
+     "Shield"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "\u00d7"
+   ],
+   [
+    "_remove_active_feature",
+    [
+     "Draven Curseblade",
+     "Hexblade's Curse"
+    ],
+    {}
+   ]
+  ]
+ },
+ "visibility": {
+  "card": {
+   "cursor": "PointingHandCursor",
+   "fixed_width": 220,
+   "hidden": true,
+   "layout": {
+    "items": [
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "cardName",
+      "text": "Arcanaloth",
+      "type": "QLabel"
+     },
+     {
+      "items": [
+       {
+        "bar": [
+         0,
+         175,
+         175,
+         "175 / 175",
+         true
+        ],
+        "cursor": "PointingHandCursor",
+        "mouse_transparent": true,
+        "stretch": 1,
+        "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
+        "type": "QProgressBar"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 4,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "object_name": "secondary",
+      "text": "AC: 18   Speed: 30 ft., fly 30 ft. (hover)",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "alignment": 1,
+      "items": [
+       {
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #1a5c7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #1a5c7acc; }",
+        "text": "Invisible",
+        "type": "QPushButton"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "flat": true,
+        "style": "QPushButton { background-color: #1a5c7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #1a5c7acc; }",
+        "text": "Half Cover",
+        "type": "QPushButton"
+       },
+       {
+        "cursor": "PointingHandCursor",
+        "margins": [
+         4,
+         1,
+         4,
+         1
+        ],
+        "mouse_transparent": true,
+        "style": "background-color: #1a5c7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px;",
+        "text": "Shimmering",
+        "type": "QLabel"
+       },
+       {
+        "type": "spacer"
+       }
+      ],
+      "margins": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "spacing": 3,
+      "type": "QHBoxLayout"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4caf82; font-size: 10px;",
+      "text": "Resist: Cold; Fire; Lightning",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Immune: Acid; Poison",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #4a9fc4; font-size: 10px;",
+      "text": "Cond. Immune: Charmed, Poisoned",
+      "type": "QLabel",
+      "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
+      "type": "QLabel"
+     }
+    ],
+    "margins": [
+     8,
+     6,
+     8,
+     6
+    ],
+    "spacing": 3,
+    "type": "QVBoxLayout"
+   },
+   "object_name": "combatantCard",
+   "properties": {
+    "active": "false",
+    "active-target": "false",
+    "dead": "false",
+    "dying": "false",
+    "selected": "false",
+    "selected-active": "false",
+    "selected-active-target": "false",
+    "selected-target": "false",
+    "stabilized": "false",
+    "target": "false"
+   },
+   "size_policy": [
+    "Fixed",
+    "Minimum"
+   ],
+   "type": "_CombatantCard"
+  },
+  "clicks": [
+   [
+    "_select_character",
+    [
+     "Arcanaloth"
+    ],
+    {}
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": false
+    }
+   ],
+   [
+    "_select_target_character",
+    [
+     "Arcanaloth"
+    ],
+    {
+     "additive": true
+    }
+   ],
+   [
+    "click",
+    "Invisible"
+   ],
+   [
+    "_show_visibility_info",
+    [
+     "Invisible"
+    ],
+    {}
+   ],
+   [
+    "click",
+    "Half Cover"
+   ],
+   [
+    "_show_visibility_info",
+    [
+     "Half Cover"
+    ],
+    {}
+   ]
+  ]
+ }
+}
