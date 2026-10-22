@@ -176,7 +176,9 @@ class ExtendedCombatantData(BasicCombatantData):
     damage_vulnerabilities: Optional[list[DamageTypeEntry]] = None
     damage_resistances: Optional[list[DamageTypeEntry]] = None
     damage_immunities: Optional[list[DamageTypeEntry]] = None
-    condition_immunities: Optional[list[Condition]] = None
+    # A str is a qualified immunity the enum can't express, e.g. the
+    # Archmage's "Charmed (with Mind Blank)"; it's shown but never enforced.
+    condition_immunities: Optional[list[Condition | str]] = None
     senses: str = ""
     languages: str = ""
     description: str = ""  # freeform flavor text / notes about the monster
