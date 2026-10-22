@@ -1,5 +1,6 @@
 import html
 import pathlib
+import unicodedata
 from enum import Enum
 from typing import Collection, Optional, Sequence, TextIO
 
@@ -58,25 +59,35 @@ def get_output_folder(
         raise ValueError("Base class must be set to generate file path.")
     example_prefix = "example_" if data.is_example else ""
     return (
-        f"Output/{example_prefix}{data.base_class.lower()}_"
-        f"{data.character_subclass.lower().replace(' / ', '_')}_"
+        f"Output/{example_prefix}{_slugify_name(data.base_class)}_"
+        f"{_slugify_name(data.character_subclass.replace(' / ', ' '))}_"
         f"{_slugify_name(data.character_name)}"
     )
 
 
+# Letters NFKD doesn't split into a base letter plus accent.
+_TRANSLITERATIONS = str.maketrans(
+    {"ø": "o", "æ": "ae", "œ": "oe", "ß": "ss", "ð": "d", "þ": "th", "ł": "l", "đ": "d"}
+)
+
+
 def _slugify_name(name: str) -> str:
-    """Convert a character name into the filename format used for output sheets."""
-    name = name.lower().strip()
+    """Convert a name into the folder-name format used for output sheets:
+    lowercase ASCII, accents dropped from their letters ("Stålskägg" ->
+    "stalskagg") and spaces as underscores."""
+    name = name.lower().strip().translate(_TRANSLITERATIONS)
+    name = unicodedata.normalize("NFKD", name)
     allowed_chars = "abcdefghijklmnopqrstuvwxyz0123456789 -"
     cleaned = "".join(ch for ch in name if ch in allowed_chars)
-    return cleaned.replace(" ", "_")
+    return "_".join(cleaned.split())
 
 
 class HtmlCharacterSheetWriter:
     def __init__(self, show_feature_tags: bool = False, source_text: bool = False):
         # Feature cards' header tag chips (action, duration, range, save DC,
-        # usage roles) are off unless asked for (RunCharacterCreator.py
-        # --feature-tags); the Passive tag is always shown.
+        # usage roles) and spell cards' usage-role chips are off unless asked
+        # for (RunCharacterCreator.py --feature-tags); the Passive,
+        # Concentration and Ritual tags are always shown.
         self.show_feature_tags = show_feature_tags
         # Print features' source text instead of their improved descriptions
         # (RunCharacterCreator.py --source-text).
@@ -127,6 +138,16 @@ class HtmlCharacterSheetWriter:
             else:
                 file.write(f"<a href='{prefix}{path}'>{label}</a>\n")
         file.write("</div>\n")
+
+    @staticmethod
+    def _remove_stale_pages(folder: pathlib.Path, pages: list[tuple[str, str]]):
+        """Delete pages a previous render left behind that this one won't
+        write (a level page after the build lost levels, an Items page after
+        it lost its gear) - they'd otherwise sit there, unlinked and stale."""
+        current = {path for _, path in pages}
+        for page in [*folder.glob("*.html"), *folder.glob("features/*.html")]:
+            if page.relative_to(folder).as_posix() not in current:
+                page.unlink()
 
     @staticmethod
     def _description_or_dash(description: str | None) -> str:
@@ -904,7 +925,12 @@ class HtmlCharacterSheetWriter:
             level_label = "Cantrips" if level == 0 else f"Level {level} Spells"
             file.write(f"<h3 class='spell-level-header'>{level_label}</h3>\n")
             for spell in group:
-                write_spell_to_file(spell, file, source_text=self.source_text)
+                write_spell_to_file(
+                    spell,
+                    file,
+                    source_text=self.source_text,
+                    show_usage_tags=self.show_feature_tags,
+                )
 
         file.write("</div>\n")
 
@@ -1518,6 +1544,7 @@ class HtmlCharacterSheetWriter:
             pages.append(("Fighting Styles", "fighting_styles.html"))
         if has_items_page:
             pages.append(("Items", "items.html"))
+        self._remove_stale_pages(output_folder_obj, pages)
 
         self._write_character_page(
             output_folder_obj / "character.html",

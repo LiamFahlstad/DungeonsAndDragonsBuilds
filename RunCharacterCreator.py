@@ -1,7 +1,9 @@
 import argparse
 import importlib
 import inspect
+import pathlib
 import pkgutil
+import shutil
 
 import Builds.Examples
 import Core.Definitions as Definitions
@@ -51,7 +53,10 @@ from Builds.Tests import (
     SpellSlotTestWizard3Warlock3,
     SpellSlotTestWizard5,
 )
-from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
+from Presentation.CharacterSheetWriters import (
+    HtmlCharacterSheetWriter,
+    get_output_folder,
+)
 
 
 class BuildSelector:
@@ -122,6 +127,25 @@ class ExampleSelector:
         return example_builds
 
 
+def remove_stale_character_folders(
+    written_folders: set[pathlib.Path], examples: bool
+) -> None:
+    """Delete the character-sheet folders in Output/ this run owns but didn't
+    write - left behind by a build that was deleted or renamed. A plain run
+    owns the non-example folders, an --example run the `example_` ones;
+    folders without a character.html (BuildGroups, ItemSheets, ...) and the
+    blank template are never touched."""
+    for folder in pathlib.Path("Output").iterdir():
+        if folder.name == "_blank_template" or folder in written_folders:
+            continue
+        if folder.name.startswith("example_") != examples:
+            continue
+        if not (folder / "character.html").is_file():
+            continue
+        print(f"Removing stale character sheet folder: {folder}")
+        shutil.rmtree(folder)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -134,8 +158,9 @@ if __name__ == "__main__":
         "--feature-tags",
         action="store_true",
         help="Show the tag chips beside each feature's name (action economy, "
-        "duration, range, save DC and usage roles such as Damage or Heal). Off by "
-        "default; the Passive tag is always shown.",
+        "duration, range, save DC and usage roles such as Damage or Heal), and "
+        "the usage-role chips on spells. Off by default; the Passive, "
+        "Concentration and Ritual tags are always shown.",
     )
     parser.add_argument(
         "--source-text",
@@ -156,6 +181,7 @@ if __name__ == "__main__":
     writer = HtmlCharacterSheetWriter(
         show_feature_tags=args.feature_tags, source_text=args.source_text
     )
+    written_folders = set()
     for build_class in builds.values():
         character = build_class().build()
         writer.write_character_sheet(
@@ -163,5 +189,7 @@ if __name__ == "__main__":
             skill_config=skill_config,
             include_probability_tables=args.probability_tables,
         )
+        written_folders.add(pathlib.Path(get_output_folder(character)))
 
     writer.write_blank_character_template("Output/_blank_template")
+    remove_stale_character_folders(written_folders, examples=args.example)

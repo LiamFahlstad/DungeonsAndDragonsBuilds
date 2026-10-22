@@ -37,9 +37,30 @@ def test_prepared_spells_and_slots_match_the_source_table(name):
         assert spell_slots(level) == tuple(slots), level
 
 
-def test_table_merges_levels_with_the_same_numbers():
-    table = spellcasting_table("Fighter")
-    assert table.columns[0] == "Fighter level"
-    assert table.rows[0] == ("3", "3", "2", "-", "-", "-")
-    assert ("4-6", "4", "3", "-", "-", "-") in table.rows
-    assert table.rows[-1] == ("20", "13", "4", "3", "3", "1")
+def test_track_runs_from_level_3_to_20():
+    track = spellcasting_table("Fighter")
+    assert track.level_label == "Fighter level"
+    assert list(track.levels) == list(range(3, 21))
+    series = dict(track.series)
+    assert list(series) == [
+        "Prepared spells",
+        "1st slots",
+        "2nd slots",
+        "3rd slots",
+        "4th slots",
+    ]
+    # Level 3, then level 4 (the first of the 4-6 run), then level 20.
+    for column, expected in (
+        (0, ("3", "2", "-", "-", "-")),
+        (1, ("4", "3", "-", "-", "-")),
+        (-1, ("13", "4", "3", "3", "1")),
+    ):
+        assert tuple(values[column] for values in series.values()) == expected
+
+
+def test_track_merges_runs_of_the_same_value_into_one_cell():
+    from Presentation.FeatureCards import improved_description_to_html
+
+    html = improved_description_to_html([spellcasting_table("Fighter")])
+    # 1st slots: 2 at level 3, 3 at levels 4-6, 4 from level 7 to 20.
+    assert "<td>2</td><td colspan='3'>3</td><td colspan='14'>4</td>" in html

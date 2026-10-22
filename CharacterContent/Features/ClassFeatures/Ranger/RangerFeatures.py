@@ -13,6 +13,33 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
+    spellcasting_table,
+)
+
+# The Ranger Features table's Prepared Spells column, levels 1-20.
+RANGER_PREPARED_SPELLS = (
+    2,
+    3,
+    4,
+    5,
+    6,
+    6,
+    7,
+    7,
+    9,
+    9,
+    10,
+    10,
+    11,
+    11,
+    12,
+    12,
+    14,
+    14,
+    15,
+    15,
+)
 
 
 class Spellcasting(Feature):
@@ -28,11 +55,12 @@ class Spellcasting(Feature):
                     ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
                     (
                         "Prepared spells",
-                        "When you finish a Long Rest, replace one with another Ranger spell for which you have spell slots",
+                        "As many as the table below. When you finish a Long Rest, replace one with another Ranger spell for which you have spell slots",
                     ),
                     ("Spell slots", "Regain all when you finish a Long Rest"),
                 )
             ),
+            spellcasting_table("Ranger", RANGER_PREPARED_SPELLS),
         ]
 
     def get_description(self, character: CharacterView) -> str:

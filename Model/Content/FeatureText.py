@@ -15,7 +15,8 @@ Guidelines:
 - Give each choice the feature offers its own Option (Divine Spark, Turn
   Undead), opening with Action, Range and Target rows, then what it does.
 - Use a Table when an option has parallel outcomes (heal or harm; a failed
-  or a successful save).
+  or a successful save), and a LevelTrack for counts that change with level
+  (prepared spells, cantrips).
 - Don't repeat what the card already shows: use boxes and dice tracks have
   their own panel.
 - A companion's or form's stat block goes in a StatBlock, the one block
@@ -71,6 +72,32 @@ class Table:
 
 
 @dataclass(frozen=True)
+class LevelTrack:
+    """Numbers that change with class level, as a compact grid: one narrow
+    column per level across the top, one row per series (e.g. Cantrips,
+    Prepared spells), and a run of levels sharing a value merged into one
+    wide cell. Three rows instead of a level-per-row Table's twenty.
+
+    Each series has one value per level, from first_level on."""
+
+    level_label: str
+    series: tuple[tuple[str, tuple[str, ...]], ...]
+    first_level: int = 1
+
+    def __post_init__(self):
+        lengths = {len(values) for _, values in self.series}
+        if len(lengths) > 1:
+            raise ValueError(
+                f"LevelTrack series cover different level ranges: {self.series!r}"
+            )
+
+    @property
+    def levels(self) -> range:
+        count = len(self.series[0][1]) if self.series else 0
+        return range(self.first_level, self.first_level + count)
+
+
+@dataclass(frozen=True)
 class Option:
     """One named choice or sub-effect of a feature (e.g. Divine Spark): a
     box headed by its name, holding its own blocks - usually Facts that open
@@ -90,7 +117,7 @@ class StatBlock:
     html: str
 
 
-Block = Paragraph | Facts | Table | Option | StatBlock
+Block = Paragraph | Facts | Table | LevelTrack | Option | StatBlock
 
 
 def blocks_from_json(data: list[Any]) -> list[Block]:

@@ -15,6 +15,34 @@ from Model.Content.Improvements import (
 from Core.Definitions import Ability, CharacterClass, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
+    spellcasting_table,
+)
+
+# The Cleric Features table's Cantrips and Prepared Spells columns, levels 1-20.
+CLERIC_CANTRIPS = (3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5)
+CLERIC_PREPARED_SPELLS = (
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    14,
+    15,
+    16,
+    16,
+    17,
+    17,
+    18,
+    18,
+    19,
+    20,
+    21,
+    22,
+)
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 
@@ -30,14 +58,18 @@ class Spellcasting(Feature):
                     ("Spellcasting ability", "Wisdom"),
                     ("Save DC", dc_formula(Ability.WISDOM)),
                     ("Spell attack", "Wisdom modifier + Proficiency Bonus"),
-                    ("Cantrips", "Replace one whenever you gain a Cleric level"),
+                    (
+                        "Cantrips",
+                        "As many as the table below; replace one whenever you gain a Cleric level",
+                    ),
                     (
                         "Prepared spells",
-                        "Change them whenever you finish a Long Rest",
+                        "As many as the table below; change them whenever you finish a Long Rest",
                     ),
                     ("Spell slots", "Regain all when you finish a Long Rest"),
                 )
             ),
+            spellcasting_table("Cleric", CLERIC_PREPARED_SPELLS, CLERIC_CANTRIPS),
         ]
 
     def get_description(self, character: CharacterView) -> str:

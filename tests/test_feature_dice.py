@@ -194,3 +194,25 @@ class TestHeaderTags:
         out = io.StringIO()
         write_feature_card(feature, character, out)
         assert "feature-passive-tag" in out.getvalue()
+
+
+class TestSpellUsageTags:
+    """Spell cards' usage-role chips (Damage, Heal, ...) ride the same
+    --feature-tags flag; Concentration always shows."""
+
+    def _spell_pages(self, tmp_path, show_tags: bool) -> str:
+        from tests._snapshot_helpers import CapturingSheetWriter
+
+        character = ALL_BUILDS["Y2024_Bard_Valor_Thomas"]().build()
+        writer = CapturingSheetWriter(tmp_path, show_feature_tags=show_tags)
+        writer.write_character_sheet(character, output_folder=str(tmp_path))
+        return writer.pages["full_character_sheet.html"].decode("utf-8")
+
+    def test_usage_tags_are_hidden_by_default(self, tmp_path):
+        page = self._spell_pages(tmp_path, show_tags=False)
+        assert "class='stag stag-usage-" not in page
+        assert "class='stag stag-concentration'" in page
+
+    def test_usage_tags_show_with_the_flag(self, tmp_path):
+        page = self._spell_pages(tmp_path, show_tags=True)
+        assert "class='stag stag-usage-" in page

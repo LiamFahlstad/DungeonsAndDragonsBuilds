@@ -4,7 +4,7 @@ spell slots by class level, for their Spellcasting cards."""
 
 from Core.Rules import MAX_LEVEL
 from Core.SpellcastingRules import CasterType, get_spell_slots_for_level
-from Model.Content.FeatureText import Table
+from Model.Content.FeatureText import LevelTrack
 
 # The Prepared Spells column, as {class level: count from that level on}.
 PREPARED_SPELLS_GAINED_AT = {
@@ -43,23 +43,22 @@ def spell_slots(class_level: int) -> tuple[int, ...]:
     return tuple(slots[:MAX_SLOT_LEVEL])
 
 
-def spellcasting_table(class_name: str) -> Table:
-    """The subclass's Spellcasting table, with consecutive levels that share
-    the same prepared spells and slots merged into one row."""
-    rows: list[list] = []
-    for level in range(FIRST_LEVEL, MAX_LEVEL + 1):
-        values = (prepared_spells(level), *spell_slots(level))
-        if rows and rows[-1][2] == values:
-            rows[-1][1] = level
-        else:
-            rows.append([level, level, values])
-    return Table(
-        (f"{class_name} level", "Prepared spells", *_ORDINALS),
-        tuple(
-            (
-                str(start) if start == end else f"{start}-{end}",
-                *(str(value) if value else "-" for value in values),
-            )
-            for start, end, values in rows
+def spellcasting_table(class_name: str) -> LevelTrack:
+    """The subclass's Spellcasting table as a level track: prepared spells
+    and each slot level's count, from its first level to 20."""
+    levels = range(FIRST_LEVEL, MAX_LEVEL + 1)
+    slots = [spell_slots(level) for level in levels]
+    return LevelTrack(
+        f"{class_name} level",
+        (
+            ("Prepared spells", tuple(str(prepared_spells(level)) for level in levels)),
+            *(
+                (
+                    f"{ordinal} slots",
+                    tuple(str(row[index]) if row[index] else "-" for row in slots),
+                )
+                for index, ordinal in enumerate(_ORDINALS)
+            ),
         ),
+        first_level=FIRST_LEVEL,
     )

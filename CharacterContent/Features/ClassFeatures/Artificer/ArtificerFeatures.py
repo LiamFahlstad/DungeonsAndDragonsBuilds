@@ -11,6 +11,34 @@ from Model.View import CharacterView
 from Utils import StringUtils
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Core.Definitions import Ability
+from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
+    spellcasting_table,
+)
+
+# The Artificer Features table's Cantrips and Prepared Spells columns, levels 1-20.
+ARTIFICER_CANTRIPS = (2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4)
+ARTIFICER_PREPARED_SPELLS = (
+    2,
+    3,
+    4,
+    5,
+    6,
+    6,
+    7,
+    7,
+    9,
+    9,
+    10,
+    10,
+    11,
+    11,
+    12,
+    12,
+    14,
+    14,
+    15,
+    15,
+)
 
 
 class Spellcasting(Feature):
@@ -30,17 +58,20 @@ class Spellcasting(Feature):
                     ),
                     (
                         "Cantrips",
-                        "Two Artificer cantrips; one more at Artificer levels 10 and 14. Swap one after each Long Rest.",
+                        "As many as the table below. Swap one after each Long Rest.",
                     ),
                     (
                         "Prepared spells",
-                        "Start with two level 1 Artificer spells; the number grows with your Artificer level. Change the list after each Long Rest.",
+                        "As many as the table below. Change the list after each Long Rest.",
                     ),
                     (
                         "Spell slots",
                         "As the Artificer Features table; regain all when you finish a Long Rest",
                     ),
                 )
+            ),
+            spellcasting_table(
+                "Artificer", ARTIFICER_PREPARED_SPELLS, ARTIFICER_CANTRIPS
             ),
         ]
 

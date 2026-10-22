@@ -6,7 +6,15 @@ import re
 from typing import Literal, Sequence, TextIO
 
 from Model.Content.Feature import ActionType, Feature, FeatureUses
-from Model.Content.FeatureText import Block, Facts, Option, Paragraph, StatBlock, Table
+from Model.Content.FeatureText import (
+    Block,
+    Facts,
+    LevelTrack,
+    Option,
+    Paragraph,
+    StatBlock,
+    Table,
+)
 from Model.Character import Character
 from Model.Records.GrantStamp import GrantStamp
 from Presentation import Html
@@ -92,6 +100,28 @@ IMPROVED_DESCRIPTION_CSS = """        /* Improved descriptions (Feature.get_impr
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            border-bottom: 2px solid #9a7040;
+        }
+
+        /* Level tracks: a narrow column per level, merged runs centred */
+        .level-track {
+            table-layout: fixed;
+        }
+
+        .level-track td,
+        .level-track th {
+            padding: 2px 0;
+            text-align: center;
+        }
+
+        .level-track th.lt-label {
+            width: 8.5rem;
+            padding: 2px 6px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .level-track tr:first-child th {
             border-bottom: 2px solid #9a7040;
         }
 
@@ -555,6 +585,8 @@ def _block_html(block: Block) -> str:
         return f"<table class='feature-box'>{_box_rows(block)}</table>\n"
     if isinstance(block, Table):
         return _table_html(block)
+    if isinstance(block, LevelTrack):
+        return _level_track_html(block)
     if isinstance(block, StatBlock):
         return block.html + "\n"
     if isinstance(block, Option):
@@ -580,6 +612,8 @@ def _box_rows(block: Block) -> str:
         return f"<tr><td colspan='2'>{_paragraphs_html(block)}</td></tr>"
     if isinstance(block, Table):
         return f"<tr><td colspan='2'>{_table_html(block)}</td></tr>"
+    if isinstance(block, LevelTrack):
+        return f"<tr><td colspan='2'>{_level_track_html(block)}</td></tr>"
     if isinstance(block, StatBlock):
         return f"<tr><td colspan='2'>{block.html}</td></tr>"
     raise TypeError(f"Can't nest {type(block).__name__} inside an Option")
@@ -600,6 +634,26 @@ def _table_html(block: Table) -> str:
         for row in block.rows
     )
     return f"<table class='feature-table'><tr>{header}</tr>{body}</table>\n"
+
+
+def _level_track_html(block: LevelTrack) -> str:
+    """Levels across the top, one row per series; consecutive levels with
+    the same value share one cell (colspan)."""
+    header = f"<th class='lt-label'>{block.level_label}</th>" + "".join(
+        f"<th>{level}</th>" for level in block.levels
+    )
+    body = ""
+    for label, values in block.series:
+        cells = ""
+        start = 0
+        for end in range(1, len(values) + 1):
+            if end == len(values) or values[end] != values[start]:
+                span = end - start
+                colspan = f" colspan='{span}'" if span > 1 else ""
+                cells += f"<td{colspan}>{values[start]}</td>"
+                start = end
+        body += f"<tr><th class='lt-label'>{label}</th>{cells}</tr>"
+    return f"<table class='feature-table level-track'><tr>{header}</tr>{body}</table>\n"
 
 
 def description_to_html(description: str) -> str:

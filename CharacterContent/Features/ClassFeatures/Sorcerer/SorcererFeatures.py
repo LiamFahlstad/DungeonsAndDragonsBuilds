@@ -11,6 +11,34 @@ from Utils import StringUtils
 from Core.Rules import levels_gained
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
+    spellcasting_table,
+)
+
+# The Sorcerer Features table's Cantrips and Prepared Spells columns, levels 1-20.
+SORCERER_CANTRIPS = (4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6)
+SORCERER_PREPARED_SPELLS = (
+    2,
+    4,
+    6,
+    7,
+    9,
+    10,
+    11,
+    12,
+    14,
+    15,
+    16,
+    16,
+    17,
+    17,
+    18,
+    18,
+    19,
+    20,
+    21,
+    22,
+)
 
 
 class Spellcasting(Feature):
@@ -24,11 +52,18 @@ class Spellcasting(Feature):
                     ("Spellcasting ability", "Charisma"),
                     ("Save DC", dc_formula(Definitions.Ability.CHARISMA)),
                     ("Spell attack", "Charisma modifier + Proficiency Bonus"),
-                    ("Cantrips", "Replace one whenever you gain a Sorcerer level"),
-                    ("Spells", "Replace one whenever you gain a Sorcerer level"),
+                    (
+                        "Cantrips",
+                        "As many as the table below; replace one whenever you gain a Sorcerer level",
+                    ),
+                    (
+                        "Prepared spells",
+                        "As many as the table below; replace one whenever you gain a Sorcerer level",
+                    ),
                     ("Spell slots", "Regain all when you finish a Long Rest"),
                 )
             ),
+            spellcasting_table("Sorcerer", SORCERER_PREPARED_SPELLS, SORCERER_CANTRIPS),
         ]
 
     def get_description(self, character: CharacterView) -> str:

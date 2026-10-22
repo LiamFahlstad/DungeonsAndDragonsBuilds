@@ -215,9 +215,12 @@ def write_spell_to_file(
     file: TextIO,
     show_classes: bool = False,
     source_text: bool = False,
+    show_usage_tags: bool = True,
 ):  # writes HTML
     """source_text shows the spell's source text instead of its improved
-    description (RunCharacterCreator.py --source-text)."""
+    description (RunCharacterCreator.py --source-text). show_usage_tags
+    adds the Damage/Heal/Buff/... role chips; Concentration and Ritual
+    always show, since they're rules rather than labels."""
     # ── Detect special tags ──────────────────────────────────────────────
     is_concentration = spell.is_concentration
     is_ritual = spell.is_ritual
@@ -266,7 +269,7 @@ def write_spell_to_file(
     }
     # Fixed display order regardless of the order listed in the spell data, so
     # cards read consistently across spells.
-    for usage_tag in usage_labels:
+    for usage_tag in usage_labels if show_usage_tags else ():
         if usage_tag in spell.usage_tags:
             tags_html += f"<span class='stag stag-usage-{usage_tag}'>{usage_labels[usage_tag]}</span> "
 
