@@ -652,7 +652,7 @@ class DialogsMixin(CombatWindowState):
                 add_divider()
                 add_header("Invocations")
                 for inv in char["invocations"]:
-                    lbl = QLabel(f"• {inv}")
+                    lbl = QLabel(f"• {_display(inv)}")
                     lay.addWidget(lbl)
 
         # --- Extended stats (only present for ExtendedCombatantData) ---
