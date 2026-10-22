@@ -1,5 +1,7 @@
 """Dialogs mixin for CombatAppQt."""
 
+from typing import Callable
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QDialog,
@@ -218,6 +220,489 @@ def _ability_probability_table_html(ab) -> str | None:
     return None
 
 
+class _InfoPanel:
+    """The More Info dialog's scrolling column: labelled fields, section
+    headers, dividers, stat-block abilities and expandable sections."""
+
+    def __init__(self, content: QWidget, make_divider: Callable[[], QFrame]):
+        self.layout = QVBoxLayout(content)
+        self.layout.setContentsMargins(14, 12, 14, 12)
+        self.layout.setSpacing(3)
+        self._make_divider = make_divider
+
+    def add(self, widget: QWidget):
+        self.layout.addWidget(widget)
+
+    def header(self, text: str):
+        lbl = QLabel(text.upper())
+        lbl.setObjectName("sectionHeader")
+        self.add(lbl)
+
+    def section(self, text: str):
+        """A divider, then a section header."""
+        self.divider()
+        self.header(text)
+
+    def field(self, label: str, value: str):
+        lbl = QLabel(f"<b>{label}:</b> {value}")
+        lbl.setWordWrap(True)
+        self.add(lbl)
+
+    def ability(self, name: str, description: str):
+        lbl = QLabel(f"<b><i>{name}.</i></b> {description}")
+        lbl.setWordWrap(True)
+        lbl.setContentsMargins(0, 2, 0, 2)
+        self.add(lbl)
+
+    def bullet(self, text: str):
+        self.add(QLabel(f"• {text}"))
+
+    def divider(self):
+        self.add(self._make_divider())
+
+    def expandable(self, header_text: str, content_widget: QWidget):
+        """`content_widget` under a ▶/▼ toggle button, collapsed at first."""
+        wrapper = QWidget()
+        wl = QVBoxLayout(wrapper)
+        wl.setContentsMargins(0, 0, 0, 0)
+        wl.setSpacing(0)
+        btn = QPushButton(f"▶  {header_text}")
+        btn.setCheckable(True)
+        btn.setFlat(True)
+        btn.setStyleSheet(
+            "QPushButton { text-align: left; padding: 2px 4px; background: transparent; "
+            "border: none; color: #eaeaea; font-size: 12px; }"
+            "QPushButton:hover { color: #c9a84c; }"
+            "QPushButton:checked { color: #c9a84c; }"
+        )
+        content_widget.setVisible(False)
+
+        def toggle(checked: bool):
+            btn.setText(f"{'▼' if checked else '▶'}  {header_text}")
+            content_widget.setVisible(checked)
+
+        btn.toggled.connect(toggle)
+        wl.addWidget(btn)
+        wl.addWidget(content_widget)
+        self.add(wrapper)
+
+
+def _detail_box(spacing: int = 2) -> tuple[QWidget, QVBoxLayout]:
+    """The indented body of an expandable section."""
+    box = QWidget()
+    layout = QVBoxLayout(box)
+    layout.setContentsMargins(16, 2, 0, 4)
+    layout.setSpacing(spacing)
+    return box, layout
+
+
+def _rich_label(html: str, word_wrap: bool = False, style: str = "") -> QLabel:
+    lbl = QLabel(html)
+    lbl.setTextFormat(Qt.TextFormat.RichText)
+    if word_wrap:
+        lbl.setWordWrap(True)
+    if style:
+        lbl.setStyleSheet(style)
+    return lbl
+
+
+def _description_label(text: str) -> QLabel:
+    lbl = QLabel(text)
+    lbl.setWordWrap(True)
+    lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
+    return lbl
+
+
+def _add_vitals(panel: _InfoPanel, char: dict):
+    """HP, AC, conditions and remaining spell slots."""
+    hp_str = f"{char['hp']} / {char['max_hp']}"
+    if char.get("temp_hp"):
+        hp_str += f"  (+{char['temp_hp']} temp)"
+    panel.field("HP", hp_str)
+
+    ac_val = str(char["ac"])
+    if char.get("ac_note"):
+        ac_val = f"{ac_val} ({char['ac_note']})"
+    panel.field("AC", ac_val)
+
+    if char.get("conditions"):
+        panel.field("Conditions", ", ".join(char["conditions"]))
+
+    if char.get("spell_slots"):
+        active = {k: v for k, v in char["spell_slots"].items() if v > 0}
+        if active:
+            panel.field(
+                "Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items())
+            )
+
+
+def _add_ability_score_table(panel: _InfoPanel, char: dict):
+    """Score / modifier / save per ability (saves only when the stat block
+    has them)."""
+    scores = char.get("Ability Scores", {})
+    saves = char.get("Saving Throws", {})
+    if not scores:
+        return
+    panel.section("Ability Scores")
+    td = "border:1px solid #0f3460;text-align:center;padding:2px 7px;"
+    tds = "border:1px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
+    tdt = "border:1px solid #0f3460;border-top:2px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
+    cells_h = cells_v = cells_m = cells_s = ""
+    for key, val in scores.items():
+        mod = ability_modifier(val)
+        sv = saves.get(key, mod)
+        cells_h += f"<td style='{td}'><b>{key}</b></td>"
+        cells_v += f"<td style='{td}'>{val}</td>"
+        cells_m += f"<td style='{tds}'>{mod:+}</td>"
+        cells_s += f"<td style='{tdt}'>{sv:+}</td>"
+    html = (
+        f"<table style='border-collapse:collapse'>"
+        f"<tr>{cells_h}</tr>"
+        f"<tr>{cells_v}</tr>"
+        f"<tr>{cells_m}</tr>"
+    )
+    if saves:
+        html += f"<tr>{cells_s}</tr>"
+    html += "</table>"
+    panel.add(_rich_label(html))
+    if saves:
+        panel.add(
+            _rich_label(
+                "<span style='color:#555;font-size:10px'>score / mod / save</span>"
+            )
+        )
+
+
+# ---------------------------------------------------------------------------
+# Player characters (character-sheet combatants)
+
+
+def _add_player_details(panel: _InfoPanel, char: dict):
+    sb = char.get("_stat_block")
+    _add_player_summary(panel, char)
+    if sb:
+        _add_player_skill_table(panel, sb)
+        _add_spellcasting_numbers(panel, char, sb)
+    _add_player_spells(panel, char)
+    if sb:
+        _add_player_weapons(panel, char, sb)
+    _add_player_features(panel, char, sb)
+    if char.get("invocations"):
+        panel.section("Invocations")
+        for inv in char["invocations"]:
+            panel.bullet(_display(inv))
+
+
+def _add_player_summary(panel: _InfoPanel, char: dict):
+    panel.divider()
+    if char.get("class_levels"):
+        panel.field(
+            "Class",
+            ", ".join(f"{cls} {lvl}" for cls, lvl in char["class_levels"].items()),
+        )
+    if char.get("subclass"):
+        panel.field("Subclass", char["subclass"])
+    if char.get("proficiency_bonus"):
+        panel.field("Proficiency Bonus", f"+{char['proficiency_bonus']}")
+    if char.get("speed"):
+        panel.field("Speed", f"{char['speed']} ft.")
+    if char.get("size"):
+        panel.field("Size", char["size"])
+
+
+def _add_player_skill_table(panel: _InfoPanel, sb):
+    """Every skill's modifier, marking proficiency and expertise."""
+    panel.section("Skills")
+    td = "border:1px solid #0f3460;padding:2px 7px;"
+    tdr = f"{td}text-align:right;"
+    tdc = f"{td}text-align:center;font-size:10px;"
+    header_row = (
+        f"<tr>"
+        f"<th style='{td}color:#c9a84c'>Skill</th>"
+        f"<th style='{tdr}color:#c9a84c'>Mod</th>"
+        f"<th style='{tdc}color:#c9a84c'></th>"
+        f"</tr>"
+    )
+    skill_rows = ""
+    for skill in Definitions.Skill:
+        mod = sb.get_skill_modifier(skill)
+        if sb.has_expertise_in_skill(skill):
+            name_html = f"<b>{skill.value}</b>"
+            prof_html = "<span style='color:#d4a747;font-weight:bold'>Exp</span>"
+        elif sb.is_proficient_in_skill(skill):
+            name_html = f"<b>{skill.value}</b>"
+            prof_html = "<span style='color:#7ecb7e'>Prof</span>"
+        else:
+            name_html = skill.value
+            prof_html = "<span style='color:#555'>—</span>"
+        skill_rows += (
+            f"<tr>"
+            f"<td style='{td}'>{name_html}</td>"
+            f"<td style='{tdr}'>{mod:+}</td>"
+            f"<td style='{tdc}'>{prof_html}</td>"
+            f"</tr>"
+        )
+    panel.add(
+        _rich_label(
+            f"<table style='border-collapse:collapse'>{header_row}{skill_rows}</table>"
+        )
+    )
+
+
+def _add_spellcasting_numbers(panel: _InfoPanel, char: dict, sb):
+    """Spell save DC and spell attack bonus for each spellcasting ability."""
+    by_ability: dict = {}
+    for _, _, ability in char.get("spells_with_level", []):
+        if ability not in by_ability:
+            by_ability[ability] = (
+                sb.calculate_difficulty_class_for_ability(ability),
+                sb.calculate_attack_bonus_for_ability(ability),
+            )
+    if not by_ability:
+        return
+    panel.divider()
+    panel.field(
+        "Spell DC",
+        "  ".join(f"DC {dc} ({ab.short_name})" for ab, (dc, _) in by_ability.items()),
+    )
+    panel.field(
+        "Spell Attack",
+        "  ".join(f"{atk:+} ({ab.short_name})" for ab, (_, atk) in by_ability.items()),
+    )
+
+
+def _add_player_spells(panel: _InfoPanel, char: dict):
+    """Spells grouped by level, each expandable to its details."""
+    spells_with_level = char.get("spells_with_level", [])
+    if not spells_with_level:
+        return
+    spell_objects = char.get("_spell_objects", {})
+    panel.section("Spells")
+    current_level = -1
+    for spell_name, level, _ in sorted(spells_with_level, key=lambda s: (s[1], s[0])):
+        if level != current_level:
+            current_level = level
+            level_label = "Cantrips" if level == 0 else f"Level {level}"
+            panel.add(_rich_label(f"<b style='color:#c9a84c'>{level_label}</b>"))
+        spell_obj = spell_objects.get(spell_name)
+        if spell_obj is None:
+            panel.add(QLabel(f"  • {spell_name}"))
+        else:
+            panel.expandable(spell_name, _spell_details(spell_obj))
+
+
+def _spell_details(spell_obj) -> QWidget:
+    box, layout = _detail_box()
+    school_color = spell_obj.get_school_color(spell_obj.school)
+    layout.addWidget(
+        _rich_label(
+            f"<span style='color:{school_color}'>{spell_obj.school}</span>"
+            f"  <span style='color:#a0a0b0'>Cast:</span> {spell_obj.casting_time}"
+            f"  <span style='color:#a0a0b0'>Range:</span> {spell_obj.range}"
+            f"  <span style='color:#a0a0b0'>Duration:</span> {spell_obj.duration}"
+            f"  <span style='color:#a0a0b0'>Components:</span> {spell_obj.components}",
+            word_wrap=True,
+        )
+    )
+    if spell_obj.description:
+        layout.addWidget(_description_label(spell_obj.description))
+    if spell_obj.additional_ruling:
+        layout.addWidget(
+            _rich_label(
+                f"<span style='color:#c9a84c'>Ruling:</span> "
+                f"<span style='color:#c0c0c0'>{spell_obj.additional_ruling}</span>",
+                word_wrap=True,
+                style="font-size: 11px;",
+            )
+        )
+    return box
+
+
+def _add_player_weapons(panel: _InfoPanel, char: dict, sb):
+    weapons = char.get("_weapons_objects", [])
+    if not weapons:
+        return
+    panel.section("Weapons")
+    for weapon in weapons:
+        panel.expandable(weapon_summary(weapon, sb), _weapon_details(weapon, char, sb))
+
+
+def _weapon_details(weapon, char: dict, sb) -> QWidget:
+    box, layout = _detail_box()
+    prof_str = "Proficient" if weapon.is_proficient(sb) else "Not proficient"
+    type_line = "  ·  ".join(
+        [weapon.weapon_type.value, weapon.damage_type.value, prof_str]
+    )
+    layout.addWidget(
+        _rich_label(f"<span style='color:#a0a0b0'>{type_line}</span>", word_wrap=True)
+    )
+    if weapon.description_text:
+        layout.addWidget(_description_label(weapon.description_text))
+    if weapon.mastery:
+        mark = "✓" if weapon.has_mastery(char.get("_weapon_masteries", [])) else "✗"
+        layout.addWidget(
+            _rich_label(
+                f"<span style='color:#a0a0b0'>Mastery:</span> "
+                f"<span style='color:#c9a84c'>{weapon.mastery.value} {mark}</span> "
+                f"<span style='color:#c0c0c0'>— {weapon.mastery.description}</span>",
+                word_wrap=True,
+                style="font-size: 11px;",
+            )
+        )
+    if weapon.properties:
+        prop_header_lbl = QLabel("Properties:")
+        prop_header_lbl.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        layout.addWidget(prop_header_lbl)
+        for prop in weapon.properties:
+            prop_lbl = _rich_label(
+                f"<span style='color:#c9a84c'>{prop.value}</span> "
+                f"<span style='color:#c0c0c0'>— {prop.description}</span>",
+                style="font-size: 11px;",
+            )
+            prop_lbl.setWordWrap(True)
+            prop_lbl.setContentsMargins(10, 0, 0, 0)
+            layout.addWidget(prop_lbl)
+    return box
+
+
+def _add_player_features(panel: _InfoPanel, char: dict, sb):
+    """Each feature expandable to its description; listed by name alone
+    without a stat block, or when its description is None or fails."""
+    feature_objects = char.get("_feature_objects", [])
+    if not feature_objects:
+        if char.get("features"):
+            panel.section("Features")
+            for name in char["features"]:
+                panel.bullet(name)
+        return
+    panel.section("Features")
+    for feature in feature_objects:
+        description = None
+        if sb:
+            try:
+                description = feature.get_description(sb)
+            except Exception:
+                pass
+        if description is None:
+            panel.bullet(feature.name)
+            continue
+        box, layout = _detail_box()
+        if feature.origin:
+            layout.addWidget(
+                _rich_label(f"<i style='color:#a0a0b0'>{feature.origin}</i>")
+            )
+        layout.addWidget(_description_label(description))
+        panel.expandable(feature.name, box)
+
+
+# ---------------------------------------------------------------------------
+# Monsters (ExtendedCombatantData)
+
+_MONSTER_ABILITY_SECTIONS = (
+    ("traits", "Traits"),
+    ("actions", "Actions"),
+    ("bonus_actions", "Bonus Actions"),
+    ("reactions", "Reactions"),
+    ("legendary_actions", "Legendary Actions"),
+    ("lair_actions", "Lair Actions"),
+    ("mythic_actions", "Mythic Actions"),
+)
+
+
+def _add_monster_details(panel: _InfoPanel, char: dict):
+    _add_monster_summary(panel, char)
+    if char.get("skills"):
+        _add_monster_skill_table(panel, char["skills"])
+    _add_monster_defenses(panel, char)
+    if char.get("legendary_resistances"):
+        panel.field("Legendary Resistances", str(char["legendary_resistances"]))
+    for key, label in _MONSTER_ABILITY_SECTIONS:
+        abilities = char.get(key, [])
+        if abilities:
+            panel.section(label)
+            for ab in abilities:
+                _add_monster_ability(panel, ab)
+
+
+def _add_monster_summary(panel: _InfoPanel, char: dict):
+    panel.divider()
+    type_text = _monster_type_text(char)
+    if type_text:
+        panel.field("Type", type_text)
+    if char.get("cr"):
+        panel.field("CR", char["cr"])
+    speed_text = _speed_text(char)
+    if speed_text:
+        panel.field("Speed", speed_text)
+    for key, label in (
+        ("hp_formula", "Hit Dice"),
+        ("senses", "Senses"),
+        ("languages", "Languages"),
+    ):
+        if char.get(key):
+            panel.field(label, char[key])
+    if char.get("description"):
+        desc_lbl = QLabel(char["description"])
+        desc_lbl.setWordWrap(True)
+        desc_lbl.setStyleSheet("font-style: italic; color: #c0c0c0;")
+        panel.add(desc_lbl)
+
+
+def _add_monster_skill_table(panel: _InfoPanel, skills: dict):
+    panel.header("Skills")
+    td = "border:1px solid #0f3460;padding:2px 8px;"
+    tdr = f"{td}text-align:right;"
+    rows = "".join(
+        f"<tr><td style='{td}'>{_display(k)}</td><td style='{tdr}'>{v:+}</td></tr>"
+        for k, v in skills.items()
+    )
+    panel.add(_rich_label(f"<table style='border-collapse:collapse'>{rows}</table>"))
+
+
+def _add_monster_defenses(panel: _InfoPanel, char: dict):
+    for key, label in (
+        ("damage_vulnerabilities", "Vulnerabilities"),
+        ("damage_resistances", "Resistances"),
+        ("damage_immunities", "Damage Immunities"),
+    ):
+        entries = char.get(key, [])
+        if entries:
+            panel.field(label, "; ".join(_damage_entry_text(e) for e in entries))
+    if char.get("condition_immunities"):
+        panel.field(
+            "Condition Immunities",
+            ", ".join(_display(c) for c in char["condition_immunities"]),
+        )
+
+
+def _add_monster_ability(panel: _InfoPanel, ab):
+    """A trait/action/...: plain text, or for an attack or a save with a DC,
+    expandable to its hit or save-failure chances."""
+    name, desc = _ability_entry(ab)
+    table_html = _ability_probability_table_html(ab)
+    if table_html is None:
+        panel.ability(name, desc)
+        return
+
+    attack_bonus = _ability_field(ab, "attack_bonus")
+    if attack_bonus is not None:
+        header_suffix = f"{attack_bonus:+} to hit"
+        caption_text = "Chance to hit, by target AC"
+    else:
+        header_suffix = f"DC {_ability_dc(ab)}"
+        caption_text = "Target's chance to fail the save, by save modifier"
+
+    box, layout = _detail_box(spacing=4)
+    desc_lbl = QLabel(desc)
+    desc_lbl.setWordWrap(True)
+    layout.addWidget(desc_lbl)
+    caption_lbl = QLabel(caption_text)
+    caption_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
+    layout.addWidget(caption_lbl)
+    layout.addWidget(_rich_label(table_html))
+    panel.expandable(f"{name}  ({header_suffix})", box)
+
+
 class DialogsMixin(CombatWindowState):
     """Mixin for dialog windows."""
 
@@ -301,466 +786,16 @@ class DialogsMixin(CombatWindowState):
         scroll.setFrameShape(QFrame.Shape.NoFrame)
 
         content = QWidget()
-        lay = QVBoxLayout(content)
-        lay.setContentsMargins(14, 12, 14, 12)
-        lay.setSpacing(3)
+        panel = _InfoPanel(content, self._make_divider)
 
-        def add_header(text: str):
-            lbl = QLabel(text.upper())
-            lbl.setObjectName("sectionHeader")
-            lay.addWidget(lbl)
-
-        def add_field(label: str, value: str):
-            lbl = QLabel(f"<b>{label}:</b> {value}")
-            lbl.setWordWrap(True)
-            lay.addWidget(lbl)
-
-        def add_ability(name: str, description: str):
-            lbl = QLabel(f"<b><i>{name}.</i></b> {description}")
-            lbl.setWordWrap(True)
-            lbl.setContentsMargins(0, 2, 0, 2)
-            lay.addWidget(lbl)
-
-        def add_divider():
-            lay.addWidget(self._make_divider())
-
-        def make_expandable(header_text: str, content_widget: QWidget) -> QWidget:
-            wrapper = QWidget()
-            wl = QVBoxLayout(wrapper)
-            wl.setContentsMargins(0, 0, 0, 0)
-            wl.setSpacing(0)
-            btn = QPushButton(f"▶  {header_text}")
-            btn.setCheckable(True)
-            btn.setFlat(True)
-            btn.setStyleSheet(
-                "QPushButton { text-align: left; padding: 2px 4px; background: transparent; "
-                "border: none; color: #eaeaea; font-size: 12px; }"
-                "QPushButton:hover { color: #c9a84c; }"
-                "QPushButton:checked { color: #c9a84c; }"
-            )
-            content_widget.setVisible(False)
-
-            def toggle(checked: bool, _btn=btn, _hw=header_text, _cw=content_widget):
-                _btn.setText(f"{'▼' if checked else '▶'}  {_hw}")
-                _cw.setVisible(checked)
-
-            btn.toggled.connect(toggle)
-            wl.addWidget(btn)
-            wl.addWidget(content_widget)
-            return wrapper
-
-        hp_str = f"{char['hp']} / {char['max_hp']}"
-        if char.get("temp_hp"):
-            hp_str += f"  (+{char['temp_hp']} temp)"
-        add_field("HP", hp_str)
-
-        ac_val = str(char["ac"])
-        if char.get("ac_note"):
-            ac_val = f"{ac_val} ({char['ac_note']})"
-        add_field("AC", ac_val)
-
-        if char.get("conditions"):
-            add_field("Conditions", ", ".join(char["conditions"]))
-
-        if char.get("spell_slots"):
-            active = {k: v for k, v in char["spell_slots"].items() if v > 0}
-            if active:
-                add_field(
-                    "Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items())
-                )
-
-        scores = char.get("Ability Scores", {})
-        saves = char.get("Saving Throws", {})
-        if scores:
-            add_divider()
-            add_header("Ability Scores")
-            td = "border:1px solid #0f3460;text-align:center;padding:2px 7px;"
-            tds = "border:1px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
-            tdt = "border:1px solid #0f3460;border-top:2px solid #0f3460;text-align:center;padding:2px 7px;color:#a0a0b0;font-size:11px;"
-            cells_h = cells_v = cells_m = cells_s = ""
-            for key, val in scores.items():
-                mod = ability_modifier(val)
-                sv = saves.get(key, mod)
-                cells_h += f"<td style='{td}'><b>{key}</b></td>"
-                cells_v += f"<td style='{td}'>{val}</td>"
-                cells_m += f"<td style='{tds}'>{mod:+}</td>"
-                cells_s += f"<td style='{tdt}'>{sv:+}</td>"
-            html = (
-                f"<table style='border-collapse:collapse'>"
-                f"<tr>{cells_h}</tr>"
-                f"<tr>{cells_v}</tr>"
-                f"<tr>{cells_m}</tr>"
-            )
-            if saves:
-                html += f"<tr>{cells_s}</tr>"
-            html += "</table>"
-            lbl = QLabel(html)
-            lbl.setTextFormat(Qt.TextFormat.RichText)
-            lay.addWidget(lbl)
-            if saves:
-                legend = QLabel(
-                    "<span style='color:#555;font-size:10px'>"
-                    "score / mod / save</span>"
-                )
-                legend.setTextFormat(Qt.TextFormat.RichText)
-                lay.addWidget(legend)
-
-        # --- Player stats (only present for character-sheet combatants) ---
+        _add_vitals(panel, char)
+        _add_ability_score_table(panel, char)
         if "_is_player" in char:
-            sb = char.get("_stat_block")
-
-            add_divider()
-            if char.get("class_levels"):
-                add_field(
-                    "Class",
-                    ", ".join(
-                        f"{cls} {lvl}" for cls, lvl in char["class_levels"].items()
-                    ),
-                )
-            if char.get("subclass"):
-                add_field("Subclass", char["subclass"])
-            if char.get("proficiency_bonus"):
-                add_field("Proficiency Bonus", f"+{char['proficiency_bonus']}")
-            if char.get("speed"):
-                add_field("Speed", f"{char['speed']} ft.")
-            if char.get("size"):
-                add_field("Size", char["size"])
-
-            # All skills table
-            if sb:
-                add_divider()
-                add_header("Skills")
-                td = "border:1px solid #0f3460;padding:2px 7px;"
-                tdr = f"{td}text-align:right;"
-                tdc = f"{td}text-align:center;font-size:10px;"
-                header_row = (
-                    f"<tr>"
-                    f"<th style='{td}color:#c9a84c'>Skill</th>"
-                    f"<th style='{tdr}color:#c9a84c'>Mod</th>"
-                    f"<th style='{tdc}color:#c9a84c'></th>"
-                    f"</tr>"
-                )
-                skill_rows = ""
-                for skill in Definitions.Skill:
-                    mod = sb.get_skill_modifier(skill)
-                    has_exp = sb.has_expertise_in_skill(skill)
-                    is_prof = sb.is_proficient_in_skill(skill)
-                    if has_exp:
-                        name_html = f"<b>{skill.value}</b>"
-                        prof_html = (
-                            "<span style='color:#d4a747;font-weight:bold'>Exp</span>"
-                        )
-                    elif is_prof:
-                        name_html = f"<b>{skill.value}</b>"
-                        prof_html = "<span style='color:#7ecb7e'>Prof</span>"
-                    else:
-                        name_html = skill.value
-                        prof_html = "<span style='color:#555'>—</span>"
-                    skill_rows += (
-                        f"<tr>"
-                        f"<td style='{td}'>{name_html}</td>"
-                        f"<td style='{tdr}'>{mod:+}</td>"
-                        f"<td style='{tdc}'>{prof_html}</td>"
-                        f"</tr>"
-                    )
-                skills_lbl = QLabel(
-                    f"<table style='border-collapse:collapse'>{header_row}{skill_rows}</table>"
-                )
-                skills_lbl.setTextFormat(Qt.TextFormat.RichText)
-                lay.addWidget(skills_lbl)
-
-            # Spell DC and spell attack bonus
-            spells_with_level = char.get("spells_with_level", [])
-            if spells_with_level and sb:
-                seen: dict = {}
-                for _, _, ability in spells_with_level:
-                    if ability not in seen:
-                        seen[ability] = (
-                            sb.calculate_difficulty_class_for_ability(ability),
-                            sb.calculate_attack_bonus_for_ability(ability),
-                        )
-                if seen:
-                    add_divider()
-                    add_field(
-                        "Spell DC",
-                        "  ".join(
-                            f"DC {dc} ({ab.short_name})" for ab, (dc, _) in seen.items()
-                        ),
-                    )
-                    add_field(
-                        "Spell Attack",
-                        "  ".join(
-                            f"{atk:+} ({ab.short_name})"
-                            for ab, (_, atk) in seen.items()
-                        ),
-                    )
-
-            # Spells as expandable items grouped by level
-            spell_objects_map = char.get("_spell_objects", {})
-            if spells_with_level:
-                add_divider()
-                add_header("Spells")
-                current_level = -1
-                for spell_name, level, _ in sorted(
-                    spells_with_level, key=lambda s: (s[1], s[0])
-                ):
-                    if level != current_level:
-                        current_level = level
-                        lvl_label = "Cantrips" if level == 0 else f"Level {level}"
-                        lbl = QLabel(f"<b style='color:#c9a84c'>{lvl_label}</b>")
-                        lbl.setTextFormat(Qt.TextFormat.RichText)
-                        lay.addWidget(lbl)
-                    spell_obj = spell_objects_map.get(spell_name)
-                    if spell_obj is not None:
-                        sw = QWidget()
-                        swl = QVBoxLayout(sw)
-                        swl.setContentsMargins(16, 2, 0, 4)
-                        swl.setSpacing(2)
-                        school_color = spell_obj.get_school_color(spell_obj.school)
-                        meta_lbl = QLabel(
-                            f"<span style='color:{school_color}'>{spell_obj.school}</span>"
-                            f"  <span style='color:#a0a0b0'>Cast:</span> {spell_obj.casting_time}"
-                            f"  <span style='color:#a0a0b0'>Range:</span> {spell_obj.range}"
-                            f"  <span style='color:#a0a0b0'>Duration:</span> {spell_obj.duration}"
-                            f"  <span style='color:#a0a0b0'>Components:</span> {spell_obj.components}"
-                        )
-                        meta_lbl.setTextFormat(Qt.TextFormat.RichText)
-                        meta_lbl.setWordWrap(True)
-                        swl.addWidget(meta_lbl)
-                        if spell_obj.description:
-                            desc_lbl = QLabel(spell_obj.description)
-                            desc_lbl.setWordWrap(True)
-                            desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
-                            swl.addWidget(desc_lbl)
-                        if spell_obj.additional_ruling:
-                            ruling_lbl = QLabel(
-                                f"<span style='color:#c9a84c'>Ruling:</span> "
-                                f"<span style='color:#c0c0c0'>{spell_obj.additional_ruling}</span>"
-                            )
-                            ruling_lbl.setTextFormat(Qt.TextFormat.RichText)
-                            ruling_lbl.setWordWrap(True)
-                            ruling_lbl.setStyleSheet("font-size: 11px;")
-                            swl.addWidget(ruling_lbl)
-                        lay.addWidget(make_expandable(spell_name, sw))
-                    else:
-                        lay.addWidget(QLabel(f"  • {spell_name}"))
-
-            # Weapons as expandable items
-            weapons_objs = char.get("_weapons_objects", [])
-            if weapons_objs and sb:
-                add_divider()
-                add_header("Weapons")
-                for weapon in weapons_objs:
-                    header_text = weapon_summary(weapon, sb)
-
-                    ww = QWidget()
-                    wwl = QVBoxLayout(ww)
-                    wwl.setContentsMargins(16, 2, 0, 4)
-                    wwl.setSpacing(2)
-
-                    prof_str = (
-                        "Proficient" if weapon.is_proficient(sb) else "Not proficient"
-                    )
-                    type_line = "  ·  ".join(
-                        [weapon.weapon_type.value, weapon.damage_type.value, prof_str]
-                    )
-                    type_lbl = QLabel(f"<span style='color:#a0a0b0'>{type_line}</span>")
-                    type_lbl.setTextFormat(Qt.TextFormat.RichText)
-                    type_lbl.setWordWrap(True)
-                    wwl.addWidget(type_lbl)
-
-                    if weapon.description_text:
-                        desc_lbl = QLabel(weapon.description_text)
-                        desc_lbl.setWordWrap(True)
-                        desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
-                        wwl.addWidget(desc_lbl)
-
-                    if weapon.mastery:
-                        has_mastery = weapon.has_mastery(
-                            char.get("_weapon_masteries", [])
-                        )
-                        mark = "✓" if has_mastery else "✗"
-                        mastery_lbl = QLabel(
-                            f"<span style='color:#a0a0b0'>Mastery:</span> "
-                            f"<span style='color:#c9a84c'>{weapon.mastery.value} {mark}</span> "
-                            f"<span style='color:#c0c0c0'>— {weapon.mastery.description}</span>"
-                        )
-                        mastery_lbl.setTextFormat(Qt.TextFormat.RichText)
-                        mastery_lbl.setWordWrap(True)
-                        mastery_lbl.setStyleSheet("font-size: 11px;")
-                        wwl.addWidget(mastery_lbl)
-
-                    if weapon.properties:
-                        prop_header_lbl = QLabel("Properties:")
-                        prop_header_lbl.setStyleSheet(
-                            "color: #a0a0b0; font-size: 11px;"
-                        )
-                        wwl.addWidget(prop_header_lbl)
-                        for prop in weapon.properties:
-                            prop_lbl = QLabel(
-                                f"<span style='color:#c9a84c'>{prop.value}</span> "
-                                f"<span style='color:#c0c0c0'>— {prop.description}</span>"
-                            )
-                            prop_lbl.setTextFormat(Qt.TextFormat.RichText)
-                            prop_lbl.setStyleSheet("font-size: 11px;")
-                            prop_lbl.setWordWrap(True)
-                            prop_lbl.setContentsMargins(10, 0, 0, 0)
-                            wwl.addWidget(prop_lbl)
-
-                    lay.addWidget(make_expandable(header_text, ww))
-
-            # Features as expandable items
-            feat_objs = char.get("_feature_objects", [])
-            if feat_objs:
-                add_divider()
-                add_header("Features")
-                for feat in feat_objs:
-                    feat_name = feat.name
-                    if sb:
-                        try:
-                            desc_text = feat.get_description(sb)
-                            if desc_text is None:
-                                lay.addWidget(QLabel(f"• {feat_name}"))
-                                continue
-                            fw = QWidget()
-                            fwl = QVBoxLayout(fw)
-                            fwl.setContentsMargins(16, 2, 0, 4)
-                            fwl.setSpacing(2)
-                            origin = feat.origin
-                            if origin:
-                                orig_lbl = QLabel(
-                                    f"<i style='color:#a0a0b0'>{origin}</i>"
-                                )
-                                orig_lbl.setTextFormat(Qt.TextFormat.RichText)
-                                fwl.addWidget(orig_lbl)
-                            desc_lbl = QLabel(desc_text)
-                            desc_lbl.setWordWrap(True)
-                            desc_lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
-                            fwl.addWidget(desc_lbl)
-                            lay.addWidget(make_expandable(feat_name, fw))
-                        except Exception:
-                            lay.addWidget(QLabel(f"• {feat_name}"))
-                    else:
-                        lay.addWidget(QLabel(f"• {feat_name}"))
-            elif char.get("features"):
-                add_divider()
-                add_header("Features")
-                for name in char["features"]:
-                    lay.addWidget(QLabel(f"• {name}"))
-
-            if char.get("invocations"):
-                add_divider()
-                add_header("Invocations")
-                for inv in char["invocations"]:
-                    lbl = QLabel(f"• {_display(inv)}")
-                    lay.addWidget(lbl)
-
-        # --- Extended stats (only present for ExtendedCombatantData) ---
+            _add_player_details(panel, char)
         if "cr" in char:
-            add_divider()
-            type_text = _monster_type_text(char)
-            if type_text:
-                add_field("Type", type_text)
-            for key, label in [
-                ("cr", "CR"),
-            ]:
-                if char.get(key):
-                    add_field(label, char[key])
-            speed_text = _speed_text(char)
-            if speed_text:
-                add_field("Speed", speed_text)
-            for key, label in [
-                ("hp_formula", "Hit Dice"),
-                ("senses", "Senses"),
-                ("languages", "Languages"),
-            ]:
-                if char.get(key):
-                    add_field(label, char[key])
+            _add_monster_details(panel, char)
 
-            if char.get("description"):
-                desc_lbl = QLabel(char["description"])
-                desc_lbl.setWordWrap(True)
-                desc_lbl.setStyleSheet("font-style: italic; color: #c0c0c0;")
-                lay.addWidget(desc_lbl)
-
-            if char.get("skills"):
-                add_header("Skills")
-                td = "border:1px solid #0f3460;padding:2px 8px;"
-                tdr = f"{td}text-align:right;"
-                rows = "".join(
-                    f"<tr><td style='{td}'>{_display(k)}</td><td style='{tdr}'>{v:+}</td></tr>"
-                    for k, v in char["skills"].items()
-                )
-                skills_lbl = QLabel(
-                    f"<table style='border-collapse:collapse'>{rows}</table>"
-                )
-                skills_lbl.setTextFormat(Qt.TextFormat.RichText)
-                lay.addWidget(skills_lbl)
-
-            for key, label in [
-                ("damage_vulnerabilities", "Vulnerabilities"),
-                ("damage_resistances", "Resistances"),
-                ("damage_immunities", "Damage Immunities"),
-            ]:
-                entries = char.get(key, [])
-                if entries:
-                    add_field(label, "; ".join(_damage_entry_text(e) for e in entries))
-
-            if char.get("condition_immunities"):
-                add_field(
-                    "Condition Immunities",
-                    ", ".join(_display(c) for c in char["condition_immunities"]),
-                )
-
-            if char.get("legendary_resistances"):
-                add_field("Legendary Resistances", str(char["legendary_resistances"]))
-
-            for section_key, section_label in [
-                ("traits", "Traits"),
-                ("actions", "Actions"),
-                ("bonus_actions", "Bonus Actions"),
-                ("reactions", "Reactions"),
-                ("legendary_actions", "Legendary Actions"),
-                ("lair_actions", "Lair Actions"),
-                ("mythic_actions", "Mythic Actions"),
-            ]:
-                abilities = char.get(section_key, [])
-                if abilities:
-                    add_divider()
-                    add_header(section_label)
-                    for ab in abilities:
-                        name, desc = _ability_entry(ab)
-                        table_html = _ability_probability_table_html(ab)
-                        if table_html is None:
-                            add_ability(name, desc)
-                            continue
-
-                        attack_bonus = _ability_field(ab, "attack_bonus")
-                        if attack_bonus is not None:
-                            header_suffix = f"{attack_bonus:+} to hit"
-                            caption_text = "Chance to hit, by target AC"
-                        else:
-                            header_suffix = f"DC {_ability_dc(ab)}"
-                            caption_text = (
-                                "Target's chance to fail the save, by save modifier"
-                            )
-
-                        aw = QWidget()
-                        awl = QVBoxLayout(aw)
-                        awl.setContentsMargins(16, 2, 0, 4)
-                        awl.setSpacing(4)
-                        desc_lbl = QLabel(desc)
-                        desc_lbl.setWordWrap(True)
-                        awl.addWidget(desc_lbl)
-                        caption_lbl = QLabel(caption_text)
-                        caption_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
-                        awl.addWidget(caption_lbl)
-                        table_lbl = QLabel(table_html)
-                        table_lbl.setTextFormat(Qt.TextFormat.RichText)
-                        awl.addWidget(table_lbl)
-                        lay.addWidget(make_expandable(f"{name}  ({header_suffix})", aw))
-
-        lay.addStretch()
+        panel.layout.addStretch()
         scroll.setWidget(content)
         outer.addWidget(scroll)
 
