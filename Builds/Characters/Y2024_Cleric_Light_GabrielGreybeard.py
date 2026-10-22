@@ -92,7 +92,7 @@ def get_starter_class_builder():
                     divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
-                    spell=ClericLevel2Spells.SILENCE,
+                    spell=ClericLevel1Spells.DETECT_MAGIC,
                 ),
                 3: ClericLevel3(
                     spell=ClericLevel2Spells.ZONE_OF_TRUTH,
