@@ -4,6 +4,7 @@ import dataclasses
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Callable
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
@@ -89,185 +90,18 @@ class LoggingMixin(CombatWindowState):
         if not self.history:
             return
         action, value = self.history[-1]
-        # Damage/Heal/ADD_TEMP_HP/conditions are applied to whichever character the
-        # value dict names as target_name (recorded at apply-time, not the current UI
-        # selection — the user may have re-targeted since); every other tracked action
-        # (spell slots, death saves) is applied to the source.
-        if action in (
-            Action.DAMAGE,
-            Action.HEAL,
-            Action.ADD_TEMP_HP,
-            Action.ADD_CONDITION,
-            Action.REMOVE_CONDITION,
-        ):
-            target_name = value.get("target_name") if isinstance(value, dict) else None
-            char = self._find_character_by_name(target_name) if target_name else None
-        else:
-            char = self.selected_character
+        char = self._undo_subject(action, value)
         if not char:
             return
         data = json.loads(self.log_file.read_text())
         key = f"round_{self.round_number}"
-        if key not in data or not data[key]:
+        if not data.get(key):
             return
 
         self.history.pop()
-
-        if action == Action.DAMAGE:
-            if isinstance(value, dict):
-                hp_delta = value["hp_delta"]
-                temp_delta = value["temp_delta"]
-                dmg = value["dmg"]
-                source_name = value.get("source_name")
-                damage_type = value.get("damage_type")
-                knockout = value.get("knockout", False)
-
-                char["hp"] -= hp_delta
-                char["temp_hp"] -= temp_delta
-
-                char.setdefault("stats", _default_stats())
-                char["stats"]["damage_taken"] = (
-                    char["stats"].get("damage_taken", 0) - dmg
-                )
-                if damage_type:
-                    taken_type_key = damage_taken_key(damage_type)
-                    char["stats"][taken_type_key] = (
-                        char["stats"].get(taken_type_key, 0) - dmg
-                    )
-                if knockout:
-                    char["stats"]["times_downed"] = max(
-                        char["stats"].get("times_downed", 0) - 1, 0
-                    )
-
-                if source_name:
-                    source = self._find_character_by_name(source_name)
-                    if source is not None:
-                        source.setdefault("stats", _default_stats())
-                        source["stats"]["damage_dealt"] = max(
-                            source["stats"].get("damage_dealt", 0) - dmg, 0
-                        )
-                        if damage_type:
-                            type_key = damage_dealt_key(damage_type)
-                            source["stats"][type_key] = max(
-                                source["stats"].get(type_key, 0) - dmg, 0
-                            )
-                        if knockout:
-                            source["stats"]["knockouts"] = max(
-                                source["stats"].get("knockouts", 0) - 1, 0
-                            )
-            elif isinstance(value, tuple):
-                hp_delta, temp_delta = value
-                char["hp"] -= hp_delta
-                char["temp_hp"] -= temp_delta
-            else:
-                char["hp"] += value
-        elif action == Action.HEAL:
-            if isinstance(value, dict):
-                heal = value["heal"]
-                source_name = value.get("source_name")
-
-                char["hp"] -= heal
-
-                char.setdefault("stats", _default_stats())
-                char["stats"]["healing_received"] = max(
-                    char["stats"].get("healing_received", 0) - heal, 0
-                )
-
-                if source_name:
-                    source = self._find_character_by_name(source_name)
-                    if source is not None:
-                        source.setdefault("stats", _default_stats())
-                        source["stats"]["healing_done"] = max(
-                            source["stats"].get("healing_done", 0) - heal, 0
-                        )
-            else:
-                char["hp"] -= value
-        elif action == Action.ADD_CONDITION:
-            cond = value["condition"] if isinstance(value, dict) else value
-            if cond in char["conditions"]:
-                char["conditions"].remove(cond)
-            char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_received"] = max(
-                char["stats"].get("conditions_received", 0) - 1, 0
-            )
-            decrement_named_stat(char["stats"], "conditions_received_by_name", cond)
-            source_name = value.get("source_name") if isinstance(value, dict) else None
-            if source_name:
-                source = self._find_character_by_name(source_name)
-                if source is not None:
-                    source.setdefault("stats", _default_stats())
-                    source["stats"]["conditions_given"] = max(
-                        source["stats"].get("conditions_given", 0) - 1, 0
-                    )
-                    decrement_named_stat(
-                        source["stats"], "conditions_given_by_name", cond
-                    )
-        elif action == Action.REMOVE_CONDITION:
-            cond = value["condition"] if isinstance(value, dict) else value
-            if cond not in char["conditions"]:
-                char["conditions"].append(cond)
-        elif action == Action.REMOVE_SPELL_SLOT:
-            assert isinstance(value, int)  # the slot level (_cast_spell_slot_level)
-            char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
-            char.setdefault("stats", _default_stats())
-            char["stats"]["spell_slots_used"] = max(
-                char["stats"].get("spell_slots_used", 0) - 1, 0
-            )
-            level_key = spell_slots_used_key(value)
-            char["stats"][level_key] = max(char["stats"].get(level_key, 0) - 1, 0)
-        elif action == Action.ADD_SPELL_SLOT:
-            char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
-        elif action == Action.CAST_SPELL:
-            spell_name = value["spell_name"] if isinstance(value, dict) else value
-            char.setdefault("stats", _default_stats())
-            char["stats"]["spells_cast"] = max(
-                char["stats"].get("spells_cast", 0) - 1, 0
-            )
-            decrement_named_stat(char["stats"], "spells_cast_by_name", spell_name)
-        elif action == Action.DEATH_SAVE_FAIL:
-            char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
-            if value:
-                char.setdefault("stats", _default_stats())
-                char["stats"]["deaths"] = max(char["stats"].get("deaths", 0) - 1, 0)
-        elif action == Action.DEATH_SAVE_SUCCESS:
-            char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
-        elif action == Action.ADD_TEMP_HP:
-            if isinstance(value, dict):
-                amount = value["amount"]
-                char["temp_hp"] -= amount
-                char.setdefault("stats", _default_stats())
-                char["stats"]["temp_hp_received"] = max(
-                    char["stats"].get("temp_hp_received", 0) - amount, 0
-                )
-                source_name = value.get("source_name")
-                if source_name:
-                    source = self._find_character_by_name(source_name)
-                    if source is not None:
-                        source.setdefault("stats", _default_stats())
-                        source["stats"]["temp_hp_granted"] = max(
-                            source["stats"].get("temp_hp_granted", 0) - amount, 0
-                        )
-            else:
-                char["temp_hp"] -= value
-        elif action == Action.ENABLE_FEATURE:
-            feature_name = value["feature_name"] if isinstance(value, dict) else value
-            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
-                feature_name
-            )
-            char.setdefault("stats", _default_stats())
-            char["stats"]["features_enabled"] = max(
-                char["stats"].get("features_enabled", 0) - 1, 0
-            )
-            decrement_named_stat(
-                char["stats"], "features_enabled_by_name", feature_name
-            )
-            if feature is not None and feature.uses is not None:
-                used = char.setdefault("feature_uses_used", {})
-                used[feature_name] = max(used.get(feature_name, 0) - 1, 0)
-        elif action == Action.REGAIN_FEATURE_CHARGE:
-            used = char.setdefault("feature_uses_used", {})
-            used[value] = used.get(value, 0) + 1
-
+        undo = _UNDO_HANDLERS.get(action)
+        if undo is not None:
+            undo(self, char, value)
         if action in (Action.DAMAGE, Action.HEAL):
             self._apply_bloodied_condition(char)
 
@@ -279,6 +113,110 @@ class LoggingMixin(CombatWindowState):
         self._write_log(data)
         print(f"Undid action: {last_event}")
         self._rebuild_card(char)
+
+    def _undo_subject(self, action, value) -> dict | None:
+        """The combatant an action changed. Damage/Heal/ADD_TEMP_HP/conditions
+        name it as target_name (recorded at apply-time, not the current UI
+        selection — the user may have re-targeted since); every other tracked
+        action (spell slots, death saves, ...) applied to the source."""
+        if action in _TARGETED_ACTIONS:
+            target_name = value.get("target_name") if isinstance(value, dict) else None
+            return self._find_character_by_name(target_name) if target_name else None
+        return self.selected_character
+
+    def _undo_source(self, value: dict) -> dict | None:
+        source_name = value.get("source_name")
+        return self._find_character_by_name(source_name) if source_name else None
+
+    def _undo_damage(self, char: dict, value: dict):
+        dmg = value["dmg"]
+        damage_type = value.get("damage_type")
+        knockout = value.get("knockout", False)
+
+        char["hp"] -= value["hp_delta"]
+        char["temp_hp"] -= value["temp_delta"]
+        _decrement_stat(char, "damage_taken", dmg, floor=False)
+        if damage_type:
+            _decrement_stat(char, damage_taken_key(damage_type), dmg, floor=False)
+        if knockout:
+            _decrement_stat(char, "times_downed")
+
+        source = self._undo_source(value)
+        if source is not None:
+            _decrement_stat(source, "damage_dealt", dmg)
+            if damage_type:
+                _decrement_stat(source, damage_dealt_key(damage_type), dmg)
+            if knockout:
+                _decrement_stat(source, "knockouts")
+
+    def _undo_heal(self, char: dict, value: dict):
+        heal = value["heal"]
+        char["hp"] -= heal
+        _decrement_stat(char, "healing_received", heal)
+        source = self._undo_source(value)
+        if source is not None:
+            _decrement_stat(source, "healing_done", heal)
+
+    def _undo_add_temp_hp(self, char: dict, value: dict):
+        amount = value["amount"]
+        char["temp_hp"] -= amount
+        _decrement_stat(char, "temp_hp_received", amount)
+        source = self._undo_source(value)
+        if source is not None:
+            _decrement_stat(source, "temp_hp_granted", amount)
+
+    def _undo_add_condition(self, char: dict, value: dict):
+        cond = value["condition"]
+        if cond in char["conditions"]:
+            char["conditions"].remove(cond)
+        _decrement_stat(char, "conditions_received")
+        decrement_named_stat(char["stats"], "conditions_received_by_name", cond)
+        source = self._undo_source(value)
+        if source is not None:
+            _decrement_stat(source, "conditions_given")
+            decrement_named_stat(source["stats"], "conditions_given_by_name", cond)
+
+    def _undo_remove_condition(self, char: dict, value: dict):
+        cond = value["condition"]
+        if cond not in char["conditions"]:
+            char["conditions"].append(cond)
+
+    def _undo_remove_spell_slot(self, char: dict, level):
+        assert isinstance(level, int)  # the slot level (_cast_spell_slot_level)
+        char["spell_slots"][level] = char["spell_slots"].get(level, 0) + 1
+        _decrement_stat(char, "spell_slots_used")
+        _decrement_stat(char, spell_slots_used_key(level))
+
+    def _undo_add_spell_slot(self, char: dict, level):
+        char["spell_slots"][level] = max(char["spell_slots"].get(level, 0) - 1, 0)
+
+    def _undo_cast_spell(self, char: dict, value):
+        spell_name = value["spell_name"] if isinstance(value, dict) else value
+        _decrement_stat(char, "spells_cast")
+        decrement_named_stat(char["stats"], "spells_cast_by_name", spell_name)
+
+    def _undo_death_save_fail(self, char: dict, newly_dead):
+        char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
+        if newly_dead:
+            _decrement_stat(char, "deaths")
+
+    def _undo_death_save_success(self, char: dict, _value):
+        char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
+
+    def _undo_enable_feature(self, char: dict, value):
+        feature_name = value["feature_name"] if isinstance(value, dict) else value
+        feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
+            feature_name
+        )
+        _decrement_stat(char, "features_enabled")
+        decrement_named_stat(char["stats"], "features_enabled_by_name", feature_name)
+        if feature is not None and feature.uses is not None:
+            used = char.setdefault("feature_uses_used", {})
+            used[feature_name] = max(used.get(feature_name, 0) - 1, 0)
+
+    def _undo_regain_feature_charge(self, char: dict, feature_name):
+        used = char.setdefault("feature_uses_used", {})
+        used[feature_name] = used.get(feature_name, 0) + 1
 
     def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
@@ -670,3 +608,38 @@ class LoggingMixin(CombatWindowState):
         layout.addWidget(close_btn)
 
         dlg.exec()
+
+
+# Actions recorded against the combatant they changed, named in the value's
+# "target_name"; every other action applied to the selected source.
+_TARGETED_ACTIONS = (
+    Action.DAMAGE,
+    Action.HEAL,
+    Action.ADD_TEMP_HP,
+    Action.ADD_CONDITION,
+    Action.REMOVE_CONDITION,
+)
+
+# How _undo_last reverses each action: handler(app, combatant, value).
+_UNDO_HANDLERS: dict[Action, Callable[[LoggingMixin, dict, Any], None]] = {
+    Action.DAMAGE: LoggingMixin._undo_damage,
+    Action.HEAL: LoggingMixin._undo_heal,
+    Action.ADD_TEMP_HP: LoggingMixin._undo_add_temp_hp,
+    Action.ADD_CONDITION: LoggingMixin._undo_add_condition,
+    Action.REMOVE_CONDITION: LoggingMixin._undo_remove_condition,
+    Action.REMOVE_SPELL_SLOT: LoggingMixin._undo_remove_spell_slot,
+    Action.ADD_SPELL_SLOT: LoggingMixin._undo_add_spell_slot,
+    Action.CAST_SPELL: LoggingMixin._undo_cast_spell,
+    Action.DEATH_SAVE_FAIL: LoggingMixin._undo_death_save_fail,
+    Action.DEATH_SAVE_SUCCESS: LoggingMixin._undo_death_save_success,
+    Action.ENABLE_FEATURE: LoggingMixin._undo_enable_feature,
+    Action.REGAIN_FEATURE_CHARGE: LoggingMixin._undo_regain_feature_charge,
+}
+
+
+def _decrement_stat(char: dict, key: str, amount: int = 1, floor: bool = True):
+    """Take `amount` off one of the combatant's battle stats, stopping at 0
+    unless `floor` is False."""
+    stats = char.setdefault("stats", _default_stats())
+    value = stats.get(key, 0) - amount
+    stats[key] = max(value, 0) if floor else value
