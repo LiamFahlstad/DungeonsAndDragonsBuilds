@@ -341,7 +341,7 @@ class CardsMixin(CombatWindowState):
                     badge.setStyleSheet(
                         f"QPushButton {{ background-color: {badge_color}; color: #ffffff;"
                         " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
-                        " border: none; cursor: pointer; }}"
+                        " border: none; cursor: pointer; }"
                         f"QPushButton:hover {{ background-color: {badge_color}cc; }}"
                     )
                     badge.setCursor(Qt.CursorShape.PointingHandCursor)

@@ -219,7 +219,7 @@
         "context_menu": "CustomContextMenu",
         "cursor": "PointingHandCursor",
         "flat": true,
-        "style": "QPushButton { background-color: #1a5c1a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #1a5c1acc; }",
+        "style": "QPushButton { background-color: #1a5c1a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #1a5c1acc; }",
         "text": "Poisoned",
         "type": "QPushButton"
        },
@@ -241,7 +241,7 @@
         "context_menu": "CustomContextMenu",
         "cursor": "PointingHandCursor",
         "flat": true,
-        "style": "QPushButton { background-color: #123456; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #123456cc; }",
+        "style": "QPushButton { background-color: #123456; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #123456cc; }",
         "text": "Bless",
         "tooltip": "Add 1d4 to attacks and saves.",
         "type": "QPushButton"
@@ -250,7 +250,7 @@
         "context_menu": "CustomContextMenu",
         "cursor": "PointingHandCursor",
         "flat": true,
-        "style": "QPushButton { background-color: #1a3a7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #1a3a7acc; }",
+        "style": "QPushButton { background-color: #1a3a7a; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #1a3a7acc; }",
         "text": "Concentrating",
         "type": "QPushButton"
        },
@@ -258,7 +258,7 @@
         "context_menu": "CustomContextMenu",
         "cursor": "PointingHandCursor",
         "flat": true,
-        "style": "QPushButton { background-color: #4c7ac9; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }}QPushButton:hover { background-color: #4c7ac9cc; }",
+        "style": "QPushButton { background-color: #4c7ac9; color: #ffffff; border-radius: 3px; padding: 1px 4px; font-size: 10px; border: none; cursor: pointer; }QPushButton:hover { background-color: #4c7ac9cc; }",
         "text": "Free Background Ability Bonus",
         "tooltip": "<b style='color:#c9a84c; font-size:14px;'>Free Background Ab... [615 chars, sha1 1107c7b960bf]",
         "type": "QPushButton"
