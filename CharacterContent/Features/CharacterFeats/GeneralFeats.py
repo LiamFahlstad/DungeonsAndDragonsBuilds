@@ -3017,7 +3017,9 @@ class _SchoolAdept(_AbilityScoreFeat):
 
     Subclasses declare:
         _NAME           – feat name, e.g. "Abjuration Adept"
-        _SPELLS         – the always-prepared spell for spell slot levels 1-5, in order
+        _SPELLS         – the always-prepared spell for spell slot levels 1-5, in order;
+                          each is of that slot's level or lower (Enchantment Adept
+                          puts the 2nd-level Hold Person in its 3rd-level row)
         _SCHOOL_EFFECT  – the school-specific benefit text
     and implement _school_facts(), that benefit as label/value rows for the
     improved description.
@@ -3025,7 +3027,13 @@ class _SchoolAdept(_AbilityScoreFeat):
 
     _ABILITIES = _MENTAL_ABILITIES
 
-    _SPELLS: tuple[Level1Spells, Level2Spells, Level3Spells, Level4Spells, Level5Spells]
+    _SPELLS: tuple[
+        Level1Spells,
+        Level1Spells | Level2Spells,
+        Level1Spells | Level2Spells | Level3Spells,
+        Level1Spells | Level2Spells | Level3Spells | Level4Spells,
+        Level1Spells | Level2Spells | Level3Spells | Level4Spells | Level5Spells,
+    ]
     _SCHOOL_EFFECT: str
 
     def _school_facts(self) -> tuple[tuple[str, str], ...]:
