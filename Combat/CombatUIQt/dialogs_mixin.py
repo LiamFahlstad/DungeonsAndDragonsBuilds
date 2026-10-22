@@ -190,9 +190,11 @@ def _save_chance_table_html(dc: int) -> str:
 def _ability_dc(ab) -> int | None:
     """DC for a save-based ability: the `dc` field on a SavingThrowEffect, or
     (for a DcMonsterAbility, live or resumed from a saved log as a plain
-    dict) the DC pulled out of its free-text description."""
+    dict) the DC pulled out of its free-text description. A prose `dc` (a
+    summon's "equals your spell save DC") falls through to the description,
+    which names no number, so it has none."""
     dc = _ability_field(ab, "dc")
-    if dc is not None:
+    if isinstance(dc, int):
         return dc
     if isinstance(ab, DcMonsterAbility):
         return ab.extract_dc()
