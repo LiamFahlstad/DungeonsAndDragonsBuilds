@@ -177,10 +177,11 @@ class SavingThrowEffect(DcMonsterAbility):
     case `failure_effect` is used verbatim as the Failure text. Inherits from
     DcMonsterAbility since it always has a DC, though callers should read the
     `dc` field directly rather than extract_dc() -- it's the exact value,
-    not a regex guess."""
+    not a regex guess. `dc` is prose instead of a number when the stat block
+    doesn't fix one, e.g. a summon's "equals your spell save DC"."""
 
     ability: Ability = Ability.DEXTERITY
-    dc: int = 10
+    dc: int | str = 10
     target: str = ""
     dice_count: int = 0
     dice_type: DiceType = DiceType.D6
