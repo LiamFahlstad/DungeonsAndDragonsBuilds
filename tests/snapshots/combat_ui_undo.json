@@ -470,8 +470,8 @@
     "2": 0
    },
    "stats": {
-    "damage_taken": -4,
-    "damage_taken_fire": -4,
+    "damage_taken": 0,
+    "damage_taken_fire": 0,
     "times_downed": 2
    },
    "temp_hp": 2
@@ -573,8 +573,8 @@
     "2": 0
    },
    "stats": {
-    "damage_taken": -6,
-    "damage_taken_fire": -6,
+    "damage_taken": 0,
+    "damage_taken_fire": 0,
     "times_downed": 2
    },
    "temp_hp": 2
@@ -627,7 +627,7 @@
     "2": 0
    },
    "stats": {
-    "damage_taken": -4
+    "damage_taken": 0
    },
    "temp_hp": 2
   }
@@ -677,8 +677,8 @@
     "2": 0
    },
    "stats": {
-    "damage_taken": -4,
-    "damage_taken_fire": -4,
+    "damage_taken": 0,
+    "damage_taken_fire": 0,
     "times_downed": 2
    },
    "temp_hp": 2

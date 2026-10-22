@@ -135,9 +135,9 @@ class LoggingMixin(CombatWindowState):
 
         char["hp"] -= value["hp_delta"]
         char["temp_hp"] -= value["temp_delta"]
-        _decrement_stat(char, "damage_taken", dmg, floor=False)
+        _decrement_stat(char, "damage_taken", dmg)
         if damage_type:
-            _decrement_stat(char, damage_taken_key(damage_type), dmg, floor=False)
+            _decrement_stat(char, damage_taken_key(damage_type), dmg)
         if knockout:
             _decrement_stat(char, "times_downed")
 
@@ -637,9 +637,7 @@ _UNDO_HANDLERS: dict[Action, Callable[[LoggingMixin, dict, Any], None]] = {
 }
 
 
-def _decrement_stat(char: dict, key: str, amount: int = 1, floor: bool = True):
-    """Take `amount` off one of the combatant's battle stats, stopping at 0
-    unless `floor` is False."""
+def _decrement_stat(char: dict, key: str, amount: int = 1):
+    """Take `amount` off one of the combatant's battle stats, stopping at 0."""
     stats = char.setdefault("stats", _default_stats())
-    value = stats.get(key, 0) - amount
-    stats[key] = max(value, 0) if floor else value
+    stats[key] = max(stats.get(key, 0) - amount, 0)
