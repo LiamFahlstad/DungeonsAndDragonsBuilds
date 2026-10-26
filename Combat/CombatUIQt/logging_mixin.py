@@ -19,6 +19,7 @@ from .stats import (
     damage_taken_key,
     decrement_named_stat,
     increment_named_stat,
+    long_rest_archive_sessions,
     spell_slots_used_key,
 )
 from .state import CombatWindowState
@@ -462,10 +463,16 @@ class LoggingMixin(CombatWindowState):
             used[value] = max(used.get(value, 0) - 1, 0)
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
-        """Aggregate lifetime stats per character name across the player log."""
+        """Aggregate lifetime stats per character name: the sessions archived
+        by long rests, then the player log's (including this one)."""
         if not self.player_log_file:
             return {}
-        return compute_player_log_stats(self.player_log_data)
+        return compute_player_log_stats(
+            {
+                "sessions": long_rest_archive_sessions(self.player_log_file)
+                + self.player_log_data.get("sessions", [])
+            }
+        )
 
     def _write_player_log(self):
         if not self.player_log_file:

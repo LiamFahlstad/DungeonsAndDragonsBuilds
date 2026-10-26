@@ -17,7 +17,7 @@ Combat/Campaigns/<Campaign>/
 ├─ CHEATSHEET.md   commands for this campaign
 ├─ PlayerLogs/     main_party.json (+ timestamped long-rest backups)
 └─ CombatLogs/     one persistent encounter log per scenario, plus timestamped
-                   encounter_log_*.json from runs without --log
+                   encounter_log_*.json from runs without --log (gitignored)
 ```
 
 To add a campaign, create that folder and register its `CAMPAIGN` in

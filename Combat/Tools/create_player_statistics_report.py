@@ -9,13 +9,13 @@ Or pick another campaign, or a custom log and output:
     python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
     python -m Combat.Tools.create_player_statistics_report --log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --output my_report.html
 
-Reads the campaign's PlayerLogs/main_party.json and writes
+Reads the campaign's PlayerLogs/main_party.json together with the sessions
+its long rests archived (main_party_long_rest_*.json), and writes
 player_statistics_report.html into the campaign's folder (or custom --log /
 --output) with lifetime player statistics.
 """
 
 import argparse
-import json
 from pathlib import Path
 
 import Combat.Scenarios as Scenarios
@@ -25,6 +25,8 @@ from Combat.CombatUIQt.stats import (
     compute_player_log_stats,
     damage_dealt_key,
     damage_taken_key,
+    long_rest_archives,
+    player_log_history,
     spell_slots_used_key,
 )
 from Core.Definitions import DamageType
@@ -78,12 +80,15 @@ def main() -> None:
     if args.output is None:
         args.output = campaign.folder / "player_statistics_report.html"
 
-    # Validate input file exists
     if not args.log.exists():
-        raise SystemExit(f"Player log not found: {args.log}")
+        raise SystemExit(
+            f"No player log for campaign '{campaign.name}' at {args.log}. Run a "
+            "session with --player-log first, or pass --log."
+        )
 
-    # Load and parse log
-    log_data = json.loads(args.log.read_text(encoding="utf-8"))
+    # The whole history: the sessions long rests archived, then the log's own.
+    log_data = player_log_history(args.log)
+    long_rest_count = len(long_rest_archives(args.log))
 
     # Compute stats
     stats_by_name = compute_player_log_stats(log_data)
@@ -107,10 +112,12 @@ def main() -> None:
         key=lambda x: (-x[1], x[0]),
     )
 
+    campaign_title = campaign.display_title
     party_name = args.log.stem.replace("_", " ").title()
 
     # Build summary chip content
     session_chip = f"Sessions: {session_count}"
+    long_rest_chip = f"Long rests: {long_rest_count}"
     first_chip = (
         f"First session: {first_session[:10]}" if first_session else "First session: —"
     )
@@ -328,16 +335,17 @@ td { color: var(--text); }
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Player Statistics - {escape(party_name)}</title>
+<title>Player Statistics - {escape(campaign_title)}</title>
 <style>
 {CSS}
 </style>
 </head>
 <body>
-<h1>Player Statistics — {escape(party_name)}</h1>
-<p class="subtitle">{escape(str(args.log))}</p>
+<h1>Player Statistics — {escape(campaign_title)} ({escape(party_name)})</h1>
+<p class="subtitle">{escape(str(args.log))} and its long-rest archives</p>
 <div class="summary-bar">
 <div class="summary-chip">{session_chip}</div>
+<div class="summary-chip">{long_rest_chip}</div>
 <div class="summary-chip">{first_chip}</div>
 <div class="summary-chip">{last_chip}</div>
 <div class="summary-chip">{scenario_chip}</div>

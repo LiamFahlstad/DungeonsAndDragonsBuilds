@@ -10,6 +10,7 @@ from Combat.Scenario import CombatScenario
 
 CAMPAIGN = Campaign(
     name="curse_of_the_lich",
+    title="Curse of the Lich",
     folder=Path(__file__).resolve().parent,
     players=Players.get_players_group,
     scenarios=[

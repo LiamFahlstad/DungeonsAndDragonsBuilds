@@ -1,9 +1,16 @@
 """Battle statistics configuration."""
 
+import json
+from pathlib import Path
+
 from Combat.Definitions import Action
 from Core.Definitions import DamageType
 
 SPELL_SLOT_LEVELS = range(1, 10)
+
+# A long rest archives the player log to a sibling named
+# "<stem>_long_rest_<YYYYmmdd_HHMMSS><suffix>" and then empties it.
+LONG_REST_ARCHIVE_SUFFIX = "long_rest"
 
 STAT_KEYS = (
     (
@@ -74,9 +81,37 @@ def decrement_named_stat(stats: dict, dict_key: str, name: str):
         by_name[name] -= 1
 
 
+def long_rest_archives(player_log_path: str | Path) -> list[Path]:
+    """The files long rests archived this player log to, oldest first (the
+    timestamp in the name sorts chronologically)."""
+    path = Path(player_log_path)
+    pattern = f"{path.stem}_{LONG_REST_ARCHIVE_SUFFIX}_*{path.suffix}"
+    return sorted(path.parent.glob(pattern))
+
+
+def long_rest_archive_sessions(player_log_path: str | Path) -> list[dict]:
+    """The sessions each long rest archived out of this player log, oldest
+    first. Every archive holds only the sessions since the rest before it
+    (the log is emptied after archiving), so these plus the current log's
+    sessions are the party's whole history, each session exactly once."""
+    sessions: list[dict] = []
+    for archive in long_rest_archives(player_log_path):
+        data = json.loads(archive.read_text(encoding="utf-8"))
+        sessions.extend(data.get("sessions", []))
+    return sessions
+
+
+def player_log_history(player_log_path: str | Path) -> dict:
+    """The player log with the long-rest archives' sessions in front of its
+    own: everything compute_player_log_stats needs for lifetime stats."""
+    path = Path(player_log_path)
+    current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    return {"sessions": long_rest_archive_sessions(path) + current.get("sessions", [])}
+
+
 def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
     """Aggregate lifetime stats per character name from every session in a
-    player log dict (as loaded from a Combat/PlayerLogs/*.json file). Mirrors
+    player log dict (as loaded from a Combat/Campaigns/<Campaign>/PlayerLogs/*.json file). Mirrors
     the forward-apply logic in logging_mixin.py's _apply_replay_action, but
     accumulates into plain stat dicts instead of mutating character objects."""
     stats_by_name: dict[str, dict] = {}

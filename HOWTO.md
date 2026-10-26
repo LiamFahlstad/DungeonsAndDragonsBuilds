@@ -68,7 +68,7 @@ python RunItemSheets.py                  # every *_item_sheet() function in Buil
 | `--player-log <path>` | Track the party across sessions: load HP, conditions and slots from the last session and append new actions |
 | `--log <path>` | Resume a scenario's encounter log (monsters' HP, conditions, round) |
 | `--absent NAME …` | Leave players out this session (case-insensitive partial match). Needs `--player-log` |
-| `--rest long\|short` | `long`: reset the log in place (with a timestamped backup). `short`: open the healing window. Needs `--player-log` |
+| `--rest long\|short` | `long`: reset the log in place (with a timestamped backup that the statistics still count). `short`: open the healing window. Needs `--player-log` |
 | `--difficulty` | Print the D&D 2024 encounter difficulty (allies' XP subtracted) and exit |
 
 With no flags it runs the default campaign's first scenario. With only `--player-log` it runs an out-of-combat "adventure" session.
@@ -111,13 +111,20 @@ To start a new persistent encounter log, copy `CombatLogs/empty.json` to `Combat
 | `Ctrl+Shift+C` | Clear target conditions | `Ctrl+N` | Add combatant |
 | `Ctrl+Z` | Undo | `Esc` | Clear selection |
 
-**Player stats report**
+**Statistics**
+
+Every action logged in the window feeds the battle statistics, in five categories: **Damage** (dealt and taken, in total and per damage type), **Healing** (healing and temp HP, given and received), **Conditions** (given and received, per condition), **Spells** (slots used per level, casts per spell) and **Outcomes** (knockouts, times downed, deaths).
+
+- **In the window:** the **Statistics** button has an *Encounter* tab per category (this fight, every combatant) and a *Players* tab per category (the tracked party's lifetime totals; needs `--player-log`).
+- **As a report:** one standalone HTML page per campaign with the party's lifetime totals, bar charts and the full breakdown tables. Pick the campaign with `--campaign` (default `curse_of_the_lich`).
 
 ```bash
-python -m Combat.Tools.create_player_statistics_report                       # → <campaign folder>/player_statistics_report.html
+python -m Combat.Tools.create_player_statistics_report                         # Curse of the Lich
 python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
 python -m Combat.Tools.create_player_statistics_report --log <log.json> --output report.html
 ```
+
+The report goes to `Combat/Campaigns/<C>/player_statistics_report.html`. Lifetime totals, in both the window and the report, cover every session: the player log plus the sessions each long rest archived to `main_party_long_rest_*.json`. A campaign without a player log yet (Grim's Castle) has nothing to report.
 
 ---
 
@@ -197,6 +204,7 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 | `Output/BuildGroups/`, `Output/ItemSheets/`, `Output/ClassHandouts/` | Party, item and handout pages |
 | `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json` plus `*_long_rest_<timestamp>.json` backups |
 | `Combat/Campaigns/<C>/CombatLogs/` | Encounter logs, one per scenario plus `encounter_log_*.json` (git-ignored) |
+| `Combat/Campaigns/<C>/player_statistics_report.html` | The campaign's player statistics report (git-ignored, like all `*.html`) |
 | `Builds/GeneratedBuilds/` | Build files from the Character Creator GUI |
 | `Guides/` | Static player guides (`ChoosingYourSpecies.html`, `ChoosingYourSubclass.html`), open directly |
 | `tests/snapshots/` | Golden build stats and sheet hashes |

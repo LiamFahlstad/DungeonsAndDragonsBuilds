@@ -10,6 +10,7 @@ from Combat.Scenario import CombatScenario
 
 CAMPAIGN = Campaign(
     name="grims_castle",
+    title="Grim's Castle",
     folder=Path(__file__).resolve().parent,
     players=Players.get_players_group,
     scenarios=[

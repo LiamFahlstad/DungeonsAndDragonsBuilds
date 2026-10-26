@@ -18,6 +18,13 @@ class Campaign:
     folder: Path
     players: Callable[[], list]
     scenarios: list[CombatScenario] = field(default_factory=list)
+    # How the statistics report names it, e.g. "Curse of the Lich"; defaults to
+    # `name` title-cased.
+    title: str = ""
+
+    @property
+    def display_title(self) -> str:
+        return self.title or self.name.replace("_", " ").title()
 
     @property
     def player_log_dir(self) -> Path:

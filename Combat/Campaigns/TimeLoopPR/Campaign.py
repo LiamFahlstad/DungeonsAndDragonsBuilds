@@ -10,6 +10,7 @@ from Combat.Scenario import CombatScenario
 
 CAMPAIGN = Campaign(
     name="time_loop_pr",
+    title="Time Loop PR",
     folder=Path(__file__).resolve().parent,
     players=Players.get_players_group,
     scenarios=[

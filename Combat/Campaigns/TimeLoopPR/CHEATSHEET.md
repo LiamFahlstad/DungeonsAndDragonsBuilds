@@ -13,8 +13,8 @@ Party: Dessie (Artificer), Hanna (Ranger), Maggie (Druid), Thomas (Bard), all le
 `PlayerLogs/main_party.json`. Each scenario has its own persistent encounter log
 in `CombatLogs/`. `--log` resumes it, and dropping `--log` starts monsters fresh.
 
-Hanna's drake and Dessie's Reanimator companion have no stat blocks in the
-simulator yet, so they don't appear as combatants.
+Hanna's drake and Dessie's Reanimator companion have stat blocks on their
+character sheets, but the simulator doesn't add companions as combatants yet.
 
 ## Adventure (out of combat)
 
@@ -26,9 +26,13 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 
 | Scenario | Command |
 |---|---|
-| Outside the Gates (easy) | `python RunCombatSimulator.py --scenario time_loop_pr_outside_the_gates --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_outside_the_gates.json` |
-| The Drunk Oxe (moderate) | `python RunCombatSimulator.py --scenario time_loop_pr_drunk_oxe --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_drunk_oxe.json` |
-| The Square (about 3× the High budget) | `python RunCombatSimulator.py --scenario time_loop_pr_square --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_square.json` |
+| Outside the Gates (low) | `python RunCombatSimulator.py --scenario time_loop_pr_outside_the_gates --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_outside_the_gates.json` |
+| The Drunk Oxe (low) | `python RunCombatSimulator.py --scenario time_loop_pr_drunk_oxe --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_drunk_oxe.json` |
+| The Square (about 2.3× the High budget) | `python RunCombatSimulator.py --scenario time_loop_pr_square --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json --log Combat/Campaigns/TimeLoopPR/CombatLogs/time_loop_pr_square.json` |
+
+Against the four level 3 players (`--difficulty`): Outside the Gates is 600 XP
+(Low starts at 600), The Drunk Oxe 800 XP (just under Moderate's 900), and The
+Square 3650 XP against a High budget of 1600.
 
 ## Rests and stats
 
@@ -38,4 +42,6 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
 ```
 
-The stats report writes `player_statistics_report.html` into this folder.
+The stats report writes `player_statistics_report.html` into this folder. It
+covers every session, including those long rests archived to
+`PlayerLogs/main_party_long_rest_*.json`.

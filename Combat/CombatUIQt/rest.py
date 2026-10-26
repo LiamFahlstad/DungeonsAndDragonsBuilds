@@ -38,6 +38,7 @@ from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
 
 from .app import CombatAppQt
+from .stats import LONG_REST_ARCHIVE_SUFFIX
 from .styles import QSS
 
 SHORT_REST_CADENCES = {RegainedOn.SHORT_REST, RegainedOn.SHORT_OR_LONG_REST}
@@ -91,7 +92,7 @@ def apply_long_rest(player_log_path: str) -> str:
     party — full HP, full spell slots, zero feature uses spent — since
     character sheets are always built that way. Never opens a window."""
     src = Path(player_log_path)
-    backup_path = Path(_rest_checkpoint_path(player_log_path, "long_rest"))
+    backup_path = Path(_rest_checkpoint_path(player_log_path, LONG_REST_ARCHIVE_SUFFIX))
     backup_path.parent.mkdir(parents=True, exist_ok=True)
     if src.exists():
         backup_path.write_text(src.read_text())
