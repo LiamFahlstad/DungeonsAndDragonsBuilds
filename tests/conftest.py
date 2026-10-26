@@ -2,7 +2,21 @@
 Shared pytest fixtures and configuration for D&D character sheet builder tests.
 """
 
+import os
+
 import pytest
+
+
+def pytest_collection_modifyitems(items):
+    """When UPDATE_SNAPSHOTS=1, force all snapshot-update tests onto a single
+    xdist worker so their concurrent read-modify-write on the golden JSON files
+    doesn't corrupt them."""
+    if os.environ.get("UPDATE_SNAPSHOTS") != "1":
+        return
+    marker = pytest.mark.xdist_group("snapshot_update")
+    for item in items:
+        if "snapshot" in item.nodeid:
+            item.add_marker(marker)
 from Model.AbilityScores import StandardArrayAbilityScores
 from Model.Ledger.ArmorClass import ArmorClass
 from Model.Ledger.CarryingCapacity import CarryingCapacity

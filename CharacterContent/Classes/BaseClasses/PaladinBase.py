@@ -80,7 +80,7 @@ class PaladinLevel4(ClassBuilder.BaseClassLevel4):
     spell: PaladinLevel1Spells
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
@@ -118,7 +118,7 @@ class PaladinLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -165,7 +165,7 @@ class PaladinLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -211,7 +211,7 @@ class PaladinLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass

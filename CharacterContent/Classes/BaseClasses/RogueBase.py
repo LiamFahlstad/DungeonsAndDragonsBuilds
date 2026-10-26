@@ -54,7 +54,7 @@ class RogueLevel4(ClassBuilder.BaseClassLevel4):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -91,7 +91,7 @@ class RogueLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -106,7 +106,7 @@ class RogueLevel10(ClassBuilder.BaseClassLevel10):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -126,7 +126,7 @@ class RogueLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -160,7 +160,7 @@ class RogueLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass

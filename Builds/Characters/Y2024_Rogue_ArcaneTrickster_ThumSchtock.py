@@ -22,10 +22,7 @@ from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Items.Weapons.SimpleMelee import Dagger
 from CharacterContent.Species import Dwarf
-from CharacterContent.Spells.SpellLists import (
-    WizardLevel0Spells,
-    WizardLevel1Spells,
-)
+from CharacterContent.Spells.SpellLists import DivinationLevel1Spells, WizardLevel0Spells, WizardLevel1Spells
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from Core.Definitions import Ability, Skill
 from Model.AbilityScores import PointBuyAbilityScores
@@ -97,10 +94,10 @@ def get_starter_class_builder():
                 3: RogueLevel3(),
                 4: RogueLevel4(
                     # Placeholder ASI pick - confirm with the player (could be a feat instead).
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.DEXTERITY, 2),
-                        ]
+                    general_feat=GeneralFeats.FeyTouched(
+                        character_level=4,
+                        ability=Ability.INTELLIGENCE,
+                        spell=DivinationLevel1Spells.DETECT_MAGIC,
                     ),
                 ),
             },
@@ -113,7 +110,7 @@ def get_starter_class_builder():
                     spell_3=WizardLevel1Spells.FOG_CLOUD,
                 ),
                 4: RogueArcaneTricksterLevel4(
-                    spell=WizardLevel1Spells.SHIELD,
+                    spell=WizardLevel1Spells.DISGUISE_SELF,
                 ),
             },
         ),

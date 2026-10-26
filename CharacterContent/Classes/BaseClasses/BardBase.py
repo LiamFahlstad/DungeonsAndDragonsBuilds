@@ -105,7 +105,7 @@ class BardLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
         data.add_cantrip(self.cantrip, source=SpellSource.CHOSEN)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
@@ -158,7 +158,7 @@ class BardLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
         data.add_spell(self.spell, source=SpellSource.CHOSEN)
 
 
@@ -215,7 +215,7 @@ class BardLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -255,7 +255,7 @@ class BardLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass

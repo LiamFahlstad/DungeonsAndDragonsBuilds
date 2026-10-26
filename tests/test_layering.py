@@ -16,6 +16,12 @@ entry ending in "/" covers every file in that folder.
 import ast
 from pathlib import Path
 
+import pytest
+
+# All tests in this file walk and parse the entire repo. Group them on one
+# xdist worker so they share the _parse_cache and don't redundantly re-parse.
+pytestmark = pytest.mark.xdist_group("repo_scan")
+
 REPO = Path(__file__).resolve().parent.parent
 SKIPPED_DIRS = {
     ".claude",
@@ -122,8 +128,13 @@ def _project_files():
             yield relative.as_posix(), path
 
 
+_parse_cache: dict[Path, ast.AST] = {}
+
+
 def _parse(path: Path) -> ast.AST:
-    return ast.parse(path.read_text(encoding="utf-8", errors="ignore"))
+    if path not in _parse_cache:
+        _parse_cache[path] = ast.parse(path.read_text(encoding="utf-8", errors="ignore"))
+    return _parse_cache[path]
 
 
 def _module_name(relative_path: str) -> str:
@@ -224,7 +235,7 @@ def test_no_type_checking_blocks():
     for name, path in _project_files():
         source = path.read_text(encoding="utf-8", errors="ignore")
         # Cheap text filter first: the repo has big generated files.
-        if "TYPE_CHECKING" in source and _uses_type_checking(ast.parse(source)):
+        if "TYPE_CHECKING" in source and _uses_type_checking(_parse(path)):
             offenders.add(name)
     _check_allowlist(offenders, TYPE_CHECKING_ALLOWLIST, "TYPE_CHECKING")
 
@@ -304,7 +315,7 @@ def test_no_cast():
     offenders = set()
     for name, path in _project_files():
         source = path.read_text(encoding="utf-8", errors="ignore")
-        if "cast" in source and _uses_cast(ast.parse(source)):
+        if "cast" in source and _uses_cast(_parse(path)):
             offenders.add(name)
     _check_allowlist(offenders, CAST_ALLOWLIST, "typing.cast")
 
@@ -324,7 +335,7 @@ def test_no_as_narrowing():
     offenders = set()
     for name, path in _project_files():
         source = path.read_text(encoding="utf-8", errors="ignore")
-        if "_as" in source and _uses_as(ast.parse(source)):
+        if "_as" in source and _uses_as(_parse(path)):
             offenders.add(name)
     _check_allowlist(offenders, AS_ALLOWLIST, "_as(...) narrowing")
 

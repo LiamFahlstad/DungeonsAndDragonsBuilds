@@ -59,7 +59,7 @@ class FighterLevel4(ClassBuilder.BaseClassLevel4):
 
     def add_features(self, data: Grants) -> None:
         data.add_weapon_mastery(self.weapon_mastery)
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -77,7 +77,7 @@ class FighterLevel6(ClassBuilder.BaseClassLevel6):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -92,7 +92,7 @@ class FighterLevel8(ClassBuilder.BaseClassLevel8):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -136,7 +136,7 @@ class FighterLevel12(ClassBuilder.BaseClassLevel12):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -154,7 +154,7 @@ class FighterLevel14(ClassBuilder.BaseClassLevel14):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -171,7 +171,7 @@ class FighterLevel16(ClassBuilder.BaseClassLevel16):
 
     def add_features(self, data: Grants) -> None:
         data.add_weapon_mastery(self.weapon_mastery)
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass

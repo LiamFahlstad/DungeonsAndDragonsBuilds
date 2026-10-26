@@ -54,7 +54,7 @@ class MonkLevel4(ClassBuilder.BaseClassLevel4):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
         data.add_feature(MonkFeatures.SlowFall())
 
 
@@ -94,7 +94,7 @@ class MonkLevel8(ClassBuilder.BaseClassLevel8):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -135,7 +135,7 @@ class MonkLevel12(ClassBuilder.BaseClassLevel12):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass
@@ -174,7 +174,7 @@ class MonkLevel16(ClassBuilder.BaseClassLevel16):
     general_feat: GeneralFeats.GeneralFeat
 
     def add_features(self, data: Grants) -> None:
-        data.add_feature(self.general_feat)
+        self.general_feat.grant_to(data)
 
 
 @attr.dataclass

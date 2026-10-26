@@ -43,6 +43,9 @@ class Grants:
         a species (a Human's Versatile) grants it."""
         return Grants(self.sources, self.level, feat.name, GrantKind.ORIGIN_FEAT)
 
+    def for_general_feat(self, feat: Feature) -> "Grants":
+        return Grants(self.sources, self.level, feat.name, GrantKind.GENERAL_FEAT)
+
     # -- Features ---------------------------------------------------------------
 
     def add_feature(

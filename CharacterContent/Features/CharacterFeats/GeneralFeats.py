@@ -4,6 +4,7 @@ from CharacterContent.Spells.SpellLists import (
     AbjurationLevel3Spells,
     AbjurationLevel4Spells,
     AbjurationLevel5Spells,
+    ConjurationLevel0Spells,
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
     ConjurationLevel3Spells,
@@ -28,11 +29,16 @@ from CharacterContent.Spells.SpellLists import (
     IllusionLevel3Spells,
     IllusionLevel4Spells,
     IllusionLevel5Spells,
+    NecromancyLevel0Spells,
     NecromancyLevel1Spells,
     NecromancyLevel2Spells,
     NecromancyLevel3Spells,
     NecromancyLevel4Spells,
     NecromancyLevel5Spells,
+    DruidLevel1Spells,
+    DruidLevel2Spells,
+    SorcererLevel0Spells,
+    WizardLevel0Spells,
     TransmutationLevel1Spells,
     TransmutationLevel2Spells,
     TransmutationLevel3Spells,
@@ -44,6 +50,8 @@ from CharacterContent.Spells.SpellLists import (
     Level4Spells,
     Level5Spells,
 )
+from Model.CharacterSources import SpellSource
+from Model.Grants import Grants
 from Model.Content.Feature import (
     Feature,
     FeatureTarget,
@@ -91,6 +99,21 @@ class GeneralFeat(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return regained_on_from_uses(self.uses)
+
+    def get_spells(self) -> list[str]:
+        return []
+
+    def get_spell_casting_ability(self) -> "Ability | None":
+        return None
+
+    def get_spell_source(self) -> "str | None":
+        return None
+
+    def grant_to(self, data: "Grants") -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        for spell in self.get_spells():
+            feat.add_spell(spell, self.get_spell_casting_ability(), source=self.get_spell_source())
 
 
 class _AbilityScoreFeat(GeneralFeat):
@@ -534,6 +557,21 @@ class ElementalAdept(_AbilityScoreFeat):
 class FeyTouched(_AbilityScoreFeat):
     _NAME = "Fey Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def __init__(self, character_level: int, ability: Ability, spell: "str | None" = None):
+        if spell is not None and spell not in list(DivinationLevel1Spells) + list(EnchantmentLevel1Spells):
+            raise ValueError(
+                f"Fey Touched spell must be a level 1 Divination or Enchantment spell."
+            )
+        self.spell = spell
+        super().__init__(character_level, ability)
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(ConjurationLevel2Spells.MISTY_STEP, self.ability)
+        if self.spell is not None:
+            feat.add_spell(self.spell, self.ability, source=SpellSource.CHOSEN)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1152,7 +1190,7 @@ class RitualCaster(_AbilityScoreFeat):
     _NAME = "Ritual Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def __init__(self, character_level: int, ability: Ability):
+    def __init__(self, character_level: int, ability: Ability, spells: "list[str] | None" = None):
         if character_level < self._MIN_LEVEL:
             raise ValueError(
                 f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
@@ -1161,6 +1199,7 @@ class RitualCaster(_AbilityScoreFeat):
             allowed = " or ".join(a.value for a in self._ABILITIES)
             raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
         self.ability = ability
+        self.spells = spells if spells is not None else []
         self._bonus = AbilityScoreBonus(
             [(ability, 1)],
             total=1,
@@ -1173,6 +1212,15 @@ class RitualCaster(_AbilityScoreFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
+
+    def get_spells(self) -> list[str]:
+        return self.spells
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
+
+    def get_spell_source(self) -> str:
+        return SpellSource.CHOSEN
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1238,6 +1286,21 @@ class Sentinel(_AbilityScoreFeat):
 class ShadowTouched(_AbilityScoreFeat):
     _NAME = "Shadow Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def __init__(self, character_level: int, ability: Ability, spell: "str | None" = None):
+        if spell is not None and spell not in list(IllusionLevel1Spells) + list(NecromancyLevel1Spells):
+            raise ValueError(
+                f"Shadow Touched spell must be a level 1 Illusion or Necromancy spell."
+            )
+        self.spell = spell
+        super().__init__(character_level, ability)
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(IllusionLevel2Spells.INVISIBILITY, self.ability)
+        if self.spell is not None:
+            feat.add_spell(self.spell, self.ability, source=SpellSource.CHOSEN)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1563,6 +1626,12 @@ class Telekinetic(_AbilityScoreFeat):
     _NAME = "Telekinetic"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
+    def get_spells(self) -> list[str]:
+        return [ConjurationLevel0Spells.MAGE_HAND]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Facts(
@@ -1633,6 +1702,12 @@ class Telepathic(_AbilityScoreFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
+
+    def get_spells(self) -> list[str]:
+        return [DivinationLevel2Spells.DETECT_THOUGHTS]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1731,6 +1806,12 @@ class ColdCaster(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
+    def get_spells(self) -> list[str]:
+        return [SorcererLevel0Spells.RAY_OF_FROST]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Facts(
@@ -1797,6 +1878,12 @@ class EnclaveMAGIC(_AbilityScoreFeat):
     _NAME = "Enclave Magic"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def get_spells(self) -> list[str]:
+        return [DruidLevel2Spells.BEAST_SENSE]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2403,9 +2490,10 @@ class EchoingSoul(GeneralFeat):
 
 class GatheredWhispers(GeneralFeat):
 
-    def __init__(self, character_level: int):
+    def __init__(self, character_level: int, spell_casting_ability: Ability):
         if character_level < 1:
             raise ValueError("Gathered Whispers requires character level 1 or higher.")
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(
             name="Gathered Whispers",
             origin="General Feat Ravenloft Campaign",
@@ -2416,6 +2504,12 @@ class GatheredWhispers(GeneralFeat):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(WizardLevel0Spells.MESSAGE, self.spell_casting_ability)
+        feat.add_spell(DivinationLevel2Spells.AUGURY, self.spell_casting_ability)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2471,9 +2565,10 @@ class GatheredWhispers(GeneralFeat):
 
 class LivingShadow(GeneralFeat):
 
-    def __init__(self, character_level: int):
+    def __init__(self, character_level: int, spell_casting_ability: Ability):
         if character_level < 1:
             raise ValueError("Living Shadow requires character level 1 or higher.")
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(
             name="Living Shadow",
             origin="General Feat Ravenloft Campaign",
@@ -2484,6 +2579,12 @@ class LivingShadow(GeneralFeat):
                 gained_at=PROFICIENCY_BONUS_GAINED_AT,
             ),
         )
+
+    def get_spells(self) -> list[str]:
+        return [ConjurationLevel0Spells.MAGE_HAND]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2762,13 +2863,20 @@ class SymbioticBeing(GeneralFeat):
 
 class TouchOfDeath(GeneralFeat):
 
-    def __init__(self, character_level: int):
+    def __init__(self, character_level: int, spell_casting_ability: Ability):
         if character_level < 1:
             raise ValueError("Touch of Death requires character level 1 or higher.")
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(
             name="Touch of Death",
             origin="General Feat Ravenloft Campaign",
         )
+
+    def get_spells(self) -> list[str]:
+        return [NecromancyLevel0Spells.CHILL_TOUCH]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2800,13 +2908,20 @@ class TouchOfDeath(GeneralFeat):
 
 class Watchers(GeneralFeat):
 
-    def __init__(self, character_level: int):
+    def __init__(self, character_level: int, spell_casting_ability: Ability):
         if character_level < 1:
             raise ValueError("Watchers requires character level 1 or higher.")
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(
             name="Watchers",
             origin="General Feat Ravenloft Campaign",
         )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(DruidLevel2Spells.BEAST_SENSE, self.spell_casting_ability)
+        feat.add_spell(DruidLevel1Spells.SPEAK_WITH_ANIMALS, self.spell_casting_ability)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -3040,6 +3155,12 @@ class _SchoolAdept(_AbilityScoreFeat):
         """The school benefit as label/value rows."""
         raise NotImplementedError
 
+    def get_spells(self) -> list[str]:
+        return list(self._SPELLS)
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.ability
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         effect_name = self._SCHOOL_EFFECT.split(". ", 1)[0]
         return [
@@ -3270,10 +3391,21 @@ class MagicConnoisseur(_AbilityScoreFeat):
         ability: Ability,
         level_1_spell: str,
         level_2_spell: str,
+        spell_casting_ability: Ability,
     ):
         self.level_1_spell = level_1_spell
         self.level_2_spell = level_2_spell
+        self.spell_casting_ability = spell_casting_ability
         super().__init__(character_level, ability)
+
+    def get_spells(self) -> list[str]:
+        return [self.level_1_spell, self.level_2_spell]
+
+    def get_spell_casting_ability(self) -> Ability:
+        return self.spell_casting_ability
+
+    def get_spell_source(self) -> str:
+        return SpellSource.CHOSEN
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

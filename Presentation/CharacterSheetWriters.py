@@ -110,7 +110,7 @@ class HtmlCharacterSheetWriter:
         stamp = character.stamp_of(feat)
         passive, *rest = feature_sort_key(character, feat)
         leveled = stamp.kind.is_class_level
-        return (passive, leveled, stamp.level if leveled else 0, *rest)
+        return (passive, leveled, stamp.level, *rest)
 
     @staticmethod
     def _feature_level(character: Character, feat: Feature) -> int:

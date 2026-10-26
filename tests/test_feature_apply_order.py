@@ -576,6 +576,7 @@ def test_evaluation_passes_apply_the_write_only_record(name):
 _LEDGER_OWNERS = {"Model", "tests", ".claude", "Output", "SourceTexts"}
 
 
+@pytest.mark.xdist_group("repo_scan")
 def test_nothing_outside_the_model_reaches_into_the_record():
     # LedgerWriter._ledger and Character._ledger are the record the Character
     # answers from. Content that reached it could read stats mid-evaluation

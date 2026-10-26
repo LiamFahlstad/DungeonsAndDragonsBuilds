@@ -14,6 +14,7 @@ class GrantKind(Enum):
     SPECIES = "species"
     BACKGROUND = "background"
     ORIGIN_FEAT = "origin feat"
+    GENERAL_FEAT = "general feat"
     CLASS = "class"
     SUBCLASS = "subclass"
     OTHER = "other"

@@ -105,6 +105,7 @@ def test_requirements_are_checked_by_validate_not_by_queries(make_character):
         character.validate()
 
 
+@pytest.mark.xdist_group("repo_scan")
 def test_model_package_imports_nothing_from_character_content():
     # CharacterContent imports the model (for Character and LedgerWriter), so the
     # model importing CharacterContent at load time would be an import cycle.

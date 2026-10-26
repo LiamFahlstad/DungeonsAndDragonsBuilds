@@ -18929,20 +18929,20 @@
   "Ability Scores": {
    "CHA": 8,
    "CON": 12,
-   "DEX": 18,
-   "INT": 17,
+   "DEX": 16,
+   "INT": 18,
    "STR": 11,
    "WIS": 10
   },
   "Saving Throws": {
    "CHA": -1,
    "CON": 1,
-   "DEX": 6,
-   "INT": 5,
+   "DEX": 5,
+   "INT": 6,
    "STR": 0,
    "WIS": 0
   },
-  "ac": "16 (no Shield)",
+  "ac": "15 (no Shield)",
   "class_levels": {
    "Rogue": 4
   },
@@ -18963,7 +18963,7 @@
    "Weapon Mastery",
    "Cunning Action",
    "Steady Aim",
-   "Ability Score Improvement",
+   "Fey Touched",
    "Spellcasting",
    "Mage Hand Legerdemain",
    "Darkvision",
@@ -19013,8 +19013,18 @@
     "Intelligence"
    ],
    [
-    "Shield",
+    "Detect Magic",
     1,
+    "Intelligence"
+   ],
+   [
+    "Disguise Self",
+    1,
+    "Intelligence"
+   ],
+   [
+    "Misty Step",
+    2,
     "Intelligence"
    ]
   ],
@@ -19023,11 +19033,11 @@
   "visibility_states": [],
   "weapons": [
    "Unarmed Strike  1d20+2  dmg 1d1 +0",
-   "Shortsword  1d20+6  dmg 1d6 +4",
-   "Scimitar  1d20+6  dmg 1d6 +4",
-   "Hand Crossbow  1d20+6  dmg 1d6 +4",
-   "Hand Crossbow  1d20+6  dmg 1d6 +4",
-   "Halfling's Trick  1d20+7  dmg 1d6 +5"
+   "Shortsword  1d20+5  dmg 1d6 +3",
+   "Scimitar  1d20+5  dmg 1d6 +3",
+   "Hand Crossbow  1d20+5  dmg 1d6 +3",
+   "Hand Crossbow  1d20+5  dmg 1d6 +3",
+   "Halfling's Trick  1d20+6  dmg 1d6 +4"
   ]
  },
  "Y2024_Rogue_Assassin_LysandraNightblade": {
