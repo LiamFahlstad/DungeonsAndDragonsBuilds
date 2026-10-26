@@ -211,14 +211,14 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 
 ---
 
-## 10. Claude Code agents (local, `.claude/agents/`, not in git)
+## 10. Claude Code agents (`.claude/agents/`)
 
-Ask Claude Code to use one by name.
+Ask Claude Code to use one by name. How the setup works (CLAUDE.md, hooks, the verify skill, model choice): [Notes/agent-workflow.md](Notes/agent-workflow.md).
 
 | Area | Agents |
 |---|---|
-| Builds & content | `dnd-builds` (`-haiku` = cheaper), `dnd-subclass-creator` (from `SourceTexts/`), `dnd-equipment`, `character-creator` (GUI) |
+| Builds & content | `dnd-builds`, `dnd-subclass-creator` (from `SourceTexts/`), `dnd-equipment`, `character-creator` (GUI) |
 | Feature polish | `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-feature-extender` |
-| Spells | `dnd-spell-summaries`, `dnd-spell-usage-tags` |
-| Combat & monsters | `combat-sim` (`-haiku` = cheaper), `dnd-monster-creator`, `dnd-monster-balancer`, `dnd-monster-ability-refactor` |
+| Spells | `dnd-spell-summaries`, `dnd-spell-usage-tags`, `dnd-spell-improved-descriptions` |
+| Combat & monsters | `combat-sim`, `dnd-monster-creator`, `dnd-monster-balancer`, `dnd-monster-ability-refactor` |
 | Data & tests | `wikidot-scraper`, `dnd-test-bughunter` |

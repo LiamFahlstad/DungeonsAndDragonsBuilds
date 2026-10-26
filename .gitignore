@@ -209,8 +209,13 @@ __marimo__/
 # Files
 *.html
 
-# Claude
+# Claude: share agents, skills, hooks and project settings; keep worktrees,
+# settings.local.json and other local state out
 .claude/*
+!.claude/agents/
+!.claude/skills/
+!.claude/hooks/
+!.claude/settings.json
 
 # Combat logs (each campaign's Combat/Campaigns/<Campaign>/CombatLogs folder)
 Combat/Campaigns/*/CombatLogs/*.json

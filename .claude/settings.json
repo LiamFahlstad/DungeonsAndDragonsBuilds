@@ -1,0 +1,62 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./run_tests.sh)",
+      "Bash(./run_tests.sh *)",
+      "Bash(./format.sh *)",
+      "Bash(./typecheck.sh)",
+      "Bash(./typecheck.sh *)",
+      "Bash(python -m pytest *)",
+      "Bash(python -m py_compile *)",
+      "Bash(python -m pyflakes *)",
+      "Bash(python -c ' *)",
+      "Bash(python3 -c ' *)",
+      "Bash(python RunCharacterCreator.py)",
+      "Bash(python RunCharacterCreator.py *)",
+      "Bash(python RunBuildGroups.py)",
+      "Bash(python RunItemSheets.py)",
+      "Bash(python Builds/*)",
+      "Bash(python Combat/Tools/monster_score.py *)",
+      "Bash(python Combat/Tools/monster_cr_compare.py *)",
+      "Bash(python .claude/skills/verify-agent-work/verify.py)",
+      "Bash(python .claude/skills/verify-agent-work/verify.py *)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git worktree list)",
+      "Bash(git -C * status *)",
+      "Bash(git -C * diff *)",
+      "WebFetch(domain:dnd2024.wikidot.com)",
+      "WebFetch(domain:dnd5e.wikidot.com)",
+      "WebFetch(domain:www.aidedd.org)",
+      "WebFetch(domain:code.claude.com)"
+    ],
+    "ask": [
+      "Bash(git checkout -- *)",
+      "Bash(git checkout .)",
+      "Bash(git restore *)",
+      "Bash(git reset --hard *)",
+      "Bash(git clean *)",
+      "Bash(git stash drop *)",
+      "Bash(git stash clear)",
+      "Bash(git push *)"
+    ]
+  },
+  "hooks": {
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/check_subagent_edits.py\"",
+            "timeout": 60,
+            "statusMessage": "Checking the subagent's edits"
+          }
+        ]
+      }
+    ]
+  }
+}
