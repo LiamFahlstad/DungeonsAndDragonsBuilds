@@ -1,13 +1,15 @@
 # Working with Claude Code agents in this repo
 
-How the agent setup is organised, why each piece exists, and how to use and extend it. The patterns follow Anthropic's Claude Code documentation ([subagents](https://code.claude.com/docs/en/sub-agents), [hooks](https://code.claude.com/docs/en/hooks)) and the lessons this repo learned the hard way.
+How the agent setup is organised, why each piece exists, and how to use and extend it. The patterns follow Anthropic's Claude Code documentation ([subagents](https://code.claude.com/docs/en/sub-agents), [skills](https://code.claude.com/docs/en/skills), [hooks](https://code.claude.com/docs/en/hooks)) and the lessons this repo learned the hard way.
 
 ## The short version
 
 | Piece | File | Job |
 |---|---|---|
 | Shared context | `CLAUDE.md` | Project rules, commands, and how agents behave and report. **Every session and every subagent loads it.** |
-| Specialists | `.claude/agents/*.md` | One focused expert per kind of task: its own prompt, tool list and default model. |
+| Roles | `.claude/agents/<domain>/<agent>.md` | One focused expert per kind of task: its own prompt, tool list, default model and the skills it preloads. Grouped by domain: `builds/`, `features/`, `spells/`, `combat/`, `tooling/`. |
+| Know-how | `.claude/skills/<skill>/` | Procedures, reference files and scripts, shared by every agent that preloads them and usable by the main session: `balance-monster`, `monster-stat-blocks`, `usage-tags`, `verify-agent-work`. |
+| Config test | `tests/test_claude_config.py` | Fails the normal test run if an agent's or skill's frontmatter is broken, or if a `skills:` entry, link or script path points at something missing. |
 | Guardrail | `.claude/hooks/check_subagent_edits.py` (wired in `.claude/settings.json`) | A subagent can't finish while a `.py` file it edited fails to compile, or if it edited another agent's worktree. |
 | Verification | `.claude/skills/verify-agent-work/` | Checks the working tree against what an agent *claimed*: compile, undefined names, imports, sibling worktrees, tests. |
 | Permissions | `.claude/settings.json` | Safe, general allow rules shared by all sessions and agents; destructive git commands always ask. |
@@ -22,12 +24,14 @@ Claude Code reads instructions from several places. Putting a rule in the wrong 
 | Layer | Who sees it | Put here |
 |---|---|---|
 | `CLAUDE.md` (repo root) | Main session **and every subagent** (except the built-in Explore/Plan) | Rules that apply to all work: project conventions, safety rules, the report format, orchestration guidance |
-| Agent prompt (`.claude/agents/<name>.md`) | Only that subagent | Domain knowledge for one kind of task: file layout, APIs, worked examples, task-specific checks |
-| Skill (`.claude/skills/<name>/SKILL.md`) | Loaded on demand (by name, or when its description matches) | A repeatable procedure with steps and maybe a script, such as verification |
+| Agent prompt (`.claude/agents/<domain>/<name>.md`) | Only that subagent; loaded in full at start | The role: who it is, its scope, workflow, token discipline and report |
+| Skill (`.claude/skills/<name>/SKILL.md` + files) | Agents that list it in `skills:` (SKILL.md injected at start), or any session that invokes it. Its other files are read only when needed | Know-how more than one agent (or the main session) needs: procedures, rubrics, reference material, scripts |
 | Hook (`.claude/settings.json` → `hooks`) | Runs automatically; Claude can't skip it | Checks that must *always* happen. Deterministic code, not a request |
-| Auto-memory (`~/.claude/projects/.../memory/`) | **Main session only. Subagents never see it.** | Personal working preferences and incident history |
+| Auto-memory (`~/.claude/projects/.../memory/`) | Main session; **not reliably** subagents (see below) | Personal working preferences and incident history |
 
-**Key fact behind this setup:** subagents do *not* load auto-memory. Before this change, rules like "`origin=` is a category, not a sourcebook", "2014 subclasses start at level 3" and "homebrew monsters score 0.4-0.6" lived only in memory. Every agent you dispatched worked without them. They now live in `CLAUDE.md`.
+**Key fact behind this setup:** don't rely on auto-memory reaching subagents. The docs say subagents don't load it ("the main conversation's auto memory isn't loaded"). Yet a test subagent in this repo did receive the memory *index*: a stale copy from when the session started, with no memory file contents. Either way it is the wrong channel. Rules like "`origin=` is a category, not a sourcebook", "2014 subclasses start at level 3" and "homebrew monsters score 0.4-0.6" lived only in memory, so agents got them partially and out of date, at best. They now live in `CLAUDE.md`, the documented channel every agent loads.
+
+**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 7.
 
 ## 2. The agents
 
@@ -39,8 +43,11 @@ name: dnd-monster-balancer
 description: Use to check and rebalance homebrew monsters ...   # what the router reads to pick an agent
 tools: Read, Grep, Glob, Edit, Write, Bash                      # allowlist; leave out what it doesn't need
 model: sonnet                                                   # default model; can be overridden per call
+skills:                                                         # shared know-how injected at start
+  - balance-monster
+  - monster-stat-blocks
 ---
-<system prompt: domain knowledge, workflow, report format>
+<system prompt: role, scope, workflow, report format>
 ```
 
 Good practices this setup follows:
@@ -125,17 +132,81 @@ It now holds about 30 general rules: tests, format, typecheck, compile, the run 
 
 `settings.local.json` (personal) was left alone. Your **user-level** `~/.claude/settings.json` applies to all your projects, so it was left alone too. It has about 245 accumulated allow entries, including broad ones like `git checkout *`, `git stash *`, `git rm *` and `pip install *`. Permission rules are checked deny → ask → allow, whichever file they come from. So this project's `ask` rules still make the destructive forms prompt here; in other projects they don't. Pruning that file by hand is worth doing at some point.
 
-## 6. Adding or changing an agent
+## 6. Folders: agents are roles, skills are know-how
 
-1. Create `.claude/agents/<name>.md` with `name`, a routing-quality `description` (when to use it *and* when not), a minimal `tools` list, and a `model`.
-2. Put only domain-specific knowledge in the body. Anything that applies to all agents goes in `CLAUDE.md` instead. Don't copy it.
-3. Give it a concrete verification step (the command that proves the task worked) and any task-specific report items.
-4. Try it on a real task, then run the verify skill on the result. If it makes a mistake, add one line to its prompt about that mistake, not a page.
-5. Add it to the table in HOWTO section 10. Commit the file; it's tracked now.
+The idea was to give every agent and skill its own folder, holding scripts, metadata and whatever else belongs to it. That is exactly right for skills, and only half right for agents, for these reasons.
+
+**What Claude Code actually does with each folder** (from the docs):
+
+- An **agent** is one Markdown file. Claude Code scans `.claude/agents/` recursively, and a file's identity comes only from its `name:` field, so subfolders are free to use for organising. But the agent's prompt is loaded **in full** every time it starts, and nothing else in its folder is loaded at all. An `.md` file with no `name:` beside it is silently treated as "documentation"; add a stray `name:` and it quietly becomes an agent.
+- A **skill** is a folder: `SKILL.md` plus any reference files, examples and scripts. `SKILL.md` is the entry point. The other files are read **only when the task needs them** ("progressive disclosure"), and scripts are run, not read. An agent preloads a skill with `skills: [name]`, which injects that skill's `SKILL.md` when the agent starts. Several agents can preload the same skill, and the main session can invoke it too.
+
+So a folder per agent, holding scripts and references, would be a skill without a skill's benefits: no on-demand loading, no sharing between agents, no access from the main session. The established split is:
+
+| | Agent (`.claude/agents/<domain>/<name>.md`) | Skill (`.claude/skills/<name>/`) |
+|---|---|---|
+| Is | a **role**: who does the work | **know-how**: how the work is done |
+| Holds | persona, scope, tools, model, workflow steps, report format | procedure, rubric, reference files, scripts |
+| Loaded | in full when the agent starts | `SKILL.md` when preloaded or invoked; other files on demand |
+| Shared | no | by every agent that lists it, and the main session |
+
+**Agents are grouped by domain** (`builds/`, `features/`, `spells/`, `combat/`, `tooling/`), matching the areas in HOWTO section 10. **Skills stay flat**, one folder each, because that is the layout Claude Code discovers (`.claude/skills/<name>/SKILL.md`).
+
+### What the split fixed
+
+- **The monster creator never balanced its monsters.** CLAUDE.md requires every homebrew monster to score 0.4-0.6, but that procedure lived only inside `dnd-monster-balancer`. Now it is the `balance-monster` skill. The creator preloads it, its workflow ends with a balancing step, and the main session can use it when it edits a monster itself.
+- **The MonsterAbility reference had silently gone stale.** `dnd-monster-ability-refactor` carried a hand-copied list of the structured ability classes. Comparing it with `Model/Creatures/MonsterAbilities.py` showed it:
+  - missed seven subclasses (`MeleeOrRangedAttack`, `NamedAttackAction`, `CastSpellLegendaryAction`, `WaterBreathing`, `Flyby`, `PrimalBond`, `TinySwarm`);
+  - missed `Multiattack(use_article=...)`;
+  - still said "two damage types on one hit can't be structured", although `MeleeAttack`/`RangedAttack` gained `secondary_*` damage fields. The agent had been leaving convertible attacks as plain text.
+
+  The `monster-stat-blocks` skill now has a script, `abilities.py`, that prints the reference **live from the code**, so it can't go stale again. Only the judgment rules (when a match is clean, how to verify, when to add a subclass) are written by hand.
+- **One rubric for one chip.** `usage_tags` render as the same chip on feature cards and on spell cards, but each tagging agent carried its own copy of the rules. They now live side by side in the `usage-tags` skill. Their wording was moved, not merged: the deliberate differences (for example, "utility" is broad for spells but strict for features) are kept and listed explicitly, so a future change to either side happens in one visible place.
+- **The creator now prefers structured abilities** where one fits exactly. Monsters come out in the form the refactor agent would otherwise have to convert them to, and the balance tools can read their numbers.
+
+### Why some things stayed in agent prompts
+
+Task-specific workflow (the refactor agent's convert-and-diff loop, the action-tag rules for `action_type`/`duration`/`range` that only features have) is only used by one agent. Moving it into a skill would add indirection without sharing anything. **Make something a skill when a second user of it exists**, not before.
+
+Scripts that people also run by hand (`Combat/Tools/monster_score.py`, `monster_cr_compare.py`) stay in `Combat/Tools/`; skills point at them instead of copying them.
+
+### Guarding the structure
+
+`tests/test_claude_config.py` runs with the normal test suite and fails when:
+
+- an agent or skill has broken frontmatter, a `name` that doesn't match its file or folder, or no `description`;
+- an agent preloads a skill that doesn't exist;
+- two agents share a name;
+- a skill link, a `.claude/...` script path or a hook command points at a missing file.
+
+On its first run it found a real bug: `dnd-spell-usage-tags` had `"usage_tags": [...]` in its description, which makes the frontmatter invalid YAML. Claude Code's own parser happened to tolerate it this session, but the docs say unparseable agents are skipped, with the reason only in the debug log.
+
+## 7. Adding or changing an agent or skill
+
+1. **Agent:** create `.claude/agents/<domain>/<name>.md` with `name` (matching the file name), a routing-quality `description` (when to use it *and* when not), a minimal `tools` list, a `model`, and `skills:` for any shared know-how it needs. Avoid `: ` inside the description; it breaks YAML.
+2. Put only the role in the agent body: scope, workflow, checks, report. Rules for all agents go in `CLAUDE.md`. Know-how that a second agent (or the main session) also needs goes in a skill.
+3. **Skill:** create `.claude/skills/<name>/SKILL.md` with `name` (matching the folder) and a `description` that says when to use it. Keep `SKILL.md` short (preloading injects all of it) and move detail into files it links to. Prefer a script that reads the code over a copied reference.
+4. Give each a concrete verification step (the command that proves the task worked).
+5. Run `./run_tests.sh tests/test_claude_config.py`. **Restart Claude Code**, then smoke-test the agent read-only: ask Claude to run it with `model: "haiku"` and the prompt below. Then try it on a real task and run the verify skill on the result. If it makes a mistake, add one line about that mistake, not a page.
+
+   > Read-only smoke test; don't edit anything. List the skills injected into your context at startup and quote each one's first `# ` heading. Then state, from your instructions only, the rule your task depends on most (e.g. the balance band).
+
+   If it reports no skills, or quotes text from an older version of the prompt, the session is still serving cached definitions: restart again.
+6. Add agents to the table in HOWTO section 10. Commit; everything under `.claude/agents`, `skills` and `hooks` is tracked.
 
 Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `dnd-test-bughunter` ("where bugs have hidden") or `dnd-monster-balancer`. Before relying on it, review what an agent writes there.
 
-## 7. What changed on 2026-10-26
+## 8. What changed on 2026-10-26
+
+Second pass (agents vs skills, section 6):
+
+- **Grouped** the agents into `builds/`, `features/`, `spells/`, `combat/` and `tooling/` with `git mv` (history kept).
+- **Added** the `balance-monster`, `monster-stat-blocks` (with `abilities.py`, `stat-block-template.md`, `monster-abilities.md`, `cr-guidelines.md`) and `usage-tags` skills.
+- **Slimmed** the three monster agents to their roles: they preload the monster skills, the creator now balances, and the refactor agent's subclass list (via the skill) is complete again. The two tagging agents preload `usage-tags`.
+- **Added** `tests/test_claude_config.py`, and fixed the invalid frontmatter it found in `dnd-spell-usage-tags`.
+- **Smoke-tested** `dnd-monster-balancer` in the same session. It ran its *startup-cached* old prompt with no skills, and saw a stale memory index. Hence the restart rule and the corrected memory note in section 1. **Pending:** repeat the smoke test after a restart to confirm skill preloading from the new folders.
+
+First pass:
 
 - **Added** `CLAUDE.md`, the hook, the verify skill, and this file.
 - **Rewrote** `.claude/settings.json` (curated permissions plus the hook). The old version is backed up in the session scratchpad.

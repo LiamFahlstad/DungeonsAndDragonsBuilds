@@ -211,14 +211,21 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 
 ---
 
-## 10. Claude Code agents (`.claude/agents/`)
+## 10. Claude Code agents (`.claude/agents/<domain>/`) and skills (`.claude/skills/`)
 
-Ask Claude Code to use one by name. How the setup works (CLAUDE.md, hooks, the verify skill, model choice): [Notes/agent-workflow.md](Notes/agent-workflow.md).
+Ask Claude Code to use an agent by name. Skills are shared know-how that agents preload, and you can also invoke them yourself (`/balance-monster`, `/verify-agent-work`, ...). How the setup works: [Notes/agent-workflow.md](Notes/agent-workflow.md).
 
-| Area | Agents |
+| Folder | Agents |
 |---|---|
-| Builds & content | `dnd-builds`, `dnd-subclass-creator` (from `SourceTexts/`), `dnd-equipment`, `character-creator` (GUI) |
-| Feature polish | `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-feature-extender` |
-| Spells | `dnd-spell-summaries`, `dnd-spell-usage-tags`, `dnd-spell-improved-descriptions` |
-| Combat & monsters | `combat-sim`, `dnd-monster-creator`, `dnd-monster-balancer`, `dnd-monster-ability-refactor` |
-| Data & tests | `wikidot-scraper`, `dnd-test-bughunter` |
+| `builds/` | `dnd-builds`, `dnd-subclass-creator` (from `SourceTexts/`), `dnd-equipment`, `character-creator` (GUI) |
+| `features/` | `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-feature-extender` |
+| `spells/` | `dnd-spell-summaries`, `dnd-spell-usage-tags`, `dnd-spell-improved-descriptions` |
+| `combat/` | `combat-sim`, `dnd-monster-creator`, `dnd-monster-balancer`, `dnd-monster-ability-refactor` |
+| `tooling/` | `wikidot-scraper`, `dnd-test-bughunter` |
+
+| Skill | For |
+|---|---|
+| `balance-monster` | Tune a homebrew monster to `monster_score.py` 0.4-0.6 |
+| `monster-stat-blocks` | Monster file layout and template; `abilities.py` prints the structured ability classes live |
+| `usage-tags` | The heal/buff/control/damage/utility/summon rubric for features and spells |
+| `verify-agent-work` | Check what agents actually changed before trusting their reports |
