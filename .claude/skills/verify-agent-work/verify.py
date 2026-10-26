@@ -6,7 +6,8 @@ Usage (from the repo root):
     python .claude/skills/verify-agent-work/verify.py --tests                # also run the test suite (quiet, stop on first failure)
 
 Steps, each printed as its own section:
-1. Changed files: tracked modifications plus untracked files, never .claude/worktrees.
+1. Changed files: tracked modifications plus untracked files, never .claude/worktrees. Agent
+   memory (.claude/agent-memory/) is listed separately, for review rather than claim-checking.
 2. Claimed vs actual (with --claimed): files claimed but untouched, and touched but not claimed.
 3. Compile every changed .py file.
 4. pyflakes for undefined names - catches a name used in a method body but never imported,
@@ -26,6 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 WORKTREES = ".claude/worktrees/"
+AGENT_MEMORY = ".claude/agent-memory/"
 
 
 def git(*args: str, cwd: Path = ROOT) -> str:
@@ -149,12 +151,18 @@ def main() -> int:
     parser.add_argument("--tests", action="store_true", help="also run ./run_tests.sh -q -x")
     args = parser.parse_args()
 
-    changed = changed_files()
+    all_changed = changed_files()
+    memory = [p for p in all_changed if p.startswith(AGENT_MEMORY)]
+    changed = [p for p in all_changed if not p.startswith(AGENT_MEMORY)]
     py_files = [p for p in changed if p.endswith(".py") and (ROOT / p).exists()]
 
     section(f"Changed files ({len(changed)})")
     for path in changed:
         print(f"  {path}")
+    if memory:
+        section(f"Agent memory changed ({len(memory)}) - review: git diff -- {AGENT_MEMORY}")
+        for path in memory:
+            print(f"  {path}")
 
     results = []
     if args.claimed is not None:

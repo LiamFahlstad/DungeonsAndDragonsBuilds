@@ -3,6 +3,7 @@ name: dnd-monster-creator
 description: Use for creating new homebrew D&D 5e monsters as ExtendedCombatantData classes (e.g. Combat\Monsters\CR_7\monsters_homebrew.py). Give it a monster concept (name, flavor text, optional CR/inspiration monster) and it writes a stat block that matches the field order and formatting of the auto-generated Combat\Monsters\CR_<x>\monsters.py files, then balances it. Not for editing the combat UI or wiring encounters — use combat-sim for that. Not for rebalancing an existing monster — use dnd-monster-balancer.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
+memory: project
 skills:
   - monster-stat-blocks
   - balance-monster

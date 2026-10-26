@@ -22,7 +22,7 @@ python Combat/Tools/monster_score.py -v "<monster>"   # homebrew monster balance
 
 ## Rules for every agent, including subagents
 
-- **Stay in scope.** Only edit the files your task names. If a shared/core file needs a change, stop and say so in your report; do not edit it.
+- **Stay in scope.** Only edit the files your task names, plus your own `.claude/agent-memory/<your-name>/`. If a shared/core file needs a change, stop and say so in your report; do not edit it.
 - **Never revert or "fix" changes you didn't make.** Other agents may be working in the same tree at the same time.
 - **Scripted edits exclude `.claude/` and `.git/`.** `.claude/worktrees/` holds full checkouts of other agents' branches; a repo-wide `rglob` will silently edit them.
 - **Scratch scripts go in the scratchpad directory**, never the repo.
@@ -37,6 +37,18 @@ End with these sections, plain and factual, in addition to anything your own age
 2. **Commands run:** each verification command and its actual result (pass/fail counts, not "looks good").
 3. **Not done:** anything skipped, partly done or deferred, with the reason. Write "none" if none.
 4. **Concerns:** anything the orchestrator should check, including any shared file you think needs a change.
+5. **Lessons:** the lines you added to or removed from your memory (or "none"), and any **proposed change** to your own prompt, a skill or CLAUDE.md, as the exact text to change and why.
+
+### Learning from your runs (subagents)
+
+Every agent has persistent memory (`memory: project`): `.claude/agent-memory/<your-name>/MEMORY.md` is loaded into your prompt on every run. That is how you improve yourself.
+
+- **Before starting**, read your memory and apply it. It overrides your prompt where they conflict, because it is newer.
+- **Record a lesson when you hit a problem a future run would hit again**: an instruction in your prompt or skill that was wrong or stale, a path or command that didn't work and what did, a check that caught your own mistake, or a correction from the orchestrator.
+- **A lesson is one line**: the date, what to do, and a short why. For example: `2026-10-26: monster_score.py needs the exact combatant_type= text, not the class name. A class name returns "not found".` Record the fix, not the story. Only record what you actually observed this run; never record guesses, and never record "task went fine".
+- **Keep it short and current.** Update or delete a lesson that turns out wrong or is superseded instead of adding a contradicting one. Keep `MEMORY.md` under 100 lines; move detail into a topic file beside it and link to it.
+- **Re-read `MEMORY.md` right before you edit it.** Another run of the same agent may have changed it.
+- **Don't edit your own agent file, a skill or CLAUDE.md.** Those are shared, tested and reviewed. Put the exact change you want under **Lessons** in your report; the orchestrator applies it.
 
 ## Orchestrating agents (main session)
 
@@ -47,4 +59,5 @@ Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared 
 - **Brief like a stranger.** A subagent sees CLAUDE.md, its own prompt and its preloaded skills, not this conversation. Don't count on it seeing auto-memory. Agent and skill edits apply only after Claude Code restarts. Say exactly which files are in scope, which are off-limits, what "done" means, and how to verify it.
 - **Parallel work.** Split by disjoint file sets. Name the off-limits shared files explicitly. Prefer `isolation: "worktree"` when scopes might overlap. For a change that repeats one pattern across many classes, consider one generic method on the base class instead of N hand-written overrides.
 - **Verify before reporting done.** After agents finish, run the `verify-agent-work` skill (`python .claude/skills/verify-agent-work/verify.py --claimed <files>`), and add `--tests` after the last agent in a batch. A detailed self-report is no more trustworthy than a vague one.
+- **Curate what agents learn.** After verifying a run, review its memory changes (`git diff -- .claude/agent-memory/`). Delete lessons that are wrong. That matters most for haiku runs, whose reports have been confidently false here. When a lesson has proven itself, or an agent proposed a prompt or skill change, make the change in the prompt or skill and delete the lesson from memory, so memory stays a short list of recent, unpromoted lessons. When *you* catch an agent's mistake during verification, write the lesson into that agent's `MEMORY.md` yourself; agents rarely notice their own fabricated successes.
 - A `SubagentStop` hook (`.claude/hooks/check_subagent_edits.py`) already refuses to let a subagent finish while a file it edited fails to compile, or when it edited another agent's worktree.

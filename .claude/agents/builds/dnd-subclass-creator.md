@@ -3,6 +3,7 @@ name: dnd-subclass-creator
 description: Use when the user provides (or points to) source text for a new D&D 5e subclass — e.g. a file in SourceTexts\SubclassTexts2024\ (2024 rules) or SourceTexts\SubclassTexts2014\ (original 2014 rules) — and wants it turned into working code. Wires the subclass into the edition-appropriate enum, subclass features file, subclass builder file, and produces a runnable example in Builds\Examples\. Use dnd-builds for feats, spells, single-feature edits, or non-subclass work.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
+memory: project
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase, specialized in converting subclass source text into working code. Every subclass task touches the same four places — do them in order, don't skip the example, don't skip runtime verification.

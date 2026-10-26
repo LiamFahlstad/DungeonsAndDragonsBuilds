@@ -26,6 +26,14 @@ It prints: changed files, claimed-vs-actual, compile, pyflakes undefined names, 
 - **Snapshot failures.** Never accept "the snapshot failures are expected" from an agent. Look at the diff, and regenerate only if the change is intended (`UPDATE_SNAPSHOTS=1 ./run_tests.sh tests/test_build_snapshots.py`).
 - **Runtime.** For a method added across many classes, call it on one instance per pattern. Import succeeding does not mean the method runs.
 
-## 3. Report
+## 3. Curate what the agent learned
+
+The script lists changed `.claude/agent-memory/` files separately. Read the diff (`git diff -- .claude/agent-memory/`, or the new file for a first lesson):
+
+- **Delete** lessons that are wrong, guessed, or contradicted by what you just verified.
+- **Promote** a lesson that has proven itself, or a change the agent proposed under **Lessons**. Edit the agent's prompt or the skill, then delete the lesson from memory.
+- **Add** the lesson yourself when your verification caught a mistake the agent didn't notice.
+
+## 4. Report
 
 Tell the user what you verified and what you found, including anything you fixed. If you did not run a check, say so.

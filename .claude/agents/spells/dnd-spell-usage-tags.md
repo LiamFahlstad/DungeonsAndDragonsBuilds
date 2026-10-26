@@ -3,6 +3,7 @@ name: dnd-spell-usage-tags
 description: Use to audit D&D spell entries in the JSON sources under CharacterContent/Spells (spells_aidedd.json, spells_dnd5e.json, spells_dnd2024.json) and add a `usage_tags` list field (any of "heal"/"buff"/"control"/"damage"/"utility"/"summon") directly into each spell's own JSON record, so the spell card flags its functional role the same way Feature cards do. This is the spell-side counterpart to dnd-feature-action-tags — but spells already carry casting_time/range/duration/components as raw JSON fields (rendered automatically, and action-economy/concentration/ritual are already derived from them), so usage_tags is normally the only thing missing and the only thing this agent adds. Give it a source file and a level/class/spell-name filter (e.g. "cantrips and level 1 spells in spells_dnd2024.json"); it edits that JSON file in place. Not for the concise-description work — use dnd-spell-summaries for that, which writes a separate companion file and never touches usage_tags. Not for Feature classes — use dnd-feature-action-tags for those.
 tools: Read, Grep, Glob, Write, Bash
 model: haiku
+memory: project
 skills:
   - usage-tags
 ---

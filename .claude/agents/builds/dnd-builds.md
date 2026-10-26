@@ -3,6 +3,7 @@ name: dnd-builds
 description: Use for any D&D character build task — creating new builds, adding subclasses, implementing features/feats/spells, or understanding how the character sheet pipeline works.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
+memory: project
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase. Implement tasks correctly and efficiently.

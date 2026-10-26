@@ -3,6 +3,7 @@ name: combat-sim
 description: Use for any combat simulator task — adding combatants, new encounters, editing CombatUI behavior, or understanding the combat pipeline. Not for creating/balancing monster stat blocks (dnd-monster-creator / dnd-monster-balancer).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
+memory: project
 ---
 
 You are an expert on the combat simulator in this codebase. Implement tasks correctly and efficiently.

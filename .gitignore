@@ -216,6 +216,7 @@ __marimo__/
 !.claude/skills/
 !.claude/hooks/
 !.claude/settings.json
+!.claude/agent-memory/
 
 # Combat logs (each campaign's Combat/Campaigns/<Campaign>/CombatLogs folder)
 Combat/Campaigns/*/CombatLogs/*.json

@@ -9,6 +9,7 @@ How the agent setup is organised, why each piece exists, and how to use and exte
 | Shared context | `CLAUDE.md` | Project rules, commands, and how agents behave and report. **Every session and every subagent loads it.** |
 | Roles | `.claude/agents/<domain>/<agent>.md` | One focused expert per kind of task: its own prompt, tool list, default model and the skills it preloads. Grouped by domain: `builds/`, `features/`, `spells/`, `combat/`, `tooling/`. |
 | Know-how | `.claude/skills/<skill>/` | Procedures, reference files and scripts, shared by every agent that preloads them and usable by the main session: `balance-monster`, `monster-stat-blocks`, `usage-tags`, `verify-agent-work`. |
+| Self-improvement | `.claude/agent-memory/<agent>/MEMORY.md` | Each agent's own lessons, loaded into its prompt every run. Agents write them; the main session reviews them and promotes good ones into prompts and skills (section 7). |
 | Config test | `tests/test_claude_config.py` | Fails the normal test run if an agent's or skill's frontmatter is broken, or if a `skills:` entry, link or script path points at something missing. |
 | Guardrail | `.claude/hooks/check_subagent_edits.py` (wired in `.claude/settings.json`) | A subagent can't finish while a `.py` file it edited fails to compile, or if it edited another agent's worktree. |
 | Verification | `.claude/skills/verify-agent-work/` | Checks the working tree against what an agent *claimed*: compile, undefined names, imports, sibling worktrees, tests. |
@@ -26,12 +27,13 @@ Claude Code reads instructions from several places. Putting a rule in the wrong 
 | `CLAUDE.md` (repo root) | Main session **and every subagent** (except the built-in Explore/Plan) | Rules that apply to all work: project conventions, safety rules, the report format, orchestration guidance |
 | Agent prompt (`.claude/agents/<domain>/<name>.md`) | Only that subagent; loaded in full at start | The role: who it is, its scope, workflow, token discipline and report |
 | Skill (`.claude/skills/<name>/SKILL.md` + files) | Agents that list it in `skills:` (SKILL.md injected at start), or any session that invokes it. Its other files are read only when needed | Know-how more than one agent (or the main session) needs: procedures, rubrics, reference material, scripts |
+| Agent memory (`.claude/agent-memory/<name>/MEMORY.md`) | That agent, every run (first 200 lines) | Lessons the agent learned from its own runs, until they are promoted into its prompt or a skill |
 | Hook (`.claude/settings.json` → `hooks`) | Runs automatically; Claude can't skip it | Checks that must *always* happen. Deterministic code, not a request |
 | Auto-memory (`~/.claude/projects/.../memory/`) | Main session; **not reliably** subagents (see below) | Personal working preferences and incident history |
 
 **Key fact behind this setup:** don't rely on auto-memory reaching subagents. The docs say subagents don't load it ("the main conversation's auto memory isn't loaded"). Yet a test subagent in this repo did receive the memory *index*: a stale copy from when the session started, with no memory file contents. Either way it is the wrong channel. Rules like "`origin=` is a category, not a sourcebook", "2014 subclasses start at level 3" and "homebrew monsters score 0.4-0.6" lived only in memory, so agents got them partially and out of date, at best. They now live in `CLAUDE.md`, the documented channel every agent loads.
 
-**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 7.
+**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 8.
 
 ## 2. The agents
 
@@ -181,9 +183,50 @@ Scripts that people also run by hand (`Combat/Tools/monster_score.py`, `monster_
 
 On its first run it found a real bug: `dnd-spell-usage-tags` had `"usage_tags": [...]` in its description, which makes the frontmatter invalid YAML. Claude Code's own parser happened to tolerate it this session, but the docs say unparseable agents are skipped, with the reason only in the debug log.
 
-## 7. Adding or changing an agent or skill
+## 7. Self-improvement: agents learn from their runs
 
-1. **Agent:** create `.claude/agents/<domain>/<name>.md` with `name` (matching the file name), a routing-quality `description` (when to use it *and* when not), a minimal `tools` list, a `model`, and `skills:` for any shared know-how it needs. Avoid `: ` inside the description; it breaks YAML.
+Every agent has `memory: project` in its frontmatter (the config test enforces it). Claude Code then gives the agent a folder, `.claude/agent-memory/<name>/`, injects its `MEMORY.md` (first 200 lines) into the agent's prompt on every run, and gives it instructions and Read/Write/Edit access to maintain it. This is the documented mechanism for "cross-session learning".
+
+### The loop
+
+```
+agent hits a problem ──► writes a one-line lesson to its MEMORY.md ──► next run starts with it
+        │                                                                   ▲
+        └──► proposes prompt/skill changes in its report                    │
+                         │                                                  │
+main session verifies ───┴──► deletes wrong lessons, promotes proven ones ──┘
+                              into the prompt or skill, adds lessons for
+                              mistakes the agent didn't notice
+```
+
+The rules live in CLAUDE.md ("Learning from your runs" for agents, "Curate what agents learn" for the main session), so every agent gets them without 16 copies:
+
+- **When to record:** a problem a future run would hit again. That means a wrong or stale instruction, a path or command that didn't work and what did, a check that caught a mistake, or a correction from the orchestrator.
+- **Format:** one line, dated, the fix plus a short why. Observed facts only; no guesses and no "it went fine".
+- **Curation:** fix or delete a wrong lesson instead of adding a contradicting one. Keep the file under 100 lines (the config test fails above that).
+- **Report:** a new 5th section, **Lessons**, lists what changed in memory and any proposed prompt or skill change as exact text.
+- **Nudges:** when the compile-check hook blocks an agent, its message asks the agent to record a lesson. `verify.py` lists memory changes separately, and the verify skill has a "curate what the agent learned" step.
+
+### Why agents write to memory, not to their own prompt
+
+You asked for agents that modify themselves. Memory *is* self-modification: the agent's next run starts with what it wrote. But it goes into a file that has a review step, not into the shared prompt:
+
+1. **A prompt edit doesn't help the same session.** Running sessions serve the definitions cached at startup (we observed this), so a direct edit takes effect no sooner than a memory lesson.
+2. **Agents' self-assessments have been confidently wrong here.** There were fabricated itemized reports and "failures are expected". A wrong lesson in memory is one line the orchestrator can delete. The same mistake written into a prompt or a shared skill would mislead every agent that loads it.
+3. **Prompts and skills are shared and tested.** Several agents preload the same skill, and two parallel runs of one agent would race on its prompt file. Memory belongs to one agent, and agents re-read it before editing.
+4. **Memory stays small.** Lessons are promoted into the prompt or skill once proven and then deleted, so prompts absorb the lessons without growing a pile of patches.
+
+Memory is tracked by git (`.gitignore` has `!.claude/agent-memory/`), so every lesson shows up in `git diff` and gets committed like any other change.
+
+### What it can't do
+
+- An agent that doesn't *notice* its mistake can't learn from it. That's why the main session writes lessons for problems found during verification.
+- Memory needs auto-memory to be on (it is by default).
+- `memory` also grants Read/Write/Edit to agents whose tool list leaves those out (e.g. `dnd-feature-summaries` gains Write). CLAUDE.md limits them to their own memory folder outside their task scope.
+
+## 8. Adding or changing an agent or skill
+
+1. **Agent:** create `.claude/agents/<domain>/<name>.md` with `name` (matching the file name), a routing-quality `description` (when to use it *and* when not), a minimal `tools` list, a `model`, `memory: project` (required; the config test checks it), and `skills:` for any shared know-how it needs. Avoid `: ` inside the description; it breaks YAML.
 2. Put only the role in the agent body: scope, workflow, checks, report. Rules for all agents go in `CLAUDE.md`. Know-how that a second agent (or the main session) also needs goes in a skill.
 3. **Skill:** create `.claude/skills/<name>/SKILL.md` with `name` (matching the folder) and a `description` that says when to use it. Keep `SKILL.md` short (preloading injects all of it) and move detail into files it links to. Prefer a script that reads the code over a copied reference.
 4. Give each a concrete verification step (the command that proves the task worked).
@@ -196,7 +239,14 @@ On its first run it found a real bug: `dnd-spell-usage-tags` had `"usage_tags": 
 
 Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `dnd-test-bughunter` ("where bugs have hidden") or `dnd-monster-balancer`. Before relying on it, review what an agent writes there.
 
-## 8. What changed on 2026-10-26
+## 9. What changed on 2026-10-26
+
+Third pass (self-improvement, section 7):
+
+- **Enabled** `memory: project` on all 16 agents, and tracked `.claude/agent-memory/` in git.
+- **Added** the learning rules and the **Lessons** report section to CLAUDE.md, plus the orchestrator's curation duty.
+- **Nudges:** the hook's block message, `verify.py`'s separate memory listing, and a curation step in the verify skill.
+- **Config test:** every agent must have `memory: project`; each `MEMORY.md` must stay under 100 lines and belong to an existing agent.
 
 Second pass (agents vs skills, section 6):
 

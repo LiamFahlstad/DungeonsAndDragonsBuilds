@@ -85,7 +85,9 @@ def main() -> int:
         return 0
     print(
         "Before you finish, fix these problems in files you edited "
-        "(and mention them in your final report):\n" + "\n".join(f"- {p}" for p in problems),
+        "(and mention them in your final report):\n" + "\n".join(f"- {p}" for p in problems)
+        + "\nIf an instruction or a habit led to this, record a one-line lesson in your agent memory "
+        "so the next run avoids it.",
         file=sys.stderr,
     )
     return 2

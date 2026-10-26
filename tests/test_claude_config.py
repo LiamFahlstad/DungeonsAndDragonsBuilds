@@ -39,8 +39,20 @@ def test_agent_frontmatter(path):
     assert meta.get("name") == path.stem, "name must match the file name"
     assert meta.get("description"), "description is what routing reads"
     assert meta.get("model") in MODELS
+    assert meta.get("memory") == "project", "every agent keeps a project memory so it can learn from its runs"
     for skill in meta.get("skills") or []:
         assert (SKILLS / skill / "SKILL.md").exists(), f"preloads missing skill {skill!r}"
+
+
+MEMORIES = sorted((ROOT / ".claude" / "agent-memory").glob("*/MEMORY.md"))
+
+
+@pytest.mark.parametrize("memory", MEMORIES, ids=[p.parent.name for p in MEMORIES])
+def test_agent_memory_stays_curated(memory):
+    # Claude Code injects only the first 200 lines; CLAUDE.md asks agents to stay under 100.
+    assert len(memory.read_text(encoding="utf-8").splitlines()) <= 100, "promote or prune lessons"
+    agent_names = {frontmatter(p)["name"] for p in agent_files()}
+    assert memory.parent.name in agent_names, "memory folder for an agent that no longer exists"
 
 
 def test_agent_names_are_unique():

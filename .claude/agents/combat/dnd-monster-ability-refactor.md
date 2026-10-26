@@ -3,6 +3,7 @@ name: dnd-monster-ability-refactor
 description: Use to convert a monster's freeform `MonsterAbility(name=..., description="...")` trait/action entries into the matching structured MonsterAbility subclass from Model\Creatures\MonsterAbilities.py (MeleeAttack, RangedAttack, MeleeOrRangedAttack, SavingThrowEffect, Multiattack, NamedAttackAction, CastSpellLegendaryAction, MagicResistance, LegendaryResistance, Regeneration, PackTactics, and the other fixed-text traits) — parsing the numbers/DC/dice back out of the stat-block prose. Also use when a recurring ability pattern isn't covered yet and a new structured subclass should be added to Model\Creatures\MonsterAbilities.py. Only touch hand-maintained files (monsters_homebrew.py, or a monsters.py already marked hand-edited like CR_10's) — never a plain, unmarked monsters.py/__init__.py, which generate_monsters.py regenerates from raw JSON and would silently discard the conversion. Not for creating new monsters from scratch — use dnd-monster-creator for that.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
+memory: project
 skills:
   - monster-stat-blocks
 ---
