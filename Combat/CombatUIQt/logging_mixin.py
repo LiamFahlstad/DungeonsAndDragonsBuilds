@@ -4,7 +4,6 @@ import dataclasses
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
@@ -17,7 +16,6 @@ from .stats import (
     compute_player_log_stats,
     damage_dealt_key,
     damage_taken_key,
-    decrement_named_stat,
     increment_named_stat,
     long_rest_archive_sessions,
     spell_slots_used_key,
@@ -75,149 +73,59 @@ class LoggingMixin(CombatWindowState):
         key = f"round_{self.round_number}"
         turn_name = self._current_turn_name() if note_turn else None
         entry = f"[{turn_name}'s turn] {text}" if turn_name else text
-        data.setdefault(key, []).append(entry)
+        round_log = data.setdefault(key, [])
+        index = len(round_log)
+        round_log.append(entry)
+        player_index = None
         if self.player_log_file:
             player_entry: dict[str, object] = {"text": entry}
             if action is not None:
                 player_entry["character"] = character
                 player_entry["action"] = action
                 player_entry["value"] = value
-            self.player_log_data["sessions"][-1].setdefault(key, []).append(
-                player_entry
-            )
+            player_round = self.player_log_data["sessions"][-1].setdefault(key, [])
+            player_index = len(player_round)
+            player_round.append(player_entry)
+        if self._open_undo_point is not None:
+            self._open_undo_point.log_entries.append((key, index, player_index))
         self._write_log(data)
 
     def _undo_last(self):
+        """Take back the last operation (see undo.py): restore the combat
+        state from before it and delete the lines it logged."""
         if not self.history:
             return
-        action, value = self.history[-1]
-        char = self._undo_subject(action, value)
-        if not char:
-            return
+        point = self.history.pop()
+
         data = json.loads(self.log_file.read_text())
-        key = f"round_{self.round_number}"
-        if not data.get(key):
-            return
+        session = self.player_log_data["sessions"][-1] if self.player_log_file else None
+        undone = []
+        for key, index, player_index in reversed(point.log_entries):
+            undone.append(data[key].pop(index))
+            if not data[key]:
+                del data[key]
+            if session is not None and player_index is not None:
+                session[key].pop(player_index)
+                if not session[key]:
+                    del session[key]
 
-        self.history.pop()
-        undo = _UNDO_HANDLERS.get(action)
-        if undo is not None:
-            undo(self, char, value)
-        if action in (Action.DAMAGE, Action.HEAL):
-            self._apply_bloodied_condition(char)
+        point.restore(self)
+        if self.selected_character is not None and not any(
+            self.selected_character is c for c in self.characters
+        ):
+            self.selected_character = None
+            self.selected_label.setText("Source: None")
+        self.target_characters = [
+            t for t in self.target_characters if any(t is c for c in self.characters)
+        ]
+        self._update_target_label()
+        self.round_label.setText(f"Round {self.round_number}")
 
-        last_event = data[key].pop()
-        if self.player_log_file:
-            session = self.player_log_data["sessions"][-1]
-            if session.get(key):
-                session[key].pop()
         self._write_log(data)
-        print(f"Undid action: {last_event}")
-        self._rebuild_card(char)
-
-    def _undo_subject(self, action, value) -> dict | None:
-        """The combatant an action changed. Damage/Heal/ADD_TEMP_HP/conditions
-        name it as target_name (recorded at apply-time, not the current UI
-        selection — the user may have re-targeted since); every other tracked
-        action (spell slots, death saves, ...) applied to the source."""
-        if action in _TARGETED_ACTIONS:
-            target_name = value.get("target_name") if isinstance(value, dict) else None
-            return self._find_character_by_name(target_name) if target_name else None
-        return self.selected_character
-
-    def _undo_source(self, value: dict) -> dict | None:
-        source_name = value.get("source_name")
-        return self._find_character_by_name(source_name) if source_name else None
-
-    def _undo_damage(self, char: dict, value: dict):
-        dmg = value["dmg"]
-        damage_type = value.get("damage_type")
-        knockout = value.get("knockout", False)
-
-        char["hp"] -= value["hp_delta"]
-        char["temp_hp"] -= value["temp_delta"]
-        _decrement_stat(char, "damage_taken", dmg)
-        if damage_type:
-            _decrement_stat(char, damage_taken_key(damage_type), dmg)
-        if knockout:
-            _decrement_stat(char, "times_downed")
-
-        source = self._undo_source(value)
-        if source is not None:
-            _decrement_stat(source, "damage_dealt", dmg)
-            if damage_type:
-                _decrement_stat(source, damage_dealt_key(damage_type), dmg)
-            if knockout:
-                _decrement_stat(source, "knockouts")
-
-    def _undo_heal(self, char: dict, value: dict):
-        heal = value["heal"]
-        char["hp"] -= heal
-        _decrement_stat(char, "healing_received", heal)
-        source = self._undo_source(value)
-        if source is not None:
-            _decrement_stat(source, "healing_done", heal)
-
-    def _undo_add_temp_hp(self, char: dict, value: dict):
-        amount = value["amount"]
-        char["temp_hp"] -= amount
-        _decrement_stat(char, "temp_hp_received", amount)
-        source = self._undo_source(value)
-        if source is not None:
-            _decrement_stat(source, "temp_hp_granted", amount)
-
-    def _undo_add_condition(self, char: dict, value: dict):
-        cond = value["condition"]
-        if cond in char["conditions"]:
-            char["conditions"].remove(cond)
-        _decrement_stat(char, "conditions_received")
-        decrement_named_stat(char["stats"], "conditions_received_by_name", cond)
-        source = self._undo_source(value)
-        if source is not None:
-            _decrement_stat(source, "conditions_given")
-            decrement_named_stat(source["stats"], "conditions_given_by_name", cond)
-
-    def _undo_remove_condition(self, char: dict, value: dict):
-        cond = value["condition"]
-        if cond not in char["conditions"]:
-            char["conditions"].append(cond)
-
-    def _undo_remove_spell_slot(self, char: dict, level):
-        assert isinstance(level, int)  # the slot level (_cast_spell_slot_level)
-        char["spell_slots"][level] = char["spell_slots"].get(level, 0) + 1
-        _decrement_stat(char, "spell_slots_used")
-        _decrement_stat(char, spell_slots_used_key(level))
-
-    def _undo_add_spell_slot(self, char: dict, level):
-        char["spell_slots"][level] = max(char["spell_slots"].get(level, 0) - 1, 0)
-
-    def _undo_cast_spell(self, char: dict, value):
-        spell_name = value["spell_name"] if isinstance(value, dict) else value
-        _decrement_stat(char, "spells_cast")
-        decrement_named_stat(char["stats"], "spells_cast_by_name", spell_name)
-
-    def _undo_death_save_fail(self, char: dict, newly_dead):
-        char["death_saves_fail"] = max(char.get("death_saves_fail", 0) - 1, 0)
-        if newly_dead:
-            _decrement_stat(char, "deaths")
-
-    def _undo_death_save_success(self, char: dict, _value):
-        char["death_saves_success"] = max(char.get("death_saves_success", 0) - 1, 0)
-
-    def _undo_enable_feature(self, char: dict, value):
-        feature_name = value["feature_name"] if isinstance(value, dict) else value
-        feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
-            feature_name
-        )
-        _decrement_stat(char, "features_enabled")
-        decrement_named_stat(char["stats"], "features_enabled_by_name", feature_name)
-        if feature is not None and feature.uses is not None:
-            used = char.setdefault("feature_uses_used", {})
-            used[feature_name] = max(used.get(feature_name, 0) - 1, 0)
-
-    def _undo_regain_feature_charge(self, char: dict, feature_name):
-        used = char.setdefault("feature_uses_used", {})
-        used[feature_name] = used.get(feature_name, 0) + 1
+        for event in reversed(undone):
+            print(f"Undid: {event}")
+        self._rebuild_cards()
+        self._refresh_turn()
 
     def _load_log_from_path(self, path: str):
         data = json.loads(Path(path).read_text())
@@ -327,8 +235,7 @@ class LoggingMixin(CombatWindowState):
                     self._apply_replay_action(char, entry["action"], entry["value"])
 
     def _apply_replay_action(self, char: dict, action: str, value):
-        """Forward-apply one recorded player-log action to a character (the
-        replay counterpart of _undo_last, which reverses the same actions)."""
+        """Forward-apply one recorded player-log action to a character."""
         if action == Action.DAMAGE:
             char["hp"] += value["hp_delta"]
             char["temp_hp"] += value["temp_delta"]
@@ -615,36 +522,3 @@ class LoggingMixin(CombatWindowState):
         layout.addWidget(close_btn)
 
         dlg.exec()
-
-
-# Actions recorded against the combatant they changed, named in the value's
-# "target_name"; every other action applied to the selected source.
-_TARGETED_ACTIONS = (
-    Action.DAMAGE,
-    Action.HEAL,
-    Action.ADD_TEMP_HP,
-    Action.ADD_CONDITION,
-    Action.REMOVE_CONDITION,
-)
-
-# How _undo_last reverses each action: handler(app, combatant, value).
-_UNDO_HANDLERS: dict[Action, Callable[[LoggingMixin, dict, Any], None]] = {
-    Action.DAMAGE: LoggingMixin._undo_damage,
-    Action.HEAL: LoggingMixin._undo_heal,
-    Action.ADD_TEMP_HP: LoggingMixin._undo_add_temp_hp,
-    Action.ADD_CONDITION: LoggingMixin._undo_add_condition,
-    Action.REMOVE_CONDITION: LoggingMixin._undo_remove_condition,
-    Action.REMOVE_SPELL_SLOT: LoggingMixin._undo_remove_spell_slot,
-    Action.ADD_SPELL_SLOT: LoggingMixin._undo_add_spell_slot,
-    Action.CAST_SPELL: LoggingMixin._undo_cast_spell,
-    Action.DEATH_SAVE_FAIL: LoggingMixin._undo_death_save_fail,
-    Action.DEATH_SAVE_SUCCESS: LoggingMixin._undo_death_save_success,
-    Action.ENABLE_FEATURE: LoggingMixin._undo_enable_feature,
-    Action.REGAIN_FEATURE_CHARGE: LoggingMixin._undo_regain_feature_charge,
-}
-
-
-def _decrement_stat(char: dict, key: str, amount: int = 1):
-    """Take `amount` off one of the combatant's battle stats, stopping at 0."""
-    stats = char.setdefault("stats", _default_stats())
-    stats[key] = max(stats.get(key, 0) - amount, 0)

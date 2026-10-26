@@ -19,12 +19,14 @@ from Combat.Definitions import Action, CombatStatus
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
+from .undo import undoable
 from .tree_filter import filter_category_tree
 
 
 class SpellsMixin(CombatWindowState):
     """Mixin for spell-related methods."""
 
+    @undoable
     def _cast_spell_slot_level(self, level: int):
         if not self.selected_character:
             return
@@ -40,7 +42,6 @@ class SpellsMixin(CombatWindowState):
         self.selected_character["stats"][level_key] = (
             self.selected_character["stats"].get(level_key, 0) + 1
         )
-        self.history.append((Action.REMOVE_SPELL_SLOT, level))
         self._log_event(
             f"{self.selected_character['name']} uses a Level {level} spell slot",
             character=self.selected_character["name"],
@@ -49,13 +50,13 @@ class SpellsMixin(CombatWindowState):
         )
         self._refresh_selected_card()
 
+    @undoable
     def _regain_spell_slot(self):
         if not self.selected_character:
             return
         level = self.spell_combo.currentIndex() + 1
         old = self.selected_character["spell_slots"].get(level, 0)
         self.selected_character["spell_slots"][level] = old + 1
-        self.history.append((Action.ADD_SPELL_SLOT, level))
         self._log_event(
             f"{self.selected_character['name']} regains a Level {level} spell slot",
             character=self.selected_character["name"],
@@ -114,6 +115,7 @@ class SpellsMixin(CombatWindowState):
                 self._clear_concentration_if_unused(char)
         self._rebuild_cards()
 
+    @undoable
     def _remove_active_spell(self, char: dict, entry: dict):
         """Manually dismiss an active spell before its duration timer runs out."""
         active_spells = char.get("active_spells") or []
@@ -276,6 +278,7 @@ class SpellsMixin(CombatWindowState):
 
         dlg.exec()
 
+    @undoable
     def _apply_cast_spell(self, spell):
         """Cast a spell. The spell's own declared metadata decides what happens:
         spell.target decides who is affected (SELF/None always means the
@@ -311,7 +314,6 @@ class SpellsMixin(CombatWindowState):
         source["stats"]["spells_cast"] = source["stats"].get("spells_cast", 0) + 1
         increment_named_stat(source["stats"], "spells_cast_by_name", spell.name)
         cast_value = {"spell_name": spell.name}
-        self.history.append((Action.CAST_SPELL, cast_value))
         self._log_event(
             f"{source['name']} casts {spell.name}",
             character=source["name"],

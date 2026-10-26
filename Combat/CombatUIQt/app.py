@@ -75,6 +75,7 @@ class CombatAppQt(
         self.target_characters: list[dict] = []
         self.round_number = 1
         self.history = []
+        self._open_undo_point = None
 
         # --- Phase / initiative state ---
         self.phase: str = "INITIATIVE"

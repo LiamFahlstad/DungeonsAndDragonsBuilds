@@ -20,11 +20,13 @@ from .stats import _default_stats
 from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
+from .undo import undoable
 
 
 class TurnsMixin(CombatWindowState):
     """Mixin for turn and initiative management."""
 
+    @undoable
     def _advance_turn(self):
         """Combined Next Combatant / Next Round button handler."""
         last_idx = len(self.initiative_order) - 1
@@ -106,6 +108,7 @@ class TurnsMixin(CombatWindowState):
 
         self._initiative_inputs[id(char)] = init_input
 
+    @undoable
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
         """Quickly add a free-text combatant mid-session (e.g. a door, an
         improvised target) without needing a full character sheet or a

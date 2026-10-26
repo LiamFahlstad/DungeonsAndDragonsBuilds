@@ -20,6 +20,7 @@ from Presentation.FeatureCards import feature_label
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 from .state import CombatWindowState
+from .undo import undoable
 from .tree_filter import filter_category_tree
 
 
@@ -279,6 +280,7 @@ class FeaturesMixin(CombatWindowState):
 
         dlg.exec()
 
+    @undoable
     def _apply_feature(self, feature):
         """Apply a feature. The feature's own declared metadata decides what happens:
         feature.target() decides who is affected (SELF/None always means the source
@@ -317,7 +319,6 @@ class FeaturesMixin(CombatWindowState):
         )
         increment_named_stat(source["stats"], "features_enabled_by_name", feature.name)
         feature_value = {"feature_name": feature.name}
-        self.history.append((Action.ENABLE_FEATURE, feature_value))
         self._log_event(
             f"{source['name']} uses {feature.name}",
             character=source["name"],
@@ -386,6 +387,7 @@ class FeaturesMixin(CombatWindowState):
             char["active_features"] = remaining
         self._rebuild_cards()
 
+    @undoable
     def _remove_active_feature(self, char: dict, entry: dict):
         """Manually dismiss an active feature before its duration timer runs out —
         also clears the matching condition badge so the two stay in sync."""

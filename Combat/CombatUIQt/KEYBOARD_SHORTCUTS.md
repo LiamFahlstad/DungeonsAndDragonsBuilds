@@ -12,7 +12,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **C** | Concentrating (self) | Add the Concentrating condition to the selected source (self-applied). No-op if no source is selected. |
 | **Ctrl+C** | Remove Concentrating | Remove Concentrating from the selected source. No-op if no source is selected. |
 | **Ctrl+Shift+C** | Clear Target Conditions | Clear every condition from every target. No-op if no targets are selected. |
-| **Ctrl+Z** | Undo | Undo the last logged action. |
+| **Ctrl+Z** | Undo | Undo the last thing done — a damage/heal/temp HP (on every target at once), a spell cast with everything it applied, a condition, an action use, Next Turn, an added combatant, ... — putting back the state from before it and removing its lines from the encounter and player logs. Repeat to go further back. |
 | **Escape** | Clear Selection | Clear both the source and target selection. |
 | **Enter / Return** | Next Turn | Advance to the Next Combatant / Next Round. Only active once combat has started (initiative phase does nothing); does nothing while a damage/heal/temp-HP field is focused (Enter submits the field instead). |
 | **1-9** | Cast Spell Slot | Cast a spell slot of that level (1-9) for the selected source. No-op if the source has no remaining slots at that level. |

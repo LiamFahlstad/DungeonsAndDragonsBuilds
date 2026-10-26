@@ -13,7 +13,6 @@ place, and the type checker can verify every use.
 """
 
 from pathlib import Path
-from typing import Any
 
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -27,8 +26,9 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Definitions import Action
 from Combat.Rules import Rule
+
+from .undo import UndoPoint
 
 
 class CombatWindowState:
@@ -46,8 +46,9 @@ class CombatWindowState:
     selected_character: dict | None
     target_characters: list[dict]
     round_number: int
-    # (action, value): what to undo; the value's shape depends on the action.
-    history: list[tuple[Action, Any]]
+    # Undo steps, oldest first, and the one being recorded (undo.py).
+    history: list[UndoPoint]
+    _open_undo_point: UndoPoint | None
     phase: str
     initiative_order: list[dict]
     current_turn_idx: int
@@ -171,6 +172,9 @@ class CombatWindowState:
     def _refresh_initiative_tracker(self):
         raise NotImplementedError("TurnsMixin._refresh_initiative_tracker")
 
+    def _refresh_turn(self):
+        raise NotImplementedError("TurnsMixin._refresh_turn")
+
     def _refresh_selected_card(self):
         raise NotImplementedError("CardsMixin._refresh_selected_card")
 
@@ -260,6 +264,9 @@ class CombatWindowState:
 
     def _undo_last(self):
         raise NotImplementedError("LoggingMixin._undo_last")
+
+    def _update_target_label(self):
+        raise NotImplementedError("WindowMixin._update_target_label")
 
     def _visibility_rule(self, visibility_name: str) -> Rule | None:
         raise NotImplementedError("DialogsMixin._visibility_rule")

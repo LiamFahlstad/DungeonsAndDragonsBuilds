@@ -73,14 +73,6 @@ def increment_named_stat(stats: dict, dict_key: str, name: str):
     by_name[name] = by_name.get(name, 0) + 1
 
 
-def decrement_named_stat(stats: dict, dict_key: str, name: str):
-    """Decrement stats[dict_key][name] (undo counterpart of increment_named_stat),
-    never going below 0."""
-    by_name = stats.setdefault(dict_key, {})
-    if by_name.get(name, 0) > 0:
-        by_name[name] -= 1
-
-
 def long_rest_archives(player_log_path: str | Path) -> list[Path]:
     """The files long rests archived this player log to, oldest first (the
     timestamp in the name sorts chronologically)."""

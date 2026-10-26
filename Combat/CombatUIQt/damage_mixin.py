@@ -18,6 +18,7 @@ from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
+from .undo import undoable
 
 
 def _damage_type_value(t) -> str:
@@ -58,7 +59,7 @@ class DamageMixin(CombatWindowState):
     def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
         """Auto-apply/remove Bloodied condition based on HP threshold. Pass
         `source` (the damage dealer/healer) to log the change with a source,
-        same as any other condition; omit it for silent resyncs (undo, replay)."""
+        same as any other condition; omit it for silent resyncs (replay)."""
         max_hp = char.get("max_hp", 1)
         hp = char.get("hp", 0)
         is_bloodied = "Bloodied" in char.get("conditions", [])
@@ -84,6 +85,7 @@ class DamageMixin(CombatWindowState):
         against the selected damage type."""
         self._do_apply_damage(check_resistance=True)
 
+    @undoable
     def _do_apply_damage(self, check_resistance: bool):
         if not self.target_characters:
             return
@@ -158,7 +160,6 @@ class DamageMixin(CombatWindowState):
                 "knockout": knockout,
                 "outcome": outcome,
             }
-            self.history.append((Action.DAMAGE, damage_value))
             type_prefix = f" {damage_type}" if damage_type else ""
             source_suffix = f" from {source_name}" if source_name else ""
             outcome_suffix = f" ({outcome})" if outcome else ""
@@ -309,7 +310,6 @@ class DamageMixin(CombatWindowState):
                     "source_name": name,
                     "target_name": name,
                 }
-                self.history.append((Action.REMOVE_CONDITION, cond_value))
                 self._log_event(
                     f"{name} loses concentration (DC {dc}, rolled {roll})",
                     character=name,
@@ -327,6 +327,7 @@ class DamageMixin(CombatWindowState):
 
         dialog.exec()
 
+    @undoable
     def _apply_heal(self):
         if not self.target_characters:
             return
@@ -360,7 +361,6 @@ class DamageMixin(CombatWindowState):
                 "source_name": source_name,
                 "target_name": char["name"],
             }
-            self.history.append((Action.HEAL, heal_value))
 
             source_suffix = f" from {source_name}" if source_name else ""
 
@@ -386,6 +386,7 @@ class DamageMixin(CombatWindowState):
 
             self._rebuild_card(char)
 
+    @undoable
     def _apply_failed_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
             return
@@ -396,7 +397,6 @@ class DamageMixin(CombatWindowState):
         if newly_dead:
             char.setdefault("stats", _default_stats())
             char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
-        self.history.append((Action.DEATH_SAVE_FAIL, newly_dead))
         if char["death_saves_fail"] >= 3:
             self._log_event(
                 f"{char['name']} has died (3 failed death saves)",
@@ -416,12 +416,12 @@ class DamageMixin(CombatWindowState):
             self._remove_condition_from(char, "Concentrating", source=char)
         self._refresh_selected_card()
 
+    @undoable
     def _apply_success_death_save(self, char: dict):
         if self._char_death_state(char) != "dying":
             return
         self._select_character(char)
         char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
-        self.history.append((Action.DEATH_SAVE_SUCCESS, None))
         if char["death_saves_success"] >= 3:
             self._log_event(
                 f"{char['name']} stabilizes (3 successful death saves)",
@@ -439,6 +439,7 @@ class DamageMixin(CombatWindowState):
             )
         self._refresh_selected_card()
 
+    @undoable
     def _apply_temp_hp(self):
         if not self.target_characters:
             return
@@ -469,7 +470,6 @@ class DamageMixin(CombatWindowState):
                 "source_name": source_name,
                 "target_name": target["name"],
             }
-            self.history.append((Action.ADD_TEMP_HP, temp_hp_value))
 
             source_suffix = f" from {source_name}" if source_name else ""
             self._log_event(

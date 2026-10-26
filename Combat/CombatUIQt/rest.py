@@ -76,7 +76,6 @@ def _restore_feature_uses(app: CombatAppQt, char: dict, cadences: set, note: str
             continue
         for _ in range(used.get(feature.name, 0)):
             used[feature.name] = max(used.get(feature.name, 0) - 1, 0)
-            app.history.append((Action.REGAIN_FEATURE_CHARGE, feature.name))
             app._log_event(
                 f"{char['name']} regains a use of {feature.name} ({note})",
                 character=char["name"],
@@ -179,7 +178,6 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
                 "source_name": None,
                 "target_name": char["name"],
             }
-            app.history.append((Action.HEAL, heal_value))
             app._log_event(
                 f"{char['name']} heals {actual_heal} HP (short rest)",
                 character=char["name"],

@@ -1,194 +1,253 @@
-"""Undo in the combat UI (LoggingMixin._undo_last), pinned against
-tests/snapshots/combat_ui_undo.json: for every kind of history entry, what
-undoing it does to the target and source (HP, conditions, slots, death
-saves, feature uses, battle stats), the encounter and player logs, and which
-cards get rebuilt. A change meant to alter undo regenerates it on purpose:
-
-    UPDATE_SNAPSHOTS=1 pytest tests/test_combat_ui_undo.py
-"""
+"""Undo in the combat UI (undo.py, LoggingMixin._undo_last): one undo takes
+back exactly one operation - all of the combat state it changed, and
+exactly the lines it wrote to the encounter log and the player log."""
 
 import json
 
 import pytest
+from PyQt6.QtWidgets import QDialog, QMessageBox
 
+from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.stats import DICT_STAT_KEYS, STAT_KEYS
-from Combat.Definitions import Action
-from tests._combat_ui import check_golden, make_ui
-from tests._snapshot_helpers import SNAPSHOT_DIR
-
-GOLDEN_PATH = SNAPSHOT_DIR / "combat_ui_undo.json"
-
-_SEEDED_STAT = 3
-_SEEDED_NAMED = {"Poisoned": 1, "Bless": 2, "Rage": 1}
+from Combat.CombatUIQt.undo import _combat_data
+from tests._combat_ui import make_ui
 
 
-class _LimitedFeature:
-    name = "Rage"
-    uses = 2
+@pytest.fixture(autouse=True)
+def no_modal_dialogs(monkeypatch):
+    """A modal dialog would block the test forever; fail it instead."""
+
+    def refuse(*args, **kwargs):
+        raise AssertionError(f"unexpected modal dialog: {args[1:3]}")
+
+    monkeypatch.setattr(QDialog, "exec", refuse)
+    monkeypatch.setattr(QMessageBox, "warning", refuse)
 
 
-def _ui(tmp_path):
+@pytest.fixture
+def fight(tmp_path):
+    """A Pirate (initiative 15) and a Tiger (10) in round 1, the Pirate's
+    turn, with a player log so both logs can be checked."""
     ui = make_ui(tmp_path, [Pirate(), Tiger()])
-    for char in ui.characters:
-        char["stats"] = {
-            **{key: _SEEDED_STAT for key in STAT_KEYS},
-            **{key: dict(_SEEDED_NAMED) for key in DICT_STAT_KEYS},
-        }
-        char["spell_slots"] = {1: 1, 2: 0}
-        char["conditions"] = ["Poisoned"]
-        char["death_saves_fail"] = 2
-        char["death_saves_success"] = 1
-        char["feature_uses_used"] = {"Rage": 1}
-        char["_feature_objects"] = [_LimitedFeature()]
     pirate, tiger = ui.characters
-    ui.selected_character = pirate
+    ui._initiative_inputs[id(pirate)].setText("15")
+    ui._initiative_inputs[id(tiger)].setText("10")
+    ui._start_combat()
+    ui.player_log_file = tmp_path / "players.json"
+    ui.player_log_data = {"sessions": [{}]}
+    pirate["spell_slots"] = {1: 2}
+    ui._select_character(pirate)
+    ui._select_target_character(tiger)
     return ui, pirate, tiger
 
 
-def _damage(**overrides):
-    value = {
-        "hp_delta": -5,
-        "temp_delta": -2,
-        "dmg": 7,
-        "damage_type": "Fire",
-        "source_name": "Pirate",
-        "target_name": "Tiger",
-        "knockout": True,
-    }
-    return (Action.DAMAGE, {**value, **overrides})
+def _rounds(log: dict) -> dict:
+    """The round_<n> lists of a log (not its round_number)."""
+    return {k: v for k, v in log.items() if k.split("_")[-1].isdigit()}
 
 
-def _source_target(action, **value):
-    return (
-        action,
-        {"source_name": "Pirate", "target_name": "Tiger", **value},
-    )
-
-
-CASES = {
-    "damage": _damage(),
-    "damage_more_than_the_stats_hold": _damage(dmg=9),
-    "damage_no_type_no_knockout": _damage(damage_type=None, knockout=False),
-    "damage_unknown_source": _damage(source_name="Nobody"),
-    "damage_unknown_target": _damage(target_name="Nobody"),
-    "damage_legacy_tuple": (Action.DAMAGE, (-5, -2)),
-    "heal": _source_target(Action.HEAL, heal=4),
-    "heal_more_than_the_stats_hold": _source_target(Action.HEAL, heal=9),
-    "heal_without_source": (
-        Action.HEAL,
-        {"heal": 4, "source_name": None, "target_name": "Tiger"},
-    ),
-    "heal_legacy_int": (Action.HEAL, 4),
-    "add_condition": _source_target(Action.ADD_CONDITION, condition="Poisoned"),
-    "add_condition_not_present": _source_target(
-        Action.ADD_CONDITION, condition="Prone"
-    ),
-    "remove_condition_absent": _source_target(
-        Action.REMOVE_CONDITION, condition="Prone"
-    ),
-    "remove_condition_present": _source_target(
-        Action.REMOVE_CONDITION, condition="Poisoned"
-    ),
-    "add_temp_hp": _source_target(Action.ADD_TEMP_HP, amount=4),
-    "add_temp_hp_more_than_the_stats_hold": _source_target(
-        Action.ADD_TEMP_HP, amount=9
-    ),
-    "remove_spell_slot": (Action.REMOVE_SPELL_SLOT, 2),
-    "add_spell_slot": (Action.ADD_SPELL_SLOT, 1),
-    "add_spell_slot_already_empty": (Action.ADD_SPELL_SLOT, 2),
-    "cast_spell": (Action.CAST_SPELL, {"spell_name": "Bless"}),
-    "cast_spell_by_name": (Action.CAST_SPELL, "Bless"),
-    "death_save_fail": (Action.DEATH_SAVE_FAIL, False),
-    "death_save_fail_that_killed": (Action.DEATH_SAVE_FAIL, True),
-    "death_save_success": (Action.DEATH_SAVE_SUCCESS, None),
-    "enable_limited_feature": (Action.ENABLE_FEATURE, {"feature_name": "Rage"}),
-    "enable_unknown_feature": (Action.ENABLE_FEATURE, "Second Wind"),
-    "regain_feature_charge": (Action.REGAIN_FEATURE_CHARGE, "Rage"),
-}
-
-
-def _changed_stats(stats: dict) -> dict:
-    """Only what differs from the seeded stats, to keep goldens readable."""
-    changed = {}
-    for key, value in stats.items():
-        seeded = dict(_SEEDED_NAMED) if key in DICT_STAT_KEYS else _SEEDED_STAT
-        if value != seeded:
-            changed[key] = value
-    return changed
-
-
-def _state(char: dict) -> dict:
-    return {
-        "hp": char["hp"],
-        "temp_hp": char["temp_hp"],
-        "conditions": char["conditions"],
-        "spell_slots": char["spell_slots"],
-        "death_saves": [char["death_saves_fail"], char["death_saves_success"]],
-        "feature_uses_used": char["feature_uses_used"],
-        "stats": _changed_stats(char["stats"]),
-    }
-
-
-def _undo(ui, entry, capsys) -> dict:
-    ui.history.append(entry)
-    ui._log_event("first event", note_turn=False)
-    ui._log_event("event to undo", note_turn=False)
-    rebuilt = []
-    ui._rebuild_card = lambda char: rebuilt.append(char["name"])
-    capsys.readouterr()
-
-    ui._undo_last()
-
+def _logs(ui) -> tuple[dict, dict]:
+    """The encounter log's and the player log session's rounds."""
     log = json.loads(ui.log_file.read_text())
+    return _rounds(log), _rounds(ui.player_log_data["sessions"][-1])
+
+
+def _everything(ui) -> dict:
+    """All the state an undo must put back."""
     return {
-        "pirate": _state(ui.characters[0]),
-        "tiger": _state(ui.characters[1]),
-        "history_left": len(ui.history),
-        "round_log": log.get("round_1"),
-        "rebuilt": rebuilt,
-        "printed": capsys.readouterr().out,
+        "combatants": [_combat_data(c) for c in ui.characters],
+        "order": [c["name"] for c in ui.initiative_order],
+        "turn": ui.current_turn_idx,
+        "round": ui.round_number,
+        "round_label": ui.round_label.text(),
+        "logs": _logs(ui),
     }
 
 
-@pytest.mark.parametrize("case", sorted(CASES))
-def test_undo_unchanged(tmp_path, capsys, case):
-    ui, _, _ = _ui(tmp_path)
-    check_golden(GOLDEN_PATH, case, _undo(ui, CASES[case], capsys))
+def _damage(ui, amount: int):
+    ui.damage_type_combo.setCurrentIndex(1)  # reset to "none" after every hit
+    ui.damage_input.setText(str(amount))
+    ui._apply_damage()
 
 
-def test_undo_with_nothing_to_undo_does_nothing(tmp_path):
-    ui, pirate, tiger = _ui(tmp_path)
-    before = [_state(pirate), _state(tiger)]
+def test_undo_damage_puts_everything_back(fight):
+    ui, _, tiger = fight
+    before = _everything(ui)
+    _damage(ui, 20)  # 30 HP Tiger -> 10, Bloodied
+    assert tiger["hp"] == 10 and "Bloodied" in tiger["conditions"]
+
     ui._undo_last()
-    assert [_state(pirate), _state(tiger)] == before
+
+    assert _everything(ui) == before
+    assert ui.history == []
 
 
-def test_undo_needs_a_selection_for_source_actions(tmp_path):
-    ui, pirate, _ = _ui(tmp_path)
-    ui.selected_character = None
-    ui.history.append((Action.REMOVE_SPELL_SLOT, 1))
-    ui._log_event("cast", note_turn=False)
+def test_undo_takes_back_operations_newest_first(fight):
+    # The old bug: logging an Action wrote a line but no undo step, so undoing
+    # the damage before it deleted the Action's line and left the damage's.
+    ui, pirate, tiger = fight
+    start = _everything(ui)
+    _damage(ui, 5)
+    after_damage = _everything(ui)
+    ui._add_action_use("Action")
+
     ui._undo_last()
-    assert pirate["spell_slots"] == {1: 1, 2: 0}
-    assert len(ui.history) == 1
+    assert _everything(ui) == after_damage
+    assert not pirate.get("action_uses")
 
-
-def test_undo_keeps_history_when_the_round_has_no_log(tmp_path):
-    # Nothing logged this round: the entry stays on the history, untouched.
-    ui, pirate, _ = _ui(tmp_path)
-    ui.history.append((Action.REMOVE_SPELL_SLOT, 1))
     ui._undo_last()
-    assert pirate["spell_slots"] == {1: 1, 2: 0}
-    assert len(ui.history) == 1
+    assert _everything(ui) == start
+    assert tiger["hp"] == 30
 
 
-def test_undo_also_pops_the_player_log(tmp_path):
-    ui, _, _ = _ui(tmp_path)
-    ui.player_log_file = tmp_path / "players.json"
-    ui.player_log_data = {"sessions": [{}]}
-    ui.history.append((Action.REMOVE_SPELL_SLOT, 1))
-    ui._log_event("first", note_turn=False)
-    ui._log_event("cast", note_turn=False)
+def test_an_undone_hit_leaves_the_player_log(fight):
+    # The player log is replayed to rebuild the party next session, so an
+    # undone action must not stay in it.
+    ui, _, _ = fight
+    ui._add_action_use("Action")
+    _damage(ui, 5)
+    ui._add_action_use("Action")
     ui._undo_last()
-    assert ui.player_log_data["sessions"][-1]["round_1"] == [{"text": "first"}]
+    ui._undo_last()
+
+    _, session = _logs(ui)
+    assert session["round_1"] == [{"text": "[Pirate's turn] Pirate uses Action"}]
+
+
+def test_undo_reverts_the_combatant_it_changed_whoever_is_selected(fight):
+    ui, pirate, tiger = fight
+    ui._cast_spell_slot_level(1)
+    ui._select_character(tiger)
+
+    ui._undo_last()
+
+    assert pirate["spell_slots"] == {1: 2}
+    assert pirate["stats"]["spell_slots_used"] == 0
+
+
+def test_undo_with_no_selection_still_works(fight):
+    ui, pirate, _ = fight
+    ui._cast_spell_slot_level(1)
+    ui._clear_selection()
+
+    ui._undo_last()
+
+    assert pirate["spell_slots"] == {1: 2}
+
+
+def test_one_undo_takes_back_damage_to_every_target(fight):
+    ui, pirate, tiger = fight
+    ui._select_target_character(pirate, additive=True)
+    before = _everything(ui)
+    _damage(ui, 20)
+    assert pirate["hp"] == 13 and tiger["hp"] == 10
+
+    ui._undo_last()
+
+    assert _everything(ui) == before
+
+
+def test_one_undo_takes_back_a_whole_spell_cast(fight):
+    # Hold Person on the Tiger: the caster spends an Action and starts
+    # Concentrating with a 1-minute timer, the Tiger gets the spell's badge.
+    ui, pirate, tiger = fight
+    before = _everything(ui)
+    ui._apply_cast_spell(SpellFactory.create("Hold Person"))
+    assert "Hold Person" in tiger["conditions"]
+    assert "Concentrating" in pirate["conditions"]
+    assert pirate["active_spells"]
+
+    ui._undo_last()
+
+    assert _everything(ui) == before
+    assert len(ui.history) == 0
+
+
+def test_undo_next_turn(fight):
+    ui, pirate, tiger = fight
+    pirate["active_spells"] = [
+        {"name": "Bless", "time_left": 6, "duration": 60, "concentration": False}
+    ]
+    ui._advance_turn()  # Tiger's turn
+    ui._add_action_use("Action")
+    before = _everything(ui)
+
+    ui._advance_turn()  # Round 2: Bless runs out, the Pirate's tallies reset
+    assert ui.round_number == 2 and pirate["active_spells"] == []
+
+    ui._undo_last()
+
+    assert _everything(ui) == before
+    assert ui._next_turn_btn.text() == "Next Round"
+
+
+def test_undo_back_across_a_round(fight):
+    ui, _, tiger = fight
+    start = _everything(ui)
+    _damage(ui, 5)
+    ui._advance_turn()
+    ui._advance_turn()
+    _damage(ui, 3)
+
+    for _ in range(4):
+        ui._undo_last()
+
+    assert _everything(ui) == start
+    assert tiger["hp"] == 30
+    assert "round_2" not in _logs(ui)[0]
+
+
+def test_undo_an_added_combatant(fight):
+    ui, pirate, _ = fight
+    ui._add_ad_hoc_combatant("Wooden Door", hp=15, ac=12)
+    door = ui.characters[-1]
+    ui._select_target_character(door)
+    _damage(ui, 4)
+
+    ui._undo_last()
+    ui._undo_last()
+
+    assert [c["name"] for c in ui.characters] == ["Pirate", "Tiger"]
+    assert [c["name"] for c in ui.initiative_order] == ["Pirate", "Tiger"]
+    assert ui.target_characters == []
+    assert ui.selected_character is pirate
+
+
+def test_right_click_removing_a_condition_is_undoable(fight):
+    ui, _, tiger = fight
+    tiger["conditions"].append("Prone")
+    ui._remove_condition_from(tiger, "Prone")
+
+    ui._undo_last()
+
+    assert tiger["conditions"] == ["Prone"]
+
+
+def test_operations_that_change_nothing_leave_no_undo_step(fight):
+    ui, _, tiger = fight
+    ui.damage_input.setText("2d6")
+    ui._apply_damage()
+    ui._remove_condition_from(tiger, "Prone")
+    ui._clear_selection()
+    ui._add_action_use("Action")
+    assert ui.history == []
+
+
+def test_undo_with_nothing_to_undo_does_nothing(fight):
+    ui, _, _ = fight
+    before = _everything(ui)
+    ui._undo_last()
+    assert _everything(ui) == before
+
+
+def test_nothing_is_recorded_before_combat(tmp_path):
+    ui = make_ui(tmp_path, [Pirate()])
+    ui._add_ad_hoc_combatant("Wooden Door")
+    assert ui.history == []
+
+
+def test_a_qt_signals_extra_argument_is_dropped(fight):
+    # clicked passes `checked`; the decorated methods don't take it.
+    ui, _, _ = fight
+    ui._advance_turn(False)
+    assert ui.current_turn_idx == 1
