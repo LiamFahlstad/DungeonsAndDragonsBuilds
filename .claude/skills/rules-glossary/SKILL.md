@@ -34,9 +34,11 @@ To find which entries some code touches, run [glossary_terms.py](glossary_terms.
 ```bash
 python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/GeneralFeats.py
 python .claude/skills/rules-glossary/glossary_terms.py $(git diff --name-only) --lines 10
+python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/OriginFeats.py::TavernBrawler
+python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/GeneralFeats.py:602-639
 ```
 
-It prints each matched entry's file, its hit count and the line numbers, most hits first. Identifiers are split into words before matching, so `BonusAction`, `bonus_action` and `Condition.GRAPPLED` all match. Everyday words (Creature, Damage, Target, ...) are summed on one line unless `--all` is given. Action names that are also ordinary words (Attack, Magic, Hide, ...) only count as "Magic action" and similar. Both lists are at the top of the script.
+For one feature, pass `file.py::ClassName` (that class or def) or `file.py:START-END`. A whole feature file names entries for every feature in it. It prints each matched entry's file, its hit count and the line numbers, most hits first. Identifiers are split into words before matching, so `BonusAction`, `bonus_action` and `Condition.GRAPPLED` all match. Everyday words (Creature, Damage, Target, ...) are summed on one line unless `--all` is given. Action names that are also ordinary words (Attack, Magic, Hide, ...) only count as "Magic action" and similar. Both lists are at the top of the script.
 
 To check an implementation against these entries, use the read-only `rules-checker` agent, which is built on this skill.
 

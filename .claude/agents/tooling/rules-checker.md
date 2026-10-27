@@ -21,7 +21,7 @@ If the scope is large (a whole folder of features), say how you sampled it, and 
 ## Workflow
 
 1. **Glossary first.** If `SourceTexts/RulesGlossary/` is missing, generate it into the scratchpad directory (`scrape_rules_glossary.py --out <scratchpad>/RulesGlossary`) and pass `--glossary` to the term script. Never write the tree into the repo yourself.
-2. **Find the terms.** Run `python .claude/skills/rules-glossary/glossary_terms.py <files>` and read the entries it lists, most specific first. Entries are short, so read them whole. Follow a *See also* link when the entry defers to another one (Grappling defers to Grappled and Unarmed Strike). Treat the generic line (Creature, Damage, ...) as a hint, not a reading list.
+2. **Find the terms.** Run `python .claude/skills/rules-glossary/glossary_terms.py <scope>` and read the entries it lists, most specific first. For one feature in a big file, pass `file.py::ClassName` or `file.py:START-END`: a whole feature file lists entries for every feature in it. Entries are short, so read them whole. Follow a *See also* link when the entry defers to another one (Grappling defers to Grappled and Unarmed Strike). Treat the generic line (Creature, Damage, ...) as a hint, not a reading list.
 3. **Read the code that implements each rule.** That means what the code *computes or enforces* (modifiers, dice, DCs, durations, stacking, rounding, action costs, resource recharge), and what it *shows* the player: a feature's description string, `get_improved_description()`, a spell's improved description, a monster ability's text. Open only the lines the term script points to, with `offset`/`limit` to get context.
 4. **Compare clause by clause.** For each rule clause that the code touches, decide whether it is followed, contradicted, partly followed or not modeled. Typical places where code drifts from the 2024 glossary:
    - 2014 mechanics or wording in 2024 content: grapple or shove as a contested Athletics check instead of a saving throw against DC 8 + Strength modifier + Proficiency Bonus (Unarmed Strike), the 2014 exhaustion table instead of a -2 per level penalty to D20 Tests, Surprise costing a turn instead of giving Disadvantage on Initiative.
@@ -33,13 +33,14 @@ If the scope is large (a whole folder of features), say how you sampled it, and 
    These are pointers to where to look. Always quote the entry itself, not this list.
 
    Many entries end with *See also* links to other D&D Beyond chapters ("Playing the Game", "Equipment"). Those chapters aren't local, and you have no web access. When a question turns on one of them (e.g. how Temporary Hit Points combine), put it under "Needs a ruling" with the link instead of answering from memory.
-5. **Probe when reading isn't enough.** Write a throwaway script in the scratchpad directory (never the repo) and run it with `PYTHONPATH=. python <script>` to build the character or call the function and print the value the rule fixes. Use the code's output to find a disagreement and the glossary to judge it, never the other way round.
+5. **Probe when reading isn't enough.** Write a throwaway script in the scratchpad directory (never the repo) and run it with `PYTHONPATH=. python <script>` to build the character or call the function and print the value the rule fixes. To build a character from its build file: `sys.path.insert(0, ".claude/skills/multiclass-builds")`, `from multiclass_report import load_builder`, `character = load_builder("Builds/.../X.py")().build()`. To find which builds use a feature, grep `Builds/` for its class name. Use the code's output to find a disagreement and the glossary to judge it, never the other way round.
 
 ## The repo's own rules come first
 
 - **2014 content on top of a 2024 engine** (CLAUDE.md): a 2014 subclass's own feature text keeps its wording and isn't a finding. It *is* a finding when the engine implements a shared base rule (a condition, an action, cover, a rest) the 2014 way, or when a 2014 feature overrides a 2024 base-class feature that should win.
 - **Homebrew is intentional.** A homebrew monster or feature that bends a rule on purpose isn't a finding. A homebrew one that misuses a term (calls something "Grappled" but gives it other effects) is.
 - **Not modeled isn't wrong.** The engine doesn't simulate everything. List an unmodeled rule only if the code or its text *claims* it, or if the gap gives a wrong number on a sheet or in combat.
+- **A feature's own text is an oracle too.** Where its improved description, card text or `apply()` disagrees with its `get_description()` (the source wording), for example by turning a "you can" option into something that always happens, that is a `wrong text` or `incomplete` finding even when no glossary entry is involved. Cite the source line instead of a glossary file.
 - Capitalization and style of rules terms aren't findings.
 
 ## Token discipline
@@ -57,6 +58,5 @@ Start with one line: the scope checked, and the glossary entries you checked it 
 3. **Checked and consistent:** the entries the scope follows correctly, one line each. This shows the coverage, so keep it.
 4. **Not modeled:** rules the scope touches but the engine doesn't implement, only where it matters (see above).
 5. **Needs a ruling:** questions the glossary doesn't settle.
-6. **Checks run:** each command or probe script and its actual result line.
 
-Then add the standard report from the `subagent-protocol` skill. Under **Files changed**, write "none (read-only)" unless you updated your own memory.
+Then add the standard report from the `subagent-protocol` skill. Its **Commands run** section is where the term-script runs and probe scripts go, each with its actual result line. Under **Files changed**, write "none (read-only)" unless you updated your own memory.

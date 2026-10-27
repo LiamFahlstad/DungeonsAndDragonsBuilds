@@ -4,6 +4,11 @@ Usage (from the repo root):
     python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/GeneralFeats.py
     python .claude/skills/rules-glossary/glossary_terms.py Combat/CombatUIQt/ --lines 10
     python .claude/skills/rules-glossary/glossary_terms.py $(git diff --name-only) --all
+    python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/OriginFeats.py::TavernBrawler
+    python .claude/skills/rules-glossary/glossary_terms.py CharacterContent/Features/CharacterFeats/GeneralFeats.py:602-639
+
+A whole feature file names entries for every feature in it, so for one feature pass
+`file.py::ClassName` (the class or def, up to the next line indented as little) or a line range.
 
 Matching is case-insensitive on whole words, after splitting identifiers into words, so
 `BonusAction`, `bonus_action` and "Bonus Action" all match the Bonus Action entry, and
@@ -97,25 +102,83 @@ def term_pattern(name: str) -> re.Pattern:
     return re.compile(r"\b" + r"\s+".join(parts) + r"s?\b")
 
 
-def source_files(paths: list[Path]) -> list[Path]:
-    files = []
-    for path in paths:
-        if path.is_dir():
-            files += [
-                p
+SCOPE_RE = re.compile(
+    r"^(?P<path>.+?)(?::(?P<start>\d+)-(?P<end>\d+)|::(?P<symbol>\w+))?$"
+)
+
+
+def symbol_range(lines: list[str], symbol: str) -> tuple[int, int] | None:
+    """1-based line range of `class symbol` or `def symbol`: up to the next line indented as little."""
+    pattern = re.compile(rf"^(?P<indent>\s*)(?:async\s+)?(?:class|def)\s+{symbol}\b")
+    for index, line in enumerate(lines):
+        match = pattern.match(line)
+        if match:
+            indent = len(match["indent"])
+            end = index + 1
+            while end < len(lines) and (
+                not lines[end].strip()
+                or len(lines[end]) - len(lines[end].lstrip()) > indent
+            ):
+                end += 1
+            while end > index + 1 and not lines[end - 1].strip():
+                end -= 1
+            return index + 1, end
+    return None
+
+
+def source_scopes(args: list[str]) -> list[tuple[Path, str | None]]:
+    """[(file, "START-END" or "::Symbol" or None)] for files, folders and file scopes."""
+    scopes: list[tuple[Path, str | None]] = []
+    for arg in args:
+        match = SCOPE_RE.match(arg)
+        assert match
+        path = Path(match["path"])
+        scope = (
+            f"{match['start']}-{match['end']}"
+            if match["start"]
+            else match["symbol"] and "::" + match["symbol"]
+        )
+        if path.is_dir() and not scope:
+            scopes += [
+                (p, None)
                 for p in sorted(path.rglob("*"))
                 if p.suffix in SUFFIXES and p.is_file() and not SKIP_DIRS & set(p.parts)
             ]
         elif path.is_file():
-            files.append(path)
+            scopes.append((path, scope))
         else:
-            print(f"skipping {path}: not found", file=sys.stderr)
-    return files
+            print(f"skipping {arg}: not found", file=sys.stderr)
+    return scopes
+
+
+def scoped_lines(path: Path, scope: str | None) -> list[tuple[int, str]] | None:
+    """[(line number, line)] inside the scope, or None (with a message) if it can't be read."""
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except UnicodeDecodeError:
+        return None
+    if scope is None:
+        start, end = 1, len(lines)
+    elif scope.startswith("::"):
+        found = symbol_range(lines, scope[2:])
+        if found is None:
+            print(
+                f"skipping {path}{scope}: no class or def by that name", file=sys.stderr
+            )
+            return None
+        start, end = found
+    else:
+        start, end = (int(n) for n in scope.split("-"))
+    return [(n, lines[n - 1]) for n in range(start, min(end, len(lines)) + 1)]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("paths", nargs="+", type=Path, help="files or folders to scan")
+    parser.add_argument(
+        "paths",
+        nargs="+",
+        help="files or folders to scan; file.py:START-END or file.py::ClassOrFunction scans part of a file",
+    )
     parser.add_argument(
         "--glossary",
         type=Path,
@@ -143,16 +206,15 @@ def main() -> int:
 
     # name -> file -> line numbers
     hits: dict[str, dict[str, list[int]]] = {}
-    for path in source_files(args.paths):
-        try:
-            text = path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
+    for path, scope in source_scopes(args.paths):
+        numbered = scoped_lines(path, scope)
+        if numbered is None:
             continue
         try:
             shown = path.resolve().relative_to(REPO_ROOT).as_posix()
         except ValueError:
             shown = path.as_posix()
-        for number, line in enumerate(text.splitlines(), start=1):
+        for number, line in numbered:
             normalized = words(line)
             for name, pattern in patterns.items():
                 if pattern.search(normalized):
