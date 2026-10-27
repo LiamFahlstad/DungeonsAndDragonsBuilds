@@ -11142,6 +11142,75 @@
    "Greatsword  1d20+11  dmg 2d6 +5"
   ]
  },
+ "Y2024FighterSorrowKnightMoiraAshenveilCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 18,
+   "DEX": 12,
+   "INT": 8,
+   "STR": 20,
+   "WIS": 19
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 10,
+   "DEX": 1,
+   "INT": -1,
+   "STR": 11,
+   "WIS": 4
+  },
+  "ac": "18 (no Shield)",
+  "class_levels": {
+   "Fighter": 18
+  },
+  "conditions": [],
+  "create_name": "Moira Ashenveil",
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Fighter Proficiencies",
+   "Class Skill Proficiencies",
+   "Second Wind",
+   "Fighting Style",
+   "Weapon Mastery",
+   "Action Surge",
+   "Ability Score Improvement",
+   "Extra Attack",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Indomitable",
+   "Ability Score Improvement",
+   "Studied Attacks",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Despairing Strikes",
+   "Solemn Gaze",
+   "Grim Constitution",
+   "Darkvision",
+   "Adrenaline Rush",
+   "Relentless Endurance"
+  ],
+  "hp": 184,
+  "invocations": [],
+  "max_hp": 184,
+  "name": "Moira Ashenveil",
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {},
+  "spells_with_level": [],
+  "subclass": "Sorrow Knight",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+11  dmg 1d1 +5",
+   "Greatsword  1d20+11  dmg 2d6 +5",
+   "Javelin  1d20+11  dmg 1d6 +5"
+  ]
+ },
  "Y2024MonkElementsKaidaEmberfistCharacterBuilder": {
   "Ability Scores": {
    "CHA": 12,

@@ -342,6 +342,12 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "damage reduction, and a controlled-fall/shove effect, plus eventually short-range "
         "teleportation. Adds a scaling resource-based toolkit without needing spell slots."
     ),
+    "FighterSorrowKnight": (
+        "A Shadowfell-touched subclass: a small pool of Despairing Strike Dice (regained on a Short "
+        "Rest) adds Psychic damage plus a debuff (Deafened, save Disadvantage, later Incapacitated, "
+        "Blinded or Exhaustion) to weapon hits, keyed to Wisdom. Later turns Tactical Shift into a "
+        "frightening teleport and Action Surge into a damage-negating shade form."
+    ),
     # --- Monk ---
     "MonkElements": (
         "Formerly Four Elements: spend Focus Points to cast elemental-themed effects (fire, "
@@ -949,6 +955,7 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("FighterChampion", "Champion", _s2024("champion")),
         ("FighterEldritchKnight", "Eldritch Knight", _s2024("eldritch_knight")),
         ("FighterPsiWarrior", "Psi Warrior", _s2024("psi_warrior")),
+        ("FighterSorrowKnight", "Sorrow Knight", _s2024("sorrow_knight")),
     ],
     "Monk": [
         ("MonkElements", "Warrior of the Elements", _s2024("warrior_of_the_elements")),

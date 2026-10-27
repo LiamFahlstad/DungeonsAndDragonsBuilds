@@ -13510,6 +13510,178 @@
    ]
   ]
  },
+ "Y2024FighterSorrowKnightMoiraAshenveilCharacterBuilder": {
+  "ac": 18,
+  "carry": 8,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 184,
+  "immune": [],
+  "init": 7,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [
+   [
+    "DamageType.NECROTIC",
+    [
+     "Grim Constitution"
+    ]
+   ],
+   [
+    "DamageType.PSYCHIC",
+    [
+     "Grim Constitution"
+    ]
+   ]
+  ],
+  "save_prof": [
+   true,
+   false,
+   true,
+   false,
+   false,
+   false
+  ],
+  "saves": [
+   11,
+   1,
+   10,
+   -1,
+   4,
+   0
+  ],
+  "scores": [
+   20,
+   12,
+   18,
+   8,
+   19,
+   10
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    180
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.DISADVANTAGE['Plate Armor']",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   1,
+   4,
+   -1,
+   11,
+   0,
+   -1,
+   10,
+   6,
+   -1,
+   4,
+   -1,
+   10,
+   0,
+   0,
+   -1,
+   1,
+   1,
+   4
+  ],
+  "slots": [],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    11,
+    5
+   ],
+   [
+    "Greatsword",
+    11,
+    5
+   ],
+   [
+    "Javelin",
+    11,
+    5
+   ]
+  ]
+ },
  "Y2024MonkElementsKaidaEmberfistCharacterBuilder": {
   "ac": 20,
   "carry": 10,

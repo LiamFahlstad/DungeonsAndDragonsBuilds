@@ -1540,6 +1540,31 @@
    "items.html": "7b1849953eac6276f2193090ac4a116fca7772d57f365e43f22ab521148229a9"
   }
  },
+ "Y2024FighterSorrowKnightMoiraAshenveilCharacterBuilder": {
+  "full": {
+   "character.html": "36e337ef8cb230351ea016f312ff827a2aee63b2e2eeac8b1219c9f309365d40",
+   "features/level_01.html": "f488f92f9fcb8009d6ced473e280c5db32c2882b054b8973eaae2e9530c12d3f",
+   "features/level_02.html": "e096565bac560b32ef79eed0750abd29d8e309b284f9bfa82844e3bf8decc3f2",
+   "features/level_03.html": "af3ed10c9e1fc3cfcc573f3967d3ef0dd0e37273b74a91a413aaedff12ee3805",
+   "features/level_04.html": "a65714b3bc6580673ef705a77362eb677008d58e4fb6d5a30a054d3118e6c824",
+   "features/level_05.html": "3de2c49e69231807e0d450e97a111c417d83fe1f47838668ffc8936f3694daba",
+   "features/level_06.html": "58c825e63a61ec878acb094574b1356041be1e2cf0866897d7118afa0a468cf0",
+   "features/level_07.html": "ee4540345f63c020e194284db6a526e762dde205ab177e37dc29a8e65524123f",
+   "features/level_08.html": "66bf412bd7153378b4c5e06b3e19fba54ecca3d0a0aed7999e978df13391398a",
+   "features/level_09.html": "7edc404da7f2ce05d4e9fc948ba60f0daa63ff1b1470f7035f43977068a29e01",
+   "features/level_10.html": "3e897e32aebe7f3b56ec51f969ec2048c52d50653625ffb3cada85ab577ae130",
+   "features/level_11.html": "acd1441d76ceb50883a8d6f4e9b233e1e29e72c38f15c66681b6912866f10ac5",
+   "features/level_12.html": "870f785f54a9f2d5e03db8432bb4a845c8a5111b13c851815125fead18105190",
+   "features/level_13.html": "24d94f4b38a014e80659b73ec39b0b1db4c2ce5420e142e2cfa068b071c6a179",
+   "features/level_14.html": "bd460c52bc6f9c397b8bf4646c83dd05af3a249b30074d09cf4108ff8e14f67c",
+   "features/level_15.html": "912ee77728431729f70c397130acf61aa41fb80dba0efaf6994dce0b69d3fb97",
+   "features/level_16.html": "3b963c1541b0ec79efee8011861ac5a0d6082b919c0060090a63b1f7104c87df",
+   "features/level_18.html": "4d55b155b1d8d36e87dabb21d0745c8035aa189c062d090c18e4c887a541d5a5",
+   "fighting_styles.html": "e570082511d7a151224a669ac94cc7e2ef787c1e23d11b7b18ab49f3ca11c60b",
+   "full_character_sheet.html": "5933daea2df192f2e3e4c0eaab728113f646040c3aac730f6223ed7667cc8336",
+   "items.html": "687b1ad518ecf10eed92e3ef035c8485a19f47b766fec9dc91fdcf37bbc1feaf"
+  }
+ },
  "Y2024MonkElementsKaidaEmberfistCharacterBuilder": {
   "full": {
    "character.html": "6c553536255af55cc704bb77bd18eec96a4d6c1a6570ee95cf51a7a1c766d8f0",

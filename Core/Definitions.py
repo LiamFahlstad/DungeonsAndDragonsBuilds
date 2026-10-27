@@ -413,6 +413,7 @@ class FighterSubclass(str, Enum):
     ELDRITCH_KNIGHT = "Eldritch Knight"
     PSI_WARRIOR = "Psi Warrior"
     ARCANE_ARCHER = "Arcane Archer"
+    SORROW_KNIGHT = "Sorrow Knight"
 
 
 class FighterSubclass2014(str, Enum):
