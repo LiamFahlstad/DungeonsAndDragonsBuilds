@@ -11,7 +11,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 **Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `dnd-builds` or `combat-sim` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 
-## Agents (15)
+## Agents (16)
 
 ### builds/
 
@@ -51,6 +51,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
 | [`dnd-test-bughunter`](../../agents/tooling/dnd-test-bughunter.md) | sonnet | - | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `dnd-builds`, `combat-sim` |
+| [`git-commit`](../../agents/tooling/git-commit.md) | sonnet | - | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
 | [`wikidot-scraper`](../../agents/tooling/wikidot-scraper.md) | sonnet | - | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
 
 ## Skills (4)

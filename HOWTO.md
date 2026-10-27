@@ -191,6 +191,8 @@ Hand-made monsters go in `Combat/Monsters/CR_<x>/monsters_homebrew.py`.
 UPDATE_SNAPSHOTS=1 ./run_tests.sh tests/test_build_snapshots.py   # accept new golden snapshots (add -k <build> to limit)
 SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # also dump rendered pages (for diff -r)
 ./format.sh            # Black, in place      |  ./format.sh --check   # report only
+./format_changed.sh    # Black on changed .py files only (FILE... for specific files, --check to report)
+./format_changed.sh --staged   # format the staged .py files and re-stage them (what the git-commit agent runs)
 ./typecheck.sh         # pyright, whole repo  |  ./typecheck.sh Model  # one folder
 ```
 

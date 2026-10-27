@@ -54,6 +54,7 @@ Every agent has persistent memory (`memory: project`): `.claude/agent-memory/<yo
 
 Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared know-how lives in `.claude/skills/<skill>/` (procedures, reference files, scripts), which agents preload with `skills:` and the main session can use directly. The description in each file says when to use it. [Notes/agent-workflow.md](Notes/agent-workflow.md) explains the whole setup.
 
+- **Commit through `git-commit`** when the user asks for a commit. Tell it what to commit and who made the changes: the user, or the Claude model from this session's attribution instructions. That decides its Co-Authored-By trailer. Relay its report, including the full message it wrote.
 - **Find the right one in the index.** `.claude/skills/agent-index/SKILL.md` (the `agent-index` skill) lists every agent and skill, generated from their frontmatter. A hook rebuilds it after edits, and a test fails if it's stale.
 - **Pick the specialist first** (subclass-creator, monster-creator, test-bughunter, ...), and fall back to `dnd-builds` / `combat-sim` for general work. Do small or single-file edits yourself instead of spawning an agent.
 - **Model choice.** Agents default to the model in their frontmatter. Pass `model: "haiku"` only for small, mechanical, easy-to-verify tasks (one feature, one combatant, a lookup). Never use haiku for tests or bug hunting, for subjective classification or tagging across hundreds of items, or for bulk migrations over shared code.
