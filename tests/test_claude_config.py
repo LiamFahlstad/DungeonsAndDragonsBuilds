@@ -6,6 +6,8 @@ naming a missing skill is only logged, so these mistakes would otherwise go unno
 
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -75,6 +77,28 @@ def test_skill_frontmatter_and_links(folder):
 def test_referenced_claude_files_exist(path):
     for ref in REPO_PATH.findall(path.read_text(encoding="utf-8")):
         assert (ROOT / ref).exists(), f"{path.name} points at missing {ref}"
+
+
+# Agent names follow dnd-<area>-<job>; combat-sim-<variant> catches retired variants like combat-sim-haiku.
+AGENT_LIKE = re.compile(r"\b(?:dnd|combat-sim)-[a-z0-9]+(?:-[a-z0-9]+)*\b")
+
+
+def test_agent_references_point_at_real_agents():
+    # A "not for X, use Y" pointing at a deleted or renamed agent sends routing nowhere.
+    known = {frontmatter(p)["name"] for p in agent_files()} | {d.name for d in skill_dirs()}
+    dangling = []
+    for path in agent_files() + sorted(SKILLS.rglob("*.md")) + [ROOT / "CLAUDE.md"]:
+        for name in set(AGENT_LIKE.findall(path.read_text(encoding="utf-8"))) - known:
+            dangling.append(f"{path.relative_to(ROOT).as_posix()}: {name}")
+    assert not dangling, "references to agents/skills that don't exist:\n" + "\n".join(sorted(dangling))
+
+
+def test_agent_index_is_current():
+    result = subprocess.run(
+        [sys.executable, str(SKILLS / "agent-index" / "build_index.py"), "--check"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stdout
 
 
 def test_hook_scripts_exist():

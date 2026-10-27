@@ -1,6 +1,6 @@
 ---
 name: dnd-spell-summaries
-description: Use to write concise (1-2 sentence) versions of D&D spell descriptions from the JSON spell sources under CharacterContent/Spells (spells_aidedd.json, spells_dnd5e.json, spells_dnd2024.json), and emit them as a companion `spells_<specification>_concise.json` file keyed by spell name. Give it a source file and a level/spell-name filter (e.g. "cantrips and level 1 spells in spells_dnd2024.json"); it writes only the new concise file, never touching the original source JSON. Not for editing Feature classes — use dnd-feature-summaries for that.
+description: Use to write concise (1-2 sentence) versions of D&D spell descriptions from the JSON spell sources under CharacterContent/Spells (spells_aidedd.json, spells_dnd5e.json, spells_dnd2024.json), and emit them as a companion `spells_<specification>_concise.json` file keyed by spell name. Give it a source file and a level/spell-name filter (e.g. "cantrips and level 1 spells in spells_dnd2024.json"); it writes only the new concise file, never touching the original source JSON. Not for editing Feature classes — use dnd-builds for that.
 tools: Read, Grep, Glob, Write, Bash
 model: haiku
 memory: project

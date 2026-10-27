@@ -10,6 +10,7 @@ How the agent setup is organised, why each piece exists, and how to use and exte
 | Roles | `.claude/agents/<domain>/<agent>.md` | One focused expert per kind of task: its own prompt, tool list, default model and the skills it preloads. Grouped by domain: `builds/`, `features/`, `spells/`, `combat/`, `tooling/`. |
 | Know-how | `.claude/skills/<skill>/` | Procedures, reference files and scripts, shared by every agent that preloads them and usable by the main session: `balance-monster`, `monster-stat-blocks`, `usage-tags`, `verify-agent-work`. |
 | Self-improvement | `.claude/agent-memory/<agent>/MEMORY.md` | Each agent's own lessons, loaded into its prompt every run. Agents write them; the main session reviews them and promotes good ones into prompts and skills (section 7). |
+| Index | `.claude/skills/agent-index/SKILL.md` | Every agent and skill in one page (domain, model, preloaded skills, use for, which agents each points to, scripts), **generated** from frontmatter. Also a skill Claude consults when choosing. |
 | Config test | `tests/test_claude_config.py` | Fails the normal test run if an agent's or skill's frontmatter is broken, or if a `skills:` entry, link or script path points at something missing. |
 | Guardrail | `.claude/hooks/check_subagent_edits.py` (wired in `.claude/settings.json`) | A subagent can't finish while a `.py` file it edited fails to compile, or if it edited another agent's worktree. |
 | Verification | `.claude/skills/verify-agent-work/` | Checks the working tree against what an agent *claimed*: compile, undefined names, imports, sibling worktrees, tests. |
@@ -33,7 +34,7 @@ Claude Code reads instructions from several places. Putting a rule in the wrong 
 
 **Key fact behind this setup:** don't rely on auto-memory reaching subagents. The docs say subagents don't load it ("the main conversation's auto memory isn't loaded"). Yet a test subagent in this repo did receive the memory *index*: a stale copy from when the session started, with no memory file contents. Either way it is the wrong channel. Rules like "`origin=` is a category, not a sourcebook", "2014 subclasses start at level 3" and "homebrew monsters score 0.4-0.6" lived only in memory, so agents got them partially and out of date, at best. They now live in `CLAUDE.md`, the documented channel every agent loads.
 
-**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 8.
+**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 9.
 
 ## 2. The agents
 
@@ -152,7 +153,7 @@ So a folder per agent, holding scripts and references, would be a skill without 
 | Loaded | in full when the agent starts | `SKILL.md` when preloaded or invoked; other files on demand |
 | Shared | no | by every agent that lists it, and the main session |
 
-**Agents are grouped by domain** (`builds/`, `features/`, `spells/`, `combat/`, `tooling/`), matching the areas in HOWTO section 10. **Skills stay flat**, one folder each, because that is the layout Claude Code discovers (`.claude/skills/<name>/SKILL.md`).
+**Agents are grouped by domain** (`builds/`, `features/`, `spells/`, `combat/`, `tooling/`), the same sections the index (section 8) uses. **Skills stay flat**, one folder each, because that is the layout Claude Code discovers (`.claude/skills/<name>/SKILL.md`).
 
 ### What the split fixed
 
@@ -237,7 +238,26 @@ Memory is tracked by git (`.gitignore` has `!.claude/agent-memory/`), so every l
 - Memory needs auto-memory to be on (it is by default).
 - `memory` also grants Read/Write/Edit to agents whose tool list leaves those out (e.g. `dnd-feature-summaries` gains Write). CLAUDE.md limits them to their own memory folder outside their task scope.
 
-## 8. Adding or changing an agent or skill
+## 8. The index: generated, never hand-written
+
+With ~15 agents and a growing set of skills, you need one page that shows what exists. Claude Code already shows Claude every description for routing, but not side by side, and not to you. The index is `.claude/skills/agent-index/SKILL.md`.
+
+**Why generated.** Every hand-kept copy in this setup has drifted: the haiku agent copies, the MonsterAbility reference, the stat-block template, the spell agent's storage rules. A hand-written index would be one more. So `build_index.py` builds it from each agent's and skill's own frontmatter:
+
+- per domain folder: each agent's model, preloaded skills, a "use for" line (the opening of its description), and **points to**, the other agents its description names;
+- each skill: who preloads it (or *main session*), its scripts, and what it's for.
+
+**Why it's also a skill.** Its frontmatter makes it the `agent-index` skill, so Claude consults it when choosing between similar agents or when asked what exists. You can open the same file as a normal Markdown page; HOWTO section 10 links to it.
+
+**How it stays current:**
+
+- a `PostToolUse` hook (`.claude/hooks/rebuild_agent_index.py`) rebuilds it after any Edit/Write to an agent or skill file. It checks the path first, so other edits cost only a Python startup;
+- `tests/test_claude_config.py` fails if it's stale (for `git mv`, edits outside Claude, ...);
+- a second test fails if any agent, skill or CLAUDE.md names an agent or skill that doesn't exist. Building the index found one straight away: `dnd-spell-summaries` still said "use dnd-feature-summaries", an agent deleted from the working tree. It now says `dnd-builds`.
+
+To change the index's wording, edit the text in `build_index.py`, never `SKILL.md`; the next rebuild would overwrite a hand edit.
+
+## 9. Adding or changing an agent or skill
 
 1. **Agent:** create `.claude/agents/<domain>/<name>.md` with `name` (matching the file name), a routing-quality `description` (when to use it *and* when not), a minimal `tools` list, a `model`, `memory: project` (required; the config test checks it), and `skills:` for any shared know-how it needs. Avoid `: ` inside the description; it breaks YAML.
 2. Put only the role in the agent body: scope, workflow, checks, report. Rules for all agents go in `CLAUDE.md`. Know-how that a second agent (or the main session) also needs goes in a skill.
@@ -248,11 +268,17 @@ Memory is tracked by git (`.gitignore` has `!.claude/agent-memory/`), so every l
    > Read-only smoke test; don't edit anything. List the skills injected into your context at startup and quote each one's first `# ` heading. Then state, from your instructions only, the rule your task depends on most (e.g. the balance band).
 
    If it reports no skills, or quotes text from an older version of the prompt, the session is still serving cached definitions: restart again.
-6. Add agents to the table in HOWTO section 10. Commit; everything under `.claude/agents`, `skills` and `hooks` is tracked.
+6. The index updates itself (hook), and the config test catches anything the hook missed. Commit; everything under `.claude/agents`, `skills` and `hooks` is tracked.
 
 Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `dnd-test-bughunter` ("where bugs have hidden") or `dnd-monster-balancer`. Before relying on it, review what an agent writes there.
 
-## 9. What changed on 2026-10-26
+## 10. What changed on 2026-10-26
+
+Fifth pass (the index, section 8), 2026-10-27:
+
+- **Added** the generated `agent-index` skill with `build_index.py`, the `rebuild_agent_index.py` PostToolUse hook, and tests for a stale index and for dangling agent references.
+- **Replaced** HOWTO section 10's hand-kept tables with a link to the index.
+- **Committed** the deletion of `dnd-feature-summaries` that was already in the working tree, and repointed `dnd-spell-summaries` to `dnd-builds`.
 
 Fourth pass (improving the skills, section 6 "Scripts over instructions"):
 

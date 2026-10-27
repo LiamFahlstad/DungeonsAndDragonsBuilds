@@ -54,6 +54,7 @@ Every agent has persistent memory (`memory: project`): `.claude/agent-memory/<yo
 
 Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared know-how lives in `.claude/skills/<skill>/` (procedures, reference files, scripts), which agents preload with `skills:` and the main session can use directly. The description in each file says when to use it. [Notes/agent-workflow.md](Notes/agent-workflow.md) explains the whole setup.
 
+- **Find the right one in the index.** `.claude/skills/agent-index/SKILL.md` (the `agent-index` skill) lists every agent and skill, generated from their frontmatter. A hook rebuilds it after edits, and a test fails if it's stale.
 - **Pick the specialist first** (subclass-creator, monster-creator, test-bughunter, ...), and fall back to `dnd-builds` / `combat-sim` for general work. Do small or single-file edits yourself instead of spawning an agent.
 - **Model choice.** Agents default to the model in their frontmatter. Pass `model: "haiku"` only for small, mechanical, easy-to-verify tasks (one feature, one combatant, a lookup). Never use haiku for tests or bug hunting, for subjective classification or tagging across hundreds of items, or for bulk migrations over shared code.
 - **Brief like a stranger.** A subagent sees CLAUDE.md, its own prompt and its preloaded skills, not this conversation. Don't count on it seeing auto-memory. Agent and skill edits apply only after Claude Code restarts. Say exactly which files are in scope, which are off-limits, what "done" means, and how to verify it.

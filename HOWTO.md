@@ -211,21 +211,9 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 
 ---
 
-## 10. Claude Code agents (`.claude/agents/<domain>/`) and skills (`.claude/skills/`)
+## 10. Claude Code agents and skills
 
-Ask Claude Code to use an agent by name. Skills are shared know-how that agents preload, and you can also invoke them yourself (`/balance-monster`, `/verify-agent-work`, ...). How the setup works: [Notes/agent-workflow.md](Notes/agent-workflow.md).
+Ask Claude Code to use an agent by name. Skills are shared know-how that agents preload, and you can also invoke them yourself (`/balance-monster`, `/verify-agent-work`, ...).
 
-| Folder | Agents |
-|---|---|
-| `builds/` | `dnd-builds`, `dnd-subclass-creator` (from `SourceTexts/`), `dnd-equipment`, `character-creator` (GUI) |
-| `features/` | `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-feature-extender` |
-| `spells/` | `dnd-spell-summaries`, `dnd-spell-usage-tags`, `dnd-spell-improved-descriptions` |
-| `combat/` | `combat-sim`, `dnd-monster-creator`, `dnd-monster-balancer`, `dnd-monster-ability-refactor` |
-| `tooling/` | `wikidot-scraper`, `dnd-test-bughunter` |
-
-| Skill | For |
-|---|---|
-| `balance-monster` | Tune a homebrew monster to `monster_score.py` 0.4-0.6. `check_monster.py <name>` / `--all-homebrew` is the one-call "is it done" check |
-| `monster-stat-blocks` | Monster file layout and template; `abilities.py` prints the structured ability classes live |
-| `usage-tags` | The heal/buff/control/damage/utility/summon rubric for features and spells. `tag_report.py check / file / with / spells / set-spell` |
-| `verify-agent-work` | Check what agents actually changed before trusting their reports (`verify.py --claimed --off-limits --root --tests`) |
+- **What exists:** [.claude/skills/agent-index/SKILL.md](.claude/skills/agent-index/SKILL.md) lists every agent (by domain folder, with model, preloaded skills, what it's for, and which agents it points to) and every skill (who preloads it, its scripts). It's generated from their frontmatter, so it's always current; Claude also consults it as the `agent-index` skill.
+- **How it works:** [Notes/agent-workflow.md](Notes/agent-workflow.md).
