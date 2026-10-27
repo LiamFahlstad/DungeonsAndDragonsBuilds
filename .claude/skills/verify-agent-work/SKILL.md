@@ -28,7 +28,8 @@ Run it again after every **resume** of an agent, not only after its first run. O
 - **Skipped items.** If the agent says it skipped N items as "dynamic" or "not applicable", open two or three of them and confirm the reason is real. Abandoned work gets reported as deliberate skips.
 - **Coverage.** For a migration, re-grep the old pattern and count what's left. Compare that count with the agent's claim.
 - **Content judgment.** For tagging or classification, spot-check about 10 items against the source text. Haiku runs have mis-tagged about half of a sample while reporting success. For tests, confirm they call engine code and take expected values from the rules, not from the code under test.
-- **Snapshot failures.** Never accept "the snapshot failures are expected". Look at the diff, and regenerate only if the change is intended (`UPDATE_SNAPSHOTS=1 ./run_tests.sh tests/test_build_snapshots.py`).
+- **Snapshot failures.** Never accept "the snapshot failures are expected". Look at the diff (`python .claude/skills/snapshot-diffs/snapshot_diff.py` prints it as text; see the `snapshot-diffs` skill), and regenerate only if the change is intended (`UPDATE_SNAPSHOTS=1 ./run_tests.sh tests/test_build_snapshots.py`).
+- **Rules, not just files.** This skill checks *what* changed. Whether the change follows the house rules is the `review-house-rules` skill (`check_diff.py`), or the read-only `code-reviewer` agent for a bigger change.
 - **Runtime.** For a method added across many classes, call it on one instance per pattern. Importing succeeds even when the method body would raise.
 
 ## 3. Curate what the agent learned

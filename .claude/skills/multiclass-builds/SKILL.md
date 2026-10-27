@@ -54,6 +54,6 @@ A new class's level 1 has picks (Fighter: 3 weapon masteries + a fighting style;
 
 ## Tests and snapshots that change
 
-Multiclassing an existing build legitimately changes its golden snapshots. Run `./run_tests.sh -q`, **read every diff** and check each changed line is a consequence of the multiclass (class levels, lost ASI, HP from the new hit die, new proficiencies on weapons, slots, features). Then `UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k <BuildName>` and rerun the full suite. The order-invariance tests may fail *during* the update run because the golden is being rewritten under them; they must pass on the plain rerun.
+Multiclassing an existing build legitimately changes its golden snapshots. Run `./run_tests.sh -q`, **read every diff** (`python .claude/skills/snapshot-diffs/snapshot_diff.py <BuildName>` shows the changed stats and page text) and check each changed line is a consequence of the multiclass (class levels, lost ASI, HP from the new hit die, new proficiencies on weapons, slots, features). Then `UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k <BuildName>` and rerun the full suite. The order-invariance tests may fail *during* the update run because the golden is being rewritten under them; they must pass on the plain rerun.
 
 The Character Creator GUI can't load multiclass builds. If the build is newly multiclassed, `tests/test_creator_roundtrip.py`'s `NOT_REPRODUCED` entry for it must name `_MULTICLASS` (it's a strict xfail, so a missing entry fails).

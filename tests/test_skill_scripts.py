@@ -16,10 +16,14 @@ SCRIPTS = sorted(SKILLS.glob("*/*.py"))
 
 
 def run(*args: str) -> subprocess.CompletedProcess:
-    return subprocess.run([sys.executable, *args], cwd=ROOT, capture_output=True, text=True, timeout=300)
+    return subprocess.run(
+        [sys.executable, *args], cwd=ROOT, capture_output=True, text=True, timeout=300
+    )
 
 
-@pytest.mark.parametrize("script", SCRIPTS, ids=[f"{p.parent.name}/{p.name}" for p in SCRIPTS])
+@pytest.mark.parametrize(
+    "script", SCRIPTS, ids=[f"{p.parent.name}/{p.name}" for p in SCRIPTS]
+)
 def test_script_help(script):
     result = run(str(script), "--help")
     assert result.returncode == 0, result.stderr
@@ -42,7 +46,9 @@ def test_abilities_reference_renders_every_subclass():
     }
     result = run(str(SKILLS / "monster-stat-blocks" / "abilities.py"))
     assert result.returncode == 0, result.stderr
-    listed = {line.split()[1] for line in result.stdout.splitlines() if line.startswith("## ")}
+    listed = {
+        line.split()[1] for line in result.stdout.splitlines() if line.startswith("## ")
+    }
     assert listed == expected
     assert "could not build" not in result.stdout
 
@@ -57,3 +63,80 @@ def test_check_monster_never_fails_official_monsters():
     result = run(str(SKILLS / "balance-monster" / "check_monster.py"), "Air Elemental")
     assert result.returncode == 0, result.stdout
     assert "n/a (official monster)" in result.stdout
+
+
+def test_snapshot_diff_reports_on_a_build():
+    result = run(
+        str(SKILLS / "snapshot-diffs" / "snapshot_diff.py"), "Obmar", "--stats-only"
+    )
+    assert result.returncode in (0, 1), result.stderr
+    assert "selected build" in result.stdout, result.stdout + result.stderr
+
+
+def test_snapshot_diff_names_stats_by_ability_and_skill():
+    import runpy
+
+    script = runpy.run_path(
+        str(SKILLS / "snapshot-diffs" / "snapshot_diff.py"), run_name="skill_script"
+    )
+    golden = {"scores": [10, 12, 14, 16, 8, 13], "ac": 15}
+    actual = {"scores": [10, 12, 14, 18, 8, 13], "ac": 15}
+    assert script["stat_lines"](golden, actual) == ["  scores[INTELLIGENCE]: 16 -> 18"]
+
+
+def test_check_diff_spots_generated_monster_files_and_sourcebook_origins():
+    import runpy
+
+    script = runpy.run_path(
+        str(SKILLS / "review-house-rules" / "check_diff.py"), run_name="skill_script"
+    )
+    assert script["is_generated_monster_file"]("Combat/Monsters/CR_1/monsters.py")
+    # CR_10's header says its classes were hand-edited on purpose.
+    assert not script["is_generated_monster_file"]("Combat/Monsters/CR_10/monsters.py")
+    assert not script["is_generated_monster_file"](
+        "Combat/Monsters/CR_1/monsters_homebrew.py"
+    )
+    sourcebook = script["SOURCEBOOK"]
+    assert sourcebook.search("Xanathar's Feat")
+    assert sourcebook.search("Champion Fighter Level 3 (2014)")
+    assert not sourcebook.search("Path Of The Ancestral Guardian Barbarian Level 3")
+    assert not sourcebook.search("Origin Feat")
+
+
+def test_check_diff_runs():
+    result = run(
+        str(SKILLS / "review-house-rules" / "check_diff.py"),
+        "--base",
+        "HEAD",
+        "Core/Rules.py",
+    )
+    assert result.returncode in (0, 1), result.stderr
+    assert "Checked" in result.stdout
+
+
+def test_screenshot_renders_a_sheet(tmp_path):
+    result = run(
+        str(SKILLS / "run-apps" / "screenshot.py"),
+        "--out",
+        str(tmp_path),
+        "sheet",
+        "Obmar",
+    )
+    assert result.returncode == 0, result.stderr
+    assert (
+        tmp_path / "artificer_cartographer_obmar_stalskagg" / "character.html"
+    ).exists(), result.stdout
+
+
+def test_screenshot_captures_the_creator_window(tmp_path):
+    # Also guards the import order: the Creator UI module dies silently without a QApplication.
+    result = run(
+        str(SKILLS / "run-apps" / "screenshot.py"),
+        "--out",
+        str(tmp_path),
+        "creator",
+        "--tab",
+        "Basics",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (tmp_path / "creator_0_basics.png").stat().st_size > 10_000

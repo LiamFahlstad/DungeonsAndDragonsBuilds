@@ -81,6 +81,7 @@ Good practices this setup follows:
 | `test-bughunter` | dnd-test-bughunter | opus | Expected values come from the rules; haiku once wrote tests that couldn't fail |
 | `content-scraper` | wikidot-scraper | opus | Writes and maintains scrapers (Wikidot and aidedd, not just Wikidot) |
 | `git-commit` | git-commit | opus | Judgment about what belongs together, and which unrelated work to leave alone |
+| `code-reviewer` | (new, 2026-10-27) | opus | Read-only review against the rules; a cheap reviewer misses exactly the subtle rules breaks it exists for |
 | `monster-balancer` | dnd-monster-balancer | sonnet | Bulk: iterate per monster until `check_monster.py` passes |
 | `monster-ability-converter` | dnd-monster-ability-refactor | sonnet | Bulk: rubric conversion, verified by exact text equality |
 | `spell-improved-descriptions` | dnd-spell-improved-descriptions | sonnet | Bulk: restructure many spells' rules text into blocks |
@@ -311,6 +312,13 @@ To change the index's wording, edit the text in `build_index.py`, never `SKILL.m
 Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `test-bughunter` ("where bugs have hidden") or `monster-balancer`. Before relying on it, review what an agent writes there.
 
 ## 10. What changed on 2026-10-26
+
+Eighth pass (the common roles that were missing), 2026-10-27. The setup had specialists for every content task, but not the three generic roles most Claude Code setups have: a debugger, a reviewer and a way to see the app run. Each was added in this repo's shape, with a script doing the repeated work:
+
+- **`snapshot-diffs` skill** (`snapshot_diff.py`), the debugger for this repo's most common failure. The snapshot test stores only page hashes, so it could say *which* page changed but not *what*, while CLAUDE.md demands reading every diff. The script shows each differing build's stats by ability and skill name, and a text diff of every changed page against an export of `HEAD`, rendered in a separate process and cached in the temp folder. It never touches the working tree or the index. Preloaded by `character-engine-dev`, `subclass-implementer`, `equipment-inventory`, `git-commit` and `code-reviewer`.
+- **`review-house-rules` skill** (`check_diff.py`) and the read-only **`code-reviewer`** agent. `verify-agent-work` checks *what* changed; nothing checked whether a change follows the rules no test sees (origin categories, 2014/2024 rules, generated files, Core/Rules constants). The script checks added lines only and lists the verification commands the changed files call for. Its first run over the last 60 commits found a real case: `bac2f895` hand-edited an import in three generated `CR_*/monsters.py` files, which `generate_monsters.py` will revert.
+- **`run-apps` skill** (`screenshot.py`). The built-in `run` skill looks for a project launch recipe, and the GUI agents could only test, not look. The script screenshots the combat window or each Character Creator tab offscreen, and renders a build's sheet into the temp folder. It handles two traps it hit while being built: no fonts on Windows' offscreen platform (fixed with `QT_QPA_FONTDIR`), and the Creator UI module dying silently when imported before the `QApplication` exists. Preloaded by `character-creator-gui` and `combat-simulator`.
+- **Pending:** after a restart, smoke-test `code-reviewer` (section 9) and confirm the new preloads.
 
 Seventh pass (double-checking self-improvement, section 7 "Live checks"), 2026-10-27:
 

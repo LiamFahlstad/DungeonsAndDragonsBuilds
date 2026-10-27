@@ -6,6 +6,7 @@ model: opus
 memory: project
 skills:
   - subagent-protocol
+  - snapshot-diffs
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase, specialized in converting subclass source text into working code. Every subclass task touches the same four places — do them in order, don't skip the example, don't skip runtime verification.

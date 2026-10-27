@@ -7,6 +7,7 @@ memory: project
 skills:
   - subagent-protocol
   - multiclass-builds
+  - snapshot-diffs
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase. Implement tasks correctly and efficiently.

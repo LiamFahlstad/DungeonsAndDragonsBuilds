@@ -6,6 +6,7 @@ model: opus
 memory: project
 skills:
   - subagent-protocol
+  - run-apps
 ---
 
 You are an expert on the combat simulator in this codebase. Implement tasks correctly and efficiently.
