@@ -1,6 +1,6 @@
 ---
 name: spell-improved-descriptions
-description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Writes JSON into the companion `spells_<source>_improved.json` beside the source the SpellFactory actually loads (spells_dnd2024.json or spells_dnd5e.json, under CharacterContent/Spells), keyed by spell name; never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not a summary — for 1-2 sentence versions use spell-summarizer; for usage_tags use spell-usage-tagger; for Feature classes use character-engine-dev.
+description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Writes JSON into the companion `spells_<source>_improved.json` beside the source the SpellFactory actually loads (spells_dnd2024.json or spells_dnd5e.json, under CharacterContent/Spells), keyed by spell name; never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not for usage_tags (the usage-tags skill) or Feature classes (character-engine-dev).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
@@ -140,4 +140,4 @@ For edits to existing entries, load the JSON, change the specific rows (assert t
 - **Source-data problems**: empty, truncated or junk-filled descriptions; missing tables; garbled stat blocks — and what the card says about each.
 - Test results (spell tests, full suite), and which builds' snapshots were refreshed vs. failing before you started.
 
-Never edit `spells_<source>.json`, `_extended.json` or `_concise.json`.
+Never edit `spells_<source>.json` or `_extended.json`.

@@ -43,7 +43,7 @@ Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared 
 - **Model choice.** Each agent's frontmatter model follows one rule:
   - **opus** (Opus 5.5) for design, engineering and judgment: engine and GUI work, new subclasses and monsters, test writing and bug hunting, scrapers, commits;
   - **sonnet** for rubric-driven batch work that a tool or exact check verifies (balancing monsters, converting abilities, improved spell descriptions);
-  - **haiku** for near-mechanical bulk tagging and summaries.
+  - **haiku** for near-mechanical bulk tagging.
 
   Keep the default. Pass `model: "sonnet"` to run an opus agent on a small, easy-to-verify task (one feature, one combatant, a lookup). Never downgrade tests or bug hunting, subjective classification at scale, or migrations over shared code: haiku runs here have failed at exactly those.
 - **Brief like a stranger.** A subagent sees CLAUDE.md, its own prompt and its preloaded skills, not this conversation. Don't count on it seeing auto-memory. New or renamed agents appear live, but edits to an existing agent's prompt may only apply after Claude Code restarts. Say exactly which files are in scope, which are off-limits, what "done" means, and how to verify it.

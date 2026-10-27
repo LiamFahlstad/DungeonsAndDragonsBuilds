@@ -42,8 +42,7 @@ these in bulk and carries the full workflow and checks.
 
 ## Guidelines
 
-Not a summary: keep every rule of the source text (that's what
-`spells_<source>_concise.json` is for).
+Not a summary: keep every rule of the source text.
 
 - **Flavor.** When the source describes how the magic looks, sounds or
   feels, or where it comes from ("A frigid beam of blue-white light

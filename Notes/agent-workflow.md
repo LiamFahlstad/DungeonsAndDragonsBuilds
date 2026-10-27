@@ -85,8 +85,8 @@ Good practices this setup follows:
 | `monster-ability-converter` | dnd-monster-ability-refactor | sonnet | Bulk: rubric conversion, verified by exact text equality |
 | `spell-improved-descriptions` | dnd-spell-improved-descriptions | sonnet | Bulk: restructure many spells' rules text into blocks |
 | `feature-card-tagger` | dnd-feature-action-tags | haiku | Bulk tagging; `tag_report.py check` validates it |
-| `spell-usage-tagger` | dnd-spell-usage-tags | haiku | Bulk tagging through `tag_report.py set-spell` |
-| `spell-summarizer` | dnd-spell-summaries | haiku | Bulk 1-2 sentence summaries |
+
+`spell-summarizer` and `spell-usage-tagger` were removed on 2026-10-27: concise spell descriptions left the engine on 2026-10-14, and every spell is tagged. Tag a newly scraped spell in the main session with the `usage-tags` skill (`tag_report.py set-spell`).
 
 **Downgrading for a small job:** pass `model: "sonnet"` when invoking an opus agent for a small, easy-to-verify task (one feature, one combatant, a lookup). Don't downgrade tests or bug hunting, subjective classification at scale, or migrations over shared code. Three recorded incidents (in Claude's memory) show those fail on cheaper tiers: tests that couldn't fail, about half of a spell sample mis-tagged, and detailed but false completion reports during parallel migrations.
 
@@ -368,5 +368,5 @@ First pass:
 
 - Prune the ~245 user-level permission entries (see section 5).
 - Decide what to do about the 25 homebrew monsters that fail `check_monster.py --all-homebrew` (20 over the 4-ability rule, 5 too strong). Either rebalance them with `monster-balancer`, or grandfather the ones that predate the rule.
-- Three agents default to haiku: `feature-card-tagger`, `spell-summarizer` and `spell-usage-tagger`. The summary and usage-tag work is near-mechanical, and both taggers are validated by `tag_report.py`. `feature-card-tagger` also makes action/duration/range judgment calls, so watch its first runs with the verify skill and move it to `sonnet` if quality slips.
+- One agent defaults to haiku: `feature-card-tagger`. Its usage tags are validated by `tag_report.py`, but it also makes action/duration/range judgment calls, so watch its first runs with the verify skill and move it to `sonnet` if quality slips.
 - 14 agents repeat a "Token discipline" block. It's harmless, but a change has to be made in 14 places; a candidate for moving into `CLAUDE.md` later.
