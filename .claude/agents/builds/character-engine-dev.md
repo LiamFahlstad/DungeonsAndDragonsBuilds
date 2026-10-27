@@ -6,6 +6,7 @@ model: opus
 memory: project
 skills:
   - subagent-protocol
+  - multiclass-builds
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase. Implement tasks correctly and efficiently.
