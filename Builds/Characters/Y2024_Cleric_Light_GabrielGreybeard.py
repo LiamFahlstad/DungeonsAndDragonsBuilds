@@ -92,7 +92,7 @@ def get_starter_class_builder():
                     divine_order=DivineOrderProtectorChoice(),
                 ),
                 2: ClericLevel2(
-                    spell=ClericLevel1Spells.DETECT_MAGIC,
+                    spell=ClericLevel1Spells.HEALING_WORD,
                 ),
                 3: ClericLevel3(
                     spell=ClericLevel2Spells.ZONE_OF_TRUTH,
@@ -105,7 +105,7 @@ def get_starter_class_builder():
                         ]
                     ),
                     cantrip=ClericLevel0Spells.RESISTANCE,
-                    spell=ClericLevel2Spells.AID,
+                    spell=ClericLevel2Spells.SILENCE,
                 ),
             },
             subclass_features_by_level={
