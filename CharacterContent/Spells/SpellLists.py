@@ -82,7 +82,9 @@ class SorcererLevel2Spells(StrEnum):
     DARKVISION = "Darkvision"
     DEATH_ARMOR = "Death Armor"
     DETECT_THOUGHTS = "Detect Thoughts"
+    DISRUPTIVE_TUNE = "Disruptive Tune"
     DRAGONS_BREATH = "Dragon's Breath"
+    DUELING_GROUND = "Dueling Ground"
     DUST_DEVIL = "Dust Devil"
     EARTHBIND = "Earthbind"
     ENHANCE_ABILITY = "Enhance Ability"
@@ -141,6 +143,7 @@ class SorcererLevel3Spells(StrEnum):
     HASTE = "Haste"
     HYPNOTIC_PATTERN = "Hypnotic Pattern"
     INCITE_GREED = "Incite Greed"
+    INFLICT_DOUBT = "Inflict Doubt"
     LAERALS_SILVER_LANCE = "Laeral's Silver Lance"
     LIGHTNING_BOLT = "Lightning Bolt"
     MAJOR_IMAGE = "Major Image"
@@ -165,6 +168,7 @@ class SorcererLevel4Spells(StrEnum):
     CONFUSION = "Confusion"
     DIMENSION_DOOR = "Dimension Door"
     DOMINATE_BEAST = "Dominate Beast"
+    FESTERING_BLAST = "Festering Blast"
     FIRE_SHIELD = "Fire Shield"
     GATE_SEAL = "Gate Seal"
     GREATER_INVISIBILITY = "Greater Invisibility"
@@ -203,6 +207,7 @@ class SorcererLevel5Spells(StrEnum):
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     WALL_OF_LIGHT = "Wall of Light"
     WALL_OF_STONE = "Wall of Stone"
+    WAVES_OF_EXHAUSTION = "Waves of Exhaustion"
 
 
 class SorcererLevel6Spells(StrEnum):
@@ -231,6 +236,7 @@ class SorcererLevel6Spells(StrEnum):
 
 
 class SorcererLevel7Spells(StrEnum):
+    AURA_OF_EVASION = "Aura of Evasion"
     CROWN_OF_STARS = "Crown of Stars"
     DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
     DRACONIC_TRANSFORMATION = "Draconic Transformation"
@@ -238,6 +244,7 @@ class SorcererLevel7Spells(StrEnum):
     ETHEREALNESS = "Etherealness"
     FINGER_OF_DEATH = "Finger of Death"
     FIRE_STORM = "Fire Storm"
+    FRACTURED_AWARENESS = "Fractured Awareness"
     PLANE_SHIFT = "Plane Shift"
     POWER_WORD_PAIN = "Power Word Pain"
     PRISMATIC_SPRAY = "Prismatic Spray"
@@ -251,19 +258,25 @@ class SorcererLevel8Spells(StrEnum):
     DEMIPLANE = "Demiplane"
     DOMINATE_MONSTER = "Dominate Monster"
     EARTHQUAKE = "Earthquake"
+    ENTRANCING_MIRRORS = "Entrancing Mirrors"
     INCENDIARY_CLOUD = "Incendiary Cloud"
+    IRON_BODY = "Iron Body"
+    LIGHTNING_RING = "Lightning Ring"
     POWER_WORD_STUN = "Power Word Stun"
     SUNBURST = "Sunburst"
 
 
 class SorcererLevel9Spells(StrEnum):
     BLADE_OF_DISASTER = "Blade of Disaster"
+    DETONATE = "Detonate"
     GATE = "Gate"
     MASS_POLYMORPH = "Mass Polymorph"
     METEOR_SWARM = "Meteor Swarm"
     POWER_WORD_KILL = "Power Word Kill"
     PSYCHIC_SCREAM = "Psychic Scream"
     TIME_STOP = "Time Stop"
+    VISION_OF_ELAPSING_EONS = "Vision of Elapsing Eons"
+    WAIL_OF_THE_BANSHEE = "Wail of the Banshee"
     WISH = "Wish"
 
 
@@ -310,6 +323,7 @@ class ArtificerLevel1Spells(StrEnum):
     JUMP = "Jump"
     LONGSTRIDER = "Longstrider"
     PURIFY_FOOD_AND_DRINK = "Purify Food and Drink"
+    QUICK_CLOTHIER = "Quick Clothier"
     SANCTUARY = "Sanctuary"
     SNARE = "Snare"
     TASHAS_CAUSTIC_BREW = "Tasha's Caustic Brew"
@@ -322,9 +336,11 @@ class ArtificerLevel2Spells(StrEnum):
     ARCANE_LOCK = "Arcane Lock"
     ARCANE_VIGOR = "Arcane Vigor"
     BLUR = "Blur"
+    CONJURE_TOOLS = "Conjure Tools"
     CONTINUAL_FLAME = "Continual Flame"
     DARKVISION = "Darkvision"
     DRAGONS_BREATH = "Dragon's Breath"
+    DUELING_GROUND = "Dueling Ground"
     ENHANCE_ABILITY = "Enhance Ability"
     ENLARGE_REDUCE = "Enlarge/Reduce"
     HEAT_METAL = "Heat Metal"
@@ -342,6 +358,7 @@ class ArtificerLevel2Spells(StrEnum):
     SKYWRITE = "Skywrite"
     SPIDER_CLIMB = "Spider Climb"
     TORTOISE_SHELL = "Tortoise Shell"
+    UNCERTAIN_FOOTING = "Uncertain Footing"
     VORTEX_WARP = "Vortex Warp"
     WEB = "Web"
 
@@ -366,6 +383,7 @@ class ArtificerLevel3Spells(StrEnum):
 
 class ArtificerLevel4Spells(StrEnum):
     ARCANE_EYE = "Arcane Eye"
+    DISTORTED_DISTANCE = "Distorted Distance"
     ELEMENTAL_BANE = "Elemental Bane"
     FABRICATE = "Fabricate"
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
@@ -443,6 +461,7 @@ class WizardLevel1Spells(StrEnum):
     EXPEDITIOUS_RETREAT = "Expeditious Retreat"
     FALSE_LIFE = "False Life"
     FEATHER_FALL = "Feather Fall"
+    FEIGN_INTEREST = "Feign Interest"
     FIND_FAMILIAR = "Find Familiar"
     FOG_CLOUD = "Fog Cloud"
     FROST_FINGERS = "Frost Fingers"
@@ -456,6 +475,7 @@ class WizardLevel1Spells(StrEnum):
     MAGE_ARMOR = "Mage Armor"
     MAGIC_MISSILE = "Magic Missile"
     PROTECTION_FROM_EVIL_AND_GOOD = "Protection from Evil and Good"
+    QUICK_CLOTHIER = "Quick Clothier"
     RAY_OF_SICKNESS = "Ray of Sickness"
     SHIELD = "Shield"
     SILENT_IMAGE = "Silent Image"
@@ -479,10 +499,12 @@ class WizardLevel2Spells(StrEnum):
     ARCANE_LOCK = "Arcane Lock"
     ARCANE_VIGOR = "Arcane Vigor"
     AUGURY = "Augury"
+    BATTLE_FAMILIAR = "Battle Familiar"
     BLINDNESS_DEAFNESS = "Blindness/Deafness"
     BLUR = "Blur"
     BORROWED_KNOWLEDGE = "Borrowed Knowledge"
     CLOUD_OF_DAGGERS = "Cloud of Daggers"
+    CONJURE_TOOLS = "Conjure Tools"
     CONTINUAL_FLAME = "Continual Flame"
     CROWN_OF_MADNESS = "Crown of Madness"
     DARKNESS = "Darkness"
@@ -490,7 +512,9 @@ class WizardLevel2Spells(StrEnum):
     DEATH_ARMOR = "Death Armor"
     DERYANS_HELPFUL_HOMUNCULI = "Deryan's Helpful Homunculi"
     DETECT_THOUGHTS = "Detect Thoughts"
+    DISRUPTIVE_TUNE = "Disruptive Tune"
     DRAGONS_BREATH = "Dragon's Breath"
+    DUELING_GROUND = "Dueling Ground"
     DUST_DEVIL = "Dust Devil"
     EARTHBIND = "Earthbind"
     ELMINSTERS_ELUSION = "Elminster's Elusion"
@@ -518,6 +542,7 @@ class WizardLevel2Spells(StrEnum):
     NATHAIRS_MISCHIEF = "Nathair's Mischief"
     NYSTULS_MAGIC_AURA = "Nystul's Magic Aura"
     PHANTASMAL_FORCE = "Phantasmal Force"
+    PINKY_SWEAR = "Pinky Swear"
     PYROTECHNICS = "Pyrotechnics"
     RAY_OF_ENFEEBLEMENT = "Ray of Enfeeblement"
     RIMES_BINDING_ICE = "Rime's Binding Ice"
@@ -532,6 +557,7 @@ class WizardLevel2Spells(StrEnum):
     SPRAY_OF_CARDS = "Spray of Cards"
     SUGGESTION = "Suggestion"
     TASHAS_MIND_WHIP = "Tasha's Mind Whip"
+    UNCERTAIN_FOOTING = "Uncertain Footing"
     VORTEX_WARP = "Vortex Warp"
     WARDING_WIND = "Warding Wind"
     WARP_SENSE = "Warp Sense"
@@ -565,6 +591,7 @@ class WizardLevel3Spells(StrEnum):
     HASTE = "Haste"
     HYPNOTIC_PATTERN = "Hypnotic Pattern"
     INCITE_GREED = "Incite Greed"
+    INFLICT_DOUBT = "Inflict Doubt"
     LAERALS_SILVER_LANCE = "Laeral's Silver Lance"
     LEOMUNDS_TINY_HUT = "Leomund's Tiny Hut"
     LIGHTNING_BOLT = "Lightning Bolt"
@@ -606,10 +633,12 @@ class WizardLevel4Spells(StrEnum):
     CONJURE_MINOR_ELEMENTALS = "Conjure Minor Elementals"
     CONTROL_WATER = "Control Water"
     DIMENSION_DOOR = "Dimension Door"
+    DISTORTED_DISTANCE = "Distorted Distance"
     DIVINATION = "Divination"
     ELEMENTAL_BANE = "Elemental Bane"
     EVARDS_BLACK_TENTACLES = "Evard's Black Tentacles"
     FABRICATE = "Fabricate"
+    FESTERING_BLAST = "Festering Blast"
     FIRE_SHIELD = "Fire Shield"
     GALDERS_SPEEDY_COURIER = "Galder's Speedy Courier"
     GATE_SEAL = "Gate Seal"
@@ -659,6 +688,7 @@ class WizardLevel5Spells(StrEnum):
     ENERVATION = "Enervation"
     FAR_STEP = "Far Step"
     GEAS = "Geas"
+    GRAVE_GROUND = "Grave Ground"
     HOLD_MONSTER = "Hold Monster"
     IMMOLATION = "Immolation"
     INFERNAL_CALLING = "Infernal Calling"
@@ -687,6 +717,7 @@ class WizardLevel5Spells(StrEnum):
     WALL_OF_FORCE = "Wall of Force"
     WALL_OF_LIGHT = "Wall of Light"
     WALL_OF_STONE = "Wall of Stone"
+    WAVES_OF_EXHAUSTION = "Waves of Exhaustion"
     YOLANDES_REGAL_PRESENCE = "Yolande's Regal Presence"
 
 
@@ -730,6 +761,7 @@ class WizardLevel6Spells(StrEnum):
 
 
 class WizardLevel7Spells(StrEnum):
+    AURA_OF_EVASION = "Aura of Evasion"
     CREATE_MAGEN = "Create Magen"
     CROWN_OF_STARS = "Crown of Stars"
     DELAYED_BLAST_FIREBALL = "Delayed Blast Fireball"
@@ -738,6 +770,7 @@ class WizardLevel7Spells(StrEnum):
     ETHEREALNESS = "Etherealness"
     FINGER_OF_DEATH = "Finger of Death"
     FORCECAGE = "Forcecage"
+    FRACTURED_AWARENESS = "Fractured Awareness"
     MIRAGE_ARCANE = "Mirage Arcane"
     MORDENKAINENS_MAGNIFICENT_MANSION = "Mordenkainen's Magnificent Mansion"
     MORDENKAINENS_SWORD = "Mordenkainen's Sword"
@@ -746,12 +779,14 @@ class WizardLevel7Spells(StrEnum):
     PRISMATIC_SPRAY = "Prismatic Spray"
     PROJECT_IMAGE = "Project Image"
     REVERSE_GRAVITY = "Reverse Gravity"
+    REWEAVE_FATE = "Reweave Fate"
     SEQUESTER = "Sequester"
     SIMBULS_SYNOSTODWEOMER = "Simbul's Synostodweomer"
     SIMULACRUM = "Simulacrum"
     SYMBOL = "Symbol"
     TELEPORT = "Teleport"
     TETHER_ESSENCE = "Tether Essence"
+    TRANSFIX = "Transfix"
     VOID_STAR = "Void Star"
     WHIRLWIND = "Whirlwind"
 
@@ -766,14 +801,18 @@ class WizardLevel8Spells(StrEnum):
     DARK_STAR = "Dark Star"
     DEMIPLANE = "Demiplane"
     DOMINATE_MONSTER = "Dominate Monster"
+    ENTRANCING_MIRRORS = "Entrancing Mirrors"
     FEEBLEMIND = "Feeblemind"
     HOLY_STAR_OF_MYSTRA = "Holy Star of Mystra"
     ILLUSORY_DRAGON = "Illusory Dragon"
     INCENDIARY_CLOUD = "Incendiary Cloud"
+    IRON_BODY = "Iron Body"
+    LIGHTNING_RING = "Lightning Ring"
     MADDENING_DARKNESS = "Maddening Darkness"
     MAZE = "Maze"
     MIGHTY_FORTRESS = "Mighty Fortress"
     MIND_BLANK = "Mind Blank"
+    MOMENT_OF_PRESCIENCE = "Moment of Prescience"
     POWER_WORD_STUN = "Power Word Stun"
     REALITY_BREAK = "Reality Break"
     SUNBURST = "Sunburst"
@@ -783,8 +822,10 @@ class WizardLevel8Spells(StrEnum):
 class WizardLevel9Spells(StrEnum):
     ASTRAL_PROJECTION = "Astral Projection"
     BLADE_OF_DISASTER = "Blade of Disaster"
+    DETONATE = "Detonate"
     FORESIGHT = "Foresight"
     GATE = "Gate"
+    HINDSIGHT = "Hindsight"
     IMPRISONMENT = "Imprisonment"
     INVULNERABILITY = "Invulnerability"
     MASS_POLYMORPH = "Mass Polymorph"
@@ -797,6 +838,8 @@ class WizardLevel9Spells(StrEnum):
     TIME_RAVAGE = "Time Ravage"
     TIME_STOP = "Time Stop"
     TRUE_POLYMORPH = "True Polymorph"
+    VISION_OF_ELAPSING_EONS = "Vision of Elapsing Eons"
+    WAIL_OF_THE_BANSHEE = "Wail of the Banshee"
     WEIRD = "Weird"
     WISH = "Wish"
 
@@ -838,6 +881,7 @@ class BardLevel1Spells(StrEnum):
     ILLUSORY_SCRIPT = "Illusory Script"
     INSIDIOUS_RHYTHM = "Insidious Rhythm"
     LONGSTRIDER = "Longstrider"
+    QUICK_CLOTHIER = "Quick Clothier"
     SILENT_IMAGE = "Silent Image"
     SILVERY_BARBS = "Silvery Barbs"
     SLEEP = "Sleep"
@@ -855,8 +899,11 @@ class BardLevel2Spells(StrEnum):
     BORROWED_KNOWLEDGE = "Borrowed Knowledge"
     CALM_EMOTIONS = "Calm Emotions"
     CLOUD_OF_DAGGERS = "Cloud of Daggers"
+    CONJURE_TOOLS = "Conjure Tools"
     CROWN_OF_MADNESS = "Crown of Madness"
     DETECT_THOUGHTS = "Detect Thoughts"
+    DISRUPTIVE_TUNE = "Disruptive Tune"
+    DUELING_GROUND = "Dueling Ground"
     ENHANCE_ABILITY = "Enhance Ability"
     ENLARGE_REDUCE = "Enlarge/Reduce"
     ENTHRALL = "Enthrall"
@@ -873,6 +920,7 @@ class BardLevel2Spells(StrEnum):
     MIRROR_IMAGE = "Mirror Image"
     NATHAIRS_MISCHIEF = "Nathair's Mischief"
     PHANTASMAL_FORCE = "Phantasmal Force"
+    PINKY_SWEAR = "Pinky Swear"
     PYROTECHNICS = "Pyrotechnics"
     SEE_INVISIBILITY = "See Invisibility"
     SHATTER = "Shatter"
@@ -880,6 +928,7 @@ class BardLevel2Spells(StrEnum):
     SKYWRITE = "Skywrite"
     SPRAY_OF_CARDS = "Spray of Cards"
     SUGGESTION = "Suggestion"
+    UNCERTAIN_FOOTING = "Uncertain Footing"
     WARDING_WIND = "Warding Wind"
     ZONE_OF_TRUTH = "Zone of Truth"
 
@@ -897,6 +946,7 @@ class BardLevel3Spells(StrEnum):
     FEIGN_DEATH = "Feign Death"
     GLYPH_OF_WARDING = "Glyph of Warding"
     HYPNOTIC_PATTERN = "Hypnotic Pattern"
+    INFLICT_DOUBT = "Inflict Doubt"
     LEOMUNDS_TINY_HUT = "Leomund's Tiny Hut"
     MAJOR_IMAGE = "Major Image"
     MASS_HEALING_WORD = "Mass Healing Word"
@@ -916,6 +966,7 @@ class BardLevel4Spells(StrEnum):
     COMPULSION = "Compulsion"
     CONFUSION = "Confusion"
     DIMENSION_DOOR = "Dimension Door"
+    DISTORTED_DISTANCE = "Distorted Distance"
     DOOMTIDE = "Doomtide"
     FOUNT_OF_MOONLIGHT = "Fount of Moonlight"
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
@@ -925,6 +976,7 @@ class BardLevel4Spells(StrEnum):
     PHANTASMAL_KILLER = "Phantasmal Killer"
     POLYMORPH = "Polymorph"
     RAULOTHIMS_PSYCHIC_LANCE = "Raulothim's Psychic Lance"
+    ZONE_OF_AMICABILITY = "Zone of Amicability"
 
 
 class BardLevel5Spells(StrEnum):
@@ -968,22 +1020,27 @@ class BardLevel7Spells(StrEnum):
     DREAM_OF_THE_BLUE_VEIL = "Dream of the Blue Veil"
     ETHEREALNESS = "Etherealness"
     FORCECAGE = "Forcecage"
+    FRACTURED_AWARENESS = "Fractured Awareness"
     MIRAGE_ARCANE = "Mirage Arcane"
     MORDENKAINENS_MAGNIFICENT_MANSION = "Mordenkainen's Magnificent Mansion"
     MORDENKAINENS_SWORD = "Mordenkainen's Sword"
     POWER_WORD_FORTIFY = "Power Word Fortify"
+    POWER_WORD_PAIN = "Power Word Pain"
     PRISMATIC_SPRAY = "Prismatic Spray"
     PROJECT_IMAGE = "Project Image"
     REGENERATE = "Regenerate"
     RESURRECTION = "Resurrection"
+    REWEAVE_FATE = "Reweave Fate"
     SYMBOL = "Symbol"
     TELEPORT = "Teleport"
+    TRANSFIX = "Transfix"
 
 
 class BardLevel8Spells(StrEnum):
     ANTIPATHY_SYMPATHY = "Antipathy/Sympathy"
     BEFUDDLEMENT = "Befuddlement"
     DOMINATE_MONSTER = "Dominate Monster"
+    ENTRANCING_MIRRORS = "Entrancing Mirrors"
     FEEBLEMIND = "Feeblemind"
     GLIBNESS = "Glibness"
     MIND_BLANK = "Mind Blank"
@@ -998,6 +1055,7 @@ class BardLevel9Spells(StrEnum):
     PRISMATIC_WALL = "Prismatic Wall"
     PSYCHIC_SCREAM = "Psychic Scream"
     TRUE_POLYMORPH = "True Polymorph"
+    VISION_OF_ELAPSING_EONS = "Vision of Elapsing Eons"
 
 
 class ClericLevel0Spells(StrEnum):
@@ -1040,6 +1098,7 @@ class ClericLevel2Spells(StrEnum):
     CALM_EMOTIONS = "Calm Emotions"
     CONTINUAL_FLAME = "Continual Flame"
     DERYANS_HELPFUL_HOMUNCULI = "Deryan's Helpful Homunculi"
+    DUELING_GROUND = "Dueling Ground"
     ENHANCE_ABILITY = "Enhance Ability"
     FIND_TRAPS = "Find Traps"
     GENTLE_REPOSE = "Gentle Repose"
@@ -1106,6 +1165,7 @@ class ClericLevel5Spells(StrEnum):
     DISPEL_EVIL_AND_GOOD = "Dispel Evil and Good"
     FLAME_STRIKE = "Flame Strike"
     GEAS = "Geas"
+    GRAVE_GROUND = "Grave Ground"
     GREATER_RESTORATION = "Greater Restoration"
     HALLOW = "Hallow"
     HOLY_WEAPON = "Holy Weapon"
@@ -1143,6 +1203,7 @@ class ClericLevel7Spells(StrEnum):
     POWER_WORD_FORTIFY = "Power Word Fortify"
     REGENERATE = "Regenerate"
     RESURRECTION = "Resurrection"
+    REWEAVE_FATE = "Reweave Fate"
     SYMBOL = "Symbol"
     TEMPLE_OF_THE_GODS = "Temple of the Gods"
 
@@ -1221,9 +1282,11 @@ class DruidLevel2Spells(StrEnum):
     ANIMAL_MESSENGER = "Animal Messenger"
     AUGURY = "Augury"
     BARKSKIN = "Barkskin"
+    BATTLE_FAMILIAR = "Battle Familiar"
     BEAST_SENSE = "Beast Sense"
     CONTINUAL_FLAME = "Continual Flame"
     DARKVISION = "Darkvision"
+    DUELING_GROUND = "Dueling Ground"
     DUST_DEVIL = "Dust Devil"
     EARTHBIND = "Earthbind"
     ENHANCE_ABILITY = "Enhance Ability"
@@ -1284,6 +1347,7 @@ class DruidLevel4Spells(StrEnum):
     DIVINATION = "Divination"
     DOMINATE_BEAST = "Dominate Beast"
     ELEMENTAL_BANE = "Elemental Bane"
+    FESTERING_BLAST = "Festering Blast"
     FIRE_SHIELD = "Fire Shield"
     FOUNT_OF_MOONLIGHT = "Fount of Moonlight"
     FREEDOM_OF_MOVEMENT = "Freedom of Movement"
@@ -1321,6 +1385,7 @@ class DruidLevel5Spells(StrEnum):
     SCRYING = "Scrying"
     SONGALS_ELEMENTAL_SUFFUSION = "Songal's Elemental Suffusion"
     SUMMON_DRACONIC_SPIRIT = "Summon Draconic Spirit"
+    SUMMON_PLANT = "Summon Plant"
     TRANSMUTE_ROCK = "Transmute Rock"
     TREE_STRIDE = "Tree Stride"
     WALL_OF_STONE = "Wall of Stone"
@@ -1342,6 +1407,7 @@ class DruidLevel6Spells(StrEnum):
     INVESTITURE_OF_WIND = "Investiture of Wind"
     MOVE_EARTH = "Move Earth"
     PRIMORDIAL_WARD = "Primordial Ward"
+    SUMMON_DINOSAUR = "Summon Dinosaur"
     SUNBEAM = "Sunbeam"
     TRANSPORT_VIA_PLANTS = "Transport via Plants"
     WALL_OF_THORNS = "Wall of Thorns"
@@ -1367,6 +1433,7 @@ class DruidLevel8Spells(StrEnum):
     EARTHQUAKE = "Earthquake"
     FEEBLEMIND = "Feeblemind"
     INCENDIARY_CLOUD = "Incendiary Cloud"
+    LIGHTNING_RING = "Lightning Ring"
     SUNBURST = "Sunburst"
     TSUNAMI = "Tsunami"
 
@@ -1402,11 +1469,13 @@ class PaladinLevel1Spells(StrEnum):
 class PaladinLevel2Spells(StrEnum):
     AID = "Aid"
     BRANDING_SMITE = "Branding Smite"
+    DUELING_GROUND = "Dueling Ground"
     FIND_STEED = "Find Steed"
     GENTLE_REPOSE = "Gentle Repose"
     LESSER_RESTORATION = "Lesser Restoration"
     LOCATE_OBJECT = "Locate Object"
     MAGIC_WEAPON = "Magic Weapon"
+    PINKY_SWEAR = "Pinky Swear"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
     SEARING_ORB = "Searing Orb"
@@ -1479,8 +1548,10 @@ class RangerLevel2Spells(StrEnum):
     ANIMAL_MESSENGER = "Animal Messenger"
     BARKSKIN = "Barkskin"
     BEAST_SENSE = "Beast Sense"
+    CONJURE_TOOLS = "Conjure Tools"
     CORDON_OF_ARROWS = "Cordon of Arrows"
     DARKVISION = "Darkvision"
+    DUELING_GROUND = "Dueling Ground"
     ENHANCE_ABILITY = "Enhance Ability"
     FIND_TRAPS = "Find Traps"
     GUST_OF_WIND = "Gust of Wind"
@@ -1536,6 +1607,7 @@ class RangerLevel5Spells(StrEnum):
     CONJURE_VOLLEY = "Conjure Volley"
     GREATER_RESTORATION = "Greater Restoration"
     STEEL_WIND_STRIKE = "Steel Wind Strike"
+    SUMMON_PLANT = "Summon Plant"
     SWIFT_QUIVER = "Swift Quiver"
     TREE_STRIDE = "Tree Stride"
     WRATH_OF_NATURE = "Wrath of Nature"
@@ -1585,10 +1657,12 @@ class WarlockLevel1Spells(StrEnum):
 
 
 class WarlockLevel2Spells(StrEnum):
+    BATTLE_FAMILIAR = "Battle Familiar"
     BORROWED_KNOWLEDGE = "Borrowed Knowledge"
     CLOUD_OF_DAGGERS = "Cloud of Daggers"
     CROWN_OF_MADNESS = "Crown of Madness"
     DARKNESS = "Darkness"
+    DUELING_GROUND = "Dueling Ground"
     EARTHBIND = "Earthbind"
     ENTHRALL = "Enthrall"
     FLOCK_OF_FAMILIARS = "Flock of Familiars"
@@ -1602,11 +1676,13 @@ class WarlockLevel2Spells(StrEnum):
     SPIDER_CLIMB = "Spider Climb"
     SPRAY_OF_CARDS = "Spray of Cards"
     SUGGESTION = "Suggestion"
+    UNCERTAIN_FOOTING = "Uncertain Footing"
     WARP_SENSE = "Warp Sense"
 
 
 class WarlockLevel3Spells(StrEnum):
     ANTAGONIZE = "Antagonize"
+    ASTRAL_FLOOD = "Astral Flood"
     COUNTERSPELL = "Counterspell"
     DISPEL_MAGIC = "Dispel Magic"
     ENEMIES_ABOUND = "Enemies Abound"
@@ -1616,6 +1692,7 @@ class WarlockLevel3Spells(StrEnum):
     HUNGER_OF_HADAR = "Hunger of Hadar"
     HYPNOTIC_PATTERN = "Hypnotic Pattern"
     INCITE_GREED = "Incite Greed"
+    INFLICT_DOUBT = "Inflict Doubt"
     MAGIC_CIRCLE = "Magic Circle"
     MAJOR_IMAGE = "Major Image"
     REMOVE_CURSE = "Remove Curse"
@@ -1634,8 +1711,10 @@ class WarlockLevel4Spells(StrEnum):
     BLIGHT = "Blight"
     CHARM_MONSTER = "Charm Monster"
     DIMENSION_DOOR = "Dimension Door"
+    DISTORTED_DISTANCE = "Distorted Distance"
     DOOMTIDE = "Doomtide"
     ELEMENTAL_BANE = "Elemental Bane"
+    FESTERING_BLAST = "Festering Blast"
     GALDERS_SPEEDY_COURIER = "Galder's Speedy Courier"
     GATE_SEAL = "Gate Seal"
     HALLUCINATORY_TERRAIN = "Hallucinatory Terrain"
@@ -1645,6 +1724,7 @@ class WarlockLevel4Spells(StrEnum):
     SPIRIT_OF_DEATH = "Spirit of Death"
     SUMMON_ABERRATION = "Summon Aberration"
     SUMMON_GREATER_DEMON = "Summon Greater Demon"
+    ZONE_OF_AMICABILITY = "Zone of Amicability"
 
 
 class WarlockLevel5Spells(StrEnum):
@@ -1653,6 +1733,7 @@ class WarlockLevel5Spells(StrEnum):
     DREAM = "Dream"
     ENERVATION = "Enervation"
     FAR_STEP = "Far Step"
+    GRAVE_GROUND = "Grave Ground"
     HOLD_MONSTER = "Hold Monster"
     INFERNAL_CALLING = "Infernal Calling"
     JALLARZIS_STORM_OF_RADIANCE = "Jallarzi's Storm of Radiance"
@@ -1664,6 +1745,7 @@ class WarlockLevel5Spells(StrEnum):
     SYNAPTIC_STATIC = "Synaptic Static"
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     WALL_OF_LIGHT = "Wall of Light"
+    WAVES_OF_EXHAUSTION = "Waves of Exhaustion"
 
 
 class WarlockLevel6Spells(StrEnum):
@@ -1685,13 +1767,17 @@ class WarlockLevel6Spells(StrEnum):
 
 
 class WarlockLevel7Spells(StrEnum):
+    AURA_OF_EVASION = "Aura of Evasion"
     CROWN_OF_STARS = "Crown of Stars"
     DREAM_OF_THE_BLUE_VEIL = "Dream of the Blue Veil"
     ETHEREALNESS = "Etherealness"
     FINGER_OF_DEATH = "Finger of Death"
     FORCECAGE = "Forcecage"
+    FRACTURED_AWARENESS = "Fractured Awareness"
     PLANE_SHIFT = "Plane Shift"
     POWER_WORD_PAIN = "Power Word Pain"
+    REWEAVE_FATE = "Reweave Fate"
+    TRANSFIX = "Transfix"
     VOID_STAR = "Void Star"
 
 
@@ -1699,8 +1785,11 @@ class WarlockLevel8Spells(StrEnum):
     BEFUDDLEMENT = "Befuddlement"
     DEMIPLANE = "Demiplane"
     DOMINATE_MONSTER = "Dominate Monster"
+    ENTRANCING_MIRRORS = "Entrancing Mirrors"
     FEEBLEMIND = "Feeblemind"
     GLIBNESS = "Glibness"
+    IRON_BODY = "Iron Body"
+    LIGHTNING_RING = "Lightning Ring"
     MADDENING_DARKNESS = "Maddening Darkness"
     POWER_WORD_STUN = "Power Word Stun"
 
@@ -1708,12 +1797,15 @@ class WarlockLevel8Spells(StrEnum):
 class WarlockLevel9Spells(StrEnum):
     ASTRAL_PROJECTION = "Astral Projection"
     BLADE_OF_DISASTER = "Blade of Disaster"
+    DETONATE = "Detonate"
     FORESIGHT = "Foresight"
     GATE = "Gate"
     IMPRISONMENT = "Imprisonment"
     POWER_WORD_KILL = "Power Word Kill"
     PSYCHIC_SCREAM = "Psychic Scream"
     TRUE_POLYMORPH = "True Polymorph"
+    VISION_OF_ELAPSING_EONS = "Vision of Elapsing Eons"
+    WAIL_OF_THE_BANSHEE = "Wail of the Banshee"
     WEIRD = "Weird"
 
 
@@ -1742,9 +1834,12 @@ class AbjurationLevel2Spells(StrEnum):
     AID = "Aid"
     ARCANE_LOCK = "Arcane Lock"
     ARCANE_VIGOR = "Arcane Vigor"
+    DISRUPTIVE_TUNE = "Disruptive Tune"
+    DUELING_GROUND = "Dueling Ground"
     ELMINSTERS_ELUSION = "Elminster's Elusion"
     LESSER_RESTORATION = "Lesser Restoration"
     PASS_WITHOUT_TRACE = "Pass without Trace"
+    PINKY_SWEAR = "Pinky Swear"
     PRAYER_OF_HEALING = "Prayer of Healing"
     PROTECTION_FROM_POISON = "Protection from Poison"
     TORTOISE_SHELL = "Tortoise Shell"
@@ -1800,6 +1895,7 @@ class AbjurationLevel6Spells(StrEnum):
 
 
 class AbjurationLevel7Spells(StrEnum):
+    AURA_OF_EVASION = "Aura of Evasion"
     SYMBOL = "Symbol"
 
 
@@ -1841,7 +1937,9 @@ class ConjurationLevel1Spells(StrEnum):
 
 class ConjurationLevel2Spells(StrEnum):
     AIR_BUBBLE = "Air Bubble"
+    BATTLE_FAMILIAR = "Battle Familiar"
     CLOUD_OF_DAGGERS = "Cloud of Daggers"
+    CONJURE_TOOLS = "Conjure Tools"
     DERYANS_HELPFUL_HOMUNCULI = "Deryan's Helpful Homunculi"
     DUST_DEVIL = "Dust Devil"
     FIND_STEED = "Find Steed"
@@ -1907,6 +2005,7 @@ class ConjurationLevel5Spells(StrEnum):
     SUMMON_CELESTIAL = "Summon Celestial"
     SUMMON_DRACONIC_SPIRIT = "Summon Draconic Spirit"
     SUMMON_DRAGON = "Summon Dragon"
+    SUMMON_PLANT = "Summon Plant"
     TELEPORTATION_CIRCLE = "Teleportation Circle"
     TREE_STRIDE = "Tree Stride"
 
@@ -1918,6 +2017,7 @@ class ConjurationLevel6Spells(StrEnum):
     HEROES_FEAST = "Heroes' Feast"
     PLANAR_ALLY = "Planar Ally"
     SCATTER = "Scatter"
+    SUMMON_DINOSAUR = "Summon Dinosaur"
     SUMMON_FIEND = "Summon Fiend"
     TASHAS_BUBBLING_CAULDRON = "Tasha's Bubbling Cauldron"
     TRANSPORT_VIA_PLANTS = "Transport via Plants"
@@ -2007,15 +2107,18 @@ class DivinationLevel6Spells(StrEnum):
 
 
 class DivinationLevel7Spells(StrEnum):
-    pass
+    FRACTURED_AWARENESS = "Fractured Awareness"
+    REWEAVE_FATE = "Reweave Fate"
 
 
 class DivinationLevel8Spells(StrEnum):
+    MOMENT_OF_PRESCIENCE = "Moment of Prescience"
     TELEPATHY = "Telepathy"
 
 
 class DivinationLevel9Spells(StrEnum):
     FORESIGHT = "Foresight"
+    HINDSIGHT = "Hindsight"
 
 
 class EnchantmentLevel0Spells(StrEnum):
@@ -2060,6 +2163,7 @@ class EnchantmentLevel3Spells(StrEnum):
     ENEMIES_ABOUND = "Enemies Abound"
     FAST_FRIENDS = "Fast Friends"
     INCITE_GREED = "Incite Greed"
+    INFLICT_DOUBT = "Inflict Doubt"
     MOTIVATIONAL_SPEECH = "Motivational Speech"
 
 
@@ -2070,6 +2174,7 @@ class EnchantmentLevel4Spells(StrEnum):
     DOMINATE_BEAST = "Dominate Beast"
     RAULOTHIMS_PSYCHIC_LANCE = "Raulothim's Psychic Lance"
     STAGGERING_SMITE = "Staggering Smite"
+    ZONE_OF_AMICABILITY = "Zone of Amicability"
 
 
 class EnchantmentLevel5Spells(StrEnum):
@@ -2091,6 +2196,7 @@ class EnchantmentLevel6Spells(StrEnum):
 class EnchantmentLevel7Spells(StrEnum):
     POWER_WORD_FORTIFY = "Power Word Fortify"
     POWER_WORD_PAIN = "Power Word Pain"
+    TRANSFIX = "Transfix"
 
 
 class EnchantmentLevel8Spells(StrEnum):
@@ -2229,11 +2335,13 @@ class EvocationLevel7Spells(StrEnum):
 
 class EvocationLevel8Spells(StrEnum):
     HOLY_STAR_OF_MYSTRA = "Holy Star of Mystra"
+    LIGHTNING_RING = "Lightning Ring"
     MADDENING_DARKNESS = "Maddening Darkness"
     SUNBURST = "Sunburst"
 
 
 class EvocationLevel9Spells(StrEnum):
+    DETONATE = "Detonate"
     METEOR_SWARM = "Meteor Swarm"
 
 
@@ -2246,6 +2354,7 @@ class IllusionLevel1Spells(StrEnum):
     COLOR_SPRAY = "Color Spray"
     DISGUISE_SELF = "Disguise Self"
     DISTORT_VALUE = "Distort Value"
+    FEIGN_INTEREST = "Feign Interest"
     ILLUSORY_SCRIPT = "Illusory Script"
     SILENT_IMAGE = "Silent Image"
 
@@ -2260,6 +2369,7 @@ class IllusionLevel2Spells(StrEnum):
     PHANTASMAL_FORCE = "Phantasmal Force"
     SHADOW_BLADE = "Shadow Blade"
     SILENCE = "Silence"
+    UNCERTAIN_FOOTING = "Uncertain Footing"
 
 
 class IllusionLevel3Spells(StrEnum):
@@ -2270,6 +2380,7 @@ class IllusionLevel3Spells(StrEnum):
 
 
 class IllusionLevel4Spells(StrEnum):
+    DISTORTED_DISTANCE = "Distorted Distance"
     GREATER_INVISIBILITY = "Greater Invisibility"
     HALLUCINATORY_TERRAIN = "Hallucinatory Terrain"
     PHANTASMAL_KILLER = "Phantasmal Killer"
@@ -2294,10 +2405,12 @@ class IllusionLevel7Spells(StrEnum):
 
 
 class IllusionLevel8Spells(StrEnum):
+    ENTRANCING_MIRRORS = "Entrancing Mirrors"
     ILLUSORY_DRAGON = "Illusory Dragon"
 
 
 class IllusionLevel9Spells(StrEnum):
+    VISION_OF_ELAPSING_EONS = "Vision of Elapsing Eons"
     WEIRD = "Weird"
 
 
@@ -2338,6 +2451,7 @@ class NecromancyLevel3Spells(StrEnum):
 
 class NecromancyLevel4Spells(StrEnum):
     BLIGHT = "Blight"
+    FESTERING_BLAST = "Festering Blast"
     SHADOW_OF_MOIL = "Shadow of Moil"
     SPIRIT_OF_DEATH = "Spirit of Death"
 
@@ -2346,10 +2460,12 @@ class NecromancyLevel5Spells(StrEnum):
     CONTAGION = "Contagion"
     DANSE_MACABRE = "Danse Macabre"
     ENERVATION = "Enervation"
+    GRAVE_GROUND = "Grave Ground"
     NEGATIVE_ENERGY_FLOOD = "Negative Energy Flood"
     RAISE_DEAD = "Raise Dead"
     REINCARNATE = "Reincarnate"
     SPIRIT_LANTERN = "Spirit Lantern"
+    WAVES_OF_EXHAUSTION = "Waves of Exhaustion"
 
 
 class NecromancyLevel6Spells(StrEnum):
@@ -2375,6 +2491,7 @@ class NecromancyLevel8Spells(StrEnum):
 class NecromancyLevel9Spells(StrEnum):
     ASTRAL_PROJECTION = "Astral Projection"
     TRUE_RESURRECTION = "True Resurrection"
+    WAIL_OF_THE_BANSHEE = "Wail of the Banshee"
 
 
 class TransmutationLevel0Spells(StrEnum):
@@ -2403,6 +2520,7 @@ class TransmutationLevel1Spells(StrEnum):
     JUMP = "Jump"
     LONGSTRIDER = "Longstrider"
     PURIFY_FOOD_AND_DRINK = "Purify Food and Drink"
+    QUICK_CLOTHIER = "Quick Clothier"
     ZEPHYR_STRIKE = "Zephyr Strike"
 
 
@@ -2501,6 +2619,7 @@ class TransmutationLevel8Spells(StrEnum):
     ANIMAL_SHAPES = "Animal Shapes"
     CONTROL_WEATHER = "Control Weather"
     EARTHQUAKE = "Earthquake"
+    IRON_BODY = "Iron Body"
 
 
 class TransmutationLevel9Spells(StrEnum):

@@ -106,6 +106,11 @@ class DnD2024SpellParser:
             self.url = f"{BASE_URL}spell:{spell_name_slug}"
             response = requests.get(self.url)
             last_status = response.status_code
+            if response.status_code >= 500:
+                # Server hiccup, not a wrong slug: let fetch_spell retry.
+                raise requests.exceptions.HTTPError(
+                    f"HTTP {response.status_code} for {self.url}", response=response
+                )
             if response.status_code == 200:
                 self.soup = BeautifulSoup(response.text, "html.parser")
                 break
@@ -133,12 +138,27 @@ class DnD2024SpellParser:
     def get_name(self):
         return self.original_name
 
-    def get_level_and_school(self) -> dict:
+    # "Level 3 Evocation (Sorcerer, Wizard)" or "Evocation Cantrip (Sorcerer, Wizard)"
+    _LEVEL_LINE = re.compile(r"^(Level\s+\d+\s+\w+|\w+\s+Cantrip)\s*\([^)]*\)")
+
+    def _find_level_line(self) -> str | None:
+        # Usually the first <em>, but some pages (e.g. Festering Blast) have it
+        # as bare text at the start of a <p>, possibly followed by the
+        # Casting Time block in the same <p>, so keep only the matched line.
         em = self.col1.find("em")
-        if not em:
+        candidates = ([em] if em else []) + self.col1.find_all("p")
+        for elem in candidates:
+            m = self._LEVEL_LINE.match(elem.get_text(" ", strip=True))
+            if m:
+                return m.group(0)
+        return em.text.strip() if em else None
+
+    def get_level_and_school(self) -> dict:
+        level_line = self._find_level_line()
+        if not level_line:
             raise ValueError("Could not find level/school text")
 
-        text = self.format_text(em.text.strip())
+        text = self.format_text(level_line)
 
         def get_level():
             if "Level" not in text:
@@ -194,12 +214,22 @@ class DnD2024SpellParser:
         return label.next_sibling.strip()
 
     def get_description(self):
-        elements = self.col1.find_all(["p", "ul"])
+        # Skip anything inside a table: stat blocks (e.g. Battle Familiar's)
+        # can sit mid-description and contain <em>-bearing paragraphs that
+        # would otherwise stop the backwards walk below.
+        elements = [
+            e for e in self.col1.find_all(["p", "ul"]) if e.find_parent("table") is None
+        ]
 
         if not elements:
             return None
 
         # Work backwards, collecting description elements until we hit metadata.
+        first_em = self.col1.find("em")
+        if first_em is not None and not self._LEVEL_LINE.match(
+            first_em.get_text(" ", strip=True)
+        ):
+            first_em = None
         desc_elements = []
         for elem in reversed(elements):
             if elem.name == "p":
@@ -208,10 +238,12 @@ class DnD2024SpellParser:
                     text.startswith("Casting Time:")
                     or text.startswith("Source:")
                     or text.startswith("Level ")
+                    or self._LEVEL_LINE.match(text)
                 ):
                     break
-                # The level/school line is wrapped in <em>
-                if elem.find("em"):
+                # The level/school line is the page's first <em>. Other <em>s
+                # are italics inside the description (e.g. a stat block name).
+                if first_em is not None and elem.find("em") is first_em:
                     break
             desc_elements.append(elem)
 
@@ -279,7 +311,11 @@ def fetch_spell(spell_name: str, max_retries: int = 3) -> tuple[str, dict]:
             spell = DnD2024SpellParser(spell_name)
             spell.fetch()
             return spell_name, spell.to_dict()
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            requests.exceptions.HTTPError,  # only raised for 5xx, see fetch()
+        ) as e:
             last_exc = e
             if attempt < max_retries - 1:
                 time.sleep(2**attempt)
