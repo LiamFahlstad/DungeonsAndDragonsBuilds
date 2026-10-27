@@ -34,7 +34,7 @@ Claude Code reads instructions from several places. Putting a rule in the wrong 
 
 **Key fact behind this setup:** don't rely on auto-memory reaching subagents. The docs say subagents don't load it ("the main conversation's auto memory isn't loaded"). Yet a test subagent in this repo did receive the memory *index*: a stale copy from when the session started, with no memory file contents. Either way it is the wrong channel. Rules like "`origin=` is a category, not a sourcebook", "2014 subclasses start at level 3" and "homebrew monsters score 0.4-0.6" lived only in memory, so agents got them partially and out of date, at best. They now live in `CLAUDE.md`, the documented channel every agent loads.
 
-**Agent and skill changes take effect after a restart.** A running session keeps serving the agent definitions (and the memory snapshot) it loaded at startup. After editing anything under `.claude/agents/` or `.claude/skills/`, restart Claude Code, then run the smoke test in section 9.
+**When agent changes take effect.** Adding, renaming or deleting an agent file shows up live: on 2026-10-27 the renamed agents were usable under their new names within the same session. An *edit* to an existing agent's prompt was served from the startup cache in an earlier smoke test, and so was the main memory snapshot. An agent's own `MEMORY.md` is read fresh on each run. After editing an existing agent or skill, restart Claude Code to be sure, then run the smoke test in section 9.
 
 ## 2. The agents
 
