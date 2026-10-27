@@ -104,7 +104,7 @@ def get_starter_class_builder():
                             (Ability.WISDOM, 2),
                         ]
                     ),
-                    cantrip=ClericLevel0Spells.TOLL_THE_DEAD,
+                    cantrip=ClericLevel0Spells.RESISTANCE,
                     spell=ClericLevel2Spells.AID,
                 ),
             },
