@@ -49,17 +49,18 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
 | [`code-reviewer`](../../agents/tooling/code-reviewer.md) | opus | `subagent-protocol`, `review-house-rules`, `snapshot-diffs` | Review a change before it's committed or reported done - the working tree, the staged changes, a branch, or the files a subagent… | `character-engine-dev`, `git-commit`, `test-bughunter` |
-| [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | `subagent-protocol` | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
+| [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | `subagent-protocol`, `new-content-check` | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
 | [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs` | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (10)
+## Skills (11)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
 | [`balance-monster`](../../skills/balance-monster/SKILL.md) | `monster-balancer`, `monster-designer` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
+| [`new-content-check`](../../skills/new-content-check/SKILL.md) | `content-scraper` | `check_new_content.py` | Check for new 2024-rules content - classes, subclasses, species, feats, spells and tools - against a baseline index of everything… |
 | [`review-house-rules`](../../skills/review-house-rules/SKILL.md) | `code-reviewer` | `check_diff.py` | Review a change against this repo's own rules that no test enforces - origin= is a category not a sourcebook, 2014 subclasses… |
 | [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | *main session* | `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
