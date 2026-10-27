@@ -17,7 +17,7 @@ from Core.SpellcastingRules import CasterType
 from Core.Weapons import WeaponProficiency
 from Model.Ledger.ArmorClass import ArmorClassFormula
 from Model.Ledger.Ledger import Ledger
-from Model.Ledger.WeaponBonuses import WeaponBonus
+from Model.Ledger.WeaponBonuses import WeaponBonus, WeaponDamageDie
 from Model.Records.Tools import ToolProficiency
 from Model.View import Value
 
@@ -167,6 +167,11 @@ class LedgerWriter:
 
     def add_weapon_damage_bonus(self, bonus: WeaponBonus) -> None:
         self._ledger.weapon_bonuses.add_damage_bonus(bonus)
+
+    def add_weapon_damage_die(self, damage_die: WeaponDamageDie) -> None:
+        """Damage the wielder may deal instead of a weapon's normal damage,
+        used only where it beats the weapon's own die."""
+        self._ledger.weapon_bonuses.add_damage_die(damage_die)
 
     # ── Defenses, senses, languages ─────────────────────────────────────────
 

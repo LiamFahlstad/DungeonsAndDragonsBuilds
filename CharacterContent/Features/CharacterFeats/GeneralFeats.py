@@ -113,7 +113,9 @@ class GeneralFeat(Feature):
         feat = data.for_general_feat(self)
         feat.add_feature(self)
         for spell in self.get_spells():
-            feat.add_spell(spell, self.get_spell_casting_ability(), source=self.get_spell_source())
+            feat.add_spell(
+                spell, self.get_spell_casting_ability(), source=self.get_spell_source()
+            )
 
 
 class _AbilityScoreFeat(GeneralFeat):
@@ -558,8 +560,12 @@ class FeyTouched(_AbilityScoreFeat):
     _NAME = "Fey Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def __init__(self, character_level: int, ability: Ability, spell: "str | None" = None):
-        if spell is not None and spell not in list(DivinationLevel1Spells) + list(EnchantmentLevel1Spells):
+    def __init__(
+        self, character_level: int, ability: Ability, spell: "str | None" = None
+    ):
+        if spell is not None and spell not in list(DivinationLevel1Spells) + list(
+            EnchantmentLevel1Spells
+        ):
             raise ValueError(
                 f"Fey Touched spell must be a level 1 Divination or Enchantment spell."
             )
@@ -610,7 +616,7 @@ class Grappler(_AbilityScoreFeat):
                     ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
                     (
                         "Punch and Grab",
-                        "Once per turn, when an Unarmed Strike hits as part of the Attack action on your turn, use both its Damage and Grapple options",
+                        "Once per turn, when an Unarmed Strike hits as part of the Attack action on your turn, can use both its Damage and Grapple options",
                     ),
                     (
                         "Attack Advantage",
@@ -1190,7 +1196,9 @@ class RitualCaster(_AbilityScoreFeat):
     _NAME = "Ritual Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def __init__(self, character_level: int, ability: Ability, spells: "list[str] | None" = None):
+    def __init__(
+        self, character_level: int, ability: Ability, spells: "list[str] | None" = None
+    ):
         if character_level < self._MIN_LEVEL:
             raise ValueError(
                 f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
@@ -1287,8 +1295,12 @@ class ShadowTouched(_AbilityScoreFeat):
     _NAME = "Shadow Touched"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def __init__(self, character_level: int, ability: Ability, spell: "str | None" = None):
-        if spell is not None and spell not in list(IllusionLevel1Spells) + list(NecromancyLevel1Spells):
+    def __init__(
+        self, character_level: int, ability: Ability, spell: "str | None" = None
+    ):
+        if spell is not None and spell not in list(IllusionLevel1Spells) + list(
+            NecromancyLevel1Spells
+        ):
             raise ValueError(
                 f"Shadow Touched spell must be a level 1 Illusion or Necromancy spell."
             )

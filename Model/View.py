@@ -19,7 +19,7 @@ holds a copy of a source.
 from typing import Callable, Optional, Protocol
 
 from Core.Definitions import Ability, ArmorType, CharacterClass, Skill
-from Core.Weapons import WeaponTraits
+from Core.Weapons import WeaponDamageRolls, WeaponTraits
 from Model.ClassLevels import ClassLevels
 
 
@@ -93,6 +93,10 @@ class CharacterView(Protocol):
     def get_weapon_damage_bonuses(
         self, weapon: WeaponTraits
     ) -> list[tuple[int, str]]: ...
+
+    def get_weapon_damage_dice(
+        self, weapon: WeaponTraits
+    ) -> list[tuple[WeaponDamageRolls, Ability, str]]: ...
 
     # ── Spellcasting ─────────────────────────────────────────────────────
 

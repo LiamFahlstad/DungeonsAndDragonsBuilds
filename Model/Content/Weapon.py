@@ -281,13 +281,45 @@ class AbstractWeapon(Item, ABC):
         ]
         return parts
 
+    def _alternative_damage_die(
+        self, character: CharacterView
+    ) -> Optional[tuple[WeaponDamageRolls, Ability, str]]:
+        """The wielder's alternative damage (e.g. Tavern Brawler's 1d4 +
+        Strength) with the highest average die, if it beats this weapon's
+        own die - else None, and the weapon's normal damage stands. Worked
+        out on read, so it doesn't matter what set the weapon's die or when."""
+        best = None
+        best_average = _average_roll(self.damage_roll)
+        for alternative in character.get_weapon_damage_dice(self.traits):
+            average = _average_roll(alternative[0])
+            if average > best_average:
+                best, best_average = alternative, average
+        return best
+
+    def get_damage_roll(self, character: CharacterView) -> WeaponDamageRolls:
+        """The damage die this wielder rolls: the weapon's own, or a better
+        alternative die the wielder brings (see _alternative_damage_die)."""
+        alternative = self._alternative_damage_die(character)
+        return alternative[0] if alternative is not None else self.damage_roll
+
     def get_damage_roll_breakdown(self, character: CharacterView) -> list[BonusPart]:
         """Each part of the flat bonus added to the damage die: ability
         modifier, then every flat bonus. A fixed override is its single
         part. Sums to calculate_damage_bonus_int."""
         if self._damage_bonus_override is not None:
             return [BonusPart(self._damage_bonus_override, "fixed")]
-        parts = [self._ability_modifier_part(character)]
+        alternative = self._alternative_damage_die(character)
+        if alternative is not None:
+            ability = alternative[1]
+            parts = [
+                BonusPart(
+                    character.get_ability_modifier(ability),
+                    f"{ability.short_name.title()} Mod",
+                    from_stats=True,
+                )
+            ]
+        else:
+            parts = [self._ability_modifier_part(character)]
         parts += [
             BonusPart(bonus, self._bonus_source(bonus, label))
             for bonus, label in self.get_damage_roll_bonuses(character)
@@ -324,6 +356,10 @@ class AbstractWeapon(Item, ABC):
             )
             results.append((ac, prob))
         return results
+
+
+def _average_roll(damage_roll: WeaponDamageRolls) -> float:
+    return damage_roll.number_of_dice * (damage_roll.die_size + 1) / 2
 
 
 def is_proficient_with(

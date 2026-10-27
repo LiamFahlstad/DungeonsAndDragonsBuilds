@@ -29,7 +29,7 @@ import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
 from Core.Rules import MAX_ATTUNED_ITEMS, MAX_LEVEL, ability_modifier, proficiency_bonus
 from Core.SpellcastingRules import SlotProgression
-from Core.Weapons import WeaponProficiency, WeaponTraits
+from Core.Weapons import WeaponDamageRolls, WeaponProficiency, WeaponTraits
 from Model.AbilityScores import AbilityScores
 from Model.CharacterSources import CharacterSources
 from Model.ClassLevels import ClassLevels
@@ -294,6 +294,14 @@ class Character:
         """(value, label) for every damage roll bonus the wielder brings to
         a weapon with these traits (e.g. the Dueling fighting style)."""
         return self._ledger.weapon_bonuses.damage_bonuses(weapon)
+
+    def get_weapon_damage_dice(
+        self, weapon: WeaponTraits
+    ) -> list[tuple[WeaponDamageRolls, Ability, str]]:
+        """(die, ability, source) for every damage the wielder may deal
+        instead of a weapon's normal damage (e.g. Tavern Brawler's 1d4 +
+        Strength for an Unarmed Strike)."""
+        return self._ledger.weapon_bonuses.damage_dice(weapon)
 
     # ── Evaluation ───────────────────────────────────────────────────────────
 

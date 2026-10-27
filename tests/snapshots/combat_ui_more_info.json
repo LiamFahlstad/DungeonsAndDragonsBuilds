@@ -2182,7 +2182,7 @@
                },
                {
                 "style": "color: #c0c0c0; font-size: 11px;",
-                "text": "You can replace one attack with a grapple or shove. Grapple:... [473 chars, sha1 971c2bd63771]",
+                "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
                }
@@ -4279,7 +4279,7 @@
                },
                {
                 "style": "color: #c0c0c0; font-size: 11px;",
-                "text": "You can replace one attack with a grapple or shove. Grapple:... [473 chars, sha1 971c2bd63771]",
+                "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
                }
@@ -4910,7 +4910,7 @@
                },
                {
                 "style": "color: #c0c0c0; font-size: 11px;",
-                "text": "You can replace one attack with a grapple or shove. Grapple:... [473 chars, sha1 971c2bd63771]",
+                "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
                }
@@ -5431,7 +5431,7 @@
                },
                {
                 "style": "color: #c0c0c0; font-size: 11px;",
-                "text": "You can replace one attack with a grapple or shove. Grapple:... [473 chars, sha1 971c2bd63771]",
+                "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
                }
@@ -6058,7 +6058,7 @@
                },
                {
                 "style": "color: #c0c0c0; font-size: 11px;",
-                "text": "You can replace one attack with a grapple or shove. Grapple:... [473 chars, sha1 971c2bd63771]",
+                "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
                }

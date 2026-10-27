@@ -19261,7 +19261,7 @@
   "temp_hp": 0,
   "visibility_states": [],
   "weapons": [
-   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Unarmed Strike  1d20+5  dmg 1d4 -1",
    "Shortsword  1d20+11  dmg 1d6 +5",
    "Dagger  1d20+11  dmg 1d4 +5",
    "Scimitar  1d20+11  dmg 1d6 +5",

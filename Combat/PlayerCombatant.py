@@ -93,4 +93,4 @@ def weapon_summary(weapon: AbstractWeapon, character: Character) -> str:
     every bonus the sheet's weapon card counts (Dueling, a +1 weapon, ...)."""
     to_hit = weapon.calculate_total_attack_roll_bonus_int(character)
     damage = weapon.calculate_damage_bonus_int(character)
-    return f"{weapon.name}  1d20{to_hit:+}  dmg {weapon.damage_roll.value} {damage:+}"
+    return f"{weapon.name}  1d20{to_hit:+}  dmg {weapon.get_damage_roll(character).value} {damage:+}"

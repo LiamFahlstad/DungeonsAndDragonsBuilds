@@ -294,7 +294,7 @@ def _write_single_weapon(
     damage_bonus_str = _format_bonus_breakdown(
         weapon.get_damage_roll_breakdown(character)
     )
-    damage_roll_str = f"{weapon.damage_roll.value} {damage_bonus_str}"
+    damage_roll_str = f"{weapon.get_damage_roll(character).value} {damage_bonus_str}"
 
     if weapon.extra_damage:
         extra_damages = " + ".join(ed.format_damage() for ed in weapon.extra_damage)

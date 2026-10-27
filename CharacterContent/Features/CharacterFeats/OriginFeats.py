@@ -14,6 +14,7 @@ from Model.Content.Improvements import (
     InitiativeProficiency,
     SkillProficiencyChoice,
     SpeedBonus,
+    WeaponMinimumDamageDie,
 )
 from CharacterContent.Spells.SpellLists import (
     BardLevel0Spells,
@@ -30,6 +31,7 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel1Spells,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType, Language, Skill
+from Core.Weapons import WeaponDamageRolls
 from Model.Grants import Grants
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
@@ -524,6 +526,18 @@ class SavageAttacker(OriginFeat):
 class TavernBrawler(OriginFeat):
     def __init__(self):
         super().__init__(name="Tavern Brawler", origin="Origin Feat")
+        # Enhanced Unarmed Strike: 1d4 + Strength instead of the normal
+        # damage. Shown only where it beats the strike's own die (the default
+        # 1, not a Monk's Martial Arts die).
+        self._enhanced_unarmed_strike = WeaponMinimumDamageDie(
+            lambda weapon: weapon.is_unarmed_strike,
+            WeaponDamageRolls.D4,
+            Ability.STRENGTH,
+            "Tavern Brawler",
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        self._enhanced_unarmed_strike.apply(ledger_writer)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -531,7 +545,7 @@ class TavernBrawler(OriginFeat):
                 (
                     (
                         "Enhanced Unarmed Strike",
-                        "When it hits and deals damage, deal 1d4 + Strength modifier Bludgeoning damage instead of the normal damage",
+                        "When it hits and deals damage, can deal 1d4 + Strength modifier Bludgeoning damage instead of the normal damage",
                     ),
                     (
                         "Damage Rerolls",
@@ -540,7 +554,11 @@ class TavernBrawler(OriginFeat):
                     ("Improvised Weaponry", "Proficiency with improvised weapons"),
                     (
                         "Push",
-                        "Once per turn, when you hit with an Unarmed Strike as part of the Attack action on your turn, deal damage and also push the target 5 feet away",
+                        "Once per turn, when you hit with an Unarmed Strike as part of the Attack action on your turn, can deal damage and also push the target 5 feet away",
+                    ),
+                    (
+                        "On this sheet",
+                        "The Unarmed Strike damage shown uses 1d4 + Strength modifier unless its own die is better (e.g. a Martial Arts die)",
                     ),
                 )
             ),

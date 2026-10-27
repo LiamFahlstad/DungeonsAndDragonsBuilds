@@ -34,7 +34,13 @@ class UnarmedStrike(AbstractWeapon):
         self.weapon_type = WeaponType.MARTIAL_MELEE
         self.damage_type = WeaponDamageTypes.BLUDGEONING
         self.damage_roll = self._damage_roll_arg or WeaponDamageRolls.D1
+        # 2024 Rules Glossary: Unarmed Strike, Grappling, Grappled. The DC is
+        # a formula, not a number: this text belongs to the item, which has
+        # no character to compute it against (and a Monk may use Dexterity).
         self.description_text = (
-            "You can replace one attack with a grapple or shove. Grapple: target within reach and no more than one size larger, requires a free hand; make an Athletics check contested by Athletics or Acrobatics; on success, the target’s speed becomes 0, you can move it at half speed, and you can release it at any time; it can repeat the check to escape and automatically fails if incapacitated. "
-            "Shove: same limits and check; on success, either knock the target prone or push it 5 ft. "
+            "Choose Damage, Grapple or Shove. Grapple and Shove: target within 5 ft and no more than one size larger (Grapple also needs a free hand); "
+            "it makes a Str or Dex saving throw (its choice) against DC 8 + Str mod + Proficiency Bonus (Monk Martial Arts: Dex can replace Str). "
+            "Grapple: on a failed save, it is Grappled (Speed 0); moving it costs 1 extra foot per foot unless it is Tiny or two or more sizes smaller. "
+            "To escape, it uses an action for a Str (Athletics) or Dex (Acrobatics) check against the same DC. "
+            "Shove: on a failed save, push it 5 ft away or knock it Prone."
         )

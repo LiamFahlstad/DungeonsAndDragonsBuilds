@@ -47,13 +47,13 @@ from Core.Definitions import (
     Skill,
 )
 from Model.Ledger.ArmorClass import ArmorClassFormula
-from Core.Weapons import WeaponProficiency
+from Core.Weapons import WeaponDamageRolls, WeaponProficiency
 from Model.Ledger.Bonuses import OTHER_SOURCE
 from Model.Records.Tools import ToolProficiency
 from Model.View import Formula, CharacterView, Value
 from Model.Content.Effect import Effect
 from Model.Ledger.LedgerWriter import LedgerWriter
-from Model.Ledger.WeaponBonuses import WeaponBonus, WeaponFilter
+from Model.Ledger.WeaponBonuses import WeaponBonus, WeaponDamageDie, WeaponFilter
 
 
 class CharacterImprovement(Effect):
@@ -365,6 +365,25 @@ class WeaponDamageBonus(CharacterImprovement):
 
     def apply(self, ledger_writer: LedgerWriter):
         ledger_writer.add_weapon_damage_bonus(self.bonus)
+
+
+class WeaponMinimumDamageDie(CharacterImprovement):
+    """The weapons `applies_to` accepts deal at least `damage_roll` + the
+    `ability` modifier (e.g. Tavern Brawler: an Unarmed Strike deals 1d4 +
+    Strength). Used only where it beats the weapon's own die, so it never
+    matters whether it applies before or after whatever set that die."""
+
+    def __init__(
+        self,
+        applies_to: WeaponFilter,
+        damage_roll: WeaponDamageRolls,
+        ability: Ability,
+        source: str,
+    ):
+        self.damage_die = WeaponDamageDie(applies_to, damage_roll, ability, source)
+
+    def apply(self, ledger_writer: LedgerWriter):
+        ledger_writer.add_weapon_damage_die(self.damage_die)
 
 
 # ── Skill roll conditions ─────────────────────────────────────────────────────
