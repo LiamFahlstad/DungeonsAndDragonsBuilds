@@ -1,11 +1,27 @@
 ---
 name: usage-tags
-description: The rubric for usage_tags ("heal", "buff", "control", "damage", "utility", "summon") on D&D Features and spells - the chips shown on feature and spell cards. Use whenever adding, auditing or fixing usage_tags on a Feature (super().__init__(usage_tags=[...])) or a spell JSON record.
+description: The rubric and tooling for usage_tags ("heal", "buff", "control", "damage", "utility", "summon"), the role chips on D&D feature and spell cards - where they are stored (Feature __init__ kwargs; spells_<source>_extended.json, never the source spell JSON), how to decide them, and a script that validates them and shows how similar features were tagged. Use whenever adding, auditing, fixing or reviewing usage_tags, writing a new Feature or spell that should carry them, or when someone asks why a card shows (or lacks) a Damage/Heal/Buff/Control/Utility/Summon chip.
 ---
 
 # usage_tags
 
 The same six tags (`"heal"`, `"buff"`, `"control"`, `"damage"`, `"utility"`, `"summon"`) render as the same chip on feature cards and on spell cards, so a player reads them the same way on both. This skill is the one place their rules live. Features and spells each have their own section, because the two sets of rules differ in a few deliberate ways (listed at the end).
+
+## Where tags live
+
+- **Features:** the `usage_tags=[...]` keyword of the feature's `__init__` call (`super().__init__(...)` or `Feature.__init__(self, ...)`). Leave it out when nothing applies.
+- **Spells:** `CharacterContent/Spells/spells_<source>_extended.json`, keyed by spell name (`{"Fireball": {"usage_tags": ["damage"], "target": "area"}}`). `SpellFactory` merges each extended record **over** its source record, so a `usage_tags` key written into `spells_<source>.json` itself is overridden and never renders. Tag the extended file of the source that wins for that spell. Sources win in the order dnd2024, then aidedd, then dnd5e; `tag_report.py spells` names the right file.
+
+## Tools (run them; don't guess)
+
+```bash
+python .claude/skills/usage-tags/tag_report.py check              # validate every tag; run before you report
+python .claude/skills/usage-tags/tag_report.py file <path.py>...   # each feature in a file with its tags, untagged ones as "-"
+python .claude/skills/usage-tags/tag_report.py with buff control   # everything tagged with all of these
+python .claude/skills/usage-tags/tag_report.py spells --untagged   # spells that render without chips, and where to tag them
+```
+
+**Consistency is the hard part.** Across 1200+ tagged items, the main failure has been the same mechanic tagged differently in different batches. Before settling a borderline call, run `with` on your candidate tags and compare against two or three existing items that do the same thing. If precedent and rubric disagree, follow the rubric and mention the precedent in your report.
 
 ## Shared principles
 

@@ -58,7 +58,6 @@ class MonsterClassName(ExtendedCombatantData):
             ],
             senses="darkvision 60 ft., Passive Perception 11",
             languages="understands Common but can't speak",
-            description="",
             traits=[
                 MonsterAbility(
                     name="Trait Name",
@@ -81,7 +80,7 @@ class MonsterClassName(ExtendedCombatantData):
 ```
 
 Rules for this shape:
-- **Field order is fixed** — `combatant_type, hp, ac, temp_hp, conditions, ability_scores, saving_throws, spell_slots, cr, monster_type, monster_type_note, alignment, size, ac_note, hp_formula, speed_ground_ft, speed_fly_ft, speed_climb_ft, speed_special_rules, skills, damage_vulnerabilities, damage_resistances, damage_immunities, condition_immunities, senses, languages, description, traits, actions, bonus_actions, reactions, legendary_actions, legendary_resistances, lair_actions, mythic_actions`. Don't reorder even when a field is empty.
+- **Field order is fixed** — `combatant_type, [description], hp, ac, temp_hp, conditions, ability_scores, saving_throws, spell_slots, cr, monster_type, monster_type_note, alignment, size, ac_note, hp_formula, speed_ground_ft, speed_fly_ft, speed_climb_ft, speed_special_rules, skills, damage_vulnerabilities, damage_resistances, damage_immunities, condition_immunities, senses, languages, traits, actions, bonus_actions, reactions, legendary_actions, legendary_resistances, lair_actions, mythic_actions`. Don't reorder even when a field is empty.
 - **Class name**: strip non-alphanumeric characters from the monster's display name, title-case each word, join with no spaces (`"The Crown Without a King"` → `TheCrownWithoutAKing`). `combatant_type=` keeps the real display name with spaces/punctuation.
 - **Every enum-backed field uses the enum, never a raw string**: `Ability.<X>` (bare enum, not `.short_name`) for ability/saving-throw keys — `ExtendedCombatantData` normalizes `Ability` keys to their short name internally, `Skill.<X>` for skills dict keys (only import `Skill` if you actually use it), `Alignment.<X>`, `CreatureSize.<X>`, `DamageType.<X>` inside `DamageTypeEntry`, `Condition.<X>` in condition lists, and `MonsterType.<X>` for `monster_type` (e.g. `MonsterType.UNDEAD`, `MonsterType.DRAGON` — the 14 standard 5e creature types). Any subtype/swarm qualifier that isn't part of the base type goes in `monster_type_note` as free text (e.g. `monster_type=MonsterType.DRAGON, monster_type_note="Metallic"` for "Dragon (Metallic)"; `monster_type=MonsterType.BEAST, monster_type_note="Swarm of Tiny"` for "Swarm of Tiny Beasts"). If a monster's type genuinely doesn't map to one of the 14 (a rare multi-type entry like "Celestial or Fey or Fiend"), use `monster_type=None` and put the full text in `monster_type_note`.
 - **Only import what you use.** If a monster has no skills, don't import `Skill`. If it has no damage vulnerabilities, you still need `DamageTypeEntry`/`DamageType` only if resistances or immunities use them.
@@ -97,4 +96,4 @@ Rules for this shape:
 - `legendary_resistances` is a plain `int` count (e.g. `1`, `3`), separate from also listing a "Legendary Resistance (N/Day)" `MonsterAbility` in `traits` — real files do both (the int drives any mechanical tracking, the trait entry is the display text).
 - `ac_note` is free text like `"natural armor"` or `""` — not an enum.
 - `hp_formula` is the dice string (`"20d4+40"`), independent of the `hp=` int (which is the average/rolled total actually used in combat).
-- `description=""` is freeform flavor text/notes about the monster — lore, campaign context, DM notes, whatever doesn't belong in `traits`/`actions`. It's optional and almost always `""`; only fill it in if the user actually gives you flavor text to record, don't invent lore unprompted.
+- `description=` is optional freeform flavor text/notes about the monster: lore, campaign context, DM notes, whatever doesn't belong in `traits`/`actions`. Leave it out unless the user gives you flavor text to record; don't invent lore unprompted. When you do use it, put it **right after `combatant_type`**, where every existing homebrew monster puts it (generated monsters never have it). `check_monster.py` checks the order.

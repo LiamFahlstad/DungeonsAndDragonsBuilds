@@ -10,6 +10,7 @@ fields show as <field> so you can see where each one lands. Numbers and enums us
 Because this reads the code itself, it is always current - prefer it over any copied reference.
 """
 
+import argparse
 import dataclasses
 import inspect
 import sys
@@ -69,7 +70,10 @@ def describe(cls: type) -> str:
     return "\n".join(lines)
 
 
-def main(names: list[str]) -> int:
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("names", nargs="*", help="subclass names to show (default: all)")
+    names = parser.parse_args().names
     classes = subclasses()
     if names:
         by_name = {cls.__name__: cls for cls in classes}
@@ -83,4 +87,4 @@ def main(names: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(main())

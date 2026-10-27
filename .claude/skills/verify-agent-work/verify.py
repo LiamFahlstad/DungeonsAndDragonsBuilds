@@ -4,11 +4,15 @@ Usage (from the repo root):
     python .claude/skills/verify-agent-work/verify.py                        # changed files + static checks
     python .claude/skills/verify-agent-work/verify.py --claimed a.py b.py    # also compare against an agent's claimed file list
     python .claude/skills/verify-agent-work/verify.py --tests                # also run the test suite (quiet, stop on first failure)
+    python .claude/skills/verify-agent-work/verify.py --off-limits Model/Content/Feature.py Model/Ledger
+                                                                            # FAIL if the agent touched files it was told not to
+    python .claude/skills/verify-agent-work/verify.py --root .claude/worktrees/agent-x   # check an isolated agent's worktree
 
 Steps, each printed as its own section:
 1. Changed files: tracked modifications plus untracked files, never .claude/worktrees. Agent
    memory (.claude/agent-memory/) is listed separately, for review rather than claim-checking.
 2. Claimed vs actual (with --claimed): files claimed but untouched, and touched but not claimed.
+   Off-limits (with --off-limits): changed files equal to or under any given path.
 3. Compile every changed .py file.
 4. pyflakes for undefined names - catches a name used in a method body but never imported,
    which compile and import both miss.
@@ -30,8 +34,9 @@ WORKTREES = ".claude/worktrees/"
 AGENT_MEMORY = ".claude/agent-memory/"
 
 
-def git(*args: str, cwd: Path = ROOT) -> str:
-    return subprocess.run(["git", *args], cwd=cwd, capture_output=True, text=True, check=True).stdout
+def git(*args: str, cwd: Path | None = None) -> str:
+    # cwd defaults at call time, so --root (which rebinds ROOT) is honoured.
+    return subprocess.run(["git", *args], cwd=cwd or ROOT, capture_output=True, text=True, check=True).stdout
 
 
 def changed_files() -> list[str]:
@@ -69,6 +74,16 @@ def check_claims(claimed: list[str], changed: list[str]) -> bool:
     if not untouched and not unclaimed:
         print("  claims match the working tree")
     return not untouched
+
+
+def check_off_limits(paths: list[str], changed: list[str]) -> bool:
+    fences = [normalize(p).rstrip("/") for p in paths]
+    hits = [c for c in changed if any(c == f or c.startswith(f + "/") for f in fences)]
+    for path in hits:
+        print(f"  FAIL  {path} was changed but is off-limits")
+    if not hits:
+        print(f"  none of {len(fences)} off-limits path(s) changed")
+    return not hits
 
 
 def check_compile(py_files: list[str]) -> bool:
@@ -149,7 +164,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--claimed", nargs="*", default=None, help="file paths an agent reported changing")
     parser.add_argument("--tests", action="store_true", help="also run ./run_tests.sh -q -x")
+    parser.add_argument("--off-limits", nargs="*", default=None, help="files/folders the agent was told not to touch")
+    parser.add_argument("--root", help="repo or worktree to inspect (default: this repo)")
     args = parser.parse_args()
+
+    global ROOT
+    if args.root:
+        ROOT = Path(args.root).resolve()
+        print(f"Inspecting {ROOT}")
 
     all_changed = changed_files()
     memory = [p for p in all_changed if p.startswith(AGENT_MEMORY)]
@@ -168,6 +190,9 @@ def main() -> int:
     if args.claimed is not None:
         section("Claimed vs actual")
         results.append(check_claims(args.claimed, changed))
+    if args.off_limits:
+        section("Off-limits")
+        results.append(check_off_limits(args.off_limits, changed))
     section("Compile")
     results.append(check_compile(py_files))
     section("Undefined names (pyflakes)")

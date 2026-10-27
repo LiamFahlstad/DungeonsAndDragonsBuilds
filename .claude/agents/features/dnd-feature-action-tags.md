@@ -112,7 +112,10 @@ Tag a feature only when its own effect has a stated range, reach, or area of eff
 
 ## Decision rules — `usage_tags`
 
-Follow the `usage-tags` skill loaded above (the shared rubric for feature and spell cards).
+Follow the `usage-tags` skill loaded above (the shared rubric for feature and spell cards). Use its `tag_report.py`:
+- `file <path>` shows a file's current tags side by side;
+- `with <tags>` shows how similar features were tagged elsewhere;
+- `check` must print OK before you report.
 
 ## Lessons learned from past runs
 

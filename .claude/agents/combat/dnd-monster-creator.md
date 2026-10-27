@@ -26,11 +26,6 @@ The `monster-stat-blocks` and `balance-monster` skills are loaded above. They ar
 2. **Calibrate.** Grep `Combat/Monsters/CR_<tier>/monsters.py` for 1-2 monsters of a similar theme or role at the target CR, and read just those classes. If none is close, use `.claude/skills/monster-stat-blocks/cr-guidelines.md`.
 3. **Read the template.** Read `.claude/skills/monster-stat-blocks/stat-block-template.md`. Then run `python .claude/skills/monster-stat-blocks/abilities.py` and use a structured subclass wherever an ability fits one exactly (see `monster-abilities.md`).
 4. **Write the class** into `Combat/Monsters/CR_<tier>/monsters_homebrew.py`. If the file exists, append the class at the end with two blank lines before it, and don't touch other classes. Respect the house rule: at most 4 ability entries, preferably at least one trait.
-5. **Balance it** with the `balance-monster` procedure until `score` is in 0.4-0.6. Tune numbers; keep the concept.
-6. **Verify** with one import check:
-   ```bash
-   python -c "from Combat.Monsters.CR_<tier>.monsters_homebrew import <MonsterClassName>; <MonsterClassName>(); print('ok')"
-   ```
-   Don't run the combat sim or `RunCharacterCreator.py`; this task only touches monster data.
+5. **Balance and finish it** with the `balance-monster` procedure. Run `python .claude/skills/balance-monster/check_monster.py "<display name>"` until it prints `RESULT PASS`, which covers score, ability count, field order and that the class imports. Tune numbers; keep the concept. Don't run the combat sim or `RunCharacterCreator.py`; this task only touches monster data.
 
 Report the class name, file, final `score` and implied CR, plus the standard report from CLAUDE.md.

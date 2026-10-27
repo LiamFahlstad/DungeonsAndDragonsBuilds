@@ -225,7 +225,7 @@ Ask Claude Code to use an agent by name. Skills are shared know-how that agents 
 
 | Skill | For |
 |---|---|
-| `balance-monster` | Tune a homebrew monster to `monster_score.py` 0.4-0.6 |
+| `balance-monster` | Tune a homebrew monster to `monster_score.py` 0.4-0.6. `check_monster.py <name>` / `--all-homebrew` is the one-call "is it done" check |
 | `monster-stat-blocks` | Monster file layout and template; `abilities.py` prints the structured ability classes live |
-| `usage-tags` | The heal/buff/control/damage/utility/summon rubric for features and spells |
-| `verify-agent-work` | Check what agents actually changed before trusting their reports |
+| `usage-tags` | The heal/buff/control/damage/utility/summon rubric for features and spells. `tag_report.py check / file / with / spells / set-spell` |
+| `verify-agent-work` | Check what agents actually changed before trusting their reports (`verify.py --claimed --off-limits --root --tests`) |

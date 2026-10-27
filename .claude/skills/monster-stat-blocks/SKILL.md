@@ -1,6 +1,6 @@
 ---
 name: monster-stat-blocks
-description: How monster stat blocks are stored in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders, the ExtendedCombatantData class template, and the structured MonsterAbility subclasses (MeleeAttack, SavingThrowEffect, MagicResistance, ...). Use before writing or editing any monster stat block.
+description: How monster stat blocks work in this repo - which Combat/Monsters files are generated (never edit) vs hand-maintained, the CR tier folders, the ExtendedCombatantData class template, and the structured MonsterAbility subclasses (MeleeAttack, SavingThrowEffect, Multiattack, ...), with a script that lists them live from the code. Use before writing, editing, converting or reviewing any monster, NPC or creature stat block, including homebrew monsters for a campaign or encounter, even when the request only says "make a monster" or "add an enemy".
 ---
 
 # Monster stat blocks
@@ -18,10 +18,11 @@ Monsters are `ExtendedCombatantData` subclasses (`Model/Creatures/Combatants.py`
 ## House rules for homebrew monsters
 
 - At most **4 `MonsterAbility` entries in total** (traits + actions + bonus actions + reactions; Multiattack counts), preferably at least one trait. Fold riders into existing lines (e.g. a smite as a trait, several spells as one "X Magic" action).
-- Every new or edited homebrew monster is balanced with the `balance-monster` skill before it's done.
+- Every new or edited homebrew monster is balanced with the `balance-monster` skill before it's done. Its `check_monster.py` also checks these house rules and the field order, so one clean run of it means the stat block is done.
 
 ## Reference files (read when you need them)
 
 - [.claude/skills/monster-stat-blocks/stat-block-template.md](stat-block-template.md): the exact class template, field order and formatting rules. Read it before **writing** a new monster.
+- `python .claude/skills/monster-stat-blocks/abilities.py [ClassName...]`: the structured ability classes, read live from the code (constructor, docstring, generated text).
 - [.claude/skills/monster-stat-blocks/monster-abilities.md](monster-abilities.md): every structured `MonsterAbility` subclass, its constructor, and the exact text it generates, plus how to add a new subclass. Read it before **writing or converting** abilities.
 - [.claude/skills/monster-stat-blocks/cr-guidelines.md](cr-guidelines.md): the DMG rough-numbers table by CR. Use it only when no sibling monster at the target CR is close enough to calibrate against.

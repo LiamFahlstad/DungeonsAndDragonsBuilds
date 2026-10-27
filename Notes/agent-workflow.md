@@ -166,6 +166,19 @@ So a folder per agent, holding scripts and references, would be a skill without 
 - **One rubric for one chip.** `usage_tags` render as the same chip on feature cards and on spell cards, but each tagging agent carried its own copy of the rules. They now live side by side in the `usage-tags` skill. Their wording was moved, not merged: the deliberate differences (for example, "utility" is broad for spells but strict for features) are kept and listed explicitly, so a future change to either side happens in one visible place.
 - **The creator now prefers structured abilities** where one fits exactly. Monsters come out in the form the refactor agent would otherwise have to convert them to, and the balance tools can read their numbers.
 
+### Scripts over instructions
+
+The most valuable thing a skill can hold is a script for work every run would otherwise redo by hand, and redo slightly differently each time. (This is the skill-creator guide's main lever: if every run writes the same helper, bundle it.) Each skill now has one, and `tests/test_skill_scripts.py` keeps them working against the real code:
+
+| Script | Replaces | What it found on its first run |
+|---|---|---|
+| `balance-monster/check_monster.py` | Running `monster_score.py`, `monster_cr_compare.py` and an import check, then counting abilities and comparing field order by eye | **25 of 38 homebrew monsters fail the house rules:** 20 have more than 4 abilities (up to 9) and 5 score above 0.6. Most predate the 4-ability rule. Also, every homebrew monster that has a `description=` puts it right after `combatant_type`, not where the template said; the template was corrected to match. |
+| `monster-stat-blocks/abilities.py` | A hand-copied list of ability classes | Seven missing subclasses and stale rules (see above) |
+| `usage-tags/tag_report.py` | Ad-hoc grep and `json.dump` scripts | Spell tags live in `spells_<source>_extended.json`, merged *over* the source record since 2026-08-31, but `dnd-spell-usage-tags` still wrote into the source files, where the extended copy overrides them. Its edits would never have rendered. The agent was rewritten to use `tag_report.py set-spell`, which writes the right file in the exact format (2-space JSON, no trailing newline), so a one-spell change is a one-spell diff. All 661 feature and 566 spell tags validate. |
+| `verify-agent-work/verify.py` (extended) | Manually diffing off-limits files; no way to check a worktree agent | `--off-limits` fails on a fenced file, and `--root` checks an isolated agent's worktree before merging |
+
+The pattern behind all four: **a skill that says "check X" gets checked inconsistently; a skill that says "run this" gets checked the same way every time**, by every model tier. That matters most for the haiku agents, whose failures here have all been skipped or improvised checks.
+
 ### Why some things stayed in agent prompts
 
 Task-specific workflow (the refactor agent's convert-and-diff loop, the action-tag rules for `action_type`/`duration`/`range` that only features have) is only used by one agent. Moving it into a skill would add indirection without sharing anything. **Make something a skill when a second user of it exists**, not before.
@@ -241,6 +254,14 @@ Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it 
 
 ## 9. What changed on 2026-10-26
 
+Fourth pass (improving the skills, section 6 "Scripts over instructions"):
+
+- **Added** `check_monster.py` (balance-monster) and `tag_report.py` (usage-tags); extended `verify.py` with `--off-limits` and `--root`; gave every skill script `--help`.
+- **Rewrote** each `SKILL.md` around its script, with descriptions that name the situations they're for (skills tend to under-trigger) and reasons in place of bare rules.
+- **Fixed** `dnd-spell-usage-tags` (wrong file; see above) and the stat-block template's `description` position; the creator now finishes on `check_monster.py`.
+- **Added** `tests/test_skill_scripts.py`.
+- **Not done:** the skill-creator's full eval loop (with/without-skill subagent runs per test case) and its description optimizer. Many of these skills edit repo files, so parallel runs would clash in one tree. Both are worth running after the restart, one skill at a time.
+
 Third pass (self-improvement, section 7):
 
 - **Enabled** `memory: project` on all 16 agents, and tracked `.claude/agent-memory/` in git.
@@ -269,5 +290,6 @@ First pass:
 ### Still worth doing
 
 - Prune the ~245 user-level permission entries (see section 5).
+- Decide what to do about the 25 homebrew monsters that fail `check_monster.py --all-homebrew` (20 over the 4-ability rule, 5 too strong). Either rebalance them with `dnd-monster-balancer`, or grandfather the ones that predate the rule.
 - Four agents default to haiku: `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-spell-summaries` and `dnd-spell-usage-tags`. The summary and usage-tag work is near-mechanical. `dnd-feature-action-tags` makes judgment calls, so watch its first few runs with the verify skill and switch it to `sonnet` if quality slips. (`dnd-equipment` was switched to `sonnet` because it edits engine code in `Model/Inventory.py`. For small gear edits to one build, call it with `model: "haiku"`.)
 - 15 agents repeat a "Token discipline" block. It's harmless, but a change has to be made in 15 places; a candidate for moving into `CLAUDE.md` later.
