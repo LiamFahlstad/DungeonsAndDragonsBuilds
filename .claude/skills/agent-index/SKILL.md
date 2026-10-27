@@ -11,7 +11,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 **Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `character-engine-dev` or `combat-simulator` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 
-## Agents (15)
+## Agents (16)
 
 ### builds/
 
@@ -48,9 +48,10 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`code-reviewer`](../../agents/tooling/code-reviewer.md) | opus | `subagent-protocol`, `review-house-rules`, `snapshot-diffs` | Review a change before it's committed or reported done - the working tree, the staged changes, a branch, or the files a subagent… | `character-engine-dev`, `git-commit`, `test-bughunter` |
+| [`code-reviewer`](../../agents/tooling/code-reviewer.md) | opus | `subagent-protocol`, `review-house-rules`, `snapshot-diffs` | Review a change before it's committed or reported done - the working tree, the staged changes, a branch, or the files a subagent… | `character-engine-dev`, `git-commit`, `rules-checker`, `test-bughunter` |
 | [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | `subagent-protocol`, `new-content-check` | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
 | [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs` | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
+| [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
 ## Skills (11)
@@ -62,10 +63,10 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
 | [`new-content-check`](../../skills/new-content-check/SKILL.md) | `content-scraper` | `check_new_content.py` | Check for new 2024-rules content - classes, subclasses, species, feats, spells and tools - against a baseline index of everything… |
 | [`review-house-rules`](../../skills/review-house-rules/SKILL.md) | `code-reviewer` | `check_diff.py` | Review a change against this repo's own rules that no test enforces - origin= is a category not a sourcebook, 2014 subclasses… |
-| [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | *main session* | `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
+| [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | `rules-checker` | `glossary_terms.py`, `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
 | [`snapshot-diffs`](../../skills/snapshot-diffs/SKILL.md) | `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `code-reviewer`, `git-commit` | `snapshot_diff.py` | Read what actually changed when a golden snapshot test fails - a script that shows each build's changed stats by ability/skill… |
-| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `code-reviewer`, `content-scraper`, `git-commit`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
+| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
 | [`usage-tags`](../../skills/usage-tags/SKILL.md) | `feature-card-tagger` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
 | [`verify-agent-work`](../../skills/verify-agent-work/SKILL.md) | *main session* | `verify.py` | Verify what subagents actually changed before trusting their reports - diff the working tree against the files it claimed, fail… |
 
