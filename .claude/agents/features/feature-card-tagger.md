@@ -1,6 +1,6 @@
 ---
-name: dnd-feature-action-tags
-description: Use to audit D&D Feature classes and add action-economy/duration/range/usage tags — `action_type="action"|"bonus_action"|"reaction"`, `duration="..."`, `range="..."`, and/or `usage_tags=[...]` (any of "heal"/"buff"/"control"/"damage"/"utility"/"summon") on the feature's `super().__init__(...)` call — so the character sheet flags a feature's action cost, how long its effect lasts, its range/area, and its functional role, the same way `passive=True` flags a Passive tag. Use for auditing a file/class for candidates, or for a specific named feature. Not for writing the original feature text — use dnd-builds for that.
+name: feature-card-tagger
+description: Use to audit D&D Feature classes and add action-economy/duration/range/usage tags — `action_type="action"|"bonus_action"|"reaction"`, `duration="..."`, `range="..."`, and/or `usage_tags=[...]` (any of "heal"/"buff"/"control"/"damage"/"utility"/"summon") on the feature's `super().__init__(...)` call — so the character sheet flags a feature's action cost, how long its effect lasts, its range/area, and its functional role, the same way `passive=True` flags a Passive tag. Use for auditing a file/class for candidates, or for a specific named feature. Not for writing the original feature text — use character-engine-dev for that.
 tools: Read, Grep, Glob, Edit, Bash
 model: haiku
 memory: project

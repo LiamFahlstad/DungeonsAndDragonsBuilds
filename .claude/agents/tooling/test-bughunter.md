@@ -1,8 +1,8 @@
 ---
-name: dnd-test-bughunter
-description: Use to write pytest tests for this D&D 5e engine AND hunt for bugs while doing it — engine/builder logic (stat blocks, spell slots, HP/AC, multiclassing, fighting styles, equipment/gold, CharacterBuilder/Character) and rules data tables (armor, weapons, class tables). Give it an area ("test Model/Inventory.py", "cover SpellSlots multiclassing", "audit FightingStyles.py"). Expected values come from the D&D rules, never from the code's own output; confirmed bugs become strict xfail tests plus a report — it never edits engine code. Not for writing features/builds (dnd-builds) or combat encounters (combat-sim).
+name: test-bughunter
+description: Use to write pytest tests for this D&D 5e engine AND hunt for bugs while doing it — engine/builder logic (stat blocks, spell slots, HP/AC, multiclassing, fighting styles, equipment/gold, CharacterBuilder/Character) and rules data tables (armor, weapons, class tables). Give it an area ("test Model/Inventory.py", "cover SpellSlots multiclassing", "audit FightingStyles.py"). Expected values come from the D&D rules, never from the code's own output; confirmed bugs become strict xfail tests plus a report — it never edits engine code. Not for writing features/builds (character-engine-dev) or combat encounters (combat-simulator).
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

@@ -1,8 +1,8 @@
 ---
-name: dnd-feature-extender
+name: feature-extension-auditor
 description: Use to audit D&D class/subclass level features and convert ones that are thematically a rider/upgrade of an earlier feature into `data.add_feature(Child(), extends=Parent)` instead of a standalone `data.add_feature(child())`. Also use right after implementing a new feature to check whether it should have been wired as an extension in the first place.
 tools: Read, Grep, Glob, Edit, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

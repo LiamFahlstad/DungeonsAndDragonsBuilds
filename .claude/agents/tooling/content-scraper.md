@@ -1,8 +1,8 @@
 ---
-name: wikidot-scraper
+name: content-scraper
 description: Use for any task involving scraping structured D&D content from Wikidot-hosted wikis (dnd2024.wikidot.com, dnd5e.wikidot.com, and similar) — classes, subclasses, spells, feats, species, or any new content type. Also covers the aidedd.org spell/invocation scrapers and the SpellFactory merge pipeline they feed. Writes/maintains scraper scripts under Scrapers/.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

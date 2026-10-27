@@ -1,6 +1,7 @@
 ---
 name: verify-agent-work
 description: Verify what subagents actually changed before trusting their reports - diff the working tree (or an agent's worktree) against the files it claimed, fail on off-limits files, compile, catch undefined names, import, check sibling worktrees, run tests, and curate what the agent wrote to its memory. Use every time a subagent (especially haiku-tier or a parallel batch) reports finished code or data changes, before telling the user the work is done, and whenever the user asks "did it actually do that?" or "is that agent's work right?".
+model: opus
 ---
 
 # Verify agent work

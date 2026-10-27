@@ -1,8 +1,8 @@
 ---
-name: dnd-builds
+name: character-engine-dev
 description: Use for any D&D character build task — creating new builds, adding subclasses, implementing features/feats/spells, or understanding how the character sheet pipeline works.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

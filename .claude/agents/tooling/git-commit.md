@@ -2,7 +2,7 @@
 name: git-commit
 description: Use to commit work - it picks the changes related to what you describe (or splits everything into logical commits), stages exactly those files, formats them with Black via format_changed.sh, writes a commit title and message in this repo's style with a Claude Co-Authored-By trailer when Claude made the changes, commits on the current branch, and reports back each commit and its full message. Never pushes, amends or rewrites history. Tell it what to commit and who made the changes (the user, or which Claude model). Not for resolving merge conflicts or other git surgery.
 tools: Bash, Read, Grep, Glob
-model: sonnet
+model: opus
 memory: project
 ---
 

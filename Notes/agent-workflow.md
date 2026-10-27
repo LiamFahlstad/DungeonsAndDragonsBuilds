@@ -42,7 +42,7 @@ Each agent is a Markdown file with YAML frontmatter:
 
 ```markdown
 ---
-name: dnd-monster-balancer
+name: monster-balancer
 description: Use to check and rebalance homebrew monsters ...   # what the router reads to pick an agent
 tools: Read, Grep, Glob, Edit, Write, Bash                      # allowlist; leave out what it doesn't need
 model: sonnet                                                   # default model; can be overridden per call
@@ -55,7 +55,7 @@ skills:                                                         # shared know-ho
 
 Good practices this setup follows:
 
-- **One job per agent, with a precise `description`.** The description is the routing signal. Say what it's for *and* what it's not for ("Not for creating monsters, use dnd-monster-creator"). Most of the existing agents already do this well.
+- **One job per agent, with a precise `description`.** The description is the routing signal. Say what it's for *and* what it's not for ("Not for creating monsters, use monster-designer"). Most of the existing agents already do this well.
 - **Least privilege.** Read-only or narrow agents get only the tools they need. For example, `dnd-feature-summaries` has no Bash or Write.
 - **One prompt per agent, model chosen per call.** There used to be `dnd-builds-haiku` and `combat-sim-haiku` copies of the Sonnet agents. They had drifted:
   - `dnd-builds-haiku` still said "expertise requires proficiency first" (no longer true).
@@ -65,15 +65,32 @@ Good practices this setup follows:
   Two copies of a prompt always drift. Now there is one agent, and the caller passes `model: "haiku"` when a cheap run is fine (per-call model override, documented in the subagent docs). The old files are backed up, not deleted (see *What changed*).
 - **Subagents can nest** (up to 3 levels), but here they don't: the agents have no `Agent` tool. Delegation stays with the main session, which also does the verifying. Each extra layer is one more self-report nobody checks.
 
-### Which model when
+### Which model, and what each agent is called
 
-| Use | Model |
-|---|---|
-| Writing tests or hunting bugs, subjective tagging or classification across many items, migrations over shared code, new subclasses or builds | Agent default (Sonnet) |
-| One feature, one combatant, one encounter, a lookup, a near-mechanical edit that's easy to check | `model: "haiku"` is fine |
-| Small edits you can see in full | Don't spawn an agent; the main session does it |
+**Rule:** an agent that runs a rubric over many items, where a tool or an exact check verifies each item, is **bulk** and runs on sonnet or haiku. Everything else (design, engineering, judgment) runs on **opus**, the alias that resolves to Opus 5.5 today and follows newer Opus releases. The names drop the redundant `dnd-` prefix (the whole repo is D&D) and say what the agent does.
 
-This table comes from three recorded incidents (in Claude's memory): haiku agents wrote tests that couldn't fail, mis-tagged roughly half of a spell spot-check, and returned detailed but false completion reports during parallel migrations.
+| Agent | Was | Model | Why |
+|---|---|---|---|
+| `character-engine-dev` | dnd-builds | opus | The general engine agent: builds, features, feats, spells, the pipeline |
+| `subclass-implementer` | dnd-subclass-creator | opus | Turns source text into a working subclass across several files |
+| `equipment-inventory` | dnd-equipment | opus | Edits engine code (`Model/Inventory.py`, layering rules) |
+| `character-creator-gui` | character-creator | opus | PyQt6 app development (the old name sounded like it *creates characters*) |
+| `combat-simulator` | combat-sim | opus | Combat UI and pipeline engineering |
+| `monster-designer` | dnd-monster-creator | opus | Creative design of new stat blocks |
+| `feature-extension-auditor` | dnd-feature-extender | opus | Low-volume rules judgment: is feature B a rider on feature A? |
+| `test-bughunter` | dnd-test-bughunter | opus | Expected values come from the rules; haiku once wrote tests that couldn't fail |
+| `content-scraper` | wikidot-scraper | opus | Writes and maintains scrapers (Wikidot and aidedd, not just Wikidot) |
+| `git-commit` | git-commit | opus | Judgment about what belongs together, and which unrelated work to leave alone |
+| `monster-balancer` | dnd-monster-balancer | sonnet | Bulk: iterate per monster until `check_monster.py` passes |
+| `monster-ability-converter` | dnd-monster-ability-refactor | sonnet | Bulk: rubric conversion, verified by exact text equality |
+| `spell-improved-descriptions` | dnd-spell-improved-descriptions | sonnet | Bulk: restructure many spells' rules text into blocks |
+| `feature-card-tagger` | dnd-feature-action-tags | haiku | Bulk tagging; `tag_report.py check` validates it |
+| `spell-usage-tagger` | dnd-spell-usage-tags | haiku | Bulk tagging through `tag_report.py set-spell` |
+| `spell-summarizer` | dnd-spell-summaries | haiku | Bulk 1-2 sentence summaries |
+
+**Downgrading for a small job:** pass `model: "sonnet"` when invoking an opus agent for a small, easy-to-verify task (one feature, one combatant, a lookup). Don't downgrade tests or bug hunting, subjective classification at scale, or migrations over shared code. Three recorded incidents (in Claude's memory) show those fail on cheaper tiers: tests that couldn't fail, about half of a spell sample mis-tagged, and detailed but false completion reports during parallel migrations.
+
+**Skills** run on the model of whoever loads them. A preloaded skill uses its agent's model, so the table above is what matters. `verify-agent-work` is invoked directly and is pure judgment, so it sets `model: opus` for its turn. The others are reference material or rubrics and inherit.
 
 ## 3. Briefing a subagent
 
@@ -157,8 +174,8 @@ So a folder per agent, holding scripts and references, would be a skill without 
 
 ### What the split fixed
 
-- **The monster creator never balanced its monsters.** CLAUDE.md requires every homebrew monster to score 0.4-0.6, but that procedure lived only inside `dnd-monster-balancer`. Now it is the `balance-monster` skill. The creator preloads it, its workflow ends with a balancing step, and the main session can use it when it edits a monster itself.
-- **The MonsterAbility reference had silently gone stale.** `dnd-monster-ability-refactor` carried a hand-copied list of the structured ability classes. Comparing it with `Model/Creatures/MonsterAbilities.py` showed it:
+- **The monster creator never balanced its monsters.** CLAUDE.md requires every homebrew monster to score 0.4-0.6, but that procedure lived only inside `monster-balancer`. Now it is the `balance-monster` skill. The creator preloads it, its workflow ends with a balancing step, and the main session can use it when it edits a monster itself.
+- **The MonsterAbility reference had silently gone stale.** `monster-ability-converter` carried a hand-copied list of the structured ability classes. Comparing it with `Model/Creatures/MonsterAbilities.py` showed it:
   - missed seven subclasses (`MeleeOrRangedAttack`, `NamedAttackAction`, `CastSpellLegendaryAction`, `WaterBreathing`, `Flyby`, `PrimalBond`, `TinySwarm`);
   - missed `Multiattack(use_article=...)`;
   - still said "two damage types on one hit can't be structured", although `MeleeAttack`/`RangedAttack` gained `secondary_*` damage fields. The agent had been leaving convertible attacks as plain text.
@@ -175,7 +192,7 @@ The most valuable thing a skill can hold is a script for work every run would ot
 |---|---|---|
 | `balance-monster/check_monster.py` | Running `monster_score.py`, `monster_cr_compare.py` and an import check, then counting abilities and comparing field order by eye | **25 of 38 homebrew monsters fail the house rules:** 20 have more than 4 abilities (up to 9) and 5 score above 0.6. Most predate the 4-ability rule. Also, every homebrew monster that has a `description=` puts it right after `combatant_type`, not where the template said; the template was corrected to match. |
 | `monster-stat-blocks/abilities.py` | A hand-copied list of ability classes | Seven missing subclasses and stale rules (see above) |
-| `usage-tags/tag_report.py` | Ad-hoc grep and `json.dump` scripts | Spell tags live in `spells_<source>_extended.json`, merged *over* the source record since 2026-08-31, but `dnd-spell-usage-tags` still wrote into the source files, where the extended copy overrides them. Its edits would never have rendered. The agent was rewritten to use `tag_report.py set-spell`, which writes the right file in the exact format (2-space JSON, no trailing newline), so a one-spell change is a one-spell diff. All 661 feature and 566 spell tags validate. |
+| `usage-tags/tag_report.py` | Ad-hoc grep and `json.dump` scripts | Spell tags live in `spells_<source>_extended.json`, merged *over* the source record since 2026-08-31, but `spell-usage-tagger` still wrote into the source files, where the extended copy overrides them. Its edits would never have rendered. The agent was rewritten to use `tag_report.py set-spell`, which writes the right file in the exact format (2-space JSON, no trailing newline), so a one-spell change is a one-spell diff. All 661 feature and 566 spell tags validate. |
 | `verify-agent-work/verify.py` (extended) | Manually diffing off-limits files; no way to check a worktree agent | `--off-limits` fails on a fenced file, and `--root` checks an isolated agent's worktree before merging |
 
 The pattern behind all four: **a skill that says "check X" gets checked inconsistently; a skill that says "run this" gets checked the same way every time**, by every model tier. That matters most for the haiku agents, whose failures here have all been skipped or improvised checks.
@@ -195,7 +212,7 @@ Scripts that people also run by hand (`Combat/Tools/monster_score.py`, `monster_
 - two agents share a name;
 - a skill link, a `.claude/...` script path or a hook command points at a missing file.
 
-On its first run it found a real bug: `dnd-spell-usage-tags` had `"usage_tags": [...]` in its description, which makes the frontmatter invalid YAML. Claude Code's own parser happened to tolerate it this session, but the docs say unparseable agents are skipped, with the reason only in the debug log.
+On its first run it found a real bug: `spell-usage-tagger` had `"usage_tags": [...]` in its description, which makes the frontmatter invalid YAML. Claude Code's own parser happened to tolerate it this session, but the docs say unparseable agents are skipped, with the reason only in the debug log.
 
 ## 7. Self-improvement: agents learn from their runs
 
@@ -253,7 +270,7 @@ With ~15 agents and a growing set of skills, you need one page that shows what e
 
 - a `PostToolUse` hook (`.claude/hooks/rebuild_agent_index.py`) rebuilds it after any Edit/Write to an agent or skill file. It checks the path first, so other edits cost only a Python startup;
 - `tests/test_claude_config.py` fails if it's stale (for `git mv`, edits outside Claude, ...);
-- a second test fails if any agent, skill or CLAUDE.md names an agent or skill that doesn't exist. Building the index found one straight away: `dnd-spell-summaries` still said "use dnd-feature-summaries", an agent deleted from the working tree. It now says `dnd-builds`.
+- a second test fails if any agent, skill or CLAUDE.md names an agent or skill that doesn't exist. Building the index found one straight away: `spell-summarizer` still said "use dnd-feature-summaries", an agent deleted from the working tree. It now says `character-engine-dev`.
 
 To change the index's wording, edit the text in `build_index.py`, never `SKILL.md`; the next rebuild would overwrite a hand edit.
 
@@ -270,21 +287,27 @@ To change the index's wording, edit the text in `build_index.py`, never `SKILL.m
    If it reports no skills, or quotes text from an older version of the prompt, the session is still serving cached definitions: restart again.
 6. The index updates itself (hook), and the config test catches anything the hook missed. Commit; everything under `.claude/agents`, `skills` and `hooks` is tracked.
 
-Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `dnd-test-bughunter` ("where bugs have hidden") or `dnd-monster-balancer`. Before relying on it, review what an agent writes there.
+Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `test-bughunter` ("where bugs have hidden") or `monster-balancer`. Before relying on it, review what an agent writes there.
 
 ## 10. What changed on 2026-10-26
+
+Sixth pass (models and names, section 2), 2026-10-27:
+
+- **Moved** the ten non-bulk agents to opus (Opus 5.5); bulk agents keep sonnet or haiku. The rule and the per-agent reasons are in section 2.
+- **Renamed** fourteen agents to say what they do, dropping the `dnd-` prefix (old names in the section 2 table). Used `git mv`, and updated every reference in agents, skills, CLAUDE.md and this file. Older entries below use the new names too.
+- **`verify-agent-work`** sets `model: opus` for its turn.
 
 Fifth pass (the index, section 8), 2026-10-27:
 
 - **Added** the generated `agent-index` skill with `build_index.py`, the `rebuild_agent_index.py` PostToolUse hook, and tests for a stale index and for dangling agent references.
 - **Replaced** HOWTO section 10's hand-kept tables with a link to the index.
-- **Committed** the deletion of `dnd-feature-summaries` that was already in the working tree, and repointed `dnd-spell-summaries` to `dnd-builds`.
+- **Committed** the deletion of `dnd-feature-summaries` that was already in the working tree, and repointed `spell-summarizer` to `character-engine-dev`.
 
 Fourth pass (improving the skills, section 6 "Scripts over instructions"):
 
 - **Added** `check_monster.py` (balance-monster) and `tag_report.py` (usage-tags); extended `verify.py` with `--off-limits` and `--root`; gave every skill script `--help`.
 - **Rewrote** each `SKILL.md` around its script, with descriptions that name the situations they're for (skills tend to under-trigger) and reasons in place of bare rules.
-- **Fixed** `dnd-spell-usage-tags` (wrong file; see above) and the stat-block template's `description` position; the creator now finishes on `check_monster.py`.
+- **Fixed** `spell-usage-tagger` (wrong file; see above) and the stat-block template's `description` position; the creator now finishes on `check_monster.py`.
 - **Added** `tests/test_skill_scripts.py`.
 - **Not done:** the skill-creator's full eval loop (with/without-skill subagent runs per test case) and its description optimizer. Many of these skills edit repo files, so parallel runs would clash in one tree. Both are worth running after the restart, one skill at a time.
 
@@ -300,22 +323,22 @@ Second pass (agents vs skills, section 6):
 - **Grouped** the agents into `builds/`, `features/`, `spells/`, `combat/` and `tooling/` with `git mv` (history kept).
 - **Added** the `balance-monster`, `monster-stat-blocks` (with `abilities.py`, `stat-block-template.md`, `monster-abilities.md`, `cr-guidelines.md`) and `usage-tags` skills.
 - **Slimmed** the three monster agents to their roles: they preload the monster skills, the creator now balances, and the refactor agent's subclass list (via the skill) is complete again. The two tagging agents preload `usage-tags`.
-- **Added** `tests/test_claude_config.py`, and fixed the invalid frontmatter it found in `dnd-spell-usage-tags`.
-- **Smoke-tested** `dnd-monster-balancer` in the same session. It ran its *startup-cached* old prompt with no skills, and saw a stale memory index. Hence the restart rule and the corrected memory note in section 1. **Pending:** repeat the smoke test after a restart to confirm skill preloading from the new folders.
+- **Added** `tests/test_claude_config.py`, and fixed the invalid frontmatter it found in `spell-usage-tagger`.
+- **Smoke-tested** `monster-balancer` in the same session. It ran its *startup-cached* old prompt with no skills, and saw a stale memory index. Hence the restart rule and the corrected memory note in section 1. **Pending:** repeat the smoke test after a restart to confirm skill preloading from the new folders.
 
 First pass:
 
 - **Added** `CLAUDE.md`, the hook, the verify skill, and this file.
 - **Rewrote** `.claude/settings.json` (curated permissions plus the hook). The old version is backed up in the session scratchpad.
-- **Merged** `dnd-builds-haiku` into `dnd-builds` (bulk-edit guidance with the worktree exclusion fixed, corrected output-page list) and `combat-sim-haiku` into `combat-sim` (removed self-delegation and the `Agent` tool). The old files are in the session scratchpad under `retired-agents/`.
+- **Merged** `dnd-builds-haiku` into `character-engine-dev` (bulk-edit guidance with the worktree exclusion fixed, corrected output-page list) and `combat-sim-haiku` into `combat-simulator` (removed self-delegation and the `Agent` tool). The old files are in the session scratchpad under `retired-agents/`.
 - **Updated** three agent descriptions that pointed at `dnd-builds-haiku`, and HOWTO section 10.
-- **Switched** `dnd-equipment` from haiku to sonnet, and added the worktree exclusion to its bulk-edit steps.
+- **Switched** `equipment-inventory` from haiku to sonnet, and added the worktree exclusion to its bulk-edit steps.
 - **Moved** five project rules from Claude's private memory into `CLAUDE.md`, so subagents see them.
 - **`.gitignore`** now tracks `.claude/agents/`, `.claude/skills/`, `.claude/hooks/` and `.claude/settings.json`.
 
 ### Still worth doing
 
 - Prune the ~245 user-level permission entries (see section 5).
-- Decide what to do about the 25 homebrew monsters that fail `check_monster.py --all-homebrew` (20 over the 4-ability rule, 5 too strong). Either rebalance them with `dnd-monster-balancer`, or grandfather the ones that predate the rule.
-- Four agents default to haiku: `dnd-feature-action-tags`, `dnd-feature-summaries`, `dnd-spell-summaries` and `dnd-spell-usage-tags`. The summary and usage-tag work is near-mechanical. `dnd-feature-action-tags` makes judgment calls, so watch its first few runs with the verify skill and switch it to `sonnet` if quality slips. (`dnd-equipment` was switched to `sonnet` because it edits engine code in `Model/Inventory.py`. For small gear edits to one build, call it with `model: "haiku"`.)
-- 15 agents repeat a "Token discipline" block. It's harmless, but a change has to be made in 15 places; a candidate for moving into `CLAUDE.md` later.
+- Decide what to do about the 25 homebrew monsters that fail `check_monster.py --all-homebrew` (20 over the 4-ability rule, 5 too strong). Either rebalance them with `monster-balancer`, or grandfather the ones that predate the rule.
+- Three agents default to haiku: `feature-card-tagger`, `spell-summarizer` and `spell-usage-tagger`. The summary and usage-tag work is near-mechanical, and both taggers are validated by `tag_report.py`. `feature-card-tagger` also makes action/duration/range judgment calls, so watch its first runs with the verify skill and move it to `sonnet` if quality slips.
+- 14 agents repeat a "Token discipline" block. It's harmless, but a change has to be made in 14 places; a candidate for moving into `CLAUDE.md` later.

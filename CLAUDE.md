@@ -1,6 +1,6 @@
 # DungeonsAndDragonsBuilds
 
-A D&D 5e (2024 rules) character engine that renders HTML character sheets, plus a PyQt6 combat simulator and a character-creator GUI. Python 3.11, `attrs`. All commands run from the repo root; [HOWTO.md](HOWTO.md) lists every script and flag.
+A D&D 5e (2024 rules) character engine that renders HTML character sheets, plus a PyQt6 combat simulator and a character-creator-gui GUI. Python 3.11, `attrs`. All commands run from the repo root; [HOWTO.md](HOWTO.md) lists every script and flag.
 
 ## Commands
 
@@ -56,8 +56,13 @@ Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared 
 
 - **Commit through `git-commit`** when the user asks for a commit. Tell it what to commit and who made the changes: the user, or the Claude model from this session's attribution instructions. That decides its Co-Authored-By trailer. Relay its report, including the full message it wrote.
 - **Find the right one in the index.** `.claude/skills/agent-index/SKILL.md` (the `agent-index` skill) lists every agent and skill, generated from their frontmatter. A hook rebuilds it after edits, and a test fails if it's stale.
-- **Pick the specialist first** (subclass-creator, monster-creator, test-bughunter, ...), and fall back to `dnd-builds` / `combat-sim` for general work. Do small or single-file edits yourself instead of spawning an agent.
-- **Model choice.** Agents default to the model in their frontmatter. Pass `model: "haiku"` only for small, mechanical, easy-to-verify tasks (one feature, one combatant, a lookup). Never use haiku for tests or bug hunting, for subjective classification or tagging across hundreds of items, or for bulk migrations over shared code.
+- **Pick the specialist first** (`subclass-implementer`, `monster-designer`, `test-bughunter`, ...), and fall back to `character-engine-dev` / `combat-simulator` for general work. Do small or single-file edits yourself instead of spawning an agent.
+- **Model choice.** Each agent's frontmatter model follows one rule:
+  - **opus** (Opus 5.5) for design, engineering and judgment: engine and GUI work, new subclasses and monsters, test writing and bug hunting, scrapers, commits;
+  - **sonnet** for rubric-driven batch work that a tool or exact check verifies (balancing monsters, converting abilities, improved spell descriptions);
+  - **haiku** for near-mechanical bulk tagging and summaries.
+
+  Keep the default. Pass `model: "sonnet"` to run an opus agent on a small, easy-to-verify task (one feature, one combatant, a lookup). Never downgrade tests or bug hunting, subjective classification at scale, or migrations over shared code: haiku runs here have failed at exactly those.
 - **Brief like a stranger.** A subagent sees CLAUDE.md, its own prompt and its preloaded skills, not this conversation. Don't count on it seeing auto-memory. Agent and skill edits apply only after Claude Code restarts. Say exactly which files are in scope, which are off-limits, what "done" means, and how to verify it.
 - **Parallel work.** Split by disjoint file sets. Name the off-limits shared files explicitly. Prefer `isolation: "worktree"` when scopes might overlap. For a change that repeats one pattern across many classes, consider one generic method on the base class instead of N hand-written overrides.
 - **Verify before reporting done.** After agents finish, run the `verify-agent-work` skill (`python .claude/skills/verify-agent-work/verify.py --claimed <files> --off-limits <shared files>`), and add `--tests` after the last agent in a batch. A detailed self-report is no more trustworthy than a vague one.

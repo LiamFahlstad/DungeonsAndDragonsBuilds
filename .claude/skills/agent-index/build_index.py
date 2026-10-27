@@ -24,7 +24,7 @@ SUMMARY_CHARS = 130
 
 FRONTMATTER = """---
 name: agent-index
-description: Generated index of every project agent and skill - what each is for, its model, the skills it preloads, which agents point to each other, and each skill's scripts. Use when choosing which agent or skill fits a task (especially between similar ones, e.g. dnd-builds vs dnd-subclass-creator vs dnd-equipment), when the user asks what agents or skills exist or what one does, and before adding or changing an agent or skill, to avoid overlap.
+description: Generated index of every project agent and skill - what each is for, its model, the skills it preloads, which agents point to each other, and each skill's scripts. Use when choosing which agent or skill fits a task (especially between similar ones, e.g. character-engine-dev vs subclass-implementer vs equipment-inventory), when the user asks what agents or skills exist or what one does, and before adding or changing an agent or skill, to avoid overlap.
 ---
 """
 
@@ -34,7 +34,7 @@ INTRO = """# Agent and skill index
 
 Every row comes from the agent's or skill's own frontmatter, so this can't drift from them. The **use for** column is the opening of each description. The full description, which Claude Code routes on, is in the linked file. How to brief, pick a model and verify is in CLAUDE.md, and the reasoning behind the setup is in `Notes/agent-workflow.md`.
 
-**Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `dnd-builds` or `combat-sim` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
+**Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `character-engine-dev` or `combat-simulator` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 """
 
 

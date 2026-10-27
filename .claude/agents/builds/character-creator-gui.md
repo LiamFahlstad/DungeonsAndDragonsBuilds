@@ -1,8 +1,8 @@
 ---
-name: character-creator
-description: Use for any Character Creator UI task — the PyQt6 player build creator in Builds/CharacterCreator (editors, tabs, registry discovery, build-file codegen, build-file loading). Not for the combat UI (combat-sim) or hand-written builds/features (dnd-builds).
+name: character-creator-gui
+description: Use for any Character Creator UI task — the PyQt6 player build creator in Builds/CharacterCreator (editors, tabs, registry discovery, build-file codegen, build-file loading). Not for the combat UI (combat-simulator) or hand-written builds/features (character-engine-dev).
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

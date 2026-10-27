@@ -1,8 +1,8 @@
 ---
-name: dnd-subclass-creator
-description: Use when the user provides (or points to) source text for a new D&D 5e subclass — e.g. a file in SourceTexts\SubclassTexts2024\ (2024 rules) or SourceTexts\SubclassTexts2014\ (original 2014 rules) — and wants it turned into working code. Wires the subclass into the edition-appropriate enum, subclass features file, subclass builder file, and produces a runnable example in Builds\Examples\. Use dnd-builds for feats, spells, single-feature edits, or non-subclass work.
+name: subclass-implementer
+description: Use when the user provides (or points to) source text for a new D&D 5e subclass — e.g. a file in SourceTexts\SubclassTexts2024\ (2024 rules) or SourceTexts\SubclassTexts2014\ (original 2014 rules) — and wants it turned into working code. Wires the subclass into the edition-appropriate enum, subclass features file, subclass builder file, and produces a runnable example in Builds\Examples\. Use character-engine-dev for feats, spells, single-feature edits, or non-subclass work.
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 

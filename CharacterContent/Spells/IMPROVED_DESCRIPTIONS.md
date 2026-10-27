@@ -37,7 +37,7 @@ Options don't nest, and there is no stat-block form (a summon's stat block
 is an Option of Facts rows). A spell without flavor opens with a
 `{"paragraph": ...}` lead instead, or straight with its rows.
 
-The `dnd-spell-improved-descriptions` agent (`.claude/agents/`) writes
+The `spell-improved-descriptions` agent (`.claude/agents/`) writes
 these in bulk and carries the full workflow and checks.
 
 ## Guidelines

@@ -1,6 +1,6 @@
 ---
 name: agent-index
-description: Generated index of every project agent and skill - what each is for, its model, the skills it preloads, which agents point to each other, and each skill's scripts. Use when choosing which agent or skill fits a task (especially between similar ones, e.g. dnd-builds vs dnd-subclass-creator vs dnd-equipment), when the user asks what agents or skills exist or what one does, and before adding or changing an agent or skill, to avoid overlap.
+description: Generated index of every project agent and skill - what each is for, its model, the skills it preloads, which agents point to each other, and each skill's scripts. Use when choosing which agent or skill fits a task (especially between similar ones, e.g. character-engine-dev vs subclass-implementer vs equipment-inventory), when the user asks what agents or skills exist or what one does, and before adding or changing an agent or skill, to avoid overlap.
 ---
 
 # Agent and skill index
@@ -9,7 +9,7 @@ description: Generated index of every project agent and skill - what each is for
 
 Every row comes from the agent's or skill's own frontmatter, so this can't drift from them. The **use for** column is the opening of each description. The full description, which Claude Code routes on, is in the linked file. How to brief, pick a model and verify is in CLAUDE.md, and the reasoning behind the setup is in `Notes/agent-workflow.md`.
 
-**Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `dnd-builds` or `combat-sim` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
+**Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `character-engine-dev` or `combat-simulator` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 
 ## Agents (16)
 
@@ -17,50 +17,50 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`character-creator`](../../agents/builds/character-creator.md) | sonnet | - | Any Character Creator UI task | `dnd-builds`, `combat-sim` |
-| [`dnd-builds`](../../agents/builds/dnd-builds.md) | sonnet | - | Any D&D character build task | - |
-| [`dnd-equipment`](../../agents/builds/dnd-equipment.md) | sonnet | - | Any D&D character equipment/item task | `dnd-builds`, `combat-sim` |
-| [`dnd-subclass-creator`](../../agents/builds/dnd-subclass-creator.md) | sonnet | - | The user provides source text for a new D&D 5e subclass | `dnd-builds` |
+| [`character-creator-gui`](../../agents/builds/character-creator-gui.md) | opus | - | Any Character Creator UI task | `character-engine-dev`, `combat-simulator` |
+| [`character-engine-dev`](../../agents/builds/character-engine-dev.md) | opus | - | Any D&D character build task | - |
+| [`equipment-inventory`](../../agents/builds/equipment-inventory.md) | opus | - | Any D&D character equipment/item task | `character-engine-dev`, `combat-simulator` |
+| [`subclass-implementer`](../../agents/builds/subclass-implementer.md) | opus | - | The user provides source text for a new D&D 5e subclass | `character-engine-dev` |
 
 ### combat/
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`combat-sim`](../../agents/combat/combat-sim.md) | sonnet | - | Any combat simulator task | `dnd-monster-balancer`, `dnd-monster-creator` |
-| [`dnd-monster-ability-refactor`](../../agents/combat/dnd-monster-ability-refactor.md) | sonnet | `monster-stat-blocks` | Convert a monster's freeform `MonsterAbility(name=..., description="...")` trait/action entries into the matching structured… | `dnd-monster-creator` |
-| [`dnd-monster-balancer`](../../agents/combat/dnd-monster-balancer.md) | sonnet | `balance-monster`, `monster-stat-blocks` | Check and rebalance homebrew D&D 5e monsters against Combat\Tools\monster_score.py's CR-relative power score | `dnd-monster-ability-refactor`, `dnd-monster-creator` |
-| [`dnd-monster-creator`](../../agents/combat/dnd-monster-creator.md) | sonnet | `monster-stat-blocks`, `balance-monster` | Creating new homebrew D&D 5e monsters as ExtendedCombatantData classes | `combat-sim`, `dnd-monster-balancer` |
+| [`combat-simulator`](../../agents/combat/combat-simulator.md) | opus | - | Any combat simulator task | `monster-balancer`, `monster-designer` |
+| [`monster-ability-converter`](../../agents/combat/monster-ability-converter.md) | sonnet | `monster-stat-blocks` | Convert a monster's freeform `MonsterAbility(name=..., description="...")` trait/action entries into the matching structured… | `monster-designer` |
+| [`monster-balancer`](../../agents/combat/monster-balancer.md) | sonnet | `balance-monster`, `monster-stat-blocks` | Check and rebalance homebrew D&D 5e monsters against Combat\Tools\monster_score.py's CR-relative power score | `monster-ability-converter`, `monster-designer` |
+| [`monster-designer`](../../agents/combat/monster-designer.md) | opus | `monster-stat-blocks`, `balance-monster` | Creating new homebrew D&D 5e monsters as ExtendedCombatantData classes | `combat-simulator`, `monster-balancer` |
 
 ### features/
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`dnd-feature-action-tags`](../../agents/features/dnd-feature-action-tags.md) | haiku | `usage-tags` | Audit D&D Feature classes and add action-economy/duration/range/usage tags | `dnd-builds` |
-| [`dnd-feature-extender`](../../agents/features/dnd-feature-extender.md) | sonnet | - | Audit D&D class/subclass level features and convert ones that are thematically a rider/upgrade of an earlier feature into… | - |
+| [`feature-card-tagger`](../../agents/features/feature-card-tagger.md) | haiku | `usage-tags` | Audit D&D Feature classes and add action-economy/duration/range/usage tags | `character-engine-dev` |
+| [`feature-extension-auditor`](../../agents/features/feature-extension-auditor.md) | opus | - | Audit D&D class/subclass level features and convert ones that are thematically a rider/upgrade of an earlier feature into… | - |
 
 ### spells/
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`dnd-spell-improved-descriptions`](../../agents/spells/dnd-spell-improved-descriptions.md) | sonnet | - | Write, audit or fix improved descriptions for D&D spells | `dnd-builds`, `dnd-spell-summaries`, `dnd-spell-usage-tags` |
-| [`dnd-spell-summaries`](../../agents/spells/dnd-spell-summaries.md) | haiku | - | Write concise versions of D&D spell descriptions from the JSON spell sources under CharacterContent/Spells, and emit them as a… | `dnd-builds` |
-| [`dnd-spell-usage-tags`](../../agents/spells/dnd-spell-usage-tags.md) | haiku | `usage-tags` | Audit or add usage_tags on D&D spells, so the spell card flags its functional role the same way Feature cards do | `dnd-feature-action-tags`, `dnd-spell-summaries` |
+| [`spell-improved-descriptions`](../../agents/spells/spell-improved-descriptions.md) | sonnet | - | Write, audit or fix improved descriptions for D&D spells | `character-engine-dev`, `spell-summarizer`, `spell-usage-tagger` |
+| [`spell-summarizer`](../../agents/spells/spell-summarizer.md) | haiku | - | Write concise versions of D&D spell descriptions from the JSON spell sources under CharacterContent/Spells, and emit them as a… | `character-engine-dev` |
+| [`spell-usage-tagger`](../../agents/spells/spell-usage-tagger.md) | haiku | `usage-tags` | Audit or add usage_tags on D&D spells, so the spell card flags its functional role the same way Feature cards do | `feature-card-tagger`, `spell-summarizer` |
 
 ### tooling/
 
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
-| [`dnd-test-bughunter`](../../agents/tooling/dnd-test-bughunter.md) | sonnet | - | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `dnd-builds`, `combat-sim` |
-| [`git-commit`](../../agents/tooling/git-commit.md) | sonnet | - | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
-| [`wikidot-scraper`](../../agents/tooling/wikidot-scraper.md) | sonnet | - | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
+| [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | - | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
+| [`git-commit`](../../agents/tooling/git-commit.md) | opus | - | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
+| [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | - | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
 ## Skills (4)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
-| [`balance-monster`](../../skills/balance-monster/SKILL.md) | `dnd-monster-balancer`, `dnd-monster-creator` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
-| [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `dnd-monster-ability-refactor`, `dnd-monster-balancer`, `dnd-monster-creator` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
-| [`usage-tags`](../../skills/usage-tags/SKILL.md) | `dnd-feature-action-tags`, `dnd-spell-usage-tags` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
+| [`balance-monster`](../../skills/balance-monster/SKILL.md) | `monster-balancer`, `monster-designer` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
+| [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
+| [`usage-tags`](../../skills/usage-tags/SKILL.md) | `feature-card-tagger`, `spell-usage-tagger` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
 | [`verify-agent-work`](../../skills/verify-agent-work/SKILL.md) | *main session* | `verify.py` | Verify what subagents actually changed before trusting their reports - diff the working tree against the files it claimed, fail… |
 
 This skill itself (`agent-index`) is the index, generated by `build_index.py` in this folder.

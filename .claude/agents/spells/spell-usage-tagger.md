@@ -1,6 +1,6 @@
 ---
-name: dnd-spell-usage-tags
-description: Use to audit or add usage_tags (any of "heal"/"buff"/"control"/"damage"/"utility"/"summon") on D&D spells, so the spell card flags its functional role the same way Feature cards do. Tags live in CharacterContent/Spells/spells_<source>_extended.json (merged over the source spells_dnd2024/aidedd/dnd5e.json records). Give it a level/class/spell-name filter (e.g. "cantrips and level 1 Wizard spells" or "every untagged spell"). This is the spell-side counterpart to dnd-feature-action-tags; casting time, range, duration and components are already rendered from the spell data, so usage_tags is the only thing it adds. Not for concise descriptions (dnd-spell-summaries) or Feature classes (dnd-feature-action-tags).
+name: spell-usage-tagger
+description: Use to audit or add usage_tags (any of "heal"/"buff"/"control"/"damage"/"utility"/"summon") on D&D spells, so the spell card flags its functional role the same way Feature cards do. Tags live in CharacterContent/Spells/spells_<source>_extended.json (merged over the source spells_dnd2024/aidedd/dnd5e.json records). Give it a level/class/spell-name filter (e.g. "cantrips and level 1 Wizard spells" or "every untagged spell"). This is the spell-side counterpart to feature-card-tagger; casting time, range, duration and components are already rendered from the spell data, so usage_tags is the only thing it adds. Not for concise descriptions (spell-summarizer) or Feature classes (feature-card-tagger).
 tools: Read, Grep, Glob, Write, Bash
 model: haiku
 memory: project

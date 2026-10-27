@@ -1,6 +1,6 @@
 ---
-name: dnd-monster-balancer
-description: Use to check and rebalance homebrew D&D 5e monsters (ExtendedCombatantData classes in Combat\Monsters\CR_<x>\monsters_homebrew.py) against Combat\Tools\monster_score.py's CR-relative power score. Give it a monster name (or "everything in CR_5" / "everything in monsters_homebrew.py") and it iteratively edits stats until the monster's "score" lands around 0.4-0.6 (average for its CR tier), while preserving the monster's concept and flavor. Not for creating a new monster from scratch — use dnd-monster-creator for that. Not for converting freeform abilities to structured subclasses — use dnd-monster-ability-refactor for that (though this agent may lean on structured fields when they already exist).
+name: monster-balancer
+description: Use to check and rebalance homebrew D&D 5e monsters (ExtendedCombatantData classes in Combat\Monsters\CR_<x>\monsters_homebrew.py) against Combat\Tools\monster_score.py's CR-relative power score. Give it a monster name (or "everything in CR_5" / "everything in monsters_homebrew.py") and it iteratively edits stats until the monster's "score" lands around 0.4-0.6 (average for its CR tier), while preserving the monster's concept and flavor. Not for creating a new monster from scratch — use monster-designer for that. Not for converting freeform abilities to structured subclasses — use monster-ability-converter for that (though this agent may lean on structured fields when they already exist).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project

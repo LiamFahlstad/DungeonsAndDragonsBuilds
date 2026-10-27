@@ -1,8 +1,8 @@
 ---
-name: dnd-equipment
-description: Use for any D&D character equipment/item task — starting equipment, adventuring gear picked up over time, buying/dropping items, or item pricing/display (value, sell value, rarity, type) on the character sheet. Not for combat mechanics (combat-sim) or unrelated feature/class build work (dnd-builds).
+name: equipment-inventory
+description: Use for any D&D character equipment/item task — starting equipment, adventuring gear picked up over time, buying/dropping items, or item pricing/display (value, sell value, rarity, type) on the character sheet. Not for combat mechanics (combat-simulator) or unrelated feature/class build work (character-engine-dev).
 tools: Read, Grep, Glob, Edit, Write, Bash
-model: sonnet
+model: opus
 memory: project
 ---
 
