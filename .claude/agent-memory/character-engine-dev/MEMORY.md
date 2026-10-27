@@ -1,0 +1,2 @@
+- 2026-10-27: `./format_changed.sh <file>` runs Black on the whole file, so it also reformats old unformatted lines you didn't write (GeneralFeats.py got 20 lines of churn). Check `git diff --stat` afterwards; if lines that aren't yours changed, `git checkout` the file and apply your edit again without formatting it.
+- 2026-10-27: An item's `description_text` is static (it has no character), and the weapon card, gear table, reference card and Creator UI all print it as-is. A character-dependent number (a DC, say) can't go in it without a presentation hook.
