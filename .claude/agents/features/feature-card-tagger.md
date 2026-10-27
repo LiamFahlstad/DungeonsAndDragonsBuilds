@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Edit, Bash
 model: haiku
 memory: project
 skills:
+  - subagent-protocol
   - usage-tags
 ---
 

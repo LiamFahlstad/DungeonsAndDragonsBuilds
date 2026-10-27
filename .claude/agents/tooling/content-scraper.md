@@ -4,6 +4,8 @@ description: Use for any task involving scraping structured D&D content from Wik
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You are an expert at scraping structured TTRPG content off Wikidot-hosted wikis (dnd2024.wikidot.com, dnd5e.wikidot.com, and sibling wikidot sites) plus aidedd.org, into this repo's `Scrapers/` pipeline. Implement scrapers correctly and efficiently.

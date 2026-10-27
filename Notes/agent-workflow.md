@@ -114,14 +114,21 @@ Every subagent ends with the report format from `CLAUDE.md`: **Files changed / C
 
 Two layers.
 
-**Automatic: the `SubagentStop` hook.** When any subagent tries to finish, `check_subagent_edits.py`:
+**Automatic: the hand-back hook.** When a subagent tries to finish, `check_subagent_edits.py`:
 
 - reads *that agent's own* transcript to find the files it edited with Edit/Write, so parallel agents never block each other;
 - compiles each edited `.py` file;
 - flags any edit inside another agent's worktree;
 - if something is wrong, exits with code 2, and Claude Code hands the message back to the agent as its next instruction.
 
-It blocks at most once per stop (`stop_hook_active`), so an agent that can't fix the problem still ends and has to report it. Its limit: edits made through Bash (sed, scripts) don't show up as file edits in the transcript, and the verify skill covers those.
+**Which event matters.** It's registered on two events, and only one works here:
+
+- **`PreToolUse` on `SubagentHandback`** is the one that works in this environment. Here a subagent finishes by calling a `SubagentHandback` tool, which delivers its report, so blocking that call is the last point where the agent can still react.
+- **`SubagentStop`** is the documented event, and it does fire. But it fires *after* the report is gone. A live probe on 2026-10-27 showed the hook finding the broken file, exiting 2, and nothing happening. It is kept for environments where subagents simply stop.
+
+After the fix, a probe agent that wrote a broken file was blocked, fixed the file and only then handed back. `tests/test_subagent_hook.py` covers both input shapes. On `PreToolUse` there's no `agent_transcript_path`, so the hook derives it from the session transcript and `agent_id`.
+
+It blocks at most once per problem set (`stop_hook_active`, or a small state file for the hand-back), so an agent that can't fix the problem still finishes and has to report it. Its limit: edits made through Bash (sed, scripts) don't show up as file edits in the transcript, and the verify skill covers those.
 
 **On demand: the `verify-agent-work` skill.** Run it after agents report done:
 
@@ -230,7 +237,7 @@ main session verifies ───┴──► deletes wrong lessons, promotes prov
                               mistakes the agent didn't notice
 ```
 
-The rules live in CLAUDE.md ("Learning from your runs" for agents, "Curate what agents learn" for the main session), so every agent gets them without 16 copies:
+The agents' rules live in the **`subagent-protocol` skill**, which every agent preloads (the config test enforces it). The main session's curation duty lives in CLAUDE.md ("Curate what agents learn"). One copy each, no 16 duplicates:
 
 - **When to record:** a problem a future run would hit again. That means a wrong or stale instruction, a path or command that didn't work and what did, a check that caught a mistake, or a correction from the orchestrator.
 - **Format:** one line, dated, the fix plus a short why. Observed facts only; no guesses and no "it went fine".
@@ -253,7 +260,21 @@ Memory is tracked by git (`.gitignore` has `!.claude/agent-memory/`), so every l
 
 - An agent that doesn't *notice* its mistake can't learn from it. That's why the main session writes lessons for problems found during verification.
 - Memory needs auto-memory to be on (it is by default).
-- `memory` also grants Read/Write/Edit to agents whose tool list leaves those out (e.g. `dnd-feature-summaries` gains Write). CLAUDE.md limits them to their own memory folder outside their task scope.
+- `memory` also grants Read/Write/Edit to agents whose tool list leaves those out (e.g. `feature-card-tagger` gains Write). The protocol limits them to their own memory folder outside their task scope.
+
+### Live checks (2026-10-27)
+
+| Mechanism | Result |
+|---|---|
+| `MEMORY.md` injected into the agent | ✅ `git-commit` quoted its lesson word for word, along with Claude Code's built-in memory instructions |
+| Agent reacts to its lesson | ✅ After the "placeholder report" lesson, the next run returned a complete report that matched git |
+| Hook forces a fix before hand-back | ❌ then ✅. `SubagentStop` fired too late; after moving to `PreToolUse` on `SubagentHandback`, the probe was blocked and fixed the file |
+| Learning rules reach agents | ❌ then ⏳. Agents didn't receive CLAUDE.md (it was created mid-session), so the rules moved into the preloaded `subagent-protocol` skill. **Edits to an existing agent load only after a restart**, so this is pending until then |
+| Agent records a lesson unprompted | Not shown yet. The probe avoided the planted snag, correctly, by grepping first. The protocol now says a deliberate test or a one-off isn't a lesson |
+| Prompts allow writing memory | Fixed. `test-bughunter` ("never edit outside tests/") and `git-commit` ("never edit file contents") read as forbidding it, so both now name their memory folder as the exception |
+| Memory format | Fixed. Claude Code's default is one file per memory plus an index line, but only `MEMORY.md` loads every run, so the protocol says lessons go *in* `MEMORY.md` |
+
+**After restarting Claude Code**, ask any agent, read-only, to quote its preloaded skills. `subagent-protocol` should be among them.
 
 ## 8. The index: generated, never hand-written
 
@@ -290,6 +311,13 @@ To change the index's wording, edit the text in `build_index.py`, never `SKILL.m
 Optional, not enabled yet: `memory: project` in an agent's frontmatter gives it its own persistent notes in `.claude/agent-memory/<name>/`, shared through git. Good candidates are agents with a growing body of case knowledge, such as `test-bughunter` ("where bugs have hidden") or `monster-balancer`. Before relying on it, review what an agent writes there.
 
 ## 10. What changed on 2026-10-26
+
+Seventh pass (double-checking self-improvement, section 7 "Live checks"), 2026-10-27:
+
+- **Fixed** the edit-check hook. It now also runs on `PreToolUse` for `SubagentHandback`, because `SubagentStop` fires after the report is already delivered. Added `tests/test_subagent_hook.py`.
+- **Moved** the report format and learning rules from CLAUDE.md into a `subagent-protocol` skill that every agent preloads (enforced by a test), because agents weren't receiving CLAUDE.md.
+- **Fixed** two prompts that forbade writing memory, and stated that lessons go in `MEMORY.md` itself.
+- **Pending:** after a restart, confirm agents preload `subagent-protocol`.
 
 Sixth pass (models and names, section 2), 2026-10-27:
 

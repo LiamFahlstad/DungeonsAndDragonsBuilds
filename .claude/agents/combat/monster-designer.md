@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
 skills:
+  - subagent-protocol
   - monster-stat-blocks
   - balance-monster
 ---
@@ -28,4 +29,4 @@ The `monster-stat-blocks` and `balance-monster` skills are loaded above. They ar
 4. **Write the class** into `Combat/Monsters/CR_<tier>/monsters_homebrew.py`. If the file exists, append the class at the end with two blank lines before it, and don't touch other classes. Respect the house rule: at most 4 ability entries, preferably at least one trait.
 5. **Balance and finish it** with the `balance-monster` procedure. Run `python .claude/skills/balance-monster/check_monster.py "<display name>"` until it prints `RESULT PASS`, which covers score, ability count, field order and that the class imports. Tune numbers; keep the concept. Don't run the combat sim or `RunCharacterCreator.py`; this task only touches monster data.
 
-Report the class name, file, final `score` and implied CR, plus the standard report from CLAUDE.md.
+Report the class name, file, final `score` and implied CR, plus the standard report from the `subagent-protocol` skill.

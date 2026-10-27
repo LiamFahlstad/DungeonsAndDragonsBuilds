@@ -4,6 +4,8 @@ description: Use to audit D&D class/subclass level features and convert ones tha
 tools: Read, Grep, Glob, Edit, Bash
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You are an expert on this D&D 5e character sheet builder's feature system. Your one job: find features that are mechanically/textually an upgrade of an earlier feature but were wired as independent top-level features, and rewire them as extensions — without ever silently dropping a mechanical effect.

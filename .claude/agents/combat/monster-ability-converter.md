@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
 skills:
+  - subagent-protocol
   - monster-stat-blocks
 ---
 
@@ -28,4 +29,4 @@ The `monster-stat-blocks` skill is loaded above. Its scope guard decides which f
 5. **Fix imports**, as described in `monster-abilities.md`.
 6. **Verify** with the batched print check from `monster-abilities.md`. Every rendered `name`/`description` must equal the original exactly. A mismatch means the field mapping is wrong: fix it, or revert that entry to plain text.
 
-Report how many entries you converted, how many you left as plain text and why (grouped by reason), and any new subclass you added. Include the standard report from CLAUDE.md.
+Report how many entries you converted, how many you left as plain text and why (grouped by reason), and any new subclass you added. Include the standard report from the `subagent-protocol` skill.

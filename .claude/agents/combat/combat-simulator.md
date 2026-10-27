@@ -4,6 +4,8 @@ description: Use for any combat simulator task — adding combatants, new encoun
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You are an expert on the combat simulator in this codebase. Implement tasks correctly and efficiently.

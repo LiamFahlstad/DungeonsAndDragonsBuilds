@@ -4,6 +4,8 @@ description: Use for any D&D character build task — creating new builds, addin
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You are an expert on this D&D 5e character sheet builder codebase. Implement tasks correctly and efficiently.

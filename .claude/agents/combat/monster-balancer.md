@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
 skills:
+  - subagent-protocol
   - balance-monster
   - monster-stat-blocks
 ---
@@ -21,4 +22,4 @@ Follow the `balance-monster` skill loaded above: its workflow, field mapping, ro
 - **Don't over-iterate.** At most 2-3 score-check/edit rounds per monster, then report the remaining gap.
 - **Don't edit a monster that isn't broken.** If it's already in 0.4-0.6, report that and move on.
 
-Report each monster's starting and final `score`, implied CR, and what you changed, plus the standard report from CLAUDE.md.
+Report each monster's starting and final `score`, implied CR, and what you changed, plus the standard report from the `subagent-protocol` skill.

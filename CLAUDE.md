@@ -29,26 +29,9 @@ python Combat/Tools/monster_score.py -v "<monster>"   # homebrew monster balance
 - **Fix what you broke; don't widen the change.** When you find a bug in your own work, fix those lines only, not the whole scope back to the old pattern.
 - **Don't wave away failures.** A failing test or snapshot is never "expected" unless you have looked at the diff and can say why.
 
-### Final report format (subagents)
+### Subagents: reporting and learning
 
-End with these sections, plain and factual, in addition to anything your own agent prompt asks you to report. The orchestrator checks them against `git status`.
-
-1. **Files changed:** exact paths, one per line. Nothing else.
-2. **Commands run:** each verification command and its actual result (pass/fail counts, not "looks good").
-3. **Not done:** anything skipped, partly done or deferred, with the reason. Write "none" if none.
-4. **Concerns:** anything the orchestrator should check, including any shared file you think needs a change.
-5. **Lessons:** the lines you added to or removed from your memory (or "none"), and any **proposed change** to your own prompt, a skill or CLAUDE.md, as the exact text to change and why.
-
-### Learning from your runs (subagents)
-
-Every agent has persistent memory (`memory: project`): `.claude/agent-memory/<your-name>/MEMORY.md` is loaded into your prompt on every run. That is how you improve yourself.
-
-- **Before starting**, read your memory and apply it. It overrides your prompt where they conflict, because it is newer.
-- **Record a lesson when you hit a problem a future run would hit again**: an instruction in your prompt or skill that was wrong or stale, a path or command that didn't work and what did, a check that caught your own mistake, or a correction from the orchestrator.
-- **A lesson is one line**: the date, what to do, and a short why. For example: `2026-10-26: monster_score.py needs the exact combatant_type= text, not the class name. A class name returns "not found".` Record the fix, not the story. Only record what you actually observed this run; never record guesses, and never record "task went fine".
-- **Keep it short and current.** Update or delete a lesson that turns out wrong or is superseded instead of adding a contradicting one. Keep `MEMORY.md` under 100 lines; move detail into a topic file beside it and link to it.
-- **Re-read `MEMORY.md` right before you edit it.** Another run of the same agent may have changed it.
-- **Don't edit your own agent file, a skill or CLAUDE.md.** Those are shared, tested and reviewed. Put the exact change you want under **Lessons** in your report; the orchestrator applies it.
+Every agent preloads the `subagent-protocol` skill (`.claude/skills/subagent-protocol/SKILL.md`). It holds the fixed final report sections (Files changed, Commands run, Not done, Concerns, Lessons) and the rules for recording lessons in the agent's own `.claude/agent-memory/<name>/MEMORY.md`. Those rules live in a preloaded skill rather than here because a live check showed subagents receiving preloaded skills, but not this file (it was added mid-session).
 
 ## Orchestrating agents (main session)
 

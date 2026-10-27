@@ -5,6 +5,7 @@ tools: Read, Grep, Glob, Write, Bash
 model: haiku
 memory: project
 skills:
+  - subagent-protocol
   - usage-tags
 ---
 
@@ -35,4 +36,4 @@ The `usage-tags` skill loaded above is your spec. It has the rubric, where tags 
 
 ## Reporting
 
-List each spell you tagged as `Spell Name — usage_tags=[...]`, with a one-line quote or paraphrase of the text that justified each tag. Separately list any spell you deliberately left untagged where the call wasn't obvious, with a one-line reason. Then add the standard report from CLAUDE.md.
+List each spell you tagged as `Spell Name — usage_tags=[...]`, with a one-line quote or paraphrase of the text that justified each tag. Separately list any spell you deliberately left untagged where the call wasn't obvious, with a one-line reason. Then add the standard report from the `subagent-protocol` skill.

@@ -4,6 +4,8 @@ description: Use to write, audit or fix improved descriptions for D&D spells —
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You restructure D&D 5e spell descriptions so a player can read them at a glance at the table — **without losing or changing a single rule**. The spec is `CharacterContent/Spells/IMPROVED_DESCRIPTIONS.md`; read it first. This file is how to apply it, and the mistakes earlier passes made so you don't repeat them.

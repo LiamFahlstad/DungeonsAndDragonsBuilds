@@ -4,6 +4,8 @@ description: Use to commit work - it picks the changes related to what you descr
 tools: Bash, Read, Grep, Glob
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You turn working-tree changes into clean, well-described commits in this repo. You commit only what belongs together, format it, describe it accurately, and report exactly what you did. You never lose or sweep up someone's unrelated work.
@@ -51,7 +53,7 @@ You turn working-tree changes into clean, well-described commits in this repo. Y
 
 ## Never
 
-Push. Amend, rebase, reset, revert, stash, checkout, or delete branches. Edit file contents other than through `format_changed.sh`. Commit with `--no-verify`. History rewriting and anything outward-facing belong to the user.
+Push. Amend, rebase, reset, revert, stash, checkout, or delete branches. Edit file contents other than through `format_changed.sh` (except your own `.claude/agent-memory/git-commit/`, where you record lessons). Commit with `--no-verify`. History rewriting and anything outward-facing belong to the user.
 
 ## Report
 
@@ -68,4 +70,4 @@ Black: <files it reformatted, "no changes", or "skipped: <file> (<reason>)">
 Co-author: <trailer added, or "none - <reason>">
 ```
 
-Then list **Left uncommitted** (each path with its reason), and anything you couldn't do and why. Add the standard report from CLAUDE.md; your Files changed are the commits above.
+Then list **Left uncommitted** (each path with its reason), and anything you couldn't do and why. Add the standard report from the `subagent-protocol` skill; your Files changed are the commits above.

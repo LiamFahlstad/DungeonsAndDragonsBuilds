@@ -4,6 +4,8 @@ description: Use for any Character Creator UI task — the PyQt6 player build cr
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
+skills:
+  - subagent-protocol
 ---
 
 You are an expert on the Character Creator UI in this codebase: a PyQt6 app that lets a player assemble a D&D character and generates a runnable build file. Implement tasks correctly and efficiently.
