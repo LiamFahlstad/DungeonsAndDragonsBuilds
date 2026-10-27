@@ -1,0 +1,191 @@
+{
+  "tags": {
+    "Action": "Combat/Actions",
+    "Condition": "Conditions",
+    "Area of Effect": "Areas-of-Effect",
+    "Hazard": "Exploration/Hazards",
+    "Attitude": "Social-Interaction"
+  },
+  "folders": {
+    "Terminology": {
+      "description": "General game and table terms: who and what is in the game, and how the rules are worded.",
+      "entries": [
+        "Adventure",
+        "Alignment",
+        "Ally",
+        "Campaign",
+        "Challenge Rating",
+        "Character Sheet",
+        "Creature",
+        "Creature Type",
+        "Encounter",
+        "Enemy",
+        "Experience Points",
+        "Monster",
+        "Nonplayer Character",
+        "Object",
+        "Per Day",
+        "Player Character",
+        "Round Down",
+        "Simultaneous Effects",
+        "Stat Block",
+        "Target"
+      ]
+    },
+    "D20-Tests": {
+      "description": "Ability checks, saving throws and the modifiers, proficiencies and rerolls that feed into them.",
+      "entries": [
+        "Ability Check",
+        "Ability Score and Modifier",
+        "Advantage",
+        "D20 Test",
+        "Difficulty Class",
+        "Disadvantage",
+        "Expertise",
+        "Heroic Inspiration",
+        "Passive Perception",
+        "Proficiency",
+        "Save",
+        "Saving Throw",
+        "Skill"
+      ]
+    },
+    "Combat": {
+      "description": "Fighting: the action economy, attacks, combat stats, damage and dying.",
+      "entries": [
+        "Surprise"
+      ]
+    },
+    "Combat/Actions": {
+      "description": "The kinds of action a turn offers, and every action tagged [Action].",
+      "entries": [
+        "Bonus Action",
+        "Reaction"
+      ]
+    },
+    "Combat/Attacks": {
+      "description": "Making attacks: attack rolls, weapons, cover, critical hits, grappling and opportunity attacks.",
+      "entries": [
+        "Attack Roll",
+        "Cover",
+        "Critical Hit",
+        "Grappling",
+        "Improvised Weapons",
+        "Opportunity Attacks",
+        "Reach",
+        "Unarmed Strike",
+        "Weapon",
+        "Weapon Attack"
+      ]
+    },
+    "Combat/Stats": {
+      "description": "A combatant's defensive numbers and turn order: Armor Class, Hit Points, Initiative and size.",
+      "entries": [
+        "Armor Class",
+        "Armor Training",
+        "Hit Point Dice",
+        "Hit Points",
+        "Initiative",
+        "Size",
+        "Temporary Hit Points"
+      ]
+    },
+    "Combat/Damage-and-Healing": {
+      "description": "Taking damage, damage types and defenses, healing, and dropping to 0 Hit Points.",
+      "entries": [
+        "Bloodied",
+        "Damage",
+        "Damage Roll",
+        "Damage Threshold",
+        "Damage Types",
+        "Dead",
+        "Death Saving Throw",
+        "Healing",
+        "Immunity",
+        "Knocking Out a Creature",
+        "Resistance",
+        "Stable",
+        "Vulnerability"
+      ]
+    },
+    "Conditions": {
+      "description": "The Condition rules and every condition tagged [Condition].",
+      "entries": []
+    },
+    "Areas-of-Effect": {
+      "description": "The Area of Effect rules and every shape tagged [Area of Effect].",
+      "entries": []
+    },
+    "Spells-and-Magic": {
+      "description": "Casting spells and other magical effects: cantrips, rituals, concentration, attunement, illusions, curses and transformations.",
+      "entries": [
+        "Attunement",
+        "Cantrip",
+        "Concentration",
+        "Curses",
+        "Illusions",
+        "Magical Effect",
+        "Possession",
+        "Ritual",
+        "Shape-Shifting",
+        "Spell",
+        "Spell Attack",
+        "Spellcasting Focus",
+        "Teleportation"
+      ]
+    },
+    "Movement": {
+      "description": "Speeds and the special ways of moving: climbing, swimming, flying, jumping, terrain and space.",
+      "entries": [
+        "Burrow Speed",
+        "Climb Speed",
+        "Climbing",
+        "Crawling",
+        "Difficult Terrain",
+        "Fly Speed",
+        "Flying",
+        "High Jump",
+        "Hover",
+        "Jumping",
+        "Long Jump",
+        "Occupied Space",
+        "Speed",
+        "Swim Speed",
+        "Swimming",
+        "Unoccupied Space"
+      ]
+    },
+    "Vision-and-Senses": {
+      "description": "Light, obscured areas and special senses.",
+      "entries": [
+        "Blindsight",
+        "Bright Light",
+        "Darkness",
+        "Darkvision",
+        "Dim Light",
+        "Heavily Obscured",
+        "Lightly Obscured",
+        "Telepathy",
+        "Tremorsense",
+        "Truesight"
+      ]
+    },
+    "Exploration": {
+      "description": "Resting, carrying gear, breaking things, and the hazards of the wider world.",
+      "entries": [
+        "Breaking Objects",
+        "Carrying Capacity",
+        "Long Rest",
+        "Short Rest"
+      ]
+    },
+    "Exploration/Hazards": {
+      "description": "The Hazard rules and every hazard tagged [Hazard].",
+      "entries": []
+    },
+    "Social-Interaction": {
+      "description": "The Attitude rules and every attitude tagged [Attitude].",
+      "entries": []
+    }
+  }
+}

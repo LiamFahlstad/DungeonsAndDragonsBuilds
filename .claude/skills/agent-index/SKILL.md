@@ -53,7 +53,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs` | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (9)
+## Skills (10)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
@@ -61,6 +61,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
 | [`review-house-rules`](../../skills/review-house-rules/SKILL.md) | `code-reviewer` | `check_diff.py` | Review a change against this repo's own rules that no test enforces - origin= is a category not a sourcebook, 2014 subclasses… |
+| [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | *main session* | `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
 | [`snapshot-diffs`](../../skills/snapshot-diffs/SKILL.md) | `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `code-reviewer`, `git-commit` | `snapshot_diff.py` | Read what actually changed when a golden snapshot test fails - a script that shows each build's changed stats by ability/skill… |
 | [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `code-reviewer`, `content-scraper`, `git-commit`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
