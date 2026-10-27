@@ -23,18 +23,18 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
-    BardLevel4,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import (
+    FighterLevel1,
+    FighterMulticlassBuilder,
+)
 from CharacterContent.Classes.SubClasses2024.BardValor import (
     BardValorCustomStarterClassArgs,
     BardValorLevel3,
 )
-from CharacterContent.Features.CharacterFeats import (
-    Backgrounds,
-    GeneralFeats,
-    OriginFeats,
-)
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
@@ -50,7 +50,6 @@ from Model.AbilityScores import PointBuyAbilityScores
 
 # Tactics:
 # - Prioritize control and support spells over weapon attacks when they can swing the encounter.
-# - Use Faerie Fire against groups to give the party advantage on attacks.
 # - Use Dissonant Whispers to damage and force an enemy to flee, potentially triggering allies' opportunity attacks.
 # - Use Healing Word to revive fallen allies without sacrificing your action.
 # - When no important spell is needed, attack with your rapier and True Strike.
@@ -66,7 +65,7 @@ def get_starter_class_builder():
                 Skill.PERSUASION,
             ],
         ),
-        base_class_level=4,
+        base_class_level=3,
         abilities=PointBuyAbilityScores(
             strength=8,
             dexterity=15,
@@ -147,22 +146,34 @@ def get_starter_class_builder():
                 3: BardLevel3(
                     spell=BardLevel2Spells.HOLD_PERSON,
                 ),
-                4: BardLevel4(
-                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.CHARISMA, 1),
-                            (Ability.CONSTITUTION, 1),
-                        ]
-                    ),
-                    cantrip=BardLevel0Spells.MINOR_ILLUSION,
-                    # Faerie Fire is already in her Tactics notes above.
-                    spell=BardLevel1Spells.FAERIE_FIRE,
-                ),
             },
             subclass_features_by_level={
                 3: BardValorLevel3(),
             },
+        ),
+    )
+
+
+def get_fighter_multiclass_builder():
+    # Character level 4 is a Fighter 1 dip (Bard 3 / Fighter 1). Valor's
+    # Martial Training already covers the multiclass Fighter proficiencies;
+    # the dip adds Second Wind, a Fighting Style and Weapon Mastery. No
+    # Fighter saving throws.
+    return FighterMulticlassBuilder(
+        fighter_level=1,
+        # No Fighter subclass until Fighter 3.
+        subclass="",
+        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: FighterLevel1(
+                    # Placeholder picks - confirm with the player.
+                    weapon_mastery_1=Weapons.Shortsword(),
+                    weapon_mastery_2=Weapons.Scimitar(),
+                    weapon_mastery_3=Weapons.Longbow(),
+                    fighting_style=FightingStyles.Dueling(),
+                ),
+            },
+            subclass_features_by_level={},
         ),
     )
 
@@ -183,6 +194,9 @@ class Y2024BardValorCloverCharacterBuilder(CharacterBuilder):
                     spell_casting_ability=Ability.CHARISMA,
                 ),
             ),
+            multiclass_builders=[
+                get_fighter_multiclass_builder(),
+            ],
         )
         # Stonehill Armory upgrade (gifted, not purchased), now that
         # Valor's Martial Training backs up medium armor/shields/martial

@@ -4,18 +4,18 @@ from CharacterContent.Classes.BaseClasses.ArtificerBase import (
     ArtificerLevel1,
     ArtificerLevel2,
     ArtificerLevel3,
-    ArtificerLevel4,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
+from CharacterContent.Classes.BaseClasses.FighterBase import (
+    FighterLevel1,
+    FighterMulticlassBuilder,
+)
 from CharacterContent.Classes.SubClasses2024.ArtificerCartographer import (
     ArtificerCartographerCustomStarterClassArgs,
     ArtificerCartographerLevel3,
 )
-from CharacterContent.Features.CharacterFeats import (
-    Backgrounds,
-    GeneralFeats,
-    OriginFeats,
-)
+from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
+from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Weapons
 from CharacterContent.Species import Dwarf
 from CharacterContent.Spells import SpellLists as SpellDefinitions
@@ -39,7 +39,7 @@ def get_starter_class_builder():
                 Skill.HISTORY,
             ],
         ),
-        base_class_level=4,
+        base_class_level=3,
         # Distribute 15, 14, 13, 12, 10, 8 among your abilities.
         abilities=PointBuyAbilityScores(
             strength=14,
@@ -95,15 +95,6 @@ def get_starter_class_builder():
                 3: ArtificerLevel3(
                     spell=SpellDefinitions.ArtificerLevel1Spells.LONGSTRIDER,
                 ),
-                4: ArtificerLevel4(
-                    # Placeholder ASI pick - confirm with the player (could be a feat instead).
-                    general_feat=GeneralFeats.AbilityScoreImprovement(
-                        [
-                            (Ability.INTELLIGENCE, 2),
-                        ]
-                    ),
-                    spell=SpellDefinitions.ArtificerLevel1Spells.DETECT_MAGIC,
-                ),
             },
             subclass_features_by_level={
                 3: ArtificerCartographerLevel3(),
@@ -120,12 +111,38 @@ def get_starter_class_builder():
     )
 
 
+def get_fighter_multiclass_builder():
+    # Character level 4 is a Fighter 1 dip (Artificer 3 / Fighter 1). As a
+    # multiclass Fighter he gains Light/Medium armor, Shields and Martial
+    # weapons (which covers Sulvesburg's Folly), but no saving throws.
+    return FighterMulticlassBuilder(
+        fighter_level=1,
+        # No Fighter subclass until Fighter 3.
+        subclass="",
+        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
+            base_class_features_by_level={
+                1: FighterLevel1(
+                    # Placeholder picks - confirm with the player.
+                    weapon_mastery_1=Weapons.SulvesburgsFolly(),
+                    weapon_mastery_2=Weapons.LightHammer(),
+                    weapon_mastery_3=Weapons.Dagger(),
+                    fighting_style=FightingStyles.Defense(),
+                ),
+            },
+            subclass_features_by_level={},
+        ),
+    )
+
+
 class Y2024ArtificerCartographerObmarStalskaggCharacterBuilder(CharacterBuilder):
     def __init__(self):
         super().__init__(
             name="Obmar Stålskägg",
             starter_class_builder=get_starter_class_builder(),
             species_builder=Dwarf.DwarfSpeciesBuilder(),
+            multiclass_builders=[
+                get_fighter_multiclass_builder(),
+            ],
         )
         # Stonehill Armory upgrade (gifted, not purchased): traded the
         # Studded Leather for a Breastplate (still medium, still

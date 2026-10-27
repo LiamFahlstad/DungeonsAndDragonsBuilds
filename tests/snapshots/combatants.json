@@ -15577,7 +15577,7 @@
    "CHA": 8,
    "CON": 14,
    "DEX": 12,
-   "INT": 18,
+   "INT": 16,
    "STR": 14,
    "WIS": 12
   },
@@ -15585,13 +15585,14 @@
    "CHA": -1,
    "CON": 4,
    "DEX": 1,
-   "INT": 6,
+   "INT": 5,
    "STR": 2,
    "WIS": 1
   },
-  "ac": "17 (with Shield) and 15 (without Shield)",
+  "ac": "18 (with Shield) and 16 (without Shield)",
   "class_levels": {
-   "Artificer": 4
+   "Artificer": 3,
+   "Fighter": 1
   },
   "conditions": [],
   "create_name": "Obmar St\u00e5lsk\u00e4gg",
@@ -15607,19 +15608,22 @@
    "Spellcasting",
    "Tinker's Magic",
    "Replicate Magic Item",
-   "Ability Score Improvement",
    "Tools of the Trade",
    "Cartographer Spells",
    "Adventurer's Atlas",
    "Mapping Magic",
+   "Fighter Multiclass Proficiencies",
+   "Second Wind",
+   "Fighting Style",
+   "Weapon Mastery",
    "Darkvision",
    "Dwarven Resilience",
    "Dwarven Toughness",
    "Stonecunning"
   ],
-  "hp": 35,
+  "hp": 36,
   "invocations": [],
-  "max_hp": 35,
+  "max_hp": 36,
   "name": "Obmar St\u00e5lsk\u00e4gg",
   "proficiency_bonus": 2,
   "size": "Medium",
@@ -15672,11 +15676,6 @@
     "Longstrider",
     1,
     "Intelligence"
-   ],
-   [
-    "Detect Magic",
-    1,
-    "Intelligence"
    ]
   ],
   "subclass": "Cartographer",
@@ -15686,7 +15685,7 @@
    "Unarmed Strike  1d20+4  dmg 1d1 +2",
    "Dagger  1d20+4  dmg 1d4 +2",
    "Light Hammer  1d20+4  dmg 1d4 +2",
-   "Sulvesburg's Folly  1d20+3  dmg 1d8 +3"
+   "Sulvesburg's Folly  1d20+5  dmg 1d8 +3"
   ]
  },
  "Y2024_Artificer_Reanimator_Dessie": {
@@ -16525,15 +16524,15 @@
  },
  "Y2024_Bard_Valor_Clover": {
   "Ability Scores": {
-   "CHA": 18,
-   "CON": 15,
+   "CHA": 17,
+   "CON": 14,
    "DEX": 16,
    "INT": 8,
    "STR": 8,
    "WIS": 10
   },
   "Saving Throws": {
-   "CHA": 6,
+   "CHA": 5,
    "CON": 2,
    "DEX": 5,
    "INT": -1,
@@ -16542,7 +16541,8 @@
   },
   "ac": "18 (with Shield) and 16 (without Shield)",
   "class_levels": {
-   "Bard": 4
+   "Bard": 3,
+   "Fighter": 1
   },
   "conditions": [],
   "create_name": "Clover",
@@ -16559,23 +16559,26 @@
    "Bardic Inspiration",
    "Jack of All Trades",
    "Expertise",
-   "Ability Score Improvement",
    "Martial Training",
+   "Fighter Multiclass Proficiencies",
+   "Second Wind",
+   "Fighting Style",
+   "Weapon Mastery",
    "Resourceful",
    "Skillful",
    "Versatile",
    "Magic Initiate (Wizard)"
   ],
-  "hp": 31,
+  "hp": 32,
   "invocations": [],
-  "max_hp": 31,
+  "max_hp": 32,
   "name": "Clover",
   "proficiency_bonus": 2,
   "size": "Medium",
   "speed": 35,
   "spell_slots": {
    "1": 4,
-   "2": 3
+   "2": 2
   },
   "spells_with_level": [
    [
@@ -16632,16 +16635,6 @@
     "Hold Person",
     2,
     "Charisma"
-   ],
-   [
-    "Faerie Fire",
-    1,
-    "Charisma"
-   ],
-   [
-    "Minor Illusion",
-    0,
-    "Charisma"
    ]
   ],
   "subclass": "College of Valor",
@@ -16649,8 +16642,8 @@
   "visibility_states": [],
   "weapons": [
    "Unarmed Strike  1d20+1  dmg 1d1 -1",
-   "Shortsword  1d20+5  dmg 1d6 +3",
-   "Scimitar  1d20+5  dmg 1d6 +3",
+   "Shortsword  1d20+5  dmg 1d6 +5",
+   "Scimitar  1d20+5  dmg 1d6 +5",
    "Longbow  1d20+5  dmg 1d8 +3"
   ]
  },

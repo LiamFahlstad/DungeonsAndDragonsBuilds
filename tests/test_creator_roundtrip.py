@@ -42,8 +42,10 @@ NOT_REPRODUCED = {
         "the Loader doesn't know RogueCustomStarterClassArgs (it guesses Fighter), "
         "and " + _MULTICLASS
     ),
-    "Y2024_Artificer_Cartographer_ObmarStalskagg": _ADVENTURING_GEAR,
-    "Y2024_Bard_Valor_Clover": _ADVENTURING_GEAR,
+    "Y2024_Artificer_Cartographer_ObmarStalskagg": (
+        _MULTICLASS + ", and " + _ADVENTURING_GEAR
+    ),
+    "Y2024_Bard_Valor_Clover": _MULTICLASS + ", and " + _ADVENTURING_GEAR,
     "Y2024_Bard_Valor_Thomas": _ADVENTURING_GEAR,
     "Y2024_Cleric_Light_GabrielGreybeard": _ADVENTURING_GEAR,
     "Y2024_Paladin_Devotion_Edmund": _ADVENTURING_GEAR,

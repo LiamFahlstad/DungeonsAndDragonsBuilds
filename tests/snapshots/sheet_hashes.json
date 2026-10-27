@@ -2065,13 +2065,13 @@
  },
  "Y2024_Artificer_Cartographer_ObmarStalskagg": {
   "full": {
-   "character.html": "a7eb49fd31e5121a7b224c54fb2f267342bfd9a9ac8df43ba38a5249a62ed613",
-   "features/level_01.html": "f65aeddfc1f691146ba40e0c3591e356940a4f8c21bf850f97f16bcd63a386a6",
-   "features/level_02.html": "f7822d0f85dbb301978409b17b137299f2d6c62da84f763d433fecb940304a15",
-   "features/level_03.html": "b652edae9ce64ac791539f3c6b6e23d1d8a735bc5d377154174b15512f870cb8",
-   "features/level_04.html": "7533fd7b435d591de80b2b045add8057fbbd257f4ff929f65a49ea45147e3248",
-   "full_character_sheet.html": "35152979a28357bed1eceb0c399586b9d33e32d1b9a2092f390a441edd6cd3c1",
-   "items.html": "4e3e07d61dd7d467398925bb16b17336343fba338fc2607ad9a6f65e35550c44"
+   "character.html": "958ab61cdc267b6c95c87dec5c5ddc94a84ac03c45535b25e9e8ac91a6698729",
+   "features/level_01.html": "474e7d87f9b075c73acad20c6fef62be9cc68463a5850e7589ffb24115c1168a",
+   "features/level_02.html": "6b79f75635bdb5608b52c3cb5b492effcc6165f70f2160450c53f6f682a4bad0",
+   "features/level_03.html": "625723ceac25b628af585c89868314fea829339b07cc4b1adb78dc527cbf2456",
+   "fighting_styles.html": "7f69a0987c3bacc8d12b883ec3c0418bc9a37d8b112910bc18306c2e4a7ac47d",
+   "full_character_sheet.html": "4dae0e994446dd4e29c9b9093dcf7e8e04536c6968dd3c60abbb4c90c533d024",
+   "items.html": "f207845d07534fe7311a854377d269b3025e3713ff17ae8630d3a3437162c3c7"
   }
  },
  "Y2024_Artificer_Reanimator_Dessie": {
@@ -2166,13 +2166,13 @@
  },
  "Y2024_Bard_Valor_Clover": {
   "full": {
-   "character.html": "394c16c132f85a146f3c610fbe17266419c1be87e3c87836d9762431572a4802",
-   "features/level_01.html": "260f074a128c81db73f22d7fcf966b9e93051c622405c8fb6415fc62b250f8f7",
-   "features/level_02.html": "4c82db1b6964226cfddb0a09dd7b27b35e488404542a0b54052f3cae0483906e",
-   "features/level_03.html": "ec827099c821133f3c89b89a4367fb1b2d91b9caeccb6e45939485d02a7e8f49",
-   "features/level_04.html": "788aefd44bcafc5ee3dc0dfbf985ca3e2fa52b38da62f71b9637075bf1ce24e5",
-   "full_character_sheet.html": "ebcf8c80d72f637e8b99183eaea1cafe9b67fabcbcd9bc11919917fe2df5b37e",
-   "items.html": "2480f8dd99e0800e7220cb04f559b88e7f7ae4606dff72e82c77b2092709999a"
+   "character.html": "9c81d21a089e13d5ef0b0f6d7248ae481428ad5f077643095d84f0db9d4ea165",
+   "features/level_01.html": "3cd4815999960b55aeeb2113a0bc8f19547a02dbbbff60fbe5b038098d16e6f1",
+   "features/level_02.html": "15f94607a70dbad34eba8eea71686bf2a3d0b12137d20ec7b5534a331c6e66b7",
+   "features/level_03.html": "5cb256b1521506aaeb8354ba6a3e109690ff12ae8402fa8bb6f2bf517b0c9987",
+   "fighting_styles.html": "3b8b14eb25c773507eb2d5fa445d3aa36cb0d375b8f8ea4f6753feb047843cf6",
+   "full_character_sheet.html": "353d110149b9e1ce52f4796ad0223fccfd87ad733135dc4e3daff01929acc16c",
+   "items.html": "e43c105e24c1037c736d82b6da2afa82d25d8545fef92c623188dad44dd6df44"
   }
  },
  "Y2024_Bard_Valor_Thomas": {
