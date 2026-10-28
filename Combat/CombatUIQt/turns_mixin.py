@@ -103,6 +103,18 @@ class TurnsMixin(CombatWindowState):
         roll_btn.clicked.connect(_roll)
         row_layout.addWidget(roll_btn)
 
+        if self._hp_not_set(char):
+            # Summons (Draconic Spirit, Beast of the Land, ...) have no HP in
+            # their stat block because the spell or feature sets it, so the GM
+            # enters it here before combat starts.
+            row_layout.addWidget(QLabel("HP:"))
+            hp_input = QLineEdit()
+            hp_input.setPlaceholderText(char.get("hp_formula") or "Max HP...")
+            hp_input.setFixedWidth(80)
+            hp_input.textChanged.connect(self._check_start_button)
+            row_layout.addWidget(hp_input)
+            self._initiative_hp_inputs[id(char)] = hp_input
+
         row_layout.addStretch()
         self._initiative_rows_layout.addWidget(row_widget)
 
@@ -156,6 +168,7 @@ class TurnsMixin(CombatWindowState):
         outer.addWidget(self._make_divider())
 
         self._initiative_inputs.clear()
+        self._initiative_hp_inputs.clear()
 
         self._initiative_rows_layout = QVBoxLayout()
         self._initiative_rows_layout.setSpacing(8)
@@ -198,8 +211,23 @@ class TurnsMixin(CombatWindowState):
         outer.addStretch()
         return container
 
+    @staticmethod
+    def _hp_not_set(char: dict) -> bool:
+        """True for a combatant whose stat block leaves HP to the spell or
+        feature that summons it (max HP 0), until the GM enters it."""
+        return char.get("max_hp", 1) <= 0
+
+    @staticmethod
+    def _positive_int(text: str) -> int | None:
+        try:
+            value = int(text)
+        except ValueError:
+            return None
+        return value if value > 0 else None
+
     def _check_start_button(self):
-        """Enable Start Combat only when all fields have a numeric value."""
+        """Enable Start Combat only when all fields have a numeric value and
+        every HP field a positive one."""
         all_filled = True
         for inp in self._initiative_inputs.values():
             try:
@@ -207,10 +235,22 @@ class TurnsMixin(CombatWindowState):
             except ValueError:
                 all_filled = False
                 break
+        for inp in self._initiative_hp_inputs.values():
+            if self._positive_int(inp.text()) is None:
+                all_filled = False
+                break
         self._start_combat_btn.setEnabled(all_filled)
 
     def _start_combat(self):
         """Parse initiatives, sort characters, and switch to combat phase."""
+        for char in self.characters:
+            hp_input = self._initiative_hp_inputs.get(id(char))
+            if hp_input is None:
+                continue
+            hp = self._positive_int(hp_input.text())
+            if hp is not None:
+                char["hp"] = char["max_hp"] = hp
+
         order_with_initiative = []
         for char in self.characters:
             inp = self._initiative_inputs[id(char)]

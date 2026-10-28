@@ -95,17 +95,6 @@ Typing -5 as damage adds 5 temp HP (temp_reduction = min(temp_hp, -5)); a negati
 **History**
 - 2026-10-28 rules-checker: found
 
-### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
-- **Status:** in-progress
-- **Area:** combat-simulator
-- **Where:** `Combat/Monsters/CR_0/monsters.py:DraconicSpirit`
-
-Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated stat block because the spell sets their HP. Since 03bcecb0 a monster at 0 HP without death_saves is dead, so they appear with the skull icon until the GM sets HP. Possible fix: prompt for HP when adding a 0-HP combatant, or treat max_hp == 0 as 'HP not set'. Don't hand-edit the generated monsters.py.
-
-**History**
-- 2026-10-28 main-session: found
-- 2026-10-28 claude-main: marked in-progress; Main session working on it
-
 ### DI-010 · UPDATE_SNAPSHOTS with -n auto can lose golden updates
 - **Status:** open
 - **Area:** test-bughunter
@@ -115,6 +104,7 @@ On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote on
 
 **History**
 - 2026-10-28 main-session: found
+- 2026-10-28 claude-main: Also seen in tests/snapshots/combat_ui_cards.json (via tests/_combat_ui.py check_golden): the races left truncated, invalid JSON, not just lost entries
 
 ### DI-012 · Epic boons can't grant spells, so boon spells are text only
 - **Status:** open
@@ -148,6 +138,18 @@ tag_report.py finds tags only as a literal usage_tags=[...] keyword in a call in
 
 ## Fixed
 
+### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
+- **Status:** fixed · 2026-10-28 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/Monsters/CR_0/monsters.py:DraconicSpirit`
+
+Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated stat block because the spell sets their HP. Since 03bcecb0 a monster at 0 HP without death_saves is dead, so they appear with the skull icon until the GM sets HP. Possible fix: prompt for HP when adding a 0-HP combatant, or treat max_hp == 0 as 'HP not set'. Don't hand-edit the generated monsters.py.
+
+**History**
+- 2026-10-28 main-session: found
+- 2026-10-28 claude-main: marked in-progress; Main session working on it
+- 2026-10-28 claude-main: marked fixed; Initiative screen now asks for HP for any combatant with max HP 0 (Start Combat stays disabled until it's a positive number) and _char_death_state treats max HP 0 as 'HP not set', not dead. Uncommitted in the working tree.
+
 ### DI-011 · Spell improved descriptions orphaned by the 2024 spell additions
 - **Status:** fixed · 2026-10-28 · ea8a58f5
 - **Area:** spell-improved-descriptions
@@ -162,4 +164,13 @@ a19d9d7e added 2024 versions of Catnap, Enervation, Negative Energy Flood and Po
 
 ## Won't fix
 
-_None._
+### DI-015 · UPDATE_SNAPSHOTS=1 under xdist corrupts shared golden JSON files
+- **Status:** wontfix
+- **Area:** tests
+- **Where:** `tests/_combat_ui.py:check_golden`
+
+run_tests.sh runs pytest with xdist workers; with UPDATE_SNAPSHOTS=1 each worker does load/modify/save on the same golden file (e.g. tests/snapshots/combat_ui_cards.json), so the writes race and leave truncated/garbled JSON (seen while fixing DI-009). Workaround: add -n0. Possible fix: lock the file in save(), or have run_tests.sh force -n0 when UPDATE_SNAPSHOTS is set.
+
+**History**
+- 2026-10-28 claude-main: found
+- 2026-10-28 claude-main: marked wontfix; Duplicate of DI-010

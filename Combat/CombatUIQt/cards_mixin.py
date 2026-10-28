@@ -163,8 +163,9 @@ class CardsMixin(CombatWindowState):
     def _char_death_state(char: dict) -> str:
         """Return 'alive', 'dying', 'stabilized', or 'dead'. Only player
         characters, and monsters/NPCs that opt in with `death_saves`, make
-        Death Saving Throws; any other combatant at 0 HP is dead."""
-        if char["hp"] > 0:
+        Death Saving Throws; any other combatant at 0 HP is dead. A summon
+        whose HP isn't set yet (max HP 0, see TurnsMixin._hp_not_set) isn't."""
+        if char["hp"] > 0 or char.get("max_hp", 1) <= 0:
             return "alive"
         if not (char.get("_is_player") or char.get("death_saves", False)):
             return "dead"

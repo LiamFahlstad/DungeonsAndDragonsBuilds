@@ -108,6 +108,9 @@ class CombatAppQt(
         # initiative input registry: maps id(char_dict) -> QLineEdit
         self._initiative_inputs: dict = {}
 
+        # HP inputs for combatants whose HP isn't set yet: maps id(char_dict) -> QLineEdit
+        self._initiative_hp_inputs: dict = {}
+
         # Initialize timers
         self._init_timers()
 

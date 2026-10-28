@@ -56,6 +56,7 @@ class CombatWindowState:
     _scenario_name: str | None
     _card_widgets: dict
     _initiative_inputs: dict
+    _initiative_hp_inputs: dict
     _window: QMainWindow
     _scroll_area: QScrollArea
     _cards_container: QWidget
@@ -142,6 +143,10 @@ class CombatWindowState:
 
     def _feature_condition_tooltip(self, char: dict, feature) -> str:
         raise NotImplementedError("FeaturesMixin._feature_condition_tooltip")
+
+    @staticmethod
+    def _hp_not_set(char: dict) -> bool:
+        raise NotImplementedError("TurnsMixin._hp_not_set")
 
     def _log_event(
         self,

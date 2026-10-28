@@ -651,8 +651,7 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "object_name": "cardName",
-      "style": "color: #555; font-weight: bold; font-size: 13px;",
-      "text": "\u2620 Draconic Spirit",
+      "text": "Draconic Spirit",
       "type": "QLabel"
      },
      {
@@ -755,7 +754,7 @@
    "properties": {
     "active": "false",
     "active-target": "false",
-    "dead": "true",
+    "dead": "false",
     "dying": "false",
     "selected": "false",
     "selected-active": "false",
@@ -1342,8 +1341,7 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "object_name": "cardName",
-      "style": "color: #555; font-weight: bold; font-size: 13px;",
-      "text": "\u2620 Draconic Spirit",
+      "text": "Draconic Spirit",
       "type": "QLabel"
      },
      {
@@ -1446,7 +1444,7 @@
    "properties": {
     "active": "false",
     "active-target": "false",
-    "dead": "true",
+    "dead": "false",
     "dying": "false",
     "selected": "false",
     "selected-active": "false",

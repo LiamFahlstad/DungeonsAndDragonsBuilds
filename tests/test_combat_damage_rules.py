@@ -8,6 +8,8 @@ CardsMixin._char_death_state). Expected values come from the rules glossary:
   saving throw" - no damage, no save.
 - Death Saving Throw: "A player character must make a Death Saving Throw";
   a monster dies at 0 HP unless it opts in with `death_saves=True`.
+  A summon whose stat block leaves HP to its spell (max HP 0) isn't dead;
+  the initiative screen asks for its HP.
 """
 
 from functools import cache
@@ -17,6 +19,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton
 
 from Combat.Combatants import Pirate
 from Combat.CombatUIQt import CombatAppQt
+from Combat.Monsters.CR_0.monsters import DraconicSpirit
 from Combat.Monsters.CR_1.monsters import Tiger
 from Core.Definitions import DamageType
 from Model.Creatures.Combatants import DamageTypeEntry
@@ -267,3 +270,32 @@ def test_resumed_log_without_the_key_defaults_to_no_death_saves():
     old = {"name": "Tiger", "hp": 0, "death_saves_fail": 0}
     assert CombatAppQt._char_death_state(old) == "dead"
     assert CombatAppQt._char_death_state({**old, "death_saves": True}) == "dying"
+
+
+def test_summon_without_hp_is_not_dead(tmp_path):
+    ui = make_ui(tmp_path, [DraconicSpirit()])
+    (spirit,) = ui.characters
+    assert (spirit["hp"], spirit["max_hp"]) == (0, 0)
+    assert ui._char_death_state(spirit) == "alive"
+
+
+def test_initiative_screen_asks_for_summon_hp(tmp_path):
+    ui = make_ui(tmp_path, [DraconicSpirit(), Tiger()])
+    spirit, tiger = ui.characters
+    assert list(ui._initiative_hp_inputs) == [id(spirit)]
+    ui._initiative_inputs[id(spirit)].setText("12")
+    ui._initiative_inputs[id(tiger)].setText("10")
+    assert not ui._start_combat_btn.isEnabled()
+    for bad in ("", "abc", "0", "-5"):
+        ui._initiative_hp_inputs[id(spirit)].setText(bad)
+        assert not ui._start_combat_btn.isEnabled(), bad
+    ui._initiative_hp_inputs[id(spirit)].setText("50")
+    assert ui._start_combat_btn.isEnabled()
+    ui._start_combat()
+    assert (spirit["hp"], spirit["max_hp"]) == (50, 50)
+    assert tiger["hp"] == tiger["max_hp"] == 30
+    ui._select_character(tiger)
+    ui._select_target_character(spirit)
+    _damage(ui, 60)
+    assert spirit["hp"] == 0
+    assert ui._char_death_state(spirit) == "dead"
