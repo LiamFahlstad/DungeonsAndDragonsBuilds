@@ -22,7 +22,8 @@ python Combat/Tools/monster_score.py -v "<monster>"   # homebrew monster balance
 
 ## Rules for every agent, including subagents
 
-- **Stay in scope.** Only edit the files your task names, plus your own `.claude/agent-memory/<your-name>/`. If a shared/core file needs a change, stop and say so in your report; do not edit it.
+- **Stay in scope.** Only edit the files your task names, plus your own `.claude/agent-memory/<your-name>/` and (through its script only) `Notes/discovered-issues.md`. If a shared/core file needs a change, stop and say so in your report; do not edit it.
+- **Log what you find but don't fix** in [Notes/discovered-issues.md](Notes/discovered-issues.md), the shared list of known bugs, with the `discovered-issues` skill's `issues.py` (never Edit/Write; the script locks the file so agents can write at once). Check `issues.py list --grep` before working on a bug, mark an entry `in-progress` when you start it and `fixed` when you fix it.
 - **Never revert or "fix" changes you didn't make.** Other agents may be working in the same tree at the same time.
 - **Scripted edits exclude `.claude/` and `.git/`.** `.claude/worktrees/` holds full checkouts of other agents' branches; a repo-wide `rglob` will silently edit them.
 - **Scratch scripts go in the scratchpad directory**, never the repo.
