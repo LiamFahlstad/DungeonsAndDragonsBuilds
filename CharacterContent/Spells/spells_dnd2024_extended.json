@@ -133,6 +133,12 @@
     ],
     "target": "self"
   },
+  "Aura of Evasion": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "ally"
+  },
   "Aura of Life": {
     "usage_tags": [
       "buff",
@@ -187,6 +193,12 @@
   "Barkskin": {
     "usage_tags": [
       "buff"
+    ],
+    "target": "ally"
+  },
+  "Battle Familiar": {
+    "usage_tags": [
+      "summon"
     ],
     "target": "ally"
   },
@@ -315,6 +327,13 @@
       "heal"
     ],
     "target": "area"
+  },
+  "Catnap": {
+    "usage_tags": [
+      "heal",
+      "utility"
+    ],
+    "target": "ally"
   },
   "Chain Lightning": {
     "usage_tags": [
@@ -484,6 +503,12 @@
       "control"
     ],
     "target": "self"
+  },
+  "Conjure Tools": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
   },
   "Conjure Volley": {
     "usage_tags": [
@@ -677,6 +702,12 @@
     ],
     "target": "creature"
   },
+  "Detonate": {
+    "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
   "Dimension Door": {
     "usage_tags": [
       "buff"
@@ -718,11 +749,25 @@
     ],
     "target": "creature"
   },
+  "Disruptive Tune": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
+  },
   "Dissonant Whispers": {
     "usage_tags": [
       "damage"
     ],
     "target": "enemy"
+  },
+  "Distorted Distance": {
+    "usage_tags": [
+      "buff",
+      "control",
+      "damage"
+    ],
+    "target": "area"
   },
   "Divination": {
     "usage_tags": [
@@ -803,6 +848,13 @@
     ],
     "target": "object"
   },
+  "Dueling Ground": {
+    "usage_tags": [
+      "buff",
+      "heal"
+    ],
+    "target": "ally"
+  },
   "Earthquake": {
     "usage_tags": [
       "control",
@@ -842,6 +894,13 @@
     ],
     "target": "self"
   },
+  "Enervation": {
+    "usage_tags": [
+      "damage",
+      "heal"
+    ],
+    "target": "enemy"
+  },
   "Enhance Ability": {
     "usage_tags": [
       "buff"
@@ -871,6 +930,13 @@
   "Enthrall": {
     "usage_tags": [
       "control"
+    ],
+    "target": "enemy"
+  },
+  "Entrancing Mirrors": {
+    "usage_tags": [
+      "control",
+      "damage"
     ],
     "target": "enemy"
   },
@@ -934,6 +1000,19 @@
       "buff"
     ],
     "target": "ally"
+  },
+  "Feign Interest": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "self"
+  },
+  "Festering Blast": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
   },
   "Find Familiar": {
     "usage_tags": [
@@ -1057,6 +1136,13 @@
     ],
     "target": "self"
   },
+  "Fractured Awareness": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
   "Freedom of Movement": {
     "usage_tags": [
       "buff",
@@ -1134,6 +1220,13 @@
       "damage"
     ],
     "target": "enemy"
+  },
+  "Grave Ground": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
   },
   "Grease": {
     "usage_tags": [
@@ -1261,6 +1354,12 @@
     ],
     "target": "enemy"
   },
+  "Hindsight": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "area"
+  },
   "Hold Monster": {
     "usage_tags": [
       "control"
@@ -1330,6 +1429,13 @@
     ],
     "target": "object"
   },
+  "Illusory Dragon": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "area"
+  },
   "Illusory Script": {
     "usage_tags": [
       "buff"
@@ -1349,6 +1455,12 @@
       "damage"
     ],
     "target": "area"
+  },
+  "Inflict Doubt": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
   },
   "Inflict Wounds": {
     "usage_tags": [
@@ -1372,6 +1484,19 @@
   "Invisibility": {
     "usage_tags": [
       "damage"
+    ],
+    "target": "ally"
+  },
+  "Invulnerability": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
+  "Iron Body": {
+    "usage_tags": [
+      "buff",
+      "heal"
     ],
     "target": "ally"
   },
@@ -1450,6 +1575,13 @@
   },
   "Lightning Bolt": {
     "usage_tags": [
+      "damage"
+    ],
+    "target": "area"
+  },
+  "Lightning Ring": {
+    "usage_tags": [
+      "control",
       "damage"
     ],
     "target": "area"
@@ -1650,6 +1782,12 @@
     ],
     "target": "enemy"
   },
+  "Moment of Prescience": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
+  },
   "Moonbeam": {
     "usage_tags": [
       "damage"
@@ -1694,6 +1832,14 @@
       "heal"
     ],
     "target": "area"
+  },
+  "Negative Energy Flood": {
+    "usage_tags": [
+      "damage",
+      "heal",
+      "summon"
+    ],
+    "target": "enemy"
   },
   "Nondetection": {
     "usage_tags": [
@@ -1759,6 +1905,12 @@
     ],
     "target": "ally"
   },
+  "Pinky Swear": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "creature"
+  },
   "Planar Ally": {
     "usage_tags": [
       "summon"
@@ -1812,6 +1964,13 @@
   },
   "Power Word Kill": {
     "usage_tags": [
+      "damage"
+    ],
+    "target": "enemy"
+  },
+  "Power Word Pain": {
+    "usage_tags": [
+      "control",
       "damage"
     ],
     "target": "enemy"
@@ -1892,6 +2051,12 @@
     ],
     "target": "object"
   },
+  "Quick Clothier": {
+    "usage_tags": [
+      "utility"
+    ],
+    "target": "object"
+  },
   "Raise Dead": {
     "usage_tags": [
       "heal"
@@ -1962,6 +2127,13 @@
   },
   "Revivify": {
     "usage_tags": [
+      "heal"
+    ],
+    "target": "ally"
+  },
+  "Reweave Fate": {
+    "usage_tags": [
+      "buff",
       "heal"
     ],
     "target": "ally"
@@ -2284,6 +2456,12 @@
     ],
     "target": "ally"
   },
+  "Summon Dinosaur": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "ally"
+  },
   "Summon Dragon": {
     "usage_tags": [
       "summon"
@@ -2303,6 +2481,12 @@
     "target": "ally"
   },
   "Summon Fiend": {
+    "usage_tags": [
+      "summon"
+    ],
+    "target": "ally"
+  },
+  "Summon Plant": {
     "usage_tags": [
       "summon"
     ],
@@ -2457,6 +2641,13 @@
     ],
     "target": "ally"
   },
+  "Transfix": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
   "Transport via Plants": {
     "usage_tags": [
       "utility"
@@ -2499,6 +2690,12 @@
     ],
     "target": "area"
   },
+  "Uncertain Footing": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "enemy"
+  },
   "Unseen Servant": {
     "usage_tags": [
       "utility"
@@ -2518,6 +2715,13 @@
     ],
     "target": "enemy"
   },
+  "Vision of Elapsing Eons": {
+    "usage_tags": [
+      "control",
+      "damage"
+    ],
+    "target": "enemy"
+  },
   "Vitriolic Sphere": {
     "usage_tags": [
       "damage"
@@ -2528,6 +2732,13 @@
     "usage_tags": [
       "damage",
       "heal"
+    ],
+    "target": "enemy"
+  },
+  "Wail of the Banshee": {
+    "usage_tags": [
+      "control",
+      "damage"
     ],
     "target": "enemy"
   },
@@ -2589,6 +2800,12 @@
       "buff"
     ],
     "target": "ally"
+  },
+  "Waves of Exhaustion": {
+    "usage_tags": [
+      "control"
+    ],
+    "target": "area"
   },
   "Web": {
     "usage_tags": [
@@ -2663,6 +2880,12 @@
       "heal"
     ],
     "target": "area"
+  },
+  "Zone of Amicability": {
+    "usage_tags": [
+      "buff"
+    ],
+    "target": "self"
   },
   "Zone of Truth": {
     "usage_tags": [
