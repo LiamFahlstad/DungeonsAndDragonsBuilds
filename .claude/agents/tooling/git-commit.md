@@ -50,15 +50,17 @@ Other sessions and subagents, other `git-commit` agents included, edit, stage, c
    - **Title:** imperative, capitalized, no trailing period, at most about 72 characters, and specific: "Floor damage_taken at 0 when undoing damage", not "Fix bug" or "Update files". The repo's own titles are short ("Ensure ctrl+z works").
    - **Body:** skip it for a trivial change. Otherwise write a short paragraph on *why*, then the what if it isn't obvious from the title. For multi-part changes use `- ` bullets. Wrap at about 72 columns. No "This commit…" filler, no emoji, no file-by-file inventory the diff already shows.
    - **Trailer:** if Claude made the changes, end with a blank line and then `Co-Authored-By: Claude <Model> <noreply@anthropic.com>` (e.g. `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`). If the user made them, omit it. In a mixed commit, add the trailer if Claude wrote a meaningful part.
-8. **Commit** on the current branch, main included, with a heredoc so the formatting survives:
+8. **Commit** on the current branch, main included. Write the message to a file in your scratchpad directory, then run the commit as a command of its own (not chained with other commands, and not as a heredoc: the auto-mode permission check has blocked `git commit -F - <<EOF` chained with other commands):
    ```bash
-   git commit -F - <<'EOF'
+   git commit -F <scratchpad>/commit_msg.txt
+   ```
+   where the file holds:
+   ```
    Title
 
    Body.
 
    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-   EOF
    ```
    If a pre-commit hook fails, never bypass it with `--no-verify`. If the hook only reformatted files, re-stage those same files and retry once. Otherwise stop and report the hook's output, leaving the changes staged.
 9. **Verify:** `git show --stat --format=fuller HEAD` for each commit, then `git status --porcelain` to confirm that what's left is exactly what you meant to leave.
