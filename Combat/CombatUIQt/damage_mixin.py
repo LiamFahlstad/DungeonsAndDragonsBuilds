@@ -37,7 +37,9 @@ class DamageMixin(CombatWindowState):
     def _damage_type_modifier(self, target: dict, dmg: int, damage_type: str):
         """Check target's damage immunities/resistances/vulnerabilities against
         damage_type and return (applied_dmg, outcome), outcome being one of
-        'immune', 'resisted', 'vulnerable', or None."""
+        'immune', 'resisted', 'vulnerable', 'resisted and vulnerable', or None.
+        Immunity zeroes the damage; otherwise Resistance halves it (rounded
+        down) and then Vulnerability doubles it, so both can apply."""
 
         def has_type(entries) -> bool:
             for entry in entries or []:
@@ -50,10 +52,18 @@ class DamageMixin(CombatWindowState):
 
         if has_type(target.get("damage_immunities")):
             return 0, "immune"
-        if has_type(target.get("damage_resistances")):
-            return dmg // 2, "resisted"
-        if has_type(target.get("damage_vulnerabilities")):
-            return dmg * 2, "vulnerable"
+        resisted = has_type(target.get("damage_resistances"))
+        vulnerable = has_type(target.get("damage_vulnerabilities"))
+        if resisted:
+            dmg //= 2
+        if vulnerable:
+            dmg *= 2
+        if resisted and vulnerable:
+            return dmg, "resisted and vulnerable"
+        if resisted:
+            return dmg, "resisted"
+        if vulnerable:
+            return dmg, "vulnerable"
         return dmg, None
 
     def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
@@ -116,7 +126,8 @@ class DamageMixin(CombatWindowState):
 
             temp_reduction = min(target["temp_hp"], dmg)
             target["temp_hp"] -= temp_reduction
-            target["hp"] -= dmg - temp_reduction
+            # Hit Points can't go below 0.
+            target["hp"] = max(0, target["hp"] - (dmg - temp_reduction))
 
             hp_delta = target["hp"] - pre_hp
             temp_delta = target["temp_hp"] - pre_temp
@@ -178,7 +189,9 @@ class DamageMixin(CombatWindowState):
             if "Concentrating" in target.get("conditions", []):
                 if knockout:
                     self._remove_condition_from(target, "Concentrating", source=target)
-                else:
+                elif dmg > 0:
+                    # Only damage taken forces a save (damage soaked by
+                    # temporary HP still counts); 0 after immunity doesn't.
                     self._concentration_check_dialog(target, dmg)
 
         self.damage_type_combo.setCurrentIndex(0)

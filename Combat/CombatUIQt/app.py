@@ -176,6 +176,7 @@ class CombatAppQt(
                     "legendary_resistances": combatant.legendary_resistances,
                     "lair_actions": combatant.lair_actions,
                     "mythic_actions": combatant.mythic_actions,
+                    "death_saves": combatant.death_saves,
                 }
             )
         self.characters.append(char)

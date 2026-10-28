@@ -161,9 +161,13 @@ class CardsMixin(CombatWindowState):
 
     @staticmethod
     def _char_death_state(char: dict) -> str:
-        """Return 'alive', 'dying', 'stabilized', or 'dead'."""
+        """Return 'alive', 'dying', 'stabilized', or 'dead'. Only player
+        characters, and monsters/NPCs that opt in with `death_saves`, make
+        Death Saving Throws; any other combatant at 0 HP is dead."""
         if char["hp"] > 0:
             return "alive"
+        if not (char.get("_is_player") or char.get("death_saves", False)):
+            return "dead"
         if char.get("death_saves_fail", 0) >= 3:
             return "dead"
         if char.get("death_saves_success", 0) >= 3:

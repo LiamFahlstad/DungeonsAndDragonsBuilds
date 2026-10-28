@@ -194,6 +194,9 @@ class ExtendedCombatantData(BasicCombatantData):
     mythic_actions: Optional[list[MonsterAbility]] = (
         None  # mythic actions (some monsters)
     )
+    # Makes Death Saving Throws at 0 HP like a player character (an important
+    # NPC); otherwise the combatant dies at 0 HP.
+    death_saves: bool = False
 
     def __attrs_post_init__(self):
         super().__attrs_post_init__()

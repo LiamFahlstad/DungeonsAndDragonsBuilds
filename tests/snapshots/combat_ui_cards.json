@@ -651,43 +651,9 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "object_name": "cardName",
-      "style": "color: #b070e0; font-weight: bold; font-size: 13px;",
-      "text": "\ud83d\udc80 Draconic Spirit",
+      "style": "color: #555; font-weight: bold; font-size: 13px;",
+      "text": "\u2620 Draconic Spirit",
       "type": "QLabel"
-     },
-     {
-      "cursor": "PointingHandCursor",
-      "mouse_transparent": true,
-      "style": "font-size: 11px; letter-spacing: 2px;",
-      "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cb\u25cb\u25cb</span>",
-      "text_format": "RichText",
-      "type": "QLabel"
-     },
-     {
-      "items": [
-       {
-        "cursor": "PointingHandCursor",
-        "fixed_height": 24,
-        "object_name": "deathFailBtn",
-        "text": "\u2717 Fail",
-        "type": "QPushButton"
-       },
-       {
-        "cursor": "PointingHandCursor",
-        "fixed_height": 24,
-        "object_name": "deathSuccessBtn",
-        "text": "\u2713 Save",
-        "type": "QPushButton"
-       }
-      ],
-      "margins": [
-       0,
-       0,
-       0,
-       0
-      ],
-      "spacing": 4,
-      "type": "QHBoxLayout"
      },
      {
       "items": [
@@ -789,8 +755,8 @@
    "properties": {
     "active": "false",
     "active-target": "false",
-    "dead": "false",
-    "dying": "true",
+    "dead": "true",
+    "dying": "false",
     "selected": "false",
     "selected-active": "false",
     "selected-active-target": "false",
@@ -829,28 +795,6 @@
     {
      "additive": true
     }
-   ],
-   [
-    "click",
-    "\u2717 Fail"
-   ],
-   [
-    "_apply_failed_death_save",
-    [
-     "Draconic Spirit"
-    ],
-    {}
-   ],
-   [
-    "click",
-    "\u2713 Save"
-   ],
-   [
-    "_apply_success_death_save",
-    [
-     "Draconic Spirit"
-    ],
-    {}
    ]
   ]
  },
@@ -1398,43 +1342,9 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "object_name": "cardName",
-      "style": "color: #b070e0; font-weight: bold; font-size: 13px;",
-      "text": "\ud83d\udc80 Draconic Spirit",
+      "style": "color: #555; font-weight: bold; font-size: 13px;",
+      "text": "\u2620 Draconic Spirit",
       "type": "QLabel"
-     },
-     {
-      "cursor": "PointingHandCursor",
-      "mouse_transparent": true,
-      "style": "font-size: 11px; letter-spacing: 2px;",
-      "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cb\u25cb\u25cb</span>",
-      "text_format": "RichText",
-      "type": "QLabel"
-     },
-     {
-      "items": [
-       {
-        "cursor": "PointingHandCursor",
-        "fixed_height": 24,
-        "object_name": "deathFailBtn",
-        "text": "\u2717 Fail",
-        "type": "QPushButton"
-       },
-       {
-        "cursor": "PointingHandCursor",
-        "fixed_height": 24,
-        "object_name": "deathSuccessBtn",
-        "text": "\u2713 Save",
-        "type": "QPushButton"
-       }
-      ],
-      "margins": [
-       0,
-       0,
-       0,
-       0
-      ],
-      "spacing": 4,
-      "type": "QHBoxLayout"
      },
      {
       "items": [
@@ -1536,8 +1446,8 @@
    "properties": {
     "active": "false",
     "active-target": "false",
-    "dead": "false",
-    "dying": "true",
+    "dead": "true",
+    "dying": "false",
     "selected": "false",
     "selected-active": "false",
     "selected-active-target": "false",
@@ -1576,28 +1486,6 @@
     {
      "additive": true
     }
-   ],
-   [
-    "click",
-    "\u2717 Fail"
-   ],
-   [
-    "_apply_failed_death_save",
-    [
-     "Draconic Spirit"
-    ],
-    {}
-   ],
-   [
-    "click",
-    "\u2713 Save"
-   ],
-   [
-    "_apply_success_death_save",
-    [
-     "Draconic Spirit"
-    ],
-    {}
    ]
   ]
  },
