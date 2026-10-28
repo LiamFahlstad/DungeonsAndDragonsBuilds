@@ -67,8 +67,9 @@ Other sessions and subagents, other `git-commit` agents included, edit, stage, c
 10. **Push, only if the caller named a target.** First `git fetch origin`, then check the target ref (`origin/main`, or `origin/<current branch>`):
     - **Fast-forward only.** `git merge-base --is-ancestor origin/<target> HEAD` must succeed. If the target has moved past you, stop and report the commits you're behind (`git log --oneline HEAD..origin/<target>`); don't pull, merge or rebase to make it fit.
     - **Publish only what you were asked to.** List `git log --oneline origin/<target>..HEAD`. If it holds commits besides the ones you just made, stop and report them instead of pushing, unless the caller said they may go too.
-    - **Main:** `git push origin HEAD:main`. **Current branch:** `git push origin HEAD`, or `git push -u origin <branch>` when it has no upstream yet. On `main` itself the two are the same push.
-    - Afterwards, `git fetch origin` and confirm `origin/<target>` is your HEAD. If the push is rejected or a hook fails, report the output; never retry with `--force`.
+    - **Push your own last commit's hash, not `HEAD`.** Other agents may commit on top of yours between your check and your push, and `HEAD` would publish their commits too. Right before pushing, re-run `git log --oneline origin/<target>..<hash>`.
+    - **Main:** `git push origin <hash>:main`. **Current branch:** `git push origin <hash>:<branch>`, adding `-u` when it has no upstream yet. On `main` itself the two are the same push.
+    - Afterwards, `git fetch origin` and confirm your hash is an ancestor of `origin/<target>` (`git merge-base --is-ancestor <hash> origin/<target>`). If the push is rejected or a hook fails, report the output; never retry with `--force`.
 
 ## Never
 
