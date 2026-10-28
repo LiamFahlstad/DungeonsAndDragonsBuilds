@@ -25,6 +25,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **H** | Focus Heal Field | Jump the cursor into the Heal amount field. |
 | **T** | Focus Temp HP Field | Jump the cursor into the Temp HP amount field. |
 | **Ctrl+N** | Add Combatant | Open the Add Combatant dialog (same as clicking the "+ Add Combatant" button). |
+| **Ctrl+O** | Load Encounter | Open the Load Encounter dialog (same as clicking the "Load Encounter..." button). |
 
 The arrow keys are plain aliases for N/P/Shift+N/Shift+P — left/right mirrors the unmodified source shortcuts, up/down mirrors the Shift target shortcuts. A focused text field keeps its own left/right cursor movement regardless (see Notes).
 

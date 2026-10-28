@@ -65,10 +65,10 @@ python RunItemSheets.py                  # every *_item_sheet() function in Buil
 |---|---|
 | `--scenario <name>` | Run an encounter. Its campaign is picked automatically |
 | `--campaign <name>` | `curse_of_the_lich` (default), `time_loop_pr` or `grims_castle`. Used when there's no `--scenario` |
-| `--player-log <path>` | Track the party across sessions: load HP, conditions and slots from the last session and append new actions |
-| `--log <path>` | Resume a scenario's encounter log (monsters' HP, conditions, round) |
+| `--player-log <path>` | Track the party across sessions. The player log lists where the party has been (encounters, adventures, rests); their HP, conditions and slots are replayed from those encounter logs since the last long rest |
+| `--log <path>` | Use this encounter log instead of the scenario's own `CombatLogs/<scenario>.json` (the default) |
 | `--absent NAME …` | Leave players out this session (case-insensitive partial match). Needs `--player-log` |
-| `--rest long\|short` | `long`: reset the log in place (with a timestamped backup that the statistics still count). `short`: open the healing window. Needs `--player-log` |
+| `--rest long\|short` | `long`: record a long rest in the player log (the party is fully rested from then on; statistics still count what came before). `short`: open the healing window. Needs `--player-log` |
 | `--difficulty` | Print the D&D 2024 encounter difficulty (allies' XP subtracted) and exit |
 
 With no flags it runs the default campaign's first scenario. With only `--player-log` it runs an out-of-combat "adventure" session.
@@ -84,9 +84,8 @@ With no flags it runs the default campaign's first scenario. With only `--player
 **Common recipes** (`PL=Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json`)
 
 ```bash
-python RunCombatSimulator.py --scenario ashelm_church                          # one-off, no tracking
-python RunCombatSimulator.py --scenario wrath_of_durmor --player-log $PL \
-       --log Combat/Campaigns/CurseOfTheLich/CombatLogs/wrath_of_durmor.json --absent Gabriel Obmar Thum
+python RunCombatSimulator.py --scenario ashelm_church                          # no party tracking
+python RunCombatSimulator.py --scenario wrath_of_durmor --player-log $PL --absent Gabriel Obmar Thum
 python RunCombatSimulator.py --scenario goblin_warband_ambush --player-log $PL --difficulty
 python RunCombatSimulator.py --player-log $PL                                  # adventure session
 python RunCombatSimulator.py --player-log $PL --rest long
@@ -96,9 +95,9 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 Exact per-campaign commands: [CurseOfTheLich](Combat/Campaigns/CurseOfTheLich/CHEATSHEET.md), [TimeLoopPR](Combat/Campaigns/TimeLoopPR/CHEATSHEET.md), [GrimsCastle](Combat/Campaigns/GrimsCastle/CHEATSHEET.md).
 To add a campaign, create `Combat/Campaigns/<Name>/` (`Players.py`, `Encounters.py`, `Campaign.py`) and register its `CAMPAIGN` in `Combat/Scenarios.py`.
 
-To start a new persistent encounter log, copy `CombatLogs/empty.json` to `CombatLogs/<scenario>.json` and pass it with `--log`.
+Every scenario keeps its fight in `CombatLogs/<scenario>.json`, created on first use. When that log holds a fight in progress, the window asks **Continue Encounter** (pick up where it stopped) or **Restart Encounter** (fresh monsters; the old log is kept as `<scenario>_restarted_<timestamp>.json`).
 
-**In the window:** **Roll for All** / **Start Combat** (initiative, with a dialog for ties) · **+ Add Combatant** · **Next Combatant / Next Round** · **Undo Last Action** · **Cast Spell** / **Enable Feature** on a card · damage with **Apply (Check Resist)** (concentration checks pop up automatically) · **Encounter Log** · **Player Log** · **Statistics** · **Rules** · a turn timer (Start / Pause / Reset).
+**In the window:** **Load Encounter...** (switch to another of the campaign's scenarios, showing how far each fight got, and continue or restart it; the party stays) · **End Encounter** (mark the fight ended in both logs; the party carries on in an adventure session) · **Short Rest...** / **Long Rest** (between fights, or before starting a loaded encounter) · **Roll for All** / **Start Combat** (initiative, with a dialog for ties) · **+ Add Combatant** · **Next Combatant / Next Round** · **Undo Last Action** · **Cast Spell** / **Enable Feature** on a card · damage with **Apply (Check Resist)** (concentration checks pop up automatically) · **Encounter Log** · **Player Log** · **Statistics** · **Rules** · a turn timer (Start / Pause / Reset).
 
 **In-app keyboard shortcuts** (full list: [KEYBOARD_SHORTCUTS.md](Combat/CombatUIQt/KEYBOARD_SHORTCUTS.md))
 
@@ -110,6 +109,7 @@ To start a new persistent encounter log, copy `CombatLogs/empty.json` to `Combat
 | `1`–`9` | Cast spell slot of that level | `C` / `Ctrl+C` | Add / remove Concentrating |
 | `Ctrl+Shift+C` | Clear target conditions | `Ctrl+N` | Add combatant |
 | `Ctrl+Z` | Undo | `Esc` | Clear selection |
+| `Ctrl+O` | Load encounter | | |
 
 **Statistics**
 
@@ -124,7 +124,7 @@ python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
 python -m Combat.Tools.create_player_statistics_report --log <log.json> --output report.html
 ```
 
-The report goes to `Combat/Campaigns/<C>/player_statistics_report.html`. Lifetime totals, in both the window and the report, cover every session: the player log plus the sessions each long rest archived to `main_party_long_rest_*.json`. A campaign without a player log yet (Grim's Castle) has nothing to report.
+The report goes to `Combat/Campaigns/<C>/player_statistics_report.html`. Lifetime totals, in both the window and the report, cover every session: every encounter log the player log lists, plus the sessions older long rests archived to `main_party_long_rest_*.json`. A campaign without a player log yet (Grim's Castle) has nothing to report.
 
 ---
 
@@ -204,8 +204,8 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 |---|---|
 | `Output/<build>/` | Character sheets (`character.html`, features/, spells, items) |
 | `Output/BuildGroups/`, `Output/ItemSheets/`, `Output/ClassHandouts/` | Party, item and handout pages |
-| `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json` plus `*_long_rest_<timestamp>.json` backups |
-| `Combat/Campaigns/<C>/CombatLogs/` | Encounter logs, one per scenario plus `encounter_log_*.json` (git-ignored) |
+| `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json`, where the party has been (plus older `*_long_rest_<timestamp>.json` archives) |
+| `Combat/Campaigns/<C>/CombatLogs/` | Encounter logs with every event: one per scenario, plus `adventure_*.json` / `short_rest_*.json` (committed; only `*_restarted_*` backups are git-ignored) |
 | `Combat/Campaigns/<C>/player_statistics_report.html` | The campaign's player statistics report (git-ignored, like all `*.html`) |
 | `Builds/GeneratedBuilds/` | Build files from the Character Creator GUI |
 | `Guides/` | Static player guides (`ChoosingYourSpecies.html`, `ChoosingYourSubclass.html`), open directly |
