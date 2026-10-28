@@ -1,0 +1,1359 @@
+{
+  "round_number": 5,
+  "combatants": [
+    {
+      "name": "Accursed Group of 3 (Accursed Group (3))",
+      "create_name": "Accursed Group (3)",
+      "combatant_type": "Accursed Group (3)",
+      "hp": -3,
+      "max_hp": 30,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 3,
+      "death_saves_success": 0,
+      "stats": {
+        "damage_dealt": 9,
+        "damage_taken": 33,
+        "healing_done": 0,
+        "healing_received": 0,
+        "temp_hp_granted": 0,
+        "temp_hp_received": 0,
+        "conditions_given": 0,
+        "conditions_received": 1,
+        "spell_slots_used": 0,
+        "spells_cast": 0,
+        "features_enabled": 0,
+        "knockouts": 0,
+        "times_downed": 1,
+        "deaths": 1,
+        "damage_dealt_acid": 0,
+        "damage_dealt_bludgeoning": 0,
+        "damage_dealt_cold": 0,
+        "damage_dealt_fire": 0,
+        "damage_dealt_force": 0,
+        "damage_dealt_lightning": 0,
+        "damage_dealt_necrotic": 0,
+        "damage_dealt_piercing": 0,
+        "damage_dealt_poison": 0,
+        "damage_dealt_psychic": 0,
+        "damage_dealt_radiant": 0,
+        "damage_dealt_slashing": 9,
+        "damage_dealt_thunder": 0,
+        "damage_taken_acid": 0,
+        "damage_taken_bludgeoning": 7,
+        "damage_taken_cold": 0,
+        "damage_taken_fire": 0,
+        "damage_taken_force": 0,
+        "damage_taken_lightning": 0,
+        "damage_taken_necrotic": 0,
+        "damage_taken_piercing": 10,
+        "damage_taken_poison": 0,
+        "damage_taken_psychic": 0,
+        "damage_taken_radiant": 0,
+        "damage_taken_slashing": 16,
+        "damage_taken_thunder": 0,
+        "spell_slots_used_1": 0,
+        "spell_slots_used_2": 0,
+        "spell_slots_used_3": 0,
+        "spell_slots_used_4": 0,
+        "spell_slots_used_5": 0,
+        "spell_slots_used_6": 0,
+        "spell_slots_used_7": 0,
+        "spell_slots_used_8": 0,
+        "spell_slots_used_9": 0,
+        "conditions_given_by_name": {},
+        "conditions_received_by_name": {
+          "Bloodied": 1
+        },
+        "spells_cast_by_name": {},
+        "features_enabled_by_name": {}
+      },
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 13,
+        "CON": 13,
+        "INT": 6,
+        "WIS": 11,
+        "CHA": 5
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "8d6+4",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Grappled",
+        "Restrained"
+      ],
+      "senses": "darkvision 60 ft., Passive Perception 10",
+      "languages": "Understands the languages its bodies knew in life but can't speak",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab."
+        },
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Grab",
+          "description": "reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12)."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Rush",
+          "description": "The Accursed Group of 3 can dash as a bonus action on it's first turn of combat."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "action_uses": {}
+    },
+    {
+      "name": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "create_name": "Accursed Group (5)",
+      "combatant_type": "Accursed Group (5)",
+      "hp": -9,
+      "max_hp": 50,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 3,
+      "death_saves_success": 0,
+      "stats": {
+        "damage_dealt": 15,
+        "damage_taken": 59,
+        "healing_done": 0,
+        "healing_received": 0,
+        "temp_hp_granted": 0,
+        "temp_hp_received": 0,
+        "conditions_given": 0,
+        "conditions_received": 1,
+        "spell_slots_used": 0,
+        "spells_cast": 0,
+        "features_enabled": 0,
+        "knockouts": 0,
+        "times_downed": 1,
+        "deaths": 1,
+        "damage_dealt_acid": 0,
+        "damage_dealt_bludgeoning": 15,
+        "damage_dealt_cold": 0,
+        "damage_dealt_fire": 0,
+        "damage_dealt_force": 0,
+        "damage_dealt_lightning": 0,
+        "damage_dealt_necrotic": 0,
+        "damage_dealt_piercing": 0,
+        "damage_dealt_poison": 0,
+        "damage_dealt_psychic": 0,
+        "damage_dealt_radiant": 0,
+        "damage_dealt_slashing": 0,
+        "damage_dealt_thunder": 0,
+        "damage_taken_acid": 0,
+        "damage_taken_bludgeoning": 16,
+        "damage_taken_cold": 0,
+        "damage_taken_fire": 0,
+        "damage_taken_force": 0,
+        "damage_taken_lightning": 0,
+        "damage_taken_necrotic": 0,
+        "damage_taken_piercing": 0,
+        "damage_taken_poison": 0,
+        "damage_taken_psychic": 0,
+        "damage_taken_radiant": 22,
+        "damage_taken_slashing": 21,
+        "damage_taken_thunder": 0,
+        "spell_slots_used_1": 0,
+        "spell_slots_used_2": 0,
+        "spell_slots_used_3": 0,
+        "spell_slots_used_4": 0,
+        "spell_slots_used_5": 0,
+        "spell_slots_used_6": 0,
+        "spell_slots_used_7": 0,
+        "spell_slots_used_8": 0,
+        "spell_slots_used_9": 0,
+        "conditions_given_by_name": {},
+        "conditions_received_by_name": {
+          "Bloodied": 1
+        },
+        "spells_cast_by_name": {},
+        "features_enabled_by_name": {}
+      },
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 15,
+        "DEX": 13,
+        "CON": 14,
+        "INT": 7,
+        "WIS": 11,
+        "CHA": 7
+      },
+      "Saving Throws": {},
+      "cr": "2",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "8d6+4",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Grappled",
+        "Restrained"
+      ],
+      "senses": "darkvision 60 ft., Passive Perception 10",
+      "languages": "Understands the languages its bodies knew in life but can't speak",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "50-41: 5 attacks, 40-31: 4 attacks, 30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab."
+        },
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Grab",
+          "description": "reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13)."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Rush",
+          "description": "The Accursed Group of 3 can dash as a bonus action on it's first turn of combat."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "action_uses": {}
+    },
+    {
+      "Ability Scores": {
+        "CHA": 7,
+        "CON": 14,
+        "DEX": 13,
+        "INT": 7,
+        "STR": 15,
+        "WIS": 11
+      },
+      "Saving Throws": {},
+      "ac": 14,
+      "ac_note": "",
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "50-41: 5 attacks, 40-31: 4 attacks, 30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab."
+        },
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Grab",
+          "description": "reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13)."
+        }
+      ],
+      "alignment": "Neutral Evil",
+      "bonus_actions": [
+        {
+          "name": "Rush",
+          "description": "The Accursed Group of 3 can dash as a bonus action on it's first turn of combat."
+        }
+      ],
+      "combatant_type": "Accursed Group (5)",
+      "condition_immunities": [
+        "Grappled",
+        "Restrained"
+      ],
+      "conditions": [],
+      "cr": "2",
+      "create_name": "Accursed Group (5)",
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_resistances": [],
+      "damage_vulnerabilities": [],
+      "death_saves_fail": 3,
+      "death_saves_success": 0,
+      "description": "",
+      "hp": 0,
+      "hp_formula": "8d6+4",
+      "lair_actions": [],
+      "languages": "Understands the languages its bodies knew in life but can't speak",
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "max_hp": 50,
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "mythic_actions": [],
+      "name": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "reactions": [],
+      "senses": "darkvision 60 ft., Passive Perception 10",
+      "size": "Large",
+      "skills": {},
+      "speed_climb_ft": null,
+      "speed_fly_ft": null,
+      "speed_ground_ft": 20,
+      "speed_special_rules": "",
+      "spell_slots": {},
+      "stats": {
+        "conditions_given": 1,
+        "conditions_given_by_name": {
+          "Bloodied": 1
+        },
+        "conditions_received": 1,
+        "conditions_received_by_name": {
+          "Bloodied": 1
+        },
+        "damage_dealt": 19,
+        "damage_dealt_acid": 0,
+        "damage_dealt_bludgeoning": 19,
+        "damage_dealt_cold": 0,
+        "damage_dealt_fire": 0,
+        "damage_dealt_force": 0,
+        "damage_dealt_lightning": 0,
+        "damage_dealt_necrotic": 0,
+        "damage_dealt_piercing": 0,
+        "damage_dealt_poison": 0,
+        "damage_dealt_psychic": 0,
+        "damage_dealt_radiant": 0,
+        "damage_dealt_slashing": 0,
+        "damage_dealt_thunder": 0,
+        "damage_taken": 50,
+        "damage_taken_acid": 0,
+        "damage_taken_bludgeoning": 0,
+        "damage_taken_cold": 0,
+        "damage_taken_fire": 21,
+        "damage_taken_force": 0,
+        "damage_taken_lightning": 0,
+        "damage_taken_necrotic": 0,
+        "damage_taken_piercing": 11,
+        "damage_taken_poison": 0,
+        "damage_taken_psychic": 1,
+        "damage_taken_radiant": 0,
+        "damage_taken_slashing": 17,
+        "damage_taken_thunder": 0,
+        "deaths": 1,
+        "features_enabled": 0,
+        "features_enabled_by_name": {},
+        "healing_done": 0,
+        "healing_received": 0,
+        "knockouts": 0,
+        "spell_slots_used": 0,
+        "spell_slots_used_1": 0,
+        "spell_slots_used_2": 0,
+        "spell_slots_used_3": 0,
+        "spell_slots_used_4": 0,
+        "spell_slots_used_5": 0,
+        "spell_slots_used_6": 0,
+        "spell_slots_used_7": 0,
+        "spell_slots_used_8": 0,
+        "spell_slots_used_9": 0,
+        "spells_cast": 0,
+        "spells_cast_by_name": {},
+        "temp_hp_granted": 0,
+        "temp_hp_received": 0,
+        "times_downed": 1
+      },
+      "temp_hp": 0,
+      "traits": [],
+      "visibility_states": [],
+      "action_uses": {}
+    },
+    {
+      "Ability Scores": {
+        "CHA": 7,
+        "CON": 14,
+        "DEX": 13,
+        "INT": 7,
+        "STR": 15,
+        "WIS": 11
+      },
+      "Saving Throws": {},
+      "ac": 14,
+      "ac_note": "",
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "50-41: 5 attacks, 40-31: 4 attacks, 30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab."
+        },
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Grab",
+          "description": "reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13)."
+        }
+      ],
+      "alignment": "Neutral Evil",
+      "bonus_actions": [
+        {
+          "name": "Rush",
+          "description": "The Accursed Group of 3 can dash as a bonus action on it's first turn of combat."
+        }
+      ],
+      "combatant_type": "Accursed Group (5)",
+      "condition_immunities": [
+        "Grappled",
+        "Restrained"
+      ],
+      "conditions": [],
+      "cr": "2",
+      "create_name": "Accursed Group (5)",
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_resistances": [],
+      "damage_vulnerabilities": [],
+      "death_saves_fail": 3,
+      "death_saves_success": 0,
+      "description": "",
+      "hp": 0,
+      "hp_formula": "8d6+4",
+      "lair_actions": [],
+      "languages": "Understands the languages its bodies knew in life but can't speak",
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "max_hp": 50,
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "mythic_actions": [],
+      "name": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "reactions": [],
+      "senses": "darkvision 60 ft., Passive Perception 10",
+      "size": "Large",
+      "skills": {},
+      "speed_climb_ft": null,
+      "speed_fly_ft": null,
+      "speed_ground_ft": 20,
+      "speed_special_rules": "",
+      "spell_slots": {},
+      "stats": {
+        "conditions_given": 0,
+        "conditions_given_by_name": {},
+        "conditions_received": 1,
+        "conditions_received_by_name": {
+          "Bloodied": 1
+        },
+        "damage_dealt": 20,
+        "damage_dealt_acid": 0,
+        "damage_dealt_bludgeoning": 20,
+        "damage_dealt_cold": 0,
+        "damage_dealt_fire": 0,
+        "damage_dealt_force": 0,
+        "damage_dealt_lightning": 0,
+        "damage_dealt_necrotic": 0,
+        "damage_dealt_piercing": 0,
+        "damage_dealt_poison": 0,
+        "damage_dealt_psychic": 0,
+        "damage_dealt_radiant": 0,
+        "damage_dealt_slashing": 0,
+        "damage_dealt_thunder": 0,
+        "damage_taken": 50,
+        "damage_taken_acid": 0,
+        "damage_taken_bludgeoning": 18,
+        "damage_taken_cold": 0,
+        "damage_taken_fire": 4,
+        "damage_taken_force": 0,
+        "damage_taken_lightning": 0,
+        "damage_taken_necrotic": 0,
+        "damage_taken_piercing": 12,
+        "damage_taken_poison": 0,
+        "damage_taken_psychic": 13,
+        "damage_taken_radiant": 3,
+        "damage_taken_slashing": 0,
+        "damage_taken_thunder": 0,
+        "deaths": 1,
+        "features_enabled": 0,
+        "features_enabled_by_name": {},
+        "healing_done": 0,
+        "healing_received": 0,
+        "knockouts": 1,
+        "spell_slots_used": 0,
+        "spell_slots_used_1": 0,
+        "spell_slots_used_2": 0,
+        "spell_slots_used_3": 0,
+        "spell_slots_used_4": 0,
+        "spell_slots_used_5": 0,
+        "spell_slots_used_6": 0,
+        "spell_slots_used_7": 0,
+        "spell_slots_used_8": 0,
+        "spell_slots_used_9": 0,
+        "spells_cast": 0,
+        "spells_cast_by_name": {},
+        "temp_hp_granted": 0,
+        "temp_hp_received": 0,
+        "times_downed": 1
+      },
+      "temp_hp": 0,
+      "traits": [],
+      "visibility_states": [],
+      "action_uses": {}
+    }
+  ],
+  "round_1": [
+    {
+      "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) takes 9 Slashing damage from Accursed Group of 3 (Accursed Group (3))",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -9,
+        "temp_delta": 0,
+        "dmg": 9,
+        "damage_type": "Slashing",
+        "source_name": "Accursed Group of 3 (Accursed Group (3))",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Piercing damage from Thum Schtock",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -7,
+        "temp_delta": 0,
+        "dmg": 7,
+        "damage_type": "Piercing",
+        "source_name": "Thum Schtock",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Thum Schtock's turn] Accursed Group of 3 (Accursed Group (3)) gains Bloodied from Thum Schtock",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Thum Schtock",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))"
+      }
+    },
+    {
+      "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] Edmund takes 7 Bludgeoning damage from (3) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Edmund",
+      "action": "damage",
+      "value": {
+        "hp_delta": -7,
+        "temp_delta": 0,
+        "dmg": 7,
+        "damage_type": "Bludgeoning",
+        "source_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Edmund",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Obmar Stålskägg's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Bludgeoning damage from Obmar Stålskägg",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -7,
+        "temp_delta": 0,
+        "dmg": 7,
+        "damage_type": "Bludgeoning",
+        "source_name": "Obmar Stålskägg",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Obmar Stålskägg's turn] Accursed Group of 3 (Accursed Group (3)) takes 3 Piercing damage from Obmar Stålskägg",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -3,
+        "temp_delta": 0,
+        "dmg": 3,
+        "damage_type": "Piercing",
+        "source_name": "Obmar Stålskägg",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Slashing damage from Clover",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -7,
+        "temp_delta": 0,
+        "dmg": 7,
+        "damage_type": "Slashing",
+        "source_name": "Clover",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))",
+        "knockout": true,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) loses Bloodied from Clover",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Clover",
+        "target_name": "Accursed Group of 3 (Accursed Group (3))"
+      }
+    },
+    {
+      "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) fails a death save (1/3 fails)",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) fails a death save (2/3 fails)",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Clover's turn] Accursed Group of 3 (Accursed Group (3)) has died (3 failed death saves)",
+      "character": "Accursed Group of 3 (Accursed Group (3))",
+      "action": "death_save_fail",
+      "value": true
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Gabriel Greybeard casts Bless",
+      "character": "Gabriel Greybeard",
+      "action": "cast_spell",
+      "value": {
+        "spell_name": "Bless"
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Gabriel Greybeard gains Concentrating",
+      "character": "Gabriel Greybeard",
+      "action": "add_condition",
+      "value": {
+        "condition": "Concentrating",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "Gabriel Greybeard"
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Gabriel Greybeard uses Action"
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Kivi Jätti gains Bless from Gabriel Greybeard",
+      "character": "Kivi Jätti",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "Kivi Jätti"
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Gabriel Greybeard gains Bless",
+      "character": "Gabriel Greybeard",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "Gabriel Greybeard"
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] Clover gains Bless from Gabriel Greybeard",
+      "character": "Clover",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Clover takes 13 Bludgeoning damage from (2) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Clover",
+      "action": "damage",
+      "value": {
+        "hp_delta": -13,
+        "temp_delta": 0,
+        "dmg": 13,
+        "damage_type": "Bludgeoning",
+        "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Clover",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Clover gains Bloodied from (2) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Clover",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 10 Slashing damage from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -10,
+        "temp_delta": 0,
+        "dmg": 10,
+        "damage_type": "Slashing",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Clover takes 15 Bludgeoning damage from (1) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Clover",
+      "action": "damage",
+      "value": {
+        "hp_delta": -15,
+        "temp_delta": 0,
+        "dmg": 15,
+        "damage_type": "Bludgeoning",
+        "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Clover",
+        "knockout": true,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Clover loses Bloodied from (1) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Clover",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Clover"
+      }
+    }
+  ],
+  "round_2": [
+    {
+      "text": "--- Round 2 ---"
+    },
+    {
+      "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] Edmund takes 8 Bludgeoning damage from (3) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Edmund",
+      "action": "damage",
+      "value": {
+        "hp_delta": -8,
+        "temp_delta": 0,
+        "dmg": 8,
+        "damage_type": "Bludgeoning",
+        "source_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Edmund",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] Clover is resurrected with 5 HP from Obmar Stålskägg",
+      "character": "Clover",
+      "action": "heal",
+      "value": {
+        "heal": 9,
+        "source_name": "Obmar Stålskägg",
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[Clover's turn] Clover gains Bloodied from Obmar Stålskägg",
+      "character": "Clover",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Obmar Stålskägg",
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[Clover's turn] Clover heals 4 HP from Obmar Stålskägg",
+      "character": "Clover",
+      "action": "heal",
+      "value": {
+        "heal": 4,
+        "source_name": "Obmar Stålskägg",
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 4 Fire damage from Gabriel Greybeard",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -4,
+        "temp_delta": 0,
+        "dmg": 4,
+        "damage_type": "Fire",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 4 Fire damage from Gabriel Greybeard",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -4,
+        "temp_delta": 0,
+        "dmg": 4,
+        "damage_type": "Fire",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 14 Radiant damage from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -14,
+        "temp_delta": 0,
+        "dmg": 14,
+        "damage_type": "Radiant",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 8 Radiant damage from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -8,
+        "temp_delta": 0,
+        "dmg": 8,
+        "damage_type": "Radiant",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))"
+      }
+    },
+    {
+      "text": "[Kivi Jätti's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 16 Bludgeoning damage from Kivi Jätti",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -16,
+        "temp_delta": 0,
+        "dmg": 16,
+        "damage_type": "Bludgeoning",
+        "source_name": "Kivi Jätti",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    }
+  ],
+  "round_3": [
+    {
+      "text": "--- Round 3 ---"
+    },
+    {
+      "text": "[(3) Accursed Group of 5 (Accursed Group (5))'s turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 11 Piercing damage from Thum Schtock",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -11,
+        "temp_delta": 0,
+        "dmg": 11,
+        "damage_type": "Piercing",
+        "source_name": "Thum Schtock",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 1 Psychic damage from Clover",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -1,
+        "temp_delta": 0,
+        "dmg": 1,
+        "damage_type": "Psychic",
+        "source_name": "Clover",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 6 Fire damage from Gabriel Greybeard",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -6,
+        "temp_delta": 0,
+        "dmg": 6,
+        "damage_type": "Fire",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 11 Fire damage from Gabriel Greybeard",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -11,
+        "temp_delta": 0,
+        "dmg": 11,
+        "damage_type": "Fire",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Gabriel Greybeard's turn] (2) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Gabriel Greybeard",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))"
+      }
+    },
+    {
+      "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Gabriel Greybeard takes 6 Bludgeoning damage from (2) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Gabriel Greybeard",
+      "action": "damage",
+      "value": {
+        "hp_delta": -6,
+        "temp_delta": 0,
+        "dmg": 6,
+        "damage_type": "Bludgeoning",
+        "source_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Gabriel Greybeard",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "Gabriel Greybeard's Bless ends (concentration lost)"
+    },
+    {
+      "text": "[(2) Accursed Group of 5 (Accursed Group (5))'s turn] Gabriel Greybeard loses concentration (DC 10, rolled 3)",
+      "character": "Gabriel Greybeard",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Concentrating",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "Gabriel Greybeard"
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 11 Slashing damage from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -11,
+        "temp_delta": 0,
+        "dmg": 11,
+        "damage_type": "Slashing",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": true,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Edmund",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Edmund",
+        "target_name": "(3) Accursed Group of 5 (Accursed Group (5))"
+      }
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Edmund's turn] (3) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+      "character": "(3) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": true
+    },
+    {
+      "text": "[Edmund's turn] Kivi Jätti loses Bless",
+      "character": "Kivi Jätti",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": null,
+        "target_name": "Kivi Jätti"
+      }
+    },
+    {
+      "text": "[Edmund's turn] Gabriel Greybeard loses Bless",
+      "character": "Gabriel Greybeard",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": null,
+        "target_name": "Gabriel Greybeard"
+      }
+    },
+    {
+      "text": "[Edmund's turn] Clover loses Bless",
+      "character": "Clover",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bless",
+        "source_name": null,
+        "target_name": "Clover"
+      }
+    },
+    {
+      "text": "[Edmund's turn] Edmund heals 15 HP from Edmund",
+      "character": "Edmund",
+      "action": "heal",
+      "value": {
+        "heal": 15,
+        "source_name": "Edmund",
+        "target_name": "Edmund"
+      }
+    },
+    {
+      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi Jätti",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -9,
+        "temp_delta": 0,
+        "dmg": 9,
+        "damage_type": "Bludgeoning",
+        "source_name": "Kivi Jätti",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    }
+  ],
+  "round_4": [
+    {
+      "text": "--- Round 4 ---"
+    },
+    {
+      "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) takes 17 Slashing damage from Thum Schtock",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -17,
+        "temp_delta": 0,
+        "dmg": 17,
+        "damage_type": "Slashing",
+        "source_name": "Thum Schtock",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": true,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Thum Schtock",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Thum Schtock",
+        "target_name": "(2) Accursed Group of 5 (Accursed Group (5))"
+      }
+    },
+    {
+      "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Thum Schtock's turn] (2) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+      "character": "(2) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": true
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 5 Psychic damage from Clover",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -5,
+        "temp_delta": 0,
+        "dmg": 5,
+        "damage_type": "Psychic",
+        "source_name": "Clover",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 3 Radiant damage from Gabriel Greybeard",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -3,
+        "temp_delta": 0,
+        "dmg": 3,
+        "damage_type": "Radiant",
+        "source_name": "Gabriel Greybeard",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[(1) Accursed Group of 5 (Accursed Group (5))'s turn] Thum Schtock takes 5 Bludgeoning damage from (1) Accursed Group of 5 (Accursed Group (5))",
+      "character": "Thum Schtock",
+      "action": "damage",
+      "value": {
+        "hp_delta": -5,
+        "temp_delta": 0,
+        "dmg": 5,
+        "damage_type": "Bludgeoning",
+        "source_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "target_name": "Thum Schtock",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi Jätti",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -9,
+        "temp_delta": 0,
+        "dmg": 9,
+        "damage_type": "Bludgeoning",
+        "source_name": "Kivi Jätti",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Kivi Jätti",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "add_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Kivi Jätti",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))"
+      }
+    }
+  ],
+  "round_5": [
+    {
+      "text": "--- Round 5 ---"
+    },
+    {
+      "text": "[Thum Schtock's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 12 Piercing damage from Thum Schtock",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -12,
+        "temp_delta": 0,
+        "dmg": 12,
+        "damage_type": "Piercing",
+        "source_name": "Thum Schtock",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": false,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 8 Psychic damage from Clover",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "damage",
+      "value": {
+        "hp_delta": -8,
+        "temp_delta": 0,
+        "dmg": 8,
+        "damage_type": "Psychic",
+        "source_name": "Clover",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
+        "knockout": true,
+        "outcome": null
+      }
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) loses Bloodied from Clover",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "remove_condition",
+      "value": {
+        "condition": "Bloodied",
+        "source_name": "Clover",
+        "target_name": "(1) Accursed Group of 5 (Accursed Group (5))"
+      }
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) fails a death save (1/3 fails)",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) fails a death save (2/3 fails)",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": false
+    },
+    {
+      "text": "[Clover's turn] (1) Accursed Group of 5 (Accursed Group (5)) has died (3 failed death saves)",
+      "character": "(1) Accursed Group of 5 (Accursed Group (5))",
+      "action": "death_save_fail",
+      "value": true
+    }
+  ],
+  "ended_at": "2026-09-08T20:30:23"
+}

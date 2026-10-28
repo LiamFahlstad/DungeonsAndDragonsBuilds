@@ -218,7 +218,8 @@ __marimo__/
 !.claude/settings.json
 !.claude/agent-memory/
 
-# Combat logs (each campaign's Combat/Campaigns/<Campaign>/CombatLogs folder)
-Combat/Campaigns/*/CombatLogs/*.json
+# Combat logs are committed: the party's state is replayed from them (see
+# Combat/PlayerLog.py). Only the backups a restart leaves behind are ignored.
+Combat/Campaigns/*/CombatLogs/*_restarted_*.json
 # Scratch output of CharacterContent/Features/FeatureGeneration/GenerateFeatures.py
 CharacterContent/Features/FeatureGeneration/Output.py
