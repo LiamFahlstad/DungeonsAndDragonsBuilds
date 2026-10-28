@@ -10,6 +10,12 @@ CardsMixin._char_death_state). Expected values come from the rules glossary:
   a monster dies at 0 HP unless it opts in with `death_saves=True`.
   A summon whose stat block leaves HP to its spell (max HP 0) isn't dead;
   the initiative screen asks for its HP.
+- Temporary Hit Points "aren't cumulative": the creature keeps the higher of
+  the old and new amounts.
+- Death Saving Throw: a creature that makes them is Unconscious at 0 HP, and
+  regaining any Hit Points ends that.
+- Dead: "A dead creature has no Hit Points and can't regain them unless it is
+  first revived by magic such as the Raise Dead or Revivify spell."
 """
 
 from functools import cache
@@ -100,6 +106,7 @@ def test_damage_past_zero_leaves_hp_at_zero(fight):
 
 def test_healing_from_zero_gives_the_heal_amount(fight):
     ui, _, tiger = fight
+    tiger["death_saves"] = True  # dying at 0 HP, not dead
     tiger["hp"] = 5
     _damage(ui, 15)
     _heal(ui, 8)
@@ -299,3 +306,161 @@ def test_initiative_screen_asks_for_summon_hp(tmp_path):
     _damage(ui, 60)
     assert spirit["hp"] == 0
     assert ui._char_death_state(spirit) == "dead"
+
+
+# ---------------------------------------------------------------------------
+# 5. Temporary Hit Points don't stack
+
+
+def _temp_hp(ui, amount: int):
+    ui.temp_hp_input.setText(str(amount))
+    ui._apply_temp_hp()
+
+
+@pytest.mark.parametrize("first, second, expected", [(5, 8, 8), (8, 5, 8)])
+def test_temp_hp_keep_the_higher_amount(fight, first, second, expected):
+    ui, _, tiger = fight
+    _temp_hp(ui, first)
+    _temp_hp(ui, second)
+    assert tiger["temp_hp"] == expected
+
+
+@pytest.mark.parametrize("first, second, expected", [(5, 8, 8), (8, 5, 8)])
+def test_replayed_temp_hp_keep_the_higher_amount(fight, first, second, expected):
+    ui, _, _ = fight
+    char = {"name": "Tiger", "hp": 30, "max_hp": 30, "temp_hp": 0, "conditions": []}
+    for amount in (first, second):
+        ui._apply_replay_action(char, "add_temp_hp", {"amount": amount})
+    assert char["temp_hp"] == expected
+
+
+# ---------------------------------------------------------------------------
+# 6. Unconscious at 0 HP
+
+
+@pytest.fixture
+def dying_tiger(fight):
+    """The fight's Tiger opted in to death saves, so 0 HP leaves it dying."""
+    ui, pirate, tiger = fight
+    tiger["death_saves"] = True
+    return ui, pirate, tiger
+
+
+def test_knocked_out_creature_is_unconscious(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _damage(ui, 40)
+    assert ui._char_death_state(tiger) == "dying"
+    assert "Unconscious" in tiger["conditions"]
+
+
+def test_knocked_out_concentrator_loses_concentration(dying_tiger):
+    ui, _, tiger = dying_tiger
+    tiger["conditions"].append("Concentrating")
+    _damage(ui, 40)
+    assert "Concentrating" not in tiger["conditions"]
+
+
+def test_creature_killed_at_zero_hp_isnt_marked_unconscious(fight):
+    ui, _, tiger = fight
+    _damage(ui, 40)
+    assert ui._char_death_state(tiger) == "dead"
+    assert "Unconscious" not in tiger["conditions"]
+
+
+def test_healing_ends_unconscious_and_resets_death_saves(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _damage(ui, 40)
+    ui._apply_failed_death_save(tiger)
+    ui._apply_success_death_save(tiger)
+    _heal(ui, 3)
+    assert tiger["hp"] == 3
+    assert "Unconscious" not in tiger["conditions"]
+    assert (tiger["death_saves_fail"], tiger["death_saves_success"]) == (0, 0)
+
+
+# ---------------------------------------------------------------------------
+# 7. Healing doesn't raise the dead; Revive does
+
+
+def _revive_buttons(ui, char) -> list[QPushButton]:
+    """The Revive buttons on char's card as shown in the grid."""
+    card = ui._card_widgets[id(char)]
+    return [b for b in card.findChildren(QPushButton) if b.objectName() == "reviveBtn"]
+
+
+def _kill(ui, tiger):
+    _damage(ui, 40)
+    for _ in range(3):
+        ui._apply_failed_death_save(tiger)
+    assert ui._char_death_state(tiger) == "dead"
+
+
+def test_healing_a_dead_creature_does_nothing(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _kill(ui, tiger)
+    _heal(ui, 10)
+    assert tiger["hp"] == 0
+    assert ui._char_death_state(tiger) == "dead"
+
+
+def test_only_a_dead_creature_has_a_revive_button(dying_tiger):
+    ui, _, tiger = dying_tiger
+    assert _revive_buttons(ui, tiger) == []
+    _damage(ui, 40)
+    assert _revive_buttons(ui, tiger) == []
+    for _ in range(3):
+        ui._apply_failed_death_save(tiger)
+    assert len(_revive_buttons(ui, tiger)) == 1
+
+
+def test_revive_brings_a_dead_creature_back_with_one_hp(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _kill(ui, tiger)
+    (button,) = _revive_buttons(ui, tiger)
+    button.click()
+    assert tiger["hp"] == 1
+    assert ui._char_death_state(tiger) == "alive"
+    assert (tiger["death_saves_fail"], tiger["death_saves_success"]) == (0, 0)
+    assert "Unconscious" not in tiger["conditions"]
+    assert "Bloodied" in tiger["conditions"]
+    assert _revive_buttons(ui, tiger) == []
+
+
+def test_revive_works_on_a_monster_without_death_saves(fight):
+    ui, _, tiger = fight
+    _damage(ui, 40)
+    ui._revive(tiger)
+    assert tiger["hp"] == 1
+
+
+def test_revive_does_nothing_to_a_living_creature(fight):
+    ui, _, tiger = fight
+    ui._revive(tiger)
+    assert tiger["hp"] == 30
+
+
+def test_revive_can_be_undone(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _kill(ui, tiger)
+    ui._revive(tiger)
+    ui._undo_last()
+    assert tiger["hp"] == 0
+    assert ui._char_death_state(tiger) == "dead"
+
+
+def test_replayed_revive_restores_one_hp():
+    dead = {
+        "name": "Hero",
+        "hp": 0,
+        "max_hp": 20,
+        "temp_hp": 0,
+        "conditions": ["Unconscious"],
+        "death_saves_fail": 3,
+        "death_saves_success": 1,
+        "_is_player": True,
+    }
+    app = CombatAppQt.__new__(CombatAppQt)
+    app._apply_replay_action(dead, "revive", {"hp": 1, "target_name": "Hero"})
+    assert dead["hp"] == 1
+    assert (dead["death_saves_fail"], dead["death_saves_success"]) == (0, 0)
+    assert CombatAppQt._char_death_state(dead) == "alive"

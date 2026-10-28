@@ -204,6 +204,9 @@ class CombatWindowState:
     def _remove_visibility(self):
         raise NotImplementedError("ConditionsMixin._remove_visibility")
 
+    def _revive(self, char: dict):
+        raise NotImplementedError("DamageMixin._revive")
+
     def _roll_d20(self):
         raise NotImplementedError("RollsMixin._roll_d20")
 

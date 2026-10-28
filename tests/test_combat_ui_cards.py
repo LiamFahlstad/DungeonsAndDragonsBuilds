@@ -30,6 +30,7 @@ _HANDLERS = (
     "_select_target_character",
     "_apply_failed_death_save",
     "_apply_success_death_save",
+    "_revive",
     "_show_condition_info",
     "_show_rule_popup",
     "_show_visibility_info",

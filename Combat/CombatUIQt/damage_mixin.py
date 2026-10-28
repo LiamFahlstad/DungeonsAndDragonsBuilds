@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action
+from Core.Definitions import Condition
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .styles import QSS
 from Core.Rules import ability_modifier
@@ -186,6 +187,11 @@ class DamageMixin(CombatWindowState):
 
             self._rebuild_card(target)
 
+            # A creature that makes Death Saving Throws falls Unconscious at
+            # 0 HP (which also ends its Concentration); any other one dies.
+            if knockout and self._char_death_state(target) != "dead":
+                self._add_condition_to(target, Condition.UNCONSCIOUS.value)
+
             if "Concentrating" in target.get("conditions", []):
                 if knockout:
                     self._remove_condition_from(target, "Concentrating", source=target)
@@ -353,7 +359,12 @@ class DamageMixin(CombatWindowState):
         source_name = source["name"] if source is not None else None
 
         for char in list(self.target_characters):
-            was_downed = self._char_death_state(char) != "alive"
+            death_state = self._char_death_state(char)
+            # A dead creature can't regain Hit Points until it is revived
+            # (the card's Revive button).
+            if death_state == "dead":
+                continue
+            was_downed = death_state != "alive"
 
             pre_hp = char["hp"]
             char["hp"] = min(char["hp"] + heal, char["max_hp"])
@@ -381,11 +392,13 @@ class DamageMixin(CombatWindowState):
                 char["death_saves_fail"] = 0
                 char["death_saves_success"] = 0
                 self._log_event(
-                    f"{char['name']} is resurrected with {char['hp']} HP{source_suffix}",
+                    f"{char['name']} regains consciousness with {char['hp']} HP{source_suffix}",
                     character=char["name"],
                     action=Action.HEAL,
                     value=heal_value,
                 )
+                # Regaining any Hit Points ends the Unconscious from 0 HP.
+                self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
             else:
                 self._log_event(
                     f"{char['name']} heals {actual_heal} HP{source_suffix}",
@@ -398,6 +411,26 @@ class DamageMixin(CombatWindowState):
             self._apply_bloodied_condition(char, source=source)
 
             self._rebuild_card(char)
+
+    @undoable
+    def _revive(self, char: dict):
+        """Bring a dead creature back with 1 HP, as Revivify or Raise Dead
+        would; healing alone can't (see _apply_heal)."""
+        if self._char_death_state(char) != "dead":
+            return
+        self._select_character(char)
+        char["hp"] = 1
+        char["death_saves_fail"] = 0
+        char["death_saves_success"] = 0
+        self._log_event(
+            f"{char['name']} is revived with 1 HP",
+            character=char["name"],
+            action=Action.REVIVE,
+            value={"hp": 1, "target_name": char["name"]},
+        )
+        self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
+        self._apply_bloodied_condition(char)
+        self._rebuild_card(char)
 
     @undoable
     def _apply_failed_death_save(self, char: dict):
@@ -466,7 +499,8 @@ class DamageMixin(CombatWindowState):
 
         for target in list(self.target_characters):
             old = target.get("temp_hp", 0)
-            target["temp_hp"] = old + amount
+            # Temporary Hit Points don't stack: keep the higher amount.
+            target["temp_hp"] = max(old, amount)
 
             target.setdefault("stats", _default_stats())
             target["stats"]["temp_hp_received"] = (
@@ -485,9 +519,17 @@ class DamageMixin(CombatWindowState):
             }
 
             source_suffix = f" from {source_name}" if source_name else ""
+            if amount > old:
+                text = f"{target['name']} gains {amount} temp HP{source_suffix}"
+                if old:
+                    text += f" (replacing {old})"
+            else:
+                text = (
+                    f"{target['name']} keeps {old} temp HP instead of "
+                    f"{amount}{source_suffix} (they don't stack)"
+                )
             self._log_event(
-                f"{target['name']} gains {amount} temp HP{source_suffix} "
-                f"(total {target['temp_hp']})",
+                text,
                 character=target["name"],
                 action=Action.ADD_TEMP_HP,
                 value=temp_hp_value,

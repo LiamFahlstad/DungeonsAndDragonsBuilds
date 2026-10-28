@@ -250,6 +250,16 @@ QPushButton#deathSuccessBtn:hover { background-color: #204d20; }
 QPushButton#deathSuccessBtn:pressed { background-color: #102a10; }
 QPushButton#deathSuccessBtn:disabled { color: #555; border-color: #333; background: #1a1a1a; }
 
+/* Revive a dead combatant */
+QPushButton#reviveBtn {
+    background-color: #2a2a1a;
+    border: 1px solid #c9a84c;
+    color: #c9a84c;
+    font-weight: bold;
+}
+QPushButton#reviveBtn:hover { background-color: #3a3a20; }
+QPushButton#reviveBtn:pressed { background-color: #1a1a10; }
+
 /* Scrollbar styling */
 QScrollBar:vertical {
     background: #1a1a2e;

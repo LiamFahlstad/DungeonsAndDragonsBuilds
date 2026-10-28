@@ -280,6 +280,14 @@ class CardsMixin(CombatWindowState):
             btn_row.addWidget(save_btn)
             layout.addLayout(btn_row)
 
+        if death_state == "dead":
+            revive_btn = QPushButton("✚ Revive")
+            revive_btn.setObjectName("reviveBtn")
+            revive_btn.setFixedHeight(24)
+            revive_btn.setToolTip("Bring back with 1 HP (Revivify, Raise Dead, ...)")
+            revive_btn.clicked.connect(lambda _=False, c=char: self._revive(c))
+            layout.addWidget(revive_btn)
+
     def _add_condition_badges(self, layout: QVBoxLayout, char: dict):
         conditions = char.get("conditions", [])
         if not conditions:

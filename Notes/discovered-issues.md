@@ -15,16 +15,6 @@ with Edit/Write. The `discovered-issues` skill has the rules for when to add, fi
 
 ## Open
 
-### DI-001 · Temporary Hit Points stack instead of keeping one amount
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:_apply_temp_hp`, `Combat/CombatUIQt/logging_mixin.py:338`
-
-_apply_temp_hp adds new temp HP to the old (5 + 8 = 13); replay does the same. 2024 rule (Playing the Game > Temporary Hit Points, not in the local glossary): temp HP don't stack; the creature keeps either the old or the new amount. Fix: max(old, amount) or a keep/replace prompt, in both places.
-
-**History**
-- 2026-10-28 rules-checker: found
-
 ### DI-002 · No instant death from massive damage
 - **Status:** open
 - **Area:** combat-simulator
@@ -45,32 +35,12 @@ A dying creature at 0 HP takes 3 damage: failures stay 0. A stable creature that
 **History**
 - 2026-10-28 rules-checker: found
 
-### DI-004 · Unconscious isn't applied at 0 HP
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`
-
-Knockout drops Concentration but never adds the Unconscious condition, so its effects (attackers have Advantage, hits within 5 ft are crits, auto-fail Str/Dex saves) aren't shown. Fix: add Unconscious at knockout for creatures that make death saves; remove it when HP is regained.
-
-**History**
-- 2026-10-28 rules-checker: found
-
 ### DI-005 · No buttons for a natural 20 or natural 1 on a death save
 - **Status:** open
 - **Area:** combat-simulator
 - **Where:** `Combat/CombatUIQt/cards_mixin.py`
 
 A 20 should restore 1 HP; a 1 counts as two failures. Today the GM clicks Fail twice or heals 1 by hand.
-
-**History**
-- 2026-10-28 rules-checker: found
-
-### DI-006 · Healing brings a dead creature back to life
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:_apply_heal`, `Combat/CombatUIQt/rest.py:172`
-
-Any heal on a creature with 3 failed death saves gives it HP, resets the saves and logs 'is resurrected'; healing a dying/stable creature is also logged as 'resurrected'. Dead.md: 'A dead creature has no Hit Points and can't regain them unless it is first revived by magic such as the Raise Dead or Revivify spell.' User deferred this on 2026-10-28 (may be a deliberate GM shortcut); confirm with them before fixing.
 
 **History**
 - 2026-10-28 rules-checker: found
@@ -209,6 +179,39 @@ concrete_subclasses doesn't skip names starting with '_', so _DragonmarkFeat, _G
 - 2026-10-28 code-reviewer: found
 
 ## Fixed
+
+### DI-001 · Temporary Hit Points stack instead of keeping one amount
+- **Status:** fixed · 2026-10-28 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:_apply_temp_hp`, `Combat/CombatUIQt/logging_mixin.py:338`
+
+_apply_temp_hp adds new temp HP to the old (5 + 8 = 13); replay does the same. 2024 rule (Playing the Game > Temporary Hit Points, not in the local glossary): temp HP don't stack; the creature keeps either the old or the new amount. Fix: max(old, amount) or a keep/replace prompt, in both places.
+
+**History**
+- 2026-10-28 rules-checker: found
+- 2026-10-28 main-session: marked fixed; Temp HP keep max(old, new) live and on replay; log line says which amount was kept (uncommitted)
+
+### DI-004 · Unconscious isn't applied at 0 HP
+- **Status:** fixed · 2026-10-28 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`
+
+Knockout drops Concentration but never adds the Unconscious condition, so its effects (attackers have Advantage, hits within 5 ft are crits, auto-fail Str/Dex saves) aren't shown. Fix: add Unconscious at knockout for creatures that make death saves; remove it when HP is regained.
+
+**History**
+- 2026-10-28 rules-checker: found
+- 2026-10-28 main-session: marked fixed; Knockout adds Unconscious to creatures that make death saves; healing/short rest/revive remove it (uncommitted)
+
+### DI-006 · Healing brings a dead creature back to life
+- **Status:** fixed · 2026-10-28 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:_apply_heal`, `Combat/CombatUIQt/rest.py:172`
+
+Any heal on a creature with 3 failed death saves gives it HP, resets the saves and logs 'is resurrected'; healing a dying/stable creature is also logged as 'resurrected'. Dead.md: 'A dead creature has no Hit Points and can't regain them unless it is first revived by magic such as the Raise Dead or Revivify spell.' User deferred this on 2026-10-28 (may be a deliberate GM shortcut); confirm with them before fixing.
+
+**History**
+- 2026-10-28 rules-checker: found
+- 2026-10-28 main-session: marked fixed; User confirmed: heal/short rest skip dead creatures; new Revive button on a dead card sets 1 HP (Action.REVIVE, replayed); downed heal logs 'regains consciousness' (uncommitted)
 
 ### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
 - **Status:** fixed · 2026-10-28 · uncommitted

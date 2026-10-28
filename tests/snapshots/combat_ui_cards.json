@@ -525,6 +525,14 @@
       "type": "QLabel"
      },
      {
+      "cursor": "PointingHandCursor",
+      "fixed_height": 24,
+      "object_name": "reviveBtn",
+      "text": "\u271a Revive",
+      "tooltip": "Bring back with 1 HP (Revivify, Raise Dead, ...)",
+      "type": "QPushButton"
+     },
+     {
       "items": [
        {
         "bar": [
@@ -637,6 +645,17 @@
     {
      "additive": true
     }
+   ],
+   [
+    "click",
+    "\u271a Revive"
+   ],
+   [
+    "_revive",
+    [
+     "Draven Curseblade"
+    ],
+    {}
    ]
   ]
  },

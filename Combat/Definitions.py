@@ -21,6 +21,7 @@ class Action(str, Enum):
     DEATH_SAVE_SUCCESS = "death_save_success"
     ADD_TEMP_HP = "add_temp_hp"
     REGAIN_FEATURE_CHARGE = "regain_feature_charge"
+    REVIVE = "revive"
 
 
 class CombatStatus(str, Enum):

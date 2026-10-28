@@ -335,7 +335,8 @@ class LoggingMixin(CombatWindowState):
         elif action == Action.ADD_TEMP_HP:
             if isinstance(value, dict):
                 amount = value["amount"]
-                char["temp_hp"] = char.get("temp_hp", 0) + amount
+                # Temporary Hit Points don't stack: keep the higher amount.
+                char["temp_hp"] = max(char.get("temp_hp", 0), amount)
                 char.setdefault("stats", _default_stats())
                 char["stats"]["temp_hp_received"] = (
                     char["stats"].get("temp_hp_received", 0) + amount
@@ -349,7 +350,12 @@ class LoggingMixin(CombatWindowState):
                             source["stats"].get("temp_hp_granted", 0) + amount
                         )
             else:
-                char["temp_hp"] = char.get("temp_hp", 0) + value
+                char["temp_hp"] = max(char.get("temp_hp", 0), value)
+        elif action == Action.REVIVE:
+            char["hp"] = value["hp"]
+            char["death_saves_fail"] = 0
+            char["death_saves_success"] = 0
+            self._apply_bloodied_condition(char)
         elif action == Action.ENABLE_FEATURE:
             feature_name = value["feature_name"] if isinstance(value, dict) else value
             char.setdefault("stats", _default_stats())

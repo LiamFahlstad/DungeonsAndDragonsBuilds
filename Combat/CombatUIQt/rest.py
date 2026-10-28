@@ -36,6 +36,7 @@ from PyQt6.QtWidgets import (
 from Combat.Campaign import Campaign
 from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
+from Core.Definitions import Condition
 
 from .app import CombatAppQt
 from .stats import LONG_REST_ARCHIVE_SUFFIX
@@ -169,7 +170,11 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
                 continue
             if heal <= 0:
                 continue
-            was_downed = app._char_death_state(char) != "alive"
+            death_state = app._char_death_state(char)
+            # A dead creature can't regain Hit Points until it is revived.
+            if death_state == "dead":
+                continue
+            was_downed = death_state != "alive"
             pre_hp = char["hp"]
             char["hp"] = min(char["hp"] + heal, char["max_hp"])
             actual_heal = char["hp"] - pre_hp
@@ -187,6 +192,7 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
             if was_downed and char["hp"] > 0:
                 char["death_saves_fail"] = 0
                 char["death_saves_success"] = 0
+                app._remove_condition_from(char, Condition.UNCONSCIOUS.value)
             app._apply_bloodied_condition(char)
             hp_labels[char["name"]].setText(f"{char['hp']}/{char['max_hp']} HP")
             heal_inputs[char["name"]].clear()
