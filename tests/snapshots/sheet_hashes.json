@@ -2191,13 +2191,13 @@
  },
  "Y2024_Bard_Valor_Clover": {
   "full": {
-   "character.html": "9c81d21a089e13d5ef0b0f6d7248ae481428ad5f077643095d84f0db9d4ea165",
-   "features/level_01.html": "3cd4815999960b55aeeb2113a0bc8f19547a02dbbbff60fbe5b038098d16e6f1",
-   "features/level_02.html": "15f94607a70dbad34eba8eea71686bf2a3d0b12137d20ec7b5534a331c6e66b7",
-   "features/level_03.html": "5cb256b1521506aaeb8354ba6a3e109690ff12ae8402fa8bb6f2bf517b0c9987",
-   "fighting_styles.html": "3b8b14eb25c773507eb2d5fa445d3aa36cb0d375b8f8ea4f6753feb047843cf6",
-   "full_character_sheet.html": "dc9d311014a787255e1a9a0fb620343bb4f6e7ad5c2fc7387d3d1ccbf0dce193",
-   "items.html": "8a54548324880d9dc30188bf8b37a04ec0854baa6ac8e44a90ccb18a16d2960b"
+   "character.html": "a8ee0a1736072c0f15e268411b5744ee1c15b990118156403dd6e21ea645ca16",
+   "features/level_01.html": "260f074a128c81db73f22d7fcf966b9e93051c622405c8fb6415fc62b250f8f7",
+   "features/level_02.html": "4c82db1b6964226cfddb0a09dd7b27b35e488404542a0b54052f3cae0483906e",
+   "features/level_03.html": "ec827099c821133f3c89b89a4367fb1b2d91b9caeccb6e45939485d02a7e8f49",
+   "features/level_04.html": "6528cc950e8da79d239739a7b28346104987602553554f335e4b4a043c615a2d",
+   "full_character_sheet.html": "db96b1b9291d2f788fcbfd665a48e1725985ca1facc923c16bf44c142756e025",
+   "items.html": "a8d47e041c580b3d110b79d1af44f7a8d193e61da8261327cc31ab7e146e8eea"
   }
  },
  "Y2024_Bard_Valor_Thomas": {
@@ -2299,11 +2299,11 @@
  "Y2024_Monk_Elements_KiviJatti": {
   "full": {
    "character.html": "ef24c342d508e3dec9da73f58695133878df95092e88c23409ff31d3d5b055be",
-   "features/level_01.html": "dbc45c2f1ce275629a13a4547e2a18bac0ecd267d65ea702948b35f9835e258c",
+   "features/level_01.html": "1a5c1f8662357b3a51b733a7c0e48de980a8a6968b09a2d039332978476d8ec1",
    "features/level_02.html": "8db06a2717f5505c75e34dfa7c577082e6a325241e7242d42fc42e067b732f9c",
    "features/level_03.html": "5edb4c1f205e1a519f4edee0b7cee4ab6fc90c0a327a2c153571350ebc40309d",
    "features/level_04.html": "b7c5e75d51d4850ac43c09ecdc0c9bfde1baef41caaaa55a96012fb626d0185e",
-   "full_character_sheet.html": "aa0289b3ebc8c3ab5dc895399f0d3bb0afc0e6a0a9c9dd99046408fe1e2f6921",
+   "full_character_sheet.html": "53ad7811b74cddf47b40d2ebb06748197c186733c897f6ae398a4c08d6101f3f",
    "items.html": "747e6f7aef3b07547dc43620e692853cb318641f204ebd800e494eec4020b93b"
   }
  },

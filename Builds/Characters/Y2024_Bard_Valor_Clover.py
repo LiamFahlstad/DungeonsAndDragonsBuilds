@@ -2,7 +2,7 @@
 Build for Klover's Bard (level 4, College of Valor), based on the
 2026-08-18 planning chat with the player.
 
-Two picks weren't answered in that chat and are assumed here (flagged
+A few picks weren't answered in that chat and are assumed here (flagged
 inline) - confirm with Klover's player and adjust if wrong:
 - Background ability bonus/skills/tool: the chat gave rich personality
   detail (raised in a rural commune, moved to Stonehill 3 years ago, overly
@@ -15,6 +15,9 @@ inline) - confirm with Klover's player and adjust if wrong:
 - Level 2 prepared spell: the chat left this blank, and the old pick (Charm
   Person) is now taken at level 1 instead, so Dissonant Whispers is used as
   a placeholder.
+- Level 4 cantrip and prepared spell: she asked for War Caster as the
+  level 4 feat but named no spells, so Minor Illusion and Faerie Fire are
+  placeholders.
 """
 
 from Builds.CharacterBuilder import CharacterBuilder
@@ -23,18 +26,18 @@ from CharacterContent.Classes.BaseClasses.BardBase import (
     BardLevel1,
     BardLevel2,
     BardLevel3,
+    BardLevel4,
 )
 from CharacterContent.Classes.BaseClasses.ClassBuilder import StarterClassBuilder
-from CharacterContent.Classes.BaseClasses.FighterBase import (
-    FighterLevel1,
-    FighterMulticlassBuilder,
-)
 from CharacterContent.Classes.SubClasses2024.BardValor import (
     BardValorCustomStarterClassArgs,
     BardValorLevel3,
 )
-from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
-from CharacterContent.Features.CombatFeatures import FightingStyles
+from CharacterContent.Features.CharacterFeats import (
+    Backgrounds,
+    GeneralFeats,
+    OriginFeats,
+)
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
 from CharacterContent.Spells.SpellLists import (
@@ -50,6 +53,7 @@ from Model.AbilityScores import PointBuyAbilityScores
 
 # Tactics:
 # - Prioritize control and support spells over weapon attacks when they can swing the encounter.
+# - Use Faerie Fire against groups to give the party advantage on attacks.
 # - Use Dissonant Whispers to damage and force an enemy to flee, potentially triggering allies' opportunity attacks.
 # - Use Healing Word to revive fallen allies without sacrificing your action.
 # - When no important spell is needed, attack with your rapier and True Strike.
@@ -65,7 +69,7 @@ def get_starter_class_builder():
                 Skill.PERSUASION,
             ],
         ),
-        base_class_level=3,
+        base_class_level=4,
         abilities=PointBuyAbilityScores(
             strength=8,
             dexterity=15,
@@ -146,34 +150,20 @@ def get_starter_class_builder():
                 3: BardLevel3(
                     spell=BardLevel2Spells.HOLD_PERSON,
                 ),
+                4: BardLevel4(
+                    general_feat=GeneralFeats.WarCaster(
+                        character_level=4,
+                        ability=Ability.CHARISMA,
+                    ),
+                    # Placeholder cantrip/spell picks - confirm with the player.
+                    cantrip=BardLevel0Spells.MINOR_ILLUSION,
+                    # Faerie Fire is already in her Tactics notes above.
+                    spell=BardLevel1Spells.FAERIE_FIRE,
+                ),
             },
             subclass_features_by_level={
                 3: BardValorLevel3(),
             },
-        ),
-    )
-
-
-def get_fighter_multiclass_builder():
-    # Character level 4 is a Fighter 1 dip (Bard 3 / Fighter 1). Valor's
-    # Martial Training already covers the multiclass Fighter proficiencies;
-    # the dip adds Second Wind, a Fighting Style and Weapon Mastery. No
-    # Fighter saving throws.
-    return FighterMulticlassBuilder(
-        fighter_level=1,
-        # No Fighter subclass until Fighter 3.
-        subclass="",
-        fighter_level_features=ClassBuilder.BaseClassLevelFeatures(
-            base_class_features_by_level={
-                1: FighterLevel1(
-                    # Placeholder picks - confirm with the player.
-                    weapon_mastery_1=Weapons.Shortsword(),
-                    weapon_mastery_2=Weapons.Scimitar(),
-                    weapon_mastery_3=Weapons.Longbow(),
-                    fighting_style=FightingStyles.Dueling(),
-                ),
-            },
-            subclass_features_by_level={},
         ),
     )
 
@@ -194,9 +184,6 @@ class Y2024BardValorCloverCharacterBuilder(CharacterBuilder):
                     spell_casting_ability=Ability.CHARISMA,
                 ),
             ),
-            multiclass_builders=[
-                get_fighter_multiclass_builder(),
-            ],
         )
         # Stonehill Armory upgrade (gifted, not purchased), now that
         # Valor's Martial Training backs up medium armor/shields/martial

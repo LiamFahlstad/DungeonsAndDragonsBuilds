@@ -16593,7 +16593,7 @@
  },
  "Y2024_Bard_Valor_Clover": {
   "Ability Scores": {
-   "CHA": 17,
+   "CHA": 18,
    "CON": 14,
    "DEX": 16,
    "INT": 8,
@@ -16601,7 +16601,7 @@
    "WIS": 10
   },
   "Saving Throws": {
-   "CHA": 5,
+   "CHA": 6,
    "CON": 2,
    "DEX": 5,
    "INT": -1,
@@ -16610,8 +16610,7 @@
   },
   "ac": "18 (with Shield) and 16 (without Shield)",
   "class_levels": {
-   "Bard": 3,
-   "Fighter": 1
+   "Bard": 4
   },
   "conditions": [],
   "create_name": "Clover",
@@ -16628,26 +16627,23 @@
    "Bardic Inspiration",
    "Jack of All Trades",
    "Expertise",
+   "War Caster",
    "Martial Training",
-   "Fighter Multiclass Proficiencies",
-   "Second Wind",
-   "Fighting Style",
-   "Weapon Mastery",
    "Resourceful",
    "Skillful",
    "Versatile",
    "Magic Initiate (Wizard)"
   ],
-  "hp": 32,
+  "hp": 31,
   "invocations": [],
-  "max_hp": 32,
+  "max_hp": 31,
   "name": "Clover",
   "proficiency_bonus": 2,
   "size": "Medium",
   "speed": 35,
   "spell_slots": {
    "1": 4,
-   "2": 2
+   "2": 3
   },
   "spells_with_level": [
    [
@@ -16704,6 +16700,16 @@
     "Hold Person",
     2,
     "Charisma"
+   ],
+   [
+    "Faerie Fire",
+    1,
+    "Charisma"
+   ],
+   [
+    "Minor Illusion",
+    0,
+    "Charisma"
    ]
   ],
   "subclass": "College of Valor",
@@ -16711,8 +16717,8 @@
   "visibility_states": [],
   "weapons": [
    "Unarmed Strike  1d20+1  dmg 1d1 -1",
-   "Shortsword  1d20+5  dmg 1d6 +5",
-   "Scimitar  1d20+5  dmg 1d6 +5",
+   "Shortsword  1d20+5  dmg 1d6 +3",
+   "Scimitar  1d20+5  dmg 1d6 +3",
    "Longbow  1d20+5  dmg 1d8 +3"
   ]
  },

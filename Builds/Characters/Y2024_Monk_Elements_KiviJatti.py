@@ -129,7 +129,7 @@ class Y2024MonkElementsKiviJattiCharacterBuilder(CharacterBuilder):
             # TODO: choose your species. Goliath is used here as a simple
             # placeholder with no extra sub-choices required.
             species_builder=Goliath.GoliathSpeciesBuilder(
-                giant_ancestry_type=GoliathFeatures.GiantAncestryType.STONE_GIANT
+                giant_ancestry_type=GoliathFeatures.GiantAncestryType.HILL_GIANT
             ),
         )
         # Stonehill Armory upgrade (gifted, not purchased): no armor or
