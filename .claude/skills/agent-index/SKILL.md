@@ -50,15 +50,16 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 |---|---|---|---|---|
 | [`code-reviewer`](../../agents/tooling/code-reviewer.md) | opus | `subagent-protocol`, `review-house-rules`, `snapshot-diffs` | Review a change before it's committed or reported done - the working tree, the staged changes, a branch, or the files a subagent… | `character-engine-dev`, `git-commit`, `rules-checker`, `test-bughunter` |
 | [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | `subagent-protocol`, `new-content-check` | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
-| [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs` | Commit work - it picks the changes related to what you describe, stages exactly those files, formats them with Black via… | - |
+| [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs`, `commit-plans` | Commit work, in two steps because many agents share this tree | - |
 | [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (12)
+## Skills (13)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
 | [`balance-monster`](../../skills/balance-monster/SKILL.md) | `monster-balancer`, `monster-designer` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
+| [`commit-plans`](../../skills/commit-plans/SKILL.md) | `git-commit` | `commit_plan.py` | Commit plans - commits written down instead of made, so committing stays safe while many agents edit, stage and commit in the… |
 | [`discovered-issues`](../../skills/discovered-issues/SKILL.md) | *main session* | `issues.py` | The shared log of bugs, rules mismatches and gaps found but not fixed and the script every agent uses to add, update, close and… |
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
