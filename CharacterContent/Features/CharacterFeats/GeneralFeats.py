@@ -53,7 +53,9 @@ from CharacterContent.Spells.SpellLists import (
 from Model.CharacterSources import SpellSource
 from Model.Grants import Grants
 from Model.Content.Feature import (
+    ActionType,
     Feature,
+    FeatureActivation,
     FeatureTarget,
     FeatureUses,
     RegainedOn,
@@ -64,6 +66,9 @@ from Model.Content.Improvements import (
     DamageResistance,
     ElementalResistance,
     GrantSense,
+    MultiAbilityArmorClass,
+    SkillExpertise,
+    SkillProficiency,
     SkillExpertiseChoice,
     SkillProficiencyChoice,
     SavingThrowProficiency,
@@ -74,12 +79,14 @@ from Core.Definitions import Ability, DamageType, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import (
+    ALL_LEVELS,
     PROFICIENCY_BONUS_GAINED_AT,
     MAX_ABILITY_MODIFIER,
     MAX_ABILITY_SCORE,
     MAX_PROFICIENCY_BONUS,
 )
 from Model.View import CharacterView
+from Utils import StringUtils
 from Model.Content.FeatureText import (
     Block,
     Facts,
@@ -2389,23 +2396,26 @@ class ZhentarimTactics(_AbilityScoreFeat):
 # ---------------------------------------------------------------------------
 
 
-class DarkGift(GeneralFeat):
+class AberrantAnatomy(GeneralFeat):
 
     def __init__(self, character_level: int):
         if character_level < 1:
-            raise ValueError("Dark Gift requires character level 1 or higher.")
+            raise ValueError("Aberrant Anatomy requires character level 1 or higher.")
         super().__init__(
-            name="Dark Gift",
+            name="Aberrant Anatomy",
             origin="General Feat Ravenloft Campaign",
         )
-        self._sense = GrantSense(Sense.BLINDSIGHT, 15)
 
     def apply(self, ledger_writer: LedgerWriter):
-        self._sense.apply(ledger_writer)
+        SkillProficiency([Skill.PERCEPTION]).apply(ledger_writer)
+        SkillExpertise([Skill.PERCEPTION]).apply(ledger_writer)
+        GrantSense(Sense.BLINDSIGHT, 15).apply(ledger_writer)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
-            Paragraph("Alien horrors have warped your body."),
+            Paragraph(
+                "Exposure to alien horrors like those of the Far Realm has warped your body."
+            ),
             Facts(
                 (
                     ("Breathless", "Hold your breath for 1 hour"),
@@ -2417,7 +2427,7 @@ class DarkGift(GeneralFeat):
                 )
             ),
             Option(
-                "Drawback: right after you roll a 1 on the d20 for a D20 Test",
+                "Warping Flesh: right after you roll a 1 on the d20 for a D20 Test",
                 (
                     Facts(
                         (
@@ -2431,16 +2441,14 @@ class DarkGift(GeneralFeat):
 
     def get_description(self, character: CharacterView) -> str:
         return (
-            "Exposure to alien horrors like those of the Far Realm has warmed your physical form in supernatural ways. You gain the following features.\n"
+            "Exposure to alien horrors like those of the Far Realm has warped your physical form in supernatural ways. You gain the following features.\n"
             " * Breathless. You can hold your breath for 1 hour.\n"
-            " * Extrasensory Perception. You have proficiency in the Perception skill, if you lack it. You also gain Expertise in that skill.\n"
-            " * Blindsight. In addition, you have Blindsight with a range of 15 feet.\n"
+            " * Extrasensory Perception. You have proficiency in the Perception skill, if you lack it. You also gain Expertise in that skill. In addition, you have Blindsight with a range of 15 feet.\n"
             " * Warping Flesh. Immediately after you make a D20 Test and roll a 1 on the d20, the aberrant influence infecting your form flares, wrenching control of your flesh. Make a Constitution saving throw (DC 13 plus your Proficiency Bonus). On a failed save, you have the Stunned condition until the end of your next turn."
         )
 
     def calculate_dc(self, character: CharacterView) -> int:
-        proficiency_bonus = character.get_proficiency_bonus()
-        return 13 + proficiency_bonus
+        return 13 + character.get_proficiency_bonus()
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
@@ -3714,3 +3722,1087 @@ class TacticalCombatant(_AbilityScoreFeat):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+
+# ---------------------------------------------------------------------------
+# Dragonmark General Feats
+# ---------------------------------------------------------------------------
+
+
+class _GreaterDragonmarkFeat(_AbilityScoreFeat):
+    """Base class for the Greater Dragonmark feats (Eberron: Forge of the
+    Artificer): +1 to one ability score, the base mark's 1d4 intuition die
+    becomes a 1d6, and a mark-specific upgrade.
+
+    Subclasses declare:
+        _NAME        - feat name
+        _BASE_MARK   - the Dragonmark feat it requires, e.g. "Mark of Healing"
+        _INTUITION   - that feat's intuition benefit, e.g. "Medical Intuition"
+        _ABILITIES   - allowed abilities for the +1 (default: any)
+        _USES        - optional FeatureUses for a limited-use benefit
+
+    pass their own usage_tags (and activation) to __init__, list their
+    other benefits in _benefit_facts(), and write get_description() from the
+    feat's own text.
+
+    The "requires the Mark of X feat" prerequisite is shown, not enforced:
+    no feat checks another feat's presence.
+    """
+
+    _BASE_MARK: str
+    _INTUITION: str
+    _ABILITIES = tuple(Ability)
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        usage_tags=None,
+        activation: FeatureActivation | None = None,
+    ):
+        super().__init__(character_level, ability)
+        self.usage_tags = usage_tags
+        if activation is not None:
+            self.activation = activation
+
+    def _prerequisite(self) -> str:
+        return f"General Feat (Prerequisite: Level 4+, {self._BASE_MARK} Feat)\n"
+
+    def _benefit_facts(self) -> tuple:
+        """(label, text) rows for this feat's own benefits."""
+        return ()
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Improved Intuition",
+                        f"{self._INTUITION} from your {self._BASE_MARK} feat rolls 1d6 instead of 1d4",
+                    ),
+                )
+                + self._benefit_facts()
+            ),
+        ]
+
+
+class GreaterAberrantMark(_GreaterDragonmarkFeat):
+    _NAME = "Greater Aberrant Mark"
+    _BASE_MARK = "Aberrant Dragonmark"
+    _INTUITION = "Aberrant Fortitude"
+    _ABILITIES = (Ability.CONSTITUTION,)
+    _USES = FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
+    )
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level, ability, usage_tags=["buff", "heal", "damage"]
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # Mark of Inspiration's uses are in the panel below.
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Improved Fortitude",
+                        "Aberrant Fortitude from your Aberrant Dragonmark feat rolls 1d6 instead of 1d4, and you regain its use on a Short or Long Rest",
+                    ),
+                    (
+                        "Mark of Inspiration",
+                        "When you cast a cantrip, roll one or two unexpended Hit Point Dice, then expend them. You gain Temporary Hit Points equal to the roll + your Constitution modifier, and one creature of your choice within 30 feet of you (not you) takes Force damage equal to the roll. Proficiency Bonus times per Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Constitution score by 1, to a maximum of 20.\n"
+            "Improved Fortitude. When you use the Aberrant Fortitude benefit of your Aberrant Dragonmark feat, you can roll 1d6 instead of 1d4. You also now regain your use of Aberrant Fortitude whenever you finish a Short or Long Rest.\n"
+            "Mark of Inspiration. When you cast a cantrip, you can roll one or two of your unexpended Hit Point Dice. You gain a number of Temporary Hit Points equal to the number rolled plus your Constitution modifier, and one creature of your choice within 30 feet of you (not including you) takes Force damage equal to the number rolled. Those dice are then expended.\n"
+            "You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+
+class GreaterMarkOfDetection(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Detection"
+    _BASE_MARK = "Mark of Detection"
+    _INTUITION = "Deductive Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Shared Detection",
+                "When Magical Detection casts See Invisibility without a spell slot, one creature you can see within 30 feet of you also gains its benefits for the duration",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Deductive Intuition benefit of your Mark of Detection feat, you can roll 1d6 instead of 1d4.\n"
+            "Shared Detection. When you use the Magical Detection benefit of your Mark of Detection feat to cast See Invisibility without a spell slot, you can choose one creature you can see within 30 feet of yourself. That creature also gains the benefits of the spell for its duration."
+        )
+
+
+class GreaterMarkOfFinding(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Finding"
+    _BASE_MARK = "Mark of Finding"
+    _INTUITION = "Hunter's Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "control"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Improved Finding",
+                "When Finder's Magic casts Hunter's Mark without a spell slot, its range is doubled, and you can make the target unable to benefit from the Invisible condition for the duration",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Hunter's Intuition benefit of your Mark of Finding feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Finding. When you use the Finder's Magic benefit of your Mark of Finding to cast Hunter's Mark without a spell slot, the range of the spell is doubled, and you can modify the spell so that the target can't benefit from the Invisible condition for the duration."
+        )
+
+
+class GreaterMarkOfHandling(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Handling"
+    _BASE_MARK = "Mark of Handling"
+    _INTUITION = "Wild Intuition"
+    _USES = FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
+    )
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff", "control"],
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until the start of your next turn",
+                range="30 Feet",
+            ),
+        )
+
+    def _benefit_facts(self) -> tuple:
+        # Subdue Animal's uses are in the panel below.
+        return (
+            (
+                "Improved Handling",
+                "While mounted, right after you hit a target within 5 feet of your mount with a melee attack roll, your mount can take a Reaction to move up to its Speed or to make one attack with the Attack action (your choice)",
+            ),
+            (
+                "Subdue Animal",
+                "Magic action: one Beast or Monstrosity you can see within 30 feet makes a Wisdom saving throw or has the Frightened condition until the start of your next turn. Proficiency Bonus times per Long Rest.",
+            ),
+            ("Save DC", dc_formula(Ability.WISDOM)),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Wild Intuition benefit of your Mark of Handling feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Handling. While you are mounted, immediately after you hit a target within 5 feet of your mount with a melee attack roll, your mount can take a Reaction to move up to its Speed or take the Attack action to make one attack only (your choice).\n"
+            "Subdue Animal. As a Magic action, you exert command over one Beast or Monstrosity you can see within 30 feet of yourself. The target must succeed on a Wisdom saving throw (DC 8 plus your Wisdom modifier and Proficiency Bonus) or have the Frightened condition until the start of your next turn. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def calculate_dc(self, character: CharacterView) -> int:
+        return 8 + character.get_wisdom_modifier() + character.get_proficiency_bonus()
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.CREATURE
+
+
+class GreaterMarkOfHealing(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Healing"
+    _BASE_MARK = "Mark of Healing"
+    _INTUITION = "Medical Intuition"
+    _USES = FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
+    )
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "heal"])
+
+    def _benefit_facts(self) -> tuple:
+        # The free casts are in the panel below.
+        return (
+            (
+                "Improved Healing",
+                "Healing Touch casts Cure Wounds without a spell slot Proficiency Bonus times per Long Rest (instead of once)",
+            ),
+            (
+                "Healing Rolls",
+                "When you cast Cure Wounds, treat any 1 or 2 on its healing dice as a 3",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Medical Intuition benefit of your Mark of Healing feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Healing. You can now use the Healing Touch benefit of your Mark of Healing feat to cast Cure Wounds without using a spell slot a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.\n"
+            "Additionally, when you cast Cure Wounds and roll dice to determine the number of Hit Points restored, you can treat any 1 or 2 on a roll as a 3."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+
+class GreaterMarkOfHospitality(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Hospitality"
+    _BASE_MARK = "Mark of Hospitality"
+    _INTUITION = "Ever Hospitable"
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(
+        self, character_level: int, ability: Ability, refresh_ability: Ability
+    ):
+        if refresh_ability not in _MENTAL_ABILITIES:
+            raise ValueError(
+                "Greater Mark of Hospitality's Inspired Hospitality ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.refresh_ability = refresh_ability
+        super().__init__(character_level, ability, usage_tags=["buff", "heal"])
+
+    def _benefit_facts(self) -> tuple:
+        # The once-per-Long-Rest use is in the panel below.
+        return (
+            (
+                "Inspired Hospitality",
+                f"When you cast Purify Food and Drink, instead of its normal effect each creature of your choice within 30 feet of you reduces its Exhaustion level by 1 and gains Temporary Hit Points equal to your Proficiency Bonus + your {self.refresh_ability.value} modifier. Once per Long Rest.",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Ever Hospitable benefit of your Mark of Hospitality feat, you can roll 1d6 instead of 1d4.\n"
+            f"Inspired Hospitality. When you cast Purify Food and Drink, you can modify the spell so that instead of its normal effect, each creature of your choice within 30 feet of you is refreshed. Each affected creature's Exhaustion level is reduced by 1, and the creature gains Temporary Hit Points equal to your Proficiency Bonus plus your Intelligence, Wisdom, or Charisma modifier (choose when you select this feat: {self.refresh_ability.value}). Once you modify the spell with this benefit, you can't do so again until you finish a Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class GreaterMarkOfMaking(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Making"
+    _BASE_MARK = "Mark of Making"
+    _INTUITION = "Artisan's Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Improved Making",
+                "When Spellsmith casts Magic Weapon without a spell slot, you cast its level 3 version",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Artisan's Intuition benefit of your Mark of Making feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Making. When you use the Spellsmith benefit of your Mark of Making feat to cast Magic Weapon without a spell slot, you cast the spell as its level 3 version."
+        )
+
+
+class GreaterMarkOfPassage(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Passage"
+    _BASE_MARK = "Mark of Passage"
+    _INTUITION = "Intuitive Motion"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Inspired Passage",
+                "When Magical Passage casts Misty Step without a spell slot, choose up to two willing creatures you can see within 30 feet before you teleport; each can take a Reaction to teleport up to 30 feet to an unoccupied space it can see",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Intuitive Motion benefit of your Mark of Passage feat, you can roll 1d6 instead of 1d4.\n"
+            "Inspired Passage. When you use the Magical Passage benefit of your Mark of Passage feat to cast Misty Step without a spell slot, you can also choose up to two willing creatures you can see within 30 feet of yourself before you teleport. Each target can then take a Reaction to also teleport up to 30 feet to an unoccupied space it can see."
+        )
+
+
+class GreaterMarkOfScribing(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Scribing"
+    _BASE_MARK = "Mark of Scribing"
+    _INTUITION = "Gifted Scribe"
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "utility"])
+
+    def _benefit_facts(self) -> tuple:
+        # The once-per-Long-Rest use is in the panel below.
+        return (
+            (
+                "Inspired Scribing",
+                "When you cast Comprehend Languages, up to three willing creatures you can see within 30 feet also gain its benefits, and you and they can communicate telepathically within 1 mile of each other for its duration. Once per Long Rest.",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Gifted Scribe benefit of your Mark of Scribing feat, you can roll 1d6 instead of 1d4.\n"
+            "Inspired Scribing. When you cast Comprehend Languages, you can modify the spell to encompass up to three willing creatures you can see within 30 feet of yourself. Each chosen creature also gains the benefits of the spell for the duration. In addition, for the duration of the spell, you and the chosen creatures can communicate telepathically with each other while within 1 mile of each other. Once you modify the spell with this benefit, you can't do so again until you finish a Long Rest."
+        )
+
+
+class GreaterMarkOfSentinel(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Sentinel"
+    _BASE_MARK = "Mark of Sentinel"
+    _INTUITION = "Sentinel's Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "damage"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Improved Sentinel",
+                "When you use Vigilant Guardian, you can also make one attack with a weapon or an Unarmed Strike as part of that Reaction",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Sentinel's Intuition benefit of your Mark of Sentinel feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Sentinel. When you use the Vigilant Guardian benefit of your Mark of Sentinel feat, you can also make one attack with a weapon or an Unarmed Strike as part of that same Reaction."
+        )
+
+
+class GreaterMarkOfShadow(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Shadow"
+    _BASE_MARK = "Mark of Shadow"
+    _INTUITION = "Cunning Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Improved Shadow",
+                "When Shape Shadows casts Invisibility without a spell slot, you cast its level 3 version",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Cunning Intuition benefit of your Mark of Shadow feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Shadow. When you use the Shape Shadows benefit of your Mark of Shadow feat to cast Invisibility without a spell slot, you cast the spell as its level 3 version."
+        )
+
+
+class GreaterMarkOfStorm(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Storm"
+    _BASE_MARK = "Mark of Storm"
+    _INTUITION = "Windwright's Intuition"
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "utility"])
+
+    def _benefit_facts(self) -> tuple:
+        return (
+            (
+                "Improved Storm",
+                "When Storm Magic casts Gust of Wind without a spell slot, you also gain a Fly Speed of 60 feet for the spell's duration",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Windwright's Intuition benefit of your Mark of Storm feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Storm. When you use the Storm Magic benefit of your Mark of Storm feat to cast Gust of Wind without a spell slot, you also gain a Fly Speed of 60 feet for the duration of the spell."
+        )
+
+
+class GreaterMarkOfWarding(_GreaterDragonmarkFeat):
+    _NAME = "Greater Mark of Warding"
+    _BASE_MARK = "Mark of Warding"
+    _INTUITION = "Warder's Intuition"
+    _USES = FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
+    )
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff", "control"],
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="30 Feet"
+            ),
+        )
+
+    def _benefit_facts(self) -> tuple:
+        # Improved Warding's uses are in the panel below.
+        return (
+            (
+                "Improved Warding",
+                "Reaction when a creature makes an attack roll against you or a creature you can see within 30 feet of you: impose Disadvantage on that roll. Proficiency Bonus times per Long Rest.",
+            ),
+        )
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.\n"
+            "Improved Intuition. When you use the Warder's Intuition benefit of your Mark of Warding feat, you can roll 1d6 instead of 1d4.\n"
+            "Improved Warding. When a creature makes an attack roll against you or a creature you can see within 30 feet of yourself, you can take a Reaction to impose Disadvantage on that roll. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class PotentDragonmark(_AbilityScoreFeat):
+    """Requires any Dragonmark feat (not enforced). The +1 goes to the
+    spellcasting ability your Dragonmark feat uses: Constitution for the
+    Aberrant Dragonmark, otherwise the Intelligence, Wisdom or Charisma
+    chosen with it. Its extra spell slot is tracked by the use box; the
+    engine doesn't add it to the spell slot table."""
+
+    _NAME = "Potent Dragonmark"
+    _ABILITIES = (
+        Ability.CONSTITUTION,
+        Ability.INTELLIGENCE,
+        Ability.WISDOM,
+        Ability.CHARISMA,
+    )
+    _USES = FeatureUses(max_uses=1, regain_all_on="short or long rest")
+    # The extra slot's level: half your level (round up), up to level 5.
+    _MAX_SLOT_LEVEL = 5
+
+    def _slot_level(self, level: int) -> int:
+        return min(self._MAX_SLOT_LEVEL, (level + 1) // 2)
+
+    def get_resource_tiles(
+        self, character: CharacterView
+    ) -> list[tuple[str, list[tuple[str, str]]]]:
+        slot_level_by_level = {
+            level: str(self._slot_level(level))
+            for level in ALL_LEVELS
+            if level >= self._MIN_LEVEL
+        }
+        return [
+            (
+                "Slot Level",
+                [
+                    (f"Lv {level_range}", value)
+                    for level_range, value in StringUtils.compress_level_progression(
+                        slot_level_by_level
+                    )
+                ],
+            )
+        ]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        # The slot's level by character level, and its use, are shown above and below.
+        return [
+            Facts(
+                (
+                    (
+                        "Ability Score",
+                        f"+1 {self.ability.value} (the spellcasting ability of your Dragonmark feat), to a maximum of 20",
+                    ),
+                    (
+                        "Dragonmark Preparation",
+                        "The spells on your Spells of the Mark list (if any) are always prepared",
+                    ),
+                    (
+                        "Dragonmark Spellcasting",
+                        "One extra spell slot of half your level (round up), up to level 5. It casts only spells prepared through your Dragonmark feat or Dragonmark Preparation. Regained on a Short or Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            "General Feat (Prerequisite: Level 4+, Any Dragonmark Feat)\n"
+            "You gain the following benefits.\n"
+            "Ability Score Increase. Increase the spellcasting ability score used by your Dragonmark feat by 1, to a maximum of 20.\n"
+            "Dragonmark Preparation. You always have the spells on your Spells of the Mark list (if any) prepared.\n"
+            "Dragonmark Spellcasting. You have one extra spell slot to cast the spells granted by your Dragonmark feat. The spell slot's level is half your level (round up), to a maximum of level 5. You regain the expended slot when you finish a Short or Long Rest. You can use this spell slot to cast only a spell you have prepared because of your Dragonmark feat or the Dragonmark Preparation benefit of this feat."
+        )
+
+
+# ---------------------------------------------------------------------------
+# Planar Pact General Feats
+# ---------------------------------------------------------------------------
+# The Greater Planar Pacts, D&D Beyond Drops: Fey Sentinel, Infernal Bulwark
+# and Infernal Dragoon (May 2026), Fey Tormentor (August 2026), Shadow Trapper
+# and Shadow Weaver (October 2026). Each needs its base Planar Pact feat
+# (OriginFeats.FeyPact, InfernalPact, ShadowPact); not enforced, since no feat
+# checks another feat as a prerequisite.
+
+_FREE_CAST = "Always prepared. Cast it once without a spell slot per Long Rest, or with your spell slots."
+
+
+class _GreaterPlanarPact(_AbilityScoreFeat):
+    """Base class for the Greater Planar Pact feats: an _AbilityScoreFeat
+    whose subclasses pass their own usage_tags, activation and uses, and
+    that keeps character_level for the extras gained at character level 5.
+
+    Subclasses declare _NAME, _ABILITIES and _PACT (the required feat's
+    name), and pass usage_tags=[...] to super().__init__."""
+
+    _PACT: str
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        usage_tags: list | None = None,
+        activation: FeatureActivation | None = None,
+    ):
+        if character_level < self._MIN_LEVEL:
+            raise ValueError(
+                f"{self._NAME} requires character level {self._MIN_LEVEL} or higher."
+            )
+        if ability not in self._ABILITIES:
+            allowed = " or ".join(a.value for a in self._ABILITIES)
+            raise ValueError(f"{self._NAME} ability increase must be {allowed}.")
+        self.character_level = character_level
+        self.ability = ability
+        self._bonus = AbilityScoreBonus(
+            [(ability, 1)],
+            total=1,
+            error_prefix=self._NAME,
+            max_score=MAX_ABILITY_SCORE,
+        )
+        Feature.__init__(
+            self,
+            name=self._NAME,
+            origin=self._ORIGIN,
+            uses=self._USES,
+            usage_tags=usage_tags,
+            activation=activation,
+        )
+
+    def _prerequisite(self) -> str:
+        return f"General Feat (Prerequisite: Level 4+, {self._PACT} Feat)\n"
+
+    def _ability_increase(self) -> str:
+        names = [a.value for a in self._ABILITIES]
+        allowed = (
+            f"{', '.join(names[:-1])}, or {names[-1]}"
+            if len(names) > 2
+            else " or ".join(names)
+        )
+        return f"Ability Score Increase. Increase your {allowed} score by 1, to a maximum of 20.\n"
+
+
+class FeySentinel(_GreaterPlanarPact):
+    _NAME = "Fey Sentinel"
+    _PACT = "Fey Pact"
+    _ABILITIES = _MENTAL_ABILITIES
+    # Fading Target. The free casts are on the spells' rows.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff", "utility"],
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="Until the start of your next turn",
+                range="Self",
+            ),
+        )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(ConjurationLevel1Spells.ENTANGLE, self.ability, _FREE_CAST)
+        if self.character_level >= 5:
+            feat.add_spell(
+                TransmutationLevel3Spells.PLANT_GROWTH, self.ability, _FREE_CAST
+            )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        spells = "Entangle" + (" and Plant Growth" if self.character_level >= 5 else "")
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Fading Target",
+                        "Reaction when an enemy misses you with an attack roll: you have the Invisible condition until the start of your next turn, or until right after you make an attack roll, deal damage or cast a spell. Once per Long Rest.",
+                    ),
+                    (
+                        "Fey Shift",
+                        "When you take the Dash action, you can forgo the extra movement to teleport up to half your Speed to an unoccupied space you can see",
+                    ),
+                    (
+                        "Nature's Roots",
+                        f"{spells} always prepared; each once per Long Rest without a spell slot, or with your spell slots. {self.ability.value} is their spellcasting ability.",
+                    ),
+                )
+                + (
+                    ()
+                    if self.character_level >= 5
+                    else (("Character level 5", "Plant Growth, cast the same way"),)
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Fading Target. When an enemy misses you with an attack roll, you can take a Reaction to gain the Invisible condition until the start of your next turn or until immediately after you make an attack roll, deal damage, or cast a spell. Once you use this benefit, you can't do so again until you finish a Long Rest.\n"
+            "Fey Shift. When you take the Dash action, you can forgo the extra movement to teleport to an unoccupied space you can see within a distance equal to half your Speed instead.\n"
+            "Nature's Roots. You always have the Entangle spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast it using any spell slots you have. The spell's spellcasting ability is the ability increased by this feat.\n"
+            "When you reach character level 5, you also always have the Plant Growth spell prepared and can cast it the same way."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class FeyTormentor(_GreaterPlanarPact):
+    _NAME = "Fey Tormentor"
+    _PACT = "Fey Pact"
+    _ABILITIES = _MENTAL_ABILITIES
+    # Faerie Time Warp. The free casts are on the spells' rows.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["control"],
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION,
+                duration="Until the end of your next turn",
+                range="60 Feet",
+            ),
+        )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(EnchantmentLevel1Spells.HEX, self.ability, _FREE_CAST)
+        if self.character_level >= 5:
+            feat.add_spell(
+                NecromancyLevel3Spells.BESTOW_CURSE, self.ability, _FREE_CAST
+            )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        spells = "Hex" + (" and Bestow Curse" if self.character_level >= 5 else "")
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Hag's Hex",
+                        f"{spells} always prepared; each once per Long Rest without a spell slot, or with your spell slots. {self.ability.value} is their spellcasting ability.",
+                    ),
+                )
+                + (
+                    ()
+                    if self.character_level >= 5
+                    else (("Character level 5", "Bestow Curse, cast the same way"),)
+                )
+            ),
+            Option(
+                "Faerie Time Warp",
+                (
+                    Facts(
+                        (
+                            ("Action", "Bonus Action"),
+                            (
+                                "Targets",
+                                "Up to three creatures you can see within 60 feet",
+                            ),
+                            (
+                                "Save",
+                                f"Wisdom, DC {dc_formula(self.ability)}",
+                            ),
+                            (
+                                "Failed",
+                                "Speed reduced by 10 feet and a -2 penalty to AC until the end of your next turn",
+                            ),
+                            ("Recharge", "When you finish a Long Rest"),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Faerie Time Warp. As a Bonus Action, choose up to three creatures you can see within 60 feet of yourself. Each target makes a Wisdom saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus). On a failed save, the target's Speed is reduced by 10 feet, and it takes a -2 penalty to AC until the end of your next turn.\n"
+            "Once you use this benefit, you can't use it again until you finish a Long Rest.\n"
+            "Hag's Hex. You always have the Hex spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast it using any spell slots you have. The spell's spellcasting ability is the ability increased by this feat.\n"
+            "When you reach character level 5, you also have the Bestow Curse spell prepared and can cast it in the same way."
+        )
+
+    def calculate_dc(self, character: CharacterView) -> int | None:
+        return (
+            8
+            + character.get_ability_modifier(self.ability)
+            + character.get_proficiency_bonus()
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class InfernalBulwark(_GreaterPlanarPact):
+    _NAME = "Infernal Bulwark"
+    _PACT = "Infernal Pact"
+    _ABILITIES = (Ability.CONSTITUTION, Ability.CHARISMA)
+    # Vengeful Surge. The free cast is on Armor of Agathys' row.
+    _USES = FeatureUses(
+        max_uses=MAX_PROFICIENCY_BONUS,
+        regain_all_on="long rest",
+        current_formula="Current amount: equal to your proficiency bonus.",
+        gained_at=PROFICIENCY_BONUS_GAINED_AT,
+    )
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff", "damage"],
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION, range="60 Feet"
+            ),
+        )
+        # Devil's Flesh: an unarmored formula, so worn armor or a Shield
+        # replaces it and Unarmored Defense doesn't stack with it.
+        self._devils_flesh = MultiAbilityArmorClass(
+            10, [Ability.DEXTERITY, ability], allows_shield=False
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        self._devils_flesh.apply(ledger_writer)
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(
+            AbjurationLevel1Spells.ARMOR_OF_AGATHYS,
+            Ability.CHARISMA,
+            "Always prepared. Cast it once without a spell slot per Long Rest - as its level 2 version, dealing Fire damage instead of Cold - or with your spell slots.",
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Devil's Flesh",
+                        f"While you wear no armor and wield no Shield, your base AC is 10 + Dexterity modifier + {self.ability.value} modifier",
+                    ),
+                    (
+                        "Infernal Protection",
+                        "Armor of Agathys always prepared; once per Long Rest without a spell slot, cast as its level 2 version dealing Fire damage instead of Cold, or with your spell slots. Charisma is its spellcasting ability.",
+                    ),
+                )
+            ),
+            Option(
+                "Vengeful Surge",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "You succeed on a saving throw a creature you can see within 60 feet forced you to make",
+                            ),
+                            ("Reaction", "Deal 1d10 Fire damage to that creature"),
+                            (
+                                "Uses",
+                                "Proficiency Bonus times per Long Rest",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Devil's Flesh. Your skin thickens and assumes a scaled, leathery texture. While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity modifier plus the modifier of the ability increased by this feat.\n"
+            "Infernal Protection. You always have the Armor of Agathys spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. When you cast it without a spell slot using this feature, you cast this spell as its level 2 version, and it deals Fire damage instead of Cold damage. You can also cast the spell using any spell slots you have of the appropriate level. Charisma is your spellcasting ability for this spell.\n"
+            "Vengeful Surge. Whenever a creature you can see within 60 feet of yourself forces you to make a saving throw and you succeed, you can take a Reaction to deal 1d10 Fire damage to that creature.\n"
+            "You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
+        )
+
+    def number_of_uses(self, character: CharacterView) -> int:
+        return character.get_proficiency_bonus()
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class InfernalDragoon(_GreaterPlanarPact):
+    _NAME = "Infernal Dragoon"
+    _PACT = "Infernal Pact"
+    _ABILITIES = (Ability.CONSTITUTION, Ability.CHARISMA)
+    # Devil's Favor. Devilish Aura has no use limit; the free cast is on
+    # Magic Weapon's row.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["control", "buff"],
+            activation=FeatureActivation(
+                action_type=ActionType.ACTION,
+                duration="Until the end of its next turn",
+                range="30-Foot Emanation",
+            ),
+        )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(
+            TransmutationLevel2Spells.MAGIC_WEAPON,
+            Ability.CHARISMA,
+            "Always prepared. Cast it once without a spell slot per Long Rest - that casting lasts 8 hours - or with your spell slots.",
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Devil's Favor",
+                        "When you make a D20 Test, add +2 to the roll. Once per Long Rest.",
+                    ),
+                    (
+                        "Diabolic Empowerment",
+                        "Magic Weapon always prepared; once per Long Rest without a spell slot, with a duration of 8 hours for that casting, or with your spell slots. Charisma is its spellcasting ability.",
+                    ),
+                )
+            ),
+            Option(
+                "Devilish Aura",
+                (
+                    Facts(
+                        (
+                            ("Action", "Magic action"),
+                            (
+                                "Area",
+                                "30-foot Emanation; creatures of your choice in it",
+                            ),
+                            (
+                                "Save",
+                                f"Charisma, DC {dc_formula(self.ability)}",
+                            ),
+                            ("Failed", "Frightened until the end of its next turn"),
+                            (
+                                "Success",
+                                "Unaffected, and immune to this aura for 24 hours",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Devilish Aura. Your close association with diabolic powers unsettles others. You can take a Magic action to manifest an aura of fear in a 30-foot Emanation originating from yourself. Each creature of your choice in that area makes a Charisma saving throw (DC 8 plus the modifier of the ability increased by this feat plus your Proficiency Bonus). On a failed save, it has the Frightened condition until the end of its next turn. On a successful save, a creature is unaffected, and it is immune to this ability for 24 hours.\n"
+            "Devil's Favor. You can call on your infernal patron to aid you. When you make a D20 Test, you can add a +2 bonus to the roll. Once you use this benefit, you can't do so again until you finish a Long Rest.\n"
+            "Diabolic Empowerment. You always have the Magic Weapon spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. When you cast it without a spell slot using this feature, the spell's duration becomes 8 hours for that casting. You can also cast the spell using any spell slots you have of the appropriate level. Charisma is your spellcasting ability for this spell."
+        )
+
+    def calculate_dc(self, character: CharacterView) -> int | None:
+        return (
+            8
+            + character.get_ability_modifier(self.ability)
+            + character.get_proficiency_bonus()
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class ShadowTrapper(_GreaterPlanarPact):
+    _NAME = "Shadow Trapper"
+    _PACT = "Shadow Pact"
+    _ABILITIES = (Ability.STRENGTH, Ability.WISDOM)
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Dangerous Shroud",
+                        "Advantage on attack rolls against creatures within the Emanation of your Shroud of Shadows",
+                    ),
+                )
+            ),
+            Option(
+                "Sorrowful Embrace",
+                (
+                    Facts(
+                        (
+                            (
+                                "Trigger",
+                                "The start of the turn of a creature you have Grappled",
+                            ),
+                            (
+                                "Save",
+                                f"Wisdom, DC {dc_formula(self.ability)}",
+                            ),
+                            (
+                                "Failed",
+                                f"1d4 + {self.ability.value} modifier Psychic damage",
+                            ),
+                        )
+                    ),
+                ),
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite()
+            + "Your affinity with the Shadowfell's melancholy grants you the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Dangerous Shroud. You have Advantage on attack rolls against creatures within the Emanation of your Shroud of Shadows.\n"
+            "Sorrowful Embrace. At the start of its turn, a creature Grappled by you must succeed on a Wisdom saving throw (DC equals 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or take Psychic damage equal to 1d4 plus the ability modifier of the score increased by this feat."
+        )
+
+    def calculate_dc(self, character: CharacterView) -> int | None:
+        return (
+            8
+            + character.get_ability_modifier(self.ability)
+            + character.get_proficiency_bonus()
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class ShadowWeaver(_GreaterPlanarPact):
+    _NAME = "Shadow Weaver"
+    _PACT = "Shadow Pact"
+    _ABILITIES = _MENTAL_ABILITIES
+    # Create Shadow's free cast of Darkness.
+    _USES = FeatureUses(max_uses=1, regain_all_on="long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["control"],
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="60 Feet"
+            ),
+        )
+
+    def grant_to(self, data: Grants) -> None:
+        feat = data.for_general_feat(self)
+        feat.add_feature(self)
+        feat.add_spell(EvocationLevel2Spells.DARKNESS, self.ability, _FREE_CAST)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Create Shadow",
+                        f"Darkness always prepared; cast it once per Long Rest without a spell slot, or with your spell slots. {self.ability.value} is its spellcasting ability.",
+                    ),
+                    (
+                        "Manipulate Shadow",
+                        "Bonus Action: grow or shrink the radius of a Darkness spell you cast by 5 feet (5 to 25 feet), or move its area to a space within 60 feet of you",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite()
+            + "Your commitment to your planar pact grants you the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Create Shadow. You always have the Darkness spell prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level. The spell's spellcasting ability is the ability increased by this feat.\n"
+            "Manipulate Shadow. You can take a Bonus Action to increase or decrease the radius of a Darkness spell you cast by 5 feet (minimum 5 feet, maximum 25 feet) or move the area of Darkness to a space within 60 feet of you."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.AREA

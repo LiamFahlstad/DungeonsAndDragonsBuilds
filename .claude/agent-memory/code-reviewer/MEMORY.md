@@ -1,0 +1,3 @@
+- 2026-10-28: To check feats/features against dnd2024.wikidot.com, `curl -s` each `https://dnd2024.wikidot.com/feat:<slug>` into the scratchpad and strip HTML between `<div id="page-content">` and `page-tags`; one batch fetch beats reading pages one by one.
+- 2026-10-28: Feats that take `character_level` and gate grants on it (`if self.character_level >= N`) are wrong whatever value a build passes: builds pass the level the feat is taken at, and Grants stamps every grant at that level. Check any new level-gated feat for this (DI-019).
+- 2026-10-28: The Character Creator (`Registry.concrete_subclasses`) lists `_Private` feat base classes too; a new `_Base` feat class shows up as a pickable feat that crashes on construction.
