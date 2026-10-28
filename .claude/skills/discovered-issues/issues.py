@@ -118,9 +118,22 @@ def parse(text: str) -> tuple[str, list[str]]:
             entries[-1].append(line)
         else:
             preamble.append(line)
-    return "\n".join(preamble).rstrip() + "\n", [
-        "\n".join(block).strip() for block in entries
-    ]
+    return "\n".join(preamble).rstrip() + "\n", [tidy(block) for block in entries]
+
+
+def tidy(block: list[str]) -> str:
+    """Drop blank runs and blank lines inside a bullet list (they split it in two)."""
+    kept: list[str] = []
+    for i, line in enumerate(block):
+        if not line.strip():
+            following = next((l for l in block[i + 1 :] if l.strip()), "")
+            previous = kept[-1] if kept else ""
+            if not previous.strip() or (
+                previous.startswith("- ") and following.startswith("- ")
+            ):
+                continue
+        kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def entry_id(block: str) -> int:
