@@ -59,7 +59,14 @@ from CharacterContent.Spells.SpellLists import (
 )
 from Model.Content.Feature import FeatureUses, RegainedOn, regained_on_from_uses
 from Model.Content.Improvements import SkillProficiency
-from Core.Definitions import Ability, CharacterClass, DamageType, Sense, Skill
+from Core.Definitions import (
+    Ability,
+    CharacterClass,
+    Condition,
+    DamageType,
+    Sense,
+    Skill,
+)
 from Model.Character import Character
 
 STR, DEX, CON, INT, WIS, CHA = (
@@ -564,6 +571,19 @@ EPIC_BOONS = [
     (EpicBoon.BoonOfTheIronMind, CON),
     (EpicBoon.BoonOfTheNightSpirit, DEX),
     (EpicBoon.BoonOfTruesight, WIS),
+    (EpicBoon.BoonOfBloodshed, STR),
+    (EpicBoon.BoonOfBountifulHealth, CON),
+    (EpicBoon.BoonOfCommunication, CHA),
+    (EpicBoon.BoonOfDesperateResilience, CON),
+    (EpicBoon.BoonOfExquisiteRadiance, WIS),
+    (EpicBoon.BoonOfFluidForms, WIS),
+    (EpicBoon.BoonOfFortunesFavor, DEX),
+    (EpicBoon.BoonOfPoisonMastery, DEX),
+    (EpicBoon.BoonOfRevelry, CHA),
+    (EpicBoon.BoonOfTerror, CHA),
+    (EpicBoon.BoonOfTheBrightSun, CON),
+    (EpicBoon.BoonOfTheFuriousStorm, INT),
+    (EpicBoon.BoonOfTheSoulDrinker, STR),
 ]
 
 # (boon class, an ability NOT on its restricted list)
@@ -571,6 +591,17 @@ RESTRICTED_EPIC_BOONS = [
     (EpicBoon.BoonOfEruptingSpellpower, STR),
     (EpicBoon.BoonOfIrresistibleOffense, INT),
     (EpicBoon.BoonOfSpellRecall, DEX),
+    # "Increase your Intelligence, Wisdom, or Charisma score"
+    (EpicBoon.BoonOfCommunication, STR),
+    (EpicBoon.BoonOfFluidForms, DEX),
+    (EpicBoon.BoonOfRevelry, CON),
+    (EpicBoon.BoonOfTheFuriousStorm, STR),
+    # "Increase your Strength or Constitution score"
+    (EpicBoon.BoonOfDesperateResilience, DEX),
+    # "Increase your Charisma score"
+    (EpicBoon.BoonOfTerror, WIS),
+    # "Increase your Constitution, Wisdom, or Charisma score"
+    (EpicBoon.BoonOfTheBrightSun, INT),
 ]
 
 
@@ -660,6 +691,88 @@ class TestEpicBoonBenefits:
 
     def test_boon_of_magic_school_mastery_is_repeatable(self):
         assert EpicBoon.BoonOfMagicSchoolMastery.repeatable
+
+    def test_boon_of_poison_mastery_grants_poison_immunities(self, make_sources):
+        # "You have Immunity to Poison damage and the Poisoned condition."
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfPoisonMastery(DEX))
+        character = Character(sources)
+        assert character.is_immune_to_damage(DamageType.POISON)
+        assert character.is_immune_to_condition(Condition.POISONED)
+        assert not character.is_immune_to_condition(Condition.FRIGHTENED)
+
+    def test_boon_of_terror_grants_fearless_and_intimidation_expertise(
+        self, make_sources
+    ):
+        # "Immunity to the Frightened condition" + "Proficiency in the
+        # Intimidation skill ... You also gain Expertise in Intimidation."
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfTerror(CHA))
+        character = Character(sources)
+        assert character.is_immune_to_condition(Condition.FRIGHTENED)
+        assert character.is_proficient_in_skill(Skill.INTIMIDATION)
+        assert character.has_expertise_in_skill(Skill.INTIMIDATION)
+
+    def test_boon_of_terror_keeps_expertise_if_already_proficient(self, make_sources):
+        # "...if you don't already have it": an existing proficiency is fine.
+        sources = make_sources()
+        sources.add_effect(SkillProficiency([Skill.INTIMIDATION]))
+        sources.add_effect(EpicBoon.BoonOfTerror(CHA))
+        assert Character(sources).has_expertise_in_skill(Skill.INTIMIDATION)
+
+    def test_boon_of_terror_dc_is_8_plus_cha_mod_plus_proficiency(self, make_character):
+        # CHA 20 -> +5, level 19 -> proficiency bonus +6.
+        character = make_character(charisma=20, levels={CharacterClass.FIGHTER: 19})
+        assert EpicBoon.BoonOfTerror(CHA).calculate_dc(character) == 8 + 5 + 6
+
+    def test_boon_of_the_furious_storm_resists_lightning_and_thunder(
+        self, make_sources
+    ):
+        # "Resistance to Lightning and Thunder damage." The Immunity applies
+        # only while Bloodied, so it isn't a standing immunity.
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfTheFuriousStorm(INT))
+        character = Character(sources)
+        assert character.is_resistant_to_damage(DamageType.LIGHTNING)
+        assert character.is_resistant_to_damage(DamageType.THUNDER)
+        assert not character.is_immune_to_damage(DamageType.LIGHTNING)
+
+    def test_boon_of_the_soul_drinker_resists_cold_and_necrotic(self, make_sources):
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfTheSoulDrinker(STR))
+        character = Character(sources)
+        assert character.is_resistant_to_damage(DamageType.COLD)
+        assert character.is_resistant_to_damage(DamageType.NECROTIC)
+        assert not character.is_resistant_to_damage(DamageType.FIRE)
+
+    def test_boon_of_desperate_resilience_has_no_standing_resistance(
+        self, make_sources
+    ):
+        # Its Resistance applies only "While you are Bloodied".
+        sources = make_sources()
+        sources.add_effect(EpicBoon.BoonOfDesperateResilience(CON))
+        assert not Character(sources).is_resistant_to_damage(DamageType.FIRE)
+
+    @pytest.mark.parametrize(
+        "spell",
+        ["Maze", "Fireball"],
+        ids=["dragonmark_table", "sorcerer_level_3"],
+    )
+    def test_boon_of_siberys_accepts_table_or_sorcerer_spell(self, make_sources, spell):
+        sources = make_sources(constitution=20)
+        boon = EpicBoon.BoonOfSiberys(CON, spell, INT)
+        sources.add_effect(boon)
+        assert Character(sources).get_ability_score(CON) == 21
+        assert boon.spell == spell
+
+    @pytest.mark.parametrize(
+        "spell,spellcasting_ability",
+        [("Wish", INT), ("Cure Wounds", INT), ("Maze", STR)],
+        ids=["sorcerer_level_9", "not_sorcerer", "physical_ability"],
+    )
+    def test_boon_of_siberys_rejects_invalid_choices(self, spell, spellcasting_ability):
+        with pytest.raises(ValueError):
+            EpicBoon.BoonOfSiberys(CON, spell, spellcasting_ability)
 
 
 # ---------------------------------------------------------------------------
@@ -781,6 +894,9 @@ class TestRegainedOn:
             OriginFeats.VampireHunter(),
             EpicBoon.BoonOfFate(STR),
             EpicBoon.BoonOfEruptingSpellpower(INT),
+            EpicBoon.BoonOfTerror(CHA),
+            EpicBoon.BoonOfTheSoulDrinker(STR),
+            EpicBoon.BoonOfSiberys(STR, EpicBoon.SiberysDragonmarkSpell.MAZE, WIS),
         ],
         ids=lambda feat: feat.name,
     )
@@ -795,6 +911,9 @@ class TestRegainedOn:
             OriginFeats.ArcaneInfiltrator(INT),
             OriginFeats.PortalJumper(DamageType.RADIANT),
             GeneralFeats.DivinationAdept(4, WIS),
+            EpicBoon.BoonOfExquisiteRadiance(STR),
+            EpicBoon.BoonOfFluidForms(WIS),
+            EpicBoon.BoonOfRevelry(CHA),
         ],
         ids=lambda feat: feat.name,
     )
