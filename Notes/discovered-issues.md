@@ -96,7 +96,7 @@ Typing -5 as damage adds 5 temp HP (temp_reduction = min(temp_hp, -5)); a negati
 - 2026-10-28 rules-checker: found
 
 ### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
-- **Status:** open
+- **Status:** in-progress
 - **Area:** combat-simulator
 - **Where:** `Combat/Monsters/CR_0/monsters.py:DraconicSpirit`
 
@@ -104,6 +104,7 @@ Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated sta
 
 **History**
 - 2026-10-28 main-session: found
+- 2026-10-28 claude-main: marked in-progress; Main session working on it
 
 ### DI-010 · UPDATE_SNAPSHOTS with -n auto can lose golden updates
 - **Status:** open
@@ -111,6 +112,36 @@ Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated sta
 - **Where:** `tests/_snapshot_helpers.py`, `pytest.ini:7`
 
 On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote only 4 of the 5 builds' sheet_hashes.json entries; rerunning for the missing build alone fixed it. Likely several xdist workers read-modify-write the same golden file at once. Fix: lock the golden file during updates, or have the update path run with -p no:xdist / -n 0.
+
+**History**
+- 2026-10-28 main-session: found
+
+### DI-012 · Epic boons can't grant spells, so boon spells are text only
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Classes/BaseClasses/BardBase.py:296`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:955`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:1275`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:385`
+
+Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (ArtificerBase.py:264, BarbarianBase.py:204, BardBase.py:296, ... RogueBase.py:188), which has no spell path. So Boon of Revelry's Otto's Irresistible Dance, Boon of Siberys's chosen spell and Boon of Magic School Mastery's spells appear only in the description and are never added to the character's spell list or spell cards. Fix: give EpicBoon an optional grant_to(data) hook like GeneralFeat.grant_to (GeneralFeats.py:112) and have the class bases call it, then move the three boons' spells onto it.
+
+**History**
+- 2026-10-28 main-session: found
+
+### DI-013 · Boon effects that apply only while Bloodied are text only
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Features/CharacterFeats/EpicBoon.py:768`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:1121`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:598`
+
+The engine has no way to express a resistance or immunity that holds only under a condition. So Boon of Desperate Resilience's resistances and Boon of the Furious Storm's immunity (both only while Bloodied), and Boon of the Night Spirit's resistance (only in dim light or darkness), are left out of the sheet's resistance/immunity lists and appear only in the feature text. Fix: a conditional-defense entry (e.g. 'Resistance to X while Bloodied') that the sheet shows with its condition, and that the combat simulator could apply when Bloodied.
+
+**History**
+- 2026-10-28 main-session: found
+
+### DI-014 · tag_report.py misses usage_tags set as a class attribute
+- **Status:** open
+- **Area:** main-session
+- **Where:** `.claude/skills/usage-tags/tag_report.py:36`
+
+tag_report.py finds tags only as a literal usage_tags=[...] keyword in a call inside the class. A class that sets _USAGE_TAGS = [...] and passes it via a base class's __init__ shows as untagged, although the card renders the tags. Found while adding the Faerun Epic Boons (the agent worked around it by passing the literal in each subclass's super().__init__). Fix: also read a class-level _USAGE_TAGS list, or fall back to instantiating the feature and reading .usage_tags.
 
 **History**
 - 2026-10-28 main-session: found
@@ -126,10 +157,6 @@ a19d9d7e added 2024 versions of Catnap, Enervation, Negative Energy Flood and Po
 
 **History**
 - 2026-10-28 main-session: found
-
-
-
-
 - 2026-10-28 main-session: marked fixed; 2024 improved descriptions written, orphaned 2014 entries removed, 5 builds' goldens regenerated
 - 2026-10-28 git-commit: marked fixed in ea8a58f5
 
