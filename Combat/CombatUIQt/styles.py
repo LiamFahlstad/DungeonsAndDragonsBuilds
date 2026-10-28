@@ -64,6 +64,10 @@ QFrame#combatantCard[selected-active-target="true"] {
 }
 
 /* Control panel */
+QScrollArea#controlPanelScroll,
+QScrollArea#controlPanelScroll > QWidget#qt_scrollarea_viewport {
+    background: transparent;
+}
 QFrame#controlPanel {
     background-color: #16213e;
     border: 1px solid #0f3460;

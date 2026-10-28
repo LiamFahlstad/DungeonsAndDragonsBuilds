@@ -9,8 +9,9 @@ Or pick another campaign, or a custom log and output:
     python -m Combat.Tools.create_player_statistics_report --campaign time_loop_pr
     python -m Combat.Tools.create_player_statistics_report --log Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json --output my_report.html
 
-Reads the campaign's PlayerLogs/main_party.json together with the sessions
-its long rests archived (main_party_long_rest_*.json), and writes
+Reads the campaign's PlayerLogs/main_party.json, the encounter logs its
+entries point to, and the sessions older long rests archived
+(main_party_long_rest_*.json; see Combat/PlayerLog.py), and writes
 player_statistics_report.html into the campaign's folder (or custom --log /
 --output) with lifetime player statistics.
 """
@@ -18,6 +19,7 @@ player_statistics_report.html into the campaign's folder (or custom --log /
 import argparse
 from pathlib import Path
 
+import Combat.PlayerLog as PlayerLog
 import Combat.Scenarios as Scenarios
 from Combat.Campaign import Campaign
 from Combat.CombatUIQt.stats import (
@@ -86,16 +88,18 @@ def main() -> None:
             "session with --player-log first, or pass --log."
         )
 
-    # The whole history: the sessions long rests archived, then the log's own.
+    # The whole history: the sessions older long rests archived, then the
+    # log's own entries with their encounter logs' events.
     log_data = player_log_history(args.log)
-    long_rest_count = len(long_rest_archives(args.log))
 
     # Compute stats
     stats_by_name = compute_player_log_stats(log_data)
     names = player_roster(campaign)
 
-    # Session summary
-    sessions = log_data.get("sessions", [])
+    # Session summary: long rests are entries of their own now, archives before.
+    entries = log_data.get("sessions", [])
+    sessions = [s for s in entries if s.get("type") != PlayerLog.LONG_REST]
+    long_rest_count = len(long_rest_archives(args.log)) + len(entries) - len(sessions)
     session_count = len(sessions)
 
     started_ats = [s.get("started_at") for s in sessions if s.get("started_at")]

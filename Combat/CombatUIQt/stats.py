@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Core.Definitions import DamageType
 
@@ -94,11 +95,12 @@ def long_rest_archive_sessions(player_log_path: str | Path) -> list[dict]:
 
 
 def player_log_history(player_log_path: str | Path) -> dict:
-    """The player log with the long-rest archives' sessions in front of its
-    own: everything compute_player_log_stats needs for lifetime stats."""
+    """The player log's entries, each with its encounter log's events filled
+    in (Combat/PlayerLog.py), with the sessions older long rests archived in
+    front: everything compute_player_log_stats needs for lifetime stats."""
     path = Path(player_log_path)
-    current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    return {"sessions": long_rest_archive_sessions(path) + current.get("sessions", [])}
+    sessions = PlayerLog.with_events(PlayerLog.load(path)["sessions"], path)
+    return {"sessions": long_rest_archive_sessions(path) + sessions}
 
 
 def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:

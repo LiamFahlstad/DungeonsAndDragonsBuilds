@@ -382,7 +382,9 @@ class FeaturesMixin(CombatWindowState):
                     remaining.append(entry)
                 else:
                     self._log_event(
-                        f"{char['name']}'s {entry['name']} expires", note_turn=False
+                        f"{char['name']}'s {entry['name']} expires",
+                        note_turn=False,
+                        character=char["name"],
                     )
             char["active_features"] = remaining
         self._rebuild_cards()
@@ -395,7 +397,9 @@ class FeaturesMixin(CombatWindowState):
         if entry not in active_features:
             return
         active_features.remove(entry)
-        self._log_event(f"{char['name']}'s {entry['name']} ends early")
+        self._log_event(
+            f"{char['name']}'s {entry['name']} ends early", character=char["name"]
+        )
         if entry["name"] in char.get("conditions", []):
             self._remove_condition_from(char, entry["name"], source=char)
         else:

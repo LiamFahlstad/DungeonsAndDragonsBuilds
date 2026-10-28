@@ -88,6 +88,7 @@ class SpellsMixin(CombatWindowState):
             self._log_event(
                 f"{char['name']}'s {entry['name']} ends (concentration lost)",
                 note_turn=False,
+                character=char["name"],
             )
 
     def _tick_active_spells(self):
@@ -106,7 +107,9 @@ class SpellsMixin(CombatWindowState):
                     remaining.append(entry)
                 else:
                     self._log_event(
-                        f"{char['name']}'s {entry['name']} expires", note_turn=False
+                        f"{char['name']}'s {entry['name']} expires",
+                        note_turn=False,
+                        character=char["name"],
                     )
                     if entry.get("concentration"):
                         expired_concentration = True
@@ -122,7 +125,9 @@ class SpellsMixin(CombatWindowState):
         if entry not in active_spells:
             return
         active_spells.remove(entry)
-        self._log_event(f"{char['name']}'s {entry['name']} ends early")
+        self._log_event(
+            f"{char['name']}'s {entry['name']} ends early", character=char["name"]
+        )
         if entry.get("concentration"):
             self._clear_concentration_if_unused(char)
         self._rebuild_card(char)

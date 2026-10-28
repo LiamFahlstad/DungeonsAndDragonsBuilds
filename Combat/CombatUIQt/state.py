@@ -27,6 +27,8 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Rules import Rule
+from Combat.Scenario import CombatScenario
+from Model.Creatures.Combatants import BasicCombatantData
 
 from .undo import UndoPoint
 
@@ -53,7 +55,17 @@ class CombatWindowState:
     initiative_order: list[dict]
     current_turn_idx: int
     player_log_file: Path | None
+    # The encounter log events are written to (LoggingMixin._use_log_file).
+    log_file: Path
+    player_log_data: dict
+    # This run's entry in the party's journal (see Combat/PlayerLog.py).
+    _player_log_session: dict | None
+    _unscripted_session_type: str
     _scenario_name: str | None
+    # The campaign's scenarios, offered by Load Encounter, and the folder
+    # holding their encounter logs.
+    _scenarios: list[CombatScenario]
+    _combat_log_dir: Path
     _card_widgets: dict
     _initiative_inputs: dict
     _initiative_hp_inputs: dict
@@ -66,6 +78,10 @@ class CombatWindowState:
     _turn_counter_label: QLabel
     _next_turn_btn: QPushButton
     round_label: QLabel
+    _end_encounter_btn: QPushButton
+    _short_rest_btn: QPushButton
+    _long_rest_btn: QPushButton
+    _log_status_label: QLabel
     selected_label: QLabel
     target_label: QLabel
     roll_result_label: QLabel
@@ -85,6 +101,9 @@ class CombatWindowState:
 
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
         raise NotImplementedError("TurnsMixin._add_ad_hoc_combatant")
+
+    def _add_basic_combatant(self, combatant: BasicCombatantData):
+        raise NotImplementedError("CombatAppQt._add_basic_combatant")
 
     def _add_condition(self):
         raise NotImplementedError("ConditionsMixin._add_condition")
@@ -148,6 +167,9 @@ class CombatWindowState:
     def _hp_not_set(char: dict) -> bool:
         raise NotImplementedError("TurnsMixin._hp_not_set")
 
+    def _load_log_from_path(self, path: str):
+        raise NotImplementedError("LoggingMixin._load_log_from_path")
+
     def _log_event(
         self,
         text: str,
@@ -176,6 +198,18 @@ class CombatWindowState:
 
     def _refresh_initiative_tracker(self):
         raise NotImplementedError("TurnsMixin._refresh_initiative_tracker")
+
+    def _refresh_rest_buttons(self):
+        raise NotImplementedError("RestsMixin._refresh_rest_buttons")
+
+    def _long_rest(self):
+        raise NotImplementedError("RestsMixin._long_rest")
+
+    def _short_rest(self):
+        raise NotImplementedError("RestsMixin._short_rest")
+
+    def _rebuild_players_from_log(self):
+        raise NotImplementedError("LoggingMixin._rebuild_players_from_log")
 
     def _refresh_turn(self):
         raise NotImplementedError("TurnsMixin._refresh_turn")
@@ -243,6 +277,12 @@ class CombatWindowState:
     def _show_enable_feature_dialog(self):
         raise NotImplementedError("FeaturesMixin._show_enable_feature_dialog")
 
+    def _end_encounter(self):
+        raise NotImplementedError("EncountersMixin._end_encounter")
+
+    def _show_load_encounter_dialog(self):
+        raise NotImplementedError("EncountersMixin._show_load_encounter_dialog")
+
     def _show_more_info(self):
         raise NotImplementedError("DialogsMixin._show_more_info")
 
@@ -261,8 +301,26 @@ class CombatWindowState:
     def _show_visibility_info(self, visibility_name: str):
         raise NotImplementedError("DialogsMixin._show_visibility_info")
 
+    def _read_log(self) -> dict:
+        raise NotImplementedError("LoggingMixin._read_log")
+
+    def _start_unscripted_log(self, session_type: str | None = None):
+        raise NotImplementedError("LoggingMixin._start_unscripted_log")
+
+    def _use_log_file(self, path: Path, session_type: str | None = None):
+        raise NotImplementedError("LoggingMixin._use_log_file")
+
+    def _write_log(self, data: dict):
+        raise NotImplementedError("LoggingMixin._write_log")
+
+    def _write_player_log(self):
+        raise NotImplementedError("LoggingMixin._write_player_log")
+
     def _switch_to_combat(self):
         raise NotImplementedError("TurnsMixin._switch_to_combat")
+
+    def _switch_to_initiative(self):
+        raise NotImplementedError("TurnsMixin._switch_to_initiative")
 
     def _tick_active_features(self):
         raise NotImplementedError("FeaturesMixin._tick_active_features")

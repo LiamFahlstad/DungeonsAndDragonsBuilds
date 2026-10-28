@@ -7,7 +7,11 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
+import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
+from Combat.EncounterLogs import event_text, read_log_status
+from Combat.PlayerCombatant import combatant_from_character
+from Combat.PlayerLog import has_round_events, session_label
 
 from .stats import (
     DICT_STAT_KEYS,
@@ -44,7 +48,22 @@ class LoggingMixin(CombatWindowState):
             if not c.get("_is_player")
         ]
         self.log_file.write_text(json.dumps(data, indent=2, cls=_CombatJSONEncoder))
-        self._write_player_log()
+        # The party's journal gets this log's entry once something happens in it.
+        session = self._player_log_session
+        if (
+            session is not None
+            and has_round_events(data)
+            and not any(s is session for s in self.player_log_data["sessions"])
+        ):
+            self.player_log_data["sessions"].append(session)
+            self._write_player_log()
+
+    def _read_log(self) -> dict:
+        """The encounter log's contents; {} for a new log nothing was written
+        to yet (see _start_unscripted_log)."""
+        if not self.log_file.exists():
+            return {}
+        return json.loads(self.log_file.read_text())
 
     def _current_turn_character(self) -> dict | None:
         if self.phase != "COMBAT" or not self.initiative_order:
@@ -69,25 +88,25 @@ class LoggingMixin(CombatWindowState):
         action=None,
         value=None,
     ):
-        data = json.loads(self.log_file.read_text())
+        """Append an event to the encounter log. One that changes someone's
+        state carries `character`, `action` and `value`, which is what the
+        party's state is replayed from on the next run (see Combat/PlayerLog.py)."""
+        data = self._read_log()
         key = f"round_{self.round_number}"
         turn_name = self._current_turn_name() if note_turn else None
-        entry = f"[{turn_name}'s turn] {text}" if turn_name else text
+        event: dict[str, object] = {
+            "text": f"[{turn_name}'s turn] {text}" if turn_name else text
+        }
+        if character is not None:
+            event["character"] = character
+        if action is not None:
+            event["action"] = action
+            event["value"] = value
         round_log = data.setdefault(key, [])
         index = len(round_log)
-        round_log.append(entry)
-        player_index = None
-        if self.player_log_file:
-            player_entry: dict[str, object] = {"text": entry}
-            if action is not None:
-                player_entry["character"] = character
-                player_entry["action"] = action
-                player_entry["value"] = value
-            player_round = self.player_log_data["sessions"][-1].setdefault(key, [])
-            player_index = len(player_round)
-            player_round.append(player_entry)
+        round_log.append(event)
         if self._open_undo_point is not None:
-            self._open_undo_point.log_entries.append((key, index, player_index))
+            self._open_undo_point.log_entries.append((key, index))
         self._write_log(data)
 
     def _undo_last(self):
@@ -97,17 +116,12 @@ class LoggingMixin(CombatWindowState):
             return
         point = self.history.pop()
 
-        data = json.loads(self.log_file.read_text())
-        session = self.player_log_data["sessions"][-1] if self.player_log_file else None
+        data = self._read_log()
         undone = []
-        for key, index, player_index in reversed(point.log_entries):
-            undone.append(data[key].pop(index))
+        for key, index in reversed(point.log_entries):
+            undone.append(event_text(data[key].pop(index)))
             if not data[key]:
                 del data[key]
-            if session is not None and player_index is not None:
-                session[key].pop(player_index)
-                if not session[key]:
-                    del session[key]
 
         point.restore(self)
         if self.selected_character is not None and not any(
@@ -137,7 +151,7 @@ class LoggingMixin(CombatWindowState):
             # Empty starter log (e.g. a scenario's persistent log before its first
             # session) — nothing to resume. Behave exactly like a fresh run and
             # just log to this path from now on instead of a fresh timestamped one.
-            self.log_file = Path(path)
+            self._use_log_file(Path(path))
             self._write_log({})
             return
         # Saved logs only ever contain non-player combatants (see _write_log),
@@ -158,7 +172,7 @@ class LoggingMixin(CombatWindowState):
         self.selected_label.setText("Source: None")
         self.target_label.setText("Target: None")
         self.round_label.setText(f"Round {self.round_number}")
-        self.log_file = Path(path)
+        self._use_log_file(Path(path))
         # When loading a log we jump straight into COMBAT with the loaded order
         self.phase = "COMBAT"
         self.initiative_order = list(self.characters)
@@ -166,29 +180,83 @@ class LoggingMixin(CombatWindowState):
         self._switch_to_combat()
 
     def _init_player_log(self):
-        """Load (or create) the persistent player log, reconstruct current player
-        state by replaying every recorded action onto the freshly-built default
-        characters, and start a new session entry for this run."""
+        """Load the party's player log and bring the freshly built players to
+        their current state: replay the events of every encounter log it lists
+        since the last long rest (see Combat/PlayerLog.py)."""
         player_log_file = self.player_log_file
         assert player_log_file is not None  # only called when there is one
-        player_log_file.parent.mkdir(parents=True, exist_ok=True)
-        if player_log_file.exists():
-            self.player_log_data = json.loads(player_log_file.read_text())
-        else:
-            self.player_log_data = {"sessions": []}
+        self.player_log_data = PlayerLog.load(player_log_file)
+        # Entries in which nothing happened (older runs wrote one per launch).
+        sessions = self.player_log_data["sessions"]
+        sessions[:] = [
+            s for s in sessions if PlayerLog.worth_keeping(s, player_log_file)
+        ]
+        self._replay_party_history()
 
-        sessions = self.player_log_data.setdefault("sessions", [])
-        self._replay_player_log(sessions)
+    def _replay_party_history(self):
+        assert self.player_log_file is not None
+        recent = PlayerLog.since_long_rest(self.player_log_data["sessions"])
+        self._replay_player_log(PlayerLog.with_events(recent, self.player_log_file))
 
-        session_type = "encounter" if self._scenario_name else "adventure"
-        sessions.append(
+    def _use_log_file(self, path: Path, session_type: str | None = None):
+        """Log to `path` from now on, under its entry in the party's journal:
+        the existing one when the party has been in this log before (a fight
+        continued), else a new one, which is only written once something
+        happens in the log (see _write_log). `session_type` overrides the
+        type that entry gets (e.g. "short_rest")."""
+        self.log_file = path
+        if not self.player_log_file:
+            return
+        session_type = session_type or self._session_type
+        ref = PlayerLog.log_ref(self.player_log_file, path)
+        sessions = self.player_log_data["sessions"]
+        self._player_log_session = next(
+            (s for s in sessions if s.get("log") == ref),
             {
                 "type": session_type,
-                "scenario": self._scenario_name,
-                "started_at": datetime.now().isoformat(timespec="seconds"),
-                "round_number": self.round_number,
-            }
+                "scenario": (
+                    self._scenario_name if session_type == PlayerLog.ENCOUNTER else None
+                ),
+                "log": ref,
+                "started_at": PlayerLog.now(),
+            },
         )
+
+    def _start_unscripted_log(self, session_type: str | None = None):
+        """Log to a new, timestamped log in the campaign's CombatLogs folder,
+        e.g. adventure_2026-10-29_19-00-00.json, for a run without a scenario
+        or a short rest (`session_type`). The file is only created once
+        something is logged in it, so a session where nothing happens leaves
+        no empty log behind."""
+        session_type = session_type or self._session_type
+        stem = f"{session_type}_{datetime.now():%Y-%m-%d_%H-%M-%S}"
+        path = self._combat_log_dir / f"{stem}.json"
+        # Never the log just left, even within the same second.
+        n = 2
+        while path.exists() or path == getattr(self, "log_file", None):
+            path = self._combat_log_dir / f"{stem}_{n}.json"
+            n += 1
+        self._use_log_file(path, session_type)
+
+    @property
+    def _session_type(self) -> str:
+        return (
+            PlayerLog.ENCOUNTER
+            if self._scenario_name
+            else self._unscripted_session_type
+        )
+
+    def _rebuild_players_from_log(self):
+        """Reset every player to their character sheet and replay the party's
+        history onto them again, e.g. after a restart took a fight out of it.
+        Each player's dict is refilled in place, so widgets keyed by it hold."""
+        for char in self.characters:
+            if char.get("_is_player"):
+                fresh = combatant_from_character(char["_stat_block"])
+                fresh["stats"] = _default_stats()
+                char.clear()
+                char.update(fresh)
+        self._replay_party_history()
 
     def _replay_player_log(self, sessions: list[dict]):
         """Reconstruct current player state from the log history. Older sessions
@@ -377,33 +445,33 @@ class LoggingMixin(CombatWindowState):
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         """Aggregate lifetime stats per character name: the sessions archived
-        by long rests, then the player log's (including this one)."""
+        by long rests, then every encounter in the player log."""
         if not self.player_log_file:
             return {}
+        sessions = PlayerLog.with_events(
+            self.player_log_data["sessions"], self.player_log_file
+        )
         return compute_player_log_stats(
-            {
-                "sessions": long_rest_archive_sessions(self.player_log_file)
-                + self.player_log_data.get("sessions", [])
-            }
+            {"sessions": long_rest_archive_sessions(self.player_log_file) + sessions}
         )
 
     def _write_player_log(self):
         if not self.player_log_file:
             return
-        session = self.player_log_data["sessions"][-1]
-        session["round_number"] = self.round_number
+        self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
         self.player_log_file.write_text(
             json.dumps(self.player_log_data, indent=2, cls=_CombatJSONEncoder)
         )
 
     def _log_status_text(self) -> str:
         """One-line summary of whether player-log tracking is active, shown in the side panel."""
-        if not self.player_log_file:
+        if not self.player_log_file or self._player_log_session is None:
             return "Player log: inactive — run with --player-log to track the party across sessions."
-        session = self.player_log_data["sessions"][-1]
-        label = f"Tracking players in {self.player_log_file.name} — {session['type'].capitalize()} session"
-        if session.get("scenario"):
-            label += f" ({session['scenario']})"
+        session = self._player_log_session
+        label = (
+            f"Tracking players in {self.player_log_file.name} — "
+            f"{session_label(session)}"
+        )
         return label
 
     def _show_current_log(self):
@@ -411,7 +479,7 @@ class LoggingMixin(CombatWindowState):
         if not self.log_file.exists():
             QMessageBox.information(self._window, "Encounter Log", "No log data yet.")
             return
-        data = json.loads(self.log_file.read_text())
+        data = self._read_log()
         round_keys = sorted(
             (
                 k
@@ -447,7 +515,7 @@ class LoggingMixin(CombatWindowState):
                 round_num = key.split("_", 1)[1]
                 lines.append(f"Round {round_num}")
                 for event in data[key]:
-                    lines.append(f"  • {event}")
+                    lines.append(f"  • {event_text(event)}")
                 lines.append("")
             text.setPlainText("\n".join(lines).rstrip())
         layout.addWidget(text)
@@ -494,30 +562,26 @@ class LoggingMixin(CombatWindowState):
                 )
             lines.append("")
 
+        # Where the party has been, newest first. The details of each fight
+        # are in its encounter log.
         sessions = self.player_log_data.get("sessions", [])
-        for i, session in reversed(list(enumerate(sessions, start=1))):
-            header = f"Session {i} — {session['type'].capitalize()}"
-            if session.get("scenario"):
-                header += f" ({session['scenario']})"
-            header += f" — {session.get('started_at', '')}"
-            lines.append(header)
-            round_keys = sorted(
-                (
-                    k
-                    for k in session
-                    if k.startswith("round_") and k.split("_", 1)[1].isdigit()
-                ),
-                key=lambda k: int(k.split("_", 1)[1]),
-            )
-            for key in round_keys:
-                round_num = key.split("_", 1)[1]
-                lines.append(f"  Round {round_num}")
-                for event in session[key]:
-                    event_text = (
-                        event.get("text", "") if isinstance(event, dict) else event
-                    )
-                    lines.append(f"    • {event_text}")
-            lines.append("")
+        if sessions:
+            lines.append("Where the party has been (newest first)")
+        current_since = len(sessions) - len(PlayerLog.since_long_rest(sessions))
+        for i, session in reversed(list(enumerate(sessions))):
+            line = f"  {session.get('started_at', '')[:16].replace('T', ' ')}  "
+            line += session_label(session)
+            if "log" in session:
+                status = read_log_status(
+                    PlayerLog.resolve_log(self.player_log_file, session["log"])
+                )
+                if status is not None:
+                    where = "ended in round" if status.ended else "round"
+                    line += f" — {where} {status.round_number}, "
+                    line += f"{status.standing} of {status.total} standing"
+            if i < current_since:
+                line += "  (before the last long rest)"
+            lines.append(line)
         text.setPlainText(
             "\n".join(lines).rstrip() if lines else "No player log data yet."
         )

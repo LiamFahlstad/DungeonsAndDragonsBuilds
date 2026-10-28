@@ -3,6 +3,7 @@ import sys
 
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
+from Combat.EncounterLogs import scenario_log_path
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -16,8 +17,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--log",
         default=None,
-        help="Path to a Combat/Campaigns/<Campaign>/CombatLogs/*.json file to resume from, "
-        "picking up the combatants' HP/conditions/round where that log left off",
+        help="Path to a Combat/Campaigns/<Campaign>/CombatLogs/*.json encounter log to "
+        "use. Defaults to --scenario's own log, CombatLogs/<scenario>.json (created if "
+        "missing). When the log holds a fight in progress, the window asks whether to "
+        "continue it (HP/conditions/round where it left off) or restart it with fresh "
+        "monsters (the old log is kept as a backup).",
     )
     parser.add_argument(
         "--campaign",
@@ -32,21 +36,20 @@ if __name__ == "__main__":
         default=None,
         help="Path to a persistent player log JSON file "
         "(e.g. Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json). "
-        "The 'Players' combatant group is loaded, preloading HP/conditions/etc. from the most "
-        "recent session, and every action taken against a player is appended to this file "
-        "across runs. A new session entry ('encounter' if --scenario is given, else 'adventure') "
-        "is started each run.",
+        "It is the party's journal: one line per encounter, adventure or rest, each pointing "
+        "to the encounter log with the details. The 'Players' combatant group is loaded and "
+        "brought to its current HP/conditions/slots by replaying those logs since the last "
+        "long rest.",
     )
     parser.add_argument(
         "--rest",
         choices=["long", "short"],
         default=None,
         help="Apply a rest to the tracked party instead of launching a session (requires "
-        "--player-log). 'long' fully restores HP and spell slots by resetting the player "
-        "log in place, first backing up its session history to a new, timestamped sibling "
-        "file, without opening any window. 'short' opens a small healing window (not the "
-        "main combat window) where each player can be healed a manually-entered amount, "
-        "updating the existing player log in place.",
+        "--player-log). 'long' records a long rest in the player log, after which the party "
+        "is fully rested (HP, spell slots, feature uses), without opening any window. "
+        "'short' opens a small healing window (not the main combat window) where each "
+        "player can be healed a manually-entered amount.",
     )
     parser.add_argument(
         "--difficulty",
@@ -91,9 +94,10 @@ if __name__ == "__main__":
         from Combat.CombatUIQt.rest import apply_long_rest, run_short_rest
 
         if args.rest == "long":
-            backup_path = apply_long_rest(args.player_log)
+            apply_long_rest(args.player_log)
             print(
-                f"Long rest applied. Player log reset; old session history backed up to: {backup_path}"
+                f"Long rest recorded in {args.player_log}: the party is fully rested "
+                "from the next run on."
             )
         else:
             run_short_rest(args.player_log, campaign)
@@ -101,6 +105,9 @@ if __name__ == "__main__":
 
     if args.scenario is None and not args.player_log:
         args.scenario = campaign.scenarios[0].name
+
+    if args.scenario and args.log is None:
+        args.log = str(scenario_log_path(campaign.combat_log_dir, args.scenario))
 
     scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
     combatants = scenario.build_combatants() if scenario else []
@@ -180,5 +187,6 @@ if __name__ == "__main__":
         resume_log_path=args.log,
         player_log_path=args.player_log,
         scenario_name=args.scenario,
+        scenarios=campaign.scenarios,
     )
     app.run()

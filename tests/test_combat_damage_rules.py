@@ -18,6 +18,7 @@ CardsMixin._char_death_state). Expected values come from the rules glossary:
   first revived by magic such as the Raise Dead or Revivify spell."
 """
 
+import json
 from functools import cache
 
 import pytest
@@ -54,15 +55,12 @@ def no_modal_dialogs(monkeypatch):
 
 @pytest.fixture
 def fight(tmp_path):
-    """A Pirate (initiative 15) attacking a 30 HP Tiger (10) in round 1, with
-    a player log, which is where the structured damage values are recorded."""
+    """A Pirate (initiative 15) attacking a 30 HP Tiger (10) in round 1."""
     ui = make_ui(tmp_path, [Pirate(), Tiger()])
     pirate, tiger = ui.characters
     ui._initiative_inputs[id(pirate)].setText("15")
     ui._initiative_inputs[id(tiger)].setText("10")
     ui._start_combat()
-    ui.player_log_file = tmp_path / "players.json"
-    ui.player_log_data = {"sessions": [{}]}
     ui._select_character(pirate)
     ui._select_target_character(tiger)
     return ui, pirate, tiger
@@ -83,10 +81,12 @@ def _heal(ui, amount: int):
 
 
 def _logged_damage(ui) -> list[dict]:
-    session = ui.player_log_data["sessions"][-1]
+    """The structured damage values in the encounter log, which the party's
+    state is replayed from."""
+    log = json.loads(ui.log_file.read_text())
     return [
         entry["value"]
-        for key, entries in session.items()
+        for key, entries in log.items()
         if key.split("_")[-1].isdigit()
         for entry in entries
         if isinstance(entry, dict) and entry.get("action") == "damage"

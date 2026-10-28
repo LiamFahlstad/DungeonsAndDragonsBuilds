@@ -411,14 +411,45 @@ class WindowMixin(CombatWindowState):
         # Actions section
         panel_layout.addWidget(self._section_header("Actions"))
 
+        encounter_row = QHBoxLayout()
+        encounter_row.setSpacing(6)
+        load_encounter_btn = QPushButton("Load Encounter...")
+        load_encounter_btn.setEnabled(bool(self._scenarios))
+        load_encounter_btn.clicked.connect(self._show_load_encounter_dialog)
+        encounter_row.addWidget(load_encounter_btn)
+
         add_combatant_btn = QPushButton("+ Add Combatant")
         add_combatant_btn.clicked.connect(self._show_add_combatant_dialog)
-        panel_layout.addWidget(add_combatant_btn)
+        encounter_row.addWidget(add_combatant_btn)
+
+        self._end_encounter_btn = QPushButton("End Encounter")
+        self._end_encounter_btn.setEnabled(self._scenario_name is not None)
+        self._end_encounter_btn.clicked.connect(self._end_encounter)
+        encounter_row.addWidget(self._end_encounter_btn)
+        panel_layout.addLayout(encounter_row)
+
+        # Rests, between fights (see rests_mixin.py)
+        rest_row = QHBoxLayout()
+        rest_row.setSpacing(6)
+        self._short_rest_btn = QPushButton("Short Rest...")
+        self._short_rest_btn.clicked.connect(self._short_rest)
+        rest_row.addWidget(self._short_rest_btn)
+        self._long_rest_btn = QPushButton("Long Rest")
+        self._long_rest_btn.clicked.connect(self._long_rest)
+        rest_row.addWidget(self._long_rest_btn)
+        panel_layout.addLayout(rest_row)
+        self._refresh_rest_buttons()
 
         # Next turn button (hidden during initiative phase)
         self._turn_divider = self._make_divider()
         self._turn_divider.hide()
         panel_layout.addWidget(self._turn_divider)
+
+        turn_row = QHBoxLayout()
+        turn_row.setSpacing(6)
+        undo_btn = QPushButton("Undo Last Action")
+        undo_btn.clicked.connect(self._undo_last)
+        turn_row.addWidget(undo_btn, stretch=1)
 
         self._next_turn_btn = QPushButton("Next Combatant")
         self._next_turn_btn.clicked.connect(self._advance_turn)
@@ -427,35 +458,43 @@ class WindowMixin(CombatWindowState):
             "background-color: #3a2e00; border: 1px solid #c9a84c;"
             " color: #c9a84c; font-weight: bold; min-height: 28px;"
         )
-        panel_layout.addWidget(self._next_turn_btn)
+        turn_row.addWidget(self._next_turn_btn, stretch=2)
+        panel_layout.addLayout(turn_row)
 
-        undo_btn = QPushButton("Undo Last Action")
-        undo_btn.clicked.connect(self._undo_last)
-        panel_layout.addWidget(undo_btn)
+        self._log_status_label = QLabel(self._log_status_text())
+        self._log_status_label.setWordWrap(True)
+        self._log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        panel_layout.addWidget(self._log_status_label)
 
-        log_status_label = QLabel(self._log_status_text())
-        log_status_label.setWordWrap(True)
-        log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
-        panel_layout.addWidget(log_status_label)
-
-        log_btn = QPushButton("Encounter Log")
-        log_btn.clicked.connect(self._show_current_log)
-        panel_layout.addWidget(log_btn)
-
-        player_log_btn = QPushButton("Player Log")
-        player_log_btn.clicked.connect(self._show_player_log)
-        panel_layout.addWidget(player_log_btn)
-
-        stats_btn = QPushButton("Statistics")
-        stats_btn.clicked.connect(self._show_statistics)
-        panel_layout.addWidget(stats_btn)
-
-        rules_btn = QPushButton("Rules")
-        rules_btn.clicked.connect(self._show_rules)
-        panel_layout.addWidget(rules_btn)
+        # Encounter Log / Player Log / Statistics / Rules, two to a row
+        info_grid = QGridLayout()
+        info_grid.setSpacing(6)
+        for index, (text, handler) in enumerate(
+            [
+                ("Encounter Log", self._show_current_log),
+                ("Player Log", self._show_player_log),
+                ("Statistics", self._show_statistics),
+                ("Rules", self._show_rules),
+            ]
+        ):
+            btn = QPushButton(text)
+            btn.clicked.connect(handler)
+            info_grid.addWidget(btn, index // 2, index % 2)
+        panel_layout.addLayout(info_grid)
 
         panel_layout.addStretch()
-        root_layout.addWidget(panel)
+
+        # On a short screen the panel scrolls rather than squashing its rows.
+        panel_scroll = QScrollArea()
+        panel_scroll.setObjectName("controlPanelScroll")
+        panel_scroll.setWidget(panel)
+        panel_scroll.setWidgetResizable(True)
+        panel_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        panel_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_bar = panel_scroll.verticalScrollBar()
+        assert scroll_bar is not None  # every QScrollArea has one
+        panel_scroll.setFixedWidth(panel.width() + scroll_bar.sizeHint().width())
+        root_layout.addWidget(panel_scroll)
 
         # Shortcuts that must stand down (fully disabled, not just a no-op
         # handler) while a combo box has focus — see _update_combo_sensitive_shortcuts.
@@ -603,6 +642,13 @@ class WindowMixin(CombatWindowState):
         self._add_combatant_shortcut = QShortcut(QKeySequence("Ctrl+N"), self._window)
         self._add_combatant_shortcut.activated.connect(self._show_add_combatant_dialog)
         self._combo_sensitive_shortcuts.append(self._add_combatant_shortcut)
+
+        # Ctrl+O: open the Load Encounter dialog
+        self._load_encounter_shortcut = QShortcut(QKeySequence("Ctrl+O"), self._window)
+        self._load_encounter_shortcut.activated.connect(
+            self._show_load_encounter_dialog
+        )
+        self._combo_sensitive_shortcuts.append(self._load_encounter_shortcut)
 
         # Keep the shortcuts above disabled while focus is on a combo box, and
         # restored the instant it moves elsewhere (see the method docstring).

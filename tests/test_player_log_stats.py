@@ -1,6 +1,6 @@
-"""Lifetime player statistics: a long rest archives the player log and empties
-it, so the stats (the report tool and the in-app Players tabs) must read the
-archives too."""
+"""Lifetime player statistics: the stats (the report tool and the in-app
+Players tabs) read every entry of the player log, the events of the encounter
+logs those entries point to, and the archives older long rests made."""
 
 import json
 import sys
@@ -88,10 +88,29 @@ def test_lifetime_stats_count_archived_sessions(party_log):
 def test_a_real_long_rest_keeps_the_history(tmp_path):
     log = tmp_path / "main_party.json"
     _write(log, _session("1", "A", 3), _session("2", "A", 4))
-    before = player_log_history(log)
+    before = compute_player_log_stats(player_log_history(log))
     apply_long_rest(str(log))
-    assert json.loads(log.read_text()) == {"sessions": []}
-    assert player_log_history(log) == before
+    sessions = json.loads(log.read_text())["sessions"]
+    assert [s["type"] for s in sessions] == ["encounter", "encounter", "long_rest"]
+    assert compute_player_log_stats(player_log_history(log)) == before
+
+
+def test_stats_read_the_encounter_logs_entries_point_to(tmp_path):
+    log = tmp_path / "PlayerLogs" / "main_party.json"
+    fight = tmp_path / "CombatLogs" / "fight.json"
+    fight.parent.mkdir()
+    fight.write_text(
+        json.dumps(
+            {k: v for k, v in _session("1", "A", 6).items() if k.startswith("round_")}
+        )
+    )
+    log.parent.mkdir()
+    _write(
+        log,
+        {"type": "encounter", "scenario": "fight", "log": "../CombatLogs/fight.json"},
+    )
+    stats = compute_player_log_stats(player_log_history(log))
+    assert stats["A"]["damage_dealt"] == 6
 
 
 def test_in_app_player_stats_include_archives(tmp_path, party_log):

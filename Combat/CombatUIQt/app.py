@@ -1,13 +1,14 @@
 """Main CombatAppQt class."""
 
 import sys
-from datetime import datetime
 from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
 
 from Combat.Definitions import tracked_condition_names
 from Combat.PlayerCombatant import combatant_from_character
+from Combat.PlayerLog import scenario_title
+from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import (
     BasicCombatantData,
     ExtendedCombatantData,
@@ -18,6 +19,8 @@ from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
+from .encounters_mixin import RESTART, EncountersMixin
+from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
 from .rolls_mixin import RollsMixin
@@ -38,6 +41,8 @@ class CombatAppQt(
     CardsMixin,
     LoggingMixin,
     DialogsMixin,
+    EncountersMixin,
+    RestsMixin,
     TimerMixin,
     RollsMixin,
     WindowMixin,
@@ -58,7 +63,11 @@ class CombatAppQt(
         resume_log_path: str | None = None,
         player_log_path: str | None = None,
         scenario_name: str | None = None,
+        scenarios: list[CombatScenario] | None = None,
+        session_type: str = "adventure",
     ):
+        """`session_type` is what the player log records a run without a
+        scenario as: "adventure", or "short_rest" for the short-rest window."""
         self.combatants_per_column = combatants_per_column
         self._resume_log_path = resume_log_path
 
@@ -82,25 +91,27 @@ class CombatAppQt(
         self.initiative_order: list[dict] = []
         self.current_turn_idx: int = 0
 
-        # --- Persistent player log: preload player state, start a new session ---
+        # --- Persistent player log: bring the party to their current state ---
         self.player_log_file = Path(player_log_path) if player_log_path else None
         self._scenario_name = scenario_name
+        self._scenarios = list(scenarios or [])
+        self._unscripted_session_type = session_type
         self.player_log_data: dict = {"sessions": []}
+        self._player_log_session: dict | None = None
         if self.player_log_file:
             self._init_player_log()
 
         # New, timestamped encounter logs go in the campaign's own CombatLogs folder.
         log_dir = Path(combat_log_dir)
         log_dir.mkdir(parents=True, exist_ok=True)
+        self._combat_log_dir = log_dir
         if resume_log_path:
-            # `run()` calls `_load_log_from_path` right after this, which reassigns
-            # `self.log_file` to this same path once it's actually read — don't write
+            # `run()` opens this log right after this (continuing or restarting
+            # it), which reassigns `self.log_file` to this same path once it's read — don't write
             # here first or we'd clobber the saved log before it's loaded.
             self.log_file = Path(resume_log_path)
         else:
-            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            self.log_file = log_dir / f"encounter_log_{timestamp}.json"
-            self._write_log({})
+            self._start_unscripted_log()
 
         # card widget registry: maps id(char_dict) -> QFrame
         self._card_widgets: dict = {}
@@ -194,7 +205,19 @@ class CombatAppQt(
         self._build_window()
 
         if self._resume_log_path:
-            self._load_log_from_path(self._resume_log_path)
+            path = Path(self._resume_log_path)
+            title = (
+                scenario_title(self._scenario_name)
+                if self._scenario_name
+                else path.name
+            )
+            # Restarting needs fresh monsters, which only a scenario provides.
+            choice = self._ask_continue_or_restart(
+                path, title, can_restart=self._scenario_name is not None
+            )
+            if choice is None:
+                return
+            self._open_encounter_log(path, restart=choice == RESTART)
 
         self._window.show()
         self._start_session_timer()

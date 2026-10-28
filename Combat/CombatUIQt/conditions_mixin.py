@@ -149,7 +149,10 @@ class ConditionsMixin(CombatWindowState):
             return
         counts = self.selected_character.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1
-        self._log_event(f"{self.selected_character['name']} uses {action_type}")
+        self._log_event(
+            f"{self.selected_character['name']} uses {action_type}",
+            character=self.selected_character["name"],
+        )
         self._refresh_selected_card()
 
     @undoable
@@ -160,7 +163,10 @@ class ConditionsMixin(CombatWindowState):
         counts = self.selected_character.setdefault("action_uses", {})
         if counts.get(action_type, 0) > 0:
             counts[action_type] -= 1
-            self._log_event(f"{self.selected_character['name']} refunds {action_type}")
+            self._log_event(
+                f"{self.selected_character['name']} refunds {action_type}",
+                character=self.selected_character["name"],
+            )
             self._refresh_selected_card()
 
     @undoable
@@ -171,7 +177,10 @@ class ConditionsMixin(CombatWindowState):
         visibility_states = self.selected_character.get("visibility_states", [])
         if vis not in visibility_states:
             visibility_states.append(vis)
-            self._log_event(f"{self.selected_character['name']} gains {vis}")
+            self._log_event(
+                f"{self.selected_character['name']} gains {vis}",
+                character=self.selected_character["name"],
+            )
             self._refresh_selected_card()
 
     @undoable
@@ -182,5 +191,8 @@ class ConditionsMixin(CombatWindowState):
         visibility_states = self.selected_character.get("visibility_states", [])
         if vis in visibility_states:
             visibility_states.remove(vis)
-            self._log_event(f"{self.selected_character['name']} loses {vis}")
+            self._log_event(
+                f"{self.selected_character['name']} loses {vis}",
+                character=self.selected_character["name"],
+            )
             self._refresh_selected_card()

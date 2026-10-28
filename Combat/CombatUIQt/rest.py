@@ -1,24 +1,20 @@
-"""Long-rest checkpointing and the short-rest healing window.
+"""Long rests and the short-rest healing window.
 
-A long rest empties the current player log in place: the tracked party's
-character sheets are always built at full HP, full spell slots, and zero
-feature uses spent, so an empty log already replays to a fully rested party
-on the next run — no manual restoration needed. Before it's cleared, the
-log's full session history is archived to a new, timestamped sibling path
-so nothing is lost.
+A long rest is one line in the party's player log (Combat/PlayerLog.py): the
+party's state is replayed only from what came after the last one, onto
+character sheets that are always built at full HP, full spell slots and zero
+feature uses spent, so the party is fully rested on the next run. Nothing
+before it is deleted; the statistics still count it.
 
-A short rest reuses CombatAppQt to reconstruct the party's current state (it
-already knows how to replay a player log onto freshly-built characters —
-see LoggingMixin._init_player_log) without ever calling `.run()`, and opens
-a small standalone window — not the main combat window — to manually heal
-each player and regain any short-rest-cadence feature uses (e.g. Channel
-Divinity), appending the result to the same log.
+A short rest reuses CombatAppQt to reconstruct the party's current state
+without ever calling `.run()`, and opens a small standalone window — not the
+main combat window — to manually heal each player and regain any
+short-rest-cadence feature uses (e.g. Channel Divinity). Those events go in
+a short_rest_<timestamp>.json log of their own, which the player log lists
+like any other.
 """
 
-import json
 import sys
-from datetime import datetime
-from pathlib import Path
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -33,24 +29,16 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+import Combat.PlayerLog as PlayerLog
 from Combat.Campaign import Campaign
 from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
 from Core.Definitions import Condition
 
 from .app import CombatAppQt
-from .stats import LONG_REST_ARCHIVE_SUFFIX
 from .styles import QSS
 
 SHORT_REST_CADENCES = {RegainedOn.SHORT_REST, RegainedOn.SHORT_OR_LONG_REST}
-
-
-def _rest_checkpoint_path(player_log_path: str, suffix: str) -> str:
-    """A new, timestamped sibling path next to player_log_path, e.g.
-    'main_party.json' -> 'main_party_long_rest_20260831_071200.json'."""
-    src = Path(player_log_path)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return str(src.with_name(f"{src.stem}_{suffix}_{timestamp}{src.suffix}"))
 
 
 def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
@@ -62,6 +50,7 @@ def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
         combat_log_dir=campaign.combat_log_dir,
         player_log_path=player_log_path,
         scenario_name=None,
+        session_type="short_rest",
     )
 
 
@@ -85,43 +74,37 @@ def _restore_feature_uses(app: CombatAppQt, char: dict, cadences: set, note: str
             )
 
 
-def apply_long_rest(player_log_path: str) -> str:
-    """Archive the current player log's full session history to a new,
-    timestamped sibling path, then empty the current log in place and
-    return the backup path. An empty log already replays to a fully rested
-    party — full HP, full spell slots, zero feature uses spent — since
-    character sheets are always built that way. Never opens a window."""
-    src = Path(player_log_path)
-    backup_path = Path(_rest_checkpoint_path(player_log_path, LONG_REST_ARCHIVE_SUFFIX))
-    backup_path.parent.mkdir(parents=True, exist_ok=True)
-    if src.exists():
-        backup_path.write_text(src.read_text())
-    else:
-        backup_path.write_text(json.dumps({"sessions": []}, indent=2))
-    src.parent.mkdir(parents=True, exist_ok=True)
-    src.write_text(json.dumps({"sessions": []}, indent=2))
-    return str(backup_path)
+def apply_long_rest(player_log_path: str):
+    """Record a long rest in the player log: from the next run on, the party
+    is fully rested (see the module docstring). Never opens a window."""
+    PlayerLog.append_long_rest(player_log_path)
 
 
 def run_short_rest(player_log_path: str, campaign: Campaign):
-    """Open a small standalone healing window (not the main combat window)
-    letting each of the campaign's tracked players be healed a
-    manually-entered amount, and automatically regain any short-rest-cadence
-    feature uses. Heals and regains are appended to the same player log
-    passed in — no new file is created."""
+    """Open the short-rest window on its own (not the main combat window),
+    for `--rest short`. Heals and regains go in a short-rest log of their
+    own, which the player log lists once anything is applied."""
     app = _build_party_state(player_log_path, campaign)
-    players = [c for c in app.characters if c.get("_is_player")]
-    for char in players:
-        _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
-
     qapp = QApplication.instance()
     if qapp is None:
         qapp = QApplication(sys.argv)
     assert isinstance(qapp, QApplication)
     qapp.setStyleSheet(QSS)
+    short_rest_dialog(app).exec()
 
-    dlg = QDialog()
-    dlg.setWindowTitle(f"Short Rest — {Path(player_log_path).name}")
+
+def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialog:
+    """A short rest for the tracked party in `app`, logged to its current log:
+    every short-rest-cadence feature use comes back right away, and the
+    window built here lets each player be healed a manually-entered amount
+    (Hit Dice spent). Returned unopened; the caller exec()s it."""
+    players = [c for c in app.characters if c.get("_is_player")]
+    for char in players:
+        _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
+
+    dlg = QDialog(parent)
+    title = app.player_log_file.name if app.player_log_file else "party"
+    dlg.setWindowTitle(f"Short Rest — {title}")
     dlg.setMinimumSize(420, 120 + 40 * len(players))
     dlg.setStyleSheet(QSS)
 
@@ -205,5 +188,4 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
     btn_row.addWidget(apply_btn)
     btn_row.addWidget(close_btn)
     outer.addLayout(btn_row)
-
-    dlg.exec()
+    return dlg

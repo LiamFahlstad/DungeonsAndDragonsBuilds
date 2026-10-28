@@ -5,10 +5,9 @@ is an @undoable method. Before it runs, an UndoPoint records the combat
 state - each combatant's own data (HP, conditions, slots, stats, timers,
 ...), who is in the fight, the turn order, the round and the turn - and while
 it runs, which log lines it writes. Undoing it puts that state back and
-deletes exactly those lines from the encounter log and the player log. So a
-cast's condition badges, Concentrating, spent action and duration bar go back
-together, and an undone hit isn't left in the player log to be replayed next
-session.
+deletes exactly those lines from the encounter log. So a cast's condition
+badges, Concentrating, spent action and duration bar go back together, and an
+undone hit isn't left in the log to be replayed onto the party next session.
 
 An operation that calls others (casting a spell adds conditions) is one
 step: only the outermost @undoable records one. An operation that changes
@@ -52,9 +51,9 @@ class UndoPoint:
     round_number: int
     # _combat_data of each of `characters`, in the same order.
     combat_data: list[dict]
-    # (round key, index in the encounter log's round, index in the player
-    # log's round or None) of each line the operation logged, in order.
-    log_entries: list[tuple[str, int, int | None]] = field(default_factory=list)
+    # (round key, index in the encounter log's round) of each line the
+    # operation logged, in order.
+    log_entries: list[tuple[str, int]] = field(default_factory=list)
 
     @classmethod
     def capture(cls, app) -> "UndoPoint":

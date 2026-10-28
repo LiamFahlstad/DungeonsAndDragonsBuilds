@@ -381,6 +381,24 @@ class TurnsMixin(CombatWindowState):
 
         self._rebuild_cards()
         self._refresh_turn()
+        self._refresh_rest_buttons()
+
+    def _switch_to_initiative(self):
+        """Show a fresh initiative-entry screen for self.characters, in place
+        of the card grid (or of the previous initiative screen)."""
+        old = self._scroll_area.takeWidget()
+        if old is not None and old is not self._cards_container:
+            old.deleteLater()
+        self._cards_container.hide()
+
+        # Hide the combat-only panel widgets
+        self._init_tracker_container.hide()
+        self._turn_divider.hide()
+        self._next_turn_btn.hide()
+
+        self._initiative_widget = self._build_initiative_widget()
+        self._scroll_area.setWidget(self._initiative_widget)
+        self._refresh_rest_buttons()
 
     def _refresh_initiative_tracker(self):
         """Update the turn counter label."""

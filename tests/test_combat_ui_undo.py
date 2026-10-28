@@ -1,8 +1,7 @@
 """Undo in the combat UI (undo.py, LoggingMixin._undo_last): one undo takes
 back exactly one operation - all of the combat state it changed, and
-exactly the lines it wrote to the encounter log and the player log."""
-
-import json
+exactly the lines it wrote to the encounter log (which the party's state
+is replayed from on the next run)."""
 
 import pytest
 from PyQt6.QtWidgets import QDialog, QMessageBox
@@ -27,14 +26,12 @@ def no_modal_dialogs(monkeypatch):
 @pytest.fixture
 def fight(tmp_path):
     """A Pirate (initiative 15) and a Tiger (10) in round 1, the Pirate's
-    turn, with a player log so both logs can be checked."""
+    turn."""
     ui = make_ui(tmp_path, [Pirate(), Tiger()])
     pirate, tiger = ui.characters
     ui._initiative_inputs[id(pirate)].setText("15")
     ui._initiative_inputs[id(tiger)].setText("10")
     ui._start_combat()
-    ui.player_log_file = tmp_path / "players.json"
-    ui.player_log_data = {"sessions": [{}]}
     pirate["spell_slots"] = {1: 2}
     ui._select_character(pirate)
     ui._select_target_character(tiger)
@@ -46,10 +43,9 @@ def _rounds(log: dict) -> dict:
     return {k: v for k, v in log.items() if k.split("_")[-1].isdigit()}
 
 
-def _logs(ui) -> tuple[dict, dict]:
-    """The encounter log's and the player log session's rounds."""
-    log = json.loads(ui.log_file.read_text())
-    return _rounds(log), _rounds(ui.player_log_data["sessions"][-1])
+def _logs(ui) -> dict:
+    """The encounter log's rounds (none before its file is first written)."""
+    return _rounds(ui._read_log())
 
 
 def _everything(ui) -> dict:
@@ -100,9 +96,9 @@ def test_undo_takes_back_operations_newest_first(fight):
     assert tiger["hp"] == 30
 
 
-def test_an_undone_hit_leaves_the_player_log(fight):
-    # The player log is replayed to rebuild the party next session, so an
-    # undone action must not stay in it.
+def test_an_undone_hit_leaves_the_log(fight):
+    # The log is replayed to rebuild the party next session, so an undone
+    # action must not stay in it.
     ui, _, _ = fight
     ui._add_action_use("Action")
     _damage(ui, 5)
@@ -110,8 +106,9 @@ def test_an_undone_hit_leaves_the_player_log(fight):
     ui._undo_last()
     ui._undo_last()
 
-    _, session = _logs(ui)
-    assert session["round_1"] == [{"text": "[Pirate's turn] Pirate uses Action"}]
+    assert _logs(ui)["round_1"] == [
+        {"text": "[Pirate's turn] Pirate uses Action", "character": "Pirate"}
+    ]
 
 
 def test_undo_reverts_the_combatant_it_changed_whoever_is_selected(fight):
@@ -194,7 +191,7 @@ def test_undo_back_across_a_round(fight):
 
     assert _everything(ui) == start
     assert tiger["hp"] == 30
-    assert "round_2" not in _logs(ui)[0]
+    assert "round_2" not in _logs(ui)
 
 
 def test_undo_an_added_combatant(fight):
