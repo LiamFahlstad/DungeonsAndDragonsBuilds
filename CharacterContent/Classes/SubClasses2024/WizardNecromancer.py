@@ -20,7 +20,6 @@ from CharacterContent.Spells.SpellLists import (
     NecromancyLevel7Spells,
     NecromancyLevel8Spells,
     NecromancyLevel9Spells,
-    WizardLevel1Spells,
 )
 from Model.CharacterSources import SpellSource
 
@@ -52,10 +51,6 @@ class WizardNecromancerLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(WizardNecromancerFeatures.NecromancySavant())
         data.add_feature(WizardNecromancerFeatures.NecromancySpellbook())
-        data.add_spell(
-            WizardLevel1Spells.FIND_FAMILIAR,
-            additional_ruling="In your spellbook; can take a Skeleton or Zombie form, or a normal form with the Undead creature type",
-        )
         data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
         data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
@@ -80,10 +75,6 @@ class WizardNecromancerLevel6(ClassBuilder.SubclassLevel6):
     ) -> None:
         data.add_feature(WizardNecromancerFeatures.GravePower())
         data.add_feature(WizardNecromancerFeatures.UndeadThralls())
-        data.add_spell(
-            NecromancyLevel3Spells.ANIMATE_DEAD,
-            additional_ruling="Always prepared; cast once without a spell slot per Long Rest. Whenever you start casting it, you can increase its effective level by 1",
-        )
 
 
 @attr.dataclass

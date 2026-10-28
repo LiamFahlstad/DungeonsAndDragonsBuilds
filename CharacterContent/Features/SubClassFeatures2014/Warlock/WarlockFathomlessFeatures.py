@@ -10,6 +10,8 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
+from CharacterContent.Spells.SpellLists import ConjurationLevel4Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Core.Definitions import CharacterClass
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -259,6 +261,14 @@ class GraspingTentacles(Feature):
             usage_tags=["heal"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES,
+                ruling="Doesn't count against the number of Warlock spells known",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The once-per-Long-Rest free casting is in the panel below.

@@ -214,8 +214,12 @@ class TestMagicInitiate:
             spell=ClericLevel1Spells.BLESS,
             spell_casting_ability=WIS,
         )
-        assert feat.get_spells() == ["Sacred Flame", "Guidance", "Bless"]
-        assert feat.get_spell_casting_ability() == WIS
+        assert [s.name for s in feat.granted_spells()] == [
+            "Sacred Flame",
+            "Guidance",
+            "Bless",
+        ]
+        assert {s.ability for s in feat.granted_spells()} == {WIS}
 
     def test_wizard_variant_prepares_chosen_spells(self, make_character):
         feat = OriginFeats.MagicInitiateWizard(
@@ -224,7 +228,11 @@ class TestMagicInitiate:
             spell=WizardLevel1Spells.BURNING_HANDS,
             spell_casting_ability=INT,
         )
-        assert feat.get_spells() == ["Fire Bolt", "Mage Hand", "Burning Hands"]
+        assert [s.name for s in feat.granted_spells()] == [
+            "Fire Bolt",
+            "Mage Hand",
+            "Burning Hands",
+        ]
 
     def test_druid_variant_prepares_chosen_spells(self, make_character):
         feat = OriginFeats.MagicInitiateDruid(
@@ -233,7 +241,11 @@ class TestMagicInitiate:
             spell=DruidLevel1Spells.CURE_WOUNDS,
             spell_casting_ability=WIS,
         )
-        assert feat.get_spells() == ["Produce Flame", "Guidance", "Cure Wounds"]
+        assert [s.name for s in feat.granted_spells()] == [
+            "Produce Flame",
+            "Guidance",
+            "Cure Wounds",
+        ]
 
     def test_rejects_cantrip_not_on_chosen_class_list(self):
         with pytest.raises(ValueError):
@@ -267,8 +279,10 @@ class TestMagicInitiate:
 class TestEmeraldEnclaveFledgling:
     def test_always_prepares_speak_with_animals(self):
         feat = OriginFeats.EmeraldEnclaveFledgling(spell_casting_ability=WIS)
-        assert feat.get_spells() == [DruidLevel1Spells.SPEAK_WITH_ANIMALS]
-        assert feat.get_spell_casting_ability() == WIS
+        assert [s.name for s in feat.granted_spells()] == [
+            DruidLevel1Spells.SPEAK_WITH_ANIMALS
+        ]
+        assert {s.ability for s in feat.granted_spells()} == {WIS}
 
     @pytest.mark.parametrize("bad_ability", [STR, DEX, CON])
     def test_rejects_physical_spellcasting_ability(self, bad_ability):
@@ -279,7 +293,7 @@ class TestEmeraldEnclaveFledgling:
 class TestFamiliarFriend:
     def test_always_prepares_find_familiar(self):
         feat = OriginFeats.FamiliarFriend(spell_casting_ability=INT)
-        assert feat.get_spells() == ["Find Familiar"]
+        assert [s.name for s in feat.granted_spells()] == ["Find Familiar"]
 
     @pytest.mark.parametrize("bad_ability", [STR, DEX, CON])
     def test_rejects_physical_spellcasting_ability(self, bad_ability):
@@ -799,8 +813,8 @@ SPELLCASTING_ORIGIN_FEATS = [
 class TestSpellcastingOriginFeats:
     def test_teaches_its_spell_with_the_chosen_ability(self, feat_class, spell):
         feat = feat_class(WIS)
-        assert feat.get_spells() == [spell]
-        assert feat.get_spell_casting_ability() == WIS
+        assert [s.name for s in feat.granted_spells()] == [spell]
+        assert {s.ability for s in feat.granted_spells()} == {WIS}
 
     @pytest.mark.parametrize("bad_ability", [STR, DEX, CON])
     def test_rejects_physical_spellcasting_ability(
@@ -813,8 +827,8 @@ class TestSpellcastingOriginFeats:
 class TestArcaneUndertaker:
     def test_teaches_the_chosen_necromancy_cantrip(self):
         feat = OriginFeats.ArcaneUndertaker(NecromancyLevel0Spells.TOLL_THE_DEAD, INT)
-        assert feat.get_spells() == ["Toll the Dead"]
-        assert feat.get_spell_casting_ability() == INT
+        assert [s.name for s in feat.granted_spells()] == ["Toll the Dead"]
+        assert {s.ability for s in feat.granted_spells()} == {INT}
 
 
 class TestPortalJumper:

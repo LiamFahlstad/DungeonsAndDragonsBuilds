@@ -68,10 +68,6 @@ class WizardTransmuterLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(WizardTransmuterFeatures.TransmutationSavant())
         data.add_feature(WizardTransmuterFeatures.TransmutersStone())
         data.add_feature(WizardTransmuterFeatures.WondrousAlteration())
-        data.add_spell(
-            TransmutationLevel2Spells.ALTER_SELF,
-            additional_ruling="Always prepared; cast once without a spell slot per Long Rest",
-        )
         data.add_spell(self.spell_1, source=SpellSource.CHOSEN)
         data.add_spell(self.spell_2, source=SpellSource.CHOSEN)
 
@@ -131,10 +127,6 @@ class WizardTransmuterLevel10(ClassBuilder.SubclassLevel10):
             extends=WizardTransmuterFeatures.TransmutersStone,
         )
         data.add_feature(WizardTransmuterFeatures.ShapeShifter())
-        data.add_spell(
-            TransmutationLevel4Spells.POLYMORPH,
-            additional_ruling="Always prepared; cast once without a spell slot per Long Rest",
-        )
 
 
 @attr.dataclass

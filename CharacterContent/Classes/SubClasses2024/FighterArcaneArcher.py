@@ -9,7 +9,7 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
 )
 from Model.Grants import Grants
 from CharacterContent.Spells.SpellLists import TransmutationLevel0Spells
-from Core.Definitions import Ability, FighterSubclass, Skill
+from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.SubClassFeatures.Fighter import (
     FighterArcaneArcherFeatures,
@@ -18,7 +18,6 @@ from CharacterContent.Features.SubClassFeatures.Fighter.FighterArcaneArcherFeatu
     ARCANE_ARCHER_LORE_CANTRIPS,
     ArcaneShotOption,
 )
-from Model.CharacterSources import SpellSource
 
 
 @attr.dataclass
@@ -44,11 +43,6 @@ class FighterArcaneArcherLevel3(ClassBuilder.SubclassLevel3):
             FighterArcaneArcherFeatures.ArcaneArcherLore(
                 self.cantrip, self.skill_1, self.skill_2
             )
-        )
-        data.add_cantrip(
-            self.cantrip,
-            spell_casting_ability=Ability.INTELLIGENCE,
-            source=SpellSource.CHOSEN,
         )
         arcane_shot = FighterArcaneArcherFeatures.ArcaneShot()
         data.add_feature(self.arcane_shot_option_1, extends=arcane_shot)

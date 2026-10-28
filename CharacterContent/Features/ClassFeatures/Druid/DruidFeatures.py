@@ -21,6 +21,8 @@ from Model.Content.Improvements import (
 from Model.Creatures.Combatants import CreatureForm
 from Core.Definitions import Ability, CharacterClass, Language, Skill, ArmorType
 from CharacterContent.Items.Weapons import WeaponProficiency
+from CharacterContent.Spells.SpellLists import DruidLevel1Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.FeatureText import (
@@ -109,6 +111,15 @@ class Druidic(Feature):
     def __init__(self):
         super().__init__(name="Druidic", origin="Druid Level 1")
         self._language = GrantLanguage(Language.DRUIDIC)
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                DruidLevel1Spells.SPEAK_WITH_ANIMALS,
+                ruling="Always prepared",
+                source="Druidic",
+            )
+        ]
 
     def apply(self, ledger_writer: LedgerWriter):
         self._language.apply(ledger_writer)

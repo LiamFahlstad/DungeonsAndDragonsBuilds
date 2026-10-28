@@ -69,11 +69,6 @@ class DruidLevel1(ClassBuilder.BaseClassLevel1):
     ) -> None:
         data.add_feature(DruidFeatures.Spellcasting())
         data.add_feature(DruidFeatures.Druidic())
-        data.add_spell(
-            DruidLevel1Spells.SPEAK_WITH_ANIMALS,
-            additional_ruling="Always prepared",
-            source="Druidic",
-        )
         data.add_feature(DruidFeatures.PrimalOrder(order=self.primal_order))
         data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)
         data.add_cantrip(self.cantrip_2, source=SpellSource.CHOSEN)

@@ -9,6 +9,11 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
+from CharacterContent.Spells.SpellLists import (
+    NecromancyLevel3Spells,
+    WizardLevel1Spells,
+)
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
@@ -50,6 +55,14 @@ class NecromancySpellbook(Feature):
             usage_tags=["heal", "summon"],
         )
         self._resistance = DamageResistance(DamageType.NECROTIC)
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                WizardLevel1Spells.FIND_FAMILIAR,
+                ruling="In your spellbook; can take a Skeleton or Zombie form, or a normal form with the Undead creature type",
+            )
+        ]
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
@@ -154,6 +167,14 @@ class UndeadThralls(Feature):
             usage_tags=["summon", "damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                NecromancyLevel3Spells.ANIMATE_DEAD,
+                ruling="Always prepared; cast once without a spell slot per Long Rest. Whenever you start casting it, you can increase its effective level by 1",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The free casting's once-per-Long-Rest box is in the panel below.

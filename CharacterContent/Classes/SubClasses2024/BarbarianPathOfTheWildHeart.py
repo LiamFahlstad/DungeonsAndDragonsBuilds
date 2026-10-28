@@ -8,16 +8,11 @@ from CharacterContent.Classes.BaseClasses.BarbarianBase import (
     BarbarianCustomStarterClassArgs,
 )
 from Model.Grants import Grants
-from Core.Definitions import Ability, BarbarianSubclass, Skill
+from Core.Definitions import BarbarianSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Barbarian import (
     BarbarianPathOfTheWildHeartFeatures,
 )
 from CharacterContent.Features.ClassFeatures.Barbarian import BarbarianFeatures
-from CharacterContent.Spells.SpellLists import (
-    DruidLevel1Spells,
-    DruidLevel2Spells,
-    DruidLevel5Spells,
-)
 
 
 @attr.dataclass
@@ -28,16 +23,6 @@ class BarbarianWildHeartLevel3(ClassBuilder.SubclassLevel3):
         data: Grants,
     ) -> None:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.AnimalSpeaker())
-        data.add_spell(
-            DruidLevel2Spells.BEAST_SENSE,
-            Ability.WISDOM,
-            additional_ruling="Ritual only",
-        )
-        data.add_spell(
-            DruidLevel1Spells.SPEAK_WITH_ANIMALS,
-            Ability.WISDOM,
-            additional_ruling="Ritual only",
-        )
         data.add_feature(
             BarbarianPathOfTheWildHeartFeatures.RageOfTheWilds(),
             extends=BarbarianFeatures.Rage,
@@ -62,11 +47,6 @@ class BarbarianWildHeartLevel10(ClassBuilder.SubclassLevel10):
         data: Grants,
     ) -> None:
         data.add_feature(BarbarianPathOfTheWildHeartFeatures.NatureSpeaker())
-        data.add_spell(
-            DruidLevel5Spells.COMMUNE_WITH_NATURE,
-            Ability.WISDOM,
-            additional_ruling="Ritual only",
-        )
 
 
 @attr.dataclass

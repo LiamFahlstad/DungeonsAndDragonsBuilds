@@ -121,10 +121,15 @@ class CharacterSources:
         """Grant `feature` - or, with `extends`, grant it as an extension of
         that feature (a type, or a feature instance): see FeatureGrant.
         `stamp` says where it's granted from; builders grant through a Grants
-        scope (Model/Grants.py), which stamps it."""
+        scope (Model/Grants.py), which stamps it. The feature's own spells
+        (Feature.granted_spells()) come with it - see Character.spell_grants."""
         if extends is None and if_missing != IfParentMissing.ERROR:
             raise ValueError("if_missing only applies with extends=.")
-        self.feature_grants.append(FeatureGrant(feature, stamp, extends, if_missing))
+        self.feature_grants.append(
+            FeatureGrant(
+                feature, stamp, extends, if_missing, self.spell_casting_ability
+            )
+        )
 
     def add_fighting_style(self, fighting_style: FightingStyle) -> None:
         self.fighting_styles.append(fighting_style)
@@ -158,7 +163,7 @@ class CharacterSources:
         self.spell_grants.append(
             SpellGrant(
                 name=spell,
-                ability=self._resolve_spell_casting_ability(spell_casting_ability),
+                ability=self.resolve_spell_casting_ability(spell_casting_ability),
                 ruling=additional_ruling,
                 grant_level=stamp.level,
                 granted_by=stamp.granted_by,
@@ -203,7 +208,7 @@ class CharacterSources:
             )
         )
 
-    def _resolve_spell_casting_ability(
+    def resolve_spell_casting_ability(
         self, spell_casting_ability: Optional[Ability]
     ) -> Ability:
         if spell_casting_ability is not None:

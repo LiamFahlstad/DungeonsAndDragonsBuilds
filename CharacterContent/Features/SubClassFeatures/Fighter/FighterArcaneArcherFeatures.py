@@ -15,6 +15,8 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.CharacterSources import SpellSource
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
@@ -61,6 +63,11 @@ class ArcaneArcherLore(Feature):
             count=2,
             error_prefix="Arcane Archer Lore",
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(self._cantrip, Ability.INTELLIGENCE, source=SpellSource.CHOSEN)
+        ]
 
     def apply(self, ledger_writer: LedgerWriter):
         self._proficiency_choice.apply(ledger_writer)

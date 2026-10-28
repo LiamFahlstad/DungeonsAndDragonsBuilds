@@ -8,6 +8,7 @@ from Core.Rules import MAX_LEVEL, MIN_LEVEL
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 
 
@@ -332,6 +333,15 @@ class Feature(Effect):
         read a stat here. Anything that depends on other stats or on worn
         armor is a formula evaluated on read (see Core.Improvements)."""
         pass
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        """Override to list the spells and cantrips this feature grants (a
+        feat's always-prepared spells, a boon's chosen spell, a subclass
+        feature's ritual). The character grants them with the feature,
+        stamped like it - so whoever grants the feature never adds its
+        spells separately (see Character.spell_grants). Return [] (default)
+        for features with no spells."""
+        return []
 
     def get_description(self, character: CharacterView) -> str | None:
         return None

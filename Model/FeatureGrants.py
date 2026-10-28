@@ -12,6 +12,7 @@ from typing import Optional
 
 import attr
 
+from Core.Definitions import Ability
 from Model.Records.GrantStamp import GrantStamp
 from Model.Content.Feature import Feature
 
@@ -39,6 +40,9 @@ class FeatureGrant:
     stamp: GrantStamp = GrantStamp()
     extends: type | Feature | None = None
     if_missing: IfParentMissing = IfParentMissing.ERROR
+    # The character's spellcasting ability when the feature was granted: the
+    # one its granted_spells() use unless they name their own.
+    spell_casting_ability: Optional[Ability] = None
 
 
 class ExtensionTree:

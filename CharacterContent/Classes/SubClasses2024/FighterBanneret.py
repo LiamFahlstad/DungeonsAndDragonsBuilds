@@ -8,10 +8,9 @@ from CharacterContent.Classes.BaseClasses.FighterBase import (
     FighterCustomStarterClassArgs,
 )
 from Model.Grants import Grants
-from Core.Definitions import Ability, FighterSubclass, Skill
+from Core.Definitions import FighterSubclass, Skill
 from CharacterContent.Features.ClassFeatures.Fighter import FighterFeatures
 from CharacterContent.Features.SubClassFeatures.Fighter import FighterBanneretFeatures
-from CharacterContent.Spells.SpellLists import DivinationLevel1Spells
 
 
 @attr.dataclass
@@ -23,11 +22,6 @@ class FighterBanneretLevel3(ClassBuilder.SubclassLevel3):
     ) -> None:
         data.add_feature(FighterBanneretFeatures.KnightlyEnvoy())
         data.add_feature(FighterBanneretFeatures.GroupRecovery())
-        data.add_spell(
-            DivinationLevel1Spells.COMPREHEND_LANGUAGES,
-            Ability.CHARISMA,
-            additional_ruling="Ritual only",
-        )
 
 
 @attr.dataclass

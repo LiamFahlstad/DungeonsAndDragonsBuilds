@@ -11,6 +11,8 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
+from CharacterContent.Spells.SpellLists import WarlockLevel1Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
@@ -173,6 +175,9 @@ class EldritchHex(Feature):
             origin="Great Old One Patron Warlock Level 10",
             usage_tags=["control"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(WarlockLevel1Spells.HEX, ruling="Always prepared")]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

@@ -147,6 +147,62 @@ def _subclass_level_bases():
     )
 
 
+def _parse_module(module):
+    """The module's syntax tree, or None when its source can't be read."""
+    try:
+        return ast.parse(inspect.getsource(module))
+    except (OSError, TypeError, SyntaxError):
+        return None
+
+
+def _spell_member_names(tree, call_names: tuple) -> set:
+    """Constant Enum.MEMBER arguments to calls named one of `call_names`
+    (`data.add_spell(...)` or a bare `FeatureSpell(...)`)."""
+    names = set()
+    if tree is None:
+        return names
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        called = func.attr if isinstance(func, ast.Attribute) else None
+        if isinstance(func, ast.Name):
+            called = func.id
+        if called not in call_names:
+            continue
+        # The spell is the first argument (the next is its ability).
+        for arg in node.args[:1]:
+            if not isinstance(arg, ast.Attribute) or not arg.attr.isupper():
+                continue
+            root = arg.value
+            while isinstance(root, ast.Attribute):
+                root = root.value
+            if isinstance(root, ast.Name) and root.id != "self":
+                names.add(arg.attr)
+    return names
+
+
+def _imported_modules(tree, prefixes: tuple) -> list:
+    """The modules under `prefixes` that `tree` imports from: the submodule
+    for `from package import Module`, else the module itself."""
+    modules = []
+    if tree is None:
+        return modules
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ImportFrom) or not node.module:
+            continue
+        if not node.module.startswith(prefixes):
+            continue
+        for alias in node.names:
+            for name in (f"{node.module}.{alias.name}", node.module):
+                try:
+                    modules.append(importlib.import_module(name))
+                    break
+                except ImportError:
+                    continue
+    return modules
+
+
 class Registry:
     def __init__(self):
         self._classes = None
@@ -160,39 +216,31 @@ class Registry:
 
     # --------------------------------------------------- unconditional grants
 
+    # Feature modules a class/subclass module imports, whose FeatureSpell(...)
+    # declarations (Feature.granted_spells()) are that class's grants too.
+    _FEATURE_MODULE_PREFIXES = (
+        "CharacterContent.Features.ClassFeatures",
+        "CharacterContent.Features.SubClassFeatures",
+    )
+
     def granted_member_names(self, module) -> set:
         """Enum member names a class/subclass module grants unconditionally:
         constant Enum.MEMBER arguments to add_spell(...)/add_cantrip(...)
-        calls in the module source. Default spell/cantrip picks are seeded
-        away from these because the sheet rejects duplicates."""
+        calls in the module source, and to FeatureSpell(...) in the class or
+        subclass feature modules it imports (the spells its features grant).
+        Default spell/cantrip picks are seeded away from these because the
+        sheet rejects duplicates."""
         if module is None:
             return set()
         cached = self._granted_members.get(module.__name__)
         if cached is not None:
             return cached
-        names = set()
-        try:
-            tree = ast.parse(inspect.getsource(module))
-        except (OSError, TypeError, SyntaxError):
-            tree = None
-        if tree is not None:
-            for node in ast.walk(tree):
-                if not isinstance(node, ast.Call):
-                    continue
-                func = node.func
-                if not (
-                    isinstance(func, ast.Attribute)
-                    and func.attr in ("add_spell", "add_cantrip")
-                ):
-                    continue
-                for arg in node.args:
-                    if not isinstance(arg, ast.Attribute) or not arg.attr.isupper():
-                        continue
-                    root = arg.value
-                    while isinstance(root, ast.Attribute):
-                        root = root.value
-                    if isinstance(root, ast.Name) and root.id != "self":
-                        names.add(arg.attr)
+        tree = _parse_module(module)
+        names = _spell_member_names(tree, ("add_spell", "add_cantrip"))
+        for feature_module in _imported_modules(tree, self._FEATURE_MODULE_PREFIXES):
+            names |= _spell_member_names(
+                _parse_module(feature_module), ("FeatureSpell",)
+            )
         self._granted_members[module.__name__] = names
         return names
 

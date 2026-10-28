@@ -15,6 +15,8 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
+from CharacterContent.Spells.SpellLists import WizardLevel5Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
@@ -322,6 +324,15 @@ class TelekineticMaster(Feature):
             origin="Psi Warrior Fighter Level 18",
             usage_tags=["damage"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                WizardLevel5Spells.TELEKINESIS,
+                Ability.INTELLIGENCE,
+                "Always prepared; cast without a spell slot or components",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

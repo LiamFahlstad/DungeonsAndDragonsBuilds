@@ -11,10 +11,6 @@ from Model.Grants import Grants
 from Core.Definitions import Ability, MonkSubclass, Skill
 from CharacterContent.Features.SubClassFeatures.Monk import MonkShadowFeatures
 from CharacterContent.Features.ClassFeatures.Monk import MonkFeatures
-from CharacterContent.Spells.SpellLists import (
-    EvocationLevel2Spells,
-    IllusionLevel0Spells,
-)
 
 
 @attr.dataclass
@@ -26,12 +22,6 @@ class MonkShadowLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(
             MonkShadowFeatures.ShadowArts(), extends=MonkFeatures.MonksFocus
         )
-        data.add_spell(
-            EvocationLevel2Spells.DARKNESS,
-            Ability.WISDOM,
-            additional_ruling="Cast by expending 1 Focus Point instead of a spell slot",
-        )
-        data.add_cantrip(IllusionLevel0Spells.MINOR_ILLUSION, Ability.WISDOM)
 
 
 @attr.dataclass

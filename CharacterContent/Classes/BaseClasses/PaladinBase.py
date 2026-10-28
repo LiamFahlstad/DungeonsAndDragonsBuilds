@@ -57,7 +57,6 @@ class PaladinLevel2(ClassBuilder.BaseClassLevel2):
 
         # Automatic feature
         data.add_feature(PaladinFeatures.PaladinsSmite())
-        data.add_spell(PaladinLevel1Spells.DIVINE_SMITE)
 
         # Add prepared spells:
         data.add_spell(self.spell, source=SpellSource.CHOSEN)

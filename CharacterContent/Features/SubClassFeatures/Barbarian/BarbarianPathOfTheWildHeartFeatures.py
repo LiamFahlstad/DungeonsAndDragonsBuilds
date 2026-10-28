@@ -1,4 +1,11 @@
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
+from Core.Definitions import Ability
+from CharacterContent.Spells.SpellLists import (
+    DruidLevel1Spells,
+    DruidLevel2Spells,
+    DruidLevel5Spells,
+)
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -10,6 +17,14 @@ class AnimalSpeaker(Feature):
             origin="Path Of The Wild Heart Barbarian Level 3",
             usage_tags=["utility"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(DruidLevel2Spells.BEAST_SENSE, Ability.WISDOM, "Ritual only"),
+            FeatureSpell(
+                DruidLevel1Spells.SPEAK_WITH_ANIMALS, Ability.WISDOM, "Ritual only"
+            ),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -139,6 +154,13 @@ class NatureSpeaker(Feature):
             origin="Path Of The Wild Heart Barbarian Level 10",
             usage_tags=["utility"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                DruidLevel5Spells.COMMUNE_WITH_NATURE, Ability.WISDOM, "Ritual only"
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

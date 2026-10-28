@@ -2,6 +2,9 @@ from Core.Definitions import Condition
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Core.Definitions import Ability
+from CharacterContent.Spells.SpellLists import DivinationLevel1Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option
 
@@ -13,6 +16,15 @@ class KnightlyEnvoy(Feature):
             origin="Banneret Fighter Level 3",
             usage_tags=["utility"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                DivinationLevel1Spells.COMPREHEND_LANGUAGES,
+                Ability.CHARISMA,
+                "Ritual only",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

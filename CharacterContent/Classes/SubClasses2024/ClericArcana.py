@@ -106,10 +106,11 @@ class ClericArcanaLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        spells = [self.spell_6, self.spell_7, self.spell_8, self.spell_9]
-        data.add_feature(ClericArcanaFeatures.MagicalMastery(spells))
-        for spell in spells:
-            data.add_spell(spell, source=SpellSource.CHOSEN)
+        data.add_feature(
+            ClericArcanaFeatures.MagicalMastery(
+                [self.spell_6, self.spell_7, self.spell_8, self.spell_9]
+            )
+        )
 
 
 class ClericArcanaCustomStarterClassArgs(ClericCustomStarterClassArgs):

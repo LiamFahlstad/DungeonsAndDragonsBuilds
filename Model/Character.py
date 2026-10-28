@@ -120,7 +120,45 @@ class Character:
 
     @property
     def spell_grants(self) -> list[SpellGrant]:
-        return self._sources.spell_grants
+        """Every spell grant: the ones builders added, plus the spells each
+        granted feature declares (Feature.granted_spells()), stamped like
+        that feature. A dropped extension's spells aren't granted."""
+        return [*self._sources.spell_grants, *self._feature_spell_grants]
+
+    @functools.cached_property
+    def _feature_spell_grants(self) -> list[SpellGrant]:
+        """A spell with no ability of its own uses the spellcasting ability
+        the character had when the feature was granted (a Paladin's Divine
+        Smite stays Charisma after Wizard levels), else the character's."""
+        grants = []
+        for grant in self.feature_grants:
+            spells = grant.feature.granted_spells()
+            # The extension tree is only needed (and only built) for an
+            # extension with spells: a dropped one grants none.
+            if spells and grant.extends is not None and not self._is_kept(grant):
+                continue
+            for spell in spells:
+                grants.append(
+                    SpellGrant(
+                        name=spell.name,
+                        ability=self._sources.resolve_spell_casting_ability(
+                            spell.ability or grant.spell_casting_ability
+                        ),
+                        ruling=spell.ruling,
+                        grant_level=grant.stamp.level,
+                        granted_by=grant.stamp.granted_by,
+                        source=spell.source,
+                        kind=grant.stamp.kind,
+                    )
+                )
+        return grants
+
+    def _is_kept(self, grant: FeatureGrant) -> bool:
+        """Whether an extension grant is on the sheet (its parent is granted,
+        or it stands alone) rather than dropped."""
+        return any(
+            feature is grant.feature for feature in self.iter_features_with_extensions()
+        )
 
     @property
     def spell_replacements(self) -> list[SpellReplacement]:

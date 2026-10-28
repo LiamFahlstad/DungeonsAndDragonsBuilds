@@ -1,5 +1,3 @@
-from typing import Optional
-
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -49,6 +47,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 from Model.CharacterSources import SpellSource
+from Model.Spells import FeatureSpell
 from Model.Content.FeatureText import (
     Block,
     Facts,
@@ -64,29 +63,12 @@ class OriginFeat(Feature):
     # Character._validate_feats_taken_once).
     repeatable = False
 
-    def get_spell_casting_ability(self) -> Optional[Ability]:
-        return None
-
-    def get_spells(self) -> list[str]:
-        return []
-
-    def get_spell_source(self) -> Optional[str]:
-        """The sheet label for get_spells(): SpellSource.CHOSEN when the
-        player picks them, None when the feat names them."""
-        return None
-
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return regained_on_from_uses(self.uses)
 
     def grant_to(self, data: Grants) -> None:
-        """Grant this feat and the spells it comes with (listed under the
-        feat)."""
-        feat = data.for_origin_feat(self)
-        feat.add_feature(self)
-        for spell in self.get_spells():
-            feat.add_spell(
-                spell, self.get_spell_casting_ability(), source=self.get_spell_source()
-            )
+        """Grant this feat; its granted_spells() are listed under it."""
+        data.for_origin_feat(self).add_feature(self)
 
 
 class Skilled(OriginFeat):
@@ -372,14 +354,11 @@ class MagicInitiate(OriginFeat):
             origin="Origin Feat",
         )
 
-    def get_spells(self) -> list[str]:
-        return [self.cantrip_1, self.cantrip_2, self.spell]
-
-    def get_spell_source(self) -> Optional[str]:
-        return SpellSource.CHOSEN
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(spell, self.spell_casting_ability, source=SpellSource.CHOSEN)
+            for spell in (self.cantrip_1, self.cantrip_2, self.spell)
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         spell_list = self.character_class.name.title()
@@ -712,11 +691,12 @@ class EmeraldEnclaveFledgling(OriginFeat):
         self.spell_casting_ability = spell_casting_ability
         super().__init__(name="Emerald Enclave Fledgling", origin="Origin Feat")
 
-    def get_spells(self) -> list[str]:
-        return [DruidLevel1Spells.SPEAK_WITH_ANIMALS]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                DruidLevel1Spells.SPEAK_WITH_ANIMALS, self.spell_casting_ability
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -765,11 +745,12 @@ class FamiliarFriend(OriginFeat):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def get_spells(self) -> list[str]:
-        return [ConjurationLevel1Spells.FIND_FAMILIAR]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                ConjurationLevel1Spells.FIND_FAMILIAR, self.spell_casting_ability
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1129,11 +1110,8 @@ class _SpellcastingOriginFeat(OriginFeat):
         self.spell_casting_ability = spell_casting_ability
         super().__init__(name=self._NAME, origin="Origin Feat", uses=self._USES)
 
-    def get_spells(self) -> list[str]:
-        return [self._SPELL]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(self._SPELL, self.spell_casting_ability)]
 
 
 class ArcaneArtist(_SpellcastingOriginFeat):
@@ -1346,11 +1324,14 @@ class ArcaneUndertaker(_SpellcastingOriginFeat):
         self.necromancy_cantrip = necromancy_cantrip
         super().__init__(spell_casting_ability)
 
-    def get_spells(self) -> list[str]:
-        return [self.necromancy_cantrip]
-
-    def get_spell_source(self) -> Optional[str]:
-        return SpellSource.CHOSEN
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                self.necromancy_cantrip,
+                self.spell_casting_ability,
+                source=SpellSource.CHOSEN,
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1727,27 +1708,19 @@ class _DragonmarkFeat(OriginFeat):
             uses=self._USES,
         )
 
-    def free_cast_spells(self) -> list[str]:
-        """The always-prepared spells castable once per Long Rest without a
-        slot, at this feat's character level."""
-        spells = list(self._SPELLS)
+    def granted_spells(self) -> list[FeatureSpell]:
+        """The cantrips, and the always-prepared spells castable once per
+        Long Rest without a slot at this feat's character level."""
+        free_cast = list(self._SPELLS)
         if self.character_level >= 3:
-            spells += list(self._LEVEL_3_SPELLS)
-        return spells
-
-    def get_spells(self) -> list[str]:
-        return list(self._CANTRIPS) + self.free_cast_spells()
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
-
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_origin_feat(self)
-        feat.add_feature(self)
-        for cantrip in self._CANTRIPS:
-            feat.add_cantrip(cantrip, self.spell_casting_ability)
-        for spell in self.free_cast_spells():
-            feat.add_spell(spell, self.spell_casting_ability, _DRAGONMARK_FREE_CAST)
+            free_cast += list(self._LEVEL_3_SPELLS)
+        return [
+            FeatureSpell(cantrip, self.spell_casting_ability)
+            for cantrip in self._CANTRIPS
+        ] + [
+            FeatureSpell(spell, self.spell_casting_ability, _DRAGONMARK_FREE_CAST)
+            for spell in free_cast
+        ]
 
     def _extra_facts(self) -> tuple:
         """(label, text) rows for this mark's benefits beyond the shared ones."""
@@ -1843,25 +1816,16 @@ class AberrantDragonmark(OriginFeat):
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
-    def get_spells(self) -> list[str]:
-        return [self.cantrip, self.spell]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return Ability.CONSTITUTION
-
-    def get_spell_source(self) -> Optional[str]:
-        return SpellSource.CHOSEN
-
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_origin_feat(self)
-        feat.add_feature(self)
-        feat.add_cantrip(self.cantrip, Ability.CONSTITUTION, source=SpellSource.CHOSEN)
-        feat.add_spell(
-            self.spell,
-            Ability.CONSTITUTION,
-            "Always prepared. Cast it once without a spell slot (regained on a Short or Long Rest), or with your spell slots.",
-            source=SpellSource.CHOSEN,
-        )
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(self.cantrip, Ability.CONSTITUTION, source=SpellSource.CHOSEN),
+            FeatureSpell(
+                self.spell,
+                Ability.CONSTITUTION,
+                "Always prepared. Cast it once without a spell slot (regained on a Short or Long Rest), or with your spell slots.",
+                source=SpellSource.CHOSEN,
+            ),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Aberrant Fortitude's use is in the panel below.
@@ -2386,13 +2350,13 @@ class FeyPact(OriginFeat):
         self._language.apply(ledger_writer)
         self._nature.apply(ledger_writer)
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_origin_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(DruidLevel0Spells.DRUIDCRAFT, self.spell_casting_ability)
-        feat.add_spell(
-            self.cantrip, self.spell_casting_ability, source=SpellSource.CHOSEN
-        )
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(DruidLevel0Spells.DRUIDCRAFT, self.spell_casting_ability),
+            FeatureSpell(
+                self.cantrip, self.spell_casting_ability, source=SpellSource.CHOSEN
+            ),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         language = (

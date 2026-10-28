@@ -82,6 +82,17 @@ character.get_proficiency_bonus()
 data.add_spell(spell)        # optional source="Chosen spell" label for the sheet
 # The same spell from two grants (class + species) is listed for each; twice from
 # one grant fails validate(). replace_spells={old: new} is declared, resolved on read.
+
+# A spell that comes WITH a feature (a feat's or boon's spells, a subclass feature's
+# ritual, a chosen cantrip a feature hands out) is declared by the feature itself -
+# never added next to it in the builder, and no feat/boon-specific grant_to override:
+def granted_spells(self) -> list[FeatureSpell]:   # from Model.Spells import FeatureSpell
+    return [FeatureSpell(DruidLevel2Spells.BEAST_SENSE, Ability.WISDOM, "Ritual only"),
+            FeatureSpell(self.cantrip, source=SpellSource.CHOSEN)]
+# The character grants them whenever the feature is granted (plainly or as a kept
+# extension), stamped like the feature. ability=None means the spellcasting ability
+# the character had when the feature was granted. data.add_spell stays for spells no
+# feature owns: class spell picks and subclass spell tables (domain/oath/patron spells).
 ```
 
 ## Feature types

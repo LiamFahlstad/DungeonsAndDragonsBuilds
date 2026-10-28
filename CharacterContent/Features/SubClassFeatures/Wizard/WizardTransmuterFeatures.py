@@ -7,6 +7,11 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
+from CharacterContent.Spells.SpellLists import (
+    TransmutationLevel2Spells,
+    TransmutationLevel4Spells,
+)
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -107,6 +112,14 @@ class WondrousAlteration(Feature):
             origin="Transmuter Wizard Level 3",
             usage_tags=["buff", "damage", "utility"],
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                TransmutationLevel2Spells.ALTER_SELF,
+                ruling="Always prepared; cast once without a spell slot per Long Rest",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -239,6 +252,14 @@ class PotentStone(Feature):
 class ShapeShifter(Feature):
     def __init__(self):
         super().__init__(name="Shape-Shifter", origin="Transmuter Wizard Level 10")
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                TransmutationLevel4Spells.POLYMORPH,
+                ruling="Always prepared; cast once without a spell slot per Long Rest",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

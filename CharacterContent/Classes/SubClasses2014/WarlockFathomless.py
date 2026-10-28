@@ -12,7 +12,6 @@ from Core.Definitions import WarlockSubclass2014, Skill
 from CharacterContent.Features.SubClassFeatures2014.Warlock import (
     WarlockFathomlessFeatures,
 )
-from CharacterContent.Spells.SpellLists import ConjurationLevel4Spells
 
 
 @attr.dataclass
@@ -49,10 +48,6 @@ class WarlockFathomlessLevel10(ClassBuilder.SubclassLevel10):
         data: Grants,
     ) -> None:
         data.add_feature(WarlockFathomlessFeatures.GraspingTentacles())
-        data.add_spell(
-            ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES,
-            additional_ruling="Doesn't count against the number of Warlock spells known",
-        )
 
 
 @attr.dataclass

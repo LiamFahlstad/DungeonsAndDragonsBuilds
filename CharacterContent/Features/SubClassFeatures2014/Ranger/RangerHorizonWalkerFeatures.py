@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     FeatureDice,
 )
 from Core.Definitions import CharacterClass
+from CharacterContent.Spells.SpellLists import WizardLevel7Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
@@ -160,6 +162,14 @@ class EtherealStep(Feature):
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                WizardLevel7Spells.ETHEREALNESS,
+                ruling="Cast without a spell slot once per Short or Long Rest via Ethereal Step; spell ends at the end of the current turn",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # The once-per-Short-or-Long-Rest box is in the panel below.

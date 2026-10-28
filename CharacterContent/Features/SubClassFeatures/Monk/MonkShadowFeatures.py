@@ -3,6 +3,12 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Core.Definitions import Ability
+from CharacterContent.Spells.SpellLists import (
+    EvocationLevel2Spells,
+    IllusionLevel0Spells,
+)
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 
@@ -57,6 +63,16 @@ class ShadowArts(Feature):
     def __init__(self):
         super().__init__(name="Shadow Arts", origin="Warrior of Shadow Monk Level 3")
         self._darkvision = GrantOrExtendSense(Sense.DARKVISION, 60)
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                EvocationLevel2Spells.DARKNESS,
+                Ability.WISDOM,
+                "Cast by expending 1 Focus Point instead of a spell slot",
+            ),
+            FeatureSpell(IllusionLevel0Spells.MINOR_ILLUSION, Ability.WISDOM),
+        ]
 
     def apply(self, ledger_writer: LedgerWriter):
         self._darkvision.apply(ledger_writer)

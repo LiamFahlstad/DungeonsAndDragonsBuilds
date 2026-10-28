@@ -9,6 +9,8 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SavingThrowBonus
 from Core.Definitions import Ability, CharacterClass
+from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
@@ -130,6 +132,9 @@ class FightingStyle(Feature):
 class PaladinsSmite(Feature):
     def __init__(self):
         super().__init__(name="Paladin's Smite", origin="Paladin Level 2")
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(PaladinLevel1Spells.DIVINE_SMITE)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

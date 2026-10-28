@@ -84,7 +84,6 @@ class ClericLevel1(ClassBuilder.BaseClassLevel1):
                     extra_cantrip=self.divine_order.extra_cantrip
                 )
             )
-            data.add_cantrip(self.divine_order.extra_cantrip, source=SpellSource.CHOSEN)
         else:
             data.add_feature(ClericFeatures.DivineOrderProtector())
         data.add_cantrip(self.cantrip_1, source=SpellSource.CHOSEN)

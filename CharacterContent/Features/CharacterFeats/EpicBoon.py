@@ -36,6 +36,7 @@ from Model.Content.Improvements import (
 from Core.Definitions import Ability, Condition, DamageType, Sense, Skill
 from Core.Rules import ABSOLUTE_MAX_ABILITY_SCORE
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Table, dc_formula
 
@@ -401,6 +402,20 @@ class BoonOfMagicSchoolMastery(_AbilityScoreEpicBoon):
         self.school = school
         self.rote_spell = rote_spell
         self.signature_spell = signature_spell
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                self.rote_spell,
+                ruling="Always prepared. Cast it without a spell slot or spell components, or with your spell slots.",
+                source=self.name,
+            ),
+            FeatureSpell(
+                self.signature_spell,
+                ruling="Always prepared. Cast it once without a spell slot (regained on a Long Rest), or with your spell slots.",
+                source=self.name,
+            ),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -962,6 +977,15 @@ class BoonOfRevelry(_AbilityScoreEpicBoon):
     def __init__(self, ability: Ability):
         super().__init__(ability, usage_tags=["control"])
 
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                self.SPELL,
+                ruling="Always prepared. Cast it once without a spell slot (regained on a Long Rest), or with your spell slots. No spell components, and taking damage doesn't break your Concentration on it.",
+                source=self.name,
+            )
+        ]
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Facts(
@@ -1302,6 +1326,16 @@ class BoonOfSiberys(_AbilityScoreEpicBoon):
         super().__init__(ability)
         self.spell = str(spell)
         self.spellcasting_ability = spellcasting_ability
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                self.spell,
+                self.spellcasting_ability,
+                "Always prepared. Cast it once without a spell slot or spell components (regained on a Short or Long Rest), or with your spell slots.",
+                source=self.name,
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

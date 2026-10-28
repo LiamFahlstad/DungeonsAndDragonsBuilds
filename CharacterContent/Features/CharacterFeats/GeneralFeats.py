@@ -51,6 +51,7 @@ from CharacterContent.Spells.SpellLists import (
     Level5Spells,
 )
 from Model.CharacterSources import SpellSource
+from Model.Spells import FeatureSpell
 from Model.Grants import Grants
 from Model.Content.Feature import (
     ActionType,
@@ -107,22 +108,9 @@ class GeneralFeat(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return regained_on_from_uses(self.uses)
 
-    def get_spells(self) -> list[str]:
-        return []
-
-    def get_spell_casting_ability(self) -> "Ability | None":
-        return None
-
-    def get_spell_source(self) -> "str | None":
-        return None
-
     def grant_to(self, data: "Grants") -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        for spell in self.get_spells():
-            feat.add_spell(
-                spell, self.get_spell_casting_ability(), source=self.get_spell_source()
-            )
+        """Grant this feat; its granted_spells() are listed under it."""
+        data.for_general_feat(self).add_feature(self)
 
 
 class _AbilityScoreFeat(GeneralFeat):
@@ -579,12 +567,13 @@ class FeyTouched(_AbilityScoreFeat):
         self.spell = spell
         super().__init__(character_level, ability)
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(ConjurationLevel2Spells.MISTY_STEP, self.ability)
+    def granted_spells(self) -> list[FeatureSpell]:
+        spells = [FeatureSpell(ConjurationLevel2Spells.MISTY_STEP, self.ability)]
         if self.spell is not None:
-            feat.add_spell(self.spell, self.ability, source=SpellSource.CHOSEN)
+            spells.append(
+                FeatureSpell(self.spell, self.ability, source=SpellSource.CHOSEN)
+            )
+        return spells
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1228,14 +1217,11 @@ class RitualCaster(_AbilityScoreFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
 
-    def get_spells(self) -> list[str]:
-        return self.spells
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
-
-    def get_spell_source(self) -> str:
-        return SpellSource.CHOSEN
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(spell, self.ability, source=SpellSource.CHOSEN)
+            for spell in self.spells
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1314,12 +1300,13 @@ class ShadowTouched(_AbilityScoreFeat):
         self.spell = spell
         super().__init__(character_level, ability)
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(IllusionLevel2Spells.INVISIBILITY, self.ability)
+    def granted_spells(self) -> list[FeatureSpell]:
+        spells = [FeatureSpell(IllusionLevel2Spells.INVISIBILITY, self.ability)]
         if self.spell is not None:
-            feat.add_spell(self.spell, self.ability, source=SpellSource.CHOSEN)
+            spells.append(
+                FeatureSpell(self.spell, self.ability, source=SpellSource.CHOSEN)
+            )
+        return spells
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1645,11 +1632,8 @@ class Telekinetic(_AbilityScoreFeat):
     _NAME = "Telekinetic"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_spells(self) -> list[str]:
-        return [ConjurationLevel0Spells.MAGE_HAND]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(ConjurationLevel0Spells.MAGE_HAND, self.ability)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1722,11 +1706,8 @@ class Telepathic(_AbilityScoreFeat):
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
 
-    def get_spells(self) -> list[str]:
-        return [DivinationLevel2Spells.DETECT_THOUGHTS]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(DivinationLevel2Spells.DETECT_THOUGHTS, self.ability)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1825,11 +1806,8 @@ class ColdCaster(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_spells(self) -> list[str]:
-        return [SorcererLevel0Spells.RAY_OF_FROST]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(SorcererLevel0Spells.RAY_OF_FROST, self.ability)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1898,11 +1876,8 @@ class EnclaveMAGIC(_AbilityScoreFeat):
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
 
-    def get_spells(self) -> list[str]:
-        return [DruidLevel2Spells.BEAST_SENSE]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(DruidLevel2Spells.BEAST_SENSE, self.ability)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2525,11 +2500,11 @@ class GatheredWhispers(GeneralFeat):
             ),
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(WizardLevel0Spells.MESSAGE, self.spell_casting_ability)
-        feat.add_spell(DivinationLevel2Spells.AUGURY, self.spell_casting_ability)
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(WizardLevel0Spells.MESSAGE, self.spell_casting_ability),
+            FeatureSpell(DivinationLevel2Spells.AUGURY, self.spell_casting_ability),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2600,11 +2575,10 @@ class LivingShadow(GeneralFeat):
             ),
         )
 
-    def get_spells(self) -> list[str]:
-        return [ConjurationLevel0Spells.MAGE_HAND]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(ConjurationLevel0Spells.MAGE_HAND, self.spell_casting_ability)
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2892,11 +2866,10 @@ class TouchOfDeath(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
-    def get_spells(self) -> list[str]:
-        return [NecromancyLevel0Spells.CHILL_TOUCH]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(NecromancyLevel0Spells.CHILL_TOUCH, self.spell_casting_ability)
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -2937,11 +2910,13 @@ class Watchers(GeneralFeat):
             origin="General Feat Ravenloft Campaign",
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(DruidLevel2Spells.BEAST_SENSE, self.spell_casting_ability)
-        feat.add_spell(DruidLevel1Spells.SPEAK_WITH_ANIMALS, self.spell_casting_ability)
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(DruidLevel2Spells.BEAST_SENSE, self.spell_casting_ability),
+            FeatureSpell(
+                DruidLevel1Spells.SPEAK_WITH_ANIMALS, self.spell_casting_ability
+            ),
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -3175,11 +3150,8 @@ class _SchoolAdept(_AbilityScoreFeat):
         """The school benefit as label/value rows."""
         raise NotImplementedError
 
-    def get_spells(self) -> list[str]:
-        return list(self._SPELLS)
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.ability
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(spell, self.ability) for spell in self._SPELLS]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         effect_name = self._SCHOOL_EFFECT.split(". ", 1)[0]
@@ -3418,14 +3390,11 @@ class MagicConnoisseur(_AbilityScoreFeat):
         self.spell_casting_ability = spell_casting_ability
         super().__init__(character_level, ability)
 
-    def get_spells(self) -> list[str]:
-        return [self.level_1_spell, self.level_2_spell]
-
-    def get_spell_casting_ability(self) -> Ability:
-        return self.spell_casting_ability
-
-    def get_spell_source(self) -> str:
-        return SpellSource.CHOSEN
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(spell, self.spell_casting_ability, source=SpellSource.CHOSEN)
+            for spell in (self.level_1_spell, self.level_2_spell)
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -4372,14 +4341,17 @@ class FeySentinel(_GreaterPlanarPact):
             ),
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(ConjurationLevel1Spells.ENTANGLE, self.ability, _FREE_CAST)
+    def granted_spells(self) -> list[FeatureSpell]:
+        spells = [
+            FeatureSpell(ConjurationLevel1Spells.ENTANGLE, self.ability, _FREE_CAST)
+        ]
         if self.character_level >= 5:
-            feat.add_spell(
-                TransmutationLevel3Spells.PLANT_GROWTH, self.ability, _FREE_CAST
+            spells.append(
+                FeatureSpell(
+                    TransmutationLevel3Spells.PLANT_GROWTH, self.ability, _FREE_CAST
+                )
             )
+        return spells
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         spells = "Entangle" + (" and Plant Growth" if self.character_level >= 5 else "")
@@ -4441,14 +4413,15 @@ class FeyTormentor(_GreaterPlanarPact):
             ),
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(EnchantmentLevel1Spells.HEX, self.ability, _FREE_CAST)
+    def granted_spells(self) -> list[FeatureSpell]:
+        spells = [FeatureSpell(EnchantmentLevel1Spells.HEX, self.ability, _FREE_CAST)]
         if self.character_level >= 5:
-            feat.add_spell(
-                NecromancyLevel3Spells.BESTOW_CURSE, self.ability, _FREE_CAST
+            spells.append(
+                FeatureSpell(
+                    NecromancyLevel3Spells.BESTOW_CURSE, self.ability, _FREE_CAST
+                )
             )
+        return spells
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         spells = "Hex" + (" and Bestow Curse" if self.character_level >= 5 else "")
@@ -4544,14 +4517,14 @@ class InfernalBulwark(_GreaterPlanarPact):
         super().apply(ledger_writer)
         self._devils_flesh.apply(ledger_writer)
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(
-            AbjurationLevel1Spells.ARMOR_OF_AGATHYS,
-            Ability.CHARISMA,
-            "Always prepared. Cast it once without a spell slot per Long Rest - as its level 2 version, dealing Fire damage instead of Cold - or with your spell slots.",
-        )
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                AbjurationLevel1Spells.ARMOR_OF_AGATHYS,
+                Ability.CHARISMA,
+                "Always prepared. Cast it once without a spell slot per Long Rest - as its level 2 version, dealing Fire damage instead of Cold - or with your spell slots.",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -4625,14 +4598,14 @@ class InfernalDragoon(_GreaterPlanarPact):
             ),
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(
-            TransmutationLevel2Spells.MAGIC_WEAPON,
-            Ability.CHARISMA,
-            "Always prepared. Cast it once without a spell slot per Long Rest - that casting lasts 8 hours - or with your spell slots.",
-        )
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                TransmutationLevel2Spells.MAGIC_WEAPON,
+                Ability.CHARISMA,
+                "Always prepared. Cast it once without a spell slot per Long Rest - that casting lasts 8 hours - or with your spell slots.",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -4773,10 +4746,8 @@ class ShadowWeaver(_GreaterPlanarPact):
             ),
         )
 
-    def grant_to(self, data: Grants) -> None:
-        feat = data.for_general_feat(self)
-        feat.add_feature(self)
-        feat.add_spell(EvocationLevel2Spells.DARKNESS, self.ability, _FREE_CAST)
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(EvocationLevel2Spells.DARKNESS, self.ability, _FREE_CAST)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

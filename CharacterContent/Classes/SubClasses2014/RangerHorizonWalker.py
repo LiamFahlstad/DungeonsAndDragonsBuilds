@@ -18,7 +18,6 @@ from CharacterContent.Spells.SpellLists import (
     WizardLevel3Spells,
     WizardLevel4Spells,
     WizardLevel5Spells,
-    WizardLevel7Spells,
 )
 
 
@@ -53,10 +52,6 @@ class RangerHorizonWalkerLevel7(ClassBuilder.SubclassLevel7):
         data: Grants,
     ) -> None:
         data.add_feature(RangerHorizonWalkerFeatures.EtherealStep())
-        data.add_spell(
-            WizardLevel7Spells.ETHEREALNESS,
-            additional_ruling="Cast without a spell slot once per Short or Long Rest via Ethereal Step; spell ends at the end of the current turn",
-        )
 
 
 @attr.dataclass

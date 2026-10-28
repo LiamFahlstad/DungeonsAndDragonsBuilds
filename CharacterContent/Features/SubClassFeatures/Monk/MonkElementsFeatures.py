@@ -3,6 +3,8 @@ from Core.Definitions import (
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
+from CharacterContent.Spells.SpellLists import DruidLevel0Spells
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
@@ -105,6 +107,9 @@ class ManipulateElements(Feature):
         super().__init__(
             name="Manipulate Elements", origin="Warrior of the Elements Monk Level 3"
         )
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(DruidLevel0Spells.ELEMENTALISM, Ability.WISDOM)]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

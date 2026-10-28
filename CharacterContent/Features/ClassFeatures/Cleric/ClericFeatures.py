@@ -43,6 +43,8 @@ CLERIC_PREPARED_SPELLS = (
     21,
     22,
 )
+from Model.CharacterSources import SpellSource
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 
@@ -118,6 +120,9 @@ class DivineOrderThaumaturge(Feature):
             usage_tags=["buff"],
         )
         self.extra_cantrip = extra_cantrip
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [FeatureSpell(self.extra_cantrip, source=SpellSource.CHOSEN)]
 
     def apply(self, ledger_writer: LedgerWriter):
         def bonus(cs: CharacterView) -> int:

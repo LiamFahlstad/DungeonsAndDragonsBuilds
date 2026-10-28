@@ -10,6 +10,8 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.CharacterSources import SpellSource
+from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -173,6 +175,11 @@ class MagicalMastery(Feature):
             passive=True,
         )
         self._spells = spells
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(spell, source=SpellSource.CHOSEN) for spell in self._spells
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

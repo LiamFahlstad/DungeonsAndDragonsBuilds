@@ -31,6 +31,26 @@ class SpellGrant:
 
 
 @attr.s(frozen=True, auto_attribs=True)
+class FeatureSpell:
+    """A spell or cantrip that comes with a feature, declared by the feature
+    itself (Feature.granted_spells()) instead of by whoever grants it. The
+    character turns it into a SpellGrant stamped like the feature (the same
+    level, kind and granted_by), so it is granted exactly when the feature is
+    - plainly or as an extension - and listed where the feature's grant is.
+
+    ability: None for the character's spellcasting ability.
+    ruling: how the feature lets you cast it ("Always prepared; once per Long
+    Rest without a spell slot").
+    source: the sheet label, as for add_spell (SpellSource.CHOSEN for a spell
+    the player picked)."""
+
+    name: str
+    ability: Optional[Ability] = None
+    ruling: Optional[str] = None
+    source: Optional[str] = None
+
+
+@attr.s(frozen=True, auto_attribs=True)
 class SpellReplacement:
     """Every grant of `old` becomes `new`, keeping its grant level, who
     granted it and its label. `ability`/`ruling` override the old grant's
