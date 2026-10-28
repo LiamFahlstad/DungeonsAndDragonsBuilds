@@ -250,19 +250,21 @@
   ],
   "Astral Flood": [
     {"facts": [
-      ["Flavor", "You channel energy from the Astral Sea to unleash a torrent of magic from you in a 30-foot Cone."],
-      ["Area", "30-foot Cone"],
-      ["Save", "Dexterity, made by each creature in the Cone"],
-      ["Failed save", "4d10 Cold or Radiant damage (chosen when you cast this spell), plus that type's effect below"],
-      ["Successful save", "No damage"]
+      ["Flavor", "You channel energy from the Astral Sea to unleash a torrent of magic from yourself."],
+      ["Choice", "Choose Cold or Radiant for the type of energy channeled"],
+      ["Area", "30-foot Cone originating from you"],
+      ["Save", "Dexterity, made by each creature in the Cone"]
     ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["4d10 damage of the chosen type, and the target suffers an additional effect determined by the damage type (below)", "Half as much damage only"]
+    ]}},
     {"table": {"columns": ["Damage type", "Additional effect"], "rows": [
       ["Cold", "The target has Disadvantage on the next D20 Test it makes before the end of your next turn"],
-      ["Radiant", "The target can see only within 15 feet of itself, and it has the Blinded condition for everything beyond that distance until the end of your next turn"]
+      ["Radiant", "The target has the Blinded condition until the end of your next turn"]
     ]}},
     {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
       {"facts": [
-        ["Damage", "+1d10 for each spell slot above 3"]
+        ["Damage", "The damage increases by 1d10 for each spell slot above 3"]
       ]}
     ]}}
   ],
@@ -645,6 +647,20 @@
         ["Effect", "The creature becomes Indifferent about creatures of your choice that it's Hostile toward"],
         ["Ends early", "If the target takes damage or witnesses its allies taking damage"],
         ["Spell ends", "The creature's attitude returns to normal"]
+      ]}
+    ]}}
+  ],
+  "Catnap": [
+    {"facts": [
+      ["Targets", "Up to three willing creatures of your choice that you can see within range"],
+      ["Effect", "Each target has the Unconscious condition for the spell’s duration"],
+      ["Ends early", "The spell ends on a target if it takes damage or another creature takes an action to shake it awake"],
+      ["Full duration", "If a target has the Unconscious condition from this spell for the full duration, that target gains the benefits of finishing a Short Rest"],
+      ["Limit", "That target can’t be affected by this spell again until it finishes a Long Rest"]
+    ]},
+    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
+      {"facts": [
+        ["Targets", "You can target one additional willing creature for each spell slot level above 3"]
       ]}
     ]}}
   ],
@@ -1875,6 +1891,26 @@
       ["Saves", "Advantage on saving throws against spells and magical effects"],
       ["Half damage", "If you succeed on a saving throw against a spell or magical effect and would normally take half as much damage, you instead take no damage"]
     ]}
+  ],
+  "Enervation": [
+    {"facts": [
+      ["Flavor", "A tendril of inky darkness reaches out from you to drain life from a creature you can see within range."],
+      ["Target", "A creature you can see within range"],
+      ["Save", "Dexterity"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["6d8 Necrotic damage", "Half the initial damage only, and the spell ends"]
+    ]}},
+    {"facts": [
+      ["Later turns", "On each of your subsequent turns, you can take a Bonus Action to deal 2d8 Necrotic damage to the target automatically"],
+      ["Ends early", "The spell ends if the target is ever outside the spell’s range or it has Total Cover from you"],
+      ["Healing", "Whenever this spell deals damage to a target, you regain Hit Points equal to half the amount of Necrotic damage dealt"]
+    ]},
+    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
+      {"facts": [
+        ["Damage", "The initial damage increases by 1d8 for each spell slot level above 5"]
+      ]}
+    ]}}
   ],
   "Enhance Ability": [
     {"facts": [
@@ -3757,6 +3793,26 @@
       ["Plants", "Similarly, this spell doesn't directly affect plant growth. The moved earth carries any plants along with it"]
     ]}
   ],
+  "Negative Energy Flood": [
+    {"facts": [
+      ["Flavor", "You send ribbons of negative energy at one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["Save", "Constitution, if the target isn’t Undead"]
+    ]},
+    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
+      ["3d10 + 25 Necrotic damage", "Half as much damage"]
+    ]}},
+    {"facts": [
+      ["Undead target", "If the target is Undead, it gains 3d10 Temporary Hit Points"],
+      ["Killed Humanoid", "A Humanoid killed by this spell rises at the start of your next turn as a Zombie"],
+      ["Zombie", "It follows your verbal orders for 24 hours, after which it acts according to its nature"]
+    ]},
+    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
+      {"facts": [
+        ["Damage", "The damage increases by 1d10 for each spell slot level above 5"]
+      ]}
+    ]}}
+  ],
   "Nondetection": [
     {"paragraph": "You hide a target that you touch from Divination spells for the duration."},
     {"facts": [
@@ -4024,6 +4080,23 @@
       ["Targets", "Up to six creatures you can see within range"],
       ["Temporary HP", "The spell bestows 120 Temporary Hit Points, which you divide among the spell's recipients"]
     ]}
+  ],
+  "Power Word Pain": [
+    {"facts": [
+      ["Flavor", "You speak a word of power that causes waves of intense pain to assail one creature you can see within range."],
+      ["Target", "One creature you can see within range"],
+      ["100 HP or fewer", "The target takes 6d8 Force damage and has the Charmed condition for the duration"],
+      ["More than 100 HP", "Otherwise, it takes 6d8 Force damage only"],
+      ["Repeat save", "At the end of each of its turns, the Charmed target makes a Constitution saving throw, ending the spell on itself on a successful save"]
+    ]},
+    {"option": {"name": "While the Target Is Charmed", "blocks": [
+      {"facts": [
+        ["Speed", "Its Speed can be no more than 10 feet"],
+        ["D20 Tests", "It has Disadvantage on D20 Tests except Constitution saving throws"],
+        ["Casting", "When the target tries to cast a spell, it must first succeed on a Constitution saving throw, or the spell dissipates with no effect, and the action, Bonus Action, or Reaction used to cast it is wasted"],
+        ["Spell slot", "If that spell was cast with a spell slot, the slot isn’t expended"]
+      ]}
+    ]}}
   ],
   "Prayer of Healing": [
     {"paragraph": "Up to five creatures recover as if from a Short Rest."},

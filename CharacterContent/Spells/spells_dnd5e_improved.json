@@ -171,15 +171,6 @@
       ]}
     ]}}
   ],
-  "Catnap": [
-    {"facts": [
-      ["Flavor", "You make a calming gesture."],
-      ["Targets", "Up to three willing creatures of your choice that you can see within range"],
-      ["Effect", "They fall Unconscious for the spell's duration"],
-      ["Waking", "The spell ends on a target early if it takes damage or someone uses an action to shake or slap it awake"],
-      ["Full duration", "A target that remains unconscious for the full duration gains the benefit of a short rest, and it can't be affected by this spell again until it finishes a long rest"]
-    ]}
-  ],
   "Cause Fear": [
     {"facts": [
       ["Flavor", "You awaken the sense of mortality in one creature you can see within range."],
@@ -588,25 +579,6 @@
       ["Choosing targets", "Whenever it chooses another creature as a target, it must choose at random from among the creatures it can see within range of the attack, spell, or other ability it's using"],
       ["Opportunity attacks", "If an enemy provokes an opportunity attack from it, it must make that attack if it is able to"]
     ]}
-  ],
-  "Enervation": [
-    {"facts": [
-      ["Flavor", "A tendril of inky darkness reaches out from you, touching a creature you can see within range to drain life from it."],
-      ["Target", "A creature you can see within range"],
-      ["Save", "Dexterity"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["4d8 Necrotic damage, and until the spell ends, you can use your action on each of your turns to automatically deal 4d8 Necrotic damage to the target", "2d8 Necrotic damage, and the spell ends"]
-    ]}},
-    {"facts": [
-      ["Ends early", "The spell ends if you use your action to do anything else, if the target is ever outside the spell's range, or if the target has total cover from you"],
-      ["Healing", "Whenever the spell deals damage to a target, you regain hit points equal to half the amount of Necrotic damage the target takes"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each slot level above 5th"]
-      ]}
-    ]}}
   ],
   "Erupting Earth": [
     {"facts": [
@@ -1381,38 +1353,6 @@
       ["Moving", "You can move the cube up to 10 feet before you roll"],
       ["Table", "The Mischievous Surge table isn't included in this spell's data"]
     ]}
-  ],
-  "Negative Energy Flood": [
-    {"facts": [
-      ["Flavor", "You send ribbons of negative energy at one creature you can see within range."],
-      ["Target", "One creature you can see within range"],
-      ["Save", "Constitution, unless the target is undead"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["5d12 Necrotic damage", "Half as much damage"]
-    ]}},
-    {"facts": [
-      ["Zombie", "A target killed by this damage rises up as a zombie at the start of your next turn; the zombie pursues whatever creature it can see that is closest to it"],
-      ["Statistics", "Statistics for the zombie are in the Monster Manual"],
-      ["Undead target", "If you target an undead with this spell, the target doesn't make a saving throw; instead, roll 5d12, and the target gains half the total as temporary hit points"]
-    ]}
-  ],
-  "Power Word Pain": [
-    {"facts": [
-      ["Flavor", "You speak a word of power that causes waves of intense pain to assail one creature you can see within range."],
-      ["Target", "One creature you can see within range"],
-      ["Hit points", "If the target has 100 hit points or fewer, it is subject to crippling pain. Otherwise, the spell has no effect on it"],
-      ["Unaffected", "A target is also unaffected if it is immune to being charmed"]
-    ]},
-    {"option": {"name": "Crippling Pain", "blocks": [
-      {"facts": [
-        ["Speed", "Any speed the target has can be no higher than 10 feet"],
-        ["Disadvantage", "The target also has disadvantage on attack rolls, ability checks, and saving throws, other than Constitution saving throws"],
-        ["Spellcasting", "Finally, if the target tries to cast a spell, it must first succeed on a Constitution saving throw, or the casting fails and the spell is wasted"],
-        ["Repeat save", "Constitution, which a target suffering this pain can make at the end of each of its turns"],
-        ["Successful save", "The pain ends"]
-      ]}
-    ]}}
   ],
   "Primal Savagery": [
     {"facts": [
