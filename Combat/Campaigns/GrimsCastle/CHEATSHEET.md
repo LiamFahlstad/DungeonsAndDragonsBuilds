@@ -3,21 +3,26 @@
 Run from the repo root. Everything for this campaign lives in
 `Combat/Campaigns/GrimsCastle/`:
 
-- `Players.py`: the tracked party (empty, since there are no character sheets yet)
-- `Encounters.py`: the monsters for each fight, plus four placeholder players
-- `Campaign.py`: the scenarios
-- `CombatLogs/`: one encounter log per scenario (created on the first run)
+- `encounters.json`: the encounters (format: [../ENCOUNTERS.md](../ENCOUNTERS.md)).
+  Its party is empty, since there are no character sheets yet.
+- `CombatLogs/<encounter id>.json`: one log per encounter, prepared from
+  `encounters.json`.
 
-The four placeholder players (Player 1–4) join each scenario as allies, so the
+The four placeholder players (Player 1–4) join each encounter as allies, so the
 party appears in the combat window without `--player-log`. Because there are no
 character sheets, `--difficulty` can't rate these fights.
 
+After changing `encounters.json`, prepare the logs:
+
+```
+python -m Combat.Tools.prepare_encounters --campaign grims_castle
+```
+
 ## Encounters
 
-| Scenario | Command |
+| Encounter | Command |
 |---|---|
 | The Bull | `python RunCombatSimulator.py --scenario grims_castle_bull` |
 
-The fight is persistent: `CombatLogs/grims_castle_bull.json` is created on the
-first run, and when it holds a fight in progress the window asks whether to
-continue it or restart it with fresh monsters.
+When its log holds a fight in progress, the window asks whether to continue it
+or restart it with fresh monsters.
