@@ -16,6 +16,12 @@
       "scenario": "goblin_scouting_party",
       "log": "../CombatLogs/goblin_scouting_party.json",
       "started_at": "2026-10-15T18:54:57"
+    },
+    {
+      "type": "encounter",
+      "scenario": "goblin_warband_ambush_friendly_goblins",
+      "log": "../CombatLogs/goblin_warband_ambush_friendly_goblins.json",
+      "started_at": "2026-10-29T17:39:27"
     }
   ]
 }
