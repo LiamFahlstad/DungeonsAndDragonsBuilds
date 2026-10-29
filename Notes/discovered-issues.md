@@ -76,16 +76,6 @@ On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote on
 - 2026-10-28 main-session: found
 - 2026-10-28 claude-main: Also seen in tests/snapshots/combat_ui_cards.json (via tests/_combat_ui.py check_golden): the races left truncated, invalid JSON, not just lost entries
 
-### DI-012 · Epic boons can't grant spells, so boon spells are text only
-- **Status:** open
-- **Area:** character-engine-dev
-- **Where:** `CharacterContent/Classes/BaseClasses/BardBase.py:296`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:955`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:1275`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:385`
-
-Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (ArtificerBase.py:264, BarbarianBase.py:204, BardBase.py:296, ... RogueBase.py:188), which has no spell path. So Boon of Revelry's Otto's Irresistible Dance, Boon of Siberys's chosen spell and Boon of Magic School Mastery's spells appear only in the description and are never added to the character's spell list or spell cards. Fix: give EpicBoon an optional grant_to(data) hook like GeneralFeat.grant_to (GeneralFeats.py:112) and have the class bases call it, then move the three boons' spells onto it.
-
-**History**
-- 2026-10-28 main-session: found
-
 ### DI-013 · Boon effects that apply only while Bloodied are text only
 - **Status:** open
 - **Area:** character-engine-dev
@@ -147,6 +137,7 @@ Fey Sentinel ('When you reach character level 5, you also always have the Plant 
 **History**
 - 2026-10-28 character-engine-dev: found
 - 2026-10-28 main-session: code-reviewer: wider than Fey Sentinel/Tormentor. _DragonmarkFeat.free_cast_spells (OriginFeats.py:1734) gates the level-3 Spells of the Mark spell the same way (Detection, Finding, Healing, Hospitality, Scribing, Storm, Warding); passing a higher character_level stamps the grant at that level's page instead. Fix in Model/Grants.py (level-aware grant), then drop character_level from these feats.
+- 2026-10-28 main-session: Feats now declare spells via granted_spells() (FeatureSpell). A level-aware grant could be a FeatureSpell field (e.g. from_character_level) resolved in Character._feature_spell_grants, once the character level at read time is available there.
 
 ### DI-020 · tests/test_format_changed.py fails where format_changed.sh is checked out with CRLF (core.autocrlf=true)
 - **Status:** open
@@ -178,6 +169,37 @@ concrete_subclasses doesn't skip names starting with '_', so _DragonmarkFeat, _G
 **History**
 - 2026-10-28 code-reviewer: found
 
+### DI-023 · Improved descriptions of new feats drop 'you can' on optional, use-limited benefits
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Features/CharacterFeats/EpicBoon.py:817`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:898`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:939`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:682`, `CharacterContent/Features/CharacterFeats/GeneralFeats.py:4644`, `CharacterContent/Features/CharacterFeats/GeneralFeats.py:3819`, `CharacterContent/Features/CharacterFeats/OriginFeats.py:2413`
+
+wrong text (rules-checker, source = each feat's own get_description()). Several new improved descriptions turn an optional, use-limited benefit into one that always happens, so a player reading the card thinks the once-per-turn / once-per-rest use is spent automatically on the first qualifying roll. The branch already fixed this pattern for Grappler and Tavern Brawler ("use both" -> "can use both").
+- EpicBoon.py:817 Boon of Exquisite Radiance, Powerful Radiance: card "use the highest number possible for each damage die"; source "you can instead use the highest number possible ... Once you use this benefit, you can't do so again until you finish a Long Rest."
+- EpicBoon.py:898 Boon of Fortune's Favor: card "reroll it and use the new roll"; source "you can reroll it and must use the new roll. Once you use this benefit, you can't do so again until the start of your next turn."
+- EpicBoon.py:939 Boon of Poison Mastery, Perfect Poisoner: card "use the highest number possible for each die"; source "you can instead use the highest number possible for each die" (once per turn).
+- EpicBoon.py:682 Boon of Bloodshed, Power from Pain: card "deal extra damage ..."; source "you can deal extra damage to the target equal to your Proficiency Bonus" (once per turn).
+- GeneralFeats.py:4644 Infernal Dragoon, Devil's Favor: card "When you make a D20 Test, add +2 to the roll. Once per Long Rest."; source "you can add a +2 bonus to the roll. Once you use this benefit, you can't do so again until you finish a Long Rest."
+- GeneralFeats.py:3819 Greater Aberrant Mark, Mark of Inspiration: card "When you cast a cantrip, roll one or two unexpended Hit Point Dice, then expend them ... Proficiency Bonus times per Long Rest."; source "When you cast a cantrip, you can roll one or two of your unexpended Hit Point Dice" (each use spends HP dice and a use).
+- OriginFeats.py:2413 Fey Pact, Honeyed Words: card "reroll it and use the new roll"; source "you can reroll the check, and you must use the new roll."
+Fix: put the choice back in each row ("can use the highest number...", "can reroll it; must use the new roll", "can add +2", "can roll one or two..."). No mechanics change; text only.
+
+**History**
+- 2026-10-28 rules-checker: found
+
+### DI-024 · Multiclass Monks who don't start as Monk get no Martial Arts die or Dexterity on Unarmed Strike (Kagen shows 1d4 -1 instead of 1d12 +5)
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Classes/BaseClasses/MonkBase.py:225`, `CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py:MartialArts`, `Builds/Characters/Y2024_Rogue_ShadowMonk_KagenVoidstep.py:92`
+
+contradicts (wrong number on a sheet). Source: SourceTexts/ClassTexts/monk.txt:85 "Martial Arts Die. You can roll 1d6 in place of the normal damage of your Unarmed Strike or Monk weapons. This die changes as you gain Monk levels" and :87 "Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons."
+The Martial Arts die and Dexterity reach the Unarmed Strike only through MonkCustomStarterClassArgs.default_equipment (MonkBase.py:225-237); MonkFeatures.MartialArts has no apply() that touches weapons. So a character who doesn't start as Monk keeps the plain 1d1 + Str strike at any Monk level.
+Probe: Builds/Characters/Y2024_Rogue_ShadowMonk_KagenVoidstep.py (Rogue 1 / Monk 19, Str -1, Dex +5, Tavern Brawler) shows Unarmed Strike "1d4 -1" (Tavern Brawler's 1d4 + Str now beats the 1d1). Per the rules it is 1d12 + 5 (Martial Arts d12 at Monk 17+, Dexterous Attacks). Without Tavern Brawler the same gap shows 1d1 -1. The new Tavern Brawler work makes it visible but didn't cause it.
+Suggested fix (character-engine-dev): have MartialArts.apply() register a WeaponDamageDie for weapons with is_unarmed_strike (and Monk weapons) using the Martial Arts die for the character's Monk level, the same "used only where it beats the weapon's own die" mechanism Tavern Brawler uses (WeaponMinimumDamageDie, Improvements.py:370). It also needs Dexterity, or the better of Str/Dex, as the ability, since WeaponDamageDie holds a single ability. Then the starting-class default equipment no longer has to carry the die.
+
+**History**
+- 2026-10-28 rules-checker: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -190,6 +212,7 @@ _apply_temp_hp adds new temp HP to the old (5 + 8 = 13); replay does the same. 2
 **History**
 - 2026-10-28 rules-checker: found
 - 2026-10-28 main-session: marked fixed; Temp HP keep max(old, new) live and on replay; log line says which amount was kept (uncommitted)
+- 2026-10-28 main-session: Committed in ff16d3a1
 
 ### DI-004 · Unconscious isn't applied at 0 HP
 - **Status:** fixed · 2026-10-28 · uncommitted
@@ -201,6 +224,7 @@ Knockout drops Concentration but never adds the Unconscious condition, so its ef
 **History**
 - 2026-10-28 rules-checker: found
 - 2026-10-28 main-session: marked fixed; Knockout adds Unconscious to creatures that make death saves; healing/short rest/revive remove it (uncommitted)
+- 2026-10-28 main-session: Committed in ff16d3a1
 
 ### DI-006 · Healing brings a dead creature back to life
 - **Status:** fixed · 2026-10-28 · uncommitted
@@ -212,6 +236,7 @@ Any heal on a creature with 3 failed death saves gives it HP, resets the saves a
 **History**
 - 2026-10-28 rules-checker: found
 - 2026-10-28 main-session: marked fixed; User confirmed: heal/short rest skip dead creatures; new Revive button on a dead card sets 1 HP (Action.REVIVE, replayed); downed heal logs 'regains consciousness' (uncommitted)
+- 2026-10-28 main-session: Committed in ff16d3a1
 
 ### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
 - **Status:** fixed · 2026-10-28 · uncommitted
@@ -224,6 +249,7 @@ Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated sta
 - 2026-10-28 main-session: found
 - 2026-10-28 claude-main: marked in-progress; Main session working on it
 - 2026-10-28 claude-main: marked fixed; Initiative screen now asks for HP for any combatant with max HP 0 (Start Combat stays disabled until it's a positive number) and _char_death_state treats max HP 0 as 'HP not set', not dead. Uncommitted in the working tree.
+- 2026-10-28 claude-main: Committed in f6dbd2d2
 
 ### DI-011 · Spell improved descriptions orphaned by the 2024 spell additions
 - **Status:** fixed · 2026-10-28 · ea8a58f5
@@ -236,6 +262,19 @@ a19d9d7e added 2024 versions of Catnap, Enervation, Negative Energy Flood and Po
 - 2026-10-28 main-session: found
 - 2026-10-28 main-session: marked fixed; 2024 improved descriptions written, orphaned 2014 entries removed, 5 builds' goldens regenerated
 - 2026-10-28 git-commit: marked fixed in ea8a58f5
+
+### DI-012 · Epic boons can't grant spells, so boon spells are text only
+- **Status:** fixed · 2026-10-28 · uncommitted
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Classes/BaseClasses/BardBase.py:296`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:955`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:1275`, `CharacterContent/Features/CharacterFeats/EpicBoon.py:385`
+
+Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (ArtificerBase.py:264, BarbarianBase.py:204, BardBase.py:296, ... RogueBase.py:188), which has no spell path. So Boon of Revelry's Otto's Irresistible Dance, Boon of Siberys's chosen spell and Boon of Magic School Mastery's spells appear only in the description and are never added to the character's spell list or spell cards. Fix: give EpicBoon an optional grant_to(data) hook like GeneralFeat.grant_to (GeneralFeats.py:112) and have the class bases call it, then move the three boons' spells onto it.
+
+**History**
+- 2026-10-28 main-session: found
+- 2026-10-28 main-session: marked in-progress; Starting: unified feature spell-grant hook in the engine
+- 2026-10-28 main-session: marked fixed; Feature.granted_spells() (Model/Spells.py FeatureSpell) is now the one way a feature grants spells; Character.spell_grants grants them with the feature, stamped like it. Boon of Revelry, Siberys and Magic School Mastery declare their spells (listed as '<boon> (<class> Level 19)'); feats, class and subclass features moved off their own grant paths. Tests in tests/test_spell_grants.py.
+- 2026-10-28 main-session: Committed in 5b7d6912
 
 ## Won't fix
 
