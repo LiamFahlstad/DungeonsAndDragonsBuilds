@@ -1,0 +1,354 @@
+{
+  "encounter": "time_loop_pr_outside_the_gates",
+  "title": "Outside the Gates",
+  "players": [
+    "Dessie",
+    "Hanna",
+    "Maggie",
+    "Thomas"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Paladin (Goliath Paladin of Devotion)",
+      "create_name": "Goliath Paladin of Devotion",
+      "combatant_type": "Goliath Paladin of Devotion",
+      "hp": 38,
+      "max_hp": 38,
+      "ac": 16,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 10,
+        "CON": 13,
+        "INT": 8,
+        "WIS": 10,
+        "CHA": 12
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Goliath, Paladin",
+      "alignment": "Lawful Good",
+      "size": "Medium",
+      "ac_note": "scale mail, shield",
+      "hp_formula": "7d8 + 7",
+      "speed_ground_ft": 35,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Athletics": 4,
+        "Intimidation": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 10",
+      "languages": "Common, Giant",
+      "description": "",
+      "traits": [
+        {
+          "name": "Divine Smite (2/Day)",
+          "description": "Immediately after the paladin hits a creature with a melee weapon, the target takes an extra 9 (2d8) Radiant damage."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Sacred Longsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 6 (1d8 + 2) Radiant damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 8,
+          "damage_bonus": 2,
+          "damage_type": "Radiant",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Compelled Duel (1/Day)",
+          "description": "The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [
+        {
+          "name": "Stone's Endurance (2/Day)",
+          "description": "When the paladin takes damage, it reduces the damage by 7 (1d12 + 1)."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Cleric (Dwarf Life Cleric)",
+      "create_name": "Dwarf Life Cleric",
+      "combatant_type": "Dwarf Life Cleric",
+      "hp": 18,
+      "max_hp": 18,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 8,
+        "CON": 10,
+        "INT": 8,
+        "WIS": 12,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/2",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Dwarf, Cleric",
+      "alignment": "Lawful Neutral",
+      "size": "Medium",
+      "ac_note": "scale mail",
+      "hp_formula": "4d8",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Insight": 3,
+        "Medicine": 3,
+        "Religion": 1
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 120 ft., Passive Perception 11",
+      "languages": "Common, Dwarvish",
+      "description": "",
+      "traits": [
+        {
+          "name": "Dwarven Resilience",
+          "description": "The cleric has Advantage on saving throws it makes to avoid or end the Poisoned condition."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Sacred Flame",
+          "description": "Dexterity Saving Throw: DC 11, one creature the cleric can see within 60 feet. Failure: 4 (1d8) Radiant damage. Success: No damage.",
+          "ability": "Dexterity",
+          "dc": 11,
+          "target": "one creature the cleric can see within 60 feet",
+          "dice_count": 1,
+          "dice_type": 8,
+          "damage_bonus": 0,
+          "damage_type": "Radiant",
+          "failure_effect": "",
+          "success_effect": "No damage.",
+          "extra_ruling": ""
+        },
+        {
+          "name": "Life Domain Magic",
+          "description": "The cleric uses one of the following, each once per day. Cure Wounds: it touches a creature, which regains 13 (2d8 + 4) Hit Points. Bless: up to three creatures it can see within 30 feet add 1d4 to their attack rolls and saving throws for 1 minute (Concentration). Preserve Life: it presents its holy symbol and restores 15 Hit Points, divided as it chooses among any number of Bloodied creatures within 30 feet of it (which can include itself); a creature can't be restored to more than half its Hit Point maximum this way."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Healing Word (2/Day)",
+          "description": "One creature the cleric can see within 60 feet regains 9 (2d4 + 4) Hit Points."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Druid (Elf Druid of the Land)",
+      "create_name": "Elf Druid of the Land",
+      "combatant_type": "Elf Druid of the Land",
+      "hp": 18,
+      "max_hp": 18,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 14,
+        "CON": 10,
+        "INT": 8,
+        "WIS": 12,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/2",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Elf, Druid",
+      "alignment": "Neutral",
+      "size": "Medium",
+      "ac_note": "leather armor",
+      "hp_formula": "4d8",
+      "speed_ground_ft": 35,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Nature": 1,
+        "Perception": 3,
+        "Survival": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 13",
+      "languages": "Common, Druidic, Elvish",
+      "description": "",
+      "traits": [
+        {
+          "name": "Fey Ancestry",
+          "description": "The druid has Advantage on saving throws it makes to avoid or end the Charmed condition."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Ray of Frost",
+          "description": "Ranged Attack Roll: +3, range 60 ft. Hit: 4 (1d8) Cold damage. The target's Speed is reduced by 10 feet until the start of the druid's next turn.",
+          "attack_bonus": 3,
+          "range_ft": 60,
+          "long_range_ft": null,
+          "dice_count": 1,
+          "dice_type": 8,
+          "damage_bonus": 0,
+          "damage_type": "Cold",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "The target's Speed is reduced by 10 feet until the start of the druid's next turn."
+        },
+        {
+          "name": "Circle of the Land Magic",
+          "description": "The druid uses one of the following. Hold Person (1/Day): one Humanoid it can see within 60 feet must succeed on a DC 11 Wisdom saving throw or have the Paralyzed condition for 1 minute (Concentration), repeating the save at the end of each of its turns and ending the effect on itself on a success. Entangle (1/Day): each creature in a 20-foot square of ground within 90 feet must succeed on a DC 11 Strength saving throw or have the Restrained condition for 1 minute (Concentration); a Restrained creature can take an action to make a DC 11 Strength (Athletics) check, ending the condition on itself on a success, and the area is Difficult Terrain for the duration. Land's Aid (2/Day): each creature of its choice in a 10-foot-radius Sphere centered on a point within 60 feet makes a DC 11 Constitution saving throw, taking 7 (2d6) Necrotic damage on a failure or half as much on a success, and one creature of its choice in the area regains 7 (2d6) Hit Points."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Assassin (Orc Assassin)",
+      "create_name": "Orc Assassin",
+      "combatant_type": "Orc Assassin",
+      "hp": 22,
+      "max_hp": 22,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 8,
+        "WIS": 10,
+        "CHA": 10
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Orc, Rogue",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "leather armor",
+      "hp_formula": "4d8 + 4",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Acrobatics": 5,
+        "Perception": 2,
+        "Stealth": 7
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 120 ft., Passive Perception 12",
+      "languages": "Common, Orc, Thieves' Cant",
+      "description": "",
+      "traits": [
+        {
+          "name": "Assassinate and Sneak Attack",
+          "description": "The assassin has Advantage on Initiative rolls, and during the first round of combat it has Advantage on attack rolls against any creature that hasn't taken a turn yet. Once per turn, it deals an extra 7 (2d6) damage when it hits with a weapon attack that has Advantage, or when the target is within 5 feet of one of its allies that doesn't have the Incapacitated condition."
+        },
+        {
+          "name": "Relentless Endurance (1/Day)",
+          "description": "When the assassin is reduced to 0 Hit Points but not killed outright, it drops to 1 Hit Point instead."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Piercing damage.",
+          "attack_bonus": 5,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 3,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Cunning Action",
+          "description": "The assassin takes the Dash, Disengage, or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

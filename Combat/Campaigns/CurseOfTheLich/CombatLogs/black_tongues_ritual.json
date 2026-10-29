@@ -1,0 +1,354 @@
+{
+  "encounter": "black_tongues_ritual",
+  "title": "Black Tongues Ritual",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Priest of the Black Tongues",
+      "create_name": "Priest of the Black Tongues",
+      "combatant_type": "Priest of the Black Tongues",
+      "hp": 44,
+      "max_hp": 44,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 8,
+        "WIS": 13,
+        "CHA": 9
+      },
+      "Saving Throws": {
+        "WIS": 3
+      },
+      "cr": "2",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Cultist",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "leather vestments",
+      "hp_formula": "8d8+8",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Religion": 2,
+        "Intimidation": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Necrotic"
+          ],
+          "note": "from the curse's lingering touch"
+        }
+      ],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Frightened"
+      ],
+      "senses": "darkvision 60 ft., Passive Perception 13",
+      "languages": "Common, Deep Speech",
+      "description": "",
+      "traits": [
+        {
+          "name": "Black Tongue",
+          "description": "The priest's tongue and teeth were charred black the moment it spoke Noc'tra aloud during the Utterance Ritual and lived. Its voice now cracks and rasps like grinding stone, and it has Advantage on Charisma (Intimidation) checks against any creature that can hear it speak."
+        },
+        {
+          "name": "Curse-Marked",
+          "description": "Having survived a taste of the Great Lich's whisper, the priest's nerves are already broken to the sound of oblivion. It has Resistance to Necrotic damage and cannot be Frightened."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Curse-Etched Stave",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Bludgeoning damage plus 7 (2d6) Necrotic damage as curse-fire crawls from the wood into the wound."
+        },
+        {
+          "name": "Curse-Throat Wail (Recharge 5-6)",
+          "description": "The priest looses a rasping shout amplified by the brass throat-tube lashed across its ruined mouth. Each creature in a 15-foot cone must make a DC 12 Wisdom saving throw, taking 10 (3d6) Psychic damage and gaining the Frightened condition until the end of the priest's next turn on a failed save, or half as much damage only on a successful one."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The priest casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 12, +3 to hit with spell attacks): At will: Thaumaturgy, Toll the Dead. 2/Day each: Hold Person, Silence. 1/Day: Bestow Curse."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Command the Accursed",
+          "description": "The priest chooses any number of Accursed it can see within 30 feet of it. Each chosen Accursed can immediately take the Attack action or move up to its Speed toward a point the priest designates, per the Accursed's Directed by the Faithful trait."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Accursed Brute (Physical Accursed)",
+      "create_name": "Physical Accursed",
+      "combatant_type": "Physical Accursed",
+      "hp": 13,
+      "max_hp": 13,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 12,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 6,
+        "WIS": 10,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "3d8+3",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Exhaustion"
+      ],
+      "senses": "Passive Perception 10",
+      "languages": "Understands the language it knew in life but can't speak",
+      "description": "A more physically imposing Accursed, with a stronger body.",
+      "traits": [
+        {
+          "name": "Herd-Bound",
+          "description": "While within 5 feet of at least one other Accursed creature, the Accursed Brute has Advantage on saving throws against being frightened or charmed."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Accursed Warden (Armored Accursed)",
+      "create_name": "Armored Accursed",
+      "combatant_type": "Armored Accursed",
+      "hp": 22,
+      "max_hp": 22,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 13,
+        "DEX": 12,
+        "CON": 13,
+        "INT": 6,
+        "WIS": 10,
+        "CHA": 7
+      },
+      "Saving Throws": {},
+      "cr": "1/2",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "5d8+5",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Exhaustion",
+        "Poisoned"
+      ],
+      "senses": "Passive Perception 10",
+      "languages": "Maybe understands the language it knew in life but can't speak",
+      "description": "A more physically imposing Accursed, with a stronger body and some crude armor.",
+      "traits": [
+        {
+          "name": "Herd-Bound",
+          "description": "While within 5 feet of at least one other Accursed creature, the Accursed Brute has Advantage on saving throws against being frightened and against effects that would move it against its will."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The Accursed Warden makes two Rusted Halberd attacks.",
+          "creature_name": "Accursed Warden",
+          "attacks_text": "two Rusted Halberd attacks",
+          "extra_ruling": "",
+          "use_article": true
+        },
+        {
+          "name": "Rusted Halberd",
+          "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 5 (1d10) Slashing damage.",
+          "attack_bonus": 4,
+          "reach_ft": 10,
+          "dice_count": 1,
+          "dice_type": 10,
+          "damage_bonus": 0,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Accursed Group (Accursed Group (5))",
+      "create_name": "Accursed Group (5)",
+      "combatant_type": "Accursed Group (5)",
+      "hp": 50,
+      "max_hp": 50,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 15,
+        "DEX": 13,
+        "CON": 14,
+        "INT": 7,
+        "WIS": 11,
+        "CHA": 7
+      },
+      "Saving Throws": {},
+      "cr": "2",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "8d6+4",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Grappled",
+        "Restrained"
+      ],
+      "senses": "darkvision 60 ft., Passive Perception 10",
+      "languages": "Understands the languages its bodies knew in life but can't speak",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "50-41: 5 attacks, 40-31: 4 attacks, 30-21: 3 attacks, 20-11: 2 attacks, 10-1: 1 attack. An attack can be either a Smash or a Grab."
+        },
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Grab",
+          "description": "reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13)."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Rush",
+          "description": "The Accursed Group of 3 can dash as a bonus action on it's first turn of combat."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

@@ -1,0 +1,979 @@
+{
+  "encounter": "wrath_of_durmor",
+  "title": "Wrath of Durmor",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Greypaw (Ally) (Greypaw (Young))",
+      "create_name": "Greypaw (Young)",
+      "combatant_type": "Greypaw (Young)",
+      "hp": 30,
+      "max_hp": 30,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 13,
+        "CON": 15,
+        "INT": 3,
+        "WIS": 12,
+        "CHA": 5
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Beast",
+      "monster_type_note": "Mutated",
+      "alignment": "Unaligned",
+      "size": "Large",
+      "ac_note": "Thick Hide",
+      "hp_formula": "4d10 + 8",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Perception": 3,
+        "Survival": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "darkvision 60 ft., keen smell, Passive Perception 13",
+      "languages": "None",
+      "description": "",
+      "traits": [
+        {
+          "name": "Keen Hearing and Smell",
+          "description": "Greypaw has advantage on Wisdom (Perception) checks that rely on hearing or smell."
+        },
+        {
+          "name": "Relentless Tracker",
+          "description": "Greypaw has advantage on Wisdom (Survival) checks made to track creatures. It can identify a creature by scent after smelling something it touched or wore."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 8 (1d10 + 3) Piercing damage.",
+          "attack_bonus": 5,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 10,
+          "damage_bonus": 3,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Manifestation of Durmor",
+      "create_name": "Manifestation of Durmor",
+      "combatant_type": "Manifestation of Durmor",
+      "hp": 110,
+      "max_hp": 110,
+      "ac": 16,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 19,
+        "DEX": 8,
+        "CON": 17,
+        "INT": 5,
+        "WIS": 10,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "4",
+      "monster_type": "Elemental",
+      "monster_type_note": "",
+      "alignment": "Neutral",
+      "size": "Large",
+      "ac_note": "cooling stone crust",
+      "hp_formula": "13d10 + 39",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "burrow 20 ft.",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Fire"
+          ],
+          "note": ""
+        },
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Exhaustion",
+        "Paralyzed",
+        "Petrified",
+        "Poisoned",
+        "Unconscious"
+      ],
+      "senses": "Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
+      "languages": "Primordial (Ignan, Terran)",
+      "description": "",
+      "traits": [
+        {
+          "name": "Earth Glide",
+          "description": "The manifestation can burrow through nonmagical, unworked earth and stone, leaving a glowing seam of cooling rock behind it."
+        },
+        {
+          "name": "Illumination",
+          "description": "The manifestation sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.",
+          "creature_name": "manifestation",
+          "radius_ft": 20,
+          "dim_radius_ft": 20
+        },
+        {
+          "name": "Molten Body",
+          "description": "A creature that touches the manifestation or hits it with a melee attack while within 5 feet of it takes 4 (1d8) Fire damage."
+        },
+        {
+          "name": "Siege Monster",
+          "description": "The manifestation deals double damage to objects and structures.",
+          "creature_name": "manifestation"
+        },
+        {
+          "name": "Water Susceptibility",
+          "description": "The manifestation takes 3 (1d6) Cold damage for every 5 feet it moves in water or for every gallon of water splashed on it, and its AC drops by 2 until the end of its next turn as its crust cracks."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The manifestation makes two attacks, using Molten Slam or Lava Lob in any combination.",
+          "creature_name": "manifestation",
+          "attacks_text": "two attacks, using Molten Slam or Lava Lob in any combination",
+          "extra_ruling": "",
+          "use_article": true
+        },
+        {
+          "name": "Molten Slam",
+          "description": "Melee Attack Roll: +6, reach 10 ft. Hit: 11 (2d6 + 4) Bludgeoning damage plus 3 (1d6) Fire damage.",
+          "attack_bonus": 6,
+          "reach_ft": 10,
+          "dice_count": 2,
+          "dice_type": 6,
+          "damage_bonus": 4,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 1,
+          "secondary_dice_type": 6,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": "Fire",
+          "additional_ruling": ""
+        },
+        {
+          "name": "Lava Lob",
+          "description": "Ranged Attack Roll: +6, range 60 ft. Hit: 7 (1d6 + 4) Bludgeoning damage plus 3 (1d6) Fire damage. If the target is a Large or smaller creature, it has the Prone condition.",
+          "attack_bonus": 6,
+          "range_ft": 60,
+          "long_range_ft": null,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 4,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 1,
+          "secondary_dice_type": 6,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": "Fire",
+          "additional_ruling": "If the target is a Large or smaller creature, it has the Prone condition."
+        },
+        {
+          "name": "Eruption (Recharge 5-6)",
+          "description": "Dexterity Saving Throw: DC 14, each creature in a 15-foot Emanation originating from the manifestation. Failure: 16 (3d10) Fire damage. Success: Half damage. The ground in the Emanation becomes Difficult Terrain until the end of the manifestation's next turn.",
+          "ability": "Dexterity",
+          "dc": 14,
+          "target": "each creature in a 15-foot Emanation originating from the manifestation",
+          "dice_count": 3,
+          "dice_type": 10,
+          "damage_bonus": 0,
+          "damage_type": "Fire",
+          "failure_effect": "",
+          "success_effect": "Half damage.",
+          "extra_ruling": "The ground in the Emanation becomes Difficult Terrain until the end of the manifestation's next turn."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin King",
+      "create_name": "Goblin King",
+      "combatant_type": "Goblin King",
+      "hp": 60,
+      "max_hp": 60,
+      "ac": 17,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 12,
+        "DEX": 16,
+        "CON": 14,
+        "INT": 11,
+        "WIS": 10,
+        "CHA": 12
+      },
+      "Saving Throws": {},
+      "cr": "3",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "chain shirt, shield",
+      "hp_formula": "11d6 + 22",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Intimidation": 3,
+        "Stealth": 7
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The goblin makes three attacks, using Scimitar or Shortbow in any combination.",
+          "creature_name": "goblin",
+          "attacks_text": "three attacks, using Scimitar or Shortbow in any combination",
+          "extra_ruling": "",
+          "use_article": true
+        },
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Slashing damage. If the attack roll had Advantage, the target takes an extra 5 (2d4) Slashing damage.",
+          "attack_bonus": 5,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 3,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "If the attack roll had Advantage, the target takes an extra 5 (2d4) Slashing damage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +5, range 80/320 ft. Hit: 6 (1d6 + 3) Piercing damage. If the attack roll had Advantage, the target takes an extra 5 (2d4) Piercing damage.",
+          "attack_bonus": 5,
+          "range_ft": 80,
+          "long_range_ft": 320,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 3,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "If the attack roll had Advantage, the target takes an extra 5 (2d4) Piercing damage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Royal Command",
+          "description": "The goblin barks an order at up to two allied goblins within 30 feet of it that can hear it. Each of them can take a Reaction to move up to half its Speed and make one weapon attack."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Redirect Attack",
+          "description": "Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Hexer",
+      "create_name": "Goblin Hexer",
+      "combatant_type": "Goblin Hexer",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 16,
+        "WIS": 10,
+        "CHA": 10
+      },
+      "Saving Throws": {},
+      "cr": "3",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "10d6 + 10",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Sleight of Hand": 5,
+        "Stealth": 7
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The goblin makes two Hex Stick attacks. It can replace one attack with a use of Spellcasting."
+        },
+        {
+          "name": "Hex Stick",
+          "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 60 ft. Hit: 12 (2d8 + 3) Psychic damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The goblin casts one of the following spells, using Intelligence as the spellcasting ability (spell save DC 13):"
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [
+        {
+          "name": "Jinx",
+          "description": "Trigger: A creature the goblin can see hits it with an attack roll. Response\u2014Wisdom Saving Throw: DC 13, the triggering creature. Failure: The attack misses instead."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Boss 1 (Goblin Boss)",
+      "create_name": "Goblin Boss",
+      "combatant_type": "Goblin Boss",
+      "hp": 21,
+      "max_hp": 21,
+      "ac": 17,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 10
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "6d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The goblin makes two attacks, using Scimitar or Shortbow in any combination."
+        },
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Redirect Attack",
+          "description": "Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Boss 2 (Goblin Boss)",
+      "create_name": "Goblin Boss",
+      "combatant_type": "Goblin Boss",
+      "hp": 21,
+      "max_hp": 21,
+      "ac": 17,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 10
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "6d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The goblin makes two attacks, using Scimitar or Shortbow in any combination."
+        },
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Redirect Attack",
+          "description": "Trigger: A creature the goblin can see makes an attack roll against it. Response: The goblin chooses a Medium or Small ally within 5 feet of itself. The goblin and that ally swap places, and the ally becomes the target of the attack instead."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 1 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 2 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 3 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 4 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 5 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Goblin Warrior 6 (Goblin Warrior)",
+      "create_name": "Goblin Warrior",
+      "combatant_type": "Goblin Warrior",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 8,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 10,
+        "WIS": 8,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1/4",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Neutral",
+      "size": "Small",
+      "ac_note": "",
+      "hp_formula": "3d6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 9",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Scimitar",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage."
+        },
+        {
+          "name": "Shortbow",
+          "description": "Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The goblin takes the Disengage or Hide action.",
+          "creature_name": "goblin"
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

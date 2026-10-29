@@ -1,0 +1,331 @@
+{
+  "encounter": "time_loop_pr_square",
+  "title": "The Square",
+  "players": [
+    "Dessie",
+    "Hanna",
+    "Maggie",
+    "Thomas"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Mirelle (Vrock)",
+      "create_name": "Vrock",
+      "combatant_type": "Vrock",
+      "hp": 152,
+      "max_hp": 152,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 17,
+        "DEX": 15,
+        "CON": 18,
+        "INT": 8,
+        "WIS": 13,
+        "CHA": 8
+      },
+      "Saving Throws": {
+        "DEX": 5,
+        "WIS": 4,
+        "CHA": 2
+      },
+      "cr": "6",
+      "monster_type": "Fiend",
+      "monster_type_note": "Demon",
+      "alignment": "Chaotic Evil",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "16d10 + 64",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": 60,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Cold"
+          ],
+          "note": ""
+        },
+        {
+          "damage_types": [
+            "Fire"
+          ],
+          "note": ""
+        },
+        {
+          "damage_types": [
+            "Lightning"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Poisoned"
+      ],
+      "senses": "Darkvision 120 ft., Passive Perception 11",
+      "languages": "Abyssal; telepathy 120 ft",
+      "description": "",
+      "traits": [
+        {
+          "name": "Demonic Restoration",
+          "description": "If the vrock dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss."
+        },
+        {
+          "name": "Magic Resistance",
+          "description": "The vrock has Advantage on saving throws against spells and other magical effects."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The vrock makes two Shred attacks."
+        },
+        {
+          "name": "Shred",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6 + 3) Piercing damage plus 10 (3d6) Poison damage."
+        },
+        {
+          "name": "Spores (Recharge 6)",
+          "description": "Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock. Failure: The target has the Poisoned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. While Poisoned, the target takes 5 (1d10) Poison damage at the start of each of its turns. Emptying a flask of Holy Water on the target ends the effect early."
+        },
+        {
+          "name": "Stunning Screech (1/Day)",
+          "description": "Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock (demons succeed automatically). Failure: 10 (3d6) Thunder damage, and the target has the Stunned condition until the end of the vrock's next turn."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Guard Priest (Priest)",
+      "create_name": "Priest",
+      "combatant_type": "Priest",
+      "hp": 38,
+      "max_hp": 38,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 10,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 16,
+        "CHA": 13
+      },
+      "Saving Throws": {},
+      "cr": "2",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Cleric",
+      "alignment": "Neutral",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "7d8 + 7",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Medicine": 7,
+        "Perception": 5,
+        "Religion": 5
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 15",
+      "languages": "Common plus one other language",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The priest makes two attacks, using Mace or Radiant Flame in any combination."
+        },
+        {
+          "name": "Mace",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage plus 5 (2d4) Radiant damage."
+        },
+        {
+          "name": "Radiant Flame",
+          "description": "Ranged Attack Roll: +5, range 60 ft. Hit: 11 (2d10) Radiant damage."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "The priest casts one of the following spells, using Wisdom as the spellcasting ability:"
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Divine Aid (3/Day)",
+          "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Guard Rhinoceros (Rhinoceros)",
+      "create_name": "Rhinoceros",
+      "combatant_type": "Rhinoceros",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 21,
+        "DEX": 8,
+        "CON": 15,
+        "INT": 2,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {},
+      "cr": "2",
+      "monster_type": "Beast",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "6d10 + 12",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 11",
+      "languages": "None",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Gore",
+          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage. If target is a Large or smaller creature and the rhinoceros moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Guard Saber-Toothed Tiger (Saber-Toothed Tiger)",
+      "create_name": "Saber-Toothed Tiger",
+      "combatant_type": "Saber-Toothed Tiger",
+      "hp": 52,
+      "max_hp": 52,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 18,
+        "DEX": 17,
+        "CON": 15,
+        "INT": 3,
+        "WIS": 12,
+        "CHA": 8
+      },
+      "Saving Throws": {
+        "STR": 6,
+        "DEX": 5
+      },
+      "cr": "2",
+      "monster_type": "Beast",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "7d10 + 14",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Perception": 5,
+        "Stealth": 7
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 15",
+      "languages": "None",
+      "description": "",
+      "traits": [
+        {
+          "name": "Running Leap",
+          "description": "With a 10-foot running start, the tiger can Long Jump up to 25 feet."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The tiger makes two Rend attacks."
+        },
+        {
+          "name": "Rend",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Slashing damage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The tiger takes the Disengage or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

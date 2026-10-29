@@ -1,0 +1,375 @@
+{
+  "encounter": "black_tongues_skirmish",
+  "title": "Black Tongues Skirmish",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Common Cultist 1 (Common Cultist)",
+      "create_name": "Common Cultist",
+      "combatant_type": "Common Cultist",
+      "hp": 28,
+      "max_hp": 28,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 11,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 9,
+        "WIS": 10,
+        "CHA": 12
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Cultist",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "scavenged padding",
+      "hp_formula": "5d8+5",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Religion": 1,
+        "Intimidation": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 10",
+      "languages": "Common",
+      "description": "",
+      "traits": [
+        {
+          "name": "Zealous Communion",
+          "description": "While a Priest of the Black Tongues or a Cantor of the Black Choir is within 30 feet of the cultist, the cultist fights with the reckless fervor of the newly converted and has Advantage on attack rolls."
+        },
+        {
+          "name": "Strength of the Faithful Mob",
+          "description": "The cultist has Advantage on an attack roll against a creature if at least one of the cultist's allies is within 5 feet of that creature and the ally doesn't have the Incapacitated condition."
+        },
+        {
+          "name": "Marked for the Choir",
+          "description": "Ritual scarring rings the cultist's throat, and its vestments are stitched shut at the collar in imitation of the silence to come. The sight unsettles the faithless, and the cultist has Advantage on Charisma (Intimidation) checks against any creature that can see these markings."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Scavenged Sickle",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 2,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Scavenged Sling",
+          "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 4 (1d4 + 2) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "range_ft": 30,
+          "long_range_ft": 120,
+          "dice_count": 1,
+          "dice_type": 4,
+          "damage_bonus": 2,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Fanatic's Surge",
+          "description": "The cultist recites a fragment of the Black Choir's litany, gaining Advantage on its next attack roll before the end of its turn."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Common Cultist 2 (Common Cultist)",
+      "create_name": "Common Cultist",
+      "combatant_type": "Common Cultist",
+      "hp": 28,
+      "max_hp": 28,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 11,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 9,
+        "WIS": 10,
+        "CHA": 12
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Cultist",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "scavenged padding",
+      "hp_formula": "5d8+5",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Religion": 1,
+        "Intimidation": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 10",
+      "languages": "Common",
+      "description": "",
+      "traits": [
+        {
+          "name": "Zealous Communion",
+          "description": "While a Priest of the Black Tongues or a Cantor of the Black Choir is within 30 feet of the cultist, the cultist fights with the reckless fervor of the newly converted and has Advantage on attack rolls."
+        },
+        {
+          "name": "Strength of the Faithful Mob",
+          "description": "The cultist has Advantage on an attack roll against a creature if at least one of the cultist's allies is within 5 feet of that creature and the ally doesn't have the Incapacitated condition."
+        },
+        {
+          "name": "Marked for the Choir",
+          "description": "Ritual scarring rings the cultist's throat, and its vestments are stitched shut at the collar in imitation of the silence to come. The sight unsettles the faithless, and the cultist has Advantage on Charisma (Intimidation) checks against any creature that can see these markings."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Scavenged Sickle",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 2,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Scavenged Sling",
+          "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 4 (1d4 + 2) Bludgeoning damage.",
+          "attack_bonus": 4,
+          "range_ft": 30,
+          "long_range_ft": 120,
+          "dice_count": 1,
+          "dice_type": 4,
+          "damage_bonus": 2,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Fanatic's Surge",
+          "description": "The cultist recites a fragment of the Black Choir's litany, gaining Advantage on its next attack roll before the end of its turn."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Accursed 1 (Accursed)",
+      "create_name": "Accursed",
+      "combatant_type": "Accursed",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 12,
+        "DEX": 13,
+        "CON": 12,
+        "INT": 5,
+        "WIS": 10,
+        "CHA": 5
+      },
+      "Saving Throws": {},
+      "cr": "1/8",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "2d8+2",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Exhaustion"
+      ],
+      "senses": "Passive Perception 10",
+      "languages": "Maybe understands the language it knew in life but can't speak",
+      "description": "A creature that has been turned byt a curse, driven by a malevolent force.",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 3,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Accursed 2 (Accursed)",
+      "create_name": "Accursed",
+      "combatant_type": "Accursed",
+      "hp": 10,
+      "max_hp": 10,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 12,
+        "DEX": 13,
+        "CON": 12,
+        "INT": 5,
+        "WIS": 10,
+        "CHA": 5
+      },
+      "Saving Throws": {},
+      "cr": "1/8",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "2d8+2",
+      "speed_ground_ft": 20,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Exhaustion"
+      ],
+      "senses": "Passive Perception 10",
+      "languages": "Maybe understands the language it knew in life but can't speak",
+      "description": "A creature that has been turned byt a curse, driven by a malevolent force.",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Smash",
+          "description": "Melee Attack Roll: +3, reach 5 ft. Hit: 4 (1d6 + 1) Bludgeoning damage.",
+          "attack_bonus": 3,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 1,
+          "damage_type": "Bludgeoning",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

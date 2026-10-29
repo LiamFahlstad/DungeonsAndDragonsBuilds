@@ -1,4 +1,11 @@
 {
+  "encounter": "goblin_scouting_party",
+  "title": "Goblin Scouting Party",
+  "players": [
+    "Edmund",
+    "Clover",
+    "Kivi J\u00e4tti"
+  ],
   "round_number": 4,
   "combatants": [
     {
@@ -1154,7 +1161,7 @@
   ],
   "round_1": [
     {
-      "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) takes 14 Bludgeoning damage from Kivi Jätti",
+      "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) takes 14 Bludgeoning damage from Kivi J\u00e4tti",
       "character": "Goblin Boss 1 (Goblin Boss)",
       "action": "damage",
       "value": {
@@ -1162,19 +1169,19 @@
         "temp_delta": 0,
         "dmg": 14,
         "damage_type": "Bludgeoning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Boss 1 (Goblin Boss)",
         "knockout": false,
         "outcome": null
       }
     },
     {
-      "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) gains Bloodied from Kivi Jätti",
+      "text": "[Goblin Boss 1 (Goblin Boss)'s turn] Goblin Boss 1 (Goblin Boss) gains Bloodied from Kivi J\u00e4tti",
       "character": "Goblin Boss 1 (Goblin Boss)",
       "action": "add_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Boss 1 (Goblin Boss)"
       }
     },
@@ -1199,7 +1206,7 @@
       "text": "--- Round 2 ---"
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Boss 1 (Goblin Boss) takes 5 Fire damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Boss 1 (Goblin Boss) takes 5 Fire damage from Kivi J\u00e4tti",
       "character": "Goblin Boss 1 (Goblin Boss)",
       "action": "damage",
       "value": {
@@ -1207,14 +1214,14 @@
         "temp_delta": 0,
         "dmg": 5,
         "damage_type": "Fire",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Boss 1 (Goblin Boss)",
         "knockout": false,
         "outcome": null
       }
     },
     {
-      "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) takes 4 Force damage from Kivi Jätti",
+      "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) takes 4 Force damage from Kivi J\u00e4tti",
       "character": "Goblin Boss 1 (Goblin Boss)",
       "action": "damage",
       "value": {
@@ -1222,19 +1229,19 @@
         "temp_delta": 0,
         "dmg": 4,
         "damage_type": "Force",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Boss 1 (Goblin Boss)",
         "knockout": true,
         "outcome": null
       }
     },
     {
-      "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) loses Bloodied from Kivi Jätti",
+      "text": "[Goblin Warrior 1 (Goblin Warrior)'s turn] Goblin Boss 1 (Goblin Boss) loses Bloodied from Kivi J\u00e4tti",
       "character": "Goblin Boss 1 (Goblin Boss)",
       "action": "remove_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Boss 1 (Goblin Boss)"
       }
     },
@@ -1277,7 +1284,7 @@
       "text": "--- Round 3 ---"
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) takes 7 Cold damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) takes 7 Cold damage from Kivi J\u00e4tti",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "damage",
       "value": {
@@ -1285,19 +1292,19 @@
         "temp_delta": 0,
         "dmg": 7,
         "damage_type": "Cold",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Warrior 4 (Goblin Warrior)",
         "knockout": false,
         "outcome": null
       }
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) gains Bloodied from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) gains Bloodied from Kivi J\u00e4tti",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "add_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Warrior 4 (Goblin Warrior)"
       }
     },
@@ -1385,7 +1392,7 @@
       "value": true
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Minion 2 (Goblin Minion) takes 9 Lightning damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) takes 9 Lightning damage from Kivi J\u00e4tti",
       "character": "Goblin Minion 2 (Goblin Minion)",
       "action": "damage",
       "value": {
@@ -1393,32 +1400,32 @@
         "temp_delta": 0,
         "dmg": 9,
         "damage_type": "Lightning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Minion 2 (Goblin Minion)",
         "knockout": true,
         "outcome": null
       }
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (1/3 fails)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (1/3 fails)",
       "character": "Goblin Minion 2 (Goblin Minion)",
       "action": "death_save_fail",
       "value": false
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (2/3 fails)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) fails a death save (2/3 fails)",
       "character": "Goblin Minion 2 (Goblin Minion)",
       "action": "death_save_fail",
       "value": false
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Minion 2 (Goblin Minion) has died (3 failed death saves)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Minion 2 (Goblin Minion) has died (3 failed death saves)",
       "character": "Goblin Minion 2 (Goblin Minion)",
       "action": "death_save_fail",
       "value": true
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) takes 4 Lightning damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) takes 4 Lightning damage from Kivi J\u00e4tti",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "damage",
       "value": {
@@ -1426,36 +1433,36 @@
         "temp_delta": 0,
         "dmg": 4,
         "damage_type": "Lightning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Warrior 4 (Goblin Warrior)",
         "knockout": true,
         "outcome": null
       }
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) loses Bloodied from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) loses Bloodied from Kivi J\u00e4tti",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "remove_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "Goblin Warrior 4 (Goblin Warrior)"
       }
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (1/3 fails)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (1/3 fails)",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "death_save_fail",
       "value": false
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (2/3 fails)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) fails a death save (2/3 fails)",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "death_save_fail",
       "value": false
     },
     {
-      "text": "[Kivi Jätti's turn] Goblin Warrior 4 (Goblin Warrior) has died (3 failed death saves)",
+      "text": "[Kivi J\u00e4tti's turn] Goblin Warrior 4 (Goblin Warrior) has died (3 failed death saves)",
       "character": "Goblin Warrior 4 (Goblin Warrior)",
       "action": "death_save_fail",
       "value": true

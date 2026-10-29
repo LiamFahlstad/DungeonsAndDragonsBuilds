@@ -1,4 +1,14 @@
 {
+  "encounter": "ashelm_church",
+  "title": "Ashelm Church",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
   "round_number": 5,
   "combatants": [
     {
@@ -649,7 +659,7 @@
       }
     },
     {
-      "text": "[Obmar Stålskägg's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Bludgeoning damage from Obmar Stålskägg",
+      "text": "[Obmar St\u00e5lsk\u00e4gg's turn] Accursed Group of 3 (Accursed Group (3)) takes 7 Bludgeoning damage from Obmar St\u00e5lsk\u00e4gg",
       "character": "Accursed Group of 3 (Accursed Group (3))",
       "action": "damage",
       "value": {
@@ -657,14 +667,14 @@
         "temp_delta": 0,
         "dmg": 7,
         "damage_type": "Bludgeoning",
-        "source_name": "Obmar Stålskägg",
+        "source_name": "Obmar St\u00e5lsk\u00e4gg",
         "target_name": "Accursed Group of 3 (Accursed Group (3))",
         "knockout": false,
         "outcome": null
       }
     },
     {
-      "text": "[Obmar Stålskägg's turn] Accursed Group of 3 (Accursed Group (3)) takes 3 Piercing damage from Obmar Stålskägg",
+      "text": "[Obmar St\u00e5lsk\u00e4gg's turn] Accursed Group of 3 (Accursed Group (3)) takes 3 Piercing damage from Obmar St\u00e5lsk\u00e4gg",
       "character": "Accursed Group of 3 (Accursed Group (3))",
       "action": "damage",
       "value": {
@@ -672,7 +682,7 @@
         "temp_delta": 0,
         "dmg": 3,
         "damage_type": "Piercing",
-        "source_name": "Obmar Stålskägg",
+        "source_name": "Obmar St\u00e5lsk\u00e4gg",
         "target_name": "Accursed Group of 3 (Accursed Group (3))",
         "knockout": false,
         "outcome": null
@@ -743,13 +753,13 @@
       "text": "[Gabriel Greybeard's turn] Gabriel Greybeard uses Action"
     },
     {
-      "text": "[Gabriel Greybeard's turn] Kivi Jätti gains Bless from Gabriel Greybeard",
-      "character": "Kivi Jätti",
+      "text": "[Gabriel Greybeard's turn] Kivi J\u00e4tti gains Bless from Gabriel Greybeard",
+      "character": "Kivi J\u00e4tti",
       "action": "add_condition",
       "value": {
         "condition": "Bless",
         "source_name": "Gabriel Greybeard",
-        "target_name": "Kivi Jätti"
+        "target_name": "Kivi J\u00e4tti"
       }
     },
     {
@@ -858,32 +868,32 @@
       }
     },
     {
-      "text": "[Clover's turn] Clover is resurrected with 5 HP from Obmar Stålskägg",
+      "text": "[Clover's turn] Clover is resurrected with 5 HP from Obmar St\u00e5lsk\u00e4gg",
       "character": "Clover",
       "action": "heal",
       "value": {
         "heal": 9,
-        "source_name": "Obmar Stålskägg",
+        "source_name": "Obmar St\u00e5lsk\u00e4gg",
         "target_name": "Clover"
       }
     },
     {
-      "text": "[Clover's turn] Clover gains Bloodied from Obmar Stålskägg",
+      "text": "[Clover's turn] Clover gains Bloodied from Obmar St\u00e5lsk\u00e4gg",
       "character": "Clover",
       "action": "add_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Obmar Stålskägg",
+        "source_name": "Obmar St\u00e5lsk\u00e4gg",
         "target_name": "Clover"
       }
     },
     {
-      "text": "[Clover's turn] Clover heals 4 HP from Obmar Stålskägg",
+      "text": "[Clover's turn] Clover heals 4 HP from Obmar St\u00e5lsk\u00e4gg",
       "character": "Clover",
       "action": "heal",
       "value": {
         "heal": 4,
-        "source_name": "Obmar Stålskägg",
+        "source_name": "Obmar St\u00e5lsk\u00e4gg",
         "target_name": "Clover"
       }
     },
@@ -958,7 +968,7 @@
       }
     },
     {
-      "text": "[Kivi Jätti's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 16 Bludgeoning damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] (3) Accursed Group of 5 (Accursed Group (5)) takes 16 Bludgeoning damage from Kivi J\u00e4tti",
       "character": "(3) Accursed Group of 5 (Accursed Group (5))",
       "action": "damage",
       "value": {
@@ -966,7 +976,7 @@
         "temp_delta": 0,
         "dmg": 16,
         "damage_type": "Bludgeoning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "(3) Accursed Group of 5 (Accursed Group (5))",
         "knockout": false,
         "outcome": null
@@ -1119,13 +1129,13 @@
       "value": true
     },
     {
-      "text": "[Edmund's turn] Kivi Jätti loses Bless",
-      "character": "Kivi Jätti",
+      "text": "[Edmund's turn] Kivi J\u00e4tti loses Bless",
+      "character": "Kivi J\u00e4tti",
       "action": "remove_condition",
       "value": {
         "condition": "Bless",
         "source_name": null,
-        "target_name": "Kivi Jätti"
+        "target_name": "Kivi J\u00e4tti"
       }
     },
     {
@@ -1159,7 +1169,7 @@
       }
     },
     {
-      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi J\u00e4tti",
       "character": "(1) Accursed Group of 5 (Accursed Group (5))",
       "action": "damage",
       "value": {
@@ -1167,7 +1177,7 @@
         "temp_delta": 0,
         "dmg": 9,
         "damage_type": "Bludgeoning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
         "knockout": false,
         "outcome": null
@@ -1267,7 +1277,7 @@
       }
     },
     {
-      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) takes 9 Bludgeoning damage from Kivi J\u00e4tti",
       "character": "(1) Accursed Group of 5 (Accursed Group (5))",
       "action": "damage",
       "value": {
@@ -1275,19 +1285,19 @@
         "temp_delta": 0,
         "dmg": 9,
         "damage_type": "Bludgeoning",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "(1) Accursed Group of 5 (Accursed Group (5))",
         "knockout": false,
         "outcome": null
       }
     },
     {
-      "text": "[Kivi Jätti's turn] (1) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Kivi Jätti",
+      "text": "[Kivi J\u00e4tti's turn] (1) Accursed Group of 5 (Accursed Group (5)) gains Bloodied from Kivi J\u00e4tti",
       "character": "(1) Accursed Group of 5 (Accursed Group (5))",
       "action": "add_condition",
       "value": {
         "condition": "Bloodied",
-        "source_name": "Kivi Jätti",
+        "source_name": "Kivi J\u00e4tti",
         "target_name": "(1) Accursed Group of 5 (Accursed Group (5))"
       }
     }

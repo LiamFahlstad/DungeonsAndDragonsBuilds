@@ -1,0 +1,280 @@
+{
+  "encounter": "time_loop_pr_drunk_oxe",
+  "title": "The Drunk Oxe",
+  "players": [
+    "Dessie",
+    "Hanna",
+    "Maggie",
+    "Thomas"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Bo (Bugbear Warrior)",
+      "create_name": "Bugbear Warrior",
+      "combatant_type": "Bugbear Warrior",
+      "hp": 33,
+      "max_hp": 33,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 15,
+        "DEX": 14,
+        "CON": 13,
+        "INT": 8,
+        "WIS": 11,
+        "CHA": 9
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8 + 6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6,
+        "Survival": 2
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [
+        {
+          "name": "Abduct",
+          "description": "The bugbear needn't spend extra movement to move a creature it is grappling."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Grab",
+          "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 9 (2d6 + 2) Bludgeoning damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12)."
+        },
+        {
+          "name": "Light Hammer",
+          "description": "Melee or Ranged Attack Roll: +4 (with Advantage if the target is Grappled by the bugbear), reach 10 ft. or range 20/60 ft. Hit: 9 (3d4 + 2) Bludgeoning damage."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Jax (Bugbear Warrior)",
+      "create_name": "Bugbear Warrior",
+      "combatant_type": "Bugbear Warrior",
+      "hp": 33,
+      "max_hp": 33,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 15,
+        "DEX": 14,
+        "CON": 13,
+        "INT": 8,
+        "WIS": 11,
+        "CHA": 9
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Fey",
+      "monster_type_note": "Goblinoid",
+      "alignment": "Chaotic Evil",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8 + 6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Stealth": 6,
+        "Survival": 2
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 10",
+      "languages": "Common, Goblin",
+      "description": "",
+      "traits": [
+        {
+          "name": "Abduct",
+          "description": "The bugbear needn't spend extra movement to move a creature it is grappling."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Grab",
+          "description": "Melee Attack Roll: +4, reach 10 ft. Hit: 9 (2d6 + 2) Bludgeoning damage. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12)."
+        },
+        {
+          "name": "Light Hammer",
+          "description": "Melee or Ranged Attack Roll: +4 (with Advantage if the target is Grappled by the bugbear), reach 10 ft. or range 20/60 ft. Hit: 9 (3d4 + 2) Bludgeoning damage."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Crock (Pirate)",
+      "create_name": "Pirate",
+      "combatant_type": "Pirate",
+      "hp": 33,
+      "max_hp": 33,
+      "ac": 14,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 16,
+        "CON": 12,
+        "INT": 8,
+        "WIS": 12,
+        "CHA": 14
+      },
+      "Saving Throws": {
+        "DEX": 5,
+        "CHA": 4
+      },
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "",
+      "alignment": "Any Alignment",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8 + 6",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 11",
+      "languages": "Common plus one other language",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The pirate makes two Dagger attacks. It can replace one of these attacks with a use of Enthralling Panache."
+        },
+        {
+          "name": "Dagger",
+          "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or range 20/60 ft. Hit: 5 (1d4 + 3) Piercing damage."
+        },
+        {
+          "name": "Enthralling Panache",
+          "description": "Wisdom Saving Throw: DC 12, one creature the pirate can see within 30 feet. Failure: The target has the Charmed condition until the start of the pirate's next turn."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Tiger",
+      "create_name": "Tiger",
+      "combatant_type": "Tiger",
+      "hp": 30,
+      "max_hp": 30,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 17,
+        "DEX": 16,
+        "CON": 14,
+        "INT": 3,
+        "WIS": 12,
+        "CHA": 8
+      },
+      "Saving Throws": {},
+      "cr": "1",
+      "monster_type": "Beast",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Large",
+      "ac_note": "",
+      "hp_formula": "4d10 + 8",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Perception": 3,
+        "Stealth": 7
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 13",
+      "languages": "None",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Rend",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage. If the target is a Large or smaller creature, it has the Prone condition."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Nimble Escape",
+          "description": "The tiger takes the Disengage or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

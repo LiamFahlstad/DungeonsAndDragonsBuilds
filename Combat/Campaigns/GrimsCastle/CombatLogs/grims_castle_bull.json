@@ -1,0 +1,158 @@
+{
+  "encounter": "grims_castle_bull",
+  "title": "The Bull",
+  "players": [],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Player 1",
+      "create_name": "Player 1",
+      "combatant_type": "Player 1",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 21,
+        "DEX": 8,
+        "CON": 15,
+        "INT": 2,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {
+        "STR": 5,
+        "DEX": -1,
+        "CON": 2,
+        "INT": -4,
+        "WIS": 1,
+        "CHA": -2
+      }
+    },
+    {
+      "name": "Player 2 (Player 1)",
+      "create_name": "Player 1",
+      "combatant_type": "Player 1",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 21,
+        "DEX": 8,
+        "CON": 15,
+        "INT": 2,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {
+        "STR": 5,
+        "DEX": -1,
+        "CON": 2,
+        "INT": -4,
+        "WIS": 1,
+        "CHA": -2
+      }
+    },
+    {
+      "name": "Player 3 (Player 1)",
+      "create_name": "Player 1",
+      "combatant_type": "Player 1",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 21,
+        "DEX": 8,
+        "CON": 15,
+        "INT": 2,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {
+        "STR": 5,
+        "DEX": -1,
+        "CON": 2,
+        "INT": -4,
+        "WIS": 1,
+        "CHA": -2
+      }
+    },
+    {
+      "name": "Player 4 (Player 1)",
+      "create_name": "Player 1",
+      "combatant_type": "Player 1",
+      "hp": 45,
+      "max_hp": 45,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 21,
+        "DEX": 8,
+        "CON": 15,
+        "INT": 2,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {
+        "STR": 5,
+        "DEX": -1,
+        "CON": 2,
+        "INT": -4,
+        "WIS": 1,
+        "CHA": -2
+      }
+    },
+    {
+      "name": "Bull",
+      "create_name": "Bull",
+      "combatant_type": "Bull",
+      "hp": 126,
+      "max_hp": 126,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 20,
+        "DEX": 18,
+        "CON": 20,
+        "INT": 12,
+        "WIS": 12,
+        "CHA": 8
+      },
+      "Saving Throws": {
+        "STR": 5,
+        "DEX": 5,
+        "CON": 5,
+        "INT": 1,
+        "WIS": 3,
+        "CHA": -1
+      }
+    }
+  ]
+}

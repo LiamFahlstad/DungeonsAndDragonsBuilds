@@ -1,0 +1,206 @@
+{
+  "encounter": "yellow_capes_last_stand",
+  "title": "Yellow Capes' Last Stand",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Garron the Kindly",
+      "create_name": "Garron the Kindly",
+      "combatant_type": "Garron the Kindly",
+      "hp": 65,
+      "max_hp": 65,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 12,
+        "CON": 14,
+        "INT": 10,
+        "WIS": 12,
+        "CHA": 12
+      },
+      "Saving Throws": {},
+      "cr": "3",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Goliath",
+      "alignment": "Lawful Neutral",
+      "size": "Large",
+      "ac_note": "hide armor, natural bulk",
+      "hp_formula": "10d10 + 10",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Medicine": 5,
+        "Intimidation": 3
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [
+        "Frightened"
+      ],
+      "senses": "Passive Perception 12",
+      "languages": "understands Common and Goliath but can't speak; communicates by hand signs and a chalkboard he carries strapped to his back",
+      "description": "",
+      "traits": [
+        {
+          "name": "Field Surgeon",
+          "description": "Garron carries a satchel of anesthetics, clean tools, and stitched bandages, and is proficient with healer's kits. He has Advantage on Wisdom (Medicine) checks, and any creature he tends for at least 1 minute outside combat regains all of its missing Hit Points, so long as it permits the treatment."
+        },
+        {
+          "name": "Unshaken Conviction",
+          "description": "Garron's certainty that he is saving the world is absolute and untouched by doubt: he can't be Frightened, and no plea, scream, or accusation slows his steady hands."
+        },
+        {
+          "name": "The Reliquary of Voices",
+          "description": "Strung along Garron's belt are dozens of small glass jars, each labeled in careful handwriting with a name and a date, every one a tongue he has removed. He keeps them not as trophies but as a record of everyone he believes he has saved. Should a creature realize what the jars hold, Garron has Advantage on the Intimidation check that follows, though he intends it as reassurance, never as a threat."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Garron makes two Surgeon's Maul attacks.",
+          "creature_name": "Garron",
+          "attacks_text": "two Surgeon's Maul attacks",
+          "extra_ruling": "",
+          "use_article": false
+        },
+        {
+          "name": "Surgeon's Maul",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 14 (2d10 + 3) Bludgeoning damage."
+        },
+        {
+          "name": "Precise Incision",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 9 (2d6 + 2) Slashing damage, and the target must succeed on a DC 12 Constitution saving throw or Garron's blade finds the throat with surgical precision: until the end of the target's next turn, it can't speak and can't cast spells that require a Verbal component."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Field Dressing (Recharge 5-6)",
+          "description": "Garron tends to his own wounds or those of one creature within 5 feet of him. The chosen creature regains 13 (2d8 + 4) Hit Points."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Ser Caldus - The Vow of Silence (Ser Caldus, the Vow of Silence)",
+      "create_name": "Ser Caldus, the Vow of Silence",
+      "combatant_type": "Ser Caldus, the Vow of Silence",
+      "hp": 67,
+      "max_hp": 67,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 10,
+        "CON": 16,
+        "INT": 10,
+        "WIS": 14,
+        "CHA": 13
+      },
+      "Saving Throws": {},
+      "cr": "3",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Orc",
+      "alignment": "Lawful Neutral",
+      "size": "Medium",
+      "ac_note": "half plate armor",
+      "hp_formula": "9d8 + 27",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Insight": 4,
+        "Religion": 2
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 12",
+      "languages": "understands Common and Orc but speaks only in hand signs, honoring his order's vow",
+      "description": "",
+      "traits": [
+        {
+          "name": "Vow of Silence",
+          "description": "A hush clings to Ser Caldus and carries to his allies: each creature of his choice within 10 feet of him has Advantage on saving throws against being Frightened or Charmed by an effect that requires the source to speak or make sound."
+        },
+        {
+          "name": "Names Unspoken",
+          "description": "Every tongue Ser Caldus has taken is recorded as a tattooed name on his forearm, so that someone still remembers what its owner can no longer say. He has Advantage on any Wisdom (Insight) or Intelligence (History) check made to recall the identity or history of a creature he has silenced."
+        },
+        {
+          "name": "Undying Vow (1/Day)",
+          "description": "If damage would reduce Ser Caldus to 0 Hit Points, he instead drops to 1 Hit Point, his vow unwilling to let him fall before a rite is complete."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Ser Caldus makes two Silencing Blade attacks.",
+          "creature_name": "Ser Caldus",
+          "attacks_text": "two Silencing Blade attacks",
+          "extra_ruling": "",
+          "use_article": false
+        },
+        {
+          "name": "Silencing Blade",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage.",
+          "attack_bonus": 5,
+          "reach_ft": 5,
+          "dice_count": 2,
+          "dice_type": 6,
+          "damage_bonus": 3,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": ""
+        },
+        {
+          "name": "Rite of Silence (3/Day)",
+          "description": "Immediately after hitting a creature with Silencing Blade, Ser Caldus kneels into the strike and calls the rite complete: the target takes an extra 9 (2d8) Psychic damage. If this damage reduces the target to 0 Hit Points, it dies without a sound, and each other creature within 10 feet that witnessed the kill must succeed on a DC 11 Wisdom saving throw or have the Frightened condition until the end of Ser Caldus's next turn."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [
+        {
+          "name": "Silent Guard",
+          "description": "Trigger: An allied creature within 10 feet of Ser Caldus is about to make a saving throw against an effect with a Verbal component or one that relies on sound, such as a scream or a shouted command. Response: That ally has Advantage on the saving throw, Ser Caldus's vow standing between his allies and the voice of the curse."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    }
+  ]
+}

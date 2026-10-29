@@ -1,0 +1,169 @@
+{
+  "encounter": "yellow_capes_patrol",
+  "title": "Yellow Capes Patrol",
+  "players": [
+    "Obmar St\u00e5lsk\u00e4gg",
+    "Edmund",
+    "Clover",
+    "Gabriel Greybeard",
+    "Thum Schtock",
+    "Kivi J\u00e4tti"
+  ],
+  "round_number": 1,
+  "combatants": [
+    {
+      "name": "Marshal Virel",
+      "create_name": "Marshal Virel",
+      "combatant_type": "Marshal Virel",
+      "hp": 78,
+      "max_hp": 78,
+      "ac": 15,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 14,
+        "CON": 14,
+        "INT": 11,
+        "WIS": 13,
+        "CHA": 11
+      },
+      "Saving Throws": {
+        "CON": 3,
+        "WIS": 2
+      },
+      "cr": "4",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Yellow Cape",
+      "alignment": "Lawful Neutral",
+      "size": "Medium",
+      "ac_note": "breastplate",
+      "hp_formula": "12d8 + 24",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Perception": 5,
+        "Insight": 5,
+        "Stealth": 6,
+        "Athletics": 4
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 15",
+      "languages": "Common (rarely speaks; communicates primarily through hand signs)",
+      "description": "",
+      "traits": [
+        {
+          "name": "Kill the Scream",
+          "description": "Virel has Advantage on attack rolls against any creature that, since the end of its last turn, has spoken, cast a spell with a Verbal component, or made any vocal sound."
+        },
+        {
+          "name": "Wordless Coordination",
+          "description": "At the start of each of his turns, Virel can silently direct up to two allies within 30 feet of him that can see him. Each of them has Advantage on the next attack roll or saving throw it makes before the start of Virel's next turn."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Virel makes two Duelist's Rapier attacks."
+        },
+        {
+          "name": "Duelist's Rapier",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (1d8 + 6) Piercing damage. If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn."
+        },
+        {
+          "name": "Throat Strike (Recharge 5-6)",
+          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 18 (2d8 + 9) Piercing damage. The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn.",
+          "attack_bonus": 6,
+          "reach_ft": 5,
+          "dice_count": 2,
+          "dice_type": 8,
+          "damage_bonus": 9,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Signal to Strike",
+          "description": "Virel makes a silent hand signal to one ally within 30 feet that can see him. That ally can immediately use its Reaction to make one weapon attack."
+        }
+      ],
+      "reactions": [
+        {
+          "name": "Parry",
+          "description": "Virel adds 2 to his AC against one melee attack that would hit him, potentially causing it to miss, provided he can see the attacker and is wielding a weapon."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Yellow Cape Enforcer 1 (Priest)",
+      "create_name": "Priest",
+      "combatant_type": "Priest",
+      "hp": 38,
+      "max_hp": 38,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {
+        "1": 3,
+        "2": 2
+      },
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 10,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 16,
+        "CHA": 13
+      },
+      "Saving Throws": {}
+    },
+    {
+      "name": "Yellow Cape Enforcer 2 (Priest)",
+      "create_name": "Priest",
+      "combatant_type": "Priest",
+      "hp": 38,
+      "max_hp": 38,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {
+        "1": 3,
+        "2": 2
+      },
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 10,
+        "CON": 12,
+        "INT": 13,
+        "WIS": 16,
+        "CHA": 13
+      },
+      "Saving Throws": {}
+    }
+  ]
+}
