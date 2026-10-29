@@ -69,11 +69,7 @@ class CardsMixin(CombatWindowState):
     def _card_state_flags(self, char: dict) -> tuple[bool, bool, bool]:
         """Return (is_source, is_active/turn, is_target) for a combatant card."""
         is_source = char is self.selected_character
-        is_active = (
-            self.phase == "COMBAT"
-            and bool(self.initiative_order)
-            and self.initiative_order[self.current_turn_idx] is char
-        )
+        is_active = any(char is c for c in self._current_turn_group())
         is_target = any(char is t for t in self.target_characters)
         return is_source, is_active, is_target
 

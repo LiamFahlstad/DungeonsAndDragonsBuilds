@@ -5,7 +5,7 @@ logs it points to gives the party's current state.
 The two logs split the work:
 
 - An encounter log (CombatLogs/<encounter id>.json, prepared from the
-  campaign's encounters.json; see Combat/EncounterLogs.py) holds everything
+  campaign's encounters.py; see Combat/EncounterLogs.py) holds everything
   that happened in one fight, in detail: every event, players' included, with
   its structured action and value.
 - The player log holds one entry per encounter or rest, in the order the

@@ -3,10 +3,10 @@
 Run from the repo root. The commands work the same in PowerShell and Git Bash.
 Everything for this campaign lives in `Combat/Campaigns/CurseOfTheLich/`:
 
-- `encounters.json`: the party and every encounter (monsters, allies, who takes
+- `encounters.py`: the party and every encounter (monsters, allies, who takes
   part). The format is in [../ENCOUNTERS.md](../ENCOUNTERS.md).
 - `CombatLogs/<encounter id>.json`: one log per encounter, prepared from
-  `encounters.json`, with every detail of its fight.
+  `encounters.py`, with every detail of its fight.
 - `PlayerLogs/main_party.json`: where the party has been (encounters, short and
   long rests). The party's current HP, conditions and slots are replayed from
   the encounter logs since the last long rest.
@@ -15,7 +15,7 @@ Both logs are committed, since the party's state comes from them.
 
 ## Adding or changing an encounter
 
-1. Edit `encounters.json`.
+1. Edit `encounters.py`.
 2. Prepare its log (checks the whole config first, writes nothing if it's wrong):
 
 ```
@@ -54,7 +54,7 @@ can rest before it. Nothing else is logged between encounters.
 
 Or open the party between encounters and pick one with Load Encounter.
 
-- Who takes part comes from `encounters.json` (`"players"`); change it there and
+- Who takes part comes from `encounters.py` (`players=`); change it there and
   re-prepare, before the fight starts.
 - If an encounter's log holds a fight in progress, the window asks first:
   **Continue Encounter** picks it up where it stopped; **Restart Encounter**

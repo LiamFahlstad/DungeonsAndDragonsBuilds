@@ -1,4 +1,4 @@
-"""Check a campaign's encounters.json and prepare each encounter's log,
+"""Check a campaign's encounters.py and prepare each encounter's log,
 CombatLogs/<encounter id>.json: the encounter, who takes part, and its
 monsters and allies at full HP, ready to be played (Combat/EncounterLogs.py).
 The combat window only plays prepared encounters.
@@ -31,7 +31,7 @@ def prepare_campaign(
 ) -> tuple[list[str], list[tuple[str, str]]]:
     """(problems, [(encounter id, what happened to its log)]). Nothing is
     written when there are problems."""
-    assert campaign.config is not None, f"{campaign.name} has no encounters.json"
+    assert campaign.config is not None, f"{campaign.name} has no encounters.py"
     party_names = [cs.character_name for cs in campaign.players()]
     problems = validate(campaign.config, party_names)
     known = {s.name for s in campaign.scenarios}
@@ -73,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     failed = False
     for campaign in campaigns:
-        print(f"{campaign.display_title} ({campaign.folder / 'encounters.json'})")
+        print(f"{campaign.display_title} ({campaign.folder / 'encounters.py'})")
         problems, results = prepare_campaign(
             campaign, args.encounters or None, write=not args.check
         )

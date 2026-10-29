@@ -11,17 +11,17 @@ own cheat sheet with the exact commands to run it:
 
 ```
 Combat/Campaigns/<Campaign>/
-├─ encounters.json  the party and every encounter (format: Campaigns/ENCOUNTERS.md)
-├─ Campaign.py      CAMPAIGN = Campaign.from_config(<this folder>)
+├─ encounters.py    CONFIG: the party and every encounter (format: Campaigns/ENCOUNTERS.md)
+├─ Campaign.py      CAMPAIGN = Campaign.from_config(CONFIG, <this folder>)
 ├─ CHEATSHEET.md    commands for this campaign
 ├─ PlayerLogs/      main_party.json: where the party has been (encounters, rests)
 └─ CombatLogs/      <encounter id>.json: one prepared log per encounter
 ```
 
-To add a campaign, create that folder with an `encounters.json` and a
+To add a campaign, create that folder with an `encounters.py` and a
 one-line `Campaign.py`, and register its `CAMPAIGN` in `Combat/Scenarios.py`.
 Encounter ids must be unique across all campaigns. After changing an
-`encounters.json`, prepare its logs:
+`encounters.py`, prepare its logs:
 
 ```
 python -m Combat.Tools.prepare_encounters --campaign <name>   # or --all, or --check
@@ -29,7 +29,7 @@ python -m Combat.Tools.prepare_encounters --campaign <name>   # or --all, or --c
 
 ## Flags
 
-- `--scenario <id>`: play an encounter from its campaign's `encounters.json` (its log must be prepared). Its campaign is picked automatically, and the players taking part come from the config.
+- `--scenario <id>`: play an encounter from its campaign's `encounters.py` (its log must be prepared). Its campaign is picked automatically, and the players taking part come from the config.
 - `--campaign <name>`: choose the campaign when there's no `--scenario` (the party between encounters, and rests). Defaults to `curse_of_the_lich`.
 - `--player-log <path>`: track the campaign's party across sessions. Omit it to play an encounter without touching the persistent party. With `--player-log` but no `--scenario`, the window opens on the party between encounters; with neither, the campaign's first encounter runs.
 - `--rest long|short`: rest the tracked party (requires `--player-log`).

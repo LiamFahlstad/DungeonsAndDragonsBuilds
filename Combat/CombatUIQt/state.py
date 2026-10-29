@@ -166,6 +166,9 @@ class CombatWindowState:
     def _current_turn_character(self) -> dict | None:
         raise NotImplementedError("LoggingMixin._current_turn_character")
 
+    def _current_turn_group(self) -> list[dict]:
+        raise NotImplementedError("TurnsMixin._current_turn_group")
+
     def _end_concentration_spells(self, char: dict):
         raise NotImplementedError("SpellsMixin._end_concentration_spells")
 

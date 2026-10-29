@@ -1,4 +1,4 @@
-"""Encounters: a campaign's encounters.json (Combat/EncounterConfig.py), the
+"""Encounters: a campaign's encounters.py (Combat/EncounterConfig.py), the
 logs prepared from it (Combat/EncounterLogs.py, Combat/Tools/
 prepare_encounters.py), and the combat window playing them
 (Combat/CombatUIQt/encounters_mixin.py, rests_mixin.py): Load Encounter,
@@ -6,6 +6,7 @@ Continue / Restart, End Encounter, the party view between encounters, rests,
 and how the encounter logs and the player log (Combat/PlayerLog.py) split the
 work."""
 
+import dataclasses
 import json
 import os
 from functools import cache
@@ -22,16 +23,21 @@ from PyQt6.QtWidgets import (
 
 import Combat.PlayerLog as PlayerLog
 import Combat.Scenarios as Scenarios
+from Builds.Characters.Y2024_Bard_Valor_Clover import (
+    Y2024BardValorCloverCharacterBuilder,
+)
+from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
+    Y2024PaladinDevotionEdmundCharacterBuilder,
+)
 from Combat.Campaign import Campaign
 from Combat.Combatants import Pirate
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.encounters_mixin import CONTINUE, RESTART
 from Combat.CombatUIQt.rest import apply_long_rest
 from Combat.EncounterConfig import (
+    CampaignSpec,
     CombatantSpec,
-    ConfigError,
-    load,
-    monster_class,
+    EncounterSpec,
     resolve_players,
     validate,
 )
@@ -45,7 +51,7 @@ from Combat.EncounterLogs import (
     restart_log,
     scenario_log_path,
 )
-from Combat.Monsters.CR_1.monsters import Tiger
+from Combat.Monsters.CR_1.monsters import GoblinBoss, Tiger
 from Combat.Scenario import CombatScenario
 from Combat.Tools.prepare_encounters import prepare_campaign
 from Core.Definitions import DamageType
@@ -111,27 +117,29 @@ def say_yes(monkeypatch):
 # The encounters config
 
 
-def _write_config(folder, encounters, party=(EDMUND_BUILD, CLOVER_BUILD)):
-    folder.mkdir(parents=True, exist_ok=True)
-    (folder / "encounters.json").write_text(
-        json.dumps(
-            {
-                "campaign": "test_campaign",
-                "title": "Test Campaign",
-                "party": list(party),
-                "encounters": encounters,
-            }
-        )
+PARTY = [
+    Y2024PaladinDevotionEdmundCharacterBuilder,
+    Y2024BardValorCloverCharacterBuilder,
+]
+
+
+def _config(encounters, party=PARTY) -> CampaignSpec:
+    return CampaignSpec(
+        name="test_campaign",
+        title="Test Campaign",
+        description="",
+        party=list(party),
+        encounters=list(encounters),
     )
 
 
-TIGER_CONFIG = {
-    "id": "tiger_den",
-    "title": "Tiger Den",
-    "description": "A tiger.",
-    "players": ["Edmund"],
-    "monsters": [{"monster": "Tiger", "name": "Stripes"}],
-}
+TIGER_CONFIG = EncounterSpec(
+    id="tiger_den",
+    title="Tiger Den",
+    description="A tiger.",
+    players=["Edmund"],
+    monsters=[CombatantSpec(Tiger, "Stripes")],
+)
 
 
 @pytest.mark.parametrize("campaign", sorted(Scenarios.CAMPAIGNS))
@@ -143,25 +151,16 @@ def test_every_campaign_config_is_valid(campaign):
 
 
 def test_combatant_lines_are_numbered_when_several():
-    assert CombatantSpec("GoblinBoss", "Goblin Boss", 2).names() == [
+    assert CombatantSpec(GoblinBoss, "Goblin Boss", 2).names() == [
         "Goblin Boss 1",
         "Goblin Boss 2",
     ]
-    assert CombatantSpec("Tiger").names() == [None]
-    (tiger,) = CombatantSpec("Tiger").build()
+    assert CombatantSpec(Tiger).names() == [None]
+    (tiger,) = CombatantSpec(Tiger).build()
     assert tiger.combatant_type == "Tiger" and not tiger.name
-    assert CombatantSpec("GoblinBoss", "Goblin Boss", 2).summary() == "2× Goblin Boss"
-
-
-def test_monsters_are_found_by_class_name():
-    import Combat.Combatants as Combatants
-    from Combat.Monsters.CR_2.monsters import Priest
-
-    assert monster_class("Priest") is Priest
-    assert monster_class("Combatants.Priest") is Combatants.Priest
-    assert monster_class("Bull") is Combatants.Bull  # only Combatants has it
-    with pytest.raises(KeyError):
-        monster_class("NoSuchMonster")
+    assert CombatantSpec(GoblinBoss, "Goblin Boss", 2).summary() == "2× Goblin Boss"
+    # Without a name, several are numbered after the class.
+    assert CombatantSpec(Tiger, count=2).names() == ["Tiger 1", "Tiger 2"]
 
 
 def test_players_match_parts_of_names():
@@ -174,25 +173,20 @@ def test_players_match_parts_of_names():
         resolve_players(["e"], party)  # more than one
 
 
-def test_validate_names_every_problem(tmp_path):
-    _write_config(
-        tmp_path,
+def test_validate_names_every_problem():
+    config = _config(
         [
-            {"id": "Bad Id", "title": "x", "monsters": [{"monster": "Nope"}]},
-            {
-                "id": "twice",
-                "title": "",
-                "monsters": [{"monster": "Tiger", "count": 0}],
-            },
-            {"id": "twice", "title": "y", "players": ["Obmar"]},
-        ],
-        party=[EDMUND_BUILD, "No_Such_Build"],
+            EncounterSpec(id="Bad Id", title="x", combatants_per_column=0),
+            EncounterSpec(
+                id="twice", title="", monsters=[CombatantSpec(Tiger, count=0)]
+            ),
+            EncounterSpec(id="twice", title="y", players=["Obmar"]),
+        ]
     )
-    problems = validate(load(tmp_path), ["Edmund"])
+    problems = validate(config, ["Edmund"])
     expected = [
-        "No_Such_Build",
         "'Bad Id': id must be snake_case",
-        "no stat block called 'Nope'",
+        "'Bad Id': combatants_per_column must be at least 1",
         "'twice': needs a title",
         "Tiger: count must be at least 1",
         "'twice': id used twice",
@@ -202,15 +196,8 @@ def test_validate_names_every_problem(tmp_path):
         assert any(text in p for p in problems), (text, problems)
 
 
-def test_unknown_keys_are_a_config_error(tmp_path):
-    _write_config(tmp_path, [{"id": "x", "title": "x", "monster": []}])
-    with pytest.raises(ConfigError):
-        load(tmp_path)
-
-
 def test_a_campaign_comes_from_its_config(tmp_path):
-    _write_config(tmp_path, [TIGER_CONFIG])
-    campaign = Campaign.from_config(tmp_path)
+    campaign = Campaign.from_config(_config([TIGER_CONFIG]), tmp_path)
     (scenario,) = campaign.scenarios
     assert (campaign.name, campaign.title) == ("test_campaign", "Test Campaign")
     assert (scenario.name, scenario.display_title) == ("tiger_den", "Tiger Den")
@@ -337,16 +324,16 @@ def test_restart_backs_up_the_fight_and_takes_it_out_of_the_player_log(tmp_path)
 
 
 def test_the_prepare_tool_writes_nothing_while_the_config_has_problems(tmp_path):
-    bad = {"id": "x", "title": "x", "monsters": [{"monster": "Nope"}]}
-    _write_config(tmp_path, [TIGER_CONFIG, bad])
-    problems, results = prepare_campaign(Campaign.from_config(tmp_path))
+    bad = EncounterSpec(id="Bad Id", title="x")
+    campaign = Campaign.from_config(_config([TIGER_CONFIG, bad]), tmp_path)
+    problems, results = prepare_campaign(campaign)
     assert problems and results == []
     assert not (tmp_path / "CombatLogs").exists()
 
 
 def test_the_prepare_tool_prepares_each_encounter(tmp_path):
-    _write_config(tmp_path, [TIGER_CONFIG, {**TIGER_CONFIG, "id": "second_den"}])
-    campaign = Campaign.from_config(tmp_path)
+    second = dataclasses.replace(TIGER_CONFIG, id="second_den")
+    campaign = Campaign.from_config(_config([TIGER_CONFIG, second]), tmp_path)
     assert prepare_campaign(campaign, write=False) == (
         [],
         [("tiger_den", "prepared"), ("second_den", "prepared")],
@@ -476,6 +463,41 @@ def test_continuing_a_fight_where_it_stopped(tmp_path):
     ui._open_encounter_log(ui._encounter_log_to_open, restart=False)
     assert ui.phase == "COMBAT" and ui.round_number == 2
     assert _player(ui, "Tiger")["hp"] == 23
+
+
+def test_continuing_a_fight_keeps_the_turn_order_and_whose_turn_it_is(tmp_path):
+    pack = CombatScenario(
+        name="tiger_pack",
+        title="Tiger Pack",
+        combatants=lambda: [
+            *CombatantSpec(Tiger, "Tiger", count=2, group="Tigers").build(),
+            Pirate(),
+        ],
+        players=["Edmund"],
+    )
+    path = scenario_log_path(tmp_path / "CombatLogs", pack.name)
+    prepare_log(path, pack, ["Edmund"])
+    ui = _ui(tmp_path)
+    ui._load_encounter(pack, restart=False)
+    edmund, tiger1, tiger2, pirate = ui.characters
+    for char, roll in ((edmund, 5), (tiger1, 18), (pirate, 12)):
+        ui._initiative_inputs[id(char)].setText(str(roll))
+    ui._start_combat()
+    order = [tiger1, tiger2, pirate, edmund]
+    assert ui.initiative_order == order
+    ui._advance_turn()  # the Pirate's turn
+    _hit(ui, pirate, tiger1, 4)
+    ui._advance_turn()  # Edmund's turn, saved though nothing happened in it
+
+    ui = _ui(tmp_path)
+    ui._load_encounter(pack, restart=False)
+    assert ui.phase == "COMBAT"
+    assert [c["name"] for c in ui.initiative_order] == [c["name"] for c in order]
+    assert ui.characters == ui.initiative_order  # the cards follow it too
+    assert ui._current_turn_name() == "Edmund"
+    assert ui._turn_counter_label.text() == "Turn 3 / 3"
+    ui._advance_turn()
+    assert ui.round_number == 2 and ui._current_turn_name() == "Tigers"
 
 
 def test_the_startup_question_is_only_asked_for_a_fight_in_progress(tmp_path):

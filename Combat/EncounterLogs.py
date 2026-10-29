@@ -1,7 +1,7 @@
 """Each encounter's log, Combat/Campaigns/<C>/CombatLogs/<encounter id>.json:
 preparing it, how far the fight in it got, and starting it over.
 
-Every encounter in a campaign's encounters.json (Combat/Campaigns/ENCOUNTERS.md)
+Every encounter in a campaign's encounters.py (Combat/Campaigns/ENCOUNTERS.md)
 gets its log from `python -m Combat.Tools.prepare_encounters`, named after its
 id; nothing else writes new logs. A prepared log starts as
 
@@ -10,7 +10,9 @@ id; nothing else writes new logs. A prepared log starts as
 
 and the combat window then adds one "round_<n>" list of events per round
 played, keeping "combatants" (HP, conditions, ...) and "round_number"
-current. Each event is {"text": ..., "character": ..., "action": ...,
+current, and once combat has started ORDER_KEY (everyone's names, players
+too, in turn order) and TURN_KEY (whose turn it is), which continuing the
+fight starts from. Each event is {"text": ..., "character": ..., "action": ...,
 "value": ...}; the last three are there when the event changed someone's
 state (damage, a spell slot, a condition, ...), which is what the party's
 state is replayed from (see Combat/PlayerLog.py). Logs written before that
@@ -35,6 +37,9 @@ ENDED_KEY = "ended_at"
 # In a restarted log's backup: the player-log entries the restart took out.
 UNDONE_SESSIONS_KEY = "undone_player_log_entries"
 # The keys a prepared log starts with, before "round_number" and "combatants".
+# The turn order, by name, and whose turn it is (the first of a group's).
+ORDER_KEY = "initiative_order"
+TURN_KEY = "turn"
 HEADER_KEYS = ("encounter", "title", "players")
 
 

@@ -16,6 +16,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.PlayerLog import has_round_events
+
 from .stats import _default_stats
 from .styles import QSS
 from Core.Rules import ability_modifier
@@ -23,15 +25,68 @@ from .state import CombatWindowState
 from .undo import undoable
 
 
+def initiative_units(chars: list[dict]) -> list[list[dict]]:
+    """`chars` as the turns they take: each initiative group (the
+    "initiative_group" its members share, at its first member's place) as
+    one, and everyone else on their own."""
+    units: list[list[dict]] = []
+    groups: dict[str, list[dict]] = {}
+    for char in chars:
+        group = char.get("initiative_group")
+        if group is None:
+            units.append([char])
+        elif group in groups:
+            groups[group].append(char)
+        else:
+            groups[group] = [char]
+            units.append(groups[group])
+    return units
+
+
+def unit_label(unit: list[dict]) -> str:
+    """How the initiative screen names a turn: "Goblin Warriors (6)" for a
+    group, the combatant's name otherwise."""
+    group = unit[0].get("initiative_group")
+    return f"{group} ({len(unit)})" if group else unit[0]["name"]
+
+
 class TurnsMixin(CombatWindowState):
-    """Mixin for turn and initiative management."""
+    """Mixin for turn and initiative management. An initiative group (see
+    initiative_units) rolls once and stands together in initiative_order, so
+    its members take one turn: current_turn_idx is its first member."""
+
+    def _turn_span(self, idx: int) -> tuple[int, int]:
+        """The slice [start, end) of initiative_order whose turn idx is in:
+        its initiative group's run, or idx alone."""
+        order = self.initiative_order
+        group = order[idx].get("initiative_group")
+        start, end = idx, idx + 1
+        if group is None:
+            return start, end
+        while start > 0 and order[start - 1].get("initiative_group") == group:
+            start -= 1
+        while end < len(order) and order[end].get("initiative_group") == group:
+            end += 1
+        return start, end
+
+    def _current_turn_group(self) -> list[dict]:
+        """Everyone whose turn it is (the active combatant's initiative group,
+        or just them); [] outside combat."""
+        if self.phase != "COMBAT" or not self.initiative_order:
+            return []
+        start, end = self._turn_span(self.current_turn_idx)
+        return self.initiative_order[start:end]
+
+    def _is_last_turn(self) -> bool:
+        if not self.initiative_order:
+            return True
+        return self._turn_span(self.current_turn_idx)[1] >= len(self.initiative_order)
 
     @undoable
     def _advance_turn(self):
         """Combined Next Combatant / Next Round button handler."""
-        last_idx = len(self.initiative_order) - 1
-        if self.current_turn_idx < last_idx:
-            self.current_turn_idx += 1
+        if not self._is_last_turn():
+            self.current_turn_idx = self._turn_span(self.current_turn_idx)[1]
         else:
             self.round_number += 1
             self.current_turn_idx = 0
@@ -39,13 +94,17 @@ class TurnsMixin(CombatWindowState):
             self.round_label.setText(f"Round {self.round_number}")
             self._tick_active_spells()
             self._tick_active_features()
-        if self.initiative_order:
-            # The action economy (Action/Bonus Action/Reaction) resets for whoever's
-            # turn is now starting — other combatants keep their tallies until theirs does.
-            new_active = self.initiative_order[self.current_turn_idx]
+        # The action economy (Action/Bonus Action/Reaction) resets for whoever's
+        # turn is now starting — other combatants keep their tallies until theirs does.
+        for new_active in self._current_turn_group():
             new_active["action_uses"] = {}
             self._rebuild_card(new_active)
         self._refresh_turn()
+        # Save whose turn it is, so continuing the fight starts there. A log
+        # without events is still as prepared, and stays that way.
+        data = self._read_log()
+        if has_round_events(data):
+            self._write_log(data)
 
     def _shortcut_next_turn(self):
         """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has
@@ -65,10 +124,12 @@ class TurnsMixin(CombatWindowState):
                 return ability_modifier(ability_scores[key])
         return 0
 
-    def _add_initiative_row(self, char: dict):
-        """Build and append one initiative-entry row for char. Used both while
-        building the initiative screen from scratch and to append a row for a
-        combatant added mid-setup via Add Combatant."""
+    def _add_initiative_row(self, unit: list[dict]):
+        """Build and append one initiative-entry row for unit (one combatant,
+        or an initiative group, which rolls once with its first member's
+        modifier). Used both while building the initiative screen from scratch
+        and to append a row for a combatant added mid-setup via Add Combatant."""
+        char = unit[0]
         mod = self._dex_mod(char)
 
         row_widget = QWidget()
@@ -76,7 +137,7 @@ class TurnsMixin(CombatWindowState):
         row_layout.setContentsMargins(0, 0, 0, 0)
         row_layout.setSpacing(8)
 
-        name_lbl = QLabel(char["name"])
+        name_lbl = QLabel(unit_label(unit))
         name_lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
         name_lbl.setFixedWidth(160)
         row_layout.addWidget(name_lbl)
@@ -113,12 +174,14 @@ class TurnsMixin(CombatWindowState):
             hp_input.setFixedWidth(80)
             hp_input.textChanged.connect(self._check_start_button)
             row_layout.addWidget(hp_input)
-            self._initiative_hp_inputs[id(char)] = hp_input
+            for member in unit:
+                self._initiative_hp_inputs[id(member)] = hp_input
 
         row_layout.addStretch()
         self._initiative_rows_layout.addWidget(row_widget)
 
-        self._initiative_inputs[id(char)] = init_input
+        for member in unit:
+            self._initiative_inputs[id(member)] = init_input
 
     @undoable
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
@@ -150,7 +213,7 @@ class TurnsMixin(CombatWindowState):
             self.initiative_order.append(char)
             self._rebuild_cards()
         else:
-            self._add_initiative_row(char)
+            self._add_initiative_row([char])
             self._check_start_button()
 
     def _build_initiative_widget(self) -> QWidget:
@@ -174,8 +237,8 @@ class TurnsMixin(CombatWindowState):
         self._initiative_rows_layout.setSpacing(8)
         outer.addLayout(self._initiative_rows_layout)
 
-        for char in self.characters:
-            self._add_initiative_row(char)
+        for unit in initiative_units(self.characters):
+            self._add_initiative_row(unit)
 
         outer.addWidget(self._make_divider())
 
@@ -187,7 +250,8 @@ class TurnsMixin(CombatWindowState):
 
         def _roll_all():
             for char, inp in (
-                (c, self._initiative_inputs[id(c)]) for c in self.characters
+                (unit[0], self._initiative_inputs[id(unit[0])])
+                for unit in initiative_units(self.characters)
             ):
                 result = random.randint(1, 20) + self._dex_mod(char)
                 inp.setText(str(result))
@@ -251,14 +315,16 @@ class TurnsMixin(CombatWindowState):
             if hp is not None:
                 char["hp"] = char["max_hp"] = hp
 
-        order_with_initiative = []
-        for char in self.characters:
-            inp = self._initiative_inputs[id(char)]
+        # An initiative group is sorted (and tie-broken) as one, so its
+        # members stay together and take one turn.
+        order_with_initiative: list[tuple[int, list[dict]]] = []
+        for unit in initiative_units(self.characters):
+            inp = self._initiative_inputs[id(unit[0])]
             try:
                 value = int(inp.text())
             except ValueError:
                 value = 0
-            order_with_initiative.append((value, char))
+            order_with_initiative.append((value, unit))
 
         # Stable sort descending — ties preserve original order
         order_with_initiative.sort(key=lambda x: x[0], reverse=True)
@@ -283,7 +349,7 @@ class TurnsMixin(CombatWindowState):
                 return  # user cancelled — stay on initiative screen
             order_with_initiative = resolved
 
-        sorted_chars = [c for _, c in order_with_initiative]
+        sorted_chars = [c for _, unit in order_with_initiative for c in unit]
 
         # Re-order self.characters in-place to match initiative order
         self.characters[:] = sorted_chars
@@ -295,9 +361,9 @@ class TurnsMixin(CombatWindowState):
 
     def _show_tie_break_dialog(
         self,
-        order_with_initiative: list[tuple[int, dict]],
+        order_with_initiative: list[tuple[int, list[dict]]],
         tied_groups: list[tuple[int, int, int]],
-    ) -> list[tuple[int, dict]] | None:
+    ) -> list[tuple[int, list[dict]]] | None:
         """Show a dialog to resolve initiative ties via drag-and-drop.
         Returns the updated order list, or None if the user went back."""
         dlg = QDialog(self._window)
@@ -332,9 +398,9 @@ class TurnsMixin(CombatWindowState):
                 "QListWidget::item { padding: 5px 10px; }"
                 "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
             )
-            for _, char in order_with_initiative[start:end]:
-                item = QListWidgetItem(char["name"])
-                item.setData(Qt.ItemDataRole.UserRole, char)
+            for _, unit in order_with_initiative[start:end]:
+                item = QListWidgetItem(unit_label(unit))
+                item.setData(Qt.ItemDataRole.UserRole, unit)
                 lw.addItem(item)
 
             layout.addWidget(lw)
@@ -358,8 +424,8 @@ class TurnsMixin(CombatWindowState):
             for i in range(lw.count()):
                 item = lw.item(i)
                 assert item is not None, i
-                char = item.data(Qt.ItemDataRole.UserRole)
-                result[start + i] = (init_val, char)
+                unit = item.data(Qt.ItemDataRole.UserRole)
+                result[start + i] = (init_val, unit)
 
         return result
 
@@ -401,20 +467,25 @@ class TurnsMixin(CombatWindowState):
         self._refresh_rest_buttons()
 
     def _refresh_initiative_tracker(self):
-        """Update the turn counter label."""
+        """Update the turn counter label, counting an initiative group as one
+        turn."""
         if not self.initiative_order:
             return
 
-        total = len(self.initiative_order)
-        self._turn_counter_label.setText(f"Turn {self.current_turn_idx + 1} / {total}")
+        turn_starts = []
+        idx = 0
+        while idx < len(self.initiative_order):
+            turn_starts.append(idx)
+            idx = self._turn_span(idx)[1]
+        turn = sum(1 for start in turn_starts if start <= self.current_turn_idx)
+        self._turn_counter_label.setText(f"Turn {turn} / {len(turn_starts)}")
 
     def _refresh_turn(self):
         """Update the active-turn highlight, tracker, and Next button label."""
         self._refresh_cards()
         self._refresh_initiative_tracker()
         if self.initiative_order:
-            last_idx = len(self.initiative_order) - 1
-            if self.current_turn_idx < last_idx:
+            if not self._is_last_turn():
                 self._next_turn_btn.setText("Next Combatant")
             else:
                 self._next_turn_btn.setText("Next Round")

@@ -2,7 +2,7 @@
 `python RunCombatSimulator.py --scenario <name>`.
 
 Each campaign lives entirely in Combat/Campaigns/<Campaign>/: its party and
-encounters are in that folder's encounters.json (Combat/Campaigns/ENCOUNTERS.md),
+encounters are in that folder's encounters.py (Combat/Campaigns/ENCOUNTERS.md),
 which its Campaign.py loads. To add a campaign, create its folder and add its
 CAMPAIGN to the tuple below."""
 

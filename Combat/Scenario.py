@@ -7,7 +7,7 @@ from Model.Creatures.Combatants import BasicCombatantData
 
 @dataclass
 class CombatScenario:
-    """One encounter of a campaign, as its encounters.json describes it
+    """One encounter of a campaign, as its encounters.py describes it
     (Combat/Campaigns/ENCOUNTERS.md): who's fighting, who takes part, and the
     layout. Its log is CombatLogs/<name>.json, written by
     `python -m Combat.Tools.prepare_encounters` before it can be played.

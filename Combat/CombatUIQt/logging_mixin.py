@@ -7,7 +7,13 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxL
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
-from Combat.EncounterLogs import LogJSONEncoder, event_text, read_log_status
+from Combat.EncounterLogs import (
+    ORDER_KEY,
+    TURN_KEY,
+    LogJSONEncoder,
+    event_text,
+    read_log_status,
+)
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, session_label
 
@@ -30,10 +36,16 @@ class LoggingMixin(CombatWindowState):
 
     def _write_log(self, data: dict):
         """Save `data` (the encounter log read with _read_log, plus changes)
-        with the combatants and round as they are now."""
+        with the combatants, round and, during combat, the turn order and
+        whose turn it is as they are now."""
         if self.log_file is None:
             return
         data["round_number"] = self.round_number
+        if self.phase == "COMBAT" and self.initiative_order:
+            # By name: players aren't in "combatants", and the dicts are
+            # rebuilt when the fight is continued (_load_log_from_path).
+            data[ORDER_KEY] = [c["name"] for c in self.initiative_order]
+            data[TURN_KEY] = self.initiative_order[self.current_turn_idx]["name"]
         data["combatants"] = [
             {k: v for k, v in c.items() if not k.startswith("_")}
             for c in self.characters
@@ -65,8 +77,11 @@ class LoggingMixin(CombatWindowState):
         return self.initiative_order[self.current_turn_idx]
 
     def _current_turn_name(self) -> str | None:
+        """Whose turn it is: the combatant, or their initiative group."""
         char = self._current_turn_character()
-        return char["name"] if char else None
+        if char is None:
+            return None
+        return char.get("initiative_group") or char["name"]
 
     def _find_character_by_name(self, name: str) -> dict | None:
         for char in self.characters:
@@ -173,10 +188,24 @@ class LoggingMixin(CombatWindowState):
             self.initiative_order = []
             self._switch_to_initiative()
             return
-        # Continuing a fight jumps straight into COMBAT with the loaded order.
+        # Continuing a fight jumps straight into COMBAT, in the turn order it
+        # was saved with (_write_log) and on the turn it stopped at.
         self.phase = "COMBAT"
+        self.characters[:] = self._saved_initiative_order(data)
         self.initiative_order = list(self.characters)
+        turn = data.get(TURN_KEY)
+        self.current_turn_idx = next(
+            (i for i, c in enumerate(self.initiative_order) if c["name"] == turn), 0
+        )
         self._switch_to_combat()
+
+    def _saved_initiative_order(self, data: dict) -> list[dict]:
+        """self.characters in the turn order the log `data` saved. Anyone it
+        doesn't name (all of them in a log from before the order was saved)
+        goes last, in their current order."""
+        saved = data.get(ORDER_KEY) or []
+        rank = {name: i for i, name in enumerate(saved)}
+        return sorted(self.characters, key=lambda c: rank.get(c["name"], len(saved)))
 
     def _init_player_log(self):
         """Load the party's player log and bring the freshly built players to

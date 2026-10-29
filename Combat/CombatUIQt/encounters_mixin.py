@@ -38,7 +38,7 @@ CONTINUE = "continue"
 RESTART = "restart"
 PREPARE_HINT = (
     "Its log isn't prepared yet: run `python -m Combat.Tools.prepare_encounters` "
-    "after adding it to the campaign's encounters.json."
+    "after adding it to the campaign's encounters.py."
 )
 
 
@@ -296,7 +296,7 @@ class EncountersMixin(CombatWindowState):
             QMessageBox.information(
                 self._window,
                 "Load Encounter",
-                "This campaign's encounters.json lists no encounters.",
+                "This campaign's encounters.py lists no encounters.",
             )
             return
 
@@ -310,7 +310,7 @@ class EncountersMixin(CombatWindowState):
         layout.setSpacing(10)
 
         info = QLabel(
-            "The campaign's encounters (its encounters.json). A fight in "
+            "The campaign's encounters (its encounters.py). A fight in "
             "progress can be continued where it stopped, or restarted as if it "
             "never happened: fresh monsters, and the party as they were before "
             "it (the old log is kept as a backup)."

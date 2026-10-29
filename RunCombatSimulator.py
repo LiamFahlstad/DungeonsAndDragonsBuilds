@@ -12,7 +12,7 @@ if __name__ == "__main__":
         "--scenario",
         choices=sorted(Scenarios.SCENARIOS.keys()),
         default=None,
-        help="Encounter to play, an id from its campaign's encounters.json. Its log, "
+        help="Encounter to play, an id from its campaign's encounters.py. Its log, "
         "CombatLogs/<id>.json, must be prepared first (python -m "
         "Combat.Tools.prepare_encounters). When it holds a fight in progress, the window "
         "asks whether to continue it or restart it (the old log is kept as a backup). Omit "
@@ -22,7 +22,7 @@ if __name__ == "__main__":
         "--campaign",
         choices=sorted(Scenarios.CAMPAIGNS.keys()),
         default=None,
-        help="Campaign to run: its encounters.json gives the party --player-log tracks "
+        help="Campaign to run: its encounters.py gives the party --player-log tracks "
         "and the encounters Load Encounter offers. Defaults to --scenario's campaign, or "
         f"'{Scenarios.DEFAULT_CAMPAIGN}' when no scenario is given.",
     )
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         "It is the party's journal: one line per encounter or rest, each encounter pointing "
         "to its log with the details. The campaign's party is loaded and brought to its "
         "current HP/conditions/slots by replaying those logs since the last long rest. "
-        "Who of the party takes part in an encounter is in encounters.json.",
+        "Who of the party takes part in an encounter is in encounters.py.",
     )
     parser.add_argument(
         "--rest",
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         "--difficulty",
         action="store_true",
         help="Print the D&D 2024 difficulty analysis for --scenario's encounter against the "
-        "levels of the players taking part (from encounters.json), then exit without "
+        "levels of the players taking part (from encounters.py), then exit without "
         "opening the application window.",
     )
     args = parser.parse_args()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
         if not character_sheets:
             parser.error(
                 f"--difficulty requires character levels, and {campaign.name}'s "
-                "encounters.json has no party taking part in this encounter"
+                "encounters.py has no party taking part in this encounter"
             )
 
         from Combat.EncounterDifficulty import (

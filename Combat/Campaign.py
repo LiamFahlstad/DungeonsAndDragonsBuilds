@@ -14,7 +14,7 @@ class Campaign:
     `name` is the key used on the command line (--campaign). `players` builds
     the 'Players' group tracked by --player-log. Player logs live in
     `<folder>/PlayerLogs/`, encounter logs in `<folder>/CombatLogs/`.
-    Campaigns are made from their encounters.json (from_config)."""
+    Campaigns are made from their encounters.py config (from_config)."""
 
     name: str
     folder: Path
@@ -23,7 +23,7 @@ class Campaign:
     # How the statistics report names it, e.g. "Curse of the Lich"; defaults to
     # `name` title-cased.
     title: str = ""
-    # The encounters.json it was made from (from_config), for checking it.
+    # The encounters.py config it was made from (from_config), for checking it.
     config: EncounterConfig.CampaignSpec | None = None
 
     @property
@@ -43,10 +43,11 @@ class Campaign:
         return self.player_log_dir / "main_party.json"
 
     @classmethod
-    def from_config(cls, folder: str | Path) -> "Campaign":
-        """The campaign <folder>/encounters.json describes (see
-        Combat/Campaigns/ENCOUNTERS.md)."""
-        spec = EncounterConfig.load(folder)
+    def from_config(
+        cls, spec: EncounterConfig.CampaignSpec, folder: str | Path
+    ) -> "Campaign":
+        """The campaign `spec` (its encounters.py CONFIG, see
+        Combat/Campaigns/ENCOUNTERS.md) describes, with its logs in `folder`."""
         return cls(
             name=spec.name,
             title=spec.title,

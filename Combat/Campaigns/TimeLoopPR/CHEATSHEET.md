@@ -3,15 +3,15 @@
 Run from the repo root. Everything for this oneshot lives in
 `Combat/Campaigns/TimeLoopPR/`:
 
-- `encounters.json`: the party and every encounter (format:
+- `encounters.py`: the party and every encounter (format:
   [../ENCOUNTERS.md](../ENCOUNTERS.md)).
 - `CombatLogs/<encounter id>.json`: one log per encounter, prepared from
-  `encounters.json`, with every detail of its fight.
+  `encounters.py`, with every detail of its fight.
 - `PlayerLogs/main_party.json`: where the party has been. Their current state is
   replayed from the encounter logs since the last long rest.
 
 Party: Dessie (Artificer), Hanna (Ranger), Maggie (Druid), Thomas (Bard), all
-level 3. After changing `encounters.json`, prepare the logs:
+level 3. After changing `encounters.py`, prepare the logs:
 
 ```
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr

@@ -28,13 +28,13 @@ RunCombatSimulator.py  --scenario <id> [--player-log <path>]
             │     cards_mixin/logging_mixin/dialogs_mixin/window_mixin, styles.py, stats.py)
             ├─ Combat/Definitions.py    — Action, CombatStatus, ConditionRule (stat blocks: Model/Creatures/)
             ├─ Combat/Combatants.py     — predefined combatant subclasses
-            ├─ Combat/EncounterConfig.py — reads/validates encounters.json, finds stat blocks by class name
+            ├─ Combat/EncounterConfig.py — the config dataclasses each encounters.py fills in, and validate()
             ├─ Combat/Scenario.py       — CombatScenario (one encounter, from the config)
             ├─ Combat/Campaign.py       — Campaign.from_config (party, scenarios, log folders)
             ├─ Combat/Scenarios.py      — CAMPAIGNS / SCENARIOS registry aggregated from every campaign
             ├─ Combat/EncounterLogs.py  — prepared encounter logs: prepare, status, restart
             ├─ Combat/PlayerLog.py      — the party's journal (where they've been) and replaying it
-            └─ Combat/Campaigns/<Campaign>/  — self-contained campaign: encounters.json, Campaign.py
+            └─ Combat/Campaigns/<Campaign>/  — self-contained campaign: encounters.py, Campaign.py
                                               (one line), CHEATSHEET.md, PlayerLogs/, CombatLogs/
 ```
 
@@ -48,8 +48,8 @@ RunCombatSimulator.py  --scenario <id> [--player-log <path>]
 | `Model/Creatures/Combatants.py` | `BasicCombatantData`, `ExtendedCombatantData`, `MonsterType`, `Alignment`, `Visibility`, `DamageTypeEntry` |
 | `Model/Creatures/MonsterAbilities.py` | `MonsterAbility` and its structured subclasses (`MeleeAttack`, `SavingThrowEffect`, ...), `DiceType` |
 | `Combat/Combatants.py` | Predefined combatant subclasses (monsters, players) |
-| `Combat/Campaigns/<Campaign>/` | Self-contained campaign: `encounters.json` (the party and every encounter — add new encounters here; format in `Combat/Campaigns/ENCOUNTERS.md`), `Campaign.py` (one line: `Campaign.from_config`), `CHEATSHEET.md`, `PlayerLogs/`, `CombatLogs/` |
-| `Combat/Tools/` | `prepare_encounters.py` (check a campaign's encounters.json and prepare each encounter's log), `scrape_monsters.py` (fetch raw stat blocks) → `generate_monsters.py` (codegen `Combat/Monsters/CR_*/`) |
+| `Combat/Campaigns/<Campaign>/` | Self-contained campaign: `encounters.py` (the party and every encounter — add new encounters here; format in `Combat/Campaigns/ENCOUNTERS.md`), `Campaign.py` (one line: `Campaign.from_config`), `CHEATSHEET.md`, `PlayerLogs/`, `CombatLogs/` |
+| `Combat/Tools/` | `prepare_encounters.py` (check a campaign's encounters.py and prepare each encounter's log), `scrape_monsters.py` (fetch raw stat blocks) → `generate_monsters.py` (codegen `Combat/Monsters/CR_*/`) |
 | `Combat/Campaigns/<Campaign>/CombatLogs/` | One prepared log per encounter, `<id>.json` (format below). Nothing else writes new logs |
 
 **Mixins share state through `Combat/CombatUIQt/state.py`.** Every mixin inherits `CombatWindowState`, which declares - with types - each attribute and method one mixin uses from another (`selected_character`, `_log_event`, ...). When a mixin starts using an attribute set elsewhere, or calls a method another mixin defines, declare it there too (copy the method's exact signature; its stub raises `NotImplementedError`). `./typecheck.sh Combat/CombatUIQt` must report 0 errors.
@@ -74,16 +74,22 @@ class MyMonster(BasicCombatantData):
 
 ```
 
-**Encounters are configured, not coded.** Add one to the campaign's
-`encounters.json` (monsters and allies by stat-block class name, with an
-optional `name` and `count`; `players` for who of the party takes part), then
-prepare its log and check it:
+**Encounters are configured in one file per campaign.** Add an `EncounterSpec`
+to the campaign's `encounters.py` `CONFIG` (monsters and allies as imported
+stat-block classes, with an optional `name`, `count` and shared-turn `group`;
+`players` for who of the party takes part), then prepare its log and check it:
 
-```json
-{"id": "my_encounter", "title": "My Encounter", "description": "...",
- "players": ["Edmund", "Clover"],
- "monsters": [{"monster": "MyMonster", "name": "Boss"},
-              {"monster": "GoblinWarrior", "name": "Goblin Warrior", "count": 3}]}
+```python
+EncounterSpec(
+    id="my_encounter",
+    title="My Encounter",
+    description="...",
+    players=["Edmund", "Clover"],
+    monsters=[
+        CombatantSpec(MyMonster, "Boss"),
+        CombatantSpec(GoblinWarrior, "Goblin Warrior", count=3, group="Goblin Warriors"),
+    ],
+),
 ```
 
 ```bash

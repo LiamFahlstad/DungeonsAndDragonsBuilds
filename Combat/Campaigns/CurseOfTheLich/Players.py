@@ -1,4 +1,4 @@
-"""Curse of the Lich's party, from its encounters.json, for scripts that
+"""Curse of the Lich's party, from its encounters.py, for scripts that
 build the characters themselves (RunBuildGroups.py)."""
 
 from Combat.Campaigns.CurseOfTheLich.Campaign import CAMPAIGN

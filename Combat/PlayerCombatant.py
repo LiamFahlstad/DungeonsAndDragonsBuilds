@@ -52,6 +52,9 @@ def combatant_from_stat_block(combatant: BasicCombatantData) -> dict:
         "Ability Scores": combatant.ability_scores,
         "Saving Throws": combatant.saving_throws,
     }
+    if combatant.initiative_group:
+        # Shares one initiative roll and one turn with the rest of its group.
+        char["initiative_group"] = combatant.initiative_group
     if isinstance(combatant, ExtendedCombatantData):
         char.update(
             {

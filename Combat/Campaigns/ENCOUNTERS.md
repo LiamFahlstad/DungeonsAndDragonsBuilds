@@ -1,60 +1,72 @@
-# Campaign setup: encounters.json and the logs
+# Campaign setup: encounters.py and the logs
 
 Every campaign lives in `Combat/Campaigns/<Campaign>/`:
 
 | File | What it is | Written by |
 |---|---|---|
-| `encounters.json` | The campaign's party and every encounter it can run | You |
-| `Campaign.py` | One line that loads `encounters.json` | Nobody (leave it) |
+| `encounters.py` | `CONFIG`: the campaign's party and every encounter it can run | You |
+| `Campaign.py` | One line that makes the campaign from `encounters.py` | Nobody (leave it) |
 | `CombatLogs/<encounter id>.json` | One log per encounter: who takes part, the monsters, every event of the fight | `prepare_encounters` creates it; the combat window fills it in |
 | `PlayerLogs/main_party.json` | The party's journal: where they've been (encounters, short and long rests) | The combat window |
 | `CHEATSHEET.md` | The commands for this campaign | You |
 
-The combat window only plays encounters listed in `encounters.json`, and only once
+The combat window only plays encounters listed in `encounters.py`, and only once
 their log is prepared. It never makes up a log of its own.
 
-## encounters.json
+## encounters.py
 
-```json
-{
-  "campaign": "curse_of_the_lich",
-  "title": "Curse of the Lich",
-  "description": "Free text about the campaign.",
-  "party": [
-    "Y2024_Paladin_Devotion_Edmund",
-    "Y2024_Bard_Valor_Clover"
-  ],
-  "encounters": [
-    {
-      "id": "goblin_scouting_party",
-      "title": "Goblin Scouting Party",
-      "description": "A goblin scouting party, with Greypaw fighting alongside the party.",
-      "difficulty": "Balanced for three level 3 players.",
-      "players": ["Edmund", "Clover", "Kivi"],
-      "monsters": [
-        {"monster": "GoblinBoss", "name": "Goblin Boss", "count": 2},
-        {"monster": "GoblinWarrior", "name": "Goblin Warrior", "count": 4}
-      ],
-      "allies": [{"monster": "GreypawCR1", "name": "Greypaw (Ally)"}],
-      "combatants_per_column": 5
-    }
-  ]
-}
+The config imports the stat blocks and character builders it uses and names them
+directly, so a misspelled monster or build fails as soon as the file is imported.
+
+```python
+from Builds.Characters.Y2024_Bard_Valor_Clover import Y2024BardValorCloverCharacterBuilder
+from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
+    Y2024PaladinDevotionEdmundCharacterBuilder,
+)
+from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec
+from Combat.Monsters.CR_0.monsters import GoblinWarrior
+from Combat.Monsters.CR_1.monsters import GoblinBoss
+from Combat.Monsters.CR_1.monsters_homebrew import GreypawCR1
+
+CONFIG = CampaignSpec(
+    name="curse_of_the_lich",
+    title="Curse of the Lich",
+    description="Free text about the campaign.",
+    party=[
+        Y2024PaladinDevotionEdmundCharacterBuilder,
+        Y2024BardValorCloverCharacterBuilder,
+    ],
+    encounters=[
+        EncounterSpec(
+            id="goblin_scouting_party",
+            title="Goblin Scouting Party",
+            description="A goblin scouting party, with Greypaw fighting alongside the party.",
+            difficulty="Balanced for three level 3 players.",
+            players=["Edmund", "Clover", "Kivi"],
+            monsters=[
+                CombatantSpec(GoblinBoss, "Goblin Boss", count=2),
+                CombatantSpec(GoblinWarrior, "Goblin Warrior", count=4, group="Goblin Warriors"),
+            ],
+            allies=[CombatantSpec(GreypawCR1, "Greypaw (Ally)")],
+            combatants_per_column=5,
+        ),
+    ],
+)
 ```
 
-### Campaign keys
+### The campaign: `CampaignSpec`
 
-| Key | Required | Meaning |
+| Field | Required | Meaning |
 |---|---|---|
-| `campaign` | yes | The campaign's id, snake_case. It's what `--campaign` takes. |
+| `name` | yes | The campaign's id, snake_case. It's what `--campaign` takes. |
 | `title` | yes | How it's shown, e.g. in the statistics report. |
-| `description` | no | Free text. |
-| `party` | yes | The tracked party, as build modules in `Builds/Characters/` (the file name without `.py`). `[]` for a campaign without character sheets. |
+| `description` | yes | Free text (may be `""`). |
+| `party` | yes | The tracked party, as `CharacterBuilder` classes imported from `Builds/Characters/`. `[]` for a campaign without character sheets. |
 | `encounters` | yes | The encounters, in the order Load Encounter lists them. The first one is what `RunCombatSimulator.py` runs with no flags. |
 
-### Encounter keys
+### An encounter: `EncounterSpec`
 
-| Key | Required | Meaning |
+| Field | Required | Meaning |
 |---|---|---|
 | `id` | yes | snake_case, unique across all campaigns. It names the log (`CombatLogs/<id>.json`) and is what `--scenario` takes. Don't rename an encounter that has been played: its log and the player log's line for it go by this id. |
 | `title` | yes | How Load Encounter, the window title and the player log show it. |
@@ -65,19 +77,21 @@ their log is prepared. It never makes up a log of its own.
 | `allies` | no | Friendly NPCs fighting with the party (see below). They're subtracted from the difficulty. |
 | `combatants_per_column` | no | How many cards per column in the window (default 4). |
 
-### Monsters and allies
+### Monsters and allies: `CombatantSpec`
 
 Each line is one stat block, optionally several of it:
+`CombatantSpec(monster, name=None, count=1, group=None)`.
 
-| Key | Required | Meaning |
+| Field | Required | Meaning |
 |---|---|---|
-| `monster` | yes | The stat block's class name: anything in `Combat/Monsters/` (official and homebrew), e.g. `GoblinBoss`, `GreypawCR1`. A few old ones live in `Combat/Combatants.py` (`Bull`, `Player1`); where both define a name, the `Combat/Monsters` one is used, and `Combatants.Priest` picks the other. |
+| `monster` | yes | The stat block's class, imported from `Combat/Monsters/CR_<x>/` (official `monsters.py` or `monsters_homebrew.py`), e.g. `GoblinBoss`, `GreypawCR1`. A few old ones live in `Combat/Combatants.py` (`Bull`, `Player1`); when two modules share a class name, import one under another name, e.g. `import Combat.Combatants as Combatants` and `Combatants.Priest`. |
 | `name` | no | What it's called in the fight. With a `count`, they're numbered: `"Goblin Boss"` ×2 → Goblin Boss 1, Goblin Boss 2. Leave it out to use the stat block's own name. |
 | `count` | no | How many (default 1). |
+| `group` | no | Lines with the same `group` share one turn, as a GM runs a pack of the same monster: one initiative roll (with the first one's modifier), one row on the initiative screen ("Goblin Warriors (4)"), and they all take their turn together. Each keeps its own card and stat block. Monsters and allies can't share a group. |
 
-To find a class name, search the stat blocks for the monster's name, e.g.
+To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the
-`class ...:` line above the match. A typo is caught by `prepare_encounters`.
+`class ...:` line above the match, and the file is the module to import it from.
 
 ## Preparing the logs
 
@@ -90,8 +104,8 @@ python -m Combat.Tools.prepare_encounters --check            # check the config 
 python -m Combat.Tools.prepare_encounters wrath_of_durmor    # just these encounters
 ```
 
-It checks the whole config first (monsters and builds exist, players are in the
-party, ids are valid and unique) and writes nothing while anything is wrong. Then,
+It checks the whole config first (players are in the party, ids are valid and
+unique, counts and groups make sense) and writes nothing while anything is wrong. Then,
 for each encounter:
 
 | The log | What happens |
@@ -113,7 +127,9 @@ A prepared log starts as:
 ```
 
 While the fight is played, the window keeps `combatants` and `round_number`
-current and adds one `round_<n>` list of events per round. Players' HP and
+current, saves the turn order (`initiative_order`, everyone's names, players
+too) and whose turn it is (`turn`), and adds one `round_<n>` list of events per
+round. Continuing the fight picks up in that order, on that turn. Players' HP and
 conditions aren't stored in it: they're replayed from the events (see below).
 
 ## Playing

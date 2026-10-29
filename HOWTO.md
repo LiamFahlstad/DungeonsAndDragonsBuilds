@@ -63,15 +63,15 @@ python RunItemSheets.py                  # every *_item_sheet() function in Buil
 
 | Flag | Effect |
 |---|---|
-| `--scenario <id>` | Play an encounter from its campaign's `encounters.json` (its log must be prepared). Its campaign is picked automatically |
+| `--scenario <id>` | Play an encounter from its campaign's `encounters.py` (its log must be prepared). Its campaign is picked automatically |
 | `--campaign <name>` | `curse_of_the_lich` (default), `time_loop_pr` or `grims_castle`. Used when there's no `--scenario` |
-| `--player-log <path>` | Track the party across sessions. The player log lists where the party has been (encounters, rests); their HP, conditions and slots are replayed from the encounter logs since the last long rest. Who takes part in an encounter comes from `encounters.json` |
+| `--player-log <path>` | Track the party across sessions. The player log lists where the party has been (encounters, rests); their HP, conditions and slots are replayed from the encounter logs since the last long rest. Who takes part in an encounter comes from `encounters.py` |
 | `--rest long\|short` | `long`: record a long rest in the player log (the party is fully rested from then on; statistics still count what came before). `short`: open the healing window. Needs `--player-log` |
 | `--difficulty` | Print the D&D 2024 encounter difficulty against the players taking part (allies' XP subtracted) and exit |
 
 With no flags it runs the default campaign's first encounter. With only `--player-log` it opens the party between encounters (nothing is logged there): pick an encounter with Load Encounter, or rest.
 
-**Campaigns and encounters** are configured, not coded: each campaign's `Combat/Campaigns/<C>/encounters.json` lists its party (character builds) and every encounter (monsters and allies by class name, who of the party takes part, description, difficulty note). The format is in [Combat/Campaigns/ENCOUNTERS.md](Combat/Campaigns/ENCOUNTERS.md). After changing it, prepare the encounters' logs; nothing else creates a log:
+**Campaigns and encounters** are configured in one file per campaign: `Combat/Campaigns/<C>/encounters.py` holds a `CONFIG` listing its party (imported character builder classes) and every encounter (imported monster and ally stat-block classes, who of the party takes part, description, difficulty note). The format is in [Combat/Campaigns/ENCOUNTERS.md](Combat/Campaigns/ENCOUNTERS.md). After changing it, prepare the encounters' logs; nothing else creates a log:
 
 ```bash
 python -m Combat.Tools.prepare_encounters --all            # check every config, prepare every log
@@ -90,7 +90,7 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 ```
 
 Exact per-campaign commands: [CurseOfTheLich](Combat/Campaigns/CurseOfTheLich/CHEATSHEET.md), [TimeLoopPR](Combat/Campaigns/TimeLoopPR/CHEATSHEET.md), [GrimsCastle](Combat/Campaigns/GrimsCastle/CHEATSHEET.md).
-To add a campaign, create `Combat/Campaigns/<Name>/` with an `encounters.json` and a one-line `Campaign.py` (copy another campaign's), and register its `CAMPAIGN` in `Combat/Scenarios.py`.
+To add a campaign, create `Combat/Campaigns/<Name>/` with an `encounters.py` and a one-line `Campaign.py` (copy another campaign's), and register its `CAMPAIGN` in `Combat/Scenarios.py`.
 
 Every encounter keeps its fight in its prepared `CombatLogs/<id>.json`. When that log holds a fight in progress, the window asks **Continue Encounter** (pick up where it stopped) or **Restart Encounter** (back to the prepared log, fight undone for the party; the old log is kept as `<id>_restarted_<timestamp>.json`).
 
@@ -202,7 +202,7 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 | `Output/<build>/` | Character sheets (`character.html`, features/, spells, items) |
 | `Output/BuildGroups/`, `Output/ItemSheets/`, `Output/ClassHandouts/` | Party, item and handout pages |
 | `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json`, where the party has been (plus older `*_long_rest_<timestamp>.json` archives) |
-| `Combat/Campaigns/<C>/encounters.json` | The campaign's party and encounters ([format](Combat/Campaigns/ENCOUNTERS.md)) |
+| `Combat/Campaigns/<C>/encounters.py` | The campaign's party and encounters ([format](Combat/Campaigns/ENCOUNTERS.md)) |
 | `Combat/Campaigns/<C>/CombatLogs/` | One prepared log per encounter, with every event of its fight (committed; only `*_restarted_*` backups are git-ignored) |
 | `Combat/Campaigns/<C>/player_statistics_report.html` | The campaign's player statistics report (git-ignored, like all `*.html`) |
 | `Builds/GeneratedBuilds/` | Build files from the Character Creator GUI |
