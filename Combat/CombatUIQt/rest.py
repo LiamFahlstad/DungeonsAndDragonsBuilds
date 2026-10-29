@@ -9,9 +9,9 @@ before it is deleted; the statistics still count it.
 A short rest reuses CombatAppQt to reconstruct the party's current state
 without ever calling `.run()`, and opens a small standalone window — not the
 main combat window — to manually heal each player and regain any
-short-rest-cadence feature uses (e.g. Channel Divinity). Those events go in
-a short_rest_<timestamp>.json log of their own, which the player log lists
-like any other.
+short-rest-cadence feature uses (e.g. Channel Divinity). Those events are
+recorded on the short rest's own line in the player log (no encounter log is
+written between encounters).
 """
 
 import sys
@@ -50,7 +50,6 @@ def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
         combat_log_dir=campaign.combat_log_dir,
         player_log_path=player_log_path,
         scenario_name=None,
-        session_type="short_rest",
     )
 
 
@@ -82,20 +81,21 @@ def apply_long_rest(player_log_path: str):
 
 def run_short_rest(player_log_path: str, campaign: Campaign):
     """Open the short-rest window on its own (not the main combat window),
-    for `--rest short`. Heals and regains go in a short-rest log of their
-    own, which the player log lists once anything is applied."""
+    for `--rest short`. Heals and regains are recorded on the short rest's
+    line in the player log, once anything is applied."""
     app = _build_party_state(player_log_path, campaign)
     qapp = QApplication.instance()
     if qapp is None:
         qapp = QApplication(sys.argv)
     assert isinstance(qapp, QApplication)
     qapp.setStyleSheet(QSS)
-    short_rest_dialog(app).exec()
+    app._record_short_rest(lambda: short_rest_dialog(app).exec())
 
 
 def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialog:
-    """A short rest for the tracked party in `app`, logged to its current log:
-    every short-rest-cadence feature use comes back right away, and the
+    """A short rest for the tracked party in `app` (inside
+    app._record_short_rest, which records what it logs): every
+    short-rest-cadence feature use comes back right away, and the
     window built here lets each player be healed a manually-entered amount
     (Hit Dice spent). Returned unopened; the caller exec()s it."""
     players = [c for c in app.characters if c.get("_is_player")]

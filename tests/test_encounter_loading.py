@@ -1,16 +1,19 @@
-"""Loading an encounter: each scenario's persistent log (Combat/EncounterLogs.py)
-and the combat window's Load Encounter / Continue / Restart flow
-(Combat/CombatUIQt/encounters_mixin.py), and how the two logs split the work:
-the encounter logs hold every event, the player log (Combat/PlayerLog.py)
-only where the party has been, and the party's state is replayed from the
-first through the second."""
+"""Encounters: a campaign's encounters.json (Combat/EncounterConfig.py), the
+logs prepared from it (Combat/EncounterLogs.py, Combat/Tools/
+prepare_encounters.py), and the combat window playing them
+(Combat/CombatUIQt/encounters_mixin.py, rests_mixin.py): Load Encounter,
+Continue / Restart, End Encounter, the party view between encounters, rests,
+and how the encounter logs and the player log (Combat/PlayerLog.py) split the
+work."""
 
 import json
+import os
 from functools import cache
 
 import pytest
 from PyQt6.QtWidgets import (
     QDialog,
+    QLabel,
     QLineEdit,
     QListWidget,
     QMessageBox,
@@ -18,35 +21,67 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
+import Combat.Scenarios as Scenarios
+from Combat.Campaign import Campaign
 from Combat.Combatants import Pirate
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.encounters_mixin import CONTINUE, RESTART
 from Combat.CombatUIQt.rest import apply_long_rest
+from Combat.EncounterConfig import (
+    CombatantSpec,
+    ConfigError,
+    load,
+    monster_class,
+    resolve_players,
+    validate,
+)
 from Combat.EncounterLogs import (
-    EMPTY_LOG,
     ENDED_KEY,
     UNDONE_SESSIONS_KEY,
+    is_prepared,
+    prepare_log,
+    prepared_log,
     read_log_status,
     restart_log,
     scenario_log_path,
 )
-from Combat.PlayerLog import scenario_title
 from Combat.Monsters.CR_1.monsters import Tiger
 from Combat.Scenario import CombatScenario
+from Combat.Tools.prepare_encounters import prepare_campaign
 from Core.Definitions import DamageType
 from tests._combat_ui import open_dialog, qapp
 from tests._snapshot_helpers import build
 
-PLAYER_BUILD = "Y2014WarlockHexbladeDravenCursebladeCharacterBuilder"
 SLASHING = DamageType.SLASHING.value
+EDMUND_BUILD = "Y2024_Paladin_Devotion_Edmund"
+CLOVER_BUILD = "Y2024_Bard_Valor_Clover"
 
-PIRATES = CombatScenario(name="pirate_ambush", combatants=lambda: [Pirate(), Pirate()])
-TIGER = CombatScenario(name="tiger_den", combatants=lambda: [Tiger()])
+PIRATES = CombatScenario(
+    name="pirate_ambush",
+    title="Pirate Ambush",
+    combatants=lambda: [Pirate(), Pirate()],
+    monster_summary=["2× Pirate"],
+)
+TIGER = CombatScenario(
+    name="tiger_den",
+    title="Tiger Den",
+    combatants=lambda: [Tiger()],
+    players=["Edmund"],
+    monster_summary=["Tiger"],
+)
 
 
 @cache
-def _player():
-    return build(PLAYER_BUILD)
+def _sheet(build_name: str):
+    return build(build_name)
+
+
+def _party() -> list:
+    return [_sheet(EDMUND_BUILD), _sheet(CLOVER_BUILD)]
+
+
+def _names() -> list[str]:
+    return [cs.character_name for cs in _party()]
 
 
 @pytest.fixture(autouse=True)
@@ -60,86 +95,226 @@ def no_modal_dialogs(monkeypatch):
     monkeypatch.setattr(QMessageBox, "warning", refuse)
 
 
-def _in_progress_log(path, hp: int = 3, round_number: int = 4):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tiger = {"name": "Tiger", "hp": hp, "max_hp": 30, "ac": 12, "conditions": []}
-    path.write_text(
+@pytest.fixture
+def say_yes(monkeypatch):
+    asked = []
+
+    def question(*args, **kwargs):
+        asked.append(args[1:3])
+        return QMessageBox.StandardButton.Yes
+
+    monkeypatch.setattr(QMessageBox, "question", question)
+    return asked
+
+
+# ---------------------------------------------------------------------------
+# The encounters config
+
+
+def _write_config(folder, encounters, party=(EDMUND_BUILD, CLOVER_BUILD)):
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "encounters.json").write_text(
         json.dumps(
             {
-                "round_number": round_number,
-                "combatants": [tiger, {**tiger, "name": "Tiger 2", "hp": 0}],
-                "round_1": ["Tiger took 27 damage"],
+                "campaign": "test_campaign",
+                "title": "Test Campaign",
+                "party": list(party),
+                "encounters": encounters,
             }
         )
     )
 
 
-def _ui(tmp_path, combatants=(), players=(), scenario_name=None) -> CombatAppQt:
-    qapp()
-    ui = CombatAppQt(
-        list(combatants),
-        list(players),
-        combat_log_dir=tmp_path,
-        scenario_name=scenario_name,
-        scenarios=[PIRATES, TIGER],
+TIGER_CONFIG = {
+    "id": "tiger_den",
+    "title": "Tiger Den",
+    "description": "A tiger.",
+    "players": ["Edmund"],
+    "monsters": [{"monster": "Tiger", "name": "Stripes"}],
+}
+
+
+@pytest.mark.parametrize("campaign", sorted(Scenarios.CAMPAIGNS))
+def test_every_campaign_config_is_valid(campaign):
+    campaign = Scenarios.CAMPAIGNS[campaign]
+    assert campaign.config is not None
+    party = [cs.character_name for cs in campaign.players()]
+    assert validate(campaign.config, party) == []
+
+
+def test_combatant_lines_are_numbered_when_several():
+    assert CombatantSpec("GoblinBoss", "Goblin Boss", 2).names() == [
+        "Goblin Boss 1",
+        "Goblin Boss 2",
+    ]
+    assert CombatantSpec("Tiger").names() == [None]
+    (tiger,) = CombatantSpec("Tiger").build()
+    assert tiger.combatant_type == "Tiger" and not tiger.name
+    assert CombatantSpec("GoblinBoss", "Goblin Boss", 2).summary() == "2× Goblin Boss"
+
+
+def test_monsters_are_found_by_class_name():
+    import Combat.Combatants as Combatants
+    from Combat.Monsters.CR_2.monsters import Priest
+
+    assert monster_class("Priest") is Priest
+    assert monster_class("Combatants.Priest") is Combatants.Priest
+    assert monster_class("Bull") is Combatants.Bull  # only Combatants has it
+    with pytest.raises(KeyError):
+        monster_class("NoSuchMonster")
+
+
+def test_players_match_parts_of_names():
+    party = ["Edmund", "Clover", "Kivi Jätti", "Gabriel Greybeard"]
+    assert resolve_players(None, party) == party
+    assert resolve_players(["kivi", "Edmund"], party) == ["Edmund", "Kivi Jätti"]
+    with pytest.raises(KeyError):
+        resolve_players(["Obmar"], party)
+    with pytest.raises(KeyError):
+        resolve_players(["e"], party)  # more than one
+
+
+def test_validate_names_every_problem(tmp_path):
+    _write_config(
+        tmp_path,
+        [
+            {"id": "Bad Id", "title": "x", "monsters": [{"monster": "Nope"}]},
+            {
+                "id": "twice",
+                "title": "",
+                "monsters": [{"monster": "Tiger", "count": 0}],
+            },
+            {"id": "twice", "title": "y", "players": ["Obmar"]},
+        ],
+        party=[EDMUND_BUILD, "No_Such_Build"],
     )
-    ui._build_window()
-    return ui
+    problems = validate(load(tmp_path), ["Edmund"])
+    expected = [
+        "No_Such_Build",
+        "'Bad Id': id must be snake_case",
+        "no stat block called 'Nope'",
+        "'twice': needs a title",
+        "Tiger: count must be at least 1",
+        "'twice': id used twice",
+        "player 'Obmar' matches no one",
+    ]
+    for text in expected:
+        assert any(text in p for p in problems), (text, problems)
+
+
+def test_unknown_keys_are_a_config_error(tmp_path):
+    _write_config(tmp_path, [{"id": "x", "title": "x", "monster": []}])
+    with pytest.raises(ConfigError):
+        load(tmp_path)
+
+
+def test_a_campaign_comes_from_its_config(tmp_path):
+    _write_config(tmp_path, [TIGER_CONFIG])
+    campaign = Campaign.from_config(tmp_path)
+    (scenario,) = campaign.scenarios
+    assert (campaign.name, campaign.title) == ("test_campaign", "Test Campaign")
+    assert (scenario.name, scenario.display_title) == ("tiger_den", "Tiger Den")
+    assert scenario.players == ["Edmund"]
+    assert [c.name for c in scenario.build_combatants()] == ["Stripes"]
+    assert [cs.character_name for cs in campaign.players()] == _names()
 
 
 # ---------------------------------------------------------------------------
-# EncounterLogs
+# Prepared logs
 
 
-def test_nothing_to_continue_without_a_fight(tmp_path):
-    path = tmp_path / "x.json"
-    assert read_log_status(path) is None
-    path.write_text(json.dumps(EMPTY_LOG))
-    assert read_log_status(path) is None
-    # Monsters written but no event logged: the fight never got going.
-    path.write_text(json.dumps({"round_number": 1, "combatants": [{"hp": 5}]}))
-    assert read_log_status(path) is None
+def _in_progress_log(path, hp: int = 3, round_number: int = 4, extra=None):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tiger = {"name": "Tiger", "hp": hp, "max_hp": 30, "ac": 12, "conditions": []}
+    data = {
+        "encounter": path.stem,
+        "title": "Tiger Den",
+        "players": ["Edmund"],
+        "round_number": round_number,
+        "combatants": [tiger, {**tiger, "name": "Tiger 2", "hp": 0}],
+        "round_1": [{"text": "Tiger took 27 damage"}],
+        **(extra or {}),
+    }
+    path.write_text(json.dumps(data))
 
 
-def test_status_of_a_fight_in_progress(tmp_path):
+def test_a_prepared_log_holds_the_encounter_and_who_takes_part():
+    log = prepared_log(TIGER, ["Edmund"])
+    assert {k: log[k] for k in ("encounter", "title", "players", "round_number")} == {
+        "encounter": "tiger_den",
+        "title": "Tiger Den",
+        "players": ["Edmund"],
+        "round_number": 1,
+    }
+    (tiger,) = log["combatants"]
+    assert (tiger["name"], tiger["hp"], tiger["max_hp"]) == ("Tiger", 30, 30)
+
+
+def test_preparing_logs(tmp_path):
     path = tmp_path / "tiger_den.json"
-    _in_progress_log(path)
-    status = read_log_status(path)
-    assert status is not None
-    assert (status.round_number, status.standing, status.total) == (4, 1, 2)
-    assert status.describe().startswith("Round 4, 1 of 2 standing, last played ")
+    assert not is_prepared(path)
+    assert prepare_log(path, TIGER, ["Edmund"], write=False) == "prepared"
+    assert not path.exists()
+    assert prepare_log(path, TIGER, ["Edmund"]) == "prepared"
+    assert is_prepared(path)
+    assert prepare_log(path, TIGER, ["Edmund"]) == "unchanged"
+    # Not started yet: a change in the config is taken in.
+    assert prepare_log(path, TIGER, ["Edmund", "Clover"]) == "updated"
+    assert json.loads(path.read_text())["players"] == ["Edmund", "Clover"]
 
 
-def test_status_of_a_finished_fight(tmp_path):
-    path = tmp_path / "tiger_den.json"
-    _in_progress_log(path, hp=0)
-    status = read_log_status(path)
-    assert status is not None
-    assert status.describe().startswith("Round 4, all 2 down, last played ")
-
-
-def test_scenario_titles():
-    assert scenario_title("wrath_of_durmor") == "Wrath of Durmor"
-    assert scenario_title("the_drunk_oxe") == "The Drunk Oxe"
-
-
-def test_restart_backs_up_a_fight_in_progress(tmp_path):
+def test_a_fight_in_progress_is_left_alone_but_gets_its_header(tmp_path):
     path = tmp_path / "tiger_den.json"
     _in_progress_log(path)
     old = json.loads(path.read_text())
-    backup = restart_log(path)
-    assert backup is not None and backup.parent == tmp_path
-    assert backup.name.startswith("tiger_den_restarted_")
-    assert json.loads(backup.read_text()) == old
-    assert json.loads(path.read_text()) == EMPTY_LOG
+    for key in ("encounter", "title", "players"):
+        del old[key]
+    path.write_text(json.dumps(old))
+    os.utime(path, (1_700_000_000, 1_700_000_000))
+
+    assert prepare_log(path, TIGER, ["Edmund"]) == "in progress, header added"
+    data = json.loads(path.read_text())
+    assert data["encounter"] == "tiger_den" and data["players"] == ["Edmund"]
+    header = ("encounter", "title", "players")
+    assert {k: v for k, v in data.items() if k not in header} == old
+    assert path.stat().st_mtime == 1_700_000_000  # last played is kept
+    assert prepare_log(path, TIGER, ["Edmund"]) == "in progress"
 
 
-def test_restart_takes_the_fight_out_of_the_player_log(tmp_path):
+def test_names_outside_ascii_survive_preparing(tmp_path):
+    # Logs are UTF-8 whatever the platform's default encoding (cp1252 on
+    # Windows), so "Kivi Jätti" isn't turned into "Kivi JÃ¤tti".
+    path = tmp_path / "tiger_den.json"
+    event = {"text": "Kivi Jätti takes 3 damage", "character": "Kivi Jätti"}
+    log = {"round_number": 1, "combatants": [], "round_1": [event]}
+    path.write_bytes(json.dumps(log, ensure_ascii=False).encode("utf-8"))
+    assert prepare_log(path, TIGER, ["Kivi Jätti"]) == "in progress, header added"
+    data = json.loads(path.read_bytes().decode("utf-8"))
+    assert data["round_1"] == [event] and data["players"] == ["Kivi Jätti"]
+
+
+def test_status_of_a_fight(tmp_path):
+    path = tmp_path / "tiger_den.json"
+    assert read_log_status(path) is None
+    prepare_log(path, TIGER, [])
+    assert read_log_status(path) is None  # prepared, not started
+    _in_progress_log(path)
+    status = read_log_status(path)
+    assert status is not None
+    assert status.describe().startswith("Round 4, 1 of 2 standing, last played ")
+    _in_progress_log(path, hp=0, extra={ENDED_KEY: "2026-10-29T20:00:00"})
+    status = read_log_status(path)
+    assert status is not None and status.ended
+    assert status.describe().startswith("Ended in round 4, all 2 down")
+
+
+def test_restart_backs_up_the_fight_and_takes_it_out_of_the_player_log(tmp_path):
     path = tmp_path / "CombatLogs" / "tiger_den.json"
     player_log_path = tmp_path / "PlayerLogs" / "main_party.json"
     _in_progress_log(path)
+    old = json.loads(path.read_text())
     sessions = [
-        {"type": "adventure", "log": "../CombatLogs/adventure_1.json"},
+        {"type": "long_rest"},
         # From when the player log embedded its events.
         {"type": "encounter", "scenario": "tiger_den", "round_1": []},
         {"type": "encounter", "scenario": "pirate_ambush", "round_1": []},
@@ -150,139 +325,76 @@ def test_restart_takes_the_fight_out_of_the_player_log(tmp_path):
         },
     ]
     player_log = {"sessions": list(sessions)}
-    backup = restart_log(path, player_log, player_log_path)
-    assert backup is not None
+    fresh = prepared_log(TIGER, ["Edmund"])
+
+    backup = restart_log(path, fresh, player_log, player_log_path)
+    assert backup is not None and backup.name.startswith("tiger_den_restarted_")
     assert player_log["sessions"] == [sessions[0], sessions[2]]
-    undone = json.loads(backup.read_text())[UNDONE_SESSIONS_KEY]
-    assert undone == [sessions[1], sessions[3]]
+    backup_data = json.loads(backup.read_text())
+    assert backup_data[UNDONE_SESSIONS_KEY] == [sessions[1], sessions[3]]
+    assert backup_data["round_1"] == old["round_1"]
+    assert json.loads(path.read_text())["combatants"][0]["hp"] == 30
 
 
-def test_restart_without_a_fight_keeps_no_backup(tmp_path):
-    path = tmp_path / "new" / "tiger_den.json"
-    assert restart_log(path) is None
-    assert json.loads(path.read_text()) == EMPTY_LOG
-    assert list(path.parent.iterdir()) == [path]
+def test_the_prepare_tool_writes_nothing_while_the_config_has_problems(tmp_path):
+    bad = {"id": "x", "title": "x", "monsters": [{"monster": "Nope"}]}
+    _write_config(tmp_path, [TIGER_CONFIG, bad])
+    problems, results = prepare_campaign(Campaign.from_config(tmp_path))
+    assert problems and results == []
+    assert not (tmp_path / "CombatLogs").exists()
 
 
-# ---------------------------------------------------------------------------
-# Continue or restart
-
-
-def test_no_question_when_there_is_nothing_to_continue(tmp_path):
-    ui = _ui(tmp_path)
-    path = tmp_path / "tiger_den.json"
-    assert ui._ask_continue_or_restart(path, "Tiger Den") == RESTART
-    assert ui._ask_continue_or_restart(path, "x", can_restart=False) == CONTINUE
-
-
-@pytest.mark.parametrize(
-    "button, expected",
-    [("Continue Encounter", CONTINUE), ("Restart Encounter", RESTART), (None, None)],
-)
-def test_asks_when_a_fight_is_in_progress(tmp_path, monkeypatch, button, expected):
-    ui = _ui(tmp_path)
-    path = tmp_path / "tiger_den.json"
-    _in_progress_log(path)
-    shown = []
-
-    def fake_exec(box):
-        shown.append([b.text() for b in box.buttons()])
-        clicked = next((b for b in box.buttons() if b.text() == button), None)
-        monkeypatch.setattr(box, "clickedButton", lambda: clicked)
-        return 0
-
-    monkeypatch.setattr(QMessageBox, "exec", fake_exec)
-    assert ui._ask_continue_or_restart(path, "Tiger Den") == expected
-    assert "Continue Encounter" in shown[0] and "Restart Encounter" in shown[0]
-
-
-def test_startup_restart_brings_monsters_back_fresh(tmp_path):
-    path = tmp_path / "tiger_den.json"
-    _in_progress_log(path)
-    ui = _ui(tmp_path, [Tiger()], scenario_name="tiger_den")
-    ui._open_encounter_log(path, restart=True)
-    assert ui.phase == "INITIATIVE"
-    assert [(c["name"], c["hp"]) for c in ui.characters] == [("Tiger", 30)]
-    assert ui.log_file == path
-    assert [c["hp"] for c in json.loads(path.read_text())["combatants"]] == [30]
-    assert ui._window.windowTitle() == "DnD Combat Engine — Tiger Den"
+def test_the_prepare_tool_prepares_each_encounter(tmp_path):
+    _write_config(tmp_path, [TIGER_CONFIG, {**TIGER_CONFIG, "id": "second_den"}])
+    campaign = Campaign.from_config(tmp_path)
+    assert prepare_campaign(campaign, write=False) == (
+        [],
+        [("tiger_den", "prepared"), ("second_den", "prepared")],
+    )
+    assert prepare_campaign(campaign, only=["tiger_den"]) == (
+        [],
+        [("tiger_den", "prepared")],
+    )
+    log = json.loads((tmp_path / "CombatLogs" / "tiger_den.json").read_text())
+    assert log["players"] == ["Edmund"]
+    assert [c["name"] for c in log["combatants"]] == ["Stripes (Tiger)"]
+    assert not (tmp_path / "CombatLogs" / "second_den.json").exists()
 
 
 # ---------------------------------------------------------------------------
-# Load Encounter
+# The window
 
 
-def test_load_encounter_swaps_the_monsters_and_keeps_the_party(tmp_path):
-    ui = _ui(tmp_path, [Pirate()], [_player()], scenario_name="pirate_ambush")
-    player = ui.characters[0]
-    player["hp"] -= 5
-    ui._load_encounter(TIGER, restart=True)
-    assert ui.characters[0] is player
-    assert [c["name"] for c in ui.characters[1:]] == ["Tiger"]
-    assert ui.phase == "INITIATIVE"
-    assert set(ui._initiative_inputs) == {id(c) for c in ui.characters}
-    assert ui.log_file == scenario_log_path(tmp_path, "tiger_den")
-    assert ui._scenario_name == "tiger_den"
-
-
-def test_load_encounter_continues_where_the_log_stopped(tmp_path):
-    _in_progress_log(scenario_log_path(tmp_path, "tiger_den"), hp=3, round_number=4)
-    ui = _ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    ui._load_encounter(TIGER, restart=False)
-    assert ui.phase == "COMBAT"
-    assert ui.round_number == 4
-    assert [(c["name"], c["hp"]) for c in ui.characters] == [
-        ("Tiger", 3),
-        ("Tiger 2", 0),
-    ]
-
-
-def test_load_encounter_from_combat_back_to_initiative(tmp_path):
-    ui = _ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    ui._initiative_inputs[id(ui.characters[0])].setText("10")
-    ui._start_combat()
-    ui.round_number = 3
-    ui._load_encounter(TIGER, restart=True)
-    assert ui.phase == "INITIATIVE"
-    assert ui.round_number == 1
-    assert ui.history == []
-    assert ui._scroll_area.widget() is ui._initiative_widget
-    assert ui._next_turn_btn.isHidden()
-
-
-def test_load_encounter_without_a_player_log_tracks_nothing(tmp_path):
-    ui = _ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    ui._load_encounter(TIGER, restart=True)
-    assert ui.player_log_data == {"sessions": []}
-    assert ui._player_log_session is None
-
-
-# ---------------------------------------------------------------------------
-# The player log and the encounter logs
-
-
-def _tracked_ui(
-    tmp_path, combatants=(), scenario_name="tiger_den", restart=True
-) -> CombatAppQt:
-    """One run of a window tracking one player, laid out like a campaign
-    folder: tmp_path/PlayerLogs/main_party.json and tmp_path/CombatLogs/."""
+def _ui(tmp_path, party=None, scenario=None, player_log=True) -> CombatAppQt:
+    """One run of the window for a campaign in tmp_path (PlayerLogs/,
+    CombatLogs/) with the PIRATES and TIGER encounters, both prepared.
+    Without a `scenario` it opens on the party between encounters."""
     qapp()
+    logs = tmp_path / "CombatLogs"
+    for s in (PIRATES, TIGER):
+        path = scenario_log_path(logs, s.name)
+        if not path.exists():
+            prepare_log(path, s, resolve_players(s.players, _names()))
     ui = CombatAppQt(
-        list(combatants),
-        [_player()],
-        combat_log_dir=tmp_path / "CombatLogs",
-        player_log_path=str(tmp_path / "PlayerLogs" / "main_party.json"),
-        scenario_name=scenario_name,
+        [],
+        _party() if party is None else party,
+        combat_log_dir=logs,
+        log_path=scenario_log_path(logs, scenario.name) if scenario else None,
+        player_log_path=(
+            str(tmp_path / "PlayerLogs" / "main_party.json") if player_log else None
+        ),
+        scenario_name=scenario.name if scenario else None,
         scenarios=[PIRATES, TIGER],
     )
     ui._build_window()
-    path = scenario_log_path(tmp_path / "CombatLogs", scenario_name)
-    ui._open_encounter_log(path, restart=restart)
-    if ui.phase == "INITIATIVE":
-        for i, char in enumerate(ui.characters):
-            ui._initiative_inputs[id(char)].setText(str(20 - i))
-        ui._start_combat()
     return ui
+
+
+def _start(ui):
+    """Roll initiative and start the fight on the initiative screen."""
+    for i, char in enumerate(ui.characters):
+        ui._initiative_inputs[id(char)].setText(str(20 - i))
+    ui._start_combat()
 
 
 def _hit(ui, source, target, amount: int):
@@ -298,14 +410,121 @@ def _journal(tmp_path) -> list[dict]:
     return json.loads(path.read_text())["sessions"] if path.exists() else []
 
 
-def test_the_player_log_says_where_the_party_has_been(tmp_path):
-    ui = _tracked_ui(tmp_path, [Tiger(), Pirate()])
-    player, tiger, pirate = ui.characters
-    _hit(ui, pirate, tiger, 4)
-    _hit(ui, tiger, player, 5)
-    ui._select_character(player)
-    ui._add_action_use("Action")
+def _player(ui, name: str) -> dict:
+    return next(c for c in ui.characters if c["name"].startswith(name))
 
+
+def _in_fight(tmp_path, scenario=TIGER) -> CombatAppQt:
+    ui = _ui(tmp_path)
+    ui._load_encounter(scenario, restart=False)
+    _start(ui)
+    return ui
+
+
+def test_between_encounters_the_window_shows_the_party_and_logs_nothing(tmp_path):
+    ui = _ui(tmp_path)
+    assert ui.phase == "PARTY" and ui.log_file is None
+    assert [c["name"] for c in ui.characters] == _names()
+    view = ui._scroll_area.widget()
+    assert view is not None
+    texts = [label.text() for label in view.findChildren(QLabel)]
+    assert texts[0] == "Between encounters"
+    assert any(t.startswith("Edmund:") for t in texts)
+    # Nothing can be selected, so nothing changed or logged.
+    ui._select_character(ui.characters[0])
+    assert ui.selected_character is None
+    assert not ui._add_combatant_btn.isEnabled()
+    assert not ui._end_encounter_btn.isEnabled()
+    assert sorted(p.name for p in (tmp_path / "CombatLogs").iterdir()) == [
+        "pirate_ambush.json",
+        "tiger_den.json",
+    ]
+
+
+def test_an_unprepared_encounter_cannot_be_loaded(tmp_path, monkeypatch):
+    ui = _ui(tmp_path)
+    scenario_log_path(tmp_path / "CombatLogs", "tiger_den").unlink()
+    warned = []
+    monkeypatch.setattr(QMessageBox, "warning", lambda *a: warned.append(a[2]))
+    ui._load_encounter(TIGER, restart=False)
+    assert warned and "isn't prepared" in warned[0]
+    assert ui.phase == "PARTY"
+
+
+def test_loading_an_encounter_brings_its_monsters_and_players(tmp_path):
+    ui = _ui(tmp_path)
+    ui._load_encounter(TIGER, restart=False)
+    assert ui.phase == "INITIATIVE"
+    assert [c["name"] for c in ui.characters] == ["Edmund", "Tiger"]  # not Clover
+    assert ui.log_file == scenario_log_path(tmp_path / "CombatLogs", "tiger_den")
+    assert ui._window.windowTitle() == "DnD Combat Engine — Tiger Den"
+    assert set(ui._initiative_inputs) == {id(c) for c in ui.characters}
+
+    ui._load_encounter(PIRATES, restart=False)  # the whole party
+    assert [c["name"] for c in ui.characters] == [*_names(), "Pirate", "Pirate"]
+
+
+def test_continuing_a_fight_where_it_stopped(tmp_path):
+    ui = _in_fight(tmp_path)
+    edmund, tiger = ui.characters
+    _hit(ui, edmund, tiger, 7)
+    ui._advance_turn()
+    ui._advance_turn()  # round 2
+
+    ui = _ui(tmp_path, scenario=TIGER)
+    assert ui._encounter_log_to_open is not None
+    ui._open_encounter_log(ui._encounter_log_to_open, restart=False)
+    assert ui.phase == "COMBAT" and ui.round_number == 2
+    assert _player(ui, "Tiger")["hp"] == 23
+
+
+def test_the_startup_question_is_only_asked_for_a_fight_in_progress(tmp_path):
+    ui = _ui(tmp_path, scenario=TIGER)
+    path = scenario_log_path(tmp_path / "CombatLogs", "tiger_den")
+    assert ui._ask_continue_or_restart(path, "Tiger Den") == CONTINUE
+
+
+@pytest.mark.parametrize(
+    "button, expected",
+    [("Continue Encounter", CONTINUE), ("Restart Encounter", RESTART), (None, None)],
+)
+def test_asks_when_a_fight_is_in_progress(tmp_path, monkeypatch, button, expected):
+    ui = _ui(tmp_path)
+    path = tmp_path / "CombatLogs" / "tiger_den.json"
+    _in_progress_log(path)
+    shown = []
+
+    def fake_exec(box):
+        shown.append([b.text() for b in box.buttons()])
+        clicked = next((b for b in box.buttons() if b.text() == button), None)
+        monkeypatch.setattr(box, "clickedButton", lambda: clicked)
+        return 0
+
+    monkeypatch.setattr(QMessageBox, "exec", fake_exec)
+    assert ui._ask_continue_or_restart(path, "Tiger Den") == expected
+    assert "Continue Encounter" in shown[0] and "Restart Encounter" in shown[0]
+
+
+def test_restart_brings_the_prepared_encounter_back_and_undoes_the_fight(tmp_path):
+    ui = _in_fight(tmp_path)
+    edmund, tiger = ui.characters
+    full_hp = edmund["hp"]
+    _hit(ui, tiger, edmund, 7)
+    assert [s["scenario"] for s in _journal(tmp_path)] == ["tiger_den"]
+
+    ui._load_encounter(TIGER, restart=True)
+    assert ui.phase == "INITIATIVE"
+    assert _player(ui, "Edmund")["hp"] == full_hp
+    assert _player(ui, "Tiger")["hp"] == 30
+    assert _journal(tmp_path) == []
+    (backup,) = (tmp_path / "CombatLogs").glob("tiger_den_restarted_*.json")
+    assert "takes 7" in json.loads(backup.read_text())["round_1"][0]["text"]
+
+
+def test_the_player_log_says_where_the_party_has_been(tmp_path):
+    ui = _in_fight(tmp_path)
+    edmund, tiger = ui.characters
+    _hit(ui, tiger, edmund, 5)
     (entry,) = _journal(tmp_path)
     assert entry == {
         "type": "encounter",
@@ -313,266 +532,80 @@ def test_the_player_log_says_where_the_party_has_been(tmp_path):
         "log": "../CombatLogs/tiger_den.json",
         "started_at": entry["started_at"],
     }
-    # Every event is in the encounter log, players' with what changed.
-    events = json.loads(ui.log_file.read_text())["round_1"]
-    assert len(events) == 3
-    assert events[1]["character"] == player["name"]
-    assert events[1]["action"] == "damage"
-    assert events[1]["value"]["hp_delta"] == -5
-
-
-def test_nothing_is_written_for_an_encounter_where_nothing_happened(tmp_path):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    ui._load_encounter(PIRATES, restart=True)
-    assert _journal(tmp_path) == []
+    # Every detail is in the encounter log.
+    assert ui.log_file is not None
+    (event,) = json.loads(ui.log_file.read_text())["round_1"]
+    assert (event["character"], event["action"], event["value"]["hp_delta"]) == (
+        "Edmund",
+        "damage",
+        -5,
+    )
 
 
 def test_the_party_comes_back_as_they_left(tmp_path):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    player, tiger = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, tiger, player, 5)
-
-    # The next run continues the fight: the party is replayed from its log,
-    # and the fight keeps its one entry.
-    ui = _tracked_ui(tmp_path, [Tiger()], restart=False)
-    player, tiger = ui.characters
-    assert player["hp"] == full_hp - 5
-    _hit(ui, tiger, player, 2)
-    assert len(_journal(tmp_path)) == 1
-
-    # And an adventure after it starts from there too.
-    qapp()
-    adventure = CombatAppQt(
-        [],
-        [_player()],
-        combat_log_dir=tmp_path / "CombatLogs",
-        player_log_path=str(tmp_path / "PlayerLogs" / "main_party.json"),
-    )
-    assert adventure.characters[0]["hp"] == full_hp - 7
-    assert adventure.log_file.name.startswith("adventure_")
+    ui = _in_fight(tmp_path)
+    edmund, tiger = ui.characters
+    full_hp = edmund["hp"]
+    _hit(ui, tiger, edmund, 5)
+    assert _player(_ui(tmp_path), "Edmund")["hp"] == full_hp - 5
 
 
-def test_a_long_rest_restores_the_party(tmp_path):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    player, tiger = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, tiger, player, 5)
-    apply_long_rest(str(ui.player_log_file))
-
-    ui = _tracked_ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    player, pirate = ui.characters
-    assert player["hp"] == full_hp
-    _hit(ui, pirate, player, 3)
-    assert [s["type"] for s in _journal(tmp_path)] == [
-        "encounter",
-        "long_rest",
-        "encounter",
-    ]
-    # The statistics still count the fight before the rest.
-    stats = ui._compute_player_log_stats()
-    assert stats[player["name"]]["damage_taken"] == 8
-
-
-def test_empty_entries_are_dropped_when_the_player_log_loads(tmp_path):
-    log = tmp_path / "PlayerLogs" / "main_party.json"
-    log.parent.mkdir(parents=True)
-    (tmp_path / "CombatLogs").mkdir()
-    (tmp_path / "CombatLogs" / "empty.json").write_text(json.dumps(EMPTY_LOG))
-    kept = [
-        {"type": "encounter", "round_1": [{"text": "x"}]},
-        {"type": "adventure", "combatants": []},  # old snapshot format
-        {"type": "encounter", "log": "../CombatLogs/elsewhere.json"},  # not here
-        {"type": "long_rest"},
-    ]
-    dropped = [
-        {"type": "encounter"},
-        {"type": "encounter", "log": "../CombatLogs/empty.json"},
-    ]
-    log.write_text(json.dumps({"sessions": kept[:2] + dropped + kept[2:]}))
-    ui = _tracked_ui(tmp_path)
-    assert ui.player_log_data["sessions"] == kept
-
-
-def test_restart_puts_the_party_back_as_before_the_fight(tmp_path):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    player, tiger = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, tiger, player, 7)
-    assert player["hp"] == full_hp - 7
-
-    ui._load_encounter(TIGER, restart=True)
-    assert player is ui.characters[0]
-    assert player["hp"] == full_hp
-    assert _journal(tmp_path) == []
-    (backup,) = (tmp_path / "CombatLogs").glob("tiger_den_restarted_*.json")
-    backup_data = json.loads(backup.read_text())
-    assert "takes 7" in backup_data["round_1"][0]["text"]
-    assert [s["scenario"] for s in backup_data[UNDONE_SESSIONS_KEY]] == ["tiger_den"]
-
-
-def test_restart_keeps_what_happened_to_the_party_elsewhere(tmp_path):
-    ui = _tracked_ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    player, pirate = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, pirate, player, 4)
-    ui._load_encounter(TIGER, restart=True)
-    _hit(ui, ui.characters[1], player, 6)
-    ui._load_encounter(TIGER, restart=True)
-    assert player["hp"] == full_hp - 4
-    assert [s["scenario"] for s in _journal(tmp_path)] == ["pirate_ambush"]
-
-
-# ---------------------------------------------------------------------------
-# End Encounter
-
-
-@pytest.fixture
-def say_yes(monkeypatch):
-    asked = []
-
-    def question(*args, **kwargs):
-        asked.append(args[1:3])
-        return QMessageBox.StandardButton.Yes
-
-    monkeypatch.setattr(QMessageBox, "question", question)
-    return asked
-
-
-def test_end_encounter_records_it_and_carries_on_in_an_adventure(tmp_path, say_yes):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    player, tiger = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, tiger, player, 5)
+def test_end_encounter_records_it_and_goes_back_to_the_party(tmp_path, say_yes):
+    ui = _in_fight(tmp_path)
+    edmund, tiger = ui.characters
+    _hit(ui, tiger, edmund, 5)
     fight_log = ui.log_file
+    assert fight_log is not None
 
     ui._end_encounter()
-    assert say_yes
-    # The fight is ended in its encounter log and in the party's journal.
     fight = json.loads(fight_log.read_text())
-    assert ENDED_KEY in fight
     assert fight["round_1"][-1]["text"] == "--- Tiger Den ended ---"
     (entry,) = _journal(tmp_path)
     assert entry[ENDED_KEY] == fight[ENDED_KEY]
-    status = read_log_status(fight_log)
-    assert status is not None and status.ended
-    assert status.describe().startswith("Ended in round 1, 1 of 1 standing")
+    assert ui.phase == "PARTY" and ui.log_file is None
+    assert [c["name"] for c in ui.characters] == _names()
+    assert _player(ui, "Edmund")["hp"] == edmund["hp"]
 
-    # The party carries on, as they are, in an adventure.
-    assert ui.characters == [player] and player["hp"] == full_hp - 5
-    assert ui._scenario_name is None and ui.phase == "INITIATIVE"
-    assert ui.log_file.name.startswith("adventure_")
-    assert not ui._end_encounter_btn.isEnabled()
-    ui._select_character(player)
-    ui._add_action_use("Action")
-    assert [s["type"] for s in _journal(tmp_path)] == ["encounter", "adventure"]
-
-
-def test_continuing_an_ended_encounter_reopens_it(tmp_path, say_yes):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    player, tiger = ui.characters
-    _hit(ui, tiger, player, 5)
-    ui._end_encounter()
-
+    # Continuing it later reopens the fight.
     ui._load_encounter(TIGER, restart=False)
     assert ui.phase == "COMBAT"
-    assert ENDED_KEY not in json.loads(ui.log_file.read_text())
+    assert ENDED_KEY not in json.loads(fight_log.read_text())
     assert ENDED_KEY not in _journal(tmp_path)[0]
-    assert ui._end_encounter_btn.isEnabled()
-
-
-def test_ending_an_encounter_where_nothing_happened_records_nothing(tmp_path, say_yes):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    ui._end_encounter()
-    assert _journal(tmp_path) == []
-    assert ENDED_KEY not in json.loads(
-        scenario_log_path(tmp_path / "CombatLogs", "tiger_den").read_text()
-    )
-
-
-def test_end_encounter_can_be_cancelled(tmp_path, monkeypatch):
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    monkeypatch.setattr(
-        QMessageBox, "question", lambda *a, **k: QMessageBox.StandardButton.No
-    )
-    ui._end_encounter()
-    assert ui._scenario_name == "tiger_den" and len(ui.characters) == 2
-
-
-# ---------------------------------------------------------------------------
-# Rests
-
-
-def _adventure_ui(tmp_path) -> CombatAppQt:
-    """One run of an adventure session (no scenario) for the tracked player."""
-    qapp()
-    ui = CombatAppQt(
-        [],
-        [_player()],
-        combat_log_dir=tmp_path / "CombatLogs",
-        player_log_path=str(tmp_path / "PlayerLogs" / "main_party.json"),
-        scenarios=[PIRATES, TIGER],
-    )
-    ui._build_window()
-    return ui
-
-
-def _rest_buttons(ui) -> tuple[bool, bool]:
-    return ui._short_rest_btn.isEnabled(), ui._long_rest_btn.isEnabled()
 
 
 def test_rests_only_between_fights(tmp_path):
-    assert _rest_buttons(_adventure_ui(tmp_path)) == (True, True)
-    assert _rest_buttons(_ui(tmp_path)) == (False, False)  # no tracked party
-    ui = _tracked_ui(tmp_path, [Tiger()])
-    assert ui.phase == "COMBAT"
-    assert _rest_buttons(ui) == (False, False)
-    ui._load_encounter(PIRATES, restart=True)  # loaded, not started
-    assert _rest_buttons(ui) == (True, True)
+    def buttons(ui):
+        return ui._short_rest_btn.isEnabled(), ui._long_rest_btn.isEnabled()
 
-
-def test_an_adventure_session_leaves_no_empty_log(tmp_path):
-    _adventure_ui(tmp_path)
-    assert not list((tmp_path / "CombatLogs").glob("*.json"))
-
-
-def test_long_rest_in_an_adventure(tmp_path, say_yes):
-    ui = _adventure_ui(tmp_path)
-    (player,) = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, player, player, 5)
-    adventure_log = ui.log_file
-
-    ui._long_rest()
-    assert player["hp"] == full_hp
-    # What happens next goes in a new log, after the rest.
-    assert ui.log_file != adventure_log
-    _hit(ui, player, player, 2)
-    assert [s["type"] for s in _journal(tmp_path)] == [
-        "adventure",
-        "long_rest",
-        "adventure",
-    ]
-    assert _adventure_ui(tmp_path).characters[0]["hp"] == full_hp - 2
+    ui = _ui(tmp_path)
+    assert buttons(ui) == (True, True)
+    ui._load_encounter(TIGER, restart=False)  # loaded, not started
+    assert buttons(ui) == (True, True)
+    _start(ui)
+    assert buttons(ui) == (False, False)
+    assert buttons(_ui(tmp_path, player_log=False)) == (False, False)
 
 
 def test_long_rest_before_starting_an_encounter(tmp_path, say_yes):
-    ui = _tracked_ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    player, pirate = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, pirate, player, 6)
+    ui = _in_fight(tmp_path, PIRATES)
+    edmund = _player(ui, "Edmund")
+    full_hp = edmund["hp"]
+    _hit(ui, _player(ui, "Pirate"), edmund, 6)
 
-    ui._load_encounter(TIGER, restart=True)
+    ui._load_encounter(TIGER, restart=False)
     ui._long_rest()
-    assert player["hp"] == full_hp
-    _hit(ui, ui.characters[1], player, 3)
+    assert _player(ui, "Edmund")["hp"] == full_hp
+    _start(ui)
+    _hit(ui, _player(ui, "Tiger"), _player(ui, "Edmund"), 3)
     assert [s.get("scenario") or s["type"] for s in _journal(tmp_path)] == [
         "pirate_ambush",
         "long_rest",
         "tiger_den",
     ]
-    ui = _tracked_ui(tmp_path, [Tiger()], restart=False)
-    assert ui.characters[0]["hp"] == full_hp - 3
+    assert _player(_ui(tmp_path), "Edmund")["hp"] == full_hp - 3
+    # The statistics still count the fight before the rest.
+    stats = _ui(tmp_path)._compute_player_log_stats()
+    assert stats["Edmund"]["damage_taken"] == 9
 
 
 def _heal_in_short_rest(monkeypatch, amount: int):
@@ -587,60 +620,67 @@ def _heal_in_short_rest(monkeypatch, amount: int):
     monkeypatch.setattr(QDialog, "exec", exec_)
 
 
-def test_short_rest_in_an_adventure(tmp_path, monkeypatch):
-    ui = _adventure_ui(tmp_path)
-    (player,) = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, player, player, 8)
+def test_a_short_rest_is_one_line_in_the_player_log(tmp_path, monkeypatch, say_yes):
+    ui = _in_fight(tmp_path)
+    edmund = _player(ui, "Edmund")
+    full_hp = edmund["hp"]
+    _hit(ui, _player(ui, "Tiger"), edmund, 8)
+    ui._end_encounter()
     _heal_in_short_rest(monkeypatch, 3)
 
     ui._short_rest()
-    assert player["hp"] == full_hp - 5
-    journal = _journal(tmp_path)
-    assert [s["type"] for s in journal] == ["adventure", "short_rest"]
-    assert journal[1]["log"].startswith("../CombatLogs/short_rest_")
-    assert ui.log_file.name.startswith("adventure_")
-    assert _adventure_ui(tmp_path).characters[0]["hp"] == full_hp - 5
+    assert _player(ui, "Edmund")["hp"] == full_hp - 5
+    rest = _journal(tmp_path)[-1]
+    assert rest["type"] == "short_rest" and "log" not in rest
+    assert any("Edmund heals 3 HP" in e["text"] for e in rest["events"])
+    # No log of its own, and the next run starts from there.
+    assert sorted(p.name for p in (tmp_path / "CombatLogs").iterdir()) == [
+        "pirate_ambush.json",
+        "tiger_den.json",
+    ]
+    assert _player(_ui(tmp_path), "Edmund")["hp"] == full_hp - 5
 
 
-def test_short_rest_before_starting_an_encounter(tmp_path, monkeypatch):
-    ui = _tracked_ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    player, pirate = ui.characters
-    full_hp = player["hp"]
-    _hit(ui, pirate, player, 8)
-    ui._load_encounter(TIGER, restart=True)
-    tiger_log = ui.log_file
-    _heal_in_short_rest(monkeypatch, 4)
+def test_a_long_rest_from_the_command_line(tmp_path):
+    ui = _in_fight(tmp_path)
+    edmund = _player(ui, "Edmund")
+    full_hp = edmund["hp"]
+    _hit(ui, _player(ui, "Tiger"), edmund, 4)
+    apply_long_rest(str(tmp_path / "PlayerLogs" / "main_party.json"))
+    assert _player(_ui(tmp_path), "Edmund")["hp"] == full_hp
+    assert [s["type"] for s in _journal(tmp_path)] == ["encounter", "long_rest"]
 
-    ui._short_rest()
-    assert player["hp"] == full_hp - 4
-    assert ui.log_file == tiger_log and ui._scenario_name == "tiger_den"
-    assert [s["type"] for s in _journal(tmp_path)] == ["encounter", "short_rest"]
+
+def test_the_load_encounter_dialog_lists_the_campaigns_encounters(
+    tmp_path, monkeypatch
+):
+    ui = _ui(tmp_path)
+    scenario_log_path(tmp_path / "CombatLogs", "pirate_ambush").unlink()
+    _in_progress_log(tmp_path / "CombatLogs" / "tiger_den.json")
+    dlg = open_dialog(monkeypatch, ui._show_load_encounter_dialog)
+    (scenario_list,) = dlg.findChildren(QListWidget)
+    items = [scenario_list.item(i).text() for i in range(scenario_list.count())]  # type: ignore[union-attr]
+    assert items[0] == "Pirate Ambush\n    Not prepared"
+    assert items[1].startswith("Tiger Den\n    Round 4, 1 of 2 standing")
+
+    buttons = {b.text(): b for b in dlg.findChildren(QPushButton)}
+    assert not buttons["Start Encounter"].isEnabled()
+    assert not buttons["Restart Encounter"].isEnabled()
+    details = [label.text() for label in dlg.findChildren(QLabel)][-1]
+    assert "Players: the whole party" in details and "isn't prepared" in details
+    scenario_list.setCurrentRow(1)
+    assert buttons["Start Encounter"].text() == "Continue Encounter"
+    assert buttons["Start Encounter"].isEnabled()
+    assert buttons["Restart Encounter"].isEnabled()
 
 
 def test_journal_helpers():
-    sessions = [{"type": "encounter"}, {"type": "long_rest"}, {"type": "adventure"}]
-    assert PlayerLog.since_long_rest(sessions) == [{"type": "adventure"}]
-    assert PlayerLog.since_long_rest(sessions[:1]) == sessions[:1]
+    sessions = [{"type": "encounter"}, {"type": "long_rest"}, {"type": "short_rest"}]
+    assert PlayerLog.since_long_rest(sessions) == [{"type": "short_rest"}]
+    assert PlayerLog.session_rounds({"type": "short_rest", "events": [1]}, ".") == {
+        "round_1": [1]
+    }
     assert (
         PlayerLog.session_label({"type": "encounter", "scenario": "wrath_of_durmor"})
         == "Encounter: Wrath of Durmor"
     )
-    assert PlayerLog.session_label({"type": "short_rest"}) == "Short rest"
-
-
-def test_load_encounter_dialog_shows_each_scenarios_progress(tmp_path, monkeypatch):
-    _in_progress_log(scenario_log_path(tmp_path, "tiger_den"))
-    ui = _ui(tmp_path, [Pirate()], scenario_name="pirate_ambush")
-    dlg = open_dialog(monkeypatch, ui._show_load_encounter_dialog)
-    (scenario_list,) = dlg.findChildren(QListWidget)
-    items = [scenario_list.item(i).text() for i in range(scenario_list.count())]  # type: ignore[union-attr]
-    assert items[0] == "Pirate Ambush  (current)\n    Not started"
-    assert items[1].startswith("Tiger Den\n    Round 4, 1 of 2 standing")
-
-    buttons = {b.text(): b for b in dlg.findChildren(QPushButton)}
-    assert "Start Encounter" in buttons
-    assert not buttons["Continue Encounter"].isEnabled()
-    scenario_list.setCurrentRow(1)
-    assert buttons["Continue Encounter"].isEnabled()
-    assert buttons["Start Encounter"].text() == "Restart Encounter"

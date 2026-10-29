@@ -1,9 +1,9 @@
-"""Encounter-loading mixin for CombatAppQt: open a scenario's persistent
-encounter log, continuing the fight in it or restarting it, either at launch
-(--scenario / --log) or from the Load Encounter dialog."""
+"""Encounter mixin for CombatAppQt: play the campaign's encounters from their
+prepared logs (Combat/EncounterLogs.py), at launch (--scenario) or from the
+Load Encounter dialog, continuing a fight in progress or restarting it; end
+one; and the party view shown between encounters, where nothing is logged."""
 
 import json
-from collections import Counter
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
@@ -16,16 +16,19 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QVBoxLayout,
+    QWidget,
 )
 
 import Combat.PlayerLog as PlayerLog
+from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import (
     ENDED_KEY,
+    is_prepared,
+    prepared_log,
     read_log_status,
     restart_log,
     scenario_log_path,
 )
-from Combat.PlayerLog import scenario_title
 from Combat.Scenario import CombatScenario
 
 from .state import CombatWindowState
@@ -33,28 +36,29 @@ from .styles import QSS
 
 CONTINUE = "continue"
 RESTART = "restart"
-
-
-def _monster_summary(combatants: list) -> str:
-    counts = Counter(c.combatant_type for c in combatants)
-    return ", ".join(
-        f"{count}× {name}" if count > 1 else name for name, count in counts.items()
-    )
+PREPARE_HINT = (
+    "Its log isn't prepared yet: run `python -m Combat.Tools.prepare_encounters` "
+    "after adding it to the campaign's encounters.json."
+)
 
 
 class EncountersMixin(CombatWindowState):
-    """Mixin for loading, continuing and restarting encounters."""
+    """Mixin for loading, continuing, restarting and ending encounters."""
 
-    def _ask_continue_or_restart(
-        self, path: Path, title: str, can_restart: bool = True
-    ) -> str | None:
+    def _scenario(self, name: str | None) -> CombatScenario | None:
+        return next((s for s in self._scenarios if s.name == name), None)
+
+    def _scenario_title(self, name: str) -> str:
+        scenario = self._scenario(name)
+        return scenario.display_title if scenario else PlayerLog.scenario_title(name)
+
+    def _ask_continue_or_restart(self, path: Path, title: str) -> str | None:
         """CONTINUE or RESTART for the encounter log at `path`, asking the GM
-        only when it holds a fight in progress; None if they cancelled. A log
-        with nothing to continue restarts, unless there are no fresh monsters
-        to restart with (`can_restart` False)."""
+        only when it holds a fight in progress (or one that was ended); None
+        if they cancelled. A prepared log nothing happened in just opens."""
         status = read_log_status(path)
         if status is None:
-            return RESTART if can_restart else CONTINUE
+            return CONTINUE
         box = QMessageBox(self._window)
         box.setIcon(QMessageBox.Icon.Question)
         if status.ended:
@@ -63,21 +67,17 @@ class EncountersMixin(CombatWindowState):
         else:
             box.setWindowTitle("Encounter in Progress")
             box.setText(f"{title} has a fight in progress.")
-        info = status.describe()
-        if can_restart:
-            info += (
-                "\n\nRestarting undoes the whole fight: the monsters come back "
-                "fresh and the party is as they were before it. The old logs "
-                "are kept as a backup next to it."
-            )
-        box.setInformativeText(info)
+        box.setInformativeText(
+            status.describe()
+            + "\n\nRestarting undoes the whole fight: the monsters come back "
+            "fresh and the party is as they were before it. The old log is "
+            "kept as a backup next to it."
+        )
         continue_btn = box.addButton(
             "Continue Encounter", QMessageBox.ButtonRole.AcceptRole
         )
-        restart_btn = (
-            box.addButton("Restart Encounter", QMessageBox.ButtonRole.DestructiveRole)
-            if can_restart
-            else None
+        restart_btn = box.addButton(
+            "Restart Encounter", QMessageBox.ButtonRole.DestructiveRole
         )
         box.addButton(QMessageBox.StandardButton.Cancel)
         box.setDefaultButton(continue_btn)
@@ -85,66 +85,102 @@ class EncountersMixin(CombatWindowState):
         clicked = box.clickedButton()
         if clicked is continue_btn:
             return CONTINUE
-        if restart_btn is not None and clicked is restart_btn:
+        if clicked is restart_btn:
             return RESTART
         return None
 
+    def _open_scenario_at_start(self, path: Path) -> bool:
+        """Open the --scenario encounter's log when the window starts; False
+        if the GM cancelled."""
+        assert self._scenario_name is not None
+        choice = self._ask_continue_or_restart(
+            path, self._scenario_title(self._scenario_name)
+        )
+        if choice is None:
+            return False
+        self._open_encounter_log(path, restart=choice == RESTART)
+        return True
+
+    def _encounter_players(self, scenario: CombatScenario, path: Path) -> list[str]:
+        """Who takes part in `scenario`: from its config when the party is
+        known, else as its log says."""
+        if self._party_sheets:
+            try:
+                return resolve_players(scenario.players, list(self._party_sheets))
+            except KeyError:
+                pass
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8")).get("players", [])
+        return []
+
     def _open_encounter_log(self, path: Path, restart: bool):
-        """Log to `path` from now on: resume the fight saved in it, or empty it
-        first (keeping a backup) so the monsters already loaded start fresh.
-        A restart also takes that fight out of the player log, and the party
-        goes back to how they were before it. Continuing a fight the GM ended
-        reopens it."""
-        if restart or not path.exists():
+        """Play the current scenario's prepared log at `path`: continue the
+        fight saved in it, or (`restart`) put it back to its prepared state
+        first, keeping a backup. A restart also takes that fight out of the
+        player log, and the party goes back to how they were before it.
+        Continuing a fight the GM ended reopens it. The party in the window
+        becomes the players the log lists."""
+        scenario = self._scenario(self._scenario_name)
+        if restart and scenario is not None:
+            fresh = prepared_log(scenario, self._encounter_players(scenario, path))
             session_count = len(self.player_log_data["sessions"])
-            backup = restart_log(path, self.player_log_data, self.player_log_file)
+            backup = restart_log(
+                path,
+                fresh,
+                self.player_log_data if self.player_log_file else None,
+                self.player_log_file,
+            )
             if backup is not None:
                 print(f"Restarted {path.name}; the old log is backed up to: {backup}")
             if len(self.player_log_data["sessions"]) != session_count:
                 self._write_player_log()
                 self._rebuild_players_from_log()
+        data = json.loads(path.read_text(encoding="utf-8"))
+        self._set_party(data.get("players"))
         self._load_log_from_path(str(path))
-        if ENDED_KEY in json.loads(path.read_text()):
+        if ENDED_KEY in data:
             self._mark_encounter_ended(None)
         self._refresh_encounter_labels()
 
     def _refresh_encounter_labels(self):
         title = "DnD Combat Engine"
         if self._scenario_name:
-            title += f" — {scenario_title(self._scenario_name)}"
+            title += f" — {self._scenario_title(self._scenario_name)}"
         self._window.setWindowTitle(title)
         self._log_status_label.setText(self._log_status_text())
         self._end_encounter_btn.setEnabled(self._scenario_name is not None)
+        self._add_combatant_btn.setEnabled(self.phase != "PARTY")
         self._refresh_rest_buttons()
 
-    def _reset_encounter_state(self):
-        """Back to the initiative screen for whoever is in self.characters,
-        with nothing selected, round 1 and nothing to undo."""
+    def _clear_encounter_state(self):
+        """Round 1, nothing selected and nothing to undo."""
         self.round_number = 1
         self.round_label.setText("Round 1")
         self.history = []
-        self.phase = "INITIATIVE"
         self.initiative_order = []
         self.current_turn_idx = 0
         self.selected_character = None
         self.target_characters = []
         self.selected_label.setText("Source: None")
         self._update_target_label()
-        self._switch_to_initiative()
 
     def _load_encounter(self, scenario: CombatScenario, restart: bool):
-        """Swap the monsters in the window for `scenario`'s, keeping the party
-        as it is, and continue or restart that scenario's encounter log. The
-        encounter being left needs no saving: its log is written on every event."""
+        """Swap the encounter in the window for `scenario`, from its prepared
+        log: continue it, or restart it. The encounter being left needs no
+        saving: its log is written on every event."""
+        path = scenario_log_path(self._combat_log_dir, scenario.name)
+        if not is_prepared(path):
+            QMessageBox.warning(
+                self._window,
+                "Load Encounter",
+                f"{scenario.display_title}: {PREPARE_HINT}",
+            )
+            return
         self.characters = [c for c in self.characters if c.get("_is_player")]
-        for combatant in scenario.build_allies() + scenario.build_combatants():
-            self._add_basic_combatant(combatant)
         self.combatants_per_column = scenario.combatants_per_column
         self._scenario_name = scenario.name
-        self._reset_encounter_state()
-        self._open_encounter_log(
-            scenario_log_path(self._combat_log_dir, scenario.name), restart
-        )
+        self._clear_encounter_state()
+        self._open_encounter_log(path, restart)
 
     def _mark_encounter_ended(self, ended_at: str | None):
         """Record in the encounter log and its player-log entry that the fight
@@ -166,43 +202,107 @@ class EncountersMixin(CombatWindowState):
 
     def _end_encounter(self):
         """End the current fight: it's recorded as ended (in its encounter log
-        and the player log), the monsters leave the window, and the party
-        carries on as they are in a new adventure session."""
+        and the player log), and the window goes back to the party between
+        encounters."""
         if self._scenario_name is None:
             return
-        title = scenario_title(self._scenario_name)
+        title = self._scenario_title(self._scenario_name)
         answer = QMessageBox.question(
             self._window,
             "End Encounter",
-            f"End {title}?\n\nThe fight is saved as ended and the party carries "
-            "on in an adventure session. Load Encounter can reopen it later.",
+            f"End {title}?\n\nThe fight is saved as ended and the window goes "
+            "back to the party between encounters. Load Encounter can reopen it.",
         )
         if answer != QMessageBox.StandardButton.Yes:
             return
         if read_log_status(self.log_file) is not None:
             self._log_event(f"--- {title} ended ---", note_turn=False)
             self._mark_encounter_ended(PlayerLog.now())
+        self._leave_encounter()
 
+    def _leave_encounter(self):
+        """Back to the whole party between encounters: no monsters, and
+        nothing is logged until an encounter is loaded."""
         self.characters = [c for c in self.characters if c.get("_is_player")]
         self._scenario_name = None
-        self._reset_encounter_state()
-        self._start_unscripted_log()
+        self._clear_encounter_state()
+        self._use_log_file(None)
+        self._set_party(None)
+        self.phase = "PARTY"
+        self._show_party_view()
         self._refresh_encounter_labels()
 
+    # ── The party view, between encounters ───────────────────────────────
+
+    def _show_party_view(self):
+        old = self._scroll_area.takeWidget()
+        if old is not None and old is not self._cards_container:
+            old.deleteLater()
+        self._cards_container.hide()
+        self._init_tracker_container.hide()
+        self._turn_divider.hide()
+        self._next_turn_btn.hide()
+        self._initiative_widget = None
+        self._scroll_area.setWidget(self._build_party_view())
+
+    def _build_party_view(self) -> QWidget:
+        """The party as they are now, and what can be done between encounters."""
+        container = QWidget()
+        container.setObjectName("initiativeContainer")
+        outer = QVBoxLayout(container)
+        outer.setContentsMargins(12, 12, 12, 12)
+        outer.setSpacing(8)
+
+        header = QLabel("Between encounters")
+        header.setStyleSheet("color: #c9a84c; font-size: 16px; font-weight: bold;")
+        outer.addWidget(header)
+        hint = QLabel(
+            "Load an encounter (Ctrl+O) to play a fight, or rest the party. "
+            "Nothing is logged between encounters."
+        )
+        hint.setWordWrap(True)
+        hint.setStyleSheet("color: #a0a0b0;")
+        outer.addWidget(hint)
+        outer.addWidget(self._make_divider())
+
+        players = [c for c in self.characters if c.get("_is_player")]
+        if not players:
+            none = QLabel("No tracked party (run with --player-log to track one).")
+            none.setStyleSheet("color: #a0a0b0;")
+            outer.addWidget(none)
+        for char in players:
+            line = f"{char['name']}:  {char['hp']}/{char.get('max_hp', char['hp'])} HP"
+            if char.get("temp_hp"):
+                line += f"  (+{char['temp_hp']} temp)"
+            slots = char.get("spell_slots") or {}
+            if slots:
+                line += "  ·  Slots " + " ".join(
+                    f"L{level}:{left}" for level, left in sorted(slots.items())
+                )
+            if char.get("conditions"):
+                line += "  ·  " + ", ".join(char["conditions"])
+            label = QLabel(line)
+            label.setStyleSheet("font-size: 13px;")
+            outer.addWidget(label)
+        outer.addStretch()
+        return container
+
+    # ── Load Encounter ───────────────────────────────────────────────────
+
     def _show_load_encounter_dialog(self):
-        """Pick one of the campaign's scenarios, see how far its fight got,
-        and continue or (re)start it."""
+        """Pick one of the campaign's encounters, see what it is and how far
+        its fight got, and start, continue or restart it."""
         if not self._scenarios:
             QMessageBox.information(
                 self._window,
                 "Load Encounter",
-                "This campaign has no scenarios to load.",
+                "This campaign's encounters.json lists no encounters.",
             )
             return
 
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Load Encounter")
-        dlg.setMinimumSize(560, 460)
+        dlg.setMinimumSize(560, 520)
         dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
@@ -210,10 +310,10 @@ class EncountersMixin(CombatWindowState):
         layout.setSpacing(10)
 
         info = QLabel(
-            "Pick a scenario. A fight in progress can be continued where it "
-            "stopped, or restarted as if it never happened: fresh monsters, and "
-            "the party as they were before it (the old logs are kept as a "
-            "backup)."
+            "The campaign's encounters (its encounters.json). A fight in "
+            "progress can be continued where it stopped, or restarted as if it "
+            "never happened: fresh monsters, and the party as they were before "
+            "it (the old log is kept as a backup)."
         )
         info.setWordWrap(True)
         info.setStyleSheet("color: #a0a0b0;")
@@ -225,16 +325,21 @@ class EncountersMixin(CombatWindowState):
             "QListWidget::item { padding: 6px 10px; }"
             "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
         )
+        prepared = {}
         statuses = {}
         for scenario in self._scenarios:
-            status = read_log_status(
-                scenario_log_path(self._combat_log_dir, scenario.name)
-            )
-            statuses[scenario.name] = status
-            heading = scenario_title(scenario.name)
+            path = scenario_log_path(self._combat_log_dir, scenario.name)
+            prepared[scenario.name] = is_prepared(path)
+            statuses[scenario.name] = read_log_status(path)
+            heading = scenario.display_title
             if scenario.name == self._scenario_name:
                 heading += "  (current)"
-            detail = status.describe() if status else "Not started"
+            if not prepared[scenario.name]:
+                detail = "Not prepared"
+            elif statuses[scenario.name] is None:
+                detail = "Ready"
+            else:
+                detail = statuses[scenario.name].describe()
             item = QListWidgetItem(f"{heading}\n    {detail}")
             item.setData(Qt.ItemDataRole.UserRole, scenario)
             scenario_list.addItem(item)
@@ -249,9 +354,9 @@ class EncountersMixin(CombatWindowState):
         cancel_btn.clicked.connect(dlg.reject)
         btn_row.addWidget(cancel_btn)
         btn_row.addStretch()
-        restart_btn = QPushButton("Start Encounter")
+        restart_btn = QPushButton("Restart Encounter")
         btn_row.addWidget(restart_btn)
-        continue_btn = QPushButton("Continue Encounter")
+        continue_btn = QPushButton("Start Encounter")
         continue_btn.setDefault(True)
         btn_row.addWidget(continue_btn)
         layout.addLayout(btn_row)
@@ -267,26 +372,34 @@ class EncountersMixin(CombatWindowState):
                 restart_btn.setEnabled(False)
                 continue_btn.setEnabled(False)
                 return
-            in_progress = statuses[scenario.name] is not None
-            text = f"Monsters: {_monster_summary(scenario.build_combatants())}"
-            allies = scenario.build_allies()
-            if allies:
-                text += f"\nAllies: {_monster_summary(allies)}"
-            details.setText(text)
-            restart_btn.setEnabled(True)
-            restart_btn.setText(
-                "Restart Encounter" if in_progress else "Start Encounter"
+            lines = []
+            if scenario.description:
+                lines.append(scenario.description)
+            if scenario.difficulty:
+                lines.append(f"Difficulty: {scenario.difficulty}")
+            players = (
+                ", ".join(scenario.players) if scenario.players else "the whole party"
             )
-            continue_btn.setEnabled(in_progress)
+            lines.append(f"Players: {players}")
+            lines.append(f"Monsters: {', '.join(scenario.monster_summary) or 'none'}")
+            if scenario.ally_summary:
+                lines.append(f"Allies: {', '.join(scenario.ally_summary)}")
+            if not prepared[scenario.name]:
+                lines.append(PREPARE_HINT)
+            details.setText("\n".join(lines))
+            in_progress = statuses[scenario.name] is not None
+            continue_btn.setEnabled(prepared[scenario.name])
+            continue_btn.setText(
+                "Continue Encounter" if in_progress else "Start Encounter"
+            )
+            restart_btn.setEnabled(in_progress)
 
         choice: list[str] = []
         restart_btn.clicked.connect(lambda: (choice.append(RESTART), dlg.accept()))
         continue_btn.clicked.connect(lambda: (choice.append(CONTINUE), dlg.accept()))
         scenario_list.currentItemChanged.connect(lambda *_: on_selection_changed())
         scenario_list.itemDoubleClicked.connect(
-            lambda _item: (
-                continue_btn if continue_btn.isEnabled() else restart_btn
-            ).click()
+            lambda _item: continue_btn.click() if continue_btn.isEnabled() else None
         )
 
         current = next(

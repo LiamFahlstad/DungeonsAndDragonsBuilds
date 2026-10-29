@@ -1,0 +1,117 @@
+{
+  "campaign": "curse_of_the_lich",
+  "title": "Curse of the Lich",
+  "description": "The tracked six-player campaign. Every encounter below is played from its log, CombatLogs/<id>.json, prepared with: python -m Combat.Tools.prepare_encounters",
+  "party": [
+    "Y2024_Artificer_Cartographer_ObmarStalskagg",
+    "Y2024_Paladin_Devotion_Edmund",
+    "Y2024_Bard_Valor_Clover",
+    "Y2024_Cleric_Light_GabrielGreybeard",
+    "Y2024_Rogue_ArcaneTrickster_ThumSchtock",
+    "Y2024_Monk_Elements_KiviJatti"
+  ],
+  "encounters": [
+    {
+      "id": "ashelm_church",
+      "title": "Ashelm Church",
+      "description": "The accursed ambush at the church: three groups of five Accursed and one group of three.",
+      "monsters": [
+        {"monster": "AccursedGroupOf5", "name": "(1) Accursed Group of 5"},
+        {"monster": "AccursedGroupOf5", "name": "(2) Accursed Group of 5"},
+        {"monster": "AccursedGroupOf5", "name": "(3) Accursed Group of 5"},
+        {"monster": "AccursedGroupOf3", "name": "Accursed Group of 3"}
+      ]
+    },
+    {
+      "id": "goblin_scouting_party",
+      "title": "Goblin Scouting Party",
+      "description": "A goblin scouting party, with Greypaw fighting alongside the party.",
+      "difficulty": "Balanced for three level 3 players (Edmund, Clover, Kivi).",
+      "players": ["Edmund", "Clover", "Kivi"],
+      "monsters": [
+        {"monster": "GoblinBoss", "name": "Goblin Boss", "count": 2},
+        {"monster": "GoblinWarrior", "name": "Goblin Warrior", "count": 4},
+        {"monster": "GoblinMinion", "name": "Goblin Minion", "count": 2}
+      ],
+      "allies": [{"monster": "GreypawCR1", "name": "Greypaw (Ally)"}],
+      "combatants_per_column": 5
+    },
+    {
+      "id": "goblin_warband_ambush",
+      "title": "Goblin Warband Ambush",
+      "description": "A goblin warband with hexers and worgs ambushes the party; Greypaw fights alongside them.",
+      "difficulty": "Moderate for the full party (6x level 4): 2500 XP, 2300 net of Greypaw.",
+      "monsters": [
+        {"monster": "GoblinHexer", "name": "Goblin Hexer", "count": 2},
+        {"monster": "GoblinBoss", "name": "Goblin Boss", "count": 3},
+        {"monster": "Worg", "name": "Worg", "count": 2},
+        {"monster": "GoblinWarrior", "name": "Goblin Warrior", "count": 6}
+      ],
+      "allies": [{"monster": "GreypawCR1", "name": "Greypaw (Ally)"}],
+      "combatants_per_column": 5
+    },
+    {
+      "id": "wrath_of_durmor",
+      "title": "Wrath of Durmor",
+      "description": "The Manifestation of Durmor and the Goblin King with their goblins; Greypaw fights alongside the party.",
+      "difficulty": "High for the full party (6x level 4): 3200 XP, 3000 net of Greypaw.",
+      "monsters": [
+        {"monster": "ManifestationOfDurmor", "name": "Manifestation of Durmor"},
+        {"monster": "GoblinKingCR3", "name": "Goblin King"},
+        {"monster": "GoblinHexer", "name": "Goblin Hexer"},
+        {"monster": "GoblinBoss", "name": "Goblin Boss", "count": 2},
+        {"monster": "GoblinWarrior", "name": "Goblin Warrior", "count": 6}
+      ],
+      "allies": [{"monster": "GreypawCR1", "name": "Greypaw (Ally)"}],
+      "combatants_per_column": 5
+    },
+    {
+      "id": "black_tongues_skirmish",
+      "title": "Black Tongues Skirmish",
+      "description": "Two Common Cultists with two Accursed.",
+      "monsters": [
+        {"monster": "CommonCultist", "name": "Common Cultist", "count": 2},
+        {"monster": "Accursed", "name": "Accursed", "count": 2}
+      ]
+    },
+    {
+      "id": "yellow_capes_patrol",
+      "title": "Yellow Capes Patrol",
+      "description": "Marshal Virel with two Yellow Cape Enforcers.",
+      "monsters": [
+        {"monster": "MarshalVirel", "name": "Marshal Virel"},
+        {"monster": "Combatants.Priest", "name": "Yellow Cape Enforcer", "count": 2}
+      ]
+    },
+    {
+      "id": "black_tongues_ritual",
+      "title": "Black Tongues Ritual",
+      "description": "The Priest of the Black Tongues with an Accursed Brute, an Accursed Warden and a group of five Accursed.",
+      "monsters": [
+        {"monster": "PriestOfTheBlackTongues", "name": "Priest of the Black Tongues"},
+        {"monster": "PhysicalAccursed", "name": "Accursed Brute"},
+        {"monster": "ArmoredAccursed", "name": "Accursed Warden"},
+        {"monster": "AccursedGroupOf5", "name": "Accursed Group"}
+      ]
+    },
+    {
+      "id": "yellow_capes_last_stand",
+      "title": "Yellow Capes' Last Stand",
+      "description": "Garron the Kindly and Ser Caldus, the Vow of Silence.",
+      "monsters": [
+        {"monster": "GarronTheKindly", "name": "Garron the Kindly"},
+        {"monster": "SerCaldusTheVowOfSilence", "name": "Ser Caldus - The Vow of Silence"}
+      ]
+    },
+    {
+      "id": "mouth_that_walks",
+      "title": "The Mouth That Walks",
+      "description": "The Mouth That Walks and the Cantor of the Black Choir, with two Accursed.",
+      "monsters": [
+        {"monster": "TheMouthThatWalks", "name": "The Mouth That Walks"},
+        {"monster": "CantorOfTheBlackChoir", "name": "Cantor of the Black Choir"},
+        {"monster": "Accursed", "name": "Accursed", "count": 2}
+      ]
+    }
+  ]
+}

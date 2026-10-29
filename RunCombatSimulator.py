@@ -3,7 +3,8 @@ import sys
 
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
-from Combat.EncounterLogs import scenario_log_path
+from Combat.EncounterConfig import resolve_players
+from Combat.EncounterLogs import is_prepared, scenario_log_path
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -11,35 +12,29 @@ if __name__ == "__main__":
         "--scenario",
         choices=sorted(Scenarios.SCENARIOS.keys()),
         default=None,
-        help="Combat scenario to run. Omit to run without an encounter "
-        "(e.g. an out-of-combat adventure session when combined with --player-log).",
-    )
-    parser.add_argument(
-        "--log",
-        default=None,
-        help="Path to a Combat/Campaigns/<Campaign>/CombatLogs/*.json encounter log to "
-        "use. Defaults to --scenario's own log, CombatLogs/<scenario>.json (created if "
-        "missing). When the log holds a fight in progress, the window asks whether to "
-        "continue it (HP/conditions/round where it left off) or restart it with fresh "
-        "monsters (the old log is kept as a backup).",
+        help="Encounter to play, an id from its campaign's encounters.json. Its log, "
+        "CombatLogs/<id>.json, must be prepared first (python -m "
+        "Combat.Tools.prepare_encounters). When it holds a fight in progress, the window "
+        "asks whether to continue it or restart it (the old log is kept as a backup). Omit "
+        "it with --player-log to open the party between encounters.",
     )
     parser.add_argument(
         "--campaign",
         choices=sorted(Scenarios.CAMPAIGNS.keys()),
         default=None,
-        help="Campaign to run: its 'Players' group is what --player-log tracks, and new "
-        "encounter logs are written to its CombatLogs folder. Defaults to --scenario's "
-        f"campaign, or '{Scenarios.DEFAULT_CAMPAIGN}' when no scenario is given.",
+        help="Campaign to run: its encounters.json gives the party --player-log tracks "
+        "and the encounters Load Encounter offers. Defaults to --scenario's campaign, or "
+        f"'{Scenarios.DEFAULT_CAMPAIGN}' when no scenario is given.",
     )
     parser.add_argument(
         "--player-log",
         default=None,
         help="Path to a persistent player log JSON file "
         "(e.g. Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json). "
-        "It is the party's journal: one line per encounter, adventure or rest, each pointing "
-        "to the encounter log with the details. The 'Players' combatant group is loaded and "
-        "brought to its current HP/conditions/slots by replaying those logs since the last "
-        "long rest.",
+        "It is the party's journal: one line per encounter or rest, each encounter pointing "
+        "to its log with the details. The campaign's party is loaded and brought to its "
+        "current HP/conditions/slots by replaying those logs since the last long rest. "
+        "Who of the party takes part in an encounter is in encounters.json.",
     )
     parser.add_argument(
         "--rest",
@@ -55,24 +50,10 @@ if __name__ == "__main__":
         "--difficulty",
         action="store_true",
         help="Print the D&D 2024 difficulty analysis for --scenario's encounter against the "
-        "party's levels, then exit without opening the application window. Requires character "
-        "levels: pass --player-log to source them from a tracked party, or use a scenario whose "
-        "build_character_sheets provides them.",
-    )
-    parser.add_argument(
-        "--absent",
-        nargs="+",
-        default=[],
-        metavar="NAME",
-        help="Leave these players out of the tracked party for this session (requires "
-        "--player-log). Matches case-insensitively on part of the character name, e.g. "
-        "--absent Gabriel. Their player-log history is kept and picked up again the next "
-        "time they're loaded.",
+        "levels of the players taking part (from encounters.json), then exit without "
+        "opening the application window.",
     )
     args = parser.parse_args()
-
-    if args.absent and not args.player_log:
-        parser.error("--absent requires --player-log")
 
     if args.rest and not args.player_log:
         parser.error("--rest requires --player-log")
@@ -106,40 +87,23 @@ if __name__ == "__main__":
     if args.scenario is None and not args.player_log:
         args.scenario = campaign.scenarios[0].name
 
-    if args.scenario and args.log is None:
-        args.log = str(scenario_log_path(campaign.combat_log_dir, args.scenario))
-
     scenario = Scenarios.SCENARIOS[args.scenario] if args.scenario else None
-    combatants = scenario.build_combatants() if scenario else []
-    allies = scenario.build_allies() if scenario else []
-    character_sheets = scenario.build_character_sheets() if scenario else []
-
-    if args.player_log:
-        players_group = campaign.players()
-        for absent in args.absent:
-            matches = [
-                cs
-                for cs in players_group
-                if absent.lower() in cs.character_name.lower()
-            ]
-            if not matches:
-                parser.error(f"--absent: no player name contains '{absent}'")
-            players_group = [cs for cs in players_group if cs not in matches]
-        player_names = {cs.character_name for cs in players_group}
-        character_sheets = [
-            cs for cs in character_sheets if cs.character_name not in player_names
-        ]
-        character_sheets = players_group + character_sheets
 
     if args.difficulty:
-        if not combatants:
+        if scenario is None or not (combatants := scenario.build_combatants()):
             parser.error(
                 "--difficulty requires --scenario to have monsters to evaluate"
             )
+        allies = scenario.build_allies()
+        party = campaign.players()
+        taking_part = resolve_players(
+            scenario.players, [cs.character_name for cs in party]
+        )
+        character_sheets = [cs for cs in party if cs.character_name in taking_part]
         if not character_sheets:
             parser.error(
-                "--difficulty requires character levels; pass --player-log to load a "
-                "tracked party, or use a scenario whose build_character_sheets provides them"
+                f"--difficulty requires character levels, and {campaign.name}'s "
+                "encounters.json has no party taking part in this encounter"
             )
 
         from Combat.EncounterDifficulty import (
@@ -179,12 +143,21 @@ if __name__ == "__main__":
         print(f"XP awarded: {result.xp_awarded}")
         sys.exit(0)
 
+    log_path = None
+    if scenario is not None:
+        log_path = scenario_log_path(campaign.combat_log_dir, scenario.name)
+        if not is_prepared(log_path):
+            parser.error(
+                f"encounter '{scenario.name}' isn't prepared yet. Prepare its log with:\n"
+                f"  python -m Combat.Tools.prepare_encounters --campaign {campaign.name}"
+            )
+
     app = CombatAppQt(
-        combatants=allies + combatants,
-        character_sheets=character_sheets,
+        combatants=[],
+        character_sheets=campaign.players() if args.player_log else [],
         combat_log_dir=campaign.combat_log_dir,
         combatants_per_column=scenario.combatants_per_column if scenario else 4,
-        resume_log_path=args.log,
+        log_path=log_path,
         player_log_path=args.player_log,
         scenario_name=args.scenario,
         scenarios=campaign.scenarios,

@@ -6,20 +6,15 @@ from pathlib import Path
 from PyQt6.QtWidgets import QApplication
 
 from Combat.Definitions import tracked_condition_names
-from Combat.PlayerCombatant import combatant_from_character
-from Combat.PlayerLog import scenario_title
+from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
 from Combat.Scenario import CombatScenario
-from Model.Creatures.Combatants import (
-    BasicCombatantData,
-    ExtendedCombatantData,
-    Visibility,
-)
+from Model.Creatures.Combatants import BasicCombatantData, Visibility
 
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
-from .encounters_mixin import RESTART, EncountersMixin
+from .encounters_mixin import EncountersMixin
 from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
@@ -60,21 +55,31 @@ class CombatAppQt(
         character_sheets: list,
         combat_log_dir: str | Path,
         combatants_per_column: int = 4,
-        resume_log_path: str | None = None,
+        log_path: str | Path | None = None,
         player_log_path: str | None = None,
         scenario_name: str | None = None,
         scenarios: list[CombatScenario] | None = None,
-        session_type: str = "adventure",
     ):
-        """`session_type` is what the player log records a run without a
-        scenario as: "adventure", or "short_rest" for the short-rest window."""
+        """`character_sheets` is the tracked party. Encounters come from the
+        campaign's `scenarios`, each played from its prepared log in
+        `combat_log_dir` (Combat/EncounterLogs.py):
+
+        - With `scenario_name`, `log_path` is that encounter's log, which
+          run() opens (asking whether to continue or restart a fight in progress).
+        - Without one, `log_path` is a log to fight `combatants` in directly
+          (tests and scripts).
+        - With neither, the window shows the party between encounters, and
+          nothing is logged until an encounter is loaded."""
         self.combatants_per_column = combatants_per_column
-        self._resume_log_path = resume_log_path
 
         # ---- data ----
         self.characters: list[dict] = []
+        # The tracked party by character name; who of them is in the window
+        # depends on the encounter (_set_party).
+        self._party_sheets = {}
         for cs in character_sheets:
             self._add_from_character_sheet(cs)
+            self._party_sheets[self.characters[-1]["name"]] = cs
         for c in combatants:
             self._add_basic_combatant(c)
 
@@ -95,23 +100,23 @@ class CombatAppQt(
         self.player_log_file = Path(player_log_path) if player_log_path else None
         self._scenario_name = scenario_name
         self._scenarios = list(scenarios or [])
-        self._unscripted_session_type = session_type
         self.player_log_data: dict = {"sessions": []}
         self._player_log_session: dict | None = None
+        # A short rest's events, while it's being taken (RestsMixin).
+        self._rest_events: list[dict] | None = None
         if self.player_log_file:
             self._init_player_log()
 
-        # New, timestamped encounter logs go in the campaign's own CombatLogs folder.
-        log_dir = Path(combat_log_dir)
-        log_dir.mkdir(parents=True, exist_ok=True)
-        self._combat_log_dir = log_dir
-        if resume_log_path:
-            # `run()` opens this log right after this (continuing or restarting
-            # it), which reassigns `self.log_file` to this same path once it's read — don't write
-            # here first or we'd clobber the saved log before it's loaded.
-            self.log_file = Path(resume_log_path)
-        else:
-            self._start_unscripted_log()
+        self._combat_log_dir = Path(combat_log_dir)
+        self.log_file: Path | None = None
+        if log_path is not None and scenario_name is None:
+            self._use_log_file(Path(log_path))
+        elif log_path is None:
+            self.phase = "PARTY"
+        # With a scenario, run() opens `log_path`.
+        self._encounter_log_to_open = (
+            Path(log_path) if log_path is not None and scenario_name else None
+        )
 
         # card widget registry: maps id(char_dict) -> QFrame
         self._card_widgets: dict = {}
@@ -131,68 +136,8 @@ class CombatAppQt(
         self.characters.append(char)
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
-        # Compute display name: use custom name with type in parentheses if different, else just type
-        if combatant.name and combatant.name != combatant.combatant_type:
-            display_name = f"{combatant.name} ({combatant.combatant_type})"
-        else:
-            display_name = combatant.combatant_type
-
-        char = {
-            "name": display_name,
-            "create_name": (
-                combatant.create_name
-                if combatant.create_name is not None
-                else combatant.combatant_type
-            ),
-            "combatant_type": combatant.combatant_type,
-            "hp": combatant.hp,
-            "max_hp": combatant.max_hp,
-            "ac": combatant.ac,
-            "temp_hp": combatant.temp_hp,
-            "conditions": [cond.value for cond in combatant.conditions],
-            "visibility_states": [
-                vis.value for vis in (combatant.visibility_states or [])
-            ],
-            "death_saves_fail": 0,
-            "death_saves_success": 0,
-            "stats": _default_stats(),
-            "spell_slots": combatant.spell_slots,
-            "Ability Scores": combatant.ability_scores,
-            "Saving Throws": combatant.saving_throws,
-        }
-        if isinstance(combatant, ExtendedCombatantData):
-            char.update(
-                {
-                    "cr": combatant.cr,
-                    "monster_type": combatant.monster_type,
-                    "monster_type_note": combatant.monster_type_note,
-                    "alignment": combatant.alignment,
-                    "size": combatant.size,
-                    "ac_note": combatant.ac_note,
-                    "hp_formula": combatant.hp_formula,
-                    "speed_ground_ft": combatant.speed_ground_ft,
-                    "speed_fly_ft": combatant.speed_fly_ft,
-                    "speed_climb_ft": combatant.speed_climb_ft,
-                    "speed_special_rules": combatant.speed_special_rules,
-                    "skills": combatant.skills,
-                    "damage_vulnerabilities": combatant.damage_vulnerabilities,
-                    "damage_resistances": combatant.damage_resistances,
-                    "damage_immunities": combatant.damage_immunities,
-                    "condition_immunities": combatant.condition_immunities,
-                    "senses": combatant.senses,
-                    "languages": combatant.languages,
-                    "description": combatant.description,
-                    "traits": combatant.traits,
-                    "actions": combatant.actions,
-                    "bonus_actions": combatant.bonus_actions,
-                    "reactions": combatant.reactions,
-                    "legendary_actions": combatant.legendary_actions,
-                    "legendary_resistances": combatant.legendary_resistances,
-                    "lair_actions": combatant.lair_actions,
-                    "mythic_actions": combatant.mythic_actions,
-                    "death_saves": combatant.death_saves,
-                }
-            )
+        char = combatant_from_stat_block(combatant)
+        char["stats"] = _default_stats()
         self.characters.append(char)
 
     def run(self):
@@ -204,20 +149,9 @@ class CombatAppQt(
 
         self._build_window()
 
-        if self._resume_log_path:
-            path = Path(self._resume_log_path)
-            title = (
-                scenario_title(self._scenario_name)
-                if self._scenario_name
-                else path.name
-            )
-            # Restarting needs fresh monsters, which only a scenario provides.
-            choice = self._ask_continue_or_restart(
-                path, title, can_restart=self._scenario_name is not None
-            )
-            if choice is None:
+        if self._encounter_log_to_open is not None:
+            if not self._open_scenario_at_start(self._encounter_log_to_open):
                 return
-            self._open_encounter_log(path, restart=choice == RESTART)
 
         self._window.show()
         self._start_session_timer()

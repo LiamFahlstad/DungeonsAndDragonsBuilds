@@ -13,7 +13,7 @@ import pytest
 from PyQt6.QtWidgets import QLabel, QPushButton
 
 from Combat.Combatants import Pirate
-from Combat.CombatUIQt.logging_mixin import _CombatJSONEncoder
+from Combat.EncounterLogs import LogJSONEncoder
 from Combat.Monsters.CR_0.monsters import DraconicSpirit, SwarmOfBats
 from Combat.Monsters.CR_12.monsters import Arcanaloth
 from Combat.Monsters.CR_17.monsters import SphinxOfValor
@@ -114,7 +114,7 @@ def _resumed(char: dict) -> None:
     """Replace the dict's contents with what a resumed combat log hands back."""
     plain = {k: v for k, v in char.items() if not k.startswith("_")}
     char.clear()
-    char.update(json.loads(json.dumps(plain, cls=_CombatJSONEncoder)))
+    char.update(json.loads(json.dumps(plain, cls=LogJSONEncoder)))
 
 
 def _in_combat(char):

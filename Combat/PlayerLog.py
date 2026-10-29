@@ -4,17 +4,21 @@ logs it points to gives the party's current state.
 
 The two logs split the work:
 
-- An encounter log (CombatLogs/<scenario>.json, or one per adventure or short
-  rest) holds everything that happened in one fight or session, in detail:
-  every event, players' included, with its structured action and value.
-- The player log holds one entry per encounter, adventure or rest, in the
-  order the party went through them, and no events:
+- An encounter log (CombatLogs/<encounter id>.json, prepared from the
+  campaign's encounters.json; see Combat/EncounterLogs.py) holds everything
+  that happened in one fight, in detail: every event, players' included, with
+  its structured action and value.
+- The player log holds one entry per encounter or rest, in the order the
+  party went through them:
 
       {"type": "encounter", "scenario": "goblin_warband_ambush",
        "log": "../CombatLogs/goblin_warband_ambush.json", "started_at": "..."}
+      {"type": "short_rest", "started_at": "...", "events": [<heals, ...>]}
       {"type": "long_rest", "started_at": "..."}
 
-  "log" is the encounter log's path relative to the player log's folder.
+  "log" is the encounter log's path relative to the player log's folder. A
+  short rest has no log of its own: its few events (heals, regained feature
+  uses) are kept on its line. Nothing else happens between encounters.
 
 The party's current state (HP, conditions, spell slots, ...) is their
 character sheets with the player events of every log listed since the last
@@ -22,7 +26,8 @@ long rest replayed onto them. Restarting a fight drops its entry, so the
 fight no longer counts.
 
 Older player logs embedded each session's events ("round_<n>" lists) in the
-entry itself instead of pointing to a log; those entries are still read."""
+entry itself instead of pointing to a log, and had "adventure" entries with
+logs of their own; those entries are still read."""
 
 import json
 import os
@@ -30,6 +35,7 @@ from datetime import datetime
 from pathlib import Path
 
 LONG_REST = "long_rest"
+SHORT_REST = "short_rest"
 ENCOUNTER = "encounter"
 
 
@@ -82,8 +88,10 @@ def resolve_log(player_log_path: str | Path, ref: str) -> Path:
 
 def session_rounds(session: dict, player_log_path: str | Path) -> dict[str, list]:
     """The "round_<n>" event lists of one player-log entry: read from the
-    encounter log it points to, or embedded in old entries. A log that isn't
-    on this machine contributes nothing."""
+    encounter log it points to, a short rest's own "events", or embedded in
+    old entries. A log that isn't on this machine contributes nothing."""
+    if "events" in session:
+        return {"round_1": session["events"]}
     if "log" not in session:
         return {k: v for k, v in session.items() if is_round_key(k)}
     path = resolve_log(player_log_path, session["log"])
@@ -122,7 +130,7 @@ def worth_keeping(session: dict, player_log_path: str | Path) -> bool:
     if session.get("type") == LONG_REST or "combatants" in session:
         return True
     if "log" not in session:
-        return has_round_events(session)
+        return has_round_events(session) or bool(session.get("events"))
     path = resolve_log(player_log_path, session["log"])
     return not path.exists() or has_round_events(
         session_rounds(session, player_log_path)

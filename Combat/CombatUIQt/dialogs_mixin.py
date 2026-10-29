@@ -710,6 +710,8 @@ class DialogsMixin(CombatWindowState):
         """Quickly add a free-text combatant — a name plus optional HP/AC —
         for ad hoc sources/targets that don't need a full sheet or monster
         (e.g. 'a door', an NPC improvised mid-session)."""
+        if self.phase == "PARTY":
+            return  # only in an encounter
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Add Combatant")
         dlg.setStyleSheet(QSS)

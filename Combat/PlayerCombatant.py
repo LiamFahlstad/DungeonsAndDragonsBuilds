@@ -1,8 +1,11 @@
-"""A player character as the combat UI holds it.
+"""Combatants as the combat UI holds them.
 
 The combat UI keeps every combatant - monster or player - as a dict of what it
 shows and what changes during a fight (HP, conditions, ...).
-combatant_from_character() builds a player's from their Character. The
+combatant_from_stat_block() builds a monster's from its stat block, which is
+also how a prepared encounter log stores its starting combatants
+(Combat/EncounterLogs.py). combatant_from_character() builds a player's from
+their Character. The
 Character itself rides along under "_stat_block", so anything the dict doesn't
 hold is asked of it. Nothing here imports Qt, so it can be tested and
 snapshotted (tests/test_combatant_snapshots.py).
@@ -17,6 +20,72 @@ import Core.Definitions as Definitions
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Model.Character import Character
 from Model.Content.Weapon import AbstractWeapon
+from Model.Creatures.Combatants import BasicCombatantData, ExtendedCombatantData
+
+
+def combatant_from_stat_block(combatant: BasicCombatantData) -> dict:
+    """The combat UI's dict for a monster, NPC or other stat-block combatant,
+    named "<name> (<type>)" when it has a name of its own. The battle
+    statistics ("stats") are the UI's own and aren't included."""
+    if combatant.name and combatant.name != combatant.combatant_type:
+        display_name = f"{combatant.name} ({combatant.combatant_type})"
+    else:
+        display_name = combatant.combatant_type
+
+    char = {
+        "name": display_name,
+        "create_name": (
+            combatant.create_name
+            if combatant.create_name is not None
+            else combatant.combatant_type
+        ),
+        "combatant_type": combatant.combatant_type,
+        "hp": combatant.hp,
+        "max_hp": combatant.max_hp,
+        "ac": combatant.ac,
+        "temp_hp": combatant.temp_hp,
+        "conditions": [cond.value for cond in combatant.conditions],
+        "visibility_states": [vis.value for vis in (combatant.visibility_states or [])],
+        "death_saves_fail": 0,
+        "death_saves_success": 0,
+        "spell_slots": combatant.spell_slots,
+        "Ability Scores": combatant.ability_scores,
+        "Saving Throws": combatant.saving_throws,
+    }
+    if isinstance(combatant, ExtendedCombatantData):
+        char.update(
+            {
+                "cr": combatant.cr,
+                "monster_type": combatant.monster_type,
+                "monster_type_note": combatant.monster_type_note,
+                "alignment": combatant.alignment,
+                "size": combatant.size,
+                "ac_note": combatant.ac_note,
+                "hp_formula": combatant.hp_formula,
+                "speed_ground_ft": combatant.speed_ground_ft,
+                "speed_fly_ft": combatant.speed_fly_ft,
+                "speed_climb_ft": combatant.speed_climb_ft,
+                "speed_special_rules": combatant.speed_special_rules,
+                "skills": combatant.skills,
+                "damage_vulnerabilities": combatant.damage_vulnerabilities,
+                "damage_resistances": combatant.damage_resistances,
+                "damage_immunities": combatant.damage_immunities,
+                "condition_immunities": combatant.condition_immunities,
+                "senses": combatant.senses,
+                "languages": combatant.languages,
+                "description": combatant.description,
+                "traits": combatant.traits,
+                "actions": combatant.actions,
+                "bonus_actions": combatant.bonus_actions,
+                "reactions": combatant.reactions,
+                "legendary_actions": combatant.legendary_actions,
+                "legendary_resistances": combatant.legendary_resistances,
+                "lair_actions": combatant.lair_actions,
+                "mythic_actions": combatant.mythic_actions,
+                "death_saves": combatant.death_saves,
+            }
+        )
+    return char
 
 
 def combatant_from_character(character: Character) -> dict:

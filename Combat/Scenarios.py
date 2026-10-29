@@ -1,9 +1,10 @@
 """Registry of every campaign and its runnable combat scenarios. Select one with
 `python RunCombatSimulator.py --scenario <name>`.
 
-Each campaign lives entirely in Combat/Campaigns/<Campaign>/ and declares its
-party and scenarios in that folder's Campaign.py. To add a campaign, create its
-folder and add its CAMPAIGN to the tuple below."""
+Each campaign lives entirely in Combat/Campaigns/<Campaign>/: its party and
+encounters are in that folder's encounters.json (Combat/Campaigns/ENCOUNTERS.md),
+which its Campaign.py loads. To add a campaign, create its folder and add its
+CAMPAIGN to the tuple below."""
 
 from Combat.Campaign import Campaign
 from Combat.Campaigns.CurseOfTheLich.Campaign import CAMPAIGN as CURSE_OF_THE_LICH

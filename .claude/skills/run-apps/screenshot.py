@@ -29,7 +29,9 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 # The offscreen platform has no font database of its own on Windows: without this every glyph
 # renders as an empty box.
 if os.name == "nt":
-    os.environ.setdefault("QT_QPA_FONTDIR", os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts"))
+    os.environ.setdefault(
+        "QT_QPA_FONTDIR", os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts")
+    )
 
 
 def qt_app():
@@ -81,20 +83,34 @@ def combat(args, out: Path) -> None:
     import Combat.Scenarios as Scenarios
     from Combat.CombatUIQt import CombatAppQt
     from Combat.CombatUIQt.styles import QSS
+    from Combat.EncounterLogs import prepare_log, scenario_log_path
 
     if args.scenario and args.scenario not in Scenarios.SCENARIOS:
-        sys.exit(f"Unknown scenario {args.scenario!r}. Known: {', '.join(sorted(Scenarios.SCENARIOS))}")
-    name = args.scenario or Scenarios.CAMPAIGNS[Scenarios.DEFAULT_CAMPAIGN].scenarios[0].name
+        sys.exit(
+            f"Unknown scenario {args.scenario!r}. Known: {', '.join(sorted(Scenarios.SCENARIOS))}"
+        )
+    name = (
+        args.scenario
+        or Scenarios.CAMPAIGNS[Scenarios.DEFAULT_CAMPAIGN].scenarios[0].name
+    )
     scenario = Scenarios.SCENARIOS[name]
     app.setStyleSheet(QSS)
+    # The encounter's log, prepared as prepare_encounters would, in a temp
+    # folder: never the campaign's CombatLogs/.
+    logs = Path(tempfile.mkdtemp(prefix="dnd-combat-logs-"))
+    path = scenario_log_path(logs, name)
+    prepare_log(path, scenario, players=[])
     ui = CombatAppQt(
-        combatants=scenario.build_allies() + scenario.build_combatants(),
-        character_sheets=scenario.build_character_sheets(),
-        combat_log_dir=Path(tempfile.mkdtemp(prefix="dnd-combat-logs-")),
+        combatants=[],
+        character_sheets=[],
+        combat_log_dir=logs,
         combatants_per_column=scenario.combatants_per_column,
+        log_path=path,
         scenario_name=name,
+        scenarios=[scenario],
     )
     ui._build_window()
+    ui._open_encounter_log(path, restart=False)
     grab(app, ui._window, out / f"combat_{name}.png", args.size)
 
 
@@ -116,7 +132,11 @@ def creator(args, out: Path) -> None:
     names = [tabs.tabText(i) for i in range(tabs.count())]
     wanted = range(tabs.count())
     if args.tab:
-        wanted = [i for i, n in enumerate(names) if args.tab.lower() in n.lower() or args.tab == str(i)]
+        wanted = [
+            i
+            for i, n in enumerate(names)
+            if args.tab.lower() in n.lower() or args.tab == str(i)
+        ]
         if not wanted:
             sys.exit(f"No tab matches {args.tab!r}. Tabs: {names}")
     for i in wanted:
@@ -127,44 +147,96 @@ def creator(args, out: Path) -> None:
 
 def sheet(args, out: Path) -> None:
     import Core.Definitions as Definitions
-    from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter, get_output_folder
+    from Presentation.CharacterSheetWriters import (
+        HtmlCharacterSheetWriter,
+        get_output_folder,
+    )
     from RunCharacterCreator import BuildSelector, ExampleSelector
 
     builds = {**BuildSelector.builds(), **ExampleSelector.builds()}
     matches = sorted(n for n in builds if args.build.lower() in n.lower())
     if len(matches) != 1:
-        sys.exit(f"{len(matches)} builds match {args.build!r}: {matches[:20]}. Give a more specific name.")
+        sys.exit(
+            f"{len(matches)} builds match {args.build!r}: {matches[:20]}. Give a more specific name."
+        )
     data = builds[matches[0]]().build()
     folder = out / os.path.basename(get_output_folder(data))
-    config = Definitions.SkillConfig.HOMEBREW if args.homebrew_skills else Definitions.SkillConfig.DEFAULT
-    HtmlCharacterSheetWriter(show_feature_tags=args.feature_tags).write_character_sheet(data, skill_config=config, output_folder=str(folder))
+    config = (
+        Definitions.SkillConfig.HOMEBREW
+        if args.homebrew_skills
+        else Definitions.SkillConfig.DEFAULT
+    )
+    HtmlCharacterSheetWriter(show_feature_tags=args.feature_tags).write_character_sheet(
+        data, skill_config=config, output_folder=str(folder)
+    )
     for page in sorted(folder.rglob("*.html")):
         print(page)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--out", type=Path, default=Path(tempfile.gettempdir()) / "dnd-screenshots", help="output folder (default: <temp>/dnd-screenshots)")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "--out",
+        type=Path,
+        default=Path(tempfile.gettempdir()) / "dnd-screenshots",
+        help="output folder (default: <temp>/dnd-screenshots)",
+    )
     sub = parser.add_subparsers(dest="app", required=True)
 
-    p = sub.add_parser("combat", help="the combat simulator window (RunCombatSimulator.py)")
-    p.add_argument("--scenario", help="scenario name, as RunCombatSimulator.py --scenario takes it")
-    p.add_argument("--size", type=size_of, default=(1600, 1000), help="window size, WxH (default 1600x1000)")
+    p = sub.add_parser(
+        "combat", help="the combat simulator window (RunCombatSimulator.py)"
+    )
+    p.add_argument(
+        "--scenario", help="scenario name, as RunCombatSimulator.py --scenario takes it"
+    )
+    p.add_argument(
+        "--size",
+        type=size_of,
+        default=(1600, 1000),
+        help="window size, WxH (default 1600x1000)",
+    )
 
-    p = sub.add_parser("creator", help="the Character Creator window (RunCharacterCreatorUI.py), one PNG per tab")
-    p.add_argument("--load-build", metavar="PATH", help="preload a build file, as --load-build does")
+    p = sub.add_parser(
+        "creator",
+        help="the Character Creator window (RunCharacterCreatorUI.py), one PNG per tab",
+    )
+    p.add_argument(
+        "--load-build",
+        metavar="PATH",
+        help="preload a build file, as --load-build does",
+    )
     p.add_argument("--tab", help="only this tab (index, or part of its title)")
-    p.add_argument("--size", type=size_of, default=(1200, 880), help="window size, WxH (default 1200x880, the app's own)")
+    p.add_argument(
+        "--size",
+        type=size_of,
+        default=(1200, 880),
+        help="window size, WxH (default 1200x880, the app's own)",
+    )
 
-    p = sub.add_parser("sheet", help="render one registered or example build's sheet pages (never into Output/)")
+    p = sub.add_parser(
+        "sheet",
+        help="render one registered or example build's sheet pages (never into Output/)",
+    )
     p.add_argument("build", help="part of the build's registered name, e.g. Obmar")
-    p.add_argument("--feature-tags", action="store_true", help="show the tag chips, as RunCharacterCreator.py --feature-tags")
-    p.add_argument("--homebrew-skills", action="store_true", help="SkillConfig.HOMEBREW instead of DEFAULT")
+    p.add_argument(
+        "--feature-tags",
+        action="store_true",
+        help="show the tag chips, as RunCharacterCreator.py --feature-tags",
+    )
+    p.add_argument(
+        "--homebrew-skills",
+        action="store_true",
+        help="SkillConfig.HOMEBREW instead of DEFAULT",
+    )
 
     args = parser.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    {"combat": combat, "creator": creator, "sheet": sheet}[args.app](args, args.out.resolve())
+    {"combat": combat, "creator": creator, "sheet": sheet}[args.app](
+        args, args.out.resolve()
+    )
 
 
 if __name__ == "__main__":

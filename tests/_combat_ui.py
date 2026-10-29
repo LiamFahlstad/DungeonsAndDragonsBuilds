@@ -44,10 +44,14 @@ def qapp() -> QApplication:
 
 
 def make_ui(tmp_path, combatants=(), character_sheets=()) -> CombatAppQt:
-    """A CombatAppQt whose log goes under tmp_path, with its window built."""
+    """A CombatAppQt fighting `combatants` (with `character_sheets` as the
+    party) and logging to tmp_path/logs/fight.json, with its window built."""
     qapp()
     ui = CombatAppQt(
-        list(combatants), list(character_sheets), combat_log_dir=tmp_path / "logs"
+        list(combatants),
+        list(character_sheets),
+        combat_log_dir=tmp_path / "logs",
+        log_path=tmp_path / "logs" / "fight.json",
     )
     ui._build_window()
     return ui

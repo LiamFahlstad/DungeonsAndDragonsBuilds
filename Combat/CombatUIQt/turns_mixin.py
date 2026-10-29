@@ -365,11 +365,11 @@ class TurnsMixin(CombatWindowState):
 
     def _switch_to_combat(self):
         """Replace the initiative widget with the card grid and update the panel."""
-        # Swap scroll area content
-        self._scroll_area.takeWidget()
-        if self._initiative_widget is not None:
-            self._initiative_widget.deleteLater()
-            self._initiative_widget = None
+        # Swap scroll area content (the initiative screen or the party view)
+        old = self._scroll_area.takeWidget()
+        if old is not None and old is not self._cards_container:
+            old.deleteLater()
+        self._initiative_widget = None
 
         self._scroll_area.setWidget(self._cards_container)
         self._cards_container.show()

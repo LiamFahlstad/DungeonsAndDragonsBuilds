@@ -1,15 +1,13 @@
 """Logging mixin for CombatAppQt."""
 
-import dataclasses
 import json
-from datetime import datetime
 from pathlib import Path
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
-from Combat.EncounterLogs import event_text, read_log_status
+from Combat.EncounterLogs import LogJSONEncoder, event_text, read_log_status
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, session_label
 
@@ -27,27 +25,24 @@ from .stats import (
 from .state import CombatWindowState
 
 
-class _CombatJSONEncoder(json.JSONEncoder):
-    """Monster stat-block fields (MonsterAbility, DamageTypeEntry, ...) are plain
-    dataclasses, not natively JSON-serializable — encode them as dicts."""
-
-    def default(self, o):
-        if dataclasses.is_dataclass(o) and not isinstance(o, type):
-            return dataclasses.asdict(o)
-        return super().default(o)
-
-
 class LoggingMixin(CombatWindowState):
     """Mixin for logging-related methods."""
 
     def _write_log(self, data: dict):
+        """Save `data` (the encounter log read with _read_log, plus changes)
+        with the combatants and round as they are now."""
+        if self.log_file is None:
+            return
         data["round_number"] = self.round_number
         data["combatants"] = [
             {k: v for k, v in c.items() if not k.startswith("_")}
             for c in self.characters
             if not c.get("_is_player")
         ]
-        self.log_file.write_text(json.dumps(data, indent=2, cls=_CombatJSONEncoder))
+        self.log_file.parent.mkdir(parents=True, exist_ok=True)
+        self.log_file.write_text(
+            json.dumps(data, indent=2, cls=LogJSONEncoder), encoding="utf-8"
+        )
         # The party's journal gets this log's entry once something happens in it.
         session = self._player_log_session
         if (
@@ -59,11 +54,10 @@ class LoggingMixin(CombatWindowState):
             self._write_player_log()
 
     def _read_log(self) -> dict:
-        """The encounter log's contents; {} for a new log nothing was written
-        to yet (see _start_unscripted_log)."""
-        if not self.log_file.exists():
+        """The encounter log's contents; {} between encounters."""
+        if self.log_file is None or not self.log_file.exists():
             return {}
-        return json.loads(self.log_file.read_text())
+        return json.loads(self.log_file.read_text(encoding="utf-8"))
 
     def _current_turn_character(self) -> dict | None:
         if self.phase != "COMBAT" or not self.initiative_order:
@@ -90,9 +84,9 @@ class LoggingMixin(CombatWindowState):
     ):
         """Append an event to the encounter log. One that changes someone's
         state carries `character`, `action` and `value`, which is what the
-        party's state is replayed from on the next run (see Combat/PlayerLog.py)."""
-        data = self._read_log()
-        key = f"round_{self.round_number}"
+        party's state is replayed from on the next run (see Combat/PlayerLog.py).
+        During a short rest the events are collected for its player-log entry
+        instead (RestsMixin)."""
         turn_name = self._current_turn_name() if note_turn else None
         event: dict[str, object] = {
             "text": f"[{turn_name}'s turn] {text}" if turn_name else text
@@ -102,6 +96,15 @@ class LoggingMixin(CombatWindowState):
         if action is not None:
             event["action"] = action
             event["value"] = value
+        if self._rest_events is not None:
+            self._rest_events.append(event)
+            return
+        if self.log_file is None:
+            # Between encounters nothing is logged (see EncountersMixin).
+            print(f"Not logged (no encounter loaded): {event['text']}")
+            return
+        data = self._read_log()
+        key = f"round_{self.round_number}"
         round_log = data.setdefault(key, [])
         index = len(round_log)
         round_log.append(event)
@@ -142,23 +145,14 @@ class LoggingMixin(CombatWindowState):
         self._refresh_turn()
 
     def _load_log_from_path(self, path: str):
-        data = json.loads(Path(path).read_text())
-        if "combatants" not in data:
-            QMessageBox.warning(self._window, "Error", "No combatants key in log file.")
-            return
-        saved_combatants = data["combatants"]
-        if not saved_combatants:
-            # Empty starter log (e.g. a scenario's persistent log before its first
-            # session) — nothing to resume. Behave exactly like a fresh run and
-            # just log to this path from now on instead of a fresh timestamped one.
-            self._use_log_file(Path(path))
-            self._write_log({})
-            return
-        # Saved logs only ever contain non-player combatants (see _write_log),
-        # so splice them back in alongside whatever players are already loaded
-        # rather than replacing self.characters outright.
+        """Play the encounter log at `path`: its combatants join the players
+        already in the window, on the initiative screen for a fight that
+        hasn't started, or straight into combat to continue one."""
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        # Logs only ever hold non-player combatants (see _write_log), so splice
+        # them in alongside the players rather than replacing self.characters.
         players = [c for c in self.characters if c.get("_is_player")]
-        self.characters = players + saved_combatants
+        self.characters = players + data.get("combatants", [])
         for char in self.characters:
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
@@ -173,10 +167,15 @@ class LoggingMixin(CombatWindowState):
         self.target_label.setText("Target: None")
         self.round_label.setText(f"Round {self.round_number}")
         self._use_log_file(Path(path))
-        # When loading a log we jump straight into COMBAT with the loaded order
+        self.current_turn_idx = 0
+        if not has_round_events(data):
+            self.phase = "INITIATIVE"
+            self.initiative_order = []
+            self._switch_to_initiative()
+            return
+        # Continuing a fight jumps straight into COMBAT with the loaded order.
         self.phase = "COMBAT"
         self.initiative_order = list(self.characters)
-        self.current_turn_idx = 0
         self._switch_to_combat()
 
     def _init_player_log(self):
@@ -193,57 +192,47 @@ class LoggingMixin(CombatWindowState):
         ]
         self._replay_party_history()
 
+    def _set_party(self, names: list[str] | None):
+        """Bring into the window the party members called `names` (the whole
+        party for None), as they are now, and nobody else from the party."""
+        if not self._party_sheets:
+            return
+        wanted = [n for n in self._party_sheets if names is None or n in names]
+        if wanted == [c["name"] for c in self.characters if c.get("_is_player")]:
+            return
+        others = [c for c in self.characters if not c.get("_is_player")]
+        self.characters = []
+        for name in wanted:
+            self._add_from_character_sheet(self._party_sheets[name])
+        self.characters += others
+        if self.player_log_file:
+            self._replay_party_history()
+
     def _replay_party_history(self):
         assert self.player_log_file is not None
         recent = PlayerLog.since_long_rest(self.player_log_data["sessions"])
         self._replay_player_log(PlayerLog.with_events(recent, self.player_log_file))
 
-    def _use_log_file(self, path: Path, session_type: str | None = None):
-        """Log to `path` from now on, under its entry in the party's journal:
-        the existing one when the party has been in this log before (a fight
-        continued), else a new one, which is only written once something
-        happens in the log (see _write_log). `session_type` overrides the
-        type that entry gets (e.g. "short_rest")."""
+    def _use_log_file(self, path: Path | None):
+        """Log to the encounter log at `path` from now on (None: between
+        encounters, nothing is logged), under its entry in the party's
+        journal: the existing one when the party has been in this fight before
+        (continued), else a new one, which is only written once something
+        happens in the log (see _write_log)."""
         self.log_file = path
-        if not self.player_log_file:
+        self._player_log_session = None
+        if path is None or not self.player_log_file:
             return
-        session_type = session_type or self._session_type
         ref = PlayerLog.log_ref(self.player_log_file, path)
         sessions = self.player_log_data["sessions"]
         self._player_log_session = next(
             (s for s in sessions if s.get("log") == ref),
             {
-                "type": session_type,
-                "scenario": (
-                    self._scenario_name if session_type == PlayerLog.ENCOUNTER else None
-                ),
+                "type": PlayerLog.ENCOUNTER,
+                "scenario": self._scenario_name,
                 "log": ref,
                 "started_at": PlayerLog.now(),
             },
-        )
-
-    def _start_unscripted_log(self, session_type: str | None = None):
-        """Log to a new, timestamped log in the campaign's CombatLogs folder,
-        e.g. adventure_2026-10-29_19-00-00.json, for a run without a scenario
-        or a short rest (`session_type`). The file is only created once
-        something is logged in it, so a session where nothing happens leaves
-        no empty log behind."""
-        session_type = session_type or self._session_type
-        stem = f"{session_type}_{datetime.now():%Y-%m-%d_%H-%M-%S}"
-        path = self._combat_log_dir / f"{stem}.json"
-        # Never the log just left, even within the same second.
-        n = 2
-        while path.exists() or path == getattr(self, "log_file", None):
-            path = self._combat_log_dir / f"{stem}_{n}.json"
-            n += 1
-        self._use_log_file(path, session_type)
-
-    @property
-    def _session_type(self) -> str:
-        return (
-            PlayerLog.ENCOUNTER
-            if self._scenario_name
-            else self._unscripted_session_type
         )
 
     def _rebuild_players_from_log(self):
@@ -460,24 +449,29 @@ class LoggingMixin(CombatWindowState):
             return
         self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
         self.player_log_file.write_text(
-            json.dumps(self.player_log_data, indent=2, cls=_CombatJSONEncoder)
+            json.dumps(self.player_log_data, indent=2, cls=LogJSONEncoder),
+            encoding="utf-8",
         )
 
     def _log_status_text(self) -> str:
         """One-line summary of whether player-log tracking is active, shown in the side panel."""
-        if not self.player_log_file or self._player_log_session is None:
+        if not self.player_log_file:
             return "Player log: inactive — run with --player-log to track the party across sessions."
-        session = self._player_log_session
-        label = (
-            f"Tracking players in {self.player_log_file.name} — "
-            f"{session_label(session)}"
+        where = (
+            session_label(self._player_log_session)
+            if self._player_log_session is not None
+            else "between encounters"
         )
-        return label
+        return f"Tracking players in {self.player_log_file.name} — {where}"
 
     def _show_current_log(self):
         """Display the round-by-round event history of the active encounter log."""
-        if not self.log_file.exists():
-            QMessageBox.information(self._window, "Encounter Log", "No log data yet.")
+        if self.log_file is None or not self.log_file.exists():
+            QMessageBox.information(
+                self._window,
+                "Encounter Log",
+                "No encounter loaded. Load one (Ctrl+O) to see its log.",
+            )
             return
         data = self._read_log()
         round_keys = sorted(
@@ -502,12 +496,7 @@ class LoggingMixin(CombatWindowState):
 
         text = QTextEdit()
         text.setReadOnly(True)
-        if not data.get("combatants"):
-            text.setPlainText(
-                "No encounter combatants this session — this looks like an adventure "
-                "(no --scenario). Check Player Log instead for the party's history."
-            )
-        elif not round_keys:
+        if not round_keys:
             text.setPlainText("No events logged yet.")
         else:
             lines = []

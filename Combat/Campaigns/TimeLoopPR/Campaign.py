@@ -1,30 +1,9 @@
-"""Time Loop PR (oneshot): its party, scenarios and log folders. See
-CHEATSHEET.md next to this file for the commands to run each scenario."""
+"""This campaign, as its encounters.json describes it: the party and every
+encounter it can run (format: Combat/Campaigns/ENCOUNTERS.md). See
+CHEATSHEET.md next to this file for the commands."""
 
 from pathlib import Path
 
-import Combat.Campaigns.TimeLoopPR.Encounters as Encounters
-import Combat.Campaigns.TimeLoopPR.Players as Players
 from Combat.Campaign import Campaign
-from Combat.Scenario import CombatScenario
 
-CAMPAIGN = Campaign(
-    name="time_loop_pr",
-    title="Time Loop PR",
-    folder=Path(__file__).resolve().parent,
-    players=Players.get_players_group,
-    scenarios=[
-        CombatScenario(
-            name="time_loop_pr_outside_the_gates",
-            combatants=lambda: Encounters.get_outside_the_gates_combatants(),
-        ),
-        CombatScenario(
-            name="time_loop_pr_drunk_oxe",
-            combatants=lambda: Encounters.get_drunk_oxe_combatants(),
-        ),
-        CombatScenario(
-            name="time_loop_pr_square",
-            combatants=lambda: Encounters.get_square_combatants(),
-        ),
-    ],
-)
+CAMPAIGN = Campaign.from_config(Path(__file__).resolve().parent)

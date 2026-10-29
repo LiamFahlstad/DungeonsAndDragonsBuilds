@@ -13,7 +13,7 @@ import pytest
 from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtWidgets import QPushButton, QWidget
 
-from Combat.CombatUIQt.logging_mixin import _CombatJSONEncoder
+from Combat.EncounterLogs import LogJSONEncoder
 from Combat.Monsters.CR_0.monsters import DraconicSpirit
 from Combat.Monsters.CR_12.monsters import Arcanaloth
 from Combat.Monsters.CR_17.monsters import SphinxOfValor
@@ -59,7 +59,7 @@ def _ui(tmp_path):
 def _resumed(char: dict) -> dict:
     """The char dict as a resumed combat log hands it back (plain JSON)."""
     plain = {k: v for k, v in char.items() if not k.startswith("_")}
-    return json.loads(json.dumps(plain, cls=_CombatJSONEncoder))
+    return json.loads(json.dumps(plain, cls=LogJSONEncoder))
 
 
 def _set_hp(fraction):

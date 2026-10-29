@@ -55,12 +55,17 @@ class CombatWindowState:
     initiative_order: list[dict]
     current_turn_idx: int
     player_log_file: Path | None
-    # The encounter log events are written to (LoggingMixin._use_log_file).
-    log_file: Path
+    # The encounter log events are written to (LoggingMixin._use_log_file);
+    # None between encounters, when nothing is logged.
+    log_file: Path | None
+    # The tracked party's character sheets by character name (_set_party).
+    _party_sheets: dict
+    # A short rest's events while it's being taken (RestsMixin).
+    _rest_events: list[dict] | None
+    _initiative_widget: QWidget | None
     player_log_data: dict
     # This run's entry in the party's journal (see Combat/PlayerLog.py).
     _player_log_session: dict | None
-    _unscripted_session_type: str
     _scenario_name: str | None
     # The campaign's scenarios, offered by Load Encounter, and the folder
     # holding their encounter logs.
@@ -79,6 +84,7 @@ class CombatWindowState:
     _next_turn_btn: QPushButton
     round_label: QLabel
     _end_encounter_btn: QPushButton
+    _add_combatant_btn: QPushButton
     _short_rest_btn: QPushButton
     _long_rest_btn: QPushButton
     _log_status_label: QLabel
@@ -101,6 +107,9 @@ class CombatWindowState:
 
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
         raise NotImplementedError("TurnsMixin._add_ad_hoc_combatant")
+
+    def _add_from_character_sheet(self, character_sheet):
+        raise NotImplementedError("CombatAppQt._add_from_character_sheet")
 
     def _add_basic_combatant(self, combatant: BasicCombatantData):
         raise NotImplementedError("CombatAppQt._add_basic_combatant")
@@ -304,10 +313,16 @@ class CombatWindowState:
     def _read_log(self) -> dict:
         raise NotImplementedError("LoggingMixin._read_log")
 
-    def _start_unscripted_log(self, session_type: str | None = None):
-        raise NotImplementedError("LoggingMixin._start_unscripted_log")
+    def _set_party(self, names: list[str] | None):
+        raise NotImplementedError("LoggingMixin._set_party")
 
-    def _use_log_file(self, path: Path, session_type: str | None = None):
+    def _show_party_view(self):
+        raise NotImplementedError("EncountersMixin._show_party_view")
+
+    def _build_party_view(self) -> QWidget:
+        raise NotImplementedError("EncountersMixin._build_party_view")
+
+    def _use_log_file(self, path: Path | None):
         raise NotImplementedError("LoggingMixin._use_log_file")
 
     def _write_log(self, data: dict):

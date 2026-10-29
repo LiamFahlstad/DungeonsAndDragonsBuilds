@@ -26,6 +26,8 @@ class WindowMixin(CombatWindowState):
     """Mixin for window building and selection logic."""
 
     def _select_character(self, char: dict):
+        if self.phase == "PARTY":
+            return  # nothing is logged between encounters
         self.selected_character = char
         self.selected_label.setText(f"Source: {char['name']}")
         self._more_info_btn.setEnabled(True)
@@ -34,6 +36,8 @@ class WindowMixin(CombatWindowState):
         self._refresh_cards()
 
     def _select_target_character(self, char: dict, additive: bool = False):
+        if self.phase == "PARTY":
+            return  # nothing is logged between encounters
         if additive:
             if any(char is t for t in self.target_characters):
                 self.target_characters = [
@@ -150,9 +154,13 @@ class WindowMixin(CombatWindowState):
         )
         self._cards_container.hide()
 
-        # Build and show the initiative widget
-        self._initiative_widget = self._build_initiative_widget()
-        self._scroll_area.setWidget(self._initiative_widget)
+        # The initiative screen, or between encounters the party view
+        if self.phase == "PARTY":
+            self._initiative_widget = None
+            self._scroll_area.setWidget(self._build_party_view())
+        else:
+            self._initiative_widget = self._build_initiative_widget()
+            self._scroll_area.setWidget(self._initiative_widget)
 
         root_layout.addWidget(self._scroll_area, stretch=1)
 
@@ -418,9 +426,10 @@ class WindowMixin(CombatWindowState):
         load_encounter_btn.clicked.connect(self._show_load_encounter_dialog)
         encounter_row.addWidget(load_encounter_btn)
 
-        add_combatant_btn = QPushButton("+ Add Combatant")
-        add_combatant_btn.clicked.connect(self._show_add_combatant_dialog)
-        encounter_row.addWidget(add_combatant_btn)
+        self._add_combatant_btn = QPushButton("+ Add Combatant")
+        self._add_combatant_btn.setEnabled(self.phase != "PARTY")
+        self._add_combatant_btn.clicked.connect(self._show_add_combatant_dialog)
+        encounter_row.addWidget(self._add_combatant_btn)
 
         self._end_encounter_btn = QPushButton("End Encounter")
         self._end_encounter_btn.setEnabled(self._scenario_name is not None)
