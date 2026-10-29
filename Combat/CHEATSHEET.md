@@ -11,24 +11,26 @@ own cheat sheet with the exact commands to run it:
 
 ```
 Combat/Campaigns/<Campaign>/
-├─ Players.py      get_players_group(): the party tracked by --player-log
-├─ Encounters.py   functions returning each fight's monsters
-├─ Campaign.py     CAMPAIGN = Campaign(name, folder, players, scenarios=[...])
-├─ CHEATSHEET.md   commands for this campaign
-├─ PlayerLogs/     main_party.json (+ timestamped long-rest backups)
-└─ CombatLogs/     one persistent encounter log per scenario, plus timestamped
-                   encounter_log_*.json from runs without --log (gitignored)
+├─ encounters.json  the party and every encounter (format: Campaigns/ENCOUNTERS.md)
+├─ Campaign.py      CAMPAIGN = Campaign.from_config(<this folder>)
+├─ CHEATSHEET.md    commands for this campaign
+├─ PlayerLogs/      main_party.json: where the party has been (encounters, rests)
+└─ CombatLogs/      <encounter id>.json: one prepared log per encounter
 ```
 
-To add a campaign, create that folder and register its `CAMPAIGN` in
-`Combat/Scenarios.py`. Scenario names must be unique across all campaigns.
+To add a campaign, create that folder with an `encounters.json` and a
+one-line `Campaign.py`, and register its `CAMPAIGN` in `Combat/Scenarios.py`.
+Encounter ids must be unique across all campaigns. After changing an
+`encounters.json`, prepare its logs:
+
+```
+python -m Combat.Tools.prepare_encounters --campaign <name>   # or --all, or --check
+```
 
 ## Flags
 
-- `--scenario <name>`: run an encounter. Its campaign is picked automatically.
-- `--campaign <name>`: choose the campaign when there's no `--scenario` (adventure sessions and rests). Defaults to `curse_of_the_lich`. The campaign decides which party `--player-log` loads and which `CombatLogs/` folder new encounter logs go to.
-- `--player-log <path>`: track the campaign's party across sessions. Omit it to run a one-off scenario without touching the persistent party. With neither `--scenario` nor `--player-log`, the campaign's first scenario runs.
-- `--log <path>`: resume a persistent encounter log (non-player combatants only). Drop it to start monsters fresh.
-- `--absent <name> [<name> ...]`: leave players out of the tracked party for this session (case-insensitive partial name match, e.g. `--absent Gabriel`). Their player-log history is kept and picks up again the next time they join.
+- `--scenario <id>`: play an encounter from its campaign's `encounters.json` (its log must be prepared). Its campaign is picked automatically, and the players taking part come from the config.
+- `--campaign <name>`: choose the campaign when there's no `--scenario` (the party between encounters, and rests). Defaults to `curse_of_the_lich`.
+- `--player-log <path>`: track the campaign's party across sessions. Omit it to play an encounter without touching the persistent party. With `--player-log` but no `--scenario`, the window opens on the party between encounters; with neither, the campaign's first encounter runs.
 - `--rest long|short`: rest the tracked party (requires `--player-log`).
-- `--difficulty`: print the encounter's D&D 2024 difficulty against the party and exit. Allies' XP is subtracted from the monsters' XP.
+- `--difficulty`: print the encounter's D&D 2024 difficulty against the players taking part and exit. Allies' XP is subtracted from the monsters' XP.
