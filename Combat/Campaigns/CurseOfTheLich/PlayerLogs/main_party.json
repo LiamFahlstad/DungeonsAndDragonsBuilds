@@ -22,6 +22,12 @@
       "scenario": "goblin_warband_ambush_friendly_goblins",
       "log": "../CombatLogs/goblin_warband_ambush_friendly_goblins.json",
       "started_at": "2026-10-29T17:39:27"
+    },
+    {
+      "type": "encounter",
+      "scenario": "wrath_of_durmor",
+      "log": "../CombatLogs/wrath_of_durmor.json",
+      "started_at": "2026-10-30T07:09:37"
     }
   ]
 }
