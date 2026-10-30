@@ -195,12 +195,13 @@ class DamageMixin(CombatWindowState):
             if "Concentrating" in target.get("conditions", []):
                 if knockout:
                     self._remove_condition_from(target, "Concentrating", source=target)
-                elif dmg > 0:
+                elif dmg > 0 and self.settings.ask_concentration_saves:
                     # Only damage taken forces a save (damage soaked by
                     # temporary HP still counts); 0 after immunity doesn't.
                     self._concentration_check_dialog(target, dmg)
 
-        self.damage_type_combo.setCurrentIndex(0)
+        if self.settings.reset_damage_type_after_hit:
+            self.damage_type_combo.setCurrentIndex(0)
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""

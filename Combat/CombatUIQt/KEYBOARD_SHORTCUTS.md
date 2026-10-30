@@ -21,7 +21,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **P** / **Left arrow** | Previous Source | Select the previous combatant as the source. Wraps around. |
 | **Shift+N** / **Down arrow** | Next Target | Select the next combatant as the sole target (replaces any current target selection). Wraps around. |
 | **Shift+P** / **Up arrow** | Previous Target | Select the previous combatant as the sole target. Wraps around. |
-| **Space** | Select Active Combatant | Select whoever's turn it currently is as the source — handy right after pressing Enter to advance the turn. Only active once combat has started. |
+| **Space** | Select Active Combatant | Select whoever's turn it currently is as the source — handy right after pressing Enter to advance the turn. Only active once combat has started. With Settings → "Source follows the turn" on (the default), this already happens on every turn change, so Space only matters after picking another source by hand. |
 | **D** | Focus Damage Field | Jump the cursor into the Damage amount field (existing text selected, ready to overwrite). |
 | **H** | Focus Heal Field | Jump the cursor into the Heal amount field. |
 | **T** | Focus Temp HP Field | Jump the cursor into the Temp HP amount field. |

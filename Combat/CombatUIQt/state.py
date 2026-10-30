@@ -14,6 +14,7 @@ place, and the type checker can verify every use.
 
 from pathlib import Path
 
+from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import (
     QComboBox,
     QFrame,
@@ -30,6 +31,7 @@ from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData
 
+from .settings import CombatSettings
 from .undo import UndoPoint
 
 
@@ -49,6 +51,10 @@ class CombatWindowState:
     target_characters: list[dict]
     # The card a Shift + right click range of targets starts from.
     _target_anchor: dict | None
+    # Settings (DialogsMixin._show_settings_dialog), kept between runs in
+    # _settings_store; None (tests, scripts) keeps them for this run only.
+    settings: CombatSettings
+    _settings_store: QSettings | None
     round_number: int
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
@@ -194,6 +200,12 @@ class CombatWindowState:
     ):
         raise NotImplementedError("LoggingMixin._log_event")
 
+    def _follow_turn_with_source(self):
+        raise NotImplementedError("TurnsMixin._follow_turn_with_source")
+
+    def _on_turn_changed(self):
+        raise NotImplementedError("TurnsMixin._on_turn_changed")
+
     def _log_status_text(self) -> str:
         raise NotImplementedError("LoggingMixin._log_status_text")
 
@@ -251,6 +263,9 @@ class CombatWindowState:
 
     def _remove_visibility(self):
         raise NotImplementedError("ConditionsMixin._remove_visibility")
+
+    def _reset_player_timer(self):
+        raise NotImplementedError("TimerMixin._reset_player_timer")
 
     def _revive(self, char: dict):
         raise NotImplementedError("DamageMixin._revive")
@@ -314,6 +329,9 @@ class CombatWindowState:
     def _show_rules(self):
         raise NotImplementedError("DialogsMixin._show_rules")
 
+    def _show_settings_dialog(self):
+        raise NotImplementedError("DialogsMixin._show_settings_dialog")
+
     def _show_statistics(self):
         raise NotImplementedError("DialogsMixin._show_statistics")
 
@@ -343,6 +361,9 @@ class CombatWindowState:
 
     def _switch_to_combat(self):
         raise NotImplementedError("TurnsMixin._switch_to_combat")
+
+    def _start_player_timer(self):
+        raise NotImplementedError("TimerMixin._start_player_timer")
 
     def _switch_to_initiative(self):
         raise NotImplementedError("TurnsMixin._switch_to_initiative")

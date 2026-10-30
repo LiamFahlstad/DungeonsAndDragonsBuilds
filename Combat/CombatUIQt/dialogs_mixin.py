@@ -4,6 +4,7 @@ from typing import Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QDialog,
     QFrame,
     QGridLayout,
@@ -35,6 +36,7 @@ from .stats import (
     damage_taken_key,
     spell_slots_used_key,
 )
+from .settings import SETTING_SECTIONS
 from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
@@ -767,6 +769,50 @@ class DialogsMixin(CombatWindowState):
         cancel_btn.clicked.connect(dlg.reject)
 
         name_input.setFocus()
+        dlg.exec()
+
+    def _show_settings_dialog(self):
+        """Settings that change how the window behaves. Each one takes effect
+        (and is saved) the moment it's changed."""
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Settings")
+        dlg.setStyleSheet(QSS)
+        dlg.setFixedWidth(360)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(8)
+
+        def set_setting(name: str, checked: bool):
+            setattr(self.settings, name, checked)
+            if self._settings_store is not None:
+                self.settings.save(self._settings_store)
+            if name == "source_follows_turn":
+                self._follow_turn_with_source()
+
+        for index, (section, infos) in enumerate(SETTING_SECTIONS):
+            if index:
+                layout.addWidget(self._make_divider())
+            header = QLabel(section)
+            header.setObjectName("sectionHeader")
+            layout.addWidget(header)
+            for info in infos:
+                box = QCheckBox(info.label)
+                box.setObjectName(info.name)
+                box.setChecked(getattr(self.settings, info.name))
+                box.toggled.connect(
+                    lambda checked, name=info.name: set_setting(name, checked)
+                )
+                layout.addWidget(box)
+                hint = QLabel(info.hint)
+                hint.setWordWrap(True)
+                hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+                layout.addWidget(hint)
+
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(dlg.accept)
+        layout.addWidget(close_btn)
+
         dlg.exec()
 
     def _show_more_info(self):

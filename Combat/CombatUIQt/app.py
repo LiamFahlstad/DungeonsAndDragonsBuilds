@@ -3,6 +3,7 @@
 import sys
 from pathlib import Path
 
+from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import QApplication
 
 from Combat.Definitions import tracked_condition_names
@@ -19,6 +20,7 @@ from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
 from .rolls_mixin import RollsMixin
+from .settings import CombatSettings, open_settings_store
 from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .styles import QSS
@@ -88,6 +90,9 @@ class CombatAppQt(
         self.selected_character: dict | None = None
         self.target_characters: list[dict] = []
         self._target_anchor: dict | None = None
+        # Settings; run() loads the saved ones.
+        self.settings = CombatSettings()
+        self._settings_store: QSettings | None = None
         self.round_number = 1
         self.history = []
         self._open_undo_point = None
@@ -147,6 +152,9 @@ class CombatAppQt(
             app = QApplication(sys.argv)
         assert isinstance(app, QApplication)
         app.setStyleSheet(QSS)
+
+        self._settings_store = open_settings_store()
+        self.settings.load(self._settings_store)
 
         self._build_window()
 

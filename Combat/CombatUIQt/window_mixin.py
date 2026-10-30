@@ -501,7 +501,7 @@ class WindowMixin(CombatWindowState):
         self._log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         panel_layout.addWidget(self._log_status_label)
 
-        # Encounter Log / Player Log / Statistics / Rules, two to a row
+        # Encounter Log / Player Log / Statistics / Rules / Settings, two to a row
         info_grid = QGridLayout()
         info_grid.setSpacing(6)
         for index, (text, handler) in enumerate(
@@ -510,6 +510,7 @@ class WindowMixin(CombatWindowState):
                 ("Player Log", self._show_player_log),
                 ("Statistics", self._show_statistics),
                 ("Rules", self._show_rules),
+                ("Settings", self._show_settings_dialog),
             ]
         ):
             btn = QPushButton(text)

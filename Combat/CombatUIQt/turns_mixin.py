@@ -103,6 +103,7 @@ class TurnsMixin(CombatWindowState):
             self._rebuild_card(new_active)
         self._tick_timed_conditions(ended, self._current_turn_group(), new_round)
         self._refresh_turn()
+        self._on_turn_changed()
         # Save whose turn it is, so continuing the fight starts there. A log
         # without events is still as prepared, and stays that way.
         data = self._read_log()
@@ -118,6 +119,28 @@ class TurnsMixin(CombatWindowState):
         if isinstance(QApplication.focusWidget(), QLineEdit):
             return
         self._advance_turn()
+
+    def _on_turn_changed(self):
+        """Apply the turn settings (settings.py) when whose turn it is changes:
+        Next, Previous, combat starting or continuing, an undo across a turn."""
+        self._follow_turn_with_source()
+        active = self._current_turn_character()
+        if self.settings.clear_targets_on_turn and self.target_characters:
+            self.target_characters = []
+            self._update_target_label()
+            self._refresh_cards()
+        if self.settings.restart_player_timer_on_turn:
+            self._reset_player_timer()
+            if active is not None and active.get("_is_player"):
+                self._start_player_timer()
+
+    def _follow_turn_with_source(self):
+        """With the "source follows the turn" setting on, make whoever's turn
+        it is the source (an initiative group's first member). Picking another
+        source by hand lasts until the turn changes."""
+        active = self._current_turn_character()
+        if self.settings.source_follows_turn and active is not None:
+            self._select_character(active)
 
     @staticmethod
     def _dex_mod(char: dict) -> int:
@@ -451,6 +474,7 @@ class TurnsMixin(CombatWindowState):
         self._rebuild_cards()
         self._refresh_turn()
         self._refresh_rest_buttons()
+        self._on_turn_changed()
 
     def _switch_to_initiative(self):
         """Show a fresh initiative-entry screen for self.characters, in place
@@ -495,5 +519,5 @@ class TurnsMixin(CombatWindowState):
             # Auto-scroll to active card
             active_char = self.initiative_order[self.current_turn_idx]
             card = self._card_widgets.get(id(active_char))
-            if card:
+            if card and self.settings.scroll_to_active_card:
                 self._scroll_area.ensureWidgetVisible(card)
