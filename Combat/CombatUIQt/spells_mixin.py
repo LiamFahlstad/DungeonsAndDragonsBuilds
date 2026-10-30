@@ -236,6 +236,12 @@ class SpellsMixin(CombatWindowState):
                 cast_btn.setToolTip(
                     f"Cast on {target_names} (requires: {spell.target.value})"
                 )
+            elif spell.target == FeatureTarget.AREA:
+                cast_btn.setEnabled(True)
+                cast_btn.setToolTip(
+                    "Cast into an area with no creatures marked "
+                    "(select targets first to mark who is caught in it)"
+                )
             else:
                 cast_btn.setEnabled(False)
                 cast_btn.setToolTip(
@@ -287,7 +293,9 @@ class SpellsMixin(CombatWindowState):
     def _apply_cast_spell(self, spell):
         """Cast a spell. The spell's own declared metadata decides what happens:
         spell.target decides who is affected (SELF/None always means the
-        caster; any other target type requires a target to be selected first),
+        caster; AREA means whichever targets are selected, possibly none, since
+        the caster alone tracks its duration and concentration; any other target
+        type requires a target to be selected first),
         spell.casting_time_type logs the action-economy cost on the caster,
         spell.is_concentration breaks any prior concentration and marks the
         caster Concentrating (concentration always belongs to the caster, even
@@ -304,6 +312,8 @@ class SpellsMixin(CombatWindowState):
 
         if spell.target is None or spell.target == FeatureTarget.SELF:
             recipients = [source]
+        elif spell.target == FeatureTarget.AREA:
+            recipients = list(self.target_characters)
         else:
             if not self.target_characters:
                 QMessageBox.warning(
