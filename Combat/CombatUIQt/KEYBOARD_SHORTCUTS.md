@@ -12,6 +12,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **C** | Concentrating (self) | Add the Concentrating condition to the selected source (self-applied). No-op if no source is selected. |
 | **Ctrl+C** | Remove Concentrating | Remove Concentrating from the selected source. No-op if no source is selected. |
 | **Ctrl+Shift+C** | Clear Target Conditions | Clear every condition from every target. No-op if no targets are selected. |
+| **Shift+C** | Custom Condition | Open the Custom Condition dialog (same as the "Custom..." button under Conditions): type any condition, pick a duration (until removed, until the start/end of the source's or target's next turn, 1 round, 1 minute, ..., or a custom number of rounds/minutes/seconds) and an optional note, and it goes on every target. A timed one shows under "Timed Conditions" on the card and ends by itself. |
 | **Ctrl+Z** | Undo | Undo the last thing done — a damage/heal/temp HP (on every target at once), a spell cast with everything it applied, a condition, an action use, Next Turn, an added combatant, ... — putting back the state from before it and removing its lines from the encounter and player logs. Repeat to go further back. |
 | **Escape** | Clear Selection | Clear both the source and target selection. |
 | **Enter / Return** | Next Turn | Advance to the Next Combatant / Next Round. Only active once combat has started (initiative phase does nothing); does nothing while a damage/heal/temp-HP field is focused (Enter submits the field instead). |

@@ -370,6 +370,12 @@ class WindowMixin(CombatWindowState):
         cond_row.addWidget(add_cond_btn)
         cond_row.addWidget(rm_cond_btn)
         right_col.addLayout(cond_row)
+        custom_cond_btn = QPushButton("Custom... (Shift+C)")
+        custom_cond_btn.setToolTip(
+            "Give every target any condition you type, with an optional duration"
+        )
+        custom_cond_btn.clicked.connect(self._show_custom_condition_dialog)
+        right_col.addWidget(custom_cond_btn)
 
         right_col.addWidget(self._make_divider())
 
@@ -553,10 +559,18 @@ class WindowMixin(CombatWindowState):
         self._clear_target_conditions_shortcut.activated.connect(
             self._shortcut_clear_target_conditions
         )
+        # Shift+C: the Custom Condition dialog, for every target.
+        self._custom_condition_shortcut = QShortcut(
+            QKeySequence("Shift+C"), self._window
+        )
+        self._custom_condition_shortcut.activated.connect(
+            self._show_custom_condition_dialog
+        )
         self._combo_sensitive_shortcuts += [
             self._concentration_shortcut,
             self._remove_concentration_shortcut,
             self._clear_target_conditions_shortcut,
+            self._custom_condition_shortcut,
         ]
 
         # Ctrl+Z: Undo Last Action

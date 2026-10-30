@@ -85,7 +85,9 @@ class TurnsMixin(CombatWindowState):
     @undoable
     def _advance_turn(self):
         """Combined Next Combatant / Next Round button handler."""
-        if not self._is_last_turn():
+        ended = self._current_turn_group()
+        new_round = self._is_last_turn()
+        if not new_round:
             self.current_turn_idx = self._turn_span(self.current_turn_idx)[1]
         else:
             self.round_number += 1
@@ -99,6 +101,7 @@ class TurnsMixin(CombatWindowState):
         for new_active in self._current_turn_group():
             new_active["action_uses"] = {}
             self._rebuild_card(new_active)
+        self._tick_timed_conditions(ended, self._current_turn_group(), new_round)
         self._refresh_turn()
         # Save whose turn it is, so continuing the fight starts there. A log
         # without events is still as prepared, and stays that way.

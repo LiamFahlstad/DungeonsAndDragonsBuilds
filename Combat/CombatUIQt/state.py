@@ -287,6 +287,9 @@ class CombatWindowState:
     def _show_condition_info(self, condition_name: str):
         raise NotImplementedError("DialogsMixin._show_condition_info")
 
+    def _show_custom_condition_dialog(self):
+        raise NotImplementedError("ConditionsMixin._show_custom_condition_dialog")
+
     def _show_current_log(self):
         raise NotImplementedError("LoggingMixin._show_current_log")
 
@@ -349,6 +352,11 @@ class CombatWindowState:
 
     def _tick_active_spells(self):
         raise NotImplementedError("SpellsMixin._tick_active_spells")
+
+    def _tick_timed_conditions(
+        self, ended: list[dict], started: list[dict], new_round: bool
+    ):
+        raise NotImplementedError("ConditionsMixin._tick_timed_conditions")
 
     def _undo_last(self):
         raise NotImplementedError("LoggingMixin._undo_last")

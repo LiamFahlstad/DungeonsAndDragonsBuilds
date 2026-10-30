@@ -109,6 +109,11 @@ MAX_ATTUNED_ITEMS = 3
 # bonuses from containers and features.
 CARRYING_CAPACITY_BASE_SLOTS = 3
 
+# ── Combat ───────────────────────────────────────────────────────────────────
+
+# A round, in which every combatant takes one turn, lasts about 6 seconds.
+SECONDS_PER_ROUND = 6
+
 # ── Psionic Energy Dice ──────────────────────────────────────────────────────
 
 # The Psi Warrior and Soulknife Energy Dice tables are the same table, read by

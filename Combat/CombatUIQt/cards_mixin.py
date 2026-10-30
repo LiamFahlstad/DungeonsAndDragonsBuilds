@@ -223,6 +223,13 @@ class CardsMixin(CombatWindowState):
             "Active Features:",
             lambda c, e: self._remove_active_feature(c, e),
         )
+        _add_timed_entries(
+            layout,
+            char,
+            "timed_conditions",
+            "Timed Conditions:",
+            lambda c, e: self._remove_condition_from(c, e["name"]),
+        )
         self._add_action_uses(layout, char)
         _add_ability_rows(layout, char)
 
@@ -336,9 +343,11 @@ class CardsMixin(CombatWindowState):
     ) -> tuple[str | None, str | None]:
         """The tooltip text and badge color a spell or feature attached to this
         condition, if any."""
-        description = char.get("spell_condition_descriptions", {}).get(
-            cond
-        ) or char.get("feature_condition_descriptions", {}).get(cond)
+        description = (
+            char.get("spell_condition_descriptions", {}).get(cond)
+            or char.get("feature_condition_descriptions", {}).get(cond)
+            or char.get("custom_condition_descriptions", {}).get(cond)
+        )
         color = char.get("spell_condition_colors", {}).get(cond) or char.get(
             "feature_condition_colors", {}
         ).get(cond)
@@ -542,8 +551,9 @@ def _add_timed_entries(
     header: str,
     remove: Callable[[dict, dict], None],
 ):
-    """Active spells or features (char[key]): each a name with a dismiss
-    button, over a bar of the time it has left."""
+    """Active spells, features or timed conditions (char[key]): each a name
+    with a dismiss button, over a bar of the time it has left, or the turn it
+    lasts until (entry["text"]) for one that ends on a turn."""
     entries = char.get(key) or []
     if not entries:
         return
@@ -567,6 +577,12 @@ def _add_timed_entries(
         remove_btn.clicked.connect(lambda _=False, c=char, e=entry: remove(c, e))
         name_row.addWidget(remove_btn)
         layout.addLayout(name_row)
+        if "time_left" not in entry:
+            until_lbl = QLabel(entry["text"])
+            until_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
+            until_lbl.setWordWrap(True)
+            layout.addWidget(until_lbl)
+            continue
         time_bar = QProgressBar()
         time_bar.setMinimum(0)
         time_bar.setMaximum(max(entry.get("duration", entry["time_left"]), 1))
