@@ -100,8 +100,10 @@ def test_previous_after_something_else_only_moves_the_turn(fight):
     ui, _, tiger = fight
     ui._advance_turn()
     ui._advance_turn()  # Round 2, the Pirate's turn
+    ui._select_target_character(tiger)  # targets clear when the turn changes
     _damage(ui, 5)
     hp = tiger["hp"]
+    assert hp < tiger["max_hp"]
 
     ui._previous_turn()
 

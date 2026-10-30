@@ -101,6 +101,7 @@ def test_target_durations_follow_each_target_own_turn(fight):
 def test_one_round_lasts_until_the_same_turn_next_round(fight):
     ui, _, tiger = fight
     _turns(ui, 1)  # given on the Tiger's turn
+    ui._select_target_character(tiger)  # targets clear when the turn changes
     ui._add_custom_condition("Off Balance", {"seconds": 6})
 
     _turns(ui, 1)  # round 2, the Pirate's turn

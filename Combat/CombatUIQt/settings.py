@@ -11,7 +11,7 @@ from PyQt6.QtCore import QSettings
 class CombatSettings:
     # Turns (TurnsMixin._on_turn_changed)
     source_follows_turn: bool = True
-    clear_targets_on_turn: bool = False
+    clear_targets_on_turn: bool = True
     restart_player_timer_on_turn: bool = False
     scroll_to_active_card: bool = True
     # Damage (DamageMixin._do_apply_damage)
@@ -56,7 +56,8 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
             SettingInfo(
                 "clear_targets_on_turn",
                 "Clear targets when the turn changes",
-                "Start every turn with no targets picked.",
+                "Start every turn with no targets picked. Off keeps them for"
+                " the next turn.",
             ),
             SettingInfo(
                 "restart_player_timer_on_turn",

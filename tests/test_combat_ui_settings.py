@@ -48,10 +48,11 @@ def fight(tmp_path):
 
 
 def test_the_defaults_keep_the_window_as_it_was():
-    # Only "Source follows the turn" was asked for as a new default.
+    # Only "Source follows the turn" and "Clear targets when the turn
+    # changes" were asked for as new defaults.
     assert CombatSettings() == CombatSettings(
         source_follows_turn=True,
-        clear_targets_on_turn=False,
+        clear_targets_on_turn=True,
         restart_player_timer_on_turn=False,
         scroll_to_active_card=True,
         reset_damage_type_after_hit=True,
@@ -172,12 +173,13 @@ def test_clear_targets_when_the_turn_changes(fight):
     ui._start_combat()
     ui._select_target_character(bandit)
     ui._advance_turn()
-    assert ui.target_characters == [bandit], "off by default"
-
-    ui.settings.clear_targets_on_turn = True
-    ui._advance_turn()
-    assert ui.target_characters == []
+    assert ui.target_characters == [], "on by default"
     assert ui.target_label.text() == "Target: None"
+
+    ui.settings.clear_targets_on_turn = False
+    ui._select_target_character(bandit)
+    ui._advance_turn()
+    assert ui.target_characters == [bandit]
 
 
 def test_restart_the_player_timer_each_turn(fight):
