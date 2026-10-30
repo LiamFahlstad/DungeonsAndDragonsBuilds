@@ -22,13 +22,14 @@ from .state import CombatWindowState
 
 
 class _CombatantCard(QFrame):
-    """A combatant's card. A left click selects it as the source; a right
-    click as the target (Shift + right click adds it to the targets)."""
+    """A combatant's card. A left click selects it as the (only) source; a
+    right click as the target, with Ctrl and Shift picking several targets as
+    in a Windows list (see WindowMixin._select_target_character)."""
 
     def __init__(
         self,
         on_left_click: Callable[[], None],
-        on_right_click: Callable[[bool], None],
+        on_right_click: Callable[[bool, bool], None],
     ):
         super().__init__()
         self._on_left_click = on_left_click
@@ -39,8 +40,9 @@ class _CombatantCard(QFrame):
         if a0 is None:
             return
         if a0.button() == Qt.MouseButton.RightButton:
+            ctrl = bool(a0.modifiers() & Qt.KeyboardModifier.ControlModifier)
             shift = bool(a0.modifiers() & Qt.KeyboardModifier.ShiftModifier)
-            self._on_right_click(shift)
+            self._on_right_click(ctrl, shift)
         else:
             self._on_left_click()
 
@@ -186,8 +188,8 @@ class CardsMixin(CombatWindowState):
 
         card = _CombatantCard(
             on_left_click=lambda: self._select_character(char),
-            on_right_click=lambda additive: self._select_target_character(
-                char, additive=additive
+            on_right_click=lambda ctrl, shift: self._select_target_character(
+                char, ctrl=ctrl, shift=shift
             ),
         )
         card.setObjectName("combatantCard")

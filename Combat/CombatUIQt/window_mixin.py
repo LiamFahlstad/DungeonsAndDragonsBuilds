@@ -35,18 +35,38 @@ class WindowMixin(CombatWindowState):
         self._enable_feature_btn.setEnabled(True)
         self._refresh_cards()
 
-    def _select_target_character(self, char: dict, additive: bool = False):
+    def _select_target_character(
+        self, char: dict, ctrl: bool = False, shift: bool = False
+    ):
+        """Pick targets the way a Windows list picks items. A click picks only
+        char; Ctrl + click adds or removes it; Shift + click picks every card
+        from the anchor (the last card clicked without Shift) to char, in card
+        order, and Ctrl + Shift + click adds that range. The clicked card
+        always ends up last."""
         if self.phase == "PARTY":
             return  # nothing is logged between encounters
-        if additive:
-            if any(char is t for t in self.target_characters):
-                self.target_characters = [
-                    t for t in self.target_characters if t is not char
-                ]
+        targets = self.target_characters
+        anchor_idx = next(
+            (i for i, c in enumerate(self.characters) if c is self._target_anchor),
+            None,
+        )
+        if not shift or anchor_idx is None:
+            self._target_anchor = char
+            if not ctrl:
+                targets = [char]
+            elif any(char is t for t in targets):
+                targets = [t for t in targets if t is not char]
             else:
-                self.target_characters.append(char)
+                targets = targets + [char]
         else:
-            self.target_characters = [char]
+            char_idx = next(i for i, c in enumerate(self.characters) if c is char)
+            step = 1 if char_idx >= anchor_idx else -1
+            span = [
+                self.characters[i] for i in range(anchor_idx, char_idx + step, step)
+            ]
+            kept = [t for t in targets if not any(t is s for s in span)]
+            targets = kept + span if ctrl else span
+        self.target_characters = targets
         self._update_target_label()
         self._refresh_cards()
 
@@ -103,7 +123,7 @@ class WindowMixin(CombatWindowState):
         current = self.target_characters[0] if self.target_characters else None
         idx = next((i for i, c in enumerate(self.characters) if c is current), -1)
         new_idx = (idx + direction) % len(self.characters)
-        self._select_target_character(self.characters[new_idx], additive=False)
+        self._select_target_character(self.characters[new_idx])
 
     def _shortcut_select_active_source(self):
         """Keyboard shortcut 'Space': select whoever's turn it currently is as

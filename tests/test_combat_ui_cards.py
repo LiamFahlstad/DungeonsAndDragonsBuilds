@@ -188,8 +188,8 @@ def _record_clicks(ui, card) -> list:
         setattr(ui, name, recorder)
 
     card._on_left_click()
-    card._on_right_click(False)
-    card._on_right_click(True)
+    for ctrl, shift in ((False, False), (True, False), (False, True)):
+        card._on_right_click(ctrl, shift)
     for widget in card.findChildren(QWidget):
         if isinstance(widget, QPushButton):
             calls.append(["click", widget.text()])

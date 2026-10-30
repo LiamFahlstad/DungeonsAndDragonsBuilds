@@ -78,8 +78,8 @@ Confirmed working in the current code — don't re-flag these:
   ticking — see `spells_mixin.py:_end_concentration_spells`.
 - **Casting a new concentration spell correctly ends the old one** — handled in
   `spells_mixin.py:_apply_cast_spell`.
-- **Multi-target damage/heal/temp HP** — already supported; `target_characters` is a list (Shift+right-click
-  to multi-select) and every apply loop iterates it.
+- **Multi-target damage/heal/temp HP** — already supported; `target_characters` is a list (Ctrl/Shift+right-click
+  to multi-select, Windows style) and every apply loop iterates it.
 - **"Apply as Condition" can now target the caster or the target(s)** — the Cast Spell dialog has separate
   "Apply to Source" / "Apply to Target(s)" buttons (`spells_mixin.py:_apply_spell_as_condition`, now takes
   `apply_to_target`); a debuff like Hold Person correctly badges the affected creature(s) instead of the

@@ -31,6 +31,20 @@ The arrow keys are plain aliases for N/P/Shift+N/Shift+P — left/right mirrors 
 
 A full keyboard turn loop: **Enter** (advance turn) → **Space** (select the new active combatant as source) → **Shift+N**/**Shift+P** (pick a target) → **D**/**H**/**T** (jump to an amount field) → type the amount → **Enter** (apply) → **A**/**B**/**R** (log the action spent).
 
+## Mouse
+
+A left click on a card makes it the source; there is only ever one. A right click picks targets, with Ctrl and Shift working as they do in a Windows file list.
+
+| Click on a card | Action |
+|-----|--------|
+| **Left click** | Make it the source (Ctrl and Shift make no difference). |
+| **Right click** | Make it the only target. It becomes the anchor for Shift. |
+| **Ctrl+Right click** | Add it to the targets, or remove it if it is already one. It becomes the anchor. |
+| **Shift+Right click** | Target every card from the anchor to this one (in card order, down each column), replacing the current targets. The anchor stays where it was. |
+| **Ctrl+Shift+Right click** | Add every card from the anchor to this one to the current targets. |
+
+Damage, heal, temp HP and conditions apply to every target.
+
 ## Notes
 
 - **Text field protection**: Typing into the Damage/Heal/Temp HP amount fields naturally blocks these shortcuts. Qt lets a focused text field consume its own keystrokes, so typing amounts like "15" (or moving the cursor with the left/right arrows) won't accidentally trigger number/letter/arrow shortcuts.

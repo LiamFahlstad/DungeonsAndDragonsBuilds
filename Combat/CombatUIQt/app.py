@@ -87,6 +87,7 @@ class CombatAppQt(
         self.visibility_states = Visibility.list_all()
         self.selected_character: dict | None = None
         self.target_characters: list[dict] = []
+        self._target_anchor: dict | None = None
         self.round_number = 1
         self.history = []
         self._open_undo_point = None

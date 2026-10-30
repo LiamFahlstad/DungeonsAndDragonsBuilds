@@ -47,6 +47,8 @@ class CombatWindowState:
     visibility_states: list[str]
     selected_character: dict | None
     target_characters: list[dict]
+    # The card a Shift + right click range of targets starts from.
+    _target_anchor: dict | None
     round_number: int
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
@@ -259,7 +261,9 @@ class CombatWindowState:
     def _select_character(self, char: dict):
         raise NotImplementedError("WindowMixin._select_character")
 
-    def _select_target_character(self, char: dict, additive: bool = False):
+    def _select_target_character(
+        self, char: dict, ctrl: bool = False, shift: bool = False
+    ):
         raise NotImplementedError("WindowMixin._select_target_character")
 
     def _shortcut_add_concentration(self):

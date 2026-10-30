@@ -134,7 +134,7 @@ def test_undo_with_no_selection_still_works(fight):
 
 def test_one_undo_takes_back_damage_to_every_target(fight):
     ui, pirate, tiger = fight
-    ui._select_target_character(pirate, additive=True)
+    ui._select_target_character(pirate, ctrl=True)
     before = _everything(ui)
     _damage(ui, 20)
     assert pirate["hp"] == 13 and tiger["hp"] == 10
