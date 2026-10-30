@@ -89,6 +89,7 @@ class CombatWindowState:
     _init_tracker_container: QWidget
     _turn_divider: QFrame
     _turn_counter_label: QLabel
+    _prev_turn_btn: QPushButton
     _next_turn_btn: QPushButton
     round_label: QLabel
     _end_encounter_btn: QPushButton
@@ -213,6 +214,9 @@ class CombatWindowState:
     def _make_divider() -> QFrame:
         raise NotImplementedError("WindowMixin._make_divider")
 
+    def _previous_turn(self):
+        raise NotImplementedError("TurnsMixin._previous_turn")
+
     def _rebuild_card(self, char: dict):
         raise NotImplementedError("CardsMixin._rebuild_card")
 
@@ -289,6 +293,9 @@ class CombatWindowState:
 
     def _shortcut_next_turn(self):
         raise NotImplementedError("TurnsMixin._shortcut_next_turn")
+
+    def _shortcut_previous_turn(self):
+        raise NotImplementedError("TurnsMixin._shortcut_previous_turn")
 
     def _shortcut_remove_concentration(self):
         raise NotImplementedError("ConditionsMixin._shortcut_remove_concentration")

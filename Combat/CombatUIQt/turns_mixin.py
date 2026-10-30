@@ -110,6 +110,41 @@ class TurnsMixin(CombatWindowState):
         if has_round_events(data):
             self._write_log(data)
 
+    def _is_first_turn(self) -> bool:
+        """Whether it's round 1's first turn, so there is no turn before it."""
+        return self.round_number <= 1 and (
+            not self.initiative_order or self._turn_span(self.current_turn_idx)[0] == 0
+        )
+
+    def _previous_turn(self):
+        """Previous button handler: take back a Next press made by mistake.
+        Straight after Next, that press is undone (its round, timer ticks and
+        reset action tallies included); after anything else, only whose turn
+        it is steps back."""
+        if self.phase != "COMBAT" or self._is_first_turn():
+            return
+        if self.history and self.history[-1].operation == "_advance_turn":
+            self._undo_last()
+        else:
+            self._step_turn_back()
+
+    @undoable
+    def _step_turn_back(self):
+        """Make it the previous turn's (the last one of the round before, from
+        a round's first turn), changing nothing else."""
+        start = self._turn_span(self.current_turn_idx)[0]
+        if start > 0:
+            self.current_turn_idx = self._turn_span(start - 1)[0]
+        else:
+            self.round_number -= 1
+            self.current_turn_idx = self._turn_span(len(self.initiative_order) - 1)[0]
+            self.round_label.setText(f"Round {self.round_number}")
+        self._refresh_turn()
+        self._on_turn_changed()
+        data = self._read_log()
+        if has_round_events(data):
+            self._write_log(data)
+
     def _shortcut_next_turn(self):
         """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has
         started and no text field is focused (Enter in an input field should only submit
@@ -119,6 +154,13 @@ class TurnsMixin(CombatWindowState):
         if isinstance(QApplication.focusWidget(), QLineEdit):
             return
         self._advance_turn()
+
+    def _shortcut_previous_turn(self):
+        """Keyboard shortcut 'Shift+Enter': the Previous button, under the
+        same conditions as Enter."""
+        if isinstance(QApplication.focusWidget(), QLineEdit):
+            return
+        self._previous_turn()
 
     def _on_turn_changed(self):
         """Apply the turn settings (settings.py) when whose turn it is changes:
@@ -469,6 +511,7 @@ class TurnsMixin(CombatWindowState):
         # Show the combat-only panel widgets
         self._init_tracker_container.show()
         self._turn_divider.show()
+        self._prev_turn_btn.show()
         self._next_turn_btn.show()
 
         self._rebuild_cards()
@@ -487,6 +530,7 @@ class TurnsMixin(CombatWindowState):
         # Hide the combat-only panel widgets
         self._init_tracker_container.hide()
         self._turn_divider.hide()
+        self._prev_turn_btn.hide()
         self._next_turn_btn.hide()
 
         self._initiative_widget = self._build_initiative_widget()
@@ -508,9 +552,10 @@ class TurnsMixin(CombatWindowState):
         self._turn_counter_label.setText(f"Turn {turn} / {len(turn_starts)}")
 
     def _refresh_turn(self):
-        """Update the active-turn highlight, tracker, and Next button label."""
+        """Update the active-turn highlight, tracker, and Next/Previous buttons."""
         self._refresh_cards()
         self._refresh_initiative_tracker()
+        self._prev_turn_btn.setEnabled(not self._is_first_turn())
         if self.initiative_order:
             if not self._is_last_turn():
                 self._next_turn_btn.setText("Next Combatant")

@@ -486,6 +486,15 @@ class WindowMixin(CombatWindowState):
         undo_btn.clicked.connect(self._undo_last)
         turn_row.addWidget(undo_btn, stretch=1)
 
+        # Previous / Next turn (hidden during initiative phase)
+        self._prev_turn_btn = QPushButton("Previous")
+        self._prev_turn_btn.setToolTip(
+            "Go back a turn after pressing Next by mistake (Shift+Enter)"
+        )
+        self._prev_turn_btn.clicked.connect(self._previous_turn)
+        self._prev_turn_btn.hide()
+        turn_row.addWidget(self._prev_turn_btn, stretch=1)
+
         self._next_turn_btn = QPushButton("Next Combatant")
         self._next_turn_btn.clicked.connect(self._advance_turn)
         self._next_turn_btn.hide()
@@ -591,6 +600,14 @@ class WindowMixin(CombatWindowState):
         ]
         for shortcut in self._next_turn_shortcuts:
             shortcut.activated.connect(self._shortcut_next_turn)
+
+        # Shift+Enter / Shift+Return: Previous turn
+        self._previous_turn_shortcuts = [
+            QShortcut(QKeySequence("Shift+Return"), self._window),
+            QShortcut(QKeySequence("Shift+Enter"), self._window),
+        ]
+        for shortcut in self._previous_turn_shortcuts:
+            shortcut.activated.connect(self._shortcut_previous_turn)
 
         # 1-9: cast a spell slot of that level for the source
         self._spell_slot_shortcuts = []

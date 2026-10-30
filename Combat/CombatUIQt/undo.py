@@ -54,6 +54,8 @@ class UndoPoint:
     # (round key, index in the encounter log's round) of each line the
     # operation logged, in order.
     log_entries: list[tuple[str, int]] = field(default_factory=list)
+    # The name of the @undoable method that recorded it ("_advance_turn", ...).
+    operation: str = ""
 
     @classmethod
     def capture(cls, app) -> "UndoPoint":
@@ -109,6 +111,7 @@ def undoable(method):
         if self._open_undo_point is not None or self.phase != "COMBAT":
             return method(self, *args, **kwargs)
         point = UndoPoint.capture(self)
+        point.operation = method.__name__
         self._open_undo_point = point
         try:
             return method(self, *args, **kwargs)
