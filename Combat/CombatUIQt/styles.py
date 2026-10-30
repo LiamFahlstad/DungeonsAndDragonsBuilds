@@ -169,6 +169,22 @@ QComboBox QAbstractItemView {
     selection-background-color: #0f3460;
 }
 
+/* Checkboxes (the Settings dialog): filled gold when checked */
+QCheckBox {
+    color: #eaeaea;
+    spacing: 6px;
+}
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #c9a84c;
+    border-radius: 3px;
+    background-color: #0f3460;
+}
+QCheckBox::indicator:checked {
+    background-color: #c9a84c;
+}
+
 /* Buttons — base */
 QPushButton {
     background-color: #0f3460;
