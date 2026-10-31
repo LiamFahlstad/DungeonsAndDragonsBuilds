@@ -46,18 +46,22 @@ def damage_type_from_text(word: str) -> str | None:
     return matches[0] if word and len(matches) == 1 else None
 
 
-def parse_damage(text: str) -> list[tuple[int, str | None]]:
+def parse_damage(
+    text: str, floor_at_zero: bool = False
+) -> list[tuple[int, str | None]]:
     """What the Damage field says, as (amount, damage type) for each type
     named, in the order typed; a single (amount, None) with no type in it. A
     number with no type of its own takes the next one named ("8+5 fire" is 13
-    fire), or the last if none follows. Raises AmountError if it can't."""
+    fire), or the last if none follows. Raises AmountError if it can't, or
+    if a total comes to less than 0, which `floor_at_zero` counts as 0 instead
+    (a low roll of "1d4 - 2" deals no damage, it isn't a typing mistake)."""
     terms = _parse_terms(text)
     typed = [word for _, word in terms if word]
     if not typed:
         total = sum(amount for amount, _ in terms)
-        if total < 0:
+        if total < 0 and not floor_at_zero:
             raise AmountError(f"'{text.strip()}' comes to less than 0")
-        return [(total, None)]
+        return [(max(total, 0), None)]
 
     totals: dict[str, int] = {}
     upcoming = list(typed)
@@ -66,9 +70,9 @@ def parse_damage(text: str) -> list[tuple[int, str | None]]:
         if word:
             upcoming.pop(0)
         totals[damage_type] = totals.get(damage_type, 0) + amount
-    if any(total < 0 for total in totals.values()):
+    if any(total < 0 for total in totals.values()) and not floor_at_zero:
         raise AmountError(f"'{text.strip()}' comes to less than 0")
-    return [(total, damage_type) for damage_type, total in totals.items()]
+    return [(max(total, 0), damage_type) for damage_type, total in totals.items()]
 
 
 def parse_amount(text: str) -> int | None:

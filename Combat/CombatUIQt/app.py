@@ -23,6 +23,7 @@ from .rolls_mixin import RollsMixin
 from .settings import CombatSettings, open_settings_store
 from .spells_mixin import SpellsMixin
 from .stats import _default_stats
+from .saves import DEFAULT_SAVE_DC
 from .styles import QSS
 from .timer_mixin import TimerMixin
 from .turn_panel_mixin import TurnPanelMixin
@@ -94,6 +95,13 @@ class CombatAppQt(
         self._target_anchor: dict | None = None
         # Targets marked as having saved, for half damage (DamageMixin).
         self._saved_targets: list[dict] = []
+        # The Custom dialog's saving throw, as last used.
+        self._custom_save = {
+            "ability": None,
+            "dc": DEFAULT_SAVE_DC,
+            "half": True,
+            "source": None,
+        }
         # What a monster's action rolled into the Damage field, if it's there.
         self._rolled_damage_text = ""
         # What to remember this turn, and what starting it did (TurnPanelMixin).

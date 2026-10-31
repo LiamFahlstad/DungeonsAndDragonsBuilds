@@ -134,6 +134,13 @@ QLabel#actionResultLabel {
     font-weight: bold;
     font-size: 13px;
 }
+/* ½ Saved: gold when marked, so it reads at a glance who saved */
+QPushButton#savedToggle:checked {
+    background-color: #c9a84c;
+    border: 1px solid #f0d078;
+    color: #1a1a2e;
+    font-weight: bold;
+}
 QPushButton#monsterActionBtn {
     text-align: left;
     padding: 4px 6px;

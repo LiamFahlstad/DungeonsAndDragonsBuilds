@@ -49,7 +49,7 @@ class SettingInfo:
     hint: str
 
 
-# The Settings dialog's sections, in order.
+# The Settings dialog's sections, in order: half in each of its two columns.
 SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
     (
         "Turns",
@@ -88,6 +88,16 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
         ],
     ),
     (
+        "Initiative",
+        [
+            SettingInfo(
+                "ask_initiative_ties",
+                "Ask how to break initiative ties",
+                "Off puts the higher Dexterity first and starts straight away.",
+            ),
+        ],
+    ),
+    (
         "Damage",
         [
             SettingInfo(
@@ -120,16 +130,6 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
                 "Jump to Damage after picking a target",
                 "Right-click a card, then just type the amount. Letter and"
                 " number shortcuts type into the field until Esc.",
-            ),
-        ],
-    ),
-    (
-        "Initiative",
-        [
-            SettingInfo(
-                "ask_initiative_ties",
-                "Ask how to break initiative ties",
-                "Off puts the higher Dexterity first and starts straight away.",
             ),
         ],
     ),

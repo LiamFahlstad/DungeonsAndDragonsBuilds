@@ -87,6 +87,7 @@ class TurnsMixin(CombatWindowState):
         """Combined Next Combatant / Next Round button handler. With the "skip
         dead" setting on, it passes over turns where everyone is dead (at most
         once round the order, in case the whole fight is)."""
+        self._turn_start_notes = []
         for _ in initiative_units(self.initiative_order):
             self._pass_turn()
             if not (self.settings.skip_dead_turns and self._turn_is_dead()):
@@ -142,17 +143,18 @@ class TurnsMixin(CombatWindowState):
             self.current_turn_idx = 0
             self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
-            self._tick_active_spells()
             self._tick_active_features()
         # The action economy (Action/Bonus Action/Reaction) resets for whoever's
         # turn is now starting — other combatants keep their tallies until theirs does.
-        self._turn_start_notes = []
         for new_active in self._current_turn_group():
             new_active["action_uses"] = {}
             if self._char_death_state(new_active) != "dead":
                 self._start_monster_turn(new_active)
             self._rebuild_card(new_active)
         self._tick_timed_conditions(ended, self._current_turn_group(), new_round)
+        self._tick_active_spells(self._current_turn_group(), new_round)
+        for char in ended:
+            self._repeat_saves(char)
 
     def _is_first_turn(self) -> bool:
         """Whether it's round 1's first turn, so there is no turn before it."""
@@ -312,6 +314,16 @@ class TurnsMixin(CombatWindowState):
         for member in unit:
             self._initiative_inputs[id(member)] = init_input
 
+    def _unique_name(self, name: str) -> str:
+        """name, numbered if it's taken: effects find their targets by name."""
+        taken = {c["name"] for c in self.characters}
+        number = 2
+        unique = name
+        while unique in taken:
+            unique = f"{name} {number}"
+            number += 1
+        return unique
+
     @undoable
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
         """Quickly add a free-text combatant mid-session (e.g. a door, an
@@ -320,6 +332,7 @@ class TurnsMixin(CombatWindowState):
         appended to the initiative-entry screen before combat starts, or
         appended to the end of the turn order (it'll get a turn once the
         order cycles round to it) once combat is underway."""
+        name = self._unique_name(name)
         char = {
             "name": name,
             "create_name": name,

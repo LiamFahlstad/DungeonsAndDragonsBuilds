@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
+from Core.Definitions import Condition
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
@@ -113,11 +114,84 @@ class SpellsMixin(CombatWindowState):
                 note_turn=False,
                 character=char["name"],
             )
+            self._end_spell_effects(entry)
 
-    def _tick_active_spells(self):
-        """Deduct 6 seconds (one round) from every combatant's active spell timers,
-        expiring and logging any that reach zero, and dropping Concentrating if its
-        spell expired."""
+    def _end_spell_effects(self, entry: dict):
+        """Take what a concentration spell put on its targets off them, now
+        that it's ended: entry["applied"] says what and on whom. Not what
+        another running effect also holds, and not Unconscious from 0 HP."""
+        entry["ends_with_conditions"] = False
+        for applied in list(entry.get("applied", [])):
+            if self._held_by_effect(applied, excluding=entry):
+                continue
+            condition = applied["condition"]
+            for char in self.characters:
+                if char["name"] != applied["target"]:
+                    continue
+                if condition not in char["conditions"]:
+                    continue
+                if condition != Condition.UNCONSCIOUS.value or char["hp"] > 0:
+                    self._remove_condition_from(char, condition)
+                break
+
+    def _held_by_effect(self, applied: dict, excluding: dict | None = None) -> bool:
+        """Whether a running spell, other than `excluding`, put this condition
+        on this target."""
+        return any(
+            entry is not excluding and applied in entry.get("applied", [])
+            for char in self.characters
+            for entry in char.get("active_spells") or []
+        )
+
+    def _forget_effect_on(self, target: dict, condition: str):
+        """Target has lost condition, so no spell holds it any more. A spell
+        that lasted only as long as its conditions is over with the last."""
+        applied = {"target": target["name"], "condition": condition}
+        for char in self.characters:
+            for entry in list(char.get("active_spells") or []):
+                if applied not in entry.get("applied", []):
+                    continue
+                entry["applied"].remove(applied)
+                if entry.get("ends_with_conditions") and not entry["applied"]:
+                    char["active_spells"].remove(entry)
+                    self._log_event(
+                        f"{char['name']}'s {entry['name']} ends",
+                        note_turn=False,
+                        character=char["name"],
+                    )
+                    self._clear_concentration_if_unused(char)
+                    self._rebuild_card(char)
+
+    def _start_concentration(self, source: dict, name: str):
+        """Source starts concentrating on `name`, which ends any concentration
+        it had going. Concentration always belongs to the caster, regardless
+        of who the spell targets."""
+        remaining_spells = []
+        for entry in source.get("active_spells") or []:
+            if entry.get("concentration"):
+                self._log_event(
+                    f"{source['name']}'s {entry['name']} ends (concentration broken by casting {name})",
+                    character=source["name"],
+                )
+                self._end_spell_effects(entry)
+            else:
+                remaining_spells.append(entry)
+        source["active_spells"] = remaining_spells
+        # A save still owed was for the spell that just ended.
+        source.pop("concentration_checks", None)
+        self._add_condition_to(source, CombatStatus.CONCENTRATING.value, source=source)
+
+    def _tick_active_spells(self, started: list[dict], new_round: bool):
+        """Deduct 6 seconds (one round) from the active spell timers due as the
+        turn passes to `started` (`new_round` when that begins a round),
+        expiring and logging any that reach zero, and dropping Concentrating if
+        its spell expired. A timer counts on the turn the spell was cast, like
+        a timed condition, so a late caster's spell lasts as long as anyone's;
+        at the round's start if that combatant has no turn (any more), or for
+        a timer that doesn't say."""
+        started_names = {c["name"] for c in started}
+        in_order = {c["name"] for c in self.initiative_order}
+        ticked = False
         for char in self.characters:
             active_spells = char.get("active_spells")
             if not active_spells:
@@ -125,6 +199,14 @@ class SpellsMixin(CombatWindowState):
             remaining = []
             expired_concentration = False
             for entry in active_spells:
+                ticks_on = entry.get("ticks_on")
+                if ticks_on in in_order and ticks_on not in started_names:
+                    remaining.append(entry)
+                    continue
+                if ticks_on not in started_names and not new_round:
+                    remaining.append(entry)
+                    continue
+                ticked = True
                 entry["time_left"] = max(entry["time_left"] - 6, 0)
                 if entry["time_left"] > 0:
                     remaining.append(entry)
@@ -136,10 +218,12 @@ class SpellsMixin(CombatWindowState):
                     )
                     if entry.get("concentration"):
                         expired_concentration = True
+                    self._end_spell_effects(entry)
             char["active_spells"] = remaining
             if expired_concentration:
                 self._clear_concentration_if_unused(char)
-        self._rebuild_cards()
+        if ticked:
+            self._rebuild_cards()
 
     @undoable
     def _remove_active_spell(self, char: dict, entry: dict):
@@ -151,6 +235,7 @@ class SpellsMixin(CombatWindowState):
         self._log_event(
             f"{char['name']}'s {entry['name']} ends early", character=char["name"]
         )
+        self._end_spell_effects(entry)
         if entry.get("concentration"):
             self._clear_concentration_if_unused(char)
         self._rebuild_card(char)
@@ -431,24 +516,7 @@ class SpellsMixin(CombatWindowState):
             self._cast_spell_slot_level(slot_level)
 
         if spell.is_concentration:
-            # Break any existing concentration spells before starting a new one
-            active_spells = source.get("active_spells") or []
-            remaining_spells = []
-            for entry in active_spells:
-                if entry.get("concentration"):
-                    self._log_event(
-                        f"{source['name']}'s {entry['name']} ends (concentration broken by casting {spell.name})",
-                        character=source["name"],
-                    )
-                else:
-                    remaining_spells.append(entry)
-            source["active_spells"] = remaining_spells
-            # A save still owed was for the spell that just ended.
-            source.pop("concentration_checks", None)
-            # Concentration always belongs to the caster, regardless of who the spell targets.
-            self._add_condition_to(
-                source, CombatStatus.CONCENTRATING.value, source=source
-            )
+            self._start_concentration(source, spell.name)
 
         # Action economy: the caster spends the action, regardless of who it affects
         try:
@@ -498,6 +566,12 @@ class SpellsMixin(CombatWindowState):
 
         # Store the tooltip description and badge color, and add the condition,
         # on every recipient (the caster for a self-cast, each target otherwise).
+        applied = []
+        if spell.is_concentration:
+            for char in recipients:
+                row = {"target": char["name"], "condition": spell.name}
+                if spell.name not in char["conditions"] or self._held_by_effect(row):
+                    applied.append(row)
         for char in list(recipients):
             char.setdefault("spell_condition_descriptions", {})[
                 spell.name
@@ -506,13 +580,17 @@ class SpellsMixin(CombatWindowState):
             self._add_condition_to(char, spell.name, source=source)
 
         if has_duration:
+            turn = self._current_turn_group()
             source.setdefault("active_spells", []).append(
                 {
                     "name": spell.name,
                     "time_left": duration,
                     "duration": duration,
                     "concentration": spell.is_concentration,
+                    "applied": applied,
+                    "ticks_on": turn[0]["name"] if turn else None,
                 }
             )
 
+        self._save_fight_state()
         self._refresh_selected_card()

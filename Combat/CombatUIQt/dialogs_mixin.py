@@ -705,6 +705,9 @@ def _add_monster_ability(panel: _InfoPanel, ab):
     panel.expandable(f"{name}  ({header_suffix})", box)
 
 
+_SETTINGS_WIDTH = 860
+
+
 class DialogsMixin(CombatWindowState):
     """Mixin for dialog windows."""
 
@@ -777,7 +780,7 @@ class DialogsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Settings")
         dlg.setStyleSheet(QSS)
-        dlg.setFixedWidth(360)
+        dlg.setFixedWidth(_SETTINGS_WIDTH)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
@@ -791,24 +794,34 @@ class DialogsMixin(CombatWindowState):
                 self._follow_turn_with_source()
             self._apply_panel_settings()
 
-        for index, (section, infos) in enumerate(SETTING_SECTIONS):
-            if index:
-                layout.addWidget(self._make_divider())
-            header = QLabel(section)
-            header.setObjectName("sectionHeader")
-            layout.addWidget(header)
-            for info in infos:
-                box = QCheckBox(info.label)
-                box.setObjectName(info.name)
-                box.setChecked(getattr(self.settings, info.name))
-                box.toggled.connect(
-                    lambda checked, name=info.name: set_setting(name, checked)
-                )
-                layout.addWidget(box)
-                hint = QLabel(info.hint)
-                hint.setWordWrap(True)
-                hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
-                layout.addWidget(hint)
+        # Two columns, or it's taller than many screens.
+        columns = QHBoxLayout()
+        columns.setSpacing(20)
+        middle = len(SETTING_SECTIONS) // 2
+        for sections in (SETTING_SECTIONS[:middle], SETTING_SECTIONS[middle:]):
+            column = QVBoxLayout()
+            column.setSpacing(6)
+            for index, (section, infos) in enumerate(sections):
+                if index:
+                    column.addWidget(self._make_divider())
+                header = QLabel(section)
+                header.setObjectName("sectionHeader")
+                column.addWidget(header)
+                for info in infos:
+                    box = QCheckBox(info.label)
+                    box.setObjectName(info.name)
+                    box.setChecked(getattr(self.settings, info.name))
+                    box.toggled.connect(
+                        lambda checked, name=info.name: set_setting(name, checked)
+                    )
+                    column.addWidget(box)
+                    hint = QLabel(info.hint)
+                    hint.setWordWrap(True)
+                    hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+                    column.addWidget(hint)
+            column.addStretch()
+            columns.addLayout(column, stretch=1)
+        layout.addLayout(columns)
 
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(dlg.accept)

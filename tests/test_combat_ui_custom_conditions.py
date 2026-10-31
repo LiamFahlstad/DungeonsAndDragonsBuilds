@@ -166,13 +166,13 @@ def test_card_shows_timed_conditions(fight):
 def test_dialog_applies_a_custom_duration(fight, monkeypatch):
     ui, _, tiger = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    name_combo, duration_combo, unit_combo = dlg.findChildren(QComboBox)
+    name_combo = dlg.findChild(QComboBox, "conditionName")
+    duration_combo = dlg.findChild(QComboBox, "conditionDuration")
+    unit_combo = dlg.findChild(QComboBox, "durationUnit")
     name_combo.setCurrentText("Restrained by vines")
-    # The notes box; the combo and spin boxes hold line edits of their own.
-    (notes,) = [e for e in dlg.findChildren(QLineEdit) if e.parent() is dlg]
-    notes.setText("DC 13 Str save ends")
+    dlg.findChild(QLineEdit, "conditionNotes").setText("DC 13 Str save ends")
     duration_combo.setCurrentIndex(duration_combo.findData("custom"))
-    dlg.findChild(QSpinBox).setValue(3)
+    dlg.findChild(QSpinBox, "durationAmount").setValue(3)
     unit_combo.setCurrentText("rounds")
     apply_btn = next(b for b in dlg.findChildren(QPushButton) if b.text() == "Apply")
     apply_btn.click()
@@ -187,7 +187,7 @@ def test_dialog_applies_a_custom_duration(fight, monkeypatch):
 def test_dialog_names_the_source_in_its_durations(fight, monkeypatch):
     ui, _, _ = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    duration_combo = dlg.findChildren(QComboBox)[1]
+    duration_combo = dlg.findChild(QComboBox, "conditionDuration")
     labels = [duration_combo.itemText(i) for i in range(duration_combo.count())]
     assert "Until the start of Pirate's next turn" in labels
     assert labels[-1] == "Custom..."

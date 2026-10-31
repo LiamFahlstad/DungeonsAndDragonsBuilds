@@ -5,8 +5,8 @@ import random
 from Combat.Definitions import Action
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
+from .saves import save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
-from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable
 
@@ -58,7 +58,9 @@ class DamageMixin(CombatWindowState):
 
         if has_type(target.get("damage_immunities")):
             return 0, "immune"
-        resisted = has_type(target.get("damage_resistances"))
+        resisted = has_type(target.get("damage_resistances")) or (
+            "Petrified" in target.get("conditions", [])
+        )
         vulnerable = has_type(target.get("damage_vulnerabilities"))
         if resisted:
             dmg //= 2
@@ -128,27 +130,7 @@ class DamageMixin(CombatWindowState):
 
         for target in list(self.target_characters):
             saved = any(target is s for s in self._saved_targets)
-            taken = 0
-            knockout = False
-            for amount, damage_type in parts:
-                dmg, downed = self._damage_target(
-                    target, amount, damage_type, source, check_resistance, saved
-                )
-                taken += dmg
-                knockout = knockout or downed
-
-            # A creature that makes Death Saving Throws falls Unconscious at
-            # 0 HP (which also ends its Concentration); any other one dies.
-            if knockout and self._char_death_state(target) != "dead":
-                self._add_condition_to(target, Condition.UNCONSCIOUS.value)
-
-            if "Concentrating" in target.get("conditions", []):
-                if knockout:
-                    self._remove_condition_from(target, "Concentrating", source=target)
-                elif taken > 0 and self.settings.ask_concentration_saves:
-                    # Only damage taken forces a save (damage soaked by
-                    # temporary HP still counts); 0 after immunity doesn't.
-                    self._ask_concentration_save(target, taken)
+            self._deal_damage(target, parts, source, check_resistance, saved)
 
         if source is not None:
             source["_last_damage_type"] = parts[-1][1]
@@ -159,6 +141,38 @@ class DamageMixin(CombatWindowState):
         self._update_target_label()
         for target in self.target_characters:
             self._rebuild_card(target)
+
+    def _deal_damage(
+        self,
+        target: dict,
+        parts: list[tuple[int, str]],
+        source: dict | None,
+        check_resistance: bool,
+        saved: bool,
+    ):
+        """One hit on target, of each (amount, damage type) in parts, and what
+        the hit does to it: falling Unconscious, a Concentration save."""
+        taken = 0
+        knockout = False
+        for amount, damage_type in parts:
+            dmg, downed = self._damage_target(
+                target, amount, damage_type, source, check_resistance, saved
+            )
+            taken += dmg
+            knockout = knockout or downed
+
+        # A creature that makes Death Saving Throws falls Unconscious at
+        # 0 HP (which also ends its Concentration); any other one dies.
+        if knockout and self._char_death_state(target) != "dead":
+            self._add_condition_to(target, Condition.UNCONSCIOUS.value)
+
+        if "Concentrating" in target.get("conditions", []):
+            if knockout:
+                self._remove_condition_from(target, "Concentrating", source=target)
+            elif taken > 0 and self.settings.ask_concentration_saves:
+                # Only damage taken forces a save (damage soaked by
+                # temporary HP still counts); 0 after immunity doesn't.
+                self._ask_concentration_save(target, taken)
 
     def _damage_target(
         self,
@@ -272,15 +286,7 @@ class DamageMixin(CombatWindowState):
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""
-        saving_throws = char.get("Saving Throws") or {}
-        for key in ("CONSTITUTION", "Con", "CON"):
-            if key in saving_throws:
-                return saving_throws[key]
-        ability_scores = char.get("Ability Scores") or {}
-        for key in ("Con", "CON", "CONSTITUTION"):
-            if key in ability_scores:
-                return ability_modifier(ability_scores[key])
-        return 0
+        return save_modifier(char, "CON")
 
     def _ask_concentration_save(self, char: dict, dmg: int):
         """Ask for the Constitution save that dmg forces: on char's card, or

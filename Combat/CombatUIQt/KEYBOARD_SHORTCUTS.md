@@ -12,7 +12,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **C** | Concentrating (self) | Add the Concentrating condition to the selected source (self-applied). No-op if no source is selected. |
 | **Ctrl+C** | Remove Concentrating | Remove Concentrating from the selected source. No-op if no source is selected. |
 | **Ctrl+Shift+C** | Clear Target Conditions | Clear every condition from every target. No-op if no targets are selected. |
-| **Shift+C** | Custom Condition | Open the Custom Condition dialog (same as the "Custom..." button under Conditions): type any condition, pick a duration (until removed, until the start/end of the source's or target's next turn, 1 round, 1 minute, ..., or a custom number of rounds/minutes/seconds) and an optional note, and it goes on every target. A timed one shows under "Timed Conditions" on the card and ends by itself. |
+| **Shift+C** | Custom Effect | Open the Custom Effect dialog (same as the "Custom..." button under Conditions). It applies to every target: a saving throw, damage, a condition with a duration and note, and what it costs the source. See "The Custom Effect dialog" below. A timed condition shows under "Timed Conditions" on the card and ends by itself. |
 | **Ctrl+Z** | Undo | Undo the last thing done — a damage/heal/temp HP (on every target at once), a spell cast with everything it applied, a condition, an action use, Next Turn, an added combatant, ... — putting back the state from before it and removing its lines from the encounter and player logs. Repeat to go further back. |
 | **Escape** | Leave Field / Clear Selection | In a text field, leave it so the other shortcuts work again. Otherwise clear both the source and target selection. |
 | **Enter / Return** | Next Turn | Advance to the Next Combatant / Next Round, passing over turns where everyone is dead (Settings). Only active once combat has started (initiative phase does nothing); does nothing while a damage/heal/temp-HP field is focused (Enter submits the field instead, and **Esc** leaves it). |
@@ -48,7 +48,23 @@ The type can go with the amount, and shows in the dropdown as you type. One lett
 | `24/2 fi` | 12 Fire (half, rounded down) |
 | `7 pi + 3 fi` | 7 Piercing and 3 Fire, as one hit: one undo and one Concentration save, with each type's resistance counted |
 
-**½ Saved** halves the next damage for every target. With several targets, each target's card has its own **½ Saved** instead, for those who made the save. It lasts one hit.
+**Saved?** marks every target as having saved: it turns gold, reads **½ Saved**, and the next damage is halved. With several targets, each target's card has its own **Saved?** too, for marking only those who made the save. A mark lasts one hit, or until the turn changes.
+
+## The Custom Effect dialog
+
+For anything that hits several targets at once, like a Fireball or a Hold Person. Pick the source and targets as usual, then press **Shift+C**.
+
+- **Name:** optional, for the log and the turn column ("Fireball").
+- **Saving throw:** pick the ability; the DC starts at the source's spell save DC when that's known, and stays as you set it until the source changes. Each target rolls with its own save bonus. A player's row takes the total they rolled at the table, or stays blank to roll for them.
+- **The rules it counts:** Paralyzed, Petrified, Stunned and Unconscious fail Strength and Dexterity saves, Restrained gives Disadvantage on Dexterity saves, and a creature immune to the condition doesn't get it. A longer custom name counts too ("Restrained by vines").
+- **What it doesn't count:** Exhaustion (its level isn't tracked, so the log flags it), Evasion, Magic Resistance and similar features (set Advantage yourself, or adjust by hand), and a Cast Spell badge, which is the spell's name and not a condition: a target of a Hold Person cast through Cast Spell isn't Paralyzed to this dialog, so use this dialog for it, with Paralyzed as the condition.
+- **Damage:** dice are rolled once, for everyone. Type the type (`8d6 fire`) or pick it from the dropdown, which starts on the source's last type. Each target's resistances count unless you untick that, and a save halves the damage, or avoids it with "Half damage on a save" off.
+- **Condition:** goes on those who failed, or on everyone with no saving throw. With no saving throw, a target marked ½ Saved counts as having saved by hand: half damage and no condition.
+- **Repeat the save:** at the end of each of its turns, a monster rolls again and a save ends the condition. A player gets a reminder to roll, and you remove the condition if they make it.
+- **Source:** a spell slot and an action to spend, so one dialog covers the whole spell. "Source concentrates on it" starts Concentrating, ending any other concentration, and when it ends the condition comes off everyone who got it, unless another running effect also holds it. With a duration of a turn, it ends when the last condition does. With no time set, it runs for an hour.
+- **Legendary Resistance:** with a target that has any left, a tick box spends it to turn a failed save into a success.
+
+Each target's roll is in the encounter log, and the turn column shows the totals. One Ctrl+Z takes all of it back.
 
 ## The dialogs
 

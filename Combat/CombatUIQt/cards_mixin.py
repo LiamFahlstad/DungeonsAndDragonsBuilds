@@ -24,7 +24,7 @@ from .monster_actions import (
     legendary_actions_left,
     legendary_resistances_left,
 )
-from .state import CombatWindowState
+from .state import CombatWindowState, saved_label
 from .styles import QSS
 
 # The conditions a card's quick menu offers, each one click to add or remove.
@@ -325,10 +325,11 @@ class CardsMixin(CombatWindowState):
             char is t for t in self.target_characters
         ):
             return
-        toggle = QPushButton("½ Saved")
+        saved = any(char is s for s in self._saved_targets)
+        toggle = QPushButton(saved_label(saved))
         toggle.setObjectName("savedToggle")
         toggle.setCheckable(True)
-        toggle.setChecked(any(char is s for s in self._saved_targets))
+        toggle.setChecked(saved)
         toggle.setFixedHeight(22)
         toggle.setToolTip("This target saved: it takes half of the next damage")
         toggle.clicked.connect(lambda _=False, c=char: self._toggle_saved(c))

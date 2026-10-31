@@ -30,7 +30,8 @@ from Combat.Definitions import Action
 from Combat.CombatUIQt.player_view import player_view_rows
 from Combat.CombatUIQt.monster_actions import parse_action
 from Combat.CombatUIQt.settings import SETTING_SECTIONS
-from Combat.EncounterLogs import PLAYER_SAVES_KEY, LogJSONEncoder
+from Combat.CombatUIQt.styles import QSS
+from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY, LogJSONEncoder
 from Core.Definitions import DamageType
 from Model.Creatures.Combatants import DamageTypeEntry
 from tests._combat_ui import make_ui, open_dialog
@@ -1530,7 +1531,7 @@ def test_a_settled_save_doesnt_come_back(tmp_path):
     obmar["conditions"].append("Concentrating")
     _damage_field(ui, "4 fi")
     ui._settle_concentration(obmar, 10, kept=True)
-    assert PLAYER_SAVES_KEY not in ui._read_log()
+    assert PLAYER_FIGHT_STATE_KEY not in ui._read_log()
 
 
 def test_a_new_concentration_spell_clears_the_old_save(fight):
@@ -1586,3 +1587,37 @@ def test_a_recharge_gets_one_roll_a_turn(dragon, monkeypatch):
     ui._undo_last()
     ui._advance_turn()  # the same 2, not the 6
     assert pirate["spent_abilities"] == {name: 1}
+
+
+def test_a_saved_button_asks_until_it_is_marked(fight):
+    ui, _, tiger, bandit = fight
+    assert ui._half_btn.text() == "Saved?"
+    ui._select_target_character(bandit, ctrl=True)
+    assert ui._saved_targets == [], "picking targets marks nobody"
+    assert _saved_toggle(ui, tiger).text() == "Saved?"
+    assert not _saved_toggle(ui, tiger).isChecked()
+
+    _saved_toggle(ui, tiger).click()
+    assert _saved_toggle(ui, tiger).text() == "½ Saved"
+    assert _saved_toggle(ui, tiger).isChecked()
+    assert _saved_toggle(ui, bandit).text() == "Saved?"
+    assert ui._half_btn.text() == "Saved?", "not everyone has saved"
+
+    ui._half_btn.click()
+    assert ui._half_btn.text() == "½ Saved"
+    assert _saved_toggle(ui, bandit).text() == "½ Saved"
+
+
+def test_a_marked_saved_button_looks_different(fight):
+    ui, *_ = fight
+    assert ui._half_btn.objectName() == "savedToggle"
+    assert "QPushButton#savedToggle:checked" in QSS
+
+
+def test_the_settings_dialog_fits_the_smallest_window(fight, monkeypatch):
+    """It grew past many screens' height as a single column. The window's
+    minimum height is 600, so it has to fit in that."""
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_settings_dialog)
+    width = dlg.width()
+    assert dlg.layout().totalHeightForWidth(width) <= 600

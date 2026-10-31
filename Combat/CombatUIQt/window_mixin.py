@@ -21,7 +21,7 @@ from PyQt6.QtWidgets import (
 
 from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
-from .state import CombatWindowState
+from .state import CombatWindowState, saved_label
 
 # How long the status line stays up (WindowMixin._show_status).
 STATUS_SECONDS = 6
@@ -111,7 +111,9 @@ class WindowMixin(CombatWindowState):
 
     def _update_target_label(self):
         everyone_saved = len(self._saved_targets) == len(self.target_characters)
-        self._half_btn.setChecked(bool(self.target_characters) and everyone_saved)
+        marked = bool(self.target_characters) and everyone_saved
+        self._half_btn.setChecked(marked)
+        self._half_btn.setText(saved_label(marked))
         if not self.target_characters:
             self.target_label.setText("Target: None")
         elif len(self.target_characters) == 1:
@@ -411,7 +413,8 @@ class WindowMixin(CombatWindowState):
         dmg_raw_btn.clicked.connect(self._apply_damage)
         dmg_btn_row.addWidget(dmg_raw_btn)
 
-        self._half_btn = QPushButton("½ Saved")
+        self._half_btn = QPushButton(saved_label(False))
+        self._half_btn.setObjectName("savedToggle")
         self._half_btn.setCheckable(True)
         self._half_btn.setToolTip(
             "Every target saved: the next damage is halved. With several"
@@ -497,7 +500,8 @@ class WindowMixin(CombatWindowState):
         right_col.addLayout(cond_row)
         custom_cond_btn = QPushButton("Custom... (Shift+C)")
         custom_cond_btn.setToolTip(
-            "Give every target any condition you type, with an optional duration"
+            "Roll a saving throw for every target and apply damage or a"
+            " condition to each, or just give them any condition you type"
         )
         custom_cond_btn.clicked.connect(self._show_custom_condition_dialog)
         right_col.addWidget(custom_cond_btn)

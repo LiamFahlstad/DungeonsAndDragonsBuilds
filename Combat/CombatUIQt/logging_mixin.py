@@ -9,7 +9,8 @@ import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Combat.EncounterLogs import (
     ORDER_KEY,
-    PLAYER_SAVES_KEY,
+    PLAYER_FIGHT_KEYS,
+    PLAYER_FIGHT_STATE_KEY,
     TURN_KEY,
     LogJSONEncoder,
     event_text,
@@ -57,14 +58,15 @@ class LoggingMixin(CombatWindowState):
             for c in self.characters
             if not c.get("_is_player")
         ]
-        owed = {
-            c["name"]: c["concentration_checks"]
+        player_state = {
+            c["name"]: {key: c[key] for key in PLAYER_FIGHT_KEYS if c.get(key)}
             for c in self.characters
-            if c.get("_is_player") and c.get("concentration_checks")
+            if c.get("_is_player")
         }
-        data.pop(PLAYER_SAVES_KEY, None)
-        if owed:
-            data[PLAYER_SAVES_KEY] = owed
+        player_state = {name: keys for name, keys in player_state.items() if keys}
+        data.pop(PLAYER_FIGHT_STATE_KEY, None)
+        if player_state:
+            data[PLAYER_FIGHT_STATE_KEY] = player_state
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
         self.log_file.write_text(
             json.dumps(data, indent=2, cls=LogJSONEncoder), encoding="utf-8"
@@ -78,6 +80,13 @@ class LoggingMixin(CombatWindowState):
         ):
             self.player_log_data["sessions"].append(session)
             self._write_player_log()
+
+    def _save_fight_state(self):
+        """Save what changed since the last line logged, like a timer set just
+        after it. A log without events is still as prepared, and stays so."""
+        data = self._read_log()
+        if has_round_events(data):
+            self._write_log(data)
 
     def _read_log(self) -> dict:
         """The encounter log's contents; {} between encounters."""
@@ -187,13 +196,13 @@ class LoggingMixin(CombatWindowState):
         # them in alongside the players rather than replacing self.characters.
         players = [c for c in self.characters if c.get("_is_player")]
         self.characters = players + data.get("combatants", [])
-        owed = data.get(PLAYER_SAVES_KEY, {})
+        player_state = data.get(PLAYER_FIGHT_STATE_KEY, {})
         for char in self.characters:
             char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
             if char.get("_is_player"):
-                char.pop("concentration_checks", None)
-                if char["name"] in owed:
-                    char["concentration_checks"] = list(owed[char["name"]])
+                for key in PLAYER_FIGHT_KEYS:
+                    char.pop(key, None)
+                char.update(player_state.get(char["name"], {}))
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)

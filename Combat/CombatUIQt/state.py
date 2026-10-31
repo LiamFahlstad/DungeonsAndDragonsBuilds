@@ -35,6 +35,11 @@ from .settings import CombatSettings
 from .undo import UndoPoint
 
 
+def saved_label(saved: bool) -> str:
+    """The text of a ½ Saved button: a question until it's marked."""
+    return "½ Saved" if saved else "Saved?"
+
+
 class CombatWindowState:
     # ── Class constants (CombatAppQt) ──────────────────────────────────────
 
@@ -53,6 +58,8 @@ class CombatWindowState:
     _target_anchor: dict | None
     # Targets marked as having saved, for half damage (DamageMixin).
     _saved_targets: list[dict]
+    # The Custom dialog's saving throw, as last used.
+    _custom_save: dict
     # What a monster's action rolled into the Damage field, if it's there.
     _rolled_damage_text: str
     # What to remember this turn, and what starting it did (TurnPanelMixin).
@@ -192,6 +199,34 @@ class CombatWindowState:
 
     def _report_uncaught_error(self, error_type, error, traceback_):
         raise NotImplementedError("WindowMixin._report_uncaught_error")
+
+    def _forget_effect_on(self, target: dict, condition: str):
+        raise NotImplementedError("SpellsMixin._forget_effect_on")
+
+    def _held_by_effect(self, applied: dict, excluding: dict | None = None) -> bool:
+        raise NotImplementedError("SpellsMixin._held_by_effect")
+
+    def _end_spell_effects(self, entry: dict):
+        raise NotImplementedError("SpellsMixin._end_spell_effects")
+
+    def _repeat_saves(self, char: dict):
+        raise NotImplementedError("ConditionsMixin._repeat_saves")
+
+    def _start_concentration(self, source: dict, name: str):
+        raise NotImplementedError("SpellsMixin._start_concentration")
+
+    def _deal_damage(
+        self,
+        target: dict,
+        parts: list[tuple[int, str]],
+        source: dict | None,
+        check_resistance: bool,
+        saved: bool,
+    ):
+        raise NotImplementedError("DamageMixin._deal_damage")
+
+    def _use_legendary_resistance(self, char: dict):
+        raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")
 
     def _con_save_mod(self, char: dict) -> int:
         raise NotImplementedError("DamageMixin._con_save_mod")
@@ -435,6 +470,9 @@ class CombatWindowState:
     def _show_visibility_info(self, visibility_name: str):
         raise NotImplementedError("DialogsMixin._show_visibility_info")
 
+    def _save_fight_state(self):
+        raise NotImplementedError("LoggingMixin._save_fight_state")
+
     def _read_log(self) -> dict:
         raise NotImplementedError("LoggingMixin._read_log")
 
@@ -468,7 +506,7 @@ class CombatWindowState:
     def _tick_active_features(self):
         raise NotImplementedError("FeaturesMixin._tick_active_features")
 
-    def _tick_active_spells(self):
+    def _tick_active_spells(self, started: list[dict], new_round: bool):
         raise NotImplementedError("SpellsMixin._tick_active_spells")
 
     def _tick_timed_conditions(
