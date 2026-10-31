@@ -23,6 +23,8 @@
   },
   "conditions": [],
   "create_name": "Spell Slot Test Paladin 4 Wizard 3",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -179,6 +181,8 @@
   },
   "conditions": [],
   "create_name": "Spell Slot Test Paladin 5",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -306,6 +310,8 @@
   },
   "conditions": [],
   "create_name": "Spell Slot Test Wizard 3 Warlock 3",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -483,6 +489,8 @@
   },
   "conditions": [],
   "create_name": "Spell Slot Test Wizard 5",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -616,6 +624,8 @@
   },
   "conditions": [],
   "create_name": "Kodiak Stonewatch",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -687,6 +697,14 @@
   },
   "conditions": [],
   "create_name": "Grudda Ironscar",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -759,6 +777,14 @@
   },
   "conditions": [],
   "create_name": "Torvid Stormcaller",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Lightning"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -832,6 +858,8 @@
   },
   "conditions": [],
   "create_name": "Fenwick Chaosborn",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -904,6 +932,14 @@
   },
   "conditions": [],
   "create_name": "Piper Wrenhollow",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -1084,6 +1120,8 @@
   },
   "conditions": [],
   "create_name": "Corvinus Talebright",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -1264,6 +1302,8 @@
   },
   "conditions": [],
   "create_name": "Perrin Bladesong",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -1445,6 +1485,8 @@
   },
   "conditions": [],
   "create_name": "Nyra Hollowecho",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -1626,6 +1668,8 @@
   },
   "conditions": [],
   "create_name": "Mortimer Grimvale",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -1824,6 +1868,25 @@
   },
   "conditions": [],
   "create_name": "Brenna Hearthforge",
+  "damage_immunities": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   },
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -2023,6 +2086,8 @@
   },
   "conditions": [],
   "create_name": "Willowdale Fernstep",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -2222,6 +2287,8 @@
   },
   "conditions": [],
   "create_name": "Castellan Trueward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -2421,6 +2488,8 @@
   },
   "conditions": [],
   "create_name": "Halcyon Meadowlight",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -2619,6 +2688,8 @@
   },
   "conditions": [],
   "create_name": "Storm Wavecrest",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -2819,6 +2890,8 @@
   },
   "conditions": [],
   "create_name": "Vesper Nightsong",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3019,6 +3092,8 @@
   },
   "conditions": [],
   "create_name": "Somna Driftwillow",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3206,6 +3281,8 @@
   },
   "conditions": [],
   "create_name": "Meridian Flockward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3393,6 +3470,8 @@
   },
   "conditions": [],
   "create_name": "Mossen Rotbloom",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3581,6 +3660,8 @@
   },
   "conditions": [],
   "create_name": "Ember Ashgrove",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3767,6 +3848,8 @@
   },
   "conditions": [],
   "create_name": "Percival Steelmount",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3841,6 +3924,8 @@
   },
   "conditions": [],
   "create_name": "Lucian Mirrorstrike",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3913,6 +3998,8 @@
   },
   "conditions": [],
   "create_name": "Bjorn Giantforge",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -3984,6 +4071,8 @@
   },
   "conditions": [],
   "create_name": "Kaito Stormedge",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4056,6 +4145,8 @@
   },
   "conditions": [],
   "create_name": "Indra Starform",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4118,6 +4209,8 @@
   },
   "conditions": [],
   "create_name": "Chen Wobblejar",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4182,6 +4275,8 @@
   },
   "conditions": [],
   "create_name": "Hana Steeldrift",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4248,6 +4343,8 @@
   },
   "conditions": [],
   "create_name": "Yorrin Palebone",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4311,6 +4408,8 @@
   },
   "conditions": [],
   "create_name": "Solara Brightpalm",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4374,6 +4473,8 @@
   },
   "conditions": [],
   "create_name": "Malachar Ironwill",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4591,6 +4692,8 @@
   },
   "conditions": [],
   "create_name": "Regalia Trueheart",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -4808,6 +4911,8 @@
   },
   "conditions": [],
   "create_name": "Vorlag Cursebound",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5025,6 +5130,8 @@
   },
   "conditions": [],
   "create_name": "Pax Mercyward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5242,6 +5349,8 @@
   },
   "conditions": [],
   "create_name": "Argus Farwatch",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5457,6 +5566,8 @@
   },
   "conditions": [],
   "create_name": "Wyrmhild Scaleborn",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5617,6 +5728,8 @@
   },
   "conditions": [],
   "create_name": "Dashiell Farstride",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5805,6 +5918,8 @@
   },
   "conditions": [],
   "create_name": "Vantha Beastbane",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -5987,6 +6102,8 @@
   },
   "conditions": [],
   "create_name": "Wisp Thornwhistle",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6173,6 +6290,8 @@
   },
   "conditions": [],
   "create_name": "Delphine Websworn",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6248,6 +6367,8 @@
   },
   "conditions": [],
   "create_name": "Fennick Quickstep",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6339,6 +6460,8 @@
   },
   "conditions": [],
   "create_name": "Cosimo Duelaire",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6429,6 +6552,8 @@
   },
   "conditions": [],
   "create_name": "Seraphel Lightborn",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6636,6 +6761,8 @@
   },
   "conditions": [],
   "create_name": "Selene Moonflare",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -6921,6 +7048,30 @@
   },
   "conditions": [],
   "create_name": "Zephyra Galewind",
+  "damage_immunities": [
+   {
+    "damage_types": [
+     "Lightning"
+    ]
+   },
+   {
+    "damage_types": [
+     "Thunder"
+    ]
+   }
+  ],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Lightning"
+    ]
+   },
+   {
+    "damage_types": [
+     "Thunder"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7130,6 +7281,14 @@
   },
   "conditions": [],
   "create_name": "Marrow Deepbind",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Cold"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7300,6 +7459,14 @@
   },
   "conditions": [],
   "create_name": "Kalinda Bottlebound",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7462,6 +7629,8 @@
   },
   "conditions": [],
   "create_name": "Draven Curseblade",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7625,6 +7794,8 @@
   },
   "conditions": [],
   "create_name": "Mortessa Gravepact",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7789,6 +7960,8 @@
   },
   "conditions": [],
   "create_name": "Aurelio Timeward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -7989,6 +8162,8 @@
   },
   "conditions": [],
   "create_name": "Orbeck Gravewell",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8188,6 +8363,8 @@
   },
   "conditions": [],
   "create_name": "Quillon Inkbound",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8385,6 +8562,14 @@
   },
   "conditions": [],
   "create_name": "Junia Coglance",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8490,6 +8675,8 @@
   },
   "conditions": [],
   "create_name": "Rurik Bloodfang",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8550,6 +8737,8 @@
   },
   "conditions": [],
   "create_name": "Branna Rootshield",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8612,6 +8801,19 @@
   },
   "conditions": [],
   "create_name": "Sable Quickstep",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Radiant"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8732,6 +8934,19 @@
   },
   "conditions": [],
   "create_name": "Faelan Silvertongue",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Radiant"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -8863,6 +9078,8 @@
   },
   "conditions": [],
   "create_name": "Odalys Verseholt",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9102,6 +9319,19 @@
   },
   "conditions": [],
   "create_name": "Marlowe Duskfiddle",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Radiant"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9228,6 +9458,14 @@
   },
   "conditions": [],
   "create_name": "Maelis Runeward",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9508,6 +9746,8 @@
   },
   "conditions": [],
   "create_name": "Ansel Duskvale",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9650,6 +9890,14 @@
   },
   "conditions": [],
   "create_name": "Iolanthe Pagewell",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9801,6 +10049,8 @@
   },
   "conditions": [],
   "create_name": "Amara Sunkindle",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -9938,6 +10188,14 @@
   },
   "conditions": [],
   "create_name": "Rowan Thistledown",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10198,6 +10456,8 @@
   },
   "conditions": [],
   "create_name": "Briar Wolfshade",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10333,6 +10593,8 @@
   },
   "conditions": [],
   "create_name": "Coral Tidewalker",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10474,6 +10736,8 @@
   },
   "conditions": [],
   "create_name": "Celestine Skyfarer",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10604,6 +10868,8 @@
   },
   "conditions": [],
   "create_name": "Sylvaine Farshot",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10682,6 +10948,8 @@
   },
   "conditions": [],
   "create_name": "Roderick Vanguard",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10758,6 +11026,8 @@
   },
   "conditions": [],
   "create_name": "Aldric Stormblade",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10818,6 +11088,14 @@
   },
   "conditions": [],
   "create_name": "Brant Oakenshield",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10880,6 +11158,14 @@
   },
   "conditions": [],
   "create_name": "Garrick Platewell",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -10940,6 +11226,14 @@
   },
   "conditions": [],
   "create_name": "Vance Bladewright",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11011,6 +11305,14 @@
   },
   "conditions": [],
   "create_name": "Merric Spellblade",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11088,6 +11390,14 @@
   },
   "conditions": [],
   "create_name": "Kestrel Mindshard",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Psychic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11165,6 +11475,19 @@
   },
   "conditions": [],
   "create_name": "Moira Ashenveil",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Psychic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11234,6 +11557,8 @@
   },
   "conditions": [],
   "create_name": "Kaida Emberfist",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11327,6 +11652,8 @@
   },
   "conditions": [],
   "create_name": "Amrita Softhand",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11419,6 +11746,8 @@
   },
   "conditions": [],
   "create_name": "Zephyr Moonpetal",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11514,6 +11843,8 @@
   },
   "conditions": [],
   "create_name": "Wei Stonefist",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11605,6 +11936,8 @@
   },
   "conditions": [],
   "create_name": "Kira Nightstep",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11685,6 +12018,8 @@
   },
   "conditions": [],
   "create_name": "Sylvana Greenward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11793,6 +12128,8 @@
   },
   "conditions": [],
   "create_name": "Gareth Lightbearer",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -11891,6 +12228,14 @@
   },
   "conditions": [],
   "create_name": "Jasmindra Windbound",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12009,6 +12354,8 @@
   },
   "conditions": [],
   "create_name": "Titus Battleglory",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12221,6 +12568,8 @@
   },
   "conditions": [],
   "create_name": "Seraphine Wrathbound",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12335,6 +12684,8 @@
   },
   "conditions": [],
   "create_name": "Fenn Wildstrider",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12504,6 +12855,8 @@
   },
   "conditions": [],
   "create_name": "Alder Mistwalker",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12611,6 +12964,14 @@
   },
   "conditions": [],
   "create_name": "Raven Duskrunner",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12707,6 +13068,8 @@
   },
   "conditions": [],
   "create_name": "Bramble Hollowguard",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12802,6 +13165,8 @@
   },
   "conditions": [],
   "create_name": "Talon Swiftarrow",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12893,6 +13258,19 @@
   },
   "conditions": [],
   "create_name": "Frost Icevane",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Cold"
+    ]
+   },
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -12990,6 +13368,8 @@
   },
   "conditions": [],
   "create_name": "Vex Shadowmark",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13064,6 +13444,8 @@
   },
   "conditions": [],
   "create_name": "Wraith Grimscar",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13155,6 +13537,14 @@
   },
   "conditions": [],
   "create_name": "Nyssa Voidwhisper",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Psychic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13419,6 +13809,14 @@
   },
   "conditions": [],
   "create_name": "Pyrrhus Scaleheart",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13585,6 +13983,8 @@
   },
   "conditions": [],
   "create_name": "Thistle Feydream",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13706,6 +14106,14 @@
   },
   "conditions": [],
   "create_name": "Seren Starbound",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Radiant"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -13929,6 +14337,8 @@
   },
   "conditions": [],
   "create_name": "Orsolya Hollowvow",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -14142,6 +14552,8 @@
   },
   "conditions": [],
   "create_name": "Lithea Songblade",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -14262,6 +14674,8 @@
   },
   "conditions": [],
   "create_name": "Corvin Farsummon",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -14549,6 +14963,8 @@
   },
   "conditions": [],
   "create_name": "Elowen Fatereader",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -14679,6 +15095,8 @@
   },
   "conditions": [],
   "create_name": "Seraphine Silvertongue",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -14973,6 +15391,14 @@
   },
   "conditions": [],
   "create_name": "Mordecai Ashgrave",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15262,6 +15688,8 @@
   },
   "conditions": [],
   "create_name": "Alistair Formbend",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15559,6 +15987,14 @@
   },
   "conditions": [],
   "create_name": "Petra Gearhollow",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15665,6 +16101,14 @@
   },
   "conditions": [],
   "create_name": "Obmar St\u00e5lsk\u00e4gg",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15780,6 +16224,8 @@
   },
   "conditions": [],
   "create_name": "Dessie",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15904,6 +16350,8 @@
   },
   "conditions": [],
   "create_name": "Ymira Skullcrusher",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -15964,6 +16412,8 @@
   },
   "conditions": [],
   "create_name": "Dagny Evergrasp",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16026,6 +16476,19 @@
   },
   "conditions": [],
   "create_name": "Iselle Moonweave",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Radiant"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16157,6 +16620,8 @@
   },
   "conditions": [],
   "create_name": "Thomas",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16270,6 +16735,8 @@
   },
   "conditions": [],
   "create_name": "Tobias Greyquill",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16509,6 +16976,8 @@
   },
   "conditions": [],
   "create_name": "Thomas",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16614,6 +17083,8 @@
   },
   "conditions": [],
   "create_name": "Clover",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16745,6 +17216,8 @@
   },
   "conditions": [],
   "create_name": "Thomas",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -16856,6 +17329,14 @@
   },
   "conditions": [],
   "create_name": "Thaddeus Loreweaver",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17007,6 +17488,14 @@
   },
   "conditions": [],
   "create_name": "Gabriel Greybeard",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17148,6 +17637,8 @@
   },
   "conditions": [],
   "create_name": "Solenne Brightward",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17285,6 +17776,8 @@
   },
   "conditions": [],
   "create_name": "Maggie",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17410,6 +17903,8 @@
   },
   "conditions": [],
   "create_name": "Ursaline Nightpelt",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17545,6 +18040,8 @@
   },
   "conditions": [],
   "create_name": "Reynard Steelvow",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17605,6 +18102,14 @@
   },
   "conditions": [],
   "create_name": "Osric Ironheart",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17667,6 +18172,14 @@
   },
   "conditions": [],
   "create_name": "Talia Swiftguard",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17743,6 +18256,8 @@
   },
   "conditions": [],
   "create_name": "Kivi J\u00e4tti",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17809,6 +18324,8 @@
   },
   "conditions": [],
   "create_name": "Krag Stormfist",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17874,6 +18391,8 @@
   },
   "conditions": [],
   "create_name": "Umbra Silentfang",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -17954,6 +18473,14 @@
   },
   "conditions": [],
   "create_name": "Edmund",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18076,6 +18603,8 @@
   },
   "conditions": [],
   "create_name": "Elric Pactsworn",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18329,6 +18858,8 @@
   },
   "conditions": [],
   "create_name": "Balder Sunoath",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18541,6 +19072,8 @@
   },
   "conditions": [],
   "create_name": "Nadia Ironvow",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18655,6 +19188,8 @@
   },
   "conditions": [],
   "create_name": "Orin Packleader",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18824,6 +19359,14 @@
   },
   "conditions": [],
   "create_name": "Hanna",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Psychic"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -18920,6 +19463,14 @@
   },
   "conditions": [],
   "create_name": "Nyx Shadowtracker",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19016,6 +19567,14 @@
   },
   "conditions": [],
   "create_name": "Thum Schtock",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19131,6 +19690,8 @@
   },
   "conditions": [],
   "create_name": "Lysandra Nightblade",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19206,6 +19767,8 @@
   },
   "conditions": [],
   "create_name": "Kagen Voidstep",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19297,6 +19860,14 @@
   },
   "conditions": [],
   "create_name": "Ignatia Emberscale",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Fire"
+    ]
+   }
+  ],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19464,6 +20035,8 @@
   },
   "conditions": [],
   "create_name": "Caelum Bladefey",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19618,6 +20191,8 @@
   },
   "conditions": [],
   "create_name": "Wrenna Thornpact",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19739,6 +20314,8 @@
   },
   "conditions": [],
   "create_name": "Ilyana Bladesong",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [
@@ -19859,6 +20436,8 @@
   },
   "conditions": [],
   "create_name": "Percival Farsight",
+  "damage_immunities": [],
+  "damage_resistances": [],
   "death_saves_fail": 0,
   "death_saves_success": 0,
   "features": [

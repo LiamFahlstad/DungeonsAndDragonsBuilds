@@ -130,6 +130,8 @@ def combatant_from_character(character: Character) -> dict:
             ability.short_name: character.get_saving_throw_modifier(ability)
             for ability in Definitions.Ability
         },
+        "damage_resistances": _damage_entries(character.damage_resistances()),
+        "damage_immunities": _damage_entries(character.damage_immunities()),
         "_is_player": True,
         "_stat_block": character,
         "_weapons_objects": list(character.weapons),
@@ -147,6 +149,12 @@ def combatant_from_character(character: Character) -> dict:
         "_feature_objects": list(character.features),
         "invocations": list(character.invocations),
     }
+
+
+def _damage_entries(damage_types) -> list[dict]:
+    """A character's resistances or immunities the way a monster's look once
+    reloaded from a saved fight, so the combat UI treats them alike."""
+    return [{"damage_types": [damage_type.value]} for damage_type in damage_types]
 
 
 def _armor_class_text(character: Character) -> str:
