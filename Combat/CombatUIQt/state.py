@@ -14,7 +14,7 @@ place, and the type checker can verify every use.
 
 from pathlib import Path
 
-from PyQt6.QtCore import QSettings
+from PyQt6.QtCore import QSettings, QTimer
 from PyQt6.QtWidgets import (
     QComboBox,
     QFrame,
@@ -51,6 +51,13 @@ class CombatWindowState:
     target_characters: list[dict]
     # The card a Shift + right click range of targets starts from.
     _target_anchor: dict | None
+    # Targets marked as having saved, for half damage (DamageMixin).
+    _saved_targets: list[dict]
+    # What a monster's action rolled into the Damage field, if it's there.
+    _rolled_damage_text: str
+    # What to remember this turn, and what starting it did (TurnPanelMixin).
+    _turn_reminders: list[str]
+    _turn_start_notes: list[str]
     # Settings (DialogsMixin._show_settings_dialog), kept between runs in
     # _settings_store; None (tests, scripts) keeps them for this run only.
     settings: CombatSettings
@@ -99,6 +106,14 @@ class CombatWindowState:
     _log_status_label: QLabel
     selected_label: QLabel
     target_label: QLabel
+    _status_label: QLabel
+    _status_timer: QTimer
+    _views_timer: QTimer
+    _half_btn: QPushButton
+    _more_controls: QWidget
+    _more_controls_btn: QPushButton
+    _turn_panel: QScrollArea
+    _action_result_label: QLabel
     roll_result_label: QLabel
     damage_input: QLineEdit
     heal_input: QLineEdit
@@ -159,6 +174,9 @@ class CombatWindowState:
     def _build_initiative_widget(self) -> QWidget:
         raise NotImplementedError("TurnsMixin._build_initiative_widget")
 
+    def _build_turn_panel(self) -> QWidget:
+        raise NotImplementedError("TurnPanelMixin._build_turn_panel")
+
     def _build_timer_section(self) -> QWidget:
         raise NotImplementedError("TimerMixin._build_timer_section")
 
@@ -168,6 +186,75 @@ class CombatWindowState:
     @staticmethod
     def _char_death_state(char: dict) -> str:
         raise NotImplementedError("CardsMixin._char_death_state")
+
+    def _clear_status(self):
+        raise NotImplementedError("WindowMixin._clear_status")
+
+    def _report_uncaught_error(self, error_type, error, traceback_):
+        raise NotImplementedError("WindowMixin._report_uncaught_error")
+
+    def _con_save_mod(self, char: dict) -> int:
+        raise NotImplementedError("DamageMixin._con_save_mod")
+
+    def _apply_panel_settings(self):
+        raise NotImplementedError("WindowMixin._apply_panel_settings")
+
+    def _card_right_clicked(self, char: dict, ctrl: bool, shift: bool):
+        raise NotImplementedError("CardsMixin._card_right_clicked")
+
+    def _focus_damage_input(self):
+        raise NotImplementedError("WindowMixin._focus_damage_input")
+
+    def _focus_heal_input(self):
+        raise NotImplementedError("WindowMixin._focus_heal_input")
+
+    def _focus_temp_hp_input(self):
+        raise NotImplementedError("WindowMixin._focus_temp_hp_input")
+
+    def _refresh_next_button(self):
+        raise NotImplementedError("TurnsMixin._refresh_next_button")
+
+    def _refresh_views(self):
+        raise NotImplementedError("TurnPanelMixin._refresh_views")
+
+    def _roll_concentration(self, char: dict, dc: int):
+        raise NotImplementedError("DamageMixin._roll_concentration")
+
+    @staticmethod
+    def _section_header(text: str) -> QLabel:
+        raise NotImplementedError("WindowMixin._section_header")
+
+    def _set_targets(self, targets: list[dict]):
+        raise NotImplementedError("WindowMixin._set_targets")
+
+    def _settle_concentration(
+        self, char: dict, dc: int, kept: bool, roll: int | None = None
+    ):
+        raise NotImplementedError("DamageMixin._settle_concentration")
+
+    def _show_source_damage_type(self, source: dict | None):
+        raise NotImplementedError("DamageMixin._show_source_damage_type")
+
+    def _show_typed_damage_type(self, text: str):
+        raise NotImplementedError("DamageMixin._show_typed_damage_type")
+
+    def _start_monster_turn(self, char: dict):
+        raise NotImplementedError("TurnPanelMixin._start_monster_turn")
+
+    def _take_turn_reminders(self):
+        raise NotImplementedError("TurnPanelMixin._take_turn_reminders")
+
+    def _toggle_player_view(self):
+        raise NotImplementedError("TurnPanelMixin._toggle_player_view")
+
+    def _toggle_saved(self, char: dict):
+        raise NotImplementedError("DamageMixin._toggle_saved")
+
+    def _toggle_saved_for_all(self):
+        raise NotImplementedError("DamageMixin._toggle_saved_for_all")
+
+    def _upcoming_turns(self) -> list[list[dict]]:
+        raise NotImplementedError("TurnsMixin._upcoming_turns")
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         raise NotImplementedError("LoggingMixin._compute_player_log_stats")
@@ -338,6 +425,9 @@ class CombatWindowState:
 
     def _show_settings_dialog(self):
         raise NotImplementedError("DialogsMixin._show_settings_dialog")
+
+    def _show_status(self, text: str):
+        raise NotImplementedError("WindowMixin._show_status")
 
     def _show_statistics(self):
         raise NotImplementedError("DialogsMixin._show_statistics")

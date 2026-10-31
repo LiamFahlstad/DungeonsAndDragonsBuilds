@@ -3,11 +3,12 @@
 from typing import Callable
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QMouseEvent
+from PyQt6.QtGui import QCursor, QMouseEvent
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QMenu,
     QProgressBar,
     QPushButton,
     QSizePolicy,
@@ -18,7 +19,26 @@ from PyQt6.QtWidgets import (
 from Combat.Definitions import ConditionRule
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
+from .monster_actions import (
+    LEGENDARY_ACTIONS_PER_ROUND,
+    legendary_actions_left,
+    legendary_resistances_left,
+)
 from .state import CombatWindowState
+from .styles import QSS
+
+# The conditions a card's quick menu offers, each one click to add or remove.
+CARD_MENU_CONDITIONS = (
+    "Blinded",
+    "Charmed",
+    "Frightened",
+    "Grappled",
+    "Incapacitated",
+    "Poisoned",
+    "Prone",
+    "Restrained",
+    "Stunned",
+)
 
 
 class _CombatantCard(QFrame):
@@ -122,6 +142,7 @@ class CardsMixin(CombatWindowState):
             self._apply_card_state_properties(card, char, death_state)
             card.style().unpolish(card)
             card.style().polish(card)
+        self._views_timer.start()
 
     def _rebuild_card(self, char: dict):
         """Rebuild a specific combatant card in-place (after stat changes)."""
@@ -139,6 +160,7 @@ class CardsMixin(CombatWindowState):
         new_card = self._make_card(char)
         self._grid_layout.addWidget(new_card, grid_row, grid_col)
         self._card_widgets[card_id] = new_card
+        self._views_timer.start()
 
     def _refresh_selected_card(self):
         """Rebuild only the selected card in-place."""
@@ -188,8 +210,8 @@ class CardsMixin(CombatWindowState):
 
         card = _CombatantCard(
             on_left_click=lambda: self._select_character(char),
-            on_right_click=lambda ctrl, shift: self._select_target_character(
-                char, ctrl=ctrl, shift=shift
+            on_right_click=lambda ctrl, shift: self._card_right_clicked(
+                char, ctrl, shift
             ),
         )
         card.setObjectName("combatantCard")
@@ -203,11 +225,14 @@ class CardsMixin(CombatWindowState):
         layout.setSpacing(3)
 
         self._add_card_name_and_death_saves(layout, char, death_state)
+        self._add_saved_toggle(layout, char)
+        self._add_concentration_checks(layout, char)
         layout.addLayout(_hp_row(char))
         layout.addWidget(_ac_speed_label(char))
         self._add_condition_badges(layout, char)
         self._add_visibility_badges(layout, char)
         _add_defenses(layout, char)
+        _add_monster_counters(layout, char)
         _add_spell_slots(layout, char)
         _add_timed_entries(
             layout,
@@ -292,6 +317,89 @@ class CardsMixin(CombatWindowState):
             revive_btn.setToolTip("Bring back with 1 HP (Revivify, Raise Dead, ...)")
             revive_btn.clicked.connect(lambda _=False, c=char: self._revive(c))
             layout.addWidget(revive_btn)
+
+    def _add_saved_toggle(self, layout: QVBoxLayout, char: dict):
+        """With several targets, whether this one saved, for half damage (one
+        target only needs the panel's ½ Saved button)."""
+        if len(self.target_characters) < 2 or not any(
+            char is t for t in self.target_characters
+        ):
+            return
+        toggle = QPushButton("½ Saved")
+        toggle.setObjectName("savedToggle")
+        toggle.setCheckable(True)
+        toggle.setChecked(any(char is s for s in self._saved_targets))
+        toggle.setFixedHeight(22)
+        toggle.setToolTip("This target saved: it takes half of the next damage")
+        toggle.clicked.connect(lambda _=False, c=char: self._toggle_saved(c))
+        layout.addWidget(toggle)
+
+    def _add_concentration_checks(self, layout: QVBoxLayout, char: dict):
+        """Each Concentration save char owes: roll it, or say how it went."""
+        for dc in char.get("concentration_checks", []):
+            label = QLabel(f"DC {dc} CON ({self._con_save_mod(char):+d})")
+            label.setObjectName("statusLabel")
+            layout.addWidget(label)
+            row = QHBoxLayout()
+            row.setSpacing(4)
+            roll_btn = QPushButton("Roll")
+            roll_btn.clicked.connect(
+                lambda _=False, c=char, d=dc: self._roll_concentration(c, d)
+            )
+            kept_btn = QPushButton("Kept")
+            kept_btn.clicked.connect(
+                lambda _=False, c=char, d=dc: self._settle_concentration(c, d, True)
+            )
+            lost_btn = QPushButton("Lost")
+            lost_btn.clicked.connect(
+                lambda _=False, c=char, d=dc: self._settle_concentration(c, d, False)
+            )
+            for button in (roll_btn, kept_btn, lost_btn):
+                button.setObjectName("concentrationBtn")
+                button.setFixedHeight(24)
+                row.addWidget(button)
+            layout.addLayout(row)
+
+    def _card_right_clicked(self, char: dict, ctrl: bool, shift: bool):
+        """Right-clicking picks targets; right-clicking the card that's already
+        the only target opens its quick menu."""
+        was_only_target = (
+            not (ctrl or shift)
+            and len(self.target_characters) == 1
+            and self.target_characters[0] is char
+        )
+        self._select_target_character(char, ctrl=ctrl, shift=shift)
+        if was_only_target:
+            self._card_menu(char).popup(QCursor.pos())
+
+    def _card_menu(self, char: dict) -> QMenu:
+        """Damage, Heal and Temp HP for this target, and the common conditions
+        a click away. It isn't modal: it closes with any click elsewhere."""
+        menu = QMenu(self._window)
+        menu.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        menu.setStyleSheet(QSS)
+        menu.addAction("Damage (D)", self._focus_damage_input)
+        menu.addAction("Heal (H)", self._focus_heal_input)
+        menu.addAction("Temp HP (T)", self._focus_temp_hp_input)
+        menu.addSeparator()
+        for cond in CARD_MENU_CONDITIONS:
+            action = menu.addAction(cond)
+            assert action is not None  # addAction with a text always makes one
+            action.setCheckable(True)
+            action.setChecked(cond in char["conditions"])
+            action.triggered.connect(
+                lambda _=False, c=char, name=cond: self._toggle_condition_on(c, name)
+            )
+        menu.addSeparator()
+        menu.addAction("Custom... (Shift+C)", self._show_custom_condition_dialog)
+        return menu
+
+    def _toggle_condition_on(self, char: dict, cond: str):
+        source = self.selected_character or self._current_turn_character()
+        if cond in char["conditions"]:
+            self._remove_condition_from(char, cond, source=source)
+        else:
+            self._add_condition_to(char, cond, source=source)
 
     def _add_condition_badges(self, layout: QVBoxLayout, char: dict):
         conditions = char.get("conditions", [])
@@ -531,6 +639,30 @@ def _add_defenses(layout: QVBoxLayout, char: dict):
         cond_immune_lbl.setStyleSheet("color: #4a9fc4; font-size: 10px;")
         cond_immune_lbl.setWordWrap(True)
         layout.addWidget(cond_immune_lbl)
+
+
+def _add_monster_counters(layout: QVBoxLayout, char: dict):
+    """What a monster has left of what the fight uses up."""
+    parts = []
+    if char.get("legendary_actions"):
+        left = legendary_actions_left(char)
+        parts.append(f"Legendary {left}/{LEGENDARY_ACTIONS_PER_ROUND}")
+    if char.get("legendary_resistances"):
+        left = legendary_resistances_left(char)
+        parts.append(f"Resist {left}/{char['legendary_resistances']}")
+    spent = ", ".join(char.get("spent_abilities", {}))
+    if not parts and not spent:
+        return
+    layout.addWidget(_separator())
+    if parts:
+        counters_lbl = QLabel("  ".join(parts))
+        counters_lbl.setStyleSheet("color: #c9a84c; font-size: 11px;")
+        layout.addWidget(counters_lbl)
+    if spent:
+        spent_lbl = QLabel(f"Spent: {spent}")
+        spent_lbl.setStyleSheet("color: #e67e22; font-size: 10px;")
+        spent_lbl.setWordWrap(True)
+        layout.addWidget(spent_lbl)
 
 
 def _add_spell_slots(layout: QVBoxLayout, char: dict):

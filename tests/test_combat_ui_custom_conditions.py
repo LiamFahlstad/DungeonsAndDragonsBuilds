@@ -3,7 +3,7 @@ its dialog): any condition typed in goes on every target, with an optional
 note and a duration that ends it by itself at the right turn boundary."""
 
 import pytest
-from PyQt6.QtWidgets import QComboBox, QDialog, QLabel, QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QComboBox, QDialog, QLabel, QLineEdit
 from PyQt6.QtWidgets import QPushButton, QSpinBox
 
 from Combat.Combatants import Pirate, Tiger
@@ -196,10 +196,8 @@ def test_dialog_names_the_source_in_its_durations(fight, monkeypatch):
 def test_dialog_needs_a_target(fight, monkeypatch):
     ui, _, _ = fight
     ui.target_characters = []
-    warnings = []
-    monkeypatch.setattr(QMessageBox, "warning", lambda *a: warnings.append(a))
     monkeypatch.setattr(QDialog, "exec", lambda self: pytest.fail("opened"))
 
     ui._show_custom_condition_dialog()
 
-    assert len(warnings) == 1
+    assert "pick a target" in ui._status_label.text()

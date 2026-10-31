@@ -40,6 +40,9 @@ UNDONE_SESSIONS_KEY = "undone_player_log_entries"
 # The turn order, by name, and whose turn it is (the first of a group's).
 ORDER_KEY = "initiative_order"
 TURN_KEY = "turn"
+# Players' Concentration saves still to make, by name: players aren't in
+# "combatants", and replaying their log doesn't bring these back.
+PLAYER_SAVES_KEY = "player_concentration_checks"
 HEADER_KEYS = ("encounter", "title", "players")
 
 

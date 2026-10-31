@@ -9,6 +9,7 @@ import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Combat.EncounterLogs import (
     ORDER_KEY,
+    PLAYER_SAVES_KEY,
     TURN_KEY,
     LogJSONEncoder,
     event_text,
@@ -31,6 +32,11 @@ from .stats import (
 from .state import CombatWindowState
 
 
+def _slots_by_level(slots: dict | None) -> dict[int, int]:
+    """Spell slots with their levels as numbers, which JSON makes strings."""
+    return {int(level): count for level, count in (slots or {}).items()}
+
+
 class LoggingMixin(CombatWindowState):
     """Mixin for logging-related methods."""
 
@@ -51,6 +57,14 @@ class LoggingMixin(CombatWindowState):
             for c in self.characters
             if not c.get("_is_player")
         ]
+        owed = {
+            c["name"]: c["concentration_checks"]
+            for c in self.characters
+            if c.get("_is_player") and c.get("concentration_checks")
+        }
+        data.pop(PLAYER_SAVES_KEY, None)
+        if owed:
+            data[PLAYER_SAVES_KEY] = owed
         self.log_file.parent.mkdir(parents=True, exist_ok=True)
         self.log_file.write_text(
             json.dumps(data, indent=2, cls=LogJSONEncoder), encoding="utf-8"
@@ -102,6 +116,7 @@ class LoggingMixin(CombatWindowState):
         party's state is replayed from on the next run (see Combat/PlayerLog.py).
         During a short rest the events are collected for its player-log entry
         instead (RestsMixin)."""
+        self._clear_status()
         turn_name = self._current_turn_name() if note_turn else None
         event: dict[str, object] = {
             "text": f"[{turn_name}'s turn] {text}" if turn_name else text
@@ -131,6 +146,7 @@ class LoggingMixin(CombatWindowState):
         """Take back the last operation (see undo.py): restore the combat
         state from before it and delete the lines it logged."""
         if not self.history:
+            self._show_status("Nothing to undo.")
             return
         point = self.history.pop()
 
@@ -171,7 +187,13 @@ class LoggingMixin(CombatWindowState):
         # them in alongside the players rather than replacing self.characters.
         players = [c for c in self.characters if c.get("_is_player")]
         self.characters = players + data.get("combatants", [])
+        owed = data.get(PLAYER_SAVES_KEY, {})
         for char in self.characters:
+            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
+            if char.get("_is_player"):
+                char.pop("concentration_checks", None)
+                if char["name"] in owed:
+                    char["concentration_checks"] = list(owed[char["name"]])
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)
@@ -305,6 +327,7 @@ class LoggingMixin(CombatWindowState):
                 for key in mutable_keys:
                     if key in snapshot:
                         char[key] = snapshot[key]
+                char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
 
             round_keys = sorted(
                 (
@@ -410,6 +433,8 @@ class LoggingMixin(CombatWindowState):
             level_key = spell_slots_used_key(value)
             char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
         elif action == Action.CAST_SPELL:
+            if value is None:
+                return  # older logs marked a spell ended by another cast like this
             spell_name = value["spell_name"] if isinstance(value, dict) else value
             char.setdefault("stats", _default_stats())
             char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1

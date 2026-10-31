@@ -48,15 +48,21 @@ def fight(tmp_path):
 
 
 def test_the_defaults_keep_the_window_as_it_was():
-    # Only "Source follows the turn" and "Clear targets when the turn
-    # changes" were asked for as new defaults.
+    # "Source follows the turn", "Clear targets when the turn changes" and
+    # "Skip dead combatants' turns" were asked for as new defaults.
     assert CombatSettings() == CombatSettings(
         source_follows_turn=True,
         clear_targets_on_turn=True,
         restart_player_timer_on_turn=False,
         scroll_to_active_card=True,
+        skip_dead_turns=True,
+        remember_damage_type=True,
         reset_damage_type_after_hit=True,
         ask_concentration_saves=True,
+        monsters_roll_concentration=False,
+        focus_damage_on_target=False,
+        ask_initiative_ties=True,
+        show_more_controls=False,
     )
 
 
@@ -216,9 +222,12 @@ def _hit(ui, target, amount=3):
     ui._apply_damage()
 
 
-def test_keep_the_damage_type_after_a_hit(fight):
+def test_the_damage_type_after_a_hit(fight):
     ui, _, tiger1, *_ = fight
     ui._start_combat()
+    _hit(ui, tiger1)
+    assert ui.damage_type_combo.currentIndex() == 1, "the source's remembered type"
+    ui.settings.remember_damage_type = False
     _hit(ui, tiger1)
     assert ui.damage_type_combo.currentIndex() == 0, "reset by default"
     ui.settings.reset_damage_type_after_hit = False
@@ -226,16 +235,15 @@ def test_keep_the_damage_type_after_a_hit(fight):
     assert ui.damage_type_combo.currentIndex() == 1
 
 
-def test_concentration_saves_can_be_left_to_the_gm(fight, monkeypatch):
+def test_concentration_saves_can_be_left_to_the_gm(fight):
     ui, _, tiger1, *_ = fight
     ui._start_combat()
     tiger1["conditions"].append("Concentrating")
-    dlg = open_dialog(monkeypatch, lambda: _hit(ui, tiger1))
-    assert dlg.windowTitle() == "Concentration Check"
-
-    ui.settings.ask_concentration_saves = False
-    opened = []
-    monkeypatch.setattr(QDialog, "exec", lambda self: opened.append(self))
     _hit(ui, tiger1)
-    assert opened == []
+    assert tiger1["concentration_checks"] == [10]
+
+    ui._settle_concentration(tiger1, 10, kept=True)
+    ui.settings.ask_concentration_saves = False
+    _hit(ui, tiger1)
+    assert "concentration_checks" not in tiger1
     assert "Concentrating" in tiger1["conditions"]

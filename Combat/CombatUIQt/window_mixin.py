@@ -1,7 +1,9 @@
 """Window/UI construction mixin for CombatAppQt."""
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QKeySequence, QShortcut
+import sys
+
+from PyQt6.QtCore import QEvent, Qt, QTimer
+from PyQt6.QtGui import QColor, QKeyEvent, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -21,6 +23,26 @@ from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
 from .state import CombatWindowState
 
+# How long the status line stays up (WindowMixin._show_status).
+STATUS_SECONDS = 6
+STATUS_HEIGHT = 34
+
+
+class _AmountField(QLineEdit):
+    """An amount field where Ctrl+Z is still the window's Undo. A focused
+    QLineEdit claims it for its own text, so undoing a monster's action, which
+    leaves the cursor here, would otherwise do nothing."""
+
+    def event(self, a0: QEvent | None) -> bool:
+        if (
+            isinstance(a0, QKeyEvent)
+            and a0.type() == QEvent.Type.ShortcutOverride
+            and a0.matches(QKeySequence.StandardKey.Undo)
+        ):
+            a0.ignore()
+            return True
+        return super().event(a0)
+
 
 class WindowMixin(CombatWindowState):
     """Mixin for window building and selection logic."""
@@ -33,6 +55,9 @@ class WindowMixin(CombatWindowState):
         self._more_info_btn.setEnabled(True)
         self._cast_spell_btn.setEnabled(True)
         self._enable_feature_btn.setEnabled(True)
+        # Not under an amount already typed, which was meant for that type.
+        if self.settings.remember_damage_type and not self.damage_input.text():
+            self._show_source_damage_type(char)
         self._refresh_cards()
 
     def _select_target_character(
@@ -66,11 +91,27 @@ class WindowMixin(CombatWindowState):
             ]
             kept = [t for t in targets if not any(t is s for s in span)]
             targets = kept + span if ctrl else span
+        self._set_targets(targets)
+        if self.settings.focus_damage_on_target and targets:
+            self._focus_damage_input()
+
+    def _set_targets(self, targets: list[dict]):
+        """Make `targets` the targets. A card's ½ Saved toggle shows only with
+        several targets, so going to or from that rebuilds their cards."""
+        previous = self.target_characters
         self.target_characters = targets
+        self._saved_targets = [
+            s for s in self._saved_targets if any(s is t for t in targets)
+        ]
         self._update_target_label()
+        if len(previous) > 1 or len(targets) > 1:
+            for char in {id(c): c for c in previous + targets}.values():
+                self._rebuild_card(char)
         self._refresh_cards()
 
     def _update_target_label(self):
+        everyone_saved = len(self._saved_targets) == len(self.target_characters)
+        self._half_btn.setChecked(bool(self.target_characters) and everyone_saved)
         if not self.target_characters:
             self.target_label.setText("Target: None")
         elif len(self.target_characters) == 1:
@@ -85,9 +126,47 @@ class WindowMixin(CombatWindowState):
         self._more_info_btn.setEnabled(False)
         self._cast_spell_btn.setEnabled(False)
         self._enable_feature_btn.setEnabled(False)
-        self.target_characters = []
-        self.target_label.setText("Target: None")
-        self._refresh_cards()
+        self._set_targets([])
+
+    def _show_status(self, text: str):
+        """Say why nothing happened, under Source/Target, for a few seconds or
+        until something does (_log_event clears it)."""
+        self._status_label.setText(text)
+        self._status_timer.start()
+
+    def _escape_pressed(self):
+        """Escape leaves a text field for the keyboard shortcuts to work, and
+        otherwise clears the source and target selection."""
+        focused = QApplication.focusWidget()
+        if isinstance(focused, QLineEdit):
+            focused.clearFocus()
+        else:
+            self._clear_selection()
+
+    def _report_uncaught_error(self, error_type, error, traceback_):
+        """Keep the fight going through a bug: without this hook, an exception
+        in a Qt click handler ends the whole app. Printed in full for the fix,
+        and said in the panel so nobody thinks the click worked."""
+        sys.__excepthook__(error_type, error, traceback_)
+        self._show_status(f"That didn't work ({error_type.__name__}): {error}")
+
+    def _apply_panel_settings(self):
+        """Show the panel as the settings say."""
+        shown = self.settings.show_more_controls
+        self._more_controls.setVisible(shown)
+        self._more_controls_btn.setChecked(shown)
+
+    def _toggle_more_controls(self, shown: bool):
+        self.settings.show_more_controls = shown
+        if self._settings_store is not None:
+            self.settings.save(self._settings_store)
+        self._apply_panel_settings()
+
+    def _clear_status(self):
+        # Replaying a log logs events before the window (and label) exist.
+        label = getattr(self, "_status_label", None)
+        if label is not None:
+            label.setText("")
 
     def _update_combo_sensitive_shortcuts(self, _old, new):
         """Disable every combo-sensitive shortcut while a combo box has focus,
@@ -102,6 +181,11 @@ class WindowMixin(CombatWindowState):
         active = not isinstance(new, QComboBox)
         for shortcut in self._combo_sensitive_shortcuts:
             shortcut.setEnabled(active)
+        # Enter is a focused text field's own, to apply its amount; left
+        # enabled, the window's Next Turn shortcut would take the key first.
+        in_text_field = isinstance(new, QLineEdit)
+        for shortcut in self._next_turn_shortcuts + self._previous_turn_shortcuts:
+            shortcut.setEnabled(not in_text_field)
 
     def _cycle_source(self, direction: int):
         """Select the next/previous combatant (direction +1/-1) as source,
@@ -184,6 +268,14 @@ class WindowMixin(CombatWindowState):
 
         root_layout.addWidget(self._scroll_area, stretch=1)
 
+        # The turn column and the players' screen, one refresh however many
+        # cards changed (TurnPanelMixin._refresh_views).
+        self._views_timer = QTimer(self._window)
+        self._views_timer.setSingleShot(True)
+        self._views_timer.setInterval(0)
+        self._views_timer.timeout.connect(self._refresh_views)
+        root_layout.addWidget(self._build_turn_panel())
+
         panel = QFrame()
         panel.setObjectName("controlPanel")
         panel.setFixedWidth(460)
@@ -202,6 +294,18 @@ class WindowMixin(CombatWindowState):
         self.target_label.setObjectName("targetLabel")
         self.target_label.setWordWrap(True)
         panel_layout.addWidget(self.target_label)
+
+        # Why the last thing tried did nothing (_show_status). Its two lines
+        # stay reserved, so a message never moves the buttons under the mouse.
+        self._status_label = QLabel("")
+        self._status_label.setObjectName("statusLabel")
+        self._status_label.setWordWrap(True)
+        self._status_label.setFixedHeight(STATUS_HEIGHT)
+        panel_layout.addWidget(self._status_label)
+        self._status_timer = QTimer(self._window)
+        self._status_timer.setSingleShot(True)
+        self._status_timer.setInterval(STATUS_SECONDS * 1000)
+        self._status_timer.timeout.connect(self._clear_status)
 
         info_cast_row = QHBoxLayout()
         info_cast_row.setSpacing(6)
@@ -254,9 +358,14 @@ class WindowMixin(CombatWindowState):
         left_col.addWidget(self._section_header("Damage"))
         dmg_input_row = QHBoxLayout()
         dmg_input_row.setSpacing(4)
-        self.damage_input = QLineEdit()
+        self.damage_input = _AmountField()
         self.damage_input.setPlaceholderText("Amount...")
-        self.damage_input.returnPressed.connect(self._apply_damage)
+        self.damage_input.setToolTip(
+            "A total or a sum, with the type if you like: 12 fi, 8+5 fire,"
+            " 24/2 fi, 7 pi + 3 fi"
+        )
+        self.damage_input.returnPressed.connect(self._apply_damage_checked)
+        self.damage_input.textChanged.connect(self._show_typed_damage_type)
         dmg_input_row.addWidget(self.damage_input, stretch=2)
 
         self.damage_type_combo = QComboBox()
@@ -288,19 +397,35 @@ class WindowMixin(CombatWindowState):
         dmg_btn_row.setSpacing(4)
         dmg_btn = QPushButton("Apply")
         dmg_btn.setObjectName("primaryBtn")
-        dmg_btn.clicked.connect(self._apply_damage)
+        dmg_btn.setToolTip(
+            "Apply the damage to every target, counting each one's resistance,"
+            " vulnerability or immunity to its type (Enter in the amount field)"
+        )
+        dmg_btn.clicked.connect(self._apply_damage_checked)
         dmg_btn_row.addWidget(dmg_btn)
 
-        dmg_checked_btn = QPushButton("Apply (Check Resist)")
-        dmg_checked_btn.clicked.connect(self._apply_damage_checked)
-        dmg_btn_row.addWidget(dmg_checked_btn)
+        dmg_raw_btn = QPushButton("Ignore Resist")
+        dmg_raw_btn.setToolTip(
+            "Apply exactly the amount typed, for damage you already worked out"
+        )
+        dmg_raw_btn.clicked.connect(self._apply_damage)
+        dmg_btn_row.addWidget(dmg_raw_btn)
+
+        self._half_btn = QPushButton("½ Saved")
+        self._half_btn.setCheckable(True)
+        self._half_btn.setToolTip(
+            "Every target saved: the next damage is halved. With several"
+            " targets, each card has its own ½ Saved instead."
+        )
+        self._half_btn.clicked.connect(self._toggle_saved_for_all)
+        dmg_btn_row.addWidget(self._half_btn)
         left_col.addLayout(dmg_btn_row)
 
         left_col.addWidget(self._make_divider())
 
         # Heal section
         left_col.addWidget(self._section_header("Heal"))
-        self.heal_input = QLineEdit()
+        self.heal_input = _AmountField()
         self.heal_input.setPlaceholderText("Amount...")
         self.heal_input.setStyleSheet(
             "QLineEdit { background-color: #0f3460; border: 1px solid #4caf82; "
@@ -318,7 +443,7 @@ class WindowMixin(CombatWindowState):
 
         # Temp HP section
         left_col.addWidget(self._section_header("Temp HP"))
-        self.temp_hp_input = QLineEdit()
+        self.temp_hp_input = _AmountField()
         self.temp_hp_input.setPlaceholderText("Amount...")
         self.temp_hp_input.setStyleSheet(
             "QLineEdit { background-color: #0f3460; border: 1px solid #4a9fc4; "
@@ -379,11 +504,21 @@ class WindowMixin(CombatWindowState):
 
         right_col.addWidget(self._make_divider())
 
+        # Rarely clicked, having shortcuts: collapsed until asked for
+        self._more_controls_btn = QPushButton("More: Visibility, Slots, Actions")
+        self._more_controls_btn.setCheckable(True)
+        self._more_controls_btn.clicked.connect(self._toggle_more_controls)
+        right_col.addWidget(self._more_controls_btn)
+        self._more_controls = QWidget()
+        more_col = QVBoxLayout(self._more_controls)
+        more_col.setContentsMargins(0, 0, 0, 0)
+        more_col.setSpacing(6)
+
         # Visibility section
-        right_col.addWidget(self._section_header("Visibility"))
+        more_col.addWidget(self._section_header("Visibility"))
         self.visibility_combo = QComboBox()
         self.visibility_combo.addItems(self.visibility_states)
-        right_col.addWidget(self.visibility_combo)
+        more_col.addWidget(self.visibility_combo)
         vis_row = QHBoxLayout()
         add_vis_btn = QPushButton("Add")
         add_vis_btn.clicked.connect(self._add_visibility)
@@ -391,17 +526,21 @@ class WindowMixin(CombatWindowState):
         rm_vis_btn.clicked.connect(self._remove_visibility)
         vis_row.addWidget(add_vis_btn)
         vis_row.addWidget(rm_vis_btn)
-        right_col.addLayout(vis_row)
+        more_col.addLayout(vis_row)
 
-        right_col.addWidget(self._make_divider())
+        more_col.addWidget(self._make_divider())
 
         # Spell slots section
-        right_col.addWidget(self._section_header("Spell Slots"))
+        more_col.addWidget(self._section_header("Spell Slots"))
         self.spell_combo = QComboBox()
         self.spell_combo.addItems([f"Level {i}" for i in range(1, 10)])
-        right_col.addWidget(self.spell_combo)
+        more_col.addWidget(self.spell_combo)
         spell_row = QHBoxLayout()
-        cast_btn = QPushButton("Cast (1-9)")
+        cast_btn = QPushButton("Spend (1-9)")
+        cast_btn.setToolTip(
+            "Spend a slot of this level on its own. Cast Spell already spends"
+            " one, so don't press this as well."
+        )
         cast_btn.clicked.connect(
             lambda: self._cast_spell_slot_level(self.spell_combo.currentIndex() + 1)
         )
@@ -409,15 +548,15 @@ class WindowMixin(CombatWindowState):
         regain_btn.clicked.connect(self._regain_spell_slot)
         spell_row.addWidget(cast_btn)
         spell_row.addWidget(regain_btn)
-        right_col.addLayout(spell_row)
+        more_col.addLayout(spell_row)
 
-        right_col.addWidget(self._make_divider())
+        more_col.addWidget(self._make_divider())
 
         # Action economy section (resets on this combatant's next turn)
-        right_col.addWidget(self._section_header("Action Economy"))
+        more_col.addWidget(self._section_header("Action Economy"))
         self.action_economy_combo = QComboBox()
         self.action_economy_combo.addItems(self.ACTION_ECONOMY_TYPES)
-        right_col.addWidget(self.action_economy_combo)
+        more_col.addWidget(self.action_economy_combo)
         action_economy_row = QHBoxLayout()
         add_action_btn = QPushButton("Add (A/B/R)")
         add_action_btn.clicked.connect(
@@ -429,7 +568,10 @@ class WindowMixin(CombatWindowState):
         )
         action_economy_row.addWidget(add_action_btn)
         action_economy_row.addWidget(rm_action_btn)
-        right_col.addLayout(action_economy_row)
+        more_col.addLayout(action_economy_row)
+
+        right_col.addWidget(self._more_controls)
+        self._apply_panel_settings()
 
         right_col.addStretch()
 
@@ -510,7 +652,7 @@ class WindowMixin(CombatWindowState):
         self._log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         panel_layout.addWidget(self._log_status_label)
 
-        # Encounter Log / Player Log / Statistics / Rules / Settings, two to a row
+        # Logs, Statistics, Rules, Settings, Player Screen, two to a row
         info_grid = QGridLayout()
         info_grid.setSpacing(6)
         for index, (text, handler) in enumerate(
@@ -520,6 +662,7 @@ class WindowMixin(CombatWindowState):
                 ("Statistics", self._show_statistics),
                 ("Rules", self._show_rules),
                 ("Settings", self._show_settings_dialog),
+                ("Player Screen", self._toggle_player_view),
             ]
         ):
             btn = QPushButton(text)
@@ -591,7 +734,7 @@ class WindowMixin(CombatWindowState):
         self._clear_selection_shortcut = QShortcut(
             QKeySequence(Qt.Key.Key_Escape), self._window
         )
-        self._clear_selection_shortcut.activated.connect(self._clear_selection)
+        self._clear_selection_shortcut.activated.connect(self._escape_pressed)
 
         # Enter / Return: Next Combatant / Next Round
         self._next_turn_shortcuts = [
@@ -697,6 +840,21 @@ class WindowMixin(CombatWindowState):
             self._focus_damage_shortcut,
             self._focus_heal_shortcut,
             self._focus_temp_hp_shortcut,
+        ]
+
+        # S / F / I: the source's Cast Spell, Enable Feature and More Info
+        self._cast_spell_shortcut = QShortcut(QKeySequence("S"), self._window)
+        self._cast_spell_shortcut.activated.connect(self._show_cast_spell_dialog)
+        self._enable_feature_shortcut = QShortcut(QKeySequence("F"), self._window)
+        self._enable_feature_shortcut.activated.connect(
+            self._show_enable_feature_dialog
+        )
+        self._more_info_shortcut = QShortcut(QKeySequence("I"), self._window)
+        self._more_info_shortcut.activated.connect(self._show_more_info)
+        self._combo_sensitive_shortcuts += [
+            self._cast_spell_shortcut,
+            self._enable_feature_shortcut,
+            self._more_info_shortcut,
         ]
 
         # Ctrl+N: open the Add Combatant dialog

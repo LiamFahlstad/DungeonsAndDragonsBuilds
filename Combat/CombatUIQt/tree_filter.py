@@ -6,6 +6,18 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTreeWidgetItem
 
 
+def first_visible_item(
+    category_items: dict[str, QTreeWidgetItem],
+) -> QTreeWidgetItem | None:
+    """The first entry the search left showing, categories in their order."""
+    for cat_item in category_items.values():
+        for i in range(cat_item.childCount()):
+            child = cat_item.child(i)
+            if child is not None and not child.isHidden():
+                return child
+    return None
+
+
 def filter_category_tree(
     category_items: dict[str, QTreeWidgetItem],
     query: str,

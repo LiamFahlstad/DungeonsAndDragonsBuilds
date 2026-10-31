@@ -1168,6 +1168,24 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
@@ -1338,6 +1356,24 @@
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -2018,6 +2054,24 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
@@ -2180,6 +2234,24 @@
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -2372,6 +2444,24 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
@@ -2534,6 +2624,24 @@
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -2726,6 +2834,24 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
@@ -2903,6 +3029,24 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
@@ -3065,6 +3209,24 @@
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -3427,6 +3589,24 @@
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 11px;",
+      "text": "Legendary 3/3  Resist 3/3",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",

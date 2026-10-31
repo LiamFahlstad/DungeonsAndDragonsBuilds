@@ -789,6 +789,7 @@ class DialogsMixin(CombatWindowState):
                 self.settings.save(self._settings_store)
             if name == "source_follows_turn":
                 self._follow_turn_with_source()
+            self._apply_panel_settings()
 
         for index, (section, infos) in enumerate(SETTING_SECTIONS):
             if index:
@@ -817,6 +818,7 @@ class DialogsMixin(CombatWindowState):
 
     def _show_more_info(self):
         if not self.selected_character:
+            self._show_status("Nothing to show: left-click a card to pick a source.")
             return
         char = self.selected_character
 

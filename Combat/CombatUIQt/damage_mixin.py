@@ -2,24 +2,17 @@
 
 import random
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (
-    QDialog,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QMessageBox,
-    QPushButton,
-    QVBoxLayout,
-)
-
 from Combat.Definitions import Action
 from Core.Definitions import Condition
+from .amounts import AmountError, parse_amount, parse_damage
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
-from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable
+
+# A Concentration save's DC: half the damage taken, between these.
+MIN_CONCENTRATION_DC = 10
+MAX_CONCENTRATION_DC = 30
 
 
 def _damage_type_value(t) -> str:
@@ -34,6 +27,18 @@ def _entry_damage_types(entry) -> list:
 
 class DamageMixin(CombatWindowState):
     """Mixin for damage and healing related methods."""
+
+    def _amount_for_targets(self, text: str) -> int | None:
+        """What was typed in an amount field if it can be applied now: there's
+        a target and it's a number. Otherwise says why not and returns None."""
+        if not self.target_characters:
+            self._show_status("Nothing applied: right-click a card to pick a target.")
+            return None
+        amount = parse_amount(text)
+        if amount is None:
+            shown = f"'{text.strip()}' isn't an amount" if text.strip() else "no amount"
+            self._show_status(f"Nothing applied: {shown}. Type a total, like 7 or 4+3.")
+        return amount
 
     def _damage_type_modifier(self, target: dict, dmg: int, damage_type: str):
         """Check target's damage immunities/resistances/vulnerabilities against
@@ -96,96 +101,41 @@ class DamageMixin(CombatWindowState):
         against the selected damage type."""
         self._do_apply_damage(check_resistance=True)
 
+    def _damage_parts(self) -> list[tuple[int, str]] | None:
+        """The Damage field as (amount, damage type) to apply, a type left out
+        being the one showing in the dropdown. Otherwise says why not."""
+        if not self.target_characters:
+            self._show_status("Nothing applied: right-click a card to pick a target.")
+            return None
+        try:
+            parts = parse_damage(self.damage_input.text())
+        except AmountError as error:
+            self._show_status(f"Nothing applied: {error}. Try 12, 4+3 or 12 fire.")
+            return None
+        chosen = self.damage_type_combo.currentData()
+        typed = [(amount, damage_type or chosen) for amount, damage_type in parts]
+        if any(damage_type is None for _, damage_type in typed):
+            self._show_status("Nothing applied: pick a damage type, or type 12 fire.")
+            return None
+        return typed
+
     @undoable
     def _do_apply_damage(self, check_resistance: bool):
-        if not self.target_characters:
+        parts = self._damage_parts()
+        if parts is None:
             return
-        try:
-            dmg_input = int(self.damage_input.text())
-        except ValueError:
-            return
-
         source = self.selected_character or self._current_turn_character()
-        source_name = source["name"] if source is not None else None
-
-        damage_type = self.damage_type_combo.currentData()
-
-        if damage_type is None:
-            QMessageBox.warning(
-                self._window, "Error", "Select a damage type before applying damage."
-            )
-            return
 
         for target in list(self.target_characters):
-            dmg = dmg_input
-            outcome = None
-            if check_resistance and damage_type is not None:
-                dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
-
-            pre_hp = target["hp"]
-            pre_temp = target["temp_hp"]
-
-            temp_reduction = min(target["temp_hp"], dmg)
-            target["temp_hp"] -= temp_reduction
-            # Hit Points can't go below 0.
-            target["hp"] = max(0, target["hp"] - (dmg - temp_reduction))
-
-            hp_delta = target["hp"] - pre_hp
-            temp_delta = target["temp_hp"] - pre_temp
-
-            knockout = pre_hp > 0 and target["hp"] <= 0
-
-            target.setdefault("stats", _default_stats())
-            target["stats"]["damage_taken"] = (
-                target["stats"].get("damage_taken", 0) + dmg
-            )
-            if damage_type:
-                taken_type_key = damage_taken_key(damage_type)
-                target["stats"][taken_type_key] = (
-                    target["stats"].get(taken_type_key, 0) + dmg
+            saved = any(target is s for s in self._saved_targets)
+            taken = 0
+            knockout = False
+            for amount, damage_type in parts:
+                dmg, downed = self._damage_target(
+                    target, amount, damage_type, source, check_resistance, saved
                 )
-            if knockout:
-                target["stats"]["times_downed"] = (
-                    target["stats"].get("times_downed", 0) + 1
-                )
-
-            if source is not None:
-                source.setdefault("stats", _default_stats())
-                source["stats"]["damage_dealt"] = (
-                    source["stats"].get("damage_dealt", 0) + dmg
-                )
-                if damage_type:
-                    type_key = damage_dealt_key(damage_type)
-                    source["stats"][type_key] = source["stats"].get(type_key, 0) + dmg
-                if knockout:
-                    source["stats"]["knockouts"] = (
-                        source["stats"].get("knockouts", 0) + 1
-                    )
-
-            damage_value = {
-                "hp_delta": hp_delta,
-                "temp_delta": temp_delta,
-                "dmg": dmg,
-                "damage_type": damage_type,
-                "source_name": source_name,
-                "target_name": target["name"],
-                "knockout": knockout,
-                "outcome": outcome,
-            }
-            type_prefix = f" {damage_type}" if damage_type else ""
-            source_suffix = f" from {source_name}" if source_name else ""
-            outcome_suffix = f" ({outcome})" if outcome else ""
-            self._log_event(
-                f"{target['name']} takes {dmg}{type_prefix} damage{source_suffix}{outcome_suffix}",
-                character=target["name"],
-                action=Action.DAMAGE,
-                value=damage_value,
-            )
-
-            # Auto-apply bloodied condition, attributed to whoever dealt the damage
-            self._apply_bloodied_condition(target, source=source)
-
-            self._rebuild_card(target)
+                taken += dmg
+                knockout = knockout or downed
 
             # A creature that makes Death Saving Throws falls Unconscious at
             # 0 HP (which also ends its Concentration); any other one dies.
@@ -195,13 +145,130 @@ class DamageMixin(CombatWindowState):
             if "Concentrating" in target.get("conditions", []):
                 if knockout:
                     self._remove_condition_from(target, "Concentrating", source=target)
-                elif dmg > 0 and self.settings.ask_concentration_saves:
+                elif taken > 0 and self.settings.ask_concentration_saves:
                     # Only damage taken forces a save (damage soaked by
                     # temporary HP still counts); 0 after immunity doesn't.
-                    self._concentration_check_dialog(target, dmg)
+                    self._ask_concentration_save(target, taken)
 
+        if source is not None:
+            source["_last_damage_type"] = parts[-1][1]
         if self.settings.reset_damage_type_after_hit:
-            self.damage_type_combo.setCurrentIndex(0)
+            self._show_source_damage_type(source)
+        self.damage_input.clear()
+        self._saved_targets = []
+        self._update_target_label()
+        for target in self.target_characters:
+            self._rebuild_card(target)
+
+    def _damage_target(
+        self,
+        target: dict,
+        amount: int,
+        damage_type: str,
+        source: dict | None,
+        check_resistance: bool,
+        saved: bool,
+    ) -> tuple[int, bool]:
+        """Deal one damage type to target, halved first if it saved. Returns
+        (the damage dealt, whether it took target to 0 HP)."""
+        source_name = source["name"] if source is not None else None
+        dmg = amount // 2 if saved else amount
+        outcome = None
+        if check_resistance:
+            dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
+        if saved:
+            outcome = f"saved, {outcome}" if outcome else "saved"
+
+        pre_hp = target["hp"]
+        pre_temp = target["temp_hp"]
+
+        temp_reduction = min(target["temp_hp"], dmg)
+        target["temp_hp"] -= temp_reduction
+        # Hit Points can't go below 0.
+        target["hp"] = max(0, target["hp"] - (dmg - temp_reduction))
+
+        hp_delta = target["hp"] - pre_hp
+        temp_delta = target["temp_hp"] - pre_temp
+
+        knockout = pre_hp > 0 and target["hp"] <= 0
+
+        target.setdefault("stats", _default_stats())
+        target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
+        taken_type_key = damage_taken_key(damage_type)
+        target["stats"][taken_type_key] = target["stats"].get(taken_type_key, 0) + dmg
+        if knockout:
+            target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
+
+        if source is not None:
+            source.setdefault("stats", _default_stats())
+            source["stats"]["damage_dealt"] = (
+                source["stats"].get("damage_dealt", 0) + dmg
+            )
+            type_key = damage_dealt_key(damage_type)
+            source["stats"][type_key] = source["stats"].get(type_key, 0) + dmg
+            if knockout:
+                source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
+
+        damage_value = {
+            "hp_delta": hp_delta,
+            "temp_delta": temp_delta,
+            "dmg": dmg,
+            "damage_type": damage_type,
+            "source_name": source_name,
+            "target_name": target["name"],
+            "knockout": knockout,
+            "outcome": outcome,
+        }
+        source_suffix = f" from {source_name}" if source_name else ""
+        outcome_suffix = f" ({outcome})" if outcome else ""
+        self._log_event(
+            f"{target['name']} takes {dmg} {damage_type} damage{source_suffix}{outcome_suffix}",
+            character=target["name"],
+            action=Action.DAMAGE,
+            value=damage_value,
+        )
+
+        # Auto-apply bloodied condition, attributed to whoever dealt the damage
+        self._apply_bloodied_condition(target, source=source)
+
+        self._rebuild_card(target)
+        return dmg, knockout
+
+    def _show_source_damage_type(self, source: dict | None):
+        """Show the damage type source last dealt, or a blank one, so a type
+        left over from another source can't go on this one's hit unnoticed."""
+        remembered = None
+        if source is not None and self.settings.remember_damage_type:
+            remembered = source.get("_last_damage_type")
+        index = self.damage_type_combo.findData(remembered)
+        self.damage_type_combo.setCurrentIndex(max(index, 0))
+
+    def _show_typed_damage_type(self, text: str):
+        """Show a damage type as it's typed in the Damage field."""
+        try:
+            parts = parse_damage(text)
+        except AmountError:
+            return
+        if parts[0][1] is not None:
+            index = self.damage_type_combo.findData(parts[0][1])
+            self.damage_type_combo.setCurrentIndex(index)
+
+    def _toggle_saved(self, char: dict):
+        """Mark or unmark one target as having saved, for half damage."""
+        if any(char is s for s in self._saved_targets):
+            self._saved_targets = [s for s in self._saved_targets if s is not char]
+        else:
+            self._saved_targets = self._saved_targets + [char]
+        self._update_target_label()
+        self._rebuild_card(char)
+
+    def _toggle_saved_for_all(self):
+        """The ½ Saved button: every target saved, or none did."""
+        everyone = len(self._saved_targets) == len(self.target_characters)
+        self._saved_targets = [] if everyone else list(self.target_characters)
+        self._update_target_label()
+        for target in self.target_characters:
+            self._rebuild_card(target)
 
     def _con_save_mod(self, char: dict) -> int:
         """Return the CON saving throw modifier for a character."""
@@ -215,155 +282,73 @@ class DamageMixin(CombatWindowState):
                 return ability_modifier(ability_scores[key])
         return 0
 
-    def _concentration_check_dialog(self, char: dict, dmg: int):
-        """Show a modal concentration saving throw dialog."""
-        dc = min(30, max(10, dmg // 2))
-        con_mod = self._con_save_mod(char)
+    def _ask_concentration_save(self, char: dict, dmg: int):
+        """Ask for the Constitution save that dmg forces: on char's card, or
+        rolled here for a monster with the setting on."""
+        dc = min(MAX_CONCENTRATION_DC, max(MIN_CONCENTRATION_DC, dmg // 2))
+        if self.settings.monsters_roll_concentration and not char.get("_is_player"):
+            self._roll_concentration(char, dc)
+            return
+        char.setdefault("concentration_checks", []).append(dc)
+        self._write_log(self._read_log())  # a continued fight still owes it
+        self._rebuild_card(char)
+
+    @undoable
+    def _roll_concentration(self, char: dict, dc: int):
+        roll = random.randint(1, 20) + self._con_save_mod(char)
+        self._settle_concentration(char, dc, roll >= dc, roll)
+
+    @undoable
+    def _settle_concentration(
+        self, char: dict, dc: int, kept: bool, roll: int | None = None
+    ):
+        """The result of a Concentration save asked for on char's card."""
+        checks = char.get("concentration_checks", [])
+        if dc in checks:
+            checks.remove(dc)
+        if not checks:
+            char.pop("concentration_checks", None)
         name = char["name"]
-
-        dialog = QDialog(self._window)
-        dialog.setWindowTitle("Concentration Check")
-        dialog.setModal(True)
-        dialog.setStyleSheet(QSS)
-        dialog.setFixedWidth(320)
-
-        layout = QVBoxLayout(dialog)
-        layout.setContentsMargins(14, 14, 14, 14)
-        layout.setSpacing(8)
-
-        # Gold header
-        header_lbl = QLabel(f"{name} is concentrating!")
-        header_lbl.setStyleSheet("color: #c9a84c; font-weight: bold; font-size: 13px;")
-        header_lbl.setWordWrap(True)
-        layout.addWidget(header_lbl)
-
-        # DC info
-        dc_lbl = QLabel(f"Damage taken: {dmg}  →  DC {dc}")
-        dc_lbl.setObjectName("secondary")
-        layout.addWidget(dc_lbl)
-
-        mod_lbl = QLabel(f"CON save modifier: {con_mod:+d}")
-        mod_lbl.setObjectName("secondary")
-        layout.addWidget(mod_lbl)
-
-        layout.addWidget(self._make_divider())
-
-        # Roll input
-        roll_input = QLineEdit()
-        roll_input.setPlaceholderText("Enter roll total...")
-        layout.addWidget(roll_input)
-
-        # Result label (initially hidden)
-        result_lbl = QLabel("")
-        result_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        result_lbl.setStyleSheet("font-weight: bold; font-size: 12px;")
-        result_lbl.hide()
-        layout.addWidget(result_lbl)
-
-        def _update_result_label(text: str):
-            if not text:
-                result_lbl.hide()
-                return
-            try:
-                roll = int(text)
-            except ValueError:
-                result_lbl.hide()
-                return
-            if roll >= dc:
-                result_lbl.setStyleSheet(
-                    "font-weight: bold; font-size: 12px; color: #2ecc71;"
-                )
-                result_lbl.setText("✓ CONCENTRATION MAINTAINED")
-            else:
-                result_lbl.setStyleSheet(
-                    "font-weight: bold; font-size: 12px; color: #e74c3c;"
-                )
-                result_lbl.setText("✗ CONCENTRATION LOST")
-            result_lbl.show()
-
-        roll_input.textChanged.connect(_update_result_label)
-
-        # Roll d20 button
-        roll_btn = QPushButton("Roll d20")
-
-        def _auto_roll():
-            result = random.randint(1, 20) + con_mod
-            roll_input.setText(str(result))
-            if result >= dc:
-                roll_input.setStyleSheet(
-                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
-                )
-            else:
-                roll_input.setStyleSheet(
-                    "background-color: #3a1a1a; border: 1px solid #e74c3c;"
-                )
-
-        roll_btn.clicked.connect(_auto_roll)
-        layout.addWidget(roll_btn)
-
-        layout.addWidget(self._make_divider())
-
-        # Confirm / Cancel row
-        btn_row = QHBoxLayout()
-        confirm_btn = QPushButton("Confirm")
-        cancel_btn = QPushButton("Cancel")
-        btn_row.addWidget(confirm_btn)
-        btn_row.addWidget(cancel_btn)
-        layout.addLayout(btn_row)
-
-        def _confirm():
-            text = roll_input.text().strip()
-            if not text:
-                return
-            try:
-                roll = int(text)
-            except ValueError:
-                return
-            if roll < dc:
-                if "Concentrating" in char.get("conditions", []):
-                    char["conditions"].remove("Concentrating")
-                    self._end_concentration_spells(char)
-                # Concentration is always lost by the caster's own failed save,
-                # so the caster is both source and target here.
-                cond_value = {
-                    "condition": "Concentrating",
-                    "source_name": name,
-                    "target_name": name,
-                }
-                self._log_event(
-                    f"{name} loses concentration (DC {dc}, rolled {roll})",
-                    character=name,
-                    action=Action.REMOVE_CONDITION,
-                    value=cond_value,
-                )
-                self._rebuild_card(char)
-            dialog.accept()
-
-        def _cancel():
-            dialog.reject()
-
-        confirm_btn.clicked.connect(_confirm)
-        cancel_btn.clicked.connect(_cancel)
-
-        dialog.exec()
+        result = f"DC {dc}, rolled {roll}" if roll is not None else f"DC {dc}"
+        if kept:
+            self._log_event(f"{name} keeps concentration ({result})", character=name)
+            self._rebuild_card(char)
+            return
+        char.pop("concentration_checks", None)
+        if "Concentrating" in char.get("conditions", []):
+            char["conditions"].remove("Concentrating")
+            self._end_concentration_spells(char)
+        # Concentration is always lost by the caster's own failed save,
+        # so the caster is both source and target here.
+        cond_value = {
+            "condition": "Concentrating",
+            "source_name": name,
+            "target_name": name,
+        }
+        self._log_event(
+            f"{name} loses concentration ({result})",
+            character=name,
+            action=Action.REMOVE_CONDITION,
+            value=cond_value,
+        )
+        self._rebuild_card(char)
 
     @undoable
     def _apply_heal(self):
-        if not self.target_characters:
-            return
-        try:
-            heal = int(self.heal_input.text())
-        except ValueError:
+        heal = self._amount_for_targets(self.heal_input.text())
+        if heal is None:
             return
 
         source = self.selected_character or self._current_turn_character()
         source_name = source["name"] if source is not None else None
 
+        dead = []
         for char in list(self.target_characters):
             death_state = self._char_death_state(char)
             # A dead creature can't regain Hit Points until it is revived
             # (the card's Revive button).
             if death_state == "dead":
+                dead.append(char["name"])
                 continue
             was_downed = death_state != "alive"
 
@@ -412,6 +397,11 @@ class DamageMixin(CombatWindowState):
             self._apply_bloodied_condition(char, source=source)
 
             self._rebuild_card(char)
+        if dead:
+            names = ", ".join(dead)
+            self._show_status(f"Not healed: {names} is dead. Use Revive on the card.")
+        if len(dead) < len(self.target_characters):
+            self.heal_input.clear()
 
     @undoable
     def _revive(self, char: dict):
@@ -488,11 +478,8 @@ class DamageMixin(CombatWindowState):
 
     @undoable
     def _apply_temp_hp(self):
-        if not self.target_characters:
-            return
-        try:
-            amount = int(self.temp_hp_input.text())
-        except ValueError:
+        amount = self._amount_for_targets(self.temp_hp_input.text())
+        if amount is None:
             return
 
         source = self.selected_character or self._current_turn_character()

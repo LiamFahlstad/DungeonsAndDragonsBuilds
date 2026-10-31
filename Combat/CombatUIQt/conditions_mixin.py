@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QMessageBox,
     QPushButton,
     QSpinBox,
     QVBoxLayout,
@@ -124,6 +123,7 @@ class ConditionsMixin(CombatWindowState):
                 value=cond_value,
             )
             if cond == CombatStatus.CONCENTRATING.value:
+                char.pop("concentration_checks", None)
                 self._end_concentration_spells(char)
             self._rebuild_card(char)
 
@@ -132,6 +132,7 @@ class ConditionsMixin(CombatWindowState):
         """Add the selected condition to every target, attributed to the source
         (mirrors Damage/Heal/Temp HP's source → target model)."""
         if not self.target_characters:
+            self._show_status("Nothing applied: right-click a card to pick a target.")
             return
         source = self.selected_character or self._current_turn_character()
         cond = self.condition_combo.currentText()
@@ -141,9 +142,13 @@ class ConditionsMixin(CombatWindowState):
     @undoable
     def _remove_condition(self):
         if not self.target_characters:
+            self._show_status("Nothing removed: right-click a card to pick a target.")
             return
         source = self.selected_character or self._current_turn_character()
         cond = self.condition_combo.currentText()
+        if not any(cond in t["conditions"] for t in self.target_characters):
+            self._show_status(f"Nothing removed: no target has {cond}.")
+            return
         for target in list(self.target_characters):
             self._remove_condition_from(target, cond, source=source)
 
@@ -229,7 +234,7 @@ class ConditionsMixin(CombatWindowState):
         """Give every target any condition typed in, with an optional
         duration and note (see _add_custom_condition)."""
         if not self.target_characters:
-            QMessageBox.warning(self._window, "Error", "Select a target first.")
+            self._show_status("Nothing applied: right-click a card to pick a target.")
             return
         source = self.selected_character or self._current_turn_character()
 
@@ -329,6 +334,7 @@ class ConditionsMixin(CombatWindowState):
         """Keyboard shortcut 'C': the source starts Concentrating. Self-applied —
         a caster is always the source of their own concentration."""
         if not self.selected_character:
+            self._show_status("Nothing applied: left-click a card to pick a source.")
             return
         self._add_condition_to(
             self.selected_character,
@@ -340,6 +346,7 @@ class ConditionsMixin(CombatWindowState):
     def _shortcut_remove_concentration(self):
         """Keyboard shortcut 'Ctrl+C': remove Concentrating from the source."""
         if not self.selected_character:
+            self._show_status("Nothing removed: left-click a card to pick a source.")
             return
         self._remove_condition_from(
             self.selected_character,
@@ -351,6 +358,7 @@ class ConditionsMixin(CombatWindowState):
     def _shortcut_clear_target_conditions(self):
         """Keyboard shortcut 'Ctrl+Shift+C': remove every condition from every target."""
         if not self.target_characters:
+            self._show_status("Nothing removed: right-click a card to pick a target.")
             return
         for target in list(self.target_characters):
             for cond in list(target.get("conditions", [])):
@@ -362,6 +370,7 @@ class ConditionsMixin(CombatWindowState):
         Tallies reset when it becomes that combatant's turn again (see _advance_turn).
         """
         if not self.selected_character:
+            self._show_status("Nothing logged: left-click a card to pick a source.")
             return
         counts = self.selected_character.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1
@@ -375,9 +384,13 @@ class ConditionsMixin(CombatWindowState):
     def _remove_action_use(self, action_type: str):
         """Correct a mis-logged Action/Bonus Action/Reaction use for the source."""
         if not self.selected_character:
+            self._show_status("Nothing logged: left-click a card to pick a source.")
             return
         counts = self.selected_character.setdefault("action_uses", {})
-        if counts.get(action_type, 0) > 0:
+        name = self.selected_character["name"]
+        if counts.get(action_type, 0) <= 0:
+            self._show_status(f"Nothing refunded: {name} has no {action_type} logged.")
+        else:
             counts[action_type] -= 1
             self._log_event(
                 f"{self.selected_character['name']} refunds {action_type}",
@@ -388,6 +401,7 @@ class ConditionsMixin(CombatWindowState):
     @undoable
     def _add_visibility(self):
         if not self.selected_character:
+            self._show_status("Nothing applied: left-click a card to pick a source.")
             return
         vis = self.visibility_combo.currentText()
         visibility_states = self.selected_character.get("visibility_states", [])
@@ -402,6 +416,7 @@ class ConditionsMixin(CombatWindowState):
     @undoable
     def _remove_visibility(self):
         if not self.selected_character:
+            self._show_status("Nothing removed: left-click a card to pick a source.")
             return
         vis = self.visibility_combo.currentText()
         visibility_states = self.selected_character.get("visibility_states", [])

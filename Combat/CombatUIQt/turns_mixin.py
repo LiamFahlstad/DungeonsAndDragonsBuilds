@@ -84,7 +84,55 @@ class TurnsMixin(CombatWindowState):
 
     @undoable
     def _advance_turn(self):
-        """Combined Next Combatant / Next Round button handler."""
+        """Combined Next Combatant / Next Round button handler. With the "skip
+        dead" setting on, it passes over turns where everyone is dead (at most
+        once round the order, in case the whole fight is)."""
+        for _ in initiative_units(self.initiative_order):
+            self._pass_turn()
+            if not (self.settings.skip_dead_turns and self._turn_is_dead()):
+                break
+        self._refresh_turn()
+        self._on_turn_changed()
+        # Save whose turn it is, so continuing the fight starts there. A log
+        # without events is still as prepared, and stays that way.
+        data = self._read_log()
+        if has_round_events(data):
+            self._write_log(data)
+
+    def _turn_is_dead(self) -> bool:
+        """Whether everyone whose turn it is is dead. Someone dying still has
+        a turn: it's when they make their death save."""
+        return all(
+            self._char_death_state(c) == "dead" for c in self._current_turn_group()
+        )
+
+    def _upcoming_turns(self) -> list[list[dict]]:
+        """The turns after this one, soonest first, once round the order,
+        leaving out the ones Next would pass over."""
+        order = self.initiative_order
+        turns = []
+        start = 0
+        while start < len(order):
+            span_end = self._turn_span(start)[1]
+            turns.append(order[start:span_end])
+            start = span_end
+        now = next(
+            i
+            for i, turn in enumerate(turns)
+            if any(c is order[self.current_turn_idx] for c in turn)
+        )
+        upcoming = turns[now + 1 :] + turns[:now]
+        if not self.settings.skip_dead_turns:
+            return upcoming
+        return [
+            turn
+            for turn in upcoming
+            if any(self._char_death_state(c) != "dead" for c in turn)
+        ]
+
+    def _pass_turn(self):
+        """Move on one turn: its round, and what the turn passing ticks. A
+        skipped turn passes like any other, so durations stay right."""
         ended = self._current_turn_group()
         new_round = self._is_last_turn()
         if not new_round:
@@ -98,17 +146,13 @@ class TurnsMixin(CombatWindowState):
             self._tick_active_features()
         # The action economy (Action/Bonus Action/Reaction) resets for whoever's
         # turn is now starting — other combatants keep their tallies until theirs does.
+        self._turn_start_notes = []
         for new_active in self._current_turn_group():
             new_active["action_uses"] = {}
+            if self._char_death_state(new_active) != "dead":
+                self._start_monster_turn(new_active)
             self._rebuild_card(new_active)
         self._tick_timed_conditions(ended, self._current_turn_group(), new_round)
-        self._refresh_turn()
-        self._on_turn_changed()
-        # Save whose turn it is, so continuing the fight starts there. A log
-        # without events is still as prepared, and stays that way.
-        data = self._read_log()
-        if has_round_events(data):
-            self._write_log(data)
 
     def _is_first_turn(self) -> bool:
         """Whether it's round 1's first turn, so there is no turn before it."""
@@ -131,14 +175,21 @@ class TurnsMixin(CombatWindowState):
     @undoable
     def _step_turn_back(self):
         """Make it the previous turn's (the last one of the round before, from
-        a round's first turn), changing nothing else."""
-        start = self._turn_span(self.current_turn_idx)[0]
-        if start > 0:
-            self.current_turn_idx = self._turn_span(start - 1)[0]
-        else:
-            self.round_number -= 1
-            self.current_turn_idx = self._turn_span(len(self.initiative_order) - 1)[0]
-            self.round_label.setText(f"Round {self.round_number}")
+        a round's first turn), changing nothing else. With the "skip dead"
+        setting on, that's the last turn Next wouldn't have passed over."""
+        for _ in initiative_units(self.initiative_order):
+            start = self._turn_span(self.current_turn_idx)[0]
+            if start > 0:
+                self.current_turn_idx = self._turn_span(start - 1)[0]
+            else:
+                self.round_number -= 1
+                self.current_turn_idx = self._turn_span(len(self.initiative_order) - 1)[
+                    0
+                ]
+                self.round_label.setText(f"Round {self.round_number}")
+            skip = self.settings.skip_dead_turns and self._turn_is_dead()
+            if not skip or self._is_first_turn():
+                break
         self._refresh_turn()
         self._on_turn_changed()
         data = self._read_log()
@@ -165,16 +216,24 @@ class TurnsMixin(CombatWindowState):
     def _on_turn_changed(self):
         """Apply the turn settings (settings.py) when whose turn it is changes:
         Next, Previous, combat starting or continuing, an undo across a turn."""
+        # A roll and a save were for the turn that's over.
+        if self._rolled_damage_text == self.damage_input.text():
+            self.damage_input.clear()
+        self._rolled_damage_text = ""
+        if self._saved_targets:
+            self._saved_targets = []
+            self._set_targets(list(self.target_characters))
         self._follow_turn_with_source()
         active = self._current_turn_character()
         if self.settings.clear_targets_on_turn and self.target_characters:
-            self.target_characters = []
-            self._update_target_label()
-            self._refresh_cards()
+            self._set_targets([])
         if self.settings.restart_player_timer_on_turn:
             self._reset_player_timer()
             if active is not None and active.get("_is_player"):
                 self._start_player_timer()
+        self._action_result_label.setText("")
+        self._take_turn_reminders()
+        self._refresh_views()
 
     def _follow_turn_with_source(self):
         """With the "source follows the turn" setting on, make whoever's turn
@@ -219,6 +278,7 @@ class TurnsMixin(CombatWindowState):
         init_input.setPlaceholderText("Total...")
         init_input.setFixedWidth(60)
         init_input.textChanged.connect(self._check_start_button)
+        init_input.returnPressed.connect(self._initiative_enter_pressed)
         row_layout.addWidget(init_input)
 
         roll_btn = QPushButton("Roll")
@@ -241,6 +301,7 @@ class TurnsMixin(CombatWindowState):
             hp_input.setPlaceholderText(char.get("hp_formula") or "Max HP...")
             hp_input.setFixedWidth(80)
             hp_input.textChanged.connect(self._check_start_button)
+            hp_input.returnPressed.connect(self._initiative_enter_pressed)
             row_layout.addWidget(hp_input)
             for member in unit:
                 self._initiative_hp_inputs[id(member)] = hp_input
@@ -317,19 +378,24 @@ class TurnsMixin(CombatWindowState):
         )
 
         def _roll_all():
-            for char, inp in (
-                (unit[0], self._initiative_inputs[id(unit[0])])
-                for unit in initiative_units(self.characters)
-            ):
-                result = random.randint(1, 20) + self._dex_mod(char)
-                inp.setText(str(result))
-                inp.setStyleSheet(
-                    "background-color: #1a3a1a; border: 1px solid #2ecc71;"
-                )
+            for unit in initiative_units(self.characters):
+                self._roll_initiative(unit)
             self._check_start_button()
 
         roll_all_btn.clicked.connect(_roll_all)
-        outer.addWidget(roll_all_btn)
+
+        roll_monsters_btn = QPushButton("Roll for Monsters")
+        roll_monsters_btn.setStyleSheet(roll_all_btn.styleSheet())
+        roll_monsters_btn.setToolTip(
+            "Roll every monster's initiative that isn't filled in, then jump to"
+            " the first player's field"
+        )
+        roll_monsters_btn.clicked.connect(self._roll_monster_initiative)
+
+        roll_row = QHBoxLayout()
+        roll_row.addWidget(roll_monsters_btn)
+        roll_row.addWidget(roll_all_btn)
+        outer.addLayout(roll_row)
 
         self._start_combat_btn = QPushButton("Start Combat")
         self._start_combat_btn.setEnabled(False)
@@ -342,6 +408,49 @@ class TurnsMixin(CombatWindowState):
 
         outer.addStretch()
         return container
+
+    def _roll_initiative(self, unit: list[dict]):
+        result = random.randint(1, 20) + self._dex_mod(unit[0])
+        inp = self._initiative_inputs[id(unit[0])]
+        inp.setText(str(result))
+        inp.setStyleSheet("background-color: #1a3a1a; border: 1px solid #2ecc71;")
+
+    def _roll_monster_initiative(self):
+        """Roll for everyone but the players, who roll their own dice."""
+        for unit in initiative_units(self.characters):
+            if not (
+                unit[0].get("_is_player")
+                or self._initiative_inputs[id(unit[0])].text().strip()
+            ):
+                self._roll_initiative(unit)
+        self._check_start_button()
+        self._focus_next_initiative_field()
+
+    def _focus_next_initiative_field(self) -> bool:
+        """Put the cursor in the first field still needing a number, if any."""
+        for inp in self._initiative_inputs.values():
+            if not self._is_int(inp.text()):
+                inp.setFocus()
+                return True
+        for inp in self._initiative_hp_inputs.values():
+            if self._positive_int(inp.text()) is None:
+                inp.setFocus()
+                return True
+        return False
+
+    def _initiative_enter_pressed(self):
+        """Enter in a field: on to the next one, or into the fight once
+        they're all filled in."""
+        if not self._focus_next_initiative_field():
+            self._start_combat()
+
+    @staticmethod
+    def _is_int(text: str) -> bool:
+        try:
+            int(text)
+        except ValueError:
+            return False
+        return True
 
     @staticmethod
     def _hp_not_set(char: dict) -> bool:
@@ -362,9 +471,7 @@ class TurnsMixin(CombatWindowState):
         every HP field a positive one."""
         all_filled = True
         for inp in self._initiative_inputs.values():
-            try:
-                int(inp.text())
-            except ValueError:
+            if not self._is_int(inp.text()):
                 all_filled = False
                 break
         for inp in self._initiative_hp_inputs.values():
@@ -411,11 +518,15 @@ class TurnsMixin(CombatWindowState):
                 tied_groups.append((order_with_initiative[i][0], i, j))
             i = j
 
-        if tied_groups:
+        if tied_groups and self.settings.ask_initiative_ties:
             resolved = self._show_tie_break_dialog(order_with_initiative, tied_groups)
             if resolved is None:
                 return  # user cancelled — stay on initiative screen
             order_with_initiative = resolved
+        elif tied_groups:
+            order_with_initiative.sort(
+                key=lambda x: (x[0], self._dex_mod(x[1][0])), reverse=True
+            )
 
         sorted_chars = [c for _, unit in order_with_initiative for c in unit]
 
@@ -513,6 +624,7 @@ class TurnsMixin(CombatWindowState):
         self._turn_divider.show()
         self._prev_turn_btn.show()
         self._next_turn_btn.show()
+        self._turn_panel.show()
 
         self._rebuild_cards()
         self._refresh_turn()
@@ -532,10 +644,12 @@ class TurnsMixin(CombatWindowState):
         self._turn_divider.hide()
         self._prev_turn_btn.hide()
         self._next_turn_btn.hide()
+        self._turn_panel.hide()
 
         self._initiative_widget = self._build_initiative_widget()
         self._scroll_area.setWidget(self._initiative_widget)
         self._refresh_rest_buttons()
+        self._focus_next_initiative_field()
 
     def _refresh_initiative_tracker(self):
         """Update the turn counter label, counting an initiative group as one
@@ -551,16 +665,23 @@ class TurnsMixin(CombatWindowState):
         turn = sum(1 for start in turn_starts if start <= self.current_turn_idx)
         self._turn_counter_label.setText(f"Turn {turn} / {len(turn_starts)}")
 
+    def _refresh_next_button(self):
+        """Say what pressing Next will do, turns it would pass over included:
+        the last living combatant's Next starts the round."""
+        later = self.initiative_order[self._turn_span(self.current_turn_idx)[1] :]
+        if self.settings.skip_dead_turns:
+            ends_round = all(self._char_death_state(c) == "dead" for c in later)
+        else:
+            ends_round = not later
+        self._next_turn_btn.setText("Next Round" if ends_round else "Next Combatant")
+
     def _refresh_turn(self):
         """Update the active-turn highlight, tracker, and Next/Previous buttons."""
         self._refresh_cards()
         self._refresh_initiative_tracker()
         self._prev_turn_btn.setEnabled(not self._is_first_turn())
         if self.initiative_order:
-            if not self._is_last_turn():
-                self._next_turn_btn.setText("Next Combatant")
-            else:
-                self._next_turn_btn.setText("Next Round")
+            self._refresh_next_button()
             # Auto-scroll to active card
             active_char = self.initiative_order[self.current_turn_idx]
             card = self._card_widgets.get(id(active_char))

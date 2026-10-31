@@ -189,7 +189,7 @@ def save_requests(fight, monkeypatch):
     tiger["conditions"].append("Concentrating")
     asked: list[int] = []
     monkeypatch.setattr(
-        ui, "_concentration_check_dialog", lambda char, dmg: asked.append(dmg)
+        ui, "_ask_concentration_save", lambda char, dmg: asked.append(dmg)
     )
     return asked
 

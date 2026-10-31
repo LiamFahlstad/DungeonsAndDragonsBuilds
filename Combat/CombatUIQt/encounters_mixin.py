@@ -243,6 +243,7 @@ class EncountersMixin(CombatWindowState):
         self._turn_divider.hide()
         self._prev_turn_btn.hide()
         self._next_turn_btn.hide()
+        self._turn_panel.hide()
         self._initiative_widget = None
         self._scroll_area.setWidget(self._build_party_view())
 

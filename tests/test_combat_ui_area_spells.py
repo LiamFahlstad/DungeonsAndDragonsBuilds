@@ -75,5 +75,5 @@ def test_a_creature_spell_still_needs_a_target(fight, warnings):
 
     ui._apply_cast_spell(spell)
 
-    assert len(warnings) == 1
+    assert "needs a target" in ui._status_label.text()
     assert "Concentrating" not in pirate["conditions"]

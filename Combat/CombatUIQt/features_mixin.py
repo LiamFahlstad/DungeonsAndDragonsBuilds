@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QMessageBox,
     QPushButton,
     QTextEdit,
     QTreeWidget,
@@ -21,7 +20,7 @@ from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 from .state import CombatWindowState
 from .undo import undoable
-from .tree_filter import filter_category_tree
+from .tree_filter import filter_category_tree, first_visible_item
 
 
 class FeaturesMixin(CombatWindowState):
@@ -106,8 +105,11 @@ class FeaturesMixin(CombatWindowState):
         return tooltip_html
 
     def _show_enable_feature_dialog(self):
-        """Search the feature list for the selected combatant and enable a feature."""
+        """Search the feature list for the selected combatant and enable a
+        feature. Enter in the search box picks the first match, and applies it
+        once it's picked; double-clicking a feature applies it."""
         if not self.selected_character:
+            self._show_status("No feature used: left-click a card to pick a source.")
             return
         # Modal dialog: the selection can't change while it's open.
         character = self.selected_character
@@ -262,6 +264,8 @@ class FeaturesMixin(CombatWindowState):
         btn_row = QHBoxLayout()
         apply_btn = QPushButton("Apply")
         apply_btn.setEnabled(False)
+        # Enter is search_entered's to decide, not the dialog's default button.
+        apply_btn.setAutoDefault(False)
 
         def do_apply():
             feature = selected_feature["feature"]
@@ -272,7 +276,30 @@ class FeaturesMixin(CombatWindowState):
 
         apply_btn.clicked.connect(do_apply)
 
+        def search_entered():
+            current = tree.currentItem()
+            is_picked = (
+                current is not None
+                and not current.isHidden()
+                and current.data(0, Qt.ItemDataRole.UserRole) is not None
+            )
+            if not is_picked:
+                match = first_visible_item(category_items)
+                if match is not None:
+                    tree.setCurrentItem(match)
+            elif apply_btn.isEnabled():
+                do_apply()
+
+        def item_activated(item):
+            is_feature = item.data(0, Qt.ItemDataRole.UserRole) is not None
+            if is_feature and apply_btn.isEnabled():
+                do_apply()
+
+        search_box.returnPressed.connect(search_entered)
+        tree.itemActivated.connect(item_activated)
+
         close_btn2 = QPushButton("Close")
+        close_btn2.setAutoDefault(False)
         close_btn2.clicked.connect(dlg.reject)
         btn_row.addWidget(apply_btn)
         btn_row.addWidget(close_btn2)
@@ -292,9 +319,7 @@ class FeaturesMixin(CombatWindowState):
         increments the source's features_enabled stat."""
         source = self.selected_character
         if source is None:
-            QMessageBox.warning(
-                self._window, "Error", "Select a source (character) first."
-            )
+            self._show_status("No feature used: left-click a card to pick a source.")
             return
 
         sb = source.get("_stat_block")
@@ -304,10 +329,9 @@ class FeaturesMixin(CombatWindowState):
             recipients = [source]
         else:
             if not self.target_characters:
-                QMessageBox.warning(
-                    self._window,
-                    "Error",
-                    f"{feature.name} requires a target ({feature_target.value}) — select a target before applying.",
+                self._show_status(
+                    f"No feature used: {feature.name} needs a target"
+                    f" ({feature_target.value}). Right-click a card."
                 )
                 return
             recipients = self.target_characters

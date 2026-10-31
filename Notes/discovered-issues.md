@@ -200,6 +200,16 @@ Suggested fix (character-engine-dev): have MartialArts.apply() register a Weapon
 **History**
 - 2026-10-28 rules-checker: found
 
+### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/PlayerCombatant.py:124`
+
+combatant_from_character loads character.spell_slots only; character.pact_magic_slots never reaches the combatant dict, so a Warlock's card shows no slots, the 1-9 keys do nothing, and the Cast Spell dialog's slot picker says 'No slots tracked' and spends none. Fixing it needs pact slots kept apart from spell slots (a multiclass has both, a Short Rest restores only pact slots) plus their card row, rests and player-log replay. No Warlock in the Curse of the Lich party right now.
+
+**History**
+- 2026-10-31 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -275,6 +285,17 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: marked in-progress; Starting: unified feature spell-grant hook in the engine
 - 2026-10-28 main-session: marked fixed; Feature.granted_spells() (Model/Spells.py FeatureSpell) is now the one way a feature grants spells; Character.spell_grants grants them with the feature, stamped like it. Boon of Revelry, Siberys and Magic School Mastery declare their spells (listed as '<boon> (<class> Level 19)'); feats, class and subclass features moved off their own grant paths. Tests in tests/test_spell_grants.py.
 - 2026-10-28 main-session: Committed in 5b7d6912
+
+### DI-026 · Breaking concentration by casting another spell replays as an extra cast
+- **Status:** fixed · 2026-10-31 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/spells_mixin.py:_apply_cast_spell`
+
+The 'ends (concentration broken by casting X)' log line carries action=CAST_SPELL with no value. _apply_replay_action counts every CAST_SPELL as a cast, so replaying the player log gives one spells_cast too many and a None key in spells_cast_by_name. Found by code-reviewer; existing bug, not fixed here.
+
+**History**
+- 2026-10-31 main-session: found
+- 2026-10-31 main-session: marked fixed; New casts no longer tag the ended spell as a cast, and replay skips the valueless entries in older logs.
 
 ## Won't fix
 

@@ -114,11 +114,33 @@ QLabel#conditionBadge {
 QLabel#selectedLabel {
     color: #e94560;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 QLabel#targetLabel {
     color: #e74c3c;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* The turn column */
+QLabel#turnNowLabel {
+    color: #c9a84c;
+    font-weight: bold;
+    font-size: 15px;
+}
+QLabel#actionResultLabel {
+    color: #5ac8f5;
+    font-weight: bold;
+    font-size: 13px;
+}
+QPushButton#monsterActionBtn {
+    text-align: left;
+    padding: 4px 6px;
+}
+
+QLabel#statusLabel {
+    color: #e67e22;
     font-weight: bold;
     font-size: 12px;
 }

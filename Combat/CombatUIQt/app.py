@@ -25,6 +25,7 @@ from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .styles import QSS
 from .timer_mixin import TimerMixin
+from .turn_panel_mixin import TurnPanelMixin
 from .turns_mixin import TurnsMixin
 from .window_mixin import WindowMixin
 
@@ -35,6 +36,7 @@ class CombatAppQt(
     SpellsMixin,
     FeaturesMixin,
     TurnsMixin,
+    TurnPanelMixin,
     CardsMixin,
     LoggingMixin,
     DialogsMixin,
@@ -90,6 +92,14 @@ class CombatAppQt(
         self.selected_character: dict | None = None
         self.target_characters: list[dict] = []
         self._target_anchor: dict | None = None
+        # Targets marked as having saved, for half damage (DamageMixin).
+        self._saved_targets: list[dict] = []
+        # What a monster's action rolled into the Damage field, if it's there.
+        self._rolled_damage_text = ""
+        # What to remember this turn, and what starting it did (TurnPanelMixin).
+        self._turn_reminders: list[str] = []
+        self._turn_start_notes: list[str] = []
+        self._player_view = None
         # Settings; run() loads the saved ones.
         self.settings = CombatSettings()
         self._settings_store: QSettings | None = None
@@ -157,6 +167,7 @@ class CombatAppQt(
         self.settings.load(self._settings_store)
 
         self._build_window()
+        sys.excepthook = self._report_uncaught_error
 
         if self._encounter_log_to_open is not None:
             if not self._open_scenario_at_start(self._encounter_log_to_open):

@@ -2,11 +2,11 @@
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QComboBox,
     QDialog,
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QMessageBox,
     QPushButton,
     QTextEdit,
     QTreeWidget,
@@ -20,7 +20,25 @@ from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
 from .undo import undoable
-from .tree_filter import filter_category_tree
+from .tree_filter import filter_category_tree, first_visible_item
+
+
+def spell_slot_choices(char: dict, spell_level: int) -> list[tuple[str, int | None]]:
+    """What char can pay for a spell of spell_level with, as (label, slot
+    level), cheapest first: its slots of that level or higher that have any
+    left, then casting without one (a ritual, an item, a feature). A cantrip
+    needs no slot, and neither does a caster whose slots aren't tracked."""
+    if spell_level == 0:
+        return [("Cantrip: no slot", None)]
+    slots = char.get("spell_slots") or {}
+    if not slots:
+        return [("No slots tracked", None)]
+    paid = [
+        (f"Level {level} slot ({count} left)", level)
+        for level, count in sorted(slots.items())
+        if level >= spell_level and count > 0
+    ]
+    return paid + [("No slot (ritual, item or feature)", None)]
 
 
 class SpellsMixin(CombatWindowState):
@@ -29,8 +47,11 @@ class SpellsMixin(CombatWindowState):
     @undoable
     def _cast_spell_slot_level(self, level: int):
         if not self.selected_character:
+            self._show_status("Nothing spent: left-click a card to pick a source.")
             return
         if self.selected_character["spell_slots"].get(level, 0) <= 0:
+            name = self.selected_character["name"]
+            self._show_status(f"Nothing spent: {name} has no level {level} slots left.")
             return
         old = self.selected_character["spell_slots"][level]
         self.selected_character["spell_slots"][level] = max(old - 1, 0)
@@ -53,6 +74,7 @@ class SpellsMixin(CombatWindowState):
     @undoable
     def _regain_spell_slot(self):
         if not self.selected_character:
+            self._show_status("Nothing regained: left-click a card to pick a source.")
             return
         level = self.spell_combo.currentIndex() + 1
         old = self.selected_character["spell_slots"].get(level, 0)
@@ -69,6 +91,7 @@ class SpellsMixin(CombatWindowState):
         """Remove Concentrating if no remaining active spell on char still needs it."""
         if any(e.get("concentration") for e in char.get("active_spells") or []):
             return
+        char.pop("concentration_checks", None)
         conditions = char.get("conditions", [])
         if CombatStatus.CONCENTRATING.value in conditions:
             conditions.remove(CombatStatus.CONCENTRATING.value)
@@ -133,8 +156,12 @@ class SpellsMixin(CombatWindowState):
         self._rebuild_card(char)
 
     def _show_cast_spell_dialog(self):
-        """Search the spell list (like Rules) and cast a spell on the selected combatant."""
+        """Search the spell list (like Rules), the caster's own spells first,
+        and cast one on the selected combatant, choosing the slot it uses.
+        Enter in the search box picks the first match, and casts it once it's
+        picked; double-clicking a spell casts it."""
         if not self.selected_character:
+            self._show_status("No spell cast: left-click a card to pick a source.")
             return
         # Modal dialog: the selection can't change while it's open.
         character = self.selected_character
@@ -187,8 +214,8 @@ class SpellsMixin(CombatWindowState):
             return "Cantrips" if level == 0 else f"Level {level}"
 
         category_items: dict[str, QTreeWidgetItem] = {}
-        for spell in spells:
-            category = level_label(spell.level)
+
+        def add_spell(category: str, spell):
             cat_item = category_items.get(category)
             if cat_item is None:
                 cat_item = QTreeWidgetItem([category])
@@ -198,6 +225,17 @@ class SpellsMixin(CombatWindowState):
             spell_item = QTreeWidgetItem([spell.name])
             spell_item.setData(0, Qt.ItemDataRole.UserRole, spell)
             cat_item.addChild(spell_item)
+
+        own_category = f"{character['name']}'s Spells"
+        for spell in sorted(
+            character.get("_spell_objects", {}).values(),
+            key=lambda s: (s.level, s.name),
+        ):
+            add_spell(own_category, spell)
+        if own_category in category_items:
+            category_items[own_category].setExpanded(True)
+        for spell in spells:
+            add_spell(level_label(spell.level), spell)
 
         selected_spell: dict[str, object] = {"spell": None}
 
@@ -248,6 +286,25 @@ class SpellsMixin(CombatWindowState):
                     f"This spell requires a target ({spell.target.value}) — "
                     "select a target first (right-click a card)"
                 )
+            show_slot_choices(spell)
+
+        def show_slot_choices(spell):
+            choices = spell_slot_choices(character, spell.level)
+            slot_combo.clear()
+            for label, level in choices:
+                slot_combo.addItem(label, level)
+            slot_combo.setEnabled(len(choices) > 1)
+            out_of_slots = (
+                spell.level > 0
+                and bool(character.get("spell_slots"))
+                and len(choices) == 1
+            )
+            cast_btn.setText("Cast without a slot" if out_of_slots else "Cast")
+            slot_warning.setText(
+                f"No slot of level {spell.level} or higher left."
+                if out_of_slots
+                else ""
+            )
 
         def on_selection_changed():
             items = tree.selectedItems()
@@ -268,20 +325,55 @@ class SpellsMixin(CombatWindowState):
 
         search_box.textChanged.connect(apply_filter)
 
+        slot_row = QHBoxLayout()
+        slot_row.addWidget(QLabel("Spell slot:"))
+        slot_combo = QComboBox()
+        slot_combo.setEnabled(False)
+        slot_row.addWidget(slot_combo, stretch=1)
+        slot_warning = QLabel("")
+        slot_warning.setObjectName("statusLabel")
+        slot_row.addWidget(slot_warning)
+        outer.addLayout(slot_row)
+
         btn_row = QHBoxLayout()
         cast_btn = QPushButton("Cast")
         cast_btn.setEnabled(False)
+        # Enter is search_entered's to decide, not the dialog's default button.
+        cast_btn.setAutoDefault(False)
 
         def do_cast():
             spell = selected_spell["spell"]
             if spell is None:
                 return
-            self._apply_cast_spell(spell)
+            self._apply_cast_spell(spell, slot_level=slot_combo.currentData())
             dlg.accept()
 
         cast_btn.clicked.connect(do_cast)
 
+        def search_entered():
+            current = tree.currentItem()
+            is_picked = (
+                current is not None
+                and not current.isHidden()
+                and current.data(0, Qt.ItemDataRole.UserRole) is not None
+            )
+            if not is_picked:
+                match = first_visible_item(category_items)
+                if match is not None:
+                    tree.setCurrentItem(match)
+            elif cast_btn.isEnabled():
+                do_cast()
+
+        def item_activated(item):
+            is_spell = item.data(0, Qt.ItemDataRole.UserRole) is not None
+            if is_spell and cast_btn.isEnabled():
+                do_cast()
+
+        search_box.returnPressed.connect(search_entered)
+        tree.itemActivated.connect(item_activated)
+
         close_btn2 = QPushButton("Close")
+        close_btn2.setAutoDefault(False)
         close_btn2.clicked.connect(dlg.reject)
         btn_row.addWidget(cast_btn)
         btn_row.addWidget(close_btn2)
@@ -290,7 +382,7 @@ class SpellsMixin(CombatWindowState):
         dlg.exec()
 
     @undoable
-    def _apply_cast_spell(self, spell):
+    def _apply_cast_spell(self, spell, slot_level: int | None = None):
         """Cast a spell. The spell's own declared metadata decides what happens:
         spell.target decides who is affected (SELF/None always means the
         caster; AREA means whichever targets are selected, possibly none, since
@@ -302,12 +394,12 @@ class SpellsMixin(CombatWindowState):
         when the spell's effect lands on a target), and spell.duration_seconds
         (if set) adds a ticking duration bar on every recipient. Every cast also
         adds a condition badge (with the description as a hover tooltip) on its
-        recipient(s) and increments the caster's spells_cast stat."""
+        recipient(s) and increments the caster's spells_cast stat. slot_level
+        is the spell slot it uses, higher than the spell's level to upcast it;
+        None uses no slot."""
         source = self.selected_character
         if source is None:
-            QMessageBox.warning(
-                self._window, "Error", "Select a caster (character) first."
-            )
+            self._show_status("No spell cast: left-click a card to pick a source.")
             return
 
         if spell.target is None or spell.target == FeatureTarget.SELF:
@@ -316,10 +408,9 @@ class SpellsMixin(CombatWindowState):
             recipients = list(self.target_characters)
         else:
             if not self.target_characters:
-                QMessageBox.warning(
-                    self._window,
-                    "Error",
-                    f"{spell.name} requires a target ({spell.target.value}) — select a target before casting.",
+                self._show_status(
+                    f"No spell cast: {spell.name} needs a target"
+                    f" ({spell.target.value}). Right-click a card."
                 )
                 return
             recipients = self.target_characters
@@ -329,12 +420,15 @@ class SpellsMixin(CombatWindowState):
         source["stats"]["spells_cast"] = source["stats"].get("spells_cast", 0) + 1
         increment_named_stat(source["stats"], "spells_cast_by_name", spell.name)
         cast_value = {"spell_name": spell.name}
+        upcast = f" at level {slot_level}" if (slot_level or 0) > spell.level else ""
         self._log_event(
-            f"{source['name']} casts {spell.name}",
+            f"{source['name']} casts {spell.name}{upcast}",
             character=source["name"],
             action=Action.CAST_SPELL,
             value=cast_value,
         )
+        if slot_level is not None:
+            self._cast_spell_slot_level(slot_level)
 
         if spell.is_concentration:
             # Break any existing concentration spells before starting a new one
@@ -345,11 +439,12 @@ class SpellsMixin(CombatWindowState):
                     self._log_event(
                         f"{source['name']}'s {entry['name']} ends (concentration broken by casting {spell.name})",
                         character=source["name"],
-                        action=Action.CAST_SPELL,
                     )
                 else:
                     remaining_spells.append(entry)
             source["active_spells"] = remaining_spells
+            # A save still owed was for the spell that just ended.
+            source.pop("concentration_checks", None)
             # Concentration always belongs to the caster, regardless of who the spell targets.
             self._add_condition_to(
                 source, CombatStatus.CONCENTRATING.value, source=source
