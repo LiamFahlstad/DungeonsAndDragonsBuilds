@@ -210,6 +210,16 @@ combatant_from_character loads character.spell_slots only; character.pact_magic_
 **History**
 - 2026-10-31 main-session: found
 
+### DI-027 · Cards read ability scores of 10 or less as modifiers
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/cards_mixin.py:_add_ability_rows`
+
+_add_ability_rows treats scores as modifiers unless one is over 10, so a Commoner shows +10 on every ability on its card. No stat block or campaign log holds modifiers. Saves in saves.py no longer do this. The cards golden has a modifier_scores case that pins the old reading.
+
+**History**
+- 2026-10-31 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -287,7 +297,7 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: Committed in 5b7d6912
 
 ### DI-026 · Breaking concentration by casting another spell replays as an extra cast
-- **Status:** fixed · 2026-10-31 · uncommitted
+- **Status:** fixed · 2026-10-31 · 97b31819
 - **Area:** combat-simulator
 - **Where:** `Combat/CombatUIQt/spells_mixin.py:_apply_cast_spell`
 
@@ -296,6 +306,18 @@ The 'ends (concentration broken by casting X)' log line carries action=CAST_SPEL
 **History**
 - 2026-10-31 main-session: found
 - 2026-10-31 main-session: marked fixed; New casts no longer tag the ended spell as a cast, and replay skips the valueless entries in older logs.
+- 2026-10-31 main-session: marked fixed in 97b31819
+
+### DI-028 · Player timers and condition notes do not survive replaying the player log
+- **Status:** fixed · 2026-10-31 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/logging_mixin.py:_rebuild_players_from_log`
+
+timed_conditions, custom_condition_descriptions and repeat_saves on a player are not restored, so after a restart the condition stays with no timer or note. Predates the Custom Effect dialog, which makes timed conditions on players more common.
+
+**History**
+- 2026-10-31 main-session: found
+- 2026-10-31 main-session: marked fixed; A fight in progress now keeps each player's active spells, timers, notes, repeat saves and owed Concentration saves in its log (PLAYER_FIGHT_KEYS), restored when the fight is continued.
 
 ## Won't fix
 
