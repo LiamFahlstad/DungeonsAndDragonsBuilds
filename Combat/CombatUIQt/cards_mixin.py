@@ -374,11 +374,13 @@ class CardsMixin(CombatWindowState):
             self._card_menu(char).popup(QCursor.pos())
 
     def _card_menu(self, char: dict) -> QMenu:
-        """Damage, Heal and Temp HP for this target, and the common conditions
-        a click away. It isn't modal: it closes with any click elsewhere."""
+        """An attack roll, Damage, Heal and Temp HP for this target, and the
+        common conditions a click away. It isn't modal: it closes with any click
+        elsewhere."""
         menu = QMenu(self._window)
         menu.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         menu.setStyleSheet(QSS)
+        menu.addAction("Attack roll (Shift+A)", self._focus_attack_roll_input)
         menu.addAction("Damage (D)", self._focus_damage_input)
         menu.addAction("Heal (H)", self._focus_heal_input)
         menu.addAction("Temp HP (T)", self._focus_temp_hp_input)

@@ -778,6 +778,17 @@ class DialogsMixin(CombatWindowState):
         name_input.setFocus()
         dlg.exec()
 
+    def _set_setting(self, name: str, checked: bool):
+        """Change a setting: it takes effect, and is saved, right now."""
+        setattr(self.settings, name, checked)
+        if self._settings_store is not None:
+            self.settings.save(self._settings_store)
+        if name == "source_follows_turn":
+            self._follow_turn_with_source()
+        if name == "limited_player_view":
+            self._refresh_views()
+        self._apply_panel_settings()
+
     def _show_settings_dialog(self):
         """Settings that change how the window behaves. Each one takes effect
         (and is saved) the moment it's changed."""
@@ -789,14 +800,6 @@ class DialogsMixin(CombatWindowState):
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(8)
-
-        def set_setting(name: str, checked: bool):
-            setattr(self.settings, name, checked)
-            if self._settings_store is not None:
-                self.settings.save(self._settings_store)
-            if name == "source_follows_turn":
-                self._follow_turn_with_source()
-            self._apply_panel_settings()
 
         # Two columns, or it's taller than many screens.
         columns = QHBoxLayout()
@@ -816,7 +819,7 @@ class DialogsMixin(CombatWindowState):
                     box.setObjectName(info.name)
                     box.setChecked(getattr(self.settings, info.name))
                     box.toggled.connect(
-                        lambda checked, name=info.name: set_setting(name, checked)
+                        lambda checked, name=info.name: self._set_setting(name, checked)
                     )
                     column.addWidget(box)
                     hint = QLabel(info.hint)
@@ -883,6 +886,26 @@ class DialogsMixin(CombatWindowState):
         hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         layout.addWidget(hint)
 
+        view_row = QHBoxLayout()
+        view_row.addWidget(QLabel("Players see:"))
+        view_combo = QComboBox()
+        view_combo.setObjectName("playerViewCombo")
+        view_combo.addItems(["Informative", "Limited"])
+        view_combo.setCurrentIndex(int(self.settings.limited_player_view))
+        view_row.addWidget(view_combo, stretch=1)
+        layout.addLayout(view_row)
+
+        view_hint = QLabel(
+            "Informative shows everyone's exact HP, size, AC and speed. Limited "
+            "keeps players as they are, but monsters show only speed, damage "
+            "taken, visible conditions, a word for health and what attack rolls "
+            "have shown of their AC. The encounter log is on the link in both. "
+            "This changes the Player Screen too."
+        )
+        view_hint.setWordWrap(True)
+        view_hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        layout.addWidget(view_hint)
+
         btn_row = QHBoxLayout()
         copy_btn = QPushButton("Copy")
         stop_btn = QPushButton("Stop")
@@ -939,6 +962,9 @@ class DialogsMixin(CombatWindowState):
             message.setText("No network found. Join the Wi-Fi and open this again.")
 
         address_combo.currentTextChanged.connect(serve_on)
+        view_combo.currentIndexChanged.connect(
+            lambda index: self._set_setting("limited_player_view", bool(index))
+        )
         copy_btn.clicked.connect(copy_link)
         stop_btn.clicked.connect(stop)
         close_btn.clicked.connect(dlg.accept)

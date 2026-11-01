@@ -222,6 +222,7 @@ class LoggingMixin(CombatWindowState):
         self._refresh_turn()
         if (self.round_number, self.current_turn_idx) != turn_before:
             self._on_turn_changed()
+            self.attack_roll_input.setText(point.attack_roll_text)
 
     def _load_log_from_path(self, path: str):
         """Play the encounter log at `path`: its combatants join the players

@@ -23,8 +23,10 @@ class CombatSettings:
     focus_damage_on_target: bool = False
     # Initiative (TurnsMixin._start_combat)
     ask_initiative_ties: bool = True
-    # Panel (WindowMixin._apply_panel_settings)
+    # Display (WindowMixin._apply_panel_settings)
     show_more_controls: bool = False
+    # Off is the Informative view (TurnPanelMixin._player_view_content)
+    limited_player_view: bool = False
 
     def load(self, store: QSettings):
         """Take each setting saved in `store`, keeping the default for the rest."""
@@ -134,12 +136,17 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
         ],
     ),
     (
-        "Panel",
+        "Display",
         [
             SettingInfo(
                 "show_more_controls",
                 "Show Visibility, Spell Slots and Action Economy",
                 "Their keyboard shortcuts work either way.",
+            ),
+            SettingInfo(
+                "limited_player_view",
+                "Limited player view",
+                "Monsters' HP as a word, plus damage.",
             ),
         ],
     ),

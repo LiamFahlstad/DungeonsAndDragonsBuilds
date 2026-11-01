@@ -63,6 +63,7 @@ def test_the_defaults_keep_the_window_as_it_was():
         focus_damage_on_target=False,
         ask_initiative_ties=True,
         show_more_controls=False,
+        limited_player_view=False,
     )
 
 

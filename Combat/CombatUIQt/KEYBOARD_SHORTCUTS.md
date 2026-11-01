@@ -23,6 +23,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **Shift+N** / **Down arrow** | Next Target | Select the next combatant as the sole target (replaces any current target selection). Wraps around. |
 | **Shift+P** / **Up arrow** | Previous Target | Select the previous combatant as the sole target. Wraps around. |
 | **Space** | Select Active Combatant | Select whoever's turn it currently is as the source — handy right after pressing Enter to advance the turn. Only active once combat has started. With Settings → "Source follows the turn" on (the default), this already happens on every turn change, so Space only matters after picking another source by hand. |
+| **Shift+A** | Focus Attack Roll Field | Jump the cursor into the Attack roll field, or press **Shift+Tab** from the Damage field. |
 | **D** | Focus Damage Field | Jump the cursor into the Damage amount field (existing text selected, ready to overwrite). |
 | **H** | Focus Heal Field | Jump the cursor into the Heal amount field. |
 | **T** | Focus Temp HP Field | Jump the cursor into the Temp HP amount field. |
@@ -35,6 +36,12 @@ All shortcuts listed below are global (registered on the main combat window in `
 The arrow keys are plain aliases for N/P/Shift+N/Shift+P — left/right mirrors the unmodified source shortcuts, up/down mirrors the Shift target shortcuts. A focused text field keeps its own left/right cursor movement regardless (see Notes).
 
 Enter in the Damage field applies the damage with each target's resistance, vulnerability and immunity counted, like the Apply button; **Ignore Resist** applies exactly the amount typed. The Damage, Heal and Temp HP fields take a sum or a halving as well as a number (`8+5`, `24/2`). When something can't be applied, the reason shows under Source/Target instead of nothing happening.
+
+## The Attack roll field
+
+Optional, beside Damage. Type the roll someone made and press Enter: it's checked against each target's AC, with Half or Three-Quarters Cover added, the hit or miss goes in the encounter log, and a hit moves on to the Damage field, with only the targets it hit left selected. It takes a total or a sum (`17`, `12+5`), or `nat 20` or `nat 1`, which hit or miss whatever the AC. Those two don't narrow down the AC on the Limited player view, since the AC played no part in them.
+
+With the roll and the damage both typed, Apply does both: only the targets it hit take the damage. If it missed them all, nothing is applied and the amount stays in the field, so applying again deals it anyway, for damage that lands on a miss, like the Graze mastery's. A roll left in the field is cleared when the turn changes or a monster's action rolls its own.
 
 ## The Damage field
 

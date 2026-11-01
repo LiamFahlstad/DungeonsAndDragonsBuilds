@@ -151,7 +151,7 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] The text is readable from the table. Sizes were a guess, so note it here if they're wrong.
 - [ ] Everyone shows an HP bar with numbers, in the same colors as your cards, and Defeated once dead.
 - [ ] An initiative group shows a bar for each member it can see.
-- [ ] Everyone shows size and speed under their name, and monsters show their AC too.
+- [ ] Everyone shows size, AC and speed under their name. A player with a Shield shows just their current AC.
 - [ ] A big fight still fits on the TV. Rows are taller now and the screen can't scroll, so 10+ rows or a large group may run off the bottom.
 - [ ] Invisible and Invisibility hide a monster.
 - [ ] Heavily Obscured, Darkness and Total Cover hide it too. See "Decisions to make".
@@ -184,6 +184,36 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 - [ ] Open it on both iPhone and Android, since only a real device tests their browsers.
 - [ ] iPhone: leave a quiet fight open for a minute. No banner should appear, which shows Safari handles "nothing changed" properly.
 - [ ] Put the PC to sleep and wake it, then turn its Wi-Fi off and on: do phones reconnect? If not, Stop and reopen Player Link should recover them.
+
+### 9c. Limited player view
+
+- [ ] Pick Limited in the Player Link dialog: phones and the Player Screen change within a second or two. Open Settings: Limited player view is ticked.
+- [ ] Player characters' rows look exactly as they do on Informative.
+- [ ] Monsters' rows show names, NOW and NEXT, visible conditions, speed, damage taken and a health word, with no HP numbers, size or AC number. Only attack rolls add anything about the AC.
+- [ ] A monster goes Healthy, Injured, Bloodied, Dying, Defeated as it's hurt, and the bar steps down with the word.
+- [ ] A small hit that doesn't change the word moves the damage total but not the bar.
+- [ ] Damage taken goes up with each hit, stays put when a monster heals, and goes back down on Undo.
+- [ ] An initiative group shows each member's damage beside its name, and it still reads on a phone.
+- [ ] Damage taken starts at 0 in a new or restarted encounter, and comes back when a fight is continued.
+- [ ] Encounter log is on the phones, the same as on Informative, and a hidden monster's lines still stay out of it.
+- [ ] The choice survives a restart.
+
+### 9d. Attack roll field
+
+- [ ] Attack roll sits beside the Damage amount, with the damage type on its own row below. "Bludgeoning" fits.
+- [ ] Pick a source and target, type a roll, press Enter: a hit or miss shows under Source/Target with the AC, and in the encounter log without it. A hit moves the cursor to Damage.
+- [ ] Shift+A, Shift+Tab from Damage, and Attack roll in a card's right-click menu all reach the field.
+- [ ] Roll and damage both typed: a hit deals it, and one Ctrl+Z takes it all back with both fields refilled.
+- [ ] Roll and damage both typed: a miss deals nothing and keeps the amount. Pressing Enter again deals it, as for Graze.
+- [ ] Two targets with different ACs, typing the roll and the damage together: only the one hit takes damage, and each gets a log line.
+- [ ] The same two targets, pressing Enter on the roll first: the one it missed is no longer a target, so the damage typed next goes only to the one hit.
+- [ ] Half Cover on the target: a roll of AC + 1 misses, the status says with cover, and the note is about the AC without it.
+- [ ] `nat 20` beats a high AC and logs a critical hit. `nat 1` misses a low AC. Neither adds an AC note.
+- [ ] Limited: a miss on 10 shows AC > 10 on the monster's row, on phones and the Player Screen. A hit on 17 makes it 10 < AC ≤ 17. A lower miss changes nothing.
+- [ ] Limited: in an initiative group the note goes by the member's name and still reads on a phone. Sizes were a guess here too.
+- [ ] Informative shows the AC itself and no note.
+- [ ] A hidden monster's attack on a visible one adds no note.
+- [ ] Undo takes the note back. It stays when a fight is continued and goes when it's restarted.
 
 ### 10. Panel, menu and settings
 

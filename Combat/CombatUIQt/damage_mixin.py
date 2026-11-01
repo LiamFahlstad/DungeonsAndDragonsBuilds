@@ -5,6 +5,9 @@ import random
 from Combat.Definitions import Action
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
+from .attack_rolls import cover_bonus, note_attack_roll, parse_attack_roll
+from .monster_actions import first_number
+from .player_view import _can_be_seen
 from .saves import save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
@@ -13,6 +16,12 @@ from .undo import undoable
 # A Concentration save's DC: half the damage taken, between these.
 MIN_CONCENTRATION_DC = 10
 MAX_CONCENTRATION_DC = 30
+# How an attack roll went, as the log says it; None is no AC to check against.
+_VERDICTS: dict[bool | None, str] = {
+    True: "hits",
+    False: "misses",
+    None: "can't be checked against",
+}
 
 
 def _damage_type_value(t) -> str:
@@ -121,14 +130,86 @@ class DamageMixin(CombatWindowState):
             return None
         return typed
 
+    def _check_attack_roll(self) -> tuple[list[dict], str] | None:
+        """Check the Attack roll field against each target's AC and cover and
+        log how it went. Returns the targets it hit, including any with no AC to
+        check, and how it went against the AC, for the status line, or None if
+        there's nothing to check, after saying why. The log doesn't say the AC,
+        as the Limited view's players read it too. They don't learn from a
+        hidden attacker's roll, which they never saw."""
+        if not self.target_characters:
+            self._show_status("Nothing applied: right-click a card to pick a target.")
+            return None
+        text = self.attack_roll_input.text().strip()
+        roll = parse_attack_roll(text)
+        if roll is None:
+            shown = f"'{text}' isn't an attack roll" if text else "no attack roll"
+            self._show_status(f"Nothing applied: {shown}. Try 17, 12+5 or nat 20.")
+            return None
+
+        source = self.selected_character or self._current_turn_character()
+        attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
+        hit_targets = []
+        results = []
+        for target in self.target_characters:
+            armor = first_number(target.get("ac"))
+            cover = cover_bonus(target)
+            hit = roll.hits(None if armor is None else armor + cover)
+            if source is None or _can_be_seen(source):
+                note_attack_roll(target, roll, hit, cover)
+            if hit is not False:
+                hit_targets.append(target)
+            name = target["name"]
+            critical = " (critical hit)" if roll.is_critical else ""
+            self._log_event(
+                f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}",
+                character=name,
+            )
+            if armor is None:
+                results.append(f"{name} has no AC to check")
+                continue
+            faced = f"AC {armor + cover} with cover" if cover else f"AC {armor}"
+            word = "hit" if hit else "miss"
+            results.append(f"{name}: {roll.text} vs {faced}, {word}")
+        self.attack_roll_input.clear()
+        return hit_targets, "; ".join(results)
+
+    @undoable
+    def _apply_attack_roll(self):
+        """Enter in the Attack roll field: a hit goes on to its damage, for the
+        targets it hit, and a miss leaves the field empty for the next roll."""
+        checked = self._check_attack_roll()
+        if checked is None:
+            return
+        hit_targets, results = checked
+        self._show_status(results)
+        if hit_targets:
+            self._set_targets(hit_targets)
+            self._focus_damage_input()
+
     @undoable
     def _do_apply_damage(self, check_resistance: bool):
         parts = self._damage_parts()
         if parts is None:
             return
+        targets = list(self.target_characters)
+        results = ""
+        if self.attack_roll_input.text().strip():
+            checked = self._check_attack_roll()
+            if checked is None:
+                return
+            targets, results = checked
+            if not targets:
+                # The roll's used up, so applying again deals it: some damage
+                # lands on a miss, like the Graze mastery's.
+                self._show_status(
+                    f"{results}, so no damage applied."
+                    " Apply again to deal it anyway."
+                )
+                return
         source = self.selected_character or self._current_turn_character()
 
-        for target in list(self.target_characters):
+        for target in targets:
             saved = any(target is s for s in self._saved_targets)
             self._deal_damage(target, parts, source, check_resistance, saved)
 
@@ -141,6 +222,8 @@ class DamageMixin(CombatWindowState):
         self._update_target_label()
         for target in self.target_characters:
             self._rebuild_card(target)
+        if results:  # last, as logging the damage clears the status line
+            self._show_status(results)
 
     def _deal_damage(
         self,

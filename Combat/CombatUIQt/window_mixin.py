@@ -218,6 +218,10 @@ class WindowMixin(CombatWindowState):
             return
         self._select_character(self.initiative_order[self.current_turn_idx])
 
+    def _focus_attack_roll_input(self):
+        self.attack_roll_input.setFocus()
+        self.attack_roll_input.selectAll()
+
     def _focus_damage_input(self):
         self.damage_input.setFocus()
         self.damage_input.selectAll()
@@ -360,6 +364,16 @@ class WindowMixin(CombatWindowState):
         left_col.addWidget(self._section_header("Damage"))
         dmg_input_row = QHBoxLayout()
         dmg_input_row.setSpacing(4)
+        # Optional, and first so Tab goes on to the damage.
+        self.attack_roll_input = _AmountField()
+        self.attack_roll_input.setPlaceholderText("Attack roll...")
+        self.attack_roll_input.setToolTip(
+            "Optional: checks the roll against each target's AC and logs a hit or"
+            " a miss. A total or a sum, or nat 20 or nat 1, which ignore the AC"
+        )
+        self.attack_roll_input.returnPressed.connect(self._apply_attack_roll)
+        dmg_input_row.addWidget(self.attack_roll_input, stretch=1)
+
         self.damage_input = _AmountField()
         self.damage_input.setPlaceholderText("Amount...")
         self.damage_input.setToolTip(
@@ -368,7 +382,8 @@ class WindowMixin(CombatWindowState):
         )
         self.damage_input.returnPressed.connect(self._apply_damage_checked)
         self.damage_input.textChanged.connect(self._show_typed_damage_type)
-        dmg_input_row.addWidget(self.damage_input, stretch=2)
+        dmg_input_row.addWidget(self.damage_input, stretch=1)
+        left_col.addLayout(dmg_input_row)
 
         self.damage_type_combo = QComboBox()
         self.damage_type_combo.addItem("— Type —", None)
@@ -392,8 +407,7 @@ class WindowMixin(CombatWindowState):
         )
         _update_damage_type_combo_color()
 
-        dmg_input_row.addWidget(self.damage_type_combo, stretch=3)
-        left_col.addLayout(dmg_input_row)
+        left_col.addWidget(self.damage_type_combo)
 
         dmg_btn_row = QHBoxLayout()
         dmg_btn_row.setSpacing(4)
@@ -836,7 +850,14 @@ class WindowMixin(CombatWindowState):
         )
         self._combo_sensitive_shortcuts.append(self._select_active_shortcut)
 
-        # D / H / T: jump straight into the Damage / Heal / Temp HP amount field
+        # Shift+A / D / H / T: jump straight into the Attack roll field or the
+        # Damage / Heal / Temp HP amount field
+        self._focus_attack_roll_shortcut = QShortcut(
+            QKeySequence("Shift+A"), self._window
+        )
+        self._focus_attack_roll_shortcut.activated.connect(
+            self._focus_attack_roll_input
+        )
         self._focus_damage_shortcut = QShortcut(QKeySequence("D"), self._window)
         self._focus_damage_shortcut.activated.connect(self._focus_damage_input)
         self._focus_heal_shortcut = QShortcut(QKeySequence("H"), self._window)
@@ -844,6 +865,7 @@ class WindowMixin(CombatWindowState):
         self._focus_temp_hp_shortcut = QShortcut(QKeySequence("T"), self._window)
         self._focus_temp_hp_shortcut.activated.connect(self._focus_temp_hp_input)
         self._combo_sensitive_shortcuts += [
+            self._focus_attack_roll_shortcut,
             self._focus_damage_shortcut,
             self._focus_heal_shortcut,
             self._focus_temp_hp_shortcut,

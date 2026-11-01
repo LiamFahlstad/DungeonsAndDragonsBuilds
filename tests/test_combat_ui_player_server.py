@@ -16,8 +16,10 @@ from typing import NamedTuple
 from urllib.parse import urlsplit
 
 import pytest
+from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QComboBox,
     QDialog,
     QLabel,
@@ -228,7 +230,7 @@ def test_a_players_numbers_size_and_speed_are_on_the_page(fight):
     ui._refresh_views()
     (row,) = [r for r in _state(ui)["rows"] if r["name"] == "Tiger"]
     assert _hp(row) == ["12 / 30 (+4 temp)"]
-    assert row["details"] == "Small · Speed 25 ft."
+    assert row["details"] == "Small · AC 13 · Speed 25 ft."
 
 
 def test_a_monsters_hp_ac_and_speed_are_on_the_page_but_nothing_else(fight):
@@ -284,6 +286,390 @@ def test_text_typed_by_hand_arrives_as_text(fight):
     ui._refresh_views()
     (row,) = [r for r in _state(ui)["rows"] if r["name"] == "Pirate"]
     assert row["conditions"] == ["<img src=x> & Jätte"]
+
+
+# ---------------------------------------------------------------------------
+# The Limited view
+
+
+@pytest.fixture
+def limited(fight):
+    """The fight, with the Limited view on. These stat blocks have no speed of
+    their own, so they're given one."""
+    ui, *_ = fight
+    for char in ui.characters:
+        char["speed_ground_ft"] = 40
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    return fight
+
+
+def _row_of(ui, name: str) -> dict:
+    (row,) = [r for r in _state(ui)["rows"] if r["name"] == name]
+    return row
+
+
+@pytest.mark.parametrize(
+    "hp, word",
+    [
+        (100, "Healthy"),
+        (76, "Healthy"),
+        (75, "Injured"),
+        (51, "Injured"),
+        (50, "Bloodied"),
+        (26, "Bloodied"),
+        (25, "Dying"),
+        (1, "Dying"),
+        (0, "Defeated"),
+    ],
+)
+def test_limited_says_a_monsters_hp_as_a_word(limited, hp, word):
+    ui, _, tiger, _ = limited
+    tiger.update(hp=hp, max_hp=100)
+    ui._refresh_views()
+    assert _hp(_row_of(ui, "Tiger")) == [word]
+
+
+@pytest.mark.parametrize("hp, word", [(16, "Bloodied"), (17, "Injured")])
+def test_limited_bloodied_is_half_or_fewer_of_an_odd_maximum(limited, hp, word):
+    ui, _, tiger, _ = limited
+    tiger.update(hp=hp, max_hp=33)
+    ui._refresh_views()
+    assert _hp(_row_of(ui, "Tiger")) == [word]
+
+
+def test_limited_says_bloodied_when_the_condition_arrives(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 14)  # 16 of 30 left
+    assert "Bloodied" not in tiger["conditions"]
+    assert _hp(_row_of(ui, "Tiger")) == ["Injured"]
+    _hit(ui, pirate, tiger, 1)  # 15 of 30 left
+    assert "Bloodied" in tiger["conditions"]
+    assert _hp(_row_of(ui, "Tiger")) == ["Bloodied"]
+
+
+def test_a_players_numbers_stay_on_limited(limited):
+    """They can tell each other all of it anyway."""
+    ui, pirate, *_ = limited
+    pirate.update(
+        _is_player=True,
+        hp=5,
+        max_hp=40,
+        temp_hp=4,
+        size="Small",
+        ac="18 (with Shield) and 16 (without Shield)",
+        speed=25,
+        speed_ground_ft=None,
+        conditions=["Bloodied", "Blessed"],
+    )
+    ui._refresh_views()
+    assert _row_of(ui, "Pirate") == {
+        "name": "Pirate",
+        "details": "Small · AC 18 · Speed 25 ft.",
+        "health": [
+            {
+                "name": "Pirate",
+                "text": "5 / 40 (+4 temp)",
+                "percent": 13,
+                "color": "#e74c3c",
+            }
+        ],
+        "conditions": ["Bloodied", "Blessed"],
+        "turn": "now",
+    }
+
+
+@pytest.mark.parametrize(
+    "state",
+    [
+        {"hp": 33},
+        {"hp": 5},
+        {"hp": 0, "death_saves_fail": 1, "death_saves_success": 2},
+        {"hp": 0, "death_saves_success": 3},
+        {"hp": 0, "death_saves_fail": 3},
+    ],
+)
+def test_a_players_row_is_the_same_in_both_views(fight, state):
+    ui, pirate, *_ = fight
+    pirate.update(_is_player=True, **state)
+    ui._refresh_views()
+    informative = _row_of(ui, "Pirate")
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    assert _row_of(ui, "Pirate") == informative
+
+
+@pytest.mark.parametrize(
+    "fails, saves, word", [(1, 2, "Dying"), (0, 3, "Stable"), (3, 0, "Defeated")]
+)
+def test_limited_for_a_monster_that_makes_death_saves(limited, fails, saves, word):
+    ui, _, tiger, _ = limited
+    tiger.update(
+        death_saves=True, hp=0, death_saves_fail=fails, death_saves_success=saves
+    )
+    ui._refresh_views()
+    assert _hp(_row_of(ui, "Tiger")) == [word]
+    assert _row_of(ui, "Tiger")["health"][0]["percent"] == 0
+
+
+def test_limited_doesnt_call_a_summon_with_no_hp_yet_dying(limited):
+    ui, _, tiger, _ = limited
+    tiger.update(hp=0, max_hp=0)
+    ui._refresh_views()
+    assert _hp(_row_of(ui, "Tiger")) == ["Healthy"]
+
+
+def test_limited_gives_each_member_of_a_group_its_own_word(tmp_path):
+    def tiger(name):
+        combatant = Tiger()
+        combatant.set_name(name)
+        combatant.initiative_group = "Tigers"
+        return combatant
+
+    ui = make_ui(tmp_path, [tiger("One"), tiger("Two")])
+    _start(ui, 9)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    ui.characters[0]["speed_ground_ft"] = 40
+    ui.characters[1].update(speed_ground_ft=40, hp=1)
+    ui._refresh_views()
+    (row,) = _state(ui)["rows"]
+    assert [(h["name"], h["text"]) for h in row["health"]] == [
+        ("One (Tiger) · 0 damage taken", "Healthy"),
+        ("Two (Tiger) · 0 damage taken", "Dying"),
+    ]
+    assert row["details"] == "Speed 40 ft."
+
+    _hit(ui, ui.characters[0], ui.characters[1], 2)
+    (row,) = _state(ui)["rows"]
+    assert [h["name"] for h in row["health"]] == [
+        "One (Tiger) · 0 damage taken",
+        "Two (Tiger) · 2 damage taken",
+    ]
+
+
+def test_limited_says_the_damage_each_one_has_taken(limited):
+    ui, pirate, tiger, bandit = limited
+    assert _row_of(ui, "Tiger")["details"] == "0 damage taken · Speed 40 ft."
+    _hit(ui, pirate, tiger, 3)
+    _hit(ui, bandit, tiger, 4)
+    _hit(ui, tiger, pirate, 5)
+    assert _row_of(ui, "Tiger")["details"] == "7 damage taken · Speed 40 ft."
+    assert _row_of(ui, "Pirate")["details"].startswith("5 damage taken")
+    assert _row_of(ui, "Bandit (Pirate)")["details"].startswith("0 damage taken")
+
+
+def test_damage_taken_counts_a_hit_of_several_types_in_full(limited):
+    ui, pirate, tiger, _ = limited
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui.damage_input.setText("7 sl + 3 fi")
+    ui._apply_damage()
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"].startswith("10 damage taken")
+
+
+def test_healing_doesnt_take_damage_taken_back(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 10)
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui.heal_input.setText("10")
+    ui._apply_heal()
+    QApplication.processEvents()
+    assert tiger["hp"] == 30
+    assert _row_of(ui, "Tiger")["details"].startswith("10 damage taken")
+
+
+def test_damage_taken_counts_what_temp_hp_soaked(limited):
+    """Or the total would come up short by the temp HP the view hides."""
+    ui, pirate, tiger, _ = limited
+    tiger["temp_hp"] = 5
+    _hit(ui, pirate, tiger, 3)
+    assert tiger["hp"] == 30
+    assert _row_of(ui, "Tiger")["details"].startswith("3 damage taken")
+
+
+def test_undo_takes_damage_taken_back(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 3)
+    ui._undo_last()
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"].startswith("0 damage taken")
+
+
+def test_two_monsters_of_one_name_keep_their_own_damage_taken(tmp_path):
+    ui = make_ui(tmp_path, [Tiger(), Tiger()])
+    _start(ui, 15, 10)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    first, second = ui.characters
+    _hit(ui, second, first, 3)
+    assert [r["details"] for r in _state(ui)["rows"]] == [
+        "3 damage taken",
+        "0 damage taken",
+    ]
+
+
+def test_restarting_a_fight_starts_damage_taken_again(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    _hit(ui, tiger, tiger, 3)
+    ui._load_encounter(TIGER, restart=True)
+    _start(ui, 12)
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"] == "0 damage taken"
+
+
+def test_damage_taken_survives_leaving_a_fight_and_stays_in_it(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    _hit(ui, tiger, tiger, 3)
+
+    ui._load_encounter(PIRATE, restart=False)
+    _start(ui, 9)
+    QApplication.processEvents()
+    assert _row_of(ui, "Pirate")["details"] == "0 damage taken"
+
+    ui._load_encounter(TIGER, restart=False)
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"] == "3 damage taken"
+
+
+def test_limited_sends_none_of_a_monsters_hidden_numbers(limited):
+    ui, _, tiger, _ = limited
+    tiger.update(
+        hp=137,
+        max_hp=293,
+        temp_hp=59,
+        ac=471,
+        size="Gargantuan",
+        speed=613,
+        speed_ground_ft=613,
+    )
+    ui._refresh_views()
+    body = _poll(ui).body.decode()
+    for secret in ("137", "293", "59", "471", "Gargantuan", "AC"):
+        assert secret not in body
+    assert _row_of(ui, "Tiger") == {
+        "name": "Tiger",
+        "details": "0 damage taken · Speed 613 ft.",
+        "health": [
+            {"name": "Tiger", "text": "Bloodied", "percent": 50, "color": "#e67e22"}
+        ],
+        "conditions": [],
+        "turn": "next",
+    }
+
+
+def test_limited_shows_the_turn_order_and_visible_conditions_still(limited):
+    ui, pirate, tiger, bandit = limited
+    tiger["conditions"] = ["Prone", "Concentrating", "Bloodied", "Plotting betrayal"]
+    ui._refresh_views()
+    state = _state(ui)
+    assert state["title"] == "Round 1"
+    assert _names(state) == ["Pirate", "Tiger", "Bandit (Pirate)"]
+    assert [r["turn"] for r in state["rows"]] == ["now", "next", ""]
+    assert _row_of(ui, "Tiger")["conditions"] == ["Prone"]
+
+
+def test_limited_still_hides_a_hidden_monster(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["conditions"] = ["Invisible"]
+    ui._refresh_views()
+    before = _poll(ui)
+    assert "Tiger" not in before.body.decode()
+
+    _hit(ui, pirate, tiger, 3)
+    assert _poll(ui).body == before.body, "Nor does what it takes show"
+
+
+def test_a_hit_that_doesnt_change_the_word_leaves_the_bar_alone(limited):
+    ui, pirate, tiger, _ = limited
+    before = _row_of(ui, "Tiger")["health"]
+    _hit(ui, pirate, tiger, 3)  # 27 of 30: still Healthy
+    assert tiger["hp"] == 27
+    assert _row_of(ui, "Tiger")["health"] == before
+
+    _hit(ui, pirate, tiger, 10)  # 17 of 30: Injured
+    assert _row_of(ui, "Tiger")["health"] != before
+
+
+def test_the_log_is_the_same_on_limited(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger)
+    assert _lines(ui) == ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"]
+
+    ui.settings.limited_player_view = False
+    ui._refresh_views()
+    assert _lines(ui) == ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"]
+
+
+def test_a_hidden_monsters_lines_stay_out_of_the_log_on_limited(limited):
+    ui, pirate, tiger, bandit = limited
+    tiger["conditions"] = ["Invisible"]
+    _hit(ui, tiger, bandit)
+    assert "from Tiger" in _gm_log(ui), "The GM's log keeps it"
+    assert "Tiger" not in str(_lines(ui))
+
+
+def test_the_player_screen_shows_the_limited_view_too(limited):
+    ui, _, tiger, _ = limited
+    tiger["hp"] = 15
+    ui._toggle_player_view()
+    text = _screen_text(ui)
+    assert "Bloodied" in text and "0 damage taken · Speed 40 ft." in text
+    assert "15 / 30" not in text and "AC 13" not in text
+    ui._toggle_player_view()
+
+
+def test_the_link_dialog_picks_the_view_and_saves_it(fight, monkeypatch, tmp_path):
+    ui, _, tiger, _ = fight
+    store = QSettings(str(tmp_path / "settings.ini"), QSettings.Format.IniFormat)
+    ui._settings_store = store
+    tiger["hp"] = 15
+    ui._refresh_views()
+    dlg = open_dialog(monkeypatch, ui._show_player_link_dialog)
+    combo = dlg.findChild(QComboBox, "playerViewCombo")
+    assert combo.currentText() == "Informative"
+    assert _hp(_row_of(ui, "Tiger")) == ["15 / 30"]
+
+    combo.setCurrentText("Limited")
+    assert ui.settings.limited_player_view is True
+    assert store.value("limited_player_view", type=bool) is True
+    assert _hp(_row_of(ui, "Tiger")) == ["Bloodied"], "On the phones straight away"
+
+    dlg = open_dialog(monkeypatch, ui._show_player_link_dialog)
+    combo = dlg.findChild(QComboBox, "playerViewCombo")
+    assert combo.currentText() == "Limited"
+    combo.setCurrentText("Informative")
+    assert ui.settings.limited_player_view is False
+    assert _hp(_row_of(ui, "Tiger")) == ["15 / 30"]
+
+
+def test_the_settings_checkbox_changes_the_view_too(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    tiger["hp"] = 15
+    dlg = open_dialog(monkeypatch, ui._show_settings_dialog)
+    dlg.findChild(QCheckBox, "limited_player_view").setChecked(True)
+    assert _hp(_row_of(ui, "Tiger")) == ["Bloodied"]
+
+    dlg = open_dialog(monkeypatch, ui._show_player_link_dialog)
+    assert dlg.findChild(QComboBox, "playerViewCombo").currentText() == "Limited"
+
+
+def test_picking_the_view_works_with_the_link_stopped(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    ui._player_server.stop()
+    tiger["hp"] = 15
+    ui._toggle_player_view()
+    ui._set_setting("limited_player_view", True)
+    assert "Bloodied" in _screen_text(ui)
+    ui._toggle_player_view()
 
 
 # ---------------------------------------------------------------------------

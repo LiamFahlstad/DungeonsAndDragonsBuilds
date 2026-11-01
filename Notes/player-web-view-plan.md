@@ -4,7 +4,27 @@ Goal: give players a link they open on a phone or computer, showing a live, read
 
 Status: built, steps 1-5 and the docs, uncommitted. Step 0 and the phone checks in step 6 are still to do, because nothing has been tried on a real phone or across a network. Written 2026-10-31.
 
-Changed since this was written: the views now show every combatant's exact HP as a bar, each combatant's size and speed, and monsters' AC. Monsters' HP, AC and speed were secret in the first version and no longer are, by choice. Hidden monsters and the rest of a stat block (its action list, ability scores, saving throws) still stay private.
+Changed since this was written: the views now show every combatant's exact HP as a bar, and each combatant's size, AC and speed. A player's AC is only the number they have now, because their full text also gives their AC without a Shield. Monsters' HP, AC and speed were secret in the first version and no longer are, by choice. Hidden monsters and the rest of a stat block (its action list, ability scores, saving throws) still stay private.
+
+That's the **Informative** view, the default. Players can also ask to know less, so the GM can pick the **Limited** view, in the Player Link dialog or in Settings. It changes the Player Screen and the link together, and it's the GM's choice, not the page's: if a phone could pick, the numbers would have to reach the phone first.
+
+Limited only changes monsters. A player's row is the same in both views, because players can tell each other all of it anyway. A monster's row shows its name, visible conditions, speed, the damage it has taken, and a word for health:
+
+| Word | HP left |
+| --- | --- |
+| Healthy | Above 75% |
+| Injured | 51-75% |
+| Bloodied | 26-50% |
+| Dying | 1-25% |
+| Defeated | 0 HP |
+
+A monster that makes death saves reads Dying at 0 HP, then Stable or Defeated.
+
+- The bar moves in steps with the word, because a bar with the exact percentage would give the HP away.
+- Damage taken is public, because players hear it at the table; the page only keeps the total for them. It's the monster's `stats["damage_taken"]`, which is this encounter's: a monster's stats start with its fight and are saved in its log. So Undo takes a hit back, healing takes nothing off, and damage soaked by temp HP counts, so the total doesn't give the temp HP away. A player's stats go back past this fight, so that wouldn't work for them, but their rows don't show it.
+- It counts hits on a monster while it was hidden, which show once it's revealed.
+- The total and the word together let players estimate a monster's maximum HP: the total when it turns Bloodied is about half. That follows from showing both, and it's accepted.
+- The log is on the link in both views, by the same rules for which lines are public. So in Limited it can still say what the rows hide: a monster's temp HP, its rolled saves, how many Legendary Resistances it has left, and its exact HP if it makes death saves and regains consciousness. That's accepted, by choice.
 
 The page also has an Encounter log. It isn't on the Player Screen, because nobody can open anything on a TV. The log was written for the GM, so each line is judged when it's logged (`may_read_log_line` in `player_view.py`) and marked `public` in the log file if players may read it. That has to happen at that moment, because it depends on who they could perceive then, and a line without the mark stays private. A hidden monster's attack never shows, even after it's revealed.
 
@@ -20,7 +40,7 @@ Most of the work already exists. The Player Screen (`Combat/CombatUIQt/player_vi
 
 ## What players get
 
-- The same content as the Player Screen: the round, the turn order, NOW and NEXT, everyone's HP as a bar, each combatant's size and speed, monsters' AC and visible conditions.
+- The same content as the Player Screen: the round, the turn order, NOW and NEXT, everyone's HP as a bar, each combatant's size, AC and speed, and visible conditions.
 - A page laid out for a phone, in the Player Screen's colors, with no app or account.
 - A "Lost connection" banner if the page stops getting updates, so nobody trusts an old view.
 - "Waiting for the fight to start" between fights.

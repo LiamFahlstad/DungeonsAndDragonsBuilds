@@ -128,6 +128,7 @@ class CombatWindowState:
     _turn_panel: QSplitter
     _action_result_label: QLabel
     roll_result_label: QLabel
+    attack_roll_input: QLineEdit
     damage_input: QLineEdit
     heal_input: QLineEdit
     temp_hp_input: QLineEdit
@@ -165,6 +166,9 @@ class CombatWindowState:
 
     def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
         raise NotImplementedError("DamageMixin._apply_bloodied_condition")
+
+    def _apply_attack_roll(self):
+        raise NotImplementedError("DamageMixin._apply_attack_roll")
 
     def _apply_damage(self):
         raise NotImplementedError("DamageMixin._apply_damage")
@@ -242,6 +246,9 @@ class CombatWindowState:
 
     def _card_right_clicked(self, char: dict, ctrl: bool, shift: bool):
         raise NotImplementedError("CardsMixin._card_right_clicked")
+
+    def _focus_attack_roll_input(self):
+        raise NotImplementedError("WindowMixin._focus_attack_roll_input")
 
     def _focus_damage_input(self):
         raise NotImplementedError("WindowMixin._focus_damage_input")

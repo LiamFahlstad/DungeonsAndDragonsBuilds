@@ -877,15 +877,31 @@ def test_a_dying_player_shows_their_saves(fight):
     assert _hp(row) == ["Dying (1 failed, 2 saved)"]
 
 
-def test_a_real_player_shows_their_size_and_speed(tmp_path):
+def test_a_real_player_shows_their_size_ac_and_speed(tmp_path):
     sheet = Obmar().build()
     ui = make_ui(tmp_path, [Pirate()], [sheet])
     ui._initiative_inputs[id(ui.characters[0])].setText("15")
     ui._initiative_inputs[id(ui.characters[1])].setText("10")
     ui._start_combat()
     row = next(r for r in _rows(ui) if r.name == sheet.character_name)
-    expected = f"{sheet.size.value} · Speed {sheet.calculate_speed()} ft."
+    expected = (
+        f"{sheet.size.value} · AC {sheet.calculate_armor_class()}"
+        f" · Speed {sheet.calculate_speed()} ft."
+    )
     assert row.details == expected
+
+
+@pytest.mark.parametrize(
+    "armor, shown",
+    [
+        ("16 (no Shield)", "AC 16"),
+        ("18 (with Shield) and 16 (without Shield)", "AC 18"),
+    ],
+)
+def test_a_player_shows_the_ac_they_have_now(fight, armor, shown):
+    ui, _, tiger, _ = fight
+    tiger.update(_is_player=True, ac=armor)
+    assert next(r for r in _rows(ui) if r.name == "Tiger").details == shown
 
 
 @pytest.mark.parametrize("size", [CreatureSize.LARGE, "Large"])

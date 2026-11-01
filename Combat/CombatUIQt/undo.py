@@ -56,10 +56,12 @@ class UndoPoint:
     log_entries: list[tuple[str, int]] = field(default_factory=list)
     # The name of the @undoable method that recorded it ("_advance_turn", ...).
     operation: str = ""
-    # The targets marked ½ Saved, and the Damage field: undoing a hit leaves it
-    # ready to redo as it was, and undoing a rolled action leaves nothing in it.
+    # The targets marked ½ Saved, and the Damage and Attack roll fields: undoing
+    # a hit leaves it ready to redo as it was, and undoing a rolled action leaves
+    # nothing in them.
     saved_targets: list[dict] = field(default_factory=list)
     damage_text: str = ""
+    attack_roll_text: str = ""
 
     @classmethod
     def capture(cls, app) -> "UndoPoint":
@@ -71,6 +73,7 @@ class UndoPoint:
             combat_data=[_combat_data(char) for char in app.characters],
             saved_targets=list(app._saved_targets),
             damage_text=app.damage_input.text(),
+            attack_roll_text=app.attack_roll_input.text(),
         )
 
     def changed_since(self, app) -> bool:
@@ -100,6 +103,7 @@ class UndoPoint:
         app._saved_targets = [
             s for s in self.saved_targets if any(s is t for t in app.target_characters)
         ]
+        app.attack_roll_input.setText(self.attack_roll_text)
         app.damage_input.setText(self.damage_text)
         app._rolled_damage_text = ""
         app._action_result_label.setText("")

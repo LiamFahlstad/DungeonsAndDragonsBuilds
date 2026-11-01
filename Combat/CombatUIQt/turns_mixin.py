@@ -219,6 +219,7 @@ class TurnsMixin(CombatWindowState):
         """Apply the turn settings (settings.py) when whose turn it is changes:
         Next, Previous, combat starting or continuing, an undo across a turn."""
         # A roll and a save were for the turn that's over.
+        self.attack_roll_input.clear()
         if self._rolled_damage_text == self.damage_input.text():
             self.damage_input.clear()
         self._rolled_damage_text = ""

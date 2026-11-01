@@ -273,6 +273,7 @@ class TurnPanelMixin(CombatWindowState):
         self._action_result_label.setText(text)
         self._action_result_label.setToolTip(action.description)
 
+        self.attack_roll_input.clear()  # this action has rolled its own
         self.damage_input.clear()
         self._rolled_damage_text = ""
         if hit is False or not action.damage:
@@ -415,6 +416,7 @@ class TurnPanelMixin(CombatWindowState):
                 self._current_turn_group(),
                 self._upcoming_turns(),
                 self._char_death_state,
+                limited=self.settings.limited_player_view,
             ),
         )
 
