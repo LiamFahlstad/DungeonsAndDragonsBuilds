@@ -81,7 +81,7 @@ def _lines(ui) -> list[str]:
 def _details(ui, name: str) -> str:
     _, rows = ui._player_view_content()
     (row,) = [r for r in rows if r.name == name]
-    return row.details
+    return row.details.replace("\N{NO-BREAK SPACE}", " ")
 
 
 def _ac_note(ui, name: str = "Tiger") -> str:

@@ -43,7 +43,14 @@ from Combat.CombatUIQt.player_server import (
     lan_addresses,
     rank_addresses,
 )
-from Combat.CombatUIQt.player_view import player_view_rows
+from Combat.CombatUIQt.player_view import (
+    PlayerViewHealth,
+    PlayerViewRow,
+    PlayerViewWindow,
+    _limited_health,
+    note_health,
+    player_view_rows,
+)
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.EncounterLogs import prepare_log, scenario_log_path
 from Combat.PlayerLog import is_round_key
@@ -454,7 +461,8 @@ def test_limited_says_the_damage_each_one_has_taken(limited):
     _hit(ui, pirate, tiger, 3)
     _hit(ui, bandit, tiger, 4)
     _hit(ui, tiger, pirate, 5)
-    assert _row_of(ui, "Tiger")["details"] == "7 damage taken · Speed 40 ft."
+    assert _row_of(ui, "Tiger")["details"].startswith("7 damage taken · ")
+    assert _row_of(ui, "Tiger")["details"].endswith(" · Speed 40 ft.")
     assert _row_of(ui, "Pirate")["details"].startswith("5 damage taken")
     assert _row_of(ui, "Bandit (Pirate)")["details"].startswith("0 damage taken")
 
@@ -505,7 +513,7 @@ def test_two_monsters_of_one_name_keep_their_own_damage_taken(tmp_path):
     ui._start_player_server("127.0.0.1")
     first, second = ui.characters
     _hit(ui, second, first, 3)
-    assert [r["details"] for r in _state(ui)["rows"]] == [
+    assert [r["details"].split(" · ")[0] for r in _state(ui)["rows"]] == [
         "3 damage taken",
         "0 damage taken",
     ]
@@ -537,7 +545,529 @@ def test_damage_taken_survives_leaving_a_fight_and_stays_in_it(tmp_path):
 
     ui._load_encounter(TIGER, restart=False)
     QApplication.processEvents()
-    assert _row_of(ui, "Tiger")["details"] == "3 damage taken"
+    assert _row_of(ui, "Tiger")["details"].startswith("3 damage taken")
+
+
+# ---------------------------------------------------------------------------
+# What a monster's word and damage taken show of its maximum HP
+
+
+def _details(ui) -> str:
+    """The Tiger's details, whatever can and can't break on a phone."""
+    return _row_of(ui, "Tiger")["details"].replace(" ", " ")
+
+
+def _max_hp_note(ui) -> str:
+    """The Tiger's details between its damage taken and its speed."""
+    return " · ".join(_details(ui).split(" · ")[1:-1])
+
+
+def _heal(ui, healer, target, amount):
+    ui._select_character(healer)
+    ui._set_targets([target])
+    ui.heal_input.setText(str(amount))
+    ui._apply_heal()
+    QApplication.processEvents()
+
+
+@pytest.mark.parametrize(
+    "max_hp, word, note",
+    [
+        # Having lost 12, half or fewer left means 24 at most, and more than a
+        # quarter left means above 16.
+        (17, "Bloodied", "Max HP 17–24"),
+        (24, "Bloodied", "Max HP 17–24"),
+        (13, "Dying", "Max HP 13–16"),
+        (16, "Dying", "Max HP 13–16"),
+        (25, "Injured", "Max HP 25–48"),
+        (48, "Injured", "Max HP 25–48"),
+        (49, "Healthy", "Max HP ≥ 49"),
+    ],
+)
+def test_the_word_and_the_damage_taken_bound_the_maximum(limited, max_hp, word, note):
+    ui, pirate, tiger, _ = limited
+    tiger.update(hp=max_hp, max_hp=max_hp)
+    _hit(ui, pirate, tiger, 12)
+    assert _hp(_row_of(ui, "Tiger")) == [word]
+    assert _max_hp_note(ui) == note
+
+
+def test_the_note_is_every_maximum_that_shows_the_same_word():
+    def word(max_hp: int, lost: int) -> str:
+        char = {"name": "Tiger", "hp": max_hp - lost, "max_hp": max_hp}
+        return _limited_health(char, "alive").text
+
+    for lost in range(1, 21):
+        for max_hp in range(lost + 1, 100):
+            char = {
+                "hp": max_hp - lost,
+                "max_hp": max_hp,
+                "stats": {"damage_taken": lost},
+            }
+            note_health(char)
+            shown = word(max_hp, lost)
+            fits = [m for m in range(lost + 1, 200) if word(m, lost) == shown]
+            assert char["max_hp_at_least"] == fits[0]
+            assert char.get("max_hp_at_most") == (
+                None if shown == "Healthy" else fits[-1]
+            )
+
+
+@pytest.mark.parametrize(
+    "hits, note",
+    [
+        ((), ""),
+        ((10,), "Max HP 21–40"),
+        # Only the best of what's known is said: 15 caps it at 30.
+        ((10, 5), "Max HP 21–30"),
+        ((10, 5, 8), "Max HP 24–30"),
+        # 15 Bloodied caps it at 30, and 22 still Bloodied needs more than 29.
+        ((15, 7), "Max HP = 30"),
+        # The hit that drops it: all it lost was its maximum, or less.
+        ((30,), "Max HP ≤ 30"),
+        ((31,), "Max HP ≤ 31"),
+        # Overkill shows nothing new.
+        ((20, 25), "Max HP 27–40"),
+    ],
+)
+def test_each_word_narrows_the_maximum_down(limited, hits, note):
+    ui, pirate, tiger, _ = limited
+    for damage in hits:
+        _hit(ui, pirate, tiger, damage)
+    assert _max_hp_note(ui) == note
+
+
+def test_healing_comes_off_what_the_word_is_measured_against(limited):
+    """20 lost caps it at 40 and needs 27. Healed 13, it's down 7 and Healthy,
+    so more than four times that: 29."""
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 20)
+    _heal(ui, pirate, tiger, 13)
+    assert _hp(_row_of(ui, "Tiger")) == ["Healthy"]
+    assert _max_hp_note(ui) == "Max HP 29–40"
+
+
+def test_a_hit_of_several_types_shows_one_word(limited):
+    """Players only see the word after the whole hit. The 7 alone would be
+    Injured, needing 15."""
+    ui, pirate, tiger, _ = limited
+    tiger.update(hp=20, max_hp=20)
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui.damage_input.setText("7 sl + 3 fi")
+    ui._apply_damage()
+    QApplication.processEvents()
+    assert _max_hp_note(ui) == "Max HP 14–20"
+
+
+def test_temp_hp_that_soaked_damage_never_makes_a_false_note(limited):
+    """8 damage taken but only 3 lost: going by the 8, Healthy would say 33 or
+    more of a 30 HP Tiger. It dropping is still true of what it took."""
+    ui, pirate, tiger, _ = limited
+    tiger["temp_hp"] = 5
+    _hit(ui, pirate, tiger, 8)
+    assert _hp(_row_of(ui, "Tiger")) == ["Healthy"]
+    assert _max_hp_note(ui) == ""
+    _hit(ui, pirate, tiger, 40)
+    assert _max_hp_note(ui) == "Max HP ≤ 48"
+
+
+def test_a_hit_on_a_hidden_monster_shows_nothing_when_it_reappears(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["conditions"].append("Invisible")
+    _hit(ui, pirate, tiger, 12)
+    tiger["conditions"].remove("Invisible")
+    ui._refresh_views()
+    assert _max_hp_note(ui) == ""
+
+
+def test_undo_takes_the_note_back(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 12)
+    ui._undo_last()
+    QApplication.processEvents()
+    assert _max_hp_note(ui) == ""
+
+
+def test_a_fight_left_and_continued_keeps_the_note(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    _hit(ui, tiger, tiger, 12)
+    ui._load_encounter(PIRATE, restart=False)
+    _start(ui, 9)
+    ui._load_encounter(TIGER, restart=False)
+    QApplication.processEvents()
+    assert _details(ui) == "12 damage taken · Max HP 25–48"
+
+
+def test_restarting_a_fight_forgets_the_note(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    _hit(ui, tiger, tiger, 12)
+    ui._load_encounter(TIGER, restart=True)
+    _start(ui, 12)
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"] == "0 damage taken"
+
+
+def test_the_note_goes_between_the_damage_taken_and_the_ac(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["ac_above"] = 10
+    _hit(ui, pirate, tiger, 3)
+    assert _details(ui) == "3 damage taken · Max HP ≥ 13 · AC > 10 · Speed 40 ft."
+
+
+def test_what_is_known_cant_break_inside_on_a_phone(limited):
+    """A lone monster's details wrap in a narrow column, and "Max HP 17–" with
+    its "24" on the next line, or half of an AC note, reads as nothing."""
+    ui, pirate, tiger, _ = limited
+    tiger["ac_above"], tiger["ac_at_most"] = 10, 17
+    _hit(ui, pirate, tiger, 12)
+    pieces = _row_of(ui, "Tiger")["details"].split(" · ")
+    assert not any(" " in piece for piece in pieces[1:3])
+
+
+def test_each_member_of_a_group_has_its_own_max_hp_note(tmp_path):
+    def tiger(name):
+        combatant = Tiger()
+        combatant.set_name(name)
+        combatant.initiative_group = "Tigers"
+        return combatant
+
+    ui = make_ui(tmp_path, [tiger("One"), tiger("Two")])
+    _start(ui, 9)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    _hit(ui, ui.characters[0], ui.characters[1], 3)
+    (row,) = _state(ui)["rows"]
+    assert [h["name"].replace("\N{NO-BREAK SPACE}", " ") for h in row["health"]] == [
+        "One (Tiger) · 0 damage taken",
+        "Two (Tiger) · 3 damage taken · Max HP ≥ 13",
+    ]
+
+
+def test_informative_shows_no_max_hp_note(limited):
+    ui, pirate, tiger, _ = limited
+    _hit(ui, pirate, tiger, 12)
+    ui.settings.limited_player_view = False
+    ui._refresh_views()
+    assert "Max HP" not in _row_of(ui, "Tiger")["details"]
+
+
+def test_a_player_has_no_max_hp_note(limited):
+    """Their row has the number itself, and their damage taken runs on from
+    earlier fights."""
+    ui, pirate, tiger, _ = limited
+    pirate["_is_player"] = True
+    _hit(ui, tiger, pirate, 5)
+    assert not {"max_hp_at_least", "max_hp_at_most"} & set(pirate)
+
+
+def test_a_summon_with_no_hp_yet_has_no_note(limited):
+    ui, pirate, tiger, _ = limited
+    tiger.update(hp=0, max_hp=0)
+    _hit(ui, pirate, tiger, 5)
+    assert _max_hp_note(ui) == ""
+
+
+# ---------------------------------------------------------------------------
+# What the log shows of a monster's resistances and immunities
+
+
+def _defenses(*damage_types: str) -> list[dict]:
+    return [{"damage_types": list(damage_types), "note": ""}]
+
+
+def _hit_with(ui, source, target, damage_type: DamageType, amount: int = 10):
+    """A hit the Apply button counts the target's defenses against."""
+    ui._select_character(source)
+    ui._set_targets([target])
+    ui.damage_type_combo.setCurrentIndex(
+        ui.damage_type_combo.findData(damage_type.value)
+    )
+    ui.damage_input.setText(str(amount))
+    ui._apply_damage_checked()
+    QApplication.processEvents()
+
+
+def _defense_notes(ui) -> str:
+    """The Tiger's details with only its defenses left."""
+    pieces = _details(ui).split(" · ")
+    return " · ".join(p for p in pieces if p.startswith(("Resists", "Immune")))
+
+
+@pytest.mark.parametrize(
+    "key, note",
+    [
+        ("damage_resistances", "Resists Fire"),
+        ("damage_immunities", "Immune to Fire"),
+    ],
+)
+def test_a_damage_line_shows_a_defense(limited, key, note):
+    ui, pirate, tiger, _ = limited
+    tiger[key] = _defenses("Fire")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    assert _defense_notes(ui) == note
+
+
+def test_a_stat_blocks_defenses_are_hidden_until_they_show(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    tiger["damage_immunities"] = _defenses("Poison")
+    _hit_with(ui, pirate, tiger, DamageType.COLD)
+    assert _defense_notes(ui) == ""
+    assert "Fire" not in _poll(ui).body.decode()
+
+
+def test_each_defense_is_listed_once_in_the_order_it_showed(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire", "Cold")
+    tiger["damage_immunities"] = _defenses("Poison")
+    for damage_type in (
+        DamageType.COLD,
+        DamageType.POISON,
+        DamageType.FIRE,
+        DamageType.COLD,
+    ):
+        _hit_with(ui, pirate, tiger, damage_type, 2)
+    assert _defense_notes(ui) == "Resists Cold, Fire · Immune to Poison"
+
+
+def test_a_hit_of_several_types_shows_each_defense(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui.damage_input.setText("7 sl + 3 fi")
+    ui._apply_damage_checked()
+    QApplication.processEvents()
+    assert _defense_notes(ui) == "Resists Fire"
+
+
+def test_a_saved_hit_still_shows_a_resistance(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    ui._saved_targets = [tiger]
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    assert _defense_notes(ui) == "Resists Fire"
+
+
+def test_a_resistance_shows_alongside_a_vulnerability(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    tiger["damage_vulnerabilities"] = _defenses("Fire")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    assert _defense_notes(ui) == "Resists Fire"
+
+
+def test_a_custom_effects_damage_shows_a_defense(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_immunities"] = _defenses("Fire")
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui._apply_custom_effect(CustomEffect("Burn", "", damage=[(10, "Fire")]))
+    QApplication.processEvents()
+    assert _defense_notes(ui) == "Immune to Fire"
+
+
+def test_ignoring_defenses_shows_none(limited):
+    """The log says plain damage, so that's all the players know."""
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    ui._select_character(pirate)
+    ui._set_targets([tiger])
+    ui.damage_type_combo.setCurrentIndex(
+        ui.damage_type_combo.findData(DamageType.FIRE.value)
+    )
+    ui.damage_input.setText("10")
+    ui._apply_damage()
+    QApplication.processEvents()
+    assert _defense_notes(ui) == ""
+
+
+def test_petrified_explains_a_resistance_but_not_an_immunity(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["conditions"].append("Petrified")
+    tiger["damage_immunities"] = _defenses("Poison")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    assert "(resisted)" in _gm_log(ui)
+    _hit_with(ui, pirate, tiger, DamageType.POISON)
+    assert _defense_notes(ui) == "Immune to Poison"
+
+
+@pytest.mark.parametrize(
+    "hidden",
+    ["Tiger", "Pirate"],
+    ids=["the target", "whose turn it is"],
+)
+def test_a_line_players_cant_read_shows_no_defense(limited, hidden):
+    """It's Pirate's turn and the turn's prefix names Pirate, so even a line
+    that's only about the Tiger can be private."""
+    ui, _, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    (who,) = [c for c in ui.characters if c["name"] == hidden]
+    who["conditions"].append("Invisible")
+    _hit_with(ui, tiger, tiger, DamageType.FIRE)
+    who["conditions"].remove("Invisible")
+    ui._refresh_views()
+    assert "(resisted)" in _gm_log(ui)
+    assert _lines(ui) == []
+    assert _defense_notes(ui) == ""
+
+
+def test_a_hidden_attackers_hit_shows_no_defense(limited):
+    ui, _, tiger, bandit = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    bandit["conditions"].append("Invisible")
+    _hit_with(ui, bandit, tiger, DamageType.FIRE)
+    bandit["conditions"].remove("Invisible")
+    ui._refresh_views()
+    assert _defense_notes(ui) == ""
+
+
+def test_a_failed_condition_shows_an_immunity(limited):
+    ui, _, tiger, _ = limited
+    tiger["condition_immunities"] = ["Frightened"]
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    QApplication.processEvents()
+    assert _defense_notes(ui) == "Immune to Frightened"
+
+
+def test_petrified_explains_immunity_to_poisoned(limited):
+    ui, _, tiger, _ = limited
+    tiger["conditions"].append("Petrified")
+    ui._give_effect_condition(tiger, CustomEffect("Venom", "Poisoned"))
+    QApplication.processEvents()
+    assert "is immune to Poisoned" in _gm_log(ui)
+    assert _defense_notes(ui) == ""
+
+
+def test_a_condition_immunity_on_a_hidden_monster_stays_hidden(limited):
+    ui, _, tiger, _ = limited
+    tiger["condition_immunities"] = ["Frightened"]
+    tiger["conditions"].append("Invisible")
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    tiger["conditions"].remove("Invisible")
+    ui._refresh_views()
+    assert _defense_notes(ui) == ""
+
+
+def test_undo_takes_a_defense_back(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    ui._undo_last()
+    QApplication.processEvents()
+    assert _defense_notes(ui) == ""
+
+
+def test_undo_keeps_the_defenses_shown_before_it(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire", "Cold")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    _hit_with(ui, pirate, tiger, DamageType.COLD)
+    ui._undo_last()
+    QApplication.processEvents()
+    assert _defense_notes(ui) == "Resists Fire"
+
+
+def test_a_fight_left_and_continued_keeps_the_defenses(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    tiger["damage_resistances"] = _defenses("Fire")
+    tiger["condition_immunities"] = ["Frightened"]
+    _hit_with(ui, tiger, tiger, DamageType.FIRE)
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    ui._save_fight_state()
+    ui._load_encounter(PIRATE, restart=False)
+    _start(ui, 9)
+    ui._load_encounter(TIGER, restart=False)
+    QApplication.processEvents()
+    assert _defense_notes(ui) == "Resists Fire · Immune to Frightened"
+
+
+def test_restarting_a_fight_forgets_the_defenses(tmp_path):
+    ui = _in_tiger_fight(tmp_path)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    tiger = ui.characters[0]
+    tiger["damage_resistances"] = _defenses("Fire")
+    _hit_with(ui, tiger, tiger, DamageType.FIRE)
+    ui._load_encounter(TIGER, restart=True)
+    _start(ui, 12)
+    QApplication.processEvents()
+    assert _row_of(ui, "Tiger")["details"] == "0 damage taken"
+
+
+def test_defenses_go_after_the_ac_and_before_the_speed(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["ac_above"] = 10
+    tiger["damage_immunities"] = _defenses("Fire")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    assert _details(ui) == ("0 damage taken · AC > 10 · Immune to Fire · Speed 40 ft.")
+
+
+def test_a_list_of_defenses_only_breaks_after_a_comma(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["known_immunities"] = ["Poison", "Charmed"]
+    ui._refresh_views()
+    assert "Immune\N{NO-BREAK SPACE}to\N{NO-BREAK SPACE}Poison, Charmed" in (
+        _row_of(ui, "Tiger")["details"]
+    )
+
+
+@pytest.mark.parametrize("names", [("Tiger",), ("One", "Two")])
+def test_a_long_note_wraps_on_the_player_screen(names):
+    """Unwrapped, it would make the window wider than the screen."""
+    qapp()
+    long = "24 damage taken · Max HP 49–64 · Resists Fire, Cold, Lightning" * 3
+    health = tuple(PlayerViewHealth(f"{n} {long}", "Healthy", 100, "") for n in names)
+    window = PlayerViewWindow(lambda: None)
+    window.show_rows("Round 1", [PlayerViewRow("Tiger", long, health, (), "")])
+    assert window.minimumSizeHint().width() < 900
+
+
+def test_each_member_of_a_group_has_its_own_defenses(tmp_path):
+    def tiger(name):
+        combatant = Tiger()
+        combatant.set_name(name)
+        combatant.initiative_group = "Tigers"
+        return combatant
+
+    ui = make_ui(tmp_path, [tiger("One"), tiger("Two")])
+    _start(ui, 9)
+    ui.settings.limited_player_view = True
+    ui._start_player_server("127.0.0.1")
+    ui.characters[1]["damage_resistances"] = _defenses("Fire")
+    _hit_with(ui, ui.characters[0], ui.characters[1], DamageType.FIRE)
+    (row,) = _state(ui)["rows"]
+    assert [h["name"].replace("\N{NO-BREAK SPACE}", " ") for h in row["health"]] == [
+        "One (Tiger) · 0 damage taken",
+        "Two (Tiger) · 5 damage taken · Max HP ≥ 21 · Resists Fire",
+    ]
+
+
+def test_informative_shows_no_defenses(limited):
+    ui, pirate, tiger, _ = limited
+    tiger["damage_resistances"] = _defenses("Fire")
+    _hit_with(ui, pirate, tiger, DamageType.FIRE)
+    ui.settings.limited_player_view = False
+    ui._refresh_views()
+    assert "Resists" not in _row_of(ui, "Tiger")["details"]
+
+
+def test_a_player_has_no_defense_notes(limited):
+    ui, pirate, tiger, _ = limited
+    pirate["_is_player"] = True
+    pirate["damage_resistances"] = _defenses("Fire")
+    _hit_with(ui, tiger, pirate, DamageType.FIRE)
+    assert "known_resistances" not in pirate
 
 
 def test_limited_sends_none_of_a_monsters_hidden_numbers(limited):

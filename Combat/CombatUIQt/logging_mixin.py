@@ -122,14 +122,15 @@ class LoggingMixin(CombatWindowState):
         action=None,
         value=None,
         public: bool = True,
-    ):
+    ) -> bool:
         """Append an event to the encounter log. One that changes someone's
         state carries `character`, `action` and `value`, which is what the
         party's state is replayed from on the next run (see Combat/PlayerLog.py).
         Without an action, `value` isn't kept: {"condition": name} just says what
         the line is about, for may_read_log_line. `public` False keeps a line off
         the player link whatever it says. During a short rest the events are
-        collected for its player-log entry instead (RestsMixin)."""
+        collected for its player-log entry instead (RestsMixin). Returns whether
+        players can read the line."""
         self._clear_status()
         turn_name = self._current_turn_name() if note_turn else None
         event: dict[str, object] = {
@@ -142,17 +143,18 @@ class LoggingMixin(CombatWindowState):
             event["value"] = value
         if self._rest_events is not None:
             self._rest_events.append(event)
-            return
+            return False
         if self.log_file is None:
             # Between encounters nothing is logged (see EncountersMixin).
             print(f"Not logged (no encounter loaded): {event['text']}")
-            return
+            return False
         # Before combat, nobody has perceived anyone yet.
-        if (
+        readable = (
             public
             and self.phase == "COMBAT"
             and may_read_log_line(str(event["text"]), character, value, self.characters)
-        ):
+        )
+        if readable:
             event[PUBLIC_KEY] = True
         data = self._read_log()
         key = f"round_{self.round_number}"
@@ -164,6 +166,7 @@ class LoggingMixin(CombatWindowState):
         self._write_log(data)
         # Not every event changes a card, and the turn column shows the log.
         self._views_timer.start()
+        return readable
 
     def _public_log(self) -> list[dict]:
         """What players may read of this encounter's log, round by round, oldest

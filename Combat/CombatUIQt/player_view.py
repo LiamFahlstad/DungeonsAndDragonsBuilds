@@ -3,9 +3,10 @@ it is and who's next, so players plan during other turns. player_view_rows
 decides what they may see. The Informative view has everyone's Hit Points, as on
 the GM's cards, size, AC and speed. The Limited view is the same for players,
 who can tell each other all of it anyway, but a monster's row has only
-its speed, the damage it's taken, a word for how hurt it is and what attack rolls
-have shown of its AC. In both, a monster they can't perceive isn't listed, and
-nothing else of its stat block is shown."""
+its speed, the damage it's taken, a word for how hurt it is, what those two and
+attack rolls have shown of its maximum HP and AC, and what the log has shown of
+its resistances and immunities. In both, a monster they can't perceive isn't
+listed, and nothing else of its stat block is shown."""
 
 import math
 from dataclasses import dataclass, replace
@@ -50,6 +51,8 @@ LOGGED_MONSTER_CONDITIONS = SHOWN_MONSTER_CONDITIONS | {CombatStatus.BLOODIED.va
 # The Limited view's words: the highest percentage of Hit Points each one covers,
 # lowest first. Bloodied is the rules' own, half or fewer.
 _HEALTH_WORDS = ((25, "Dying"), (50, "Bloodied"), (75, "Injured"), (100, "Healthy"))
+# The public key that keeps each kind of defense the log has shown, and its word.
+_KNOWN_DEFENSES = (("known_resistances", "Resists"), ("known_immunities", "Immune to"))
 
 _STYLE = """
 QWidget#playerView { background-color: #1a1a2e; }
@@ -131,6 +134,59 @@ def _can_be_seen(char: dict) -> bool:
     return bool(char.get("_is_player")) or not states & HIDDEN_STATES
 
 
+def _highest_max_hp(lost: int, percent: int) -> int:
+    """The highest maximum HP that's down to `percent` or less after losing
+    `lost`. What's left is max HP - lost, so max HP * (100 - percent) <= 100 * lost."""
+    return 100 * lost // (100 - percent)
+
+
+def note_health(char: dict):
+    """Keep what char's word on the Limited view shows about its maximum HP,
+    going by the damage taken beside it, less the healing in the log. Having lost
+    12, Bloodied is 17 to 24: 16 would be Dying and 25 Injured. Each word narrows
+    it down, so it's called once a change of HP is over, and it's kept in char's
+    public keys, so undo and a saved fight keep it too. It's what the players can
+    work out, so a monster they can't see shows nothing, and neither does a sum
+    that doesn't add up to the HP really lost, as when hidden temp HP soaked some
+    of it: the note would be false. At 0 HP the sum runs over by the overkill."""
+    if char.get("_is_player") or not _can_be_seen(char):
+        return
+    stats = char.get("stats", {})
+    lost = stats.get("damage_taken", 0) - stats.get("healing_received", 0)
+    hp, max_hp = char["hp"], char["max_hp"]
+    # A summon whose HP isn't set yet (max HP 0) has no maximum to show.
+    if lost <= 0 or max_hp <= 0:
+        return
+    if lost < max_hp if hp <= 0 else lost != max_hp - hp:
+        return
+    if hp <= 0:
+        char["max_hp_at_most"] = min(lost, char.get("max_hp_at_most", lost))
+        return
+    percents = [0] + [percent for percent, _ in _HEALTH_WORDS]
+    top = next(p for p in percents if 100 * hp <= p * max_hp)
+    least = _highest_max_hp(lost, percents[percents.index(top) - 1]) + 1
+    char["max_hp_at_least"] = max(least, char.get("max_hp_at_least", least))
+    if top < 100:
+        most = _highest_max_hp(lost, top)
+        char["max_hp_at_most"] = min(most, char.get("max_hp_at_most", most))
+
+
+def known_max_hp_text(char: dict) -> str:
+    """What the words have shown of char's maximum HP: "Max HP ≥ 49",
+    "Max HP ≤ 24", "Max HP 17–24" or, once they meet, "Max HP = 20". "" if
+    they've shown nothing."""
+    least, most = char.get("max_hp_at_least"), char.get("max_hp_at_most")
+    if least is None and most is None:
+        return ""
+    if most is None:
+        return f"Max HP ≥ {least}"
+    if least is None:
+        return f"Max HP ≤ {most}"
+    if least == most:
+        return f"Max HP = {most}"
+    return f"Max HP {least}–{most}"
+
+
 def _unit_speeds(unit: list[dict]) -> list[str]:
     return list(
         dict.fromkeys(f"Speed {speed}" for speed in map(_speed_text, unit) if speed)
@@ -149,31 +205,70 @@ def _unit_details(unit: list[dict]) -> str:
     return " · ".join(dict.fromkeys(sizes + armor + _unit_speeds(unit)))
 
 
+def _unbroken(text: str) -> str:
+    return text.replace(" ", "\N{NO-BREAK SPACE}")
+
+
+def _note_defense(char: dict, key: str, name: str):
+    """Keep a defense the log has shown in char's public keys, so undo and a
+    saved fight keep it too. Players know their own characters' already."""
+    if not char.get("_is_player") and name not in char.get(key, []):
+        char.setdefault(key, []).append(name)
+
+
+def _is_petrified(char: dict) -> bool:
+    return Condition.PETRIFIED.value in char.get("conditions", [])
+
+
+def note_damage_defense(char: dict, damage_type: str, outcome: str | None):
+    """Keep what a damage line players read showed of char's defenses, `outcome`
+    being what _damage_type_modifier said. Petrified gives Resistance to all
+    damage, so "resisted" says nothing about char while it's Petrified."""
+    if outcome == "immune":
+        _note_defense(char, "known_immunities", damage_type)
+    elif outcome and "resisted" in outcome and not _is_petrified(char):
+        _note_defense(char, "known_resistances", damage_type)
+
+
+def note_condition_immunity(char: dict, condition: str):
+    """Keep what a line players read showed of char's immunity to `condition`.
+    Petrified gives Immunity to Poisoned, so it says nothing about char then."""
+    if condition != Condition.POISONED.value or not _is_petrified(char):
+        _note_defense(char, "known_immunities", condition)
+
+
+def known_defense_texts(char: dict) -> list[str]:
+    """What the log has shown of char's defenses: "Resists Fire, Cold" and
+    "Immune to Poison, Charmed". A long list can only break after a comma."""
+    return [
+        _unbroken(f"{word} ") + ", ".join(char[key])
+        for key, word in _KNOWN_DEFENSES
+        if char.get(key)
+    ]
+
+
 def _limited_view(
     unit: list[dict], death_state: Callable[[dict], str]
 ) -> tuple[str, tuple[PlayerViewHealth, ...]]:
     """A monster's details and bars on the Limited view. Damage taken and what's
-    known of the AC go under a lone monster's name, and by each member's name in
-    a group, where each bar already has one. A phone's narrow column shouldn't
-    break inside either, so damage taken goes first on a row of its own, and
-    neither can break by a member's name."""
+    known of the maximum HP, AC and defenses go under a lone monster's name, and
+    by each member's name in a group, where each bar already has one. A phone's
+    narrow column shouldn't break inside any of them, so damage taken goes first
+    on a row of its own, or can't break by a member's name, and what's known
+    can't break, but for a list of defenses, which is too long not to."""
     notes = [
-        [f"{c.get('stats', {}).get('damage_taken', 0)} damage taken", known_ac_text(c)]
+        [f"{c.get('stats', {}).get('damage_taken', 0)} damage taken"]
+        + [_unbroken(t) for t in (known_max_hp_text(c), known_ac_text(c)) if t]
+        + known_defense_texts(c)
         for c in unit
     ]
     health = tuple(_limited_health(c, death_state(c)) for c in unit)
     if len(unit) == 1:
-        return " · ".join(list(filter(None, notes[0])) + _unit_speeds(unit)), health
+        return " · ".join(notes[0] + _unit_speeds(unit)), health
     return (
         " · ".join(_unit_speeds(unit)),
         tuple(
-            replace(
-                h,
-                name=" · ".join(
-                    [h.name]
-                    + [t.replace(" ", "\N{NO-BREAK SPACE}") for t in filter(None, n)]
-                ),
-            )
+            replace(h, name=" · ".join([h.name, _unbroken(n[0])] + n[1:]))
             for h, n in zip(health, notes)
         ),
     )
@@ -246,6 +341,7 @@ def _health_line(health: PlayerViewHealth, in_group: bool) -> QHBoxLayout:
     if in_group:
         member = QLabel(health.name)
         member.setObjectName("playerViewMember")
+        member.setWordWrap(True)
         line.addWidget(member, stretch=1)
     bar = QProgressBar()
     bar.setRange(0, 100)
@@ -355,6 +451,7 @@ class PlayerViewWindow(QWidget):
         if row.details:
             details = QLabel(row.details)
             details.setObjectName("playerViewDetails")
+            details.setWordWrap(True)
             grid.addWidget(details, 1, 1)
         in_group = len(row.health) > 1
         bars = QVBoxLayout()

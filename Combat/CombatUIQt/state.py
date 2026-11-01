@@ -337,7 +337,7 @@ class CombatWindowState:
         action=None,
         value=None,
         public: bool = True,
-    ):
+    ) -> bool:
         raise NotImplementedError("LoggingMixin._log_event")
 
     def _follow_turn_with_source(self):

@@ -7,7 +7,7 @@ from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
 from .attack_rolls import cover_bonus, note_attack_roll, parse_attack_roll
 from .monster_actions import first_number
-from .player_view import _can_be_seen
+from .player_view import _can_be_seen, note_damage_defense, note_health
 from .saves import save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
@@ -243,6 +243,7 @@ class DamageMixin(CombatWindowState):
             )
             taken += dmg
             knockout = knockout or downed
+        self._note_health(target)
 
         # A creature that makes Death Saving Throws falls Unconscious at
         # 0 HP (which also ends its Concentration); any other one dies.
@@ -256,6 +257,12 @@ class DamageMixin(CombatWindowState):
                 # Only damage taken forces a save (damage soaked by
                 # temporary HP still counts); 0 after immunity doesn't.
                 self._ask_concentration_save(target, taken)
+
+    def _note_health(self, char: dict):
+        """Note what the change of HP that's just over showed the players. The
+        log was written before it was done, and a continued fight needs it."""
+        note_health(char)
+        self._write_log(self._read_log())
 
     def _damage_target(
         self,
@@ -273,6 +280,7 @@ class DamageMixin(CombatWindowState):
         outcome = None
         if check_resistance:
             dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
+        defense = outcome
         if saved:
             outcome = f"saved, {outcome}" if outcome else "saved"
 
@@ -318,12 +326,14 @@ class DamageMixin(CombatWindowState):
         }
         source_suffix = f" from {source_name}" if source_name else ""
         outcome_suffix = f" ({outcome})" if outcome else ""
-        self._log_event(
+        readable = self._log_event(
             f"{target['name']} takes {dmg} {damage_type} damage{source_suffix}{outcome_suffix}",
             character=target["name"],
             action=Action.DAMAGE,
             value=damage_value,
         )
+        if readable:
+            note_damage_defense(target, damage_type, defense)
 
         # Auto-apply bloodied condition, attributed to whoever dealt the damage
         self._apply_bloodied_condition(target, source=source)
@@ -488,6 +498,7 @@ class DamageMixin(CombatWindowState):
 
             # Auto-apply bloodied condition, attributed to whoever healed
             self._apply_bloodied_condition(char, source=source)
+            self._note_health(char)
 
             self._rebuild_card(char)
         if dead:

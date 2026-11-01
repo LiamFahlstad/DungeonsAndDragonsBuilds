@@ -19,6 +19,7 @@ from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from .amounts import AmountError
 from .monster_actions import legendary_resistances_left
+from .player_view import note_condition_immunity
 from .saves import (
     ABILITIES,
     ROLL_MODES,
@@ -349,10 +350,12 @@ class ConditionsMixin(CombatWindowState):
         if self._char_death_state(target) == "dead":
             return False
         if is_immune_to(target, effect.condition):
-            self._log_event(
+            readable = self._log_event(
                 f"{target['name']} is immune to {effect.condition}",
                 character=target["name"],
             )
+            if readable:
+                note_condition_immunity(target, effect.condition)
             return False
         self._add_custom_condition(
             effect.condition, effect.duration, effect.notes, [target]
