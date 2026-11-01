@@ -50,7 +50,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 |---|---|---|---|---|
 | [`code-reviewer`](../../agents/tooling/code-reviewer.md) | opus | `subagent-protocol`, `review-house-rules`, `snapshot-diffs` | Review a change before it's committed or reported done - the working tree, the staged changes, a branch, or the files a subagent… | `character-engine-dev`, `git-commit`, `rules-checker`, `test-bughunter` |
 | [`content-scraper`](../../agents/tooling/content-scraper.md) | opus | `subagent-protocol`, `new-content-check` | Any task involving scraping structured D&D content from Wikidot-hosted wikis | - |
-| [`git-commit`](../../agents/tooling/git-commit.md) | opus | `subagent-protocol`, `snapshot-diffs`, `commit-plans` | Commit work, in two steps because many agents share this tree | - |
+| [`git-commit`](../../agents/tooling/git-commit.md) | sonnet | `subagent-protocol`, `snapshot-diffs`, `commit-plans` | Commit work, in two steps because many agents share this tree | - |
 | [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 

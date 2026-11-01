@@ -2,7 +2,7 @@
 name: git-commit
 description: Use to commit work, in two steps because many agents share this tree. Plan mode (the default) picks the changes related to what you describe (or splits everything into logical commits), formats them with Black, writes a title and message in this repo's style with a Claude Co-Authored-By trailer when Claude made the changes, and records each commit as a commit plan (commit-plans skill) - it stages, commits and pushes nothing, and reports the plan ids. Apply mode ("apply the commit plans", or named plan ids) commits the pending plans that still hold, reports any that went stale, and pushes only when the plan or the caller names a target ("push to main", "push to the current branch"), only its own commits, only as a fast-forward. Never force-pushes, amends or rewrites history. Tell it the mode, what to commit, who made the changes (the user, or which Claude model), and where to push (ask the user first if they haven't said). Not for resolving merge conflicts or other git surgery.
 tools: Bash, Read, Grep, Glob
-model: opus
+model: sonnet
 memory: project
 skills:
   - subagent-protocol

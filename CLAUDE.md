@@ -42,8 +42,8 @@ Agents live in `.claude/agents/<domain>/` (roles: prompt, tools, model). Shared 
 - **Find the right one in the index.** `.claude/skills/agent-index/SKILL.md` (the `agent-index` skill) lists every agent and skill, generated from their frontmatter. A hook rebuilds it after edits, and a test fails if it's stale.
 - **Pick the specialist first** (`subclass-implementer`, `monster-designer`, `test-bughunter`, ...), and fall back to `character-engine-dev` / `combat-simulator` for general work. Do small or single-file edits yourself instead of spawning an agent.
 - **Model choice.** Each agent's frontmatter model follows one rule:
-  - **opus** (Opus 5.5) for design, engineering and judgment: engine and GUI work, new subclasses and monsters, test writing and bug hunting, scrapers, commits;
-  - **sonnet** for rubric-driven batch work that a tool or exact check verifies (balancing monsters, converting abilities, improved spell descriptions);
+  - **opus** (Opus 5.5) for design, engineering and judgment: engine and GUI work, new subclasses and monsters, test writing and bug hunting, scrapers;
+  - **sonnet** for rubric-driven batch work that a tool or exact check verifies (balancing monsters, converting abilities, improved spell descriptions, commit plans);
   - **haiku** for near-mechanical bulk tagging.
 
   Keep the default. Pass `model: "sonnet"` to run an opus agent on a small, easy-to-verify task (one feature, one combatant, a lookup). Never downgrade tests or bug hunting, subjective classification at scale, or migrations over shared code: haiku runs here have failed at exactly those.

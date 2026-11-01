@@ -80,7 +80,7 @@ Good practices this setup follows:
 | `feature-extension-auditor` | dnd-feature-extender | opus | Low-volume rules judgment: is feature B a rider on feature A? |
 | `test-bughunter` | dnd-test-bughunter | opus | Expected values come from the rules; haiku once wrote tests that couldn't fail |
 | `content-scraper` | wikidot-scraper | opus | Writes and maintains scrapers (Wikidot and aidedd, not just Wikidot) |
-| `git-commit` | git-commit | opus | Judgment about what belongs together, and which unrelated work to leave alone |
+| `git-commit` | git-commit | sonnet | commit_plan.py checks every plan before it applies, so the cheaper model is enough |
 | `code-reviewer` | (new, 2026-10-27) | opus | Read-only review against the rules; a cheap reviewer misses exactly the subtle rules breaks it exists for |
 | `monster-balancer` | dnd-monster-balancer | sonnet | Bulk: iterate per monster until `check_monster.py` passes |
 | `monster-ability-converter` | dnd-monster-ability-refactor | sonnet | Bulk: rubric conversion, verified by exact text equality |
