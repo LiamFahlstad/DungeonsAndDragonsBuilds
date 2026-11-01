@@ -673,6 +673,8 @@ class WindowMixin(CombatWindowState):
             btn = QPushButton(text)
             btn.clicked.connect(handler)
             info_grid.addWidget(btn, index // 2, index % 2)
+            if text == "Player Link":
+                self._player_link_btn = btn
         panel_layout.addLayout(info_grid)
 
         panel_layout.addStretch()

@@ -83,7 +83,7 @@ End Encounter leaves the Player Screen showing the finished fight, monsters incl
   - Report a busy port to the DM as a plain message, not a traceback.
 - `lan_addresses()`: the addresses this PC could offer, best first.
   - **Don't use `socket.gethostbyname(socket.gethostname())`.** On this PC it returns `172.22.80.1`, the WSL adapter, which phones can't reach.
-  - Start from the local address of a connected UDP socket, which sends nothing and gives `192.168.0.143` here. Add the other private addresses, drop `169.254.*`, and rank `192.168.*` first, then `10.*`, then `172.16-31.*`. A connected VPN (`10.5.0.2` is NordVPN's adapter) or a VirtualBox adapter can still fool the ranking, so the dialog in step 4 lets the DM pick.
+  - Start from the local address of a connected UDP socket, which sends nothing and gives `192.168.0.143` here. Add the other private addresses, drop `169.254.*`, and rank `192.168.*` first, then `10.*`, then `172.16-31.*`, then Tailscale's `100.64-127.*`. A connected VPN (`10.5.0.2` is NordVPN's adapter) or a VirtualBox adapter can still fool the ranking, so the dialog in step 4 lets the DM pick.
 
 ### Step 3: the page (`Combat/CombatUIQt/player_page.html`, new)
 

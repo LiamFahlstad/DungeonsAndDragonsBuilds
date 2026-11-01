@@ -898,6 +898,13 @@ class DialogsMixin(CombatWindowState):
             link.setText(server.url or "Not running")
             copy_btn.setEnabled(server.running)
             stop_btn.setEnabled(server.running)
+            # It outlives this dialog, so the main window has to say it's on.
+            self._player_link_btn.setText(
+                "Player Link (on)" if server.running else "Player Link"
+            )
+            self._player_link_btn.setStyleSheet(
+                "color: #c9a84c;" if server.running else ""
+            )
 
         def serve_on(host: str):
             try:
@@ -915,6 +922,7 @@ class DialogsMixin(CombatWindowState):
 
         def stop():
             server.stop()
+            show_link()
             self._show_status("Player link stopped.")
             dlg.accept()
 

@@ -343,6 +343,18 @@ The player link's page is a source file, but the repo-wide *.html rule ignores i
 - 2026-10-31 combat-simulator: found
 - 2026-10-31 main-session: marked fixed; Added !Combat/CombatUIQt/player_page.html after *.html in .gitignore; not committed yet
 
+### DI-031 · Player Link can't offer a Tailscale address, though the plan recommends Tailscale for remote players
+- **Status:** fixed · 2026-11-01 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/player_server.py:31`, `Combat/CombatUIQt/dialogs_mixin.py:875`, `Notes/player-web-view-plan.md:166`
+
+rank_addresses keeps only 192.168/16, 10/8 and 172.16/12, but Tailscale uses 100.64.0.0/10, and the address combo isn't editable, so the dialog can't serve on a tailnet IP. The plan's 'Only the address in the link would differ' is therefore wrong. Fix: allow 100.64.0.0/10 in _PRIVATE_NETWORKS (ranked last), or correct the plan. Found by reading the code, not by running Tailscale.
+
+**History**
+- 2026-11-01 main-session: found
+- 2026-11-01 main-session: marked in-progress
+- 2026-11-01 main-session: marked fixed; rank_addresses now keeps 100.64.0.0/10, ranked last, with tests. Not tried with a real Tailscale connection.
+
 ## Won't fix
 
 ### DI-015 · UPDATE_SNAPSHOTS=1 under xdist corrupts shared golden JSON files
@@ -355,3 +367,13 @@ run_tests.sh runs pytest with xdist workers; with UPDATE_SNAPSHOTS=1 each worker
 **History**
 - 2026-10-28 claude-main: found
 - 2026-10-28 claude-main: marked wontfix; Duplicate of DI-010
+
+### DI-032 · Player link server doesn't check the Host header (DNS rebinding)
+- **Status:** wontfix
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/player_server.py:93`
+
+A malicious website opened by someone on the same Wi-Fi could rebind its domain to the PC's address and read /state from their browser while the link runs. It would get only what the page already shows, and the server takes no input, so this adds nothing beyond the plan's accepted 'no login' decision. A Host check would also reject hostnames such as a Tailscale MagicDNS name. Revisit if /state ever carries anything private or the server starts accepting input.
+
+**History**
+- 2026-11-01 main-session: found

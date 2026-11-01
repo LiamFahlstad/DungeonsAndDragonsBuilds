@@ -170,7 +170,7 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 - [ ] Two phones and a laptop open the link, and a damage hit shows up on all three within a second or two.
 - [ ] Lock a phone during a turn and unlock it: it catches up.
 - [ ] Stop the server: the Lost connection banner appears within a few seconds. Open Player Link again: it clears.
-- [ ] Close the dialog: the phones keep updating. Player Link then shows the same link.
+- [ ] Close the dialog: the phones keep updating, and the button reads Player Link (on), in gold. It then shows the same link.
 - [ ] A second copy of the app says the port is in use, in the dialog.
 - [ ] End Encounter: every phone says "Waiting for the fight to start", with no rows.
 - [ ] Load Encounter: every phone drops the last fight.

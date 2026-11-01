@@ -26,12 +26,14 @@ PLAYER_PORT = 8765
 _PAGE_PATH = Path(__file__).with_name("player_page.html")
 _SHUTDOWN_POLL_SECONDS = 0.1  # how long Stop can hold up the window
 _REQUEST_TIMEOUT_SECONDS = 5  # a client that goes quiet doesn't keep its thread
-# Most likely to be the Wi-Fi first. Anything else is left out, public addresses
-# included, so the server can't end up facing the internet.
+# Most likely to be the Wi-Fi first, then Tailscale's, for players at home.
+# Anything else is left out, public addresses included, so the server can't end
+# up facing the internet.
 _PRIVATE_NETWORKS = [
     ip_network("192.168.0.0/16"),
     ip_network("10.0.0.0/8"),
     ip_network("172.16.0.0/12"),
+    ip_network("100.64.0.0/10"),
 ]
 
 

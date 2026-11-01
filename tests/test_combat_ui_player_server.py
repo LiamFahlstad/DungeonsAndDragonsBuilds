@@ -1110,6 +1110,16 @@ def test_addresses_rank_wifi_first():
     ]
 
 
+def test_a_tailscale_address_is_offered_after_every_other_kind():
+    addresses = ["100.101.102.103", "172.22.80.1", "10.5.0.2", "192.168.0.143"]
+    assert rank_addresses(addresses) == [
+        "192.168.0.143",
+        "10.5.0.2",
+        "172.22.80.1",
+        "100.101.102.103",
+    ]
+
+
 def test_ranking_keeps_the_given_order_within_a_kind():
     assert rank_addresses(["192.168.56.1", "192.168.0.143"]) == [
         "192.168.56.1",
@@ -1126,6 +1136,8 @@ def test_ranking_keeps_the_given_order_within_a_kind():
         "8.8.8.8",  # public: that would face the internet
         "172.15.255.255",  # just outside 172.16-31
         "172.32.0.1",
+        "100.63.255.255",  # just outside Tailscale's 100.64-127
+        "100.128.0.0",
         "fe80::1",
     ],
 )
@@ -1202,6 +1214,19 @@ def test_copy_puts_the_link_on_the_clipboard(tmp_path, monkeypatch):
     _button(dlg, "Copy").click()
     assert QApplication.clipboard().text() == ui._player_server.url
     assert _message(dlg) == "Link copied."
+
+
+def test_the_main_window_says_the_link_is_on_until_its_stopped(tmp_path, monkeypatch):
+    ui = make_ui(tmp_path, [Pirate()])
+    dlg = open_dialog(monkeypatch, _button(ui._window, "Player Link").click)
+    _button(dlg, "Close").click()
+    assert ui._player_server.running
+    assert _button(ui._window, "Player Link (on)") is ui._player_link_btn
+
+    dlg = open_dialog(monkeypatch, ui._player_link_btn.click)
+    _button(dlg, "Stop").click()
+    assert not ui._player_server.running
+    assert _button(ui._window, "Player Link") is ui._player_link_btn
 
 
 def test_closing_leaves_it_running_and_reopening_shows_the_same_link(
@@ -1308,6 +1333,7 @@ def test_a_busy_port_is_said_in_the_dialog(tmp_path, monkeypatch):
     assert not _button(dlg, "Stop").isEnabled()
     assert not _button(dlg, "Copy").isEnabled()
     assert not ui._player_server.running
+    assert ui._player_link_btn.text() == "Player Link"
 
     # The port's free now: picking an address tries again.
     monkeypatch.setattr(turn_panel_mixin, "PLAYER_PORT", 0)

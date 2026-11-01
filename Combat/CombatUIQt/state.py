@@ -121,6 +121,7 @@ class CombatWindowState:
     _status_label: QLabel
     _status_timer: QTimer
     _views_timer: QTimer
+    _player_link_btn: QPushButton
     _half_btn: QPushButton
     _more_controls: QWidget
     _more_controls_btn: QPushButton
