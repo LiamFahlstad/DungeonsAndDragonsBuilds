@@ -309,7 +309,7 @@ The 'ends (concentration broken by casting X)' log line carries action=CAST_SPEL
 - 2026-10-31 main-session: marked fixed in 97b31819
 
 ### DI-028 · Player timers and condition notes do not survive replaying the player log
-- **Status:** fixed · 2026-10-31 · uncommitted
+- **Status:** fixed · 2026-10-31 · 5247bcd7
 - **Area:** combat-simulator
 - **Where:** `Combat/CombatUIQt/logging_mixin.py:_rebuild_players_from_log`
 
@@ -318,6 +318,30 @@ timed_conditions, custom_condition_descriptions and repeat_saves on a player are
 **History**
 - 2026-10-31 main-session: found
 - 2026-10-31 main-session: marked fixed; A fight in progress now keeps each player's active spells, timers, notes, repeat saves and owed Concentration saves in its log (PLAYER_FIGHT_KEYS), restored when the fight is continued.
+- 2026-10-31 git-commit: marked fixed in 5247bcd7
+
+### DI-029 · End Encounter leaves the Player Screen on the last round
+- **Status:** fixed · 2026-10-31 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/encounters_mixin.py:223`
+
+_leave_encounter switches to the party view without calling _refresh_views or starting _views_timer, so an open Player Screen keeps showing the finished fight's round and rows (monsters included) until something else refreshes it. Reproduced offscreen: after _leave_encounter the window was last told 'Round 1' with 3 rows, while a manual refresh gives 'Waiting for the fight to start' with 0. Start combat, HP changes, next and previous turn, undo across a round and back to initiative all refresh correctly. Fix: call self._refresh_views() at the end of _leave_encounter. Part of Notes/player-web-view-plan.md.
+
+**History**
+- 2026-10-31 main-session: found
+- 2026-10-31 main-session: marked in-progress; Being fixed as step 1 of Notes/player-web-view-plan.md
+- 2026-10-31 combat-simulator: marked fixed; _leave_encounter now calls _refresh_views. The same gap existed in Load Encounter: _open_encounter_log now refreshes too, so a fresh encounter no longer leaves the last fight on the Player Screen or the link. Tests in tests/test_combat_ui_player_server.py.
+
+### DI-030 · *.html in .gitignore hides Combat/CombatUIQt/player_page.html from git
+- **Status:** fixed · 2026-10-31 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `.gitignore:210`, `Combat/CombatUIQt/player_page.html`
+
+The player link's page is a source file, but the repo-wide *.html rule ignores it: git status doesn't list it and a commit won't include it, so on a fresh checkout every start of the player link fails with 'The link couldn't start ... No such file or directory'. Reproduce: git check-ignore -v Combat/CombatUIQt/player_page.html. Fix: add the line !Combat/CombatUIQt/player_page.html after *.html in .gitignore. .gitignore was outside the player web view task's scope.
+
+**History**
+- 2026-10-31 combat-simulator: found
+- 2026-10-31 main-session: marked fixed; Added !Combat/CombatUIQt/player_page.html after *.html in .gitignore; not committed yet
 
 ## Won't fix
 

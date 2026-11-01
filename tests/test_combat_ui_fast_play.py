@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMessageBox,
+    QProgressBar,
     QPushButton,
     QTreeWidget,
 )
@@ -32,7 +33,7 @@ from Combat.CombatUIQt.monster_actions import parse_action
 from Combat.CombatUIQt.settings import SETTING_SECTIONS
 from Combat.CombatUIQt.styles import QSS
 from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY, LogJSONEncoder
-from Core.Definitions import DamageType
+from Core.Definitions import CreatureSize, DamageType
 from Model.Creatures.Combatants import DamageTypeEntry
 from tests._combat_ui import make_ui, open_dialog
 
@@ -812,28 +813,95 @@ def _rows(ui):
     )
 
 
-def test_monsters_show_a_word_not_their_hit_points(fight):
+def _hp(row) -> list[str]:
+    return [health.text for health in row.health]
+
+
+def test_everyone_shows_their_hit_points(fight):
     ui, pirate, tiger, bandit = fight
     tiger["hp"] = 15
     bandit["hp"] = 0
     rows = {row.name: row for row in _rows(ui)}
-    assert rows["Tiger"].health == "Bloodied"
-    assert rows["Pirate"].health == "Healthy"
-    assert rows["Bandit (Pirate)"].health == "Defeated"
-    assert "15" not in str(rows["Tiger"])
+    assert _hp(rows["Tiger"]) == ["15 / 30"]
+    assert _hp(rows["Pirate"]) == ["33 / 33"]
+    assert _hp(rows["Bandit (Pirate)"]) == ["Defeated"]
 
 
-def test_a_players_numbers_are_shown(fight):
+@pytest.mark.parametrize("is_player", [True, False])
+def test_temp_hp_shows_for_anyone(fight, is_player):
     ui, _, tiger, _ = fight
-    tiger.update(_is_player=True, hp=12, max_hp=30, temp_hp=4)
-    assert next(r for r in _rows(ui) if r.name == "Tiger").health == "12 / 30 (+4)"
+    tiger.update(hp=12, temp_hp=4)
+    if is_player:
+        tiger["_is_player"] = True
+    assert _hp(next(r for r in _rows(ui) if r.name == "Tiger")) == ["12 / 30 (+4 temp)"]
+
+
+@pytest.mark.parametrize(
+    "hp, percent, color",
+    [
+        (40, 100, "#2ecc71"),  # healed past the maximum, the bar is just full
+        (30, 100, "#2ecc71"),
+        (16, 54, "#2ecc71"),
+        (15, 50, "#e67e22"),  # half or less, as on the GM's card
+        (8, 27, "#e67e22"),
+        (7, 24, "#e74c3c"),  # a quarter or less
+        (1, 4, "#e74c3c"),
+        (0, 0, "#555"),
+    ],
+)
+def test_the_bar_matches_the_gms_card(fight, hp, percent, color):
+    ui, _, tiger, _ = fight
+    tiger["hp"] = hp
+    (health,) = next(r for r in _rows(ui) if r.name == "Tiger").health
+    assert (health.percent, health.color) == (percent, color)
+
+
+def test_a_sliver_of_hp_never_looks_like_none(fight):
+    ui, _, tiger, _ = fight
+    tiger.update(hp=1, max_hp=500)
+    (health,) = next(r for r in _rows(ui) if r.name == "Tiger").health
+    assert health.percent == 1
+
+
+def test_a_summon_with_no_hp_yet_doesnt_break_the_view(fight):
+    ui, _, tiger, _ = fight
+    tiger.update(hp=0, max_hp=0)
+    (health,) = next(r for r in _rows(ui) if r.name == "Tiger").health
+    assert (health.text, health.percent) == ("0 / 0", 0)
 
 
 def test_a_dying_player_shows_their_saves(fight):
     ui, _, tiger, _ = fight
     tiger.update(_is_player=True, hp=0, death_saves_fail=1, death_saves_success=2)
     row = next(r for r in _rows(ui) if r.name == "Tiger")
-    assert row.health == "Dying (1 failed, 2 saved)"
+    assert _hp(row) == ["Dying (1 failed, 2 saved)"]
+
+
+def test_a_real_player_shows_their_size_and_speed(tmp_path):
+    sheet = Obmar().build()
+    ui = make_ui(tmp_path, [Pirate()], [sheet])
+    ui._initiative_inputs[id(ui.characters[0])].setText("15")
+    ui._initiative_inputs[id(ui.characters[1])].setText("10")
+    ui._start_combat()
+    row = next(r for r in _rows(ui) if r.name == sheet.character_name)
+    expected = f"{sheet.size.value} · Speed {sheet.calculate_speed()} ft."
+    assert row.details == expected
+
+
+@pytest.mark.parametrize("size", [CreatureSize.LARGE, "Large"])
+def test_a_monster_shows_its_size_ac_and_speed(fight, size):
+    """A fresh stat block has the enum, and a resumed fight the plain text."""
+    ui, _, tiger, _ = fight
+    tiger.update(size=size, speed_ground_ft=40, speed_fly_ft=60)
+    row = next(r for r in _rows(ui) if r.name == "Tiger")
+    assert row.details == "Large · AC 13 · Speed 40 ft., fly 60 ft."
+
+
+def test_a_basic_combatant_shows_what_it_has(fight):
+    ui, _, tiger, _ = fight
+    assert next(r for r in _rows(ui) if r.name == "Tiger").details == "AC 13"
+    tiger["ac"] = None
+    assert next(r for r in _rows(ui) if r.name == "Tiger").details == ""
 
 
 def test_now_and_next_are_marked(fight):
@@ -863,7 +931,7 @@ def test_what_a_monster_is_doing_inside_stays_hidden(fight):
     assert row.conditions == ("Prone",)
 
 
-def test_a_group_counts_its_health_and_hides_a_member_they_cant_see(tmp_path):
+def test_a_group_has_a_bar_each_and_hides_a_member_they_cant_see(tmp_path):
     ui = make_ui(
         tmp_path,
         [
@@ -877,14 +945,30 @@ def test_a_group_counts_its_health_and_hides_a_member_they_cant_see(tmp_path):
     one, two, three = ui.characters
     one["hp"] = 5
     three["conditions"].append("Invisible")
+    three.update(hp=1, ac=19)
     (row,) = _rows(ui)
     assert row.name == "Tigers (2)"
-    assert row.health == "1 Bloodied, 1 Healthy"
+    assert _hp(row) == ["5 / 30", "30 / 30"]
+    assert [health.name for health in row.health] == [one["name"], two["name"]]
+    assert row.details == "AC 13"
+
+
+def test_a_group_says_what_its_members_share_once(tmp_path):
+    ui = make_ui(
+        tmp_path,
+        [_named(Tiger(), "Tiger 1", "Tigers"), _named(Tiger(), "Tiger 2", "Tigers")],
+    )
+    ui._initiative_inputs[id(ui.characters[0])].setText("9")
+    ui._start_combat()
+    ui.characters[0].update(size="Large", speed_ground_ft=40)
+    ui.characters[1].update(size="Large", speed_ground_ft=40)
+    assert _rows(ui)[0].details == "Large · AC 13 · Speed 40 ft."
 
 
 def _view_text(ui) -> str:
     view = ui._player_view
-    return " ".join(label.text() for label in view.findChildren(QLabel))
+    labels = [label.text() for label in view.findChildren(QLabel)]
+    return " ".join(labels + [bar.format() for bar in view.findChildren(QProgressBar)])
 
 
 def test_the_players_screen_opens_follows_and_closes(fight):
@@ -908,7 +992,7 @@ def test_a_change_reaches_the_screen_by_itself(fight):
     ui._rebuild_card(tiger)
     assert ui._views_timer.isActive()
     QApplication.processEvents()
-    assert "Bloodied" in _view_text(ui)
+    assert "5 / 30" in _view_text(ui)
     ui._toggle_player_view()
 
 

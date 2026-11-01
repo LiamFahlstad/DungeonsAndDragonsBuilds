@@ -141,6 +141,7 @@ class EncountersMixin(CombatWindowState):
         if ENDED_KEY in data:
             self._mark_encounter_ended(None)
         self._refresh_encounter_labels()
+        self._refresh_views()
 
     def _refresh_encounter_labels(self):
         title = "DnD Combat Engine"
@@ -216,7 +217,7 @@ class EncountersMixin(CombatWindowState):
         if answer != QMessageBox.StandardButton.Yes:
             return
         if read_log_status(self.log_file) is not None:
-            self._log_event(f"--- {title} ended ---", note_turn=False)
+            self._log_event(f"--- {title} ended ---", note_turn=False, public=False)
             self._mark_encounter_ended(PlayerLog.now())
         self._leave_encounter()
 
@@ -231,6 +232,7 @@ class EncountersMixin(CombatWindowState):
         self.phase = "PARTY"
         self._show_party_view()
         self._refresh_encounter_labels()
+        self._refresh_views()
 
     # ── The party view, between encounters ───────────────────────────────
 

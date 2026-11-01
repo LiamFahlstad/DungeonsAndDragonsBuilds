@@ -19,6 +19,7 @@ from .encounters_mixin import EncountersMixin
 from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
+from .player_server import PlayerServer
 from .rolls_mixin import RollsMixin
 from .settings import CombatSettings, open_settings_store
 from .spells_mixin import SpellsMixin
@@ -108,6 +109,7 @@ class CombatAppQt(
         self._turn_reminders: list[str] = []
         self._turn_start_notes: list[str] = []
         self._player_view = None
+        self._player_server = PlayerServer()
         # Settings; run() loads the saved ones.
         self.settings = CombatSettings()
         self._settings_store: QSettings | None = None

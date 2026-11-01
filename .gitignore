@@ -208,6 +208,8 @@ __marimo__/
 
 # Files
 *.html
+# The player link's page is source, not a generated sheet.
+!Combat/CombatUIQt/player_page.html
 
 # Claude: share agents, skills, hooks and project settings; keep worktrees,
 # settings.local.json and other local state out

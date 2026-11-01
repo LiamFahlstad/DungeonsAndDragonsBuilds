@@ -4,7 +4,9 @@ from typing import Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QApplication,
     QCheckBox,
+    QComboBox,
     QDialog,
     QFrame,
     QGridLayout,
@@ -36,6 +38,7 @@ from .stats import (
     damage_taken_key,
     spell_slots_used_key,
 )
+from .player_server import PlayerServerError, lan_addresses
 from .settings import SETTING_SECTIONS
 from .styles import QSS
 from Core.Rules import ability_modifier
@@ -706,6 +709,7 @@ def _add_monster_ability(panel: _InfoPanel, ab):
 
 
 _SETTINGS_WIDTH = 860
+_PLAYER_LINK_WIDTH = 420
 
 
 class DialogsMixin(CombatWindowState):
@@ -826,6 +830,110 @@ class DialogsMixin(CombatWindowState):
         close_btn = QPushButton("Close")
         close_btn.clicked.connect(dlg.accept)
         layout.addWidget(close_btn)
+
+        dlg.exec()
+
+    def _show_player_link_dialog(self):
+        """Start the player link if it isn't running, and show it. Closing the
+        dialog leaves it running, for the GM to get back to the fight; only
+        Stop ends it. A port that's in use is said here, never as a popup."""
+        server = self._player_server
+        addresses = lan_addresses()
+        if server.host is not None and server.host not in addresses:
+            addresses.insert(0, server.host)
+
+        dlg = QDialog(self._window)
+        dlg.setWindowTitle("Player Link")
+        dlg.setStyleSheet(QSS)
+        dlg.setFixedWidth(_PLAYER_LINK_WIDTH)
+
+        layout = QVBoxLayout(dlg)
+        layout.setContentsMargins(14, 14, 14, 14)
+        layout.setSpacing(8)
+
+        info = QLabel(
+            "Players on the same Wi-Fi open this link on a phone or computer. "
+            "They see what the Player Screen shows, and can't change anything."
+        )
+        info.setWordWrap(True)
+        info.setStyleSheet("color: #a0a0b0;")
+        layout.addWidget(info)
+
+        link = QLabel()
+        link.setObjectName("playerLink")
+        link.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        link.setStyleSheet("color: #c9a84c; font-size: 18px; font-weight: bold;")
+        layout.addWidget(link)
+
+        message = QLabel()
+        message.setObjectName("playerLinkMessage")
+        message.setWordWrap(True)
+        layout.addWidget(message)
+
+        address_row = QHBoxLayout()
+        address_row.addWidget(QLabel("Address:"))
+        address_combo = QComboBox()
+        address_combo.addItems(addresses)
+        address_combo.setEnabled(bool(addresses))
+        address_row.addWidget(address_combo, stretch=1)
+        layout.addLayout(address_row)
+
+        hint = QLabel("If a phone can't connect, try another address.")
+        hint.setWordWrap(True)
+        hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        layout.addWidget(hint)
+
+        btn_row = QHBoxLayout()
+        copy_btn = QPushButton("Copy")
+        stop_btn = QPushButton("Stop")
+        close_btn = QPushButton("Close")
+        close_btn.setDefault(True)
+        btn_row.addWidget(copy_btn)
+        btn_row.addWidget(stop_btn)
+        btn_row.addStretch()
+        btn_row.addWidget(close_btn)
+        layout.addLayout(btn_row)
+
+        def show_link():
+            link.setText(server.url or "Not running")
+            copy_btn.setEnabled(server.running)
+            stop_btn.setEnabled(server.running)
+
+        def serve_on(host: str):
+            try:
+                self._start_player_server(host)
+                message.setText("")
+            except PlayerServerError as error:
+                message.setText(str(error))
+            show_link()
+
+        def copy_link():
+            clipboard = QApplication.clipboard()
+            assert clipboard is not None  # there's always one while Qt runs
+            clipboard.setText(server.url or "")
+            message.setText("Link copied.")
+
+        def stop():
+            server.stop()
+            self._show_status("Player link stopped.")
+            dlg.accept()
+
+        if server.host is not None:
+            address_combo.setCurrentText(server.host)
+            show_link()
+        elif addresses:
+            last = server.last_host
+            host = last if last is not None and last in addresses else addresses[0]
+            address_combo.setCurrentText(host)
+            serve_on(host)
+        else:
+            show_link()
+            message.setText("No network found. Join the Wi-Fi and open this again.")
+
+        address_combo.currentTextChanged.connect(serve_on)
+        copy_btn.clicked.connect(copy_link)
+        stop_btn.clicked.connect(stop)
+        close_btn.clicked.connect(dlg.accept)
 
         dlg.exec()
 

@@ -107,7 +107,11 @@ def test_an_undone_hit_leaves_the_log(fight):
     ui._undo_last()
 
     assert _logs(ui)["round_1"] == [
-        {"text": "[Pirate's turn] Pirate uses Action", "character": "Pirate"}
+        {
+            "text": "[Pirate's turn] Pirate uses Action",
+            "character": "Pirate",
+            "public": True,
+        }
     ]
 
 

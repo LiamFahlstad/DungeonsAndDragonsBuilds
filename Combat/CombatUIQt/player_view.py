@@ -1,17 +1,29 @@
 """The players' screen (a second monitor or a TV): the turn order, whose turn
 it is and who's next, so players plan during other turns. player_view_rows
-decides what they may see: a monster's health is only a word, and a monster
-they can't perceive isn't listed."""
+decides what they may see: everyone's Hit Points, as on the GM's cards, size and
+speed, and monsters' AC. A monster they can't perceive isn't listed, and nothing
+else of its stat block is shown."""
 
-from collections import Counter
+import math
 from dataclasses import dataclass
 from typing import Callable
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent
-from PyQt6.QtWidgets import QFrame, QGridLayout, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import (
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QProgressBar,
+    QVBoxLayout,
+    QWidget,
+)
 
+from Combat.Definitions import CombatStatus
 from Core.Definitions import Condition
+from .cards_mixin import _hp_chunk_color
+from .dialogs_mixin import _display, _speed_text
 from .turns_mixin import initiative_units, unit_label
 
 # A monster with one of these (a condition, a Visibility, or the spell's badge)
@@ -28,6 +40,8 @@ HIDDEN_STATES = {
 # All the players see of a monster's conditions: the rules' own, which show on
 # the table. Spell badges and a GM's custom conditions are private notes.
 SHOWN_MONSTER_CONDITIONS = {c.value for c in Condition} - HIDDEN_STATES
+# The log can say Bloodied as well, since they can see the HP it comes from.
+LOGGED_MONSTER_CONDITIONS = SHOWN_MONSTER_CONDITIONS | {CombatStatus.BLOODIED.value}
 
 _STYLE = """
 QWidget#playerView { background-color: #1a1a2e; }
@@ -38,20 +52,38 @@ QFrame#playerViewRow[turn="now"] { background-color: #3a2e00; }
 QFrame#playerViewRow[turn="next"] { background-color: #0f3460; }
 QLabel#playerViewMark { color: #c9a84c; font-weight: bold; }
 QLabel#playerViewConditions { color: #a0c4ff; font-size: 22px; }
+QLabel#playerViewDetails { color: #a0a0b0; font-size: 20px; }
+QLabel#playerViewMember { font-size: 22px; }
+QProgressBar {
+    background-color: #8a8a9a;
+    font-size: 22px;
+    min-height: 34px;
+    max-height: 34px;
+}
 """
+_BAR_WIDTH = 320
+
+
+@dataclass(frozen=True)
+class PlayerViewHealth:
+    name: str  # whose it is, to tell an initiative group's members apart
+    text: str  # "12 / 30", or how they stand at 0 HP
+    percent: int  # how full the bar is
+    color: str  # the bar's color, the same as on the GM's card
 
 
 @dataclass(frozen=True)
 class PlayerViewRow:
     name: str
-    health: str
+    details: str  # "Large · AC 13 · Speed 40 ft.", or "" if nothing's known
+    health: tuple[PlayerViewHealth, ...]  # one bar for each combatant on this turn
     conditions: tuple[str, ...]
     turn: str  # "now", "next" or ""
 
 
-def _player_health(char: dict, death_state: str) -> str:
+def _health_text(char: dict, death_state: str) -> str:
     if death_state == "dead":
-        return "Dead"
+        return "Dead" if char.get("_is_player") else "Defeated"
     if death_state == "stabilized":
         return "Stable"
     if death_state == "dying":
@@ -60,15 +92,18 @@ def _player_health(char: dict, death_state: str) -> str:
         )
         return f"Dying ({fails} failed, {saves} saved)"
     temp = char.get("temp_hp", 0)
-    return f"{char['hp']} / {char['max_hp']}" + (f" (+{temp})" if temp else "")
+    return f"{char['hp']} / {char['max_hp']}" + (f" (+{temp} temp)" if temp else "")
 
 
-def _monster_health(char: dict, death_state: str) -> str:
-    if death_state == "dead":
-        return "Defeated"
-    if char["hp"] <= 0:
-        return "Down"
-    return "Bloodied" if char["hp"] <= char["max_hp"] / 2 else "Healthy"
+def _health(char: dict, death_state: str) -> PlayerViewHealth:
+    hp, max_hp = max(char["hp"], 0), max(char["max_hp"], 1)
+    return PlayerViewHealth(
+        char["name"],
+        _health_text(char, death_state),
+        # Rounded up, so a bar is only empty at 0 HP.
+        min(math.ceil(100 * hp / max_hp), 100),
+        _hp_chunk_color(hp, max_hp),
+    )
 
 
 def _can_be_seen(char: dict) -> bool:
@@ -76,14 +111,17 @@ def _can_be_seen(char: dict) -> bool:
     return bool(char.get("_is_player")) or not states & HIDDEN_STATES
 
 
-def _unit_health(unit: list[dict], death_state: Callable[[dict], str]) -> str:
-    """One combatant's health, or a group's count of each."""
-    if unit[0].get("_is_player"):
-        return _player_health(unit[0], death_state(unit[0]))
-    words = Counter(_monster_health(c, death_state(c)) for c in unit)
-    if len(unit) == 1:
-        return next(iter(words))
-    return ", ".join(f"{count} {word}" for word, count in words.items())
+def _unit_details(unit: list[dict]) -> str:
+    """Everyone's size and speed, and monsters' AC: a player's is on their own
+    sheet, and it's a sentence once they have a Shield."""
+    sizes = [_display(c["size"]) for c in unit if c.get("size")]
+    armor = [
+        f"AC {c['ac']}"
+        for c in unit
+        if not c.get("_is_player") and c.get("ac") is not None
+    ]
+    speeds = [f"Speed {speed}" for speed in map(_speed_text, unit) if speed]
+    return " · ".join(dict.fromkeys(sizes + armor + speeds))
 
 
 def _unit_conditions(unit: list[dict]) -> tuple[str, ...]:
@@ -134,12 +172,64 @@ def player_view_rows(
         rows.append(
             PlayerViewRow(
                 unit_label(shown),
-                _unit_health(shown, death_state),
+                _unit_details(shown),
+                tuple(_health(c, death_state(c)) for c in shown),
                 _unit_conditions(shown),
                 turn,
             )
         )
     return rows
+
+
+def _health_line(health: PlayerViewHealth, in_group: bool) -> QHBoxLayout:
+    """A combatant's HP bar, with its name when it shares a row with others."""
+    line = QHBoxLayout()
+    if in_group:
+        member = QLabel(health.name)
+        member.setObjectName("playerViewMember")
+        line.addWidget(member, stretch=1)
+    bar = QProgressBar()
+    bar.setRange(0, 100)
+    bar.setValue(health.percent)
+    bar.setFormat(health.text)
+    bar.setTextVisible(True)
+    bar.setFixedWidth(_BAR_WIDTH)
+    bar.setStyleSheet(
+        f"QProgressBar::chunk {{ background-color: {health.color};"
+        " border-radius: 3px; }"
+    )
+    line.addWidget(bar)
+    return line
+
+
+def may_read_log_line(
+    text: str, character: str | None, value: object, chars: list[dict]
+) -> bool:
+    """Whether players may read an encounter log line. It's asked when the line
+    is logged, because it depends on who they can perceive at that moment: a
+    hidden monster's attack stays private after it's revealed.
+
+    A line about a monster says which condition or effect it's about in
+    `value`, since the text can't be trusted to name it: it may already be gone,
+    and "keeps concentration" doesn't say Concentrating. The whole text is also
+    checked, not just `character`: a hidden monster can be named as the source
+    of a line about someone else, or in its turn's prefix."""
+    private = {c["name"] for c in chars if not _can_be_seen(c)}
+    for unit in initiative_units(chars):
+        group = unit[0].get("initiative_group")
+        if group and not any(_can_be_seen(c) for c in unit):
+            private.add(group)
+    if character in private:
+        return False
+    condition = value.get("condition", "") if isinstance(value, dict) else ""
+    # Every one by that name: nothing stops two monsters sharing one.
+    for subject in chars:
+        if subject["name"] != character or subject.get("_is_player"):
+            continue
+        if condition and condition not in LOGGED_MONSTER_CONDITIONS:
+            return False
+        private |= set(subject.get("conditions", [])) - LOGGED_MONSTER_CONDITIONS
+    return not any(name in text for name in private)
 
 
 class PlayerViewWindow(QWidget):
@@ -203,12 +293,24 @@ class PlayerViewWindow(QWidget):
         mark.setFixedWidth(100)
         grid.addWidget(mark, 0, 0)
         grid.addWidget(QLabel(row.name), 0, 1)
-        grid.addWidget(QLabel(row.health), 0, 2)
+        if row.details:
+            details = QLabel(row.details)
+            details.setObjectName("playerViewDetails")
+            grid.addWidget(details, 1, 1)
+        in_group = len(row.health) > 1
+        bars = QVBoxLayout()
+        bars.setSpacing(4)
+        for health in row.health:
+            bars.addLayout(_health_line(health, in_group))
+        if in_group:
+            grid.addLayout(bars, 2, 1, 1, 2)
+        else:
+            grid.addLayout(bars, 0, 2, 2, 1)
         if row.conditions:
             conditions = QLabel(", ".join(row.conditions))
             conditions.setObjectName("playerViewConditions")
             conditions.setWordWrap(True)
-            grid.addWidget(conditions, 1, 1, 1, 2)
+            grid.addWidget(conditions, 3, 1, 1, 2)
         return frame
 
     def show_on_spare_screen(self, main_window: QWidget):

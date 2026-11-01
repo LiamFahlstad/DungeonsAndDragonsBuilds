@@ -31,6 +31,7 @@ from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData
 
+from .player_server import PlayerServer
 from .settings import CombatSettings
 from .undo import UndoPoint
 
@@ -65,6 +66,9 @@ class CombatWindowState:
     # What to remember this turn, and what starting it did (TurnPanelMixin).
     _turn_reminders: list[str]
     _turn_start_notes: list[str]
+    # The player link. It listens only once the GM starts it (TurnPanelMixin
+    # publishes to it, DialogsMixin._show_player_link_dialog controls it).
+    _player_server: PlayerServer
     # Settings (DialogsMixin._show_settings_dialog), kept between runs in
     # _settings_store; None (tests, scripts) keeps them for this run only.
     settings: CombatSettings
@@ -276,6 +280,9 @@ class CombatWindowState:
     def _start_monster_turn(self, char: dict):
         raise NotImplementedError("TurnPanelMixin._start_monster_turn")
 
+    def _start_player_server(self, host: str):
+        raise NotImplementedError("TurnPanelMixin._start_player_server")
+
     def _take_turn_reminders(self):
         raise NotImplementedError("TurnPanelMixin._take_turn_reminders")
 
@@ -320,6 +327,7 @@ class CombatWindowState:
         character: str | None = None,
         action=None,
         value=None,
+        public: bool = True,
     ):
         raise NotImplementedError("LoggingMixin._log_event")
 
@@ -458,6 +466,9 @@ class CombatWindowState:
     def _show_rules(self):
         raise NotImplementedError("DialogsMixin._show_rules")
 
+    def _show_player_link_dialog(self):
+        raise NotImplementedError("DialogsMixin._show_player_link_dialog")
+
     def _show_settings_dialog(self):
         raise NotImplementedError("DialogsMixin._show_settings_dialog")
 
@@ -475,6 +486,9 @@ class CombatWindowState:
 
     def _read_log(self) -> dict:
         raise NotImplementedError("LoggingMixin._read_log")
+
+    def _public_log(self) -> list[dict]:
+        raise NotImplementedError("LoggingMixin._public_log")
 
     def _set_party(self, names: list[str] | None):
         raise NotImplementedError("LoggingMixin._set_party")

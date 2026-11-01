@@ -16,7 +16,8 @@ fight starts from. Each event is {"text": ..., "character": ..., "action": ...,
 "value": ...}; the last three are there when the event changed someone's
 state (damage, a spell slot, a condition, ...), which is what the party's
 state is replayed from (see Combat/PlayerLog.py). Logs written before that
-hold plain text strings.
+hold plain text strings. An event players may read on the player link also has
+PUBLIC_KEY, set when it was logged; without it, it stays the GM's.
 
 A log without any events is a fight that never got going, so there is
 nothing in it to continue. A fight the GM ended (End Encounter) has ENDED_KEY,
@@ -51,6 +52,8 @@ PLAYER_FIGHT_KEYS = (
     "timed_conditions",
 )
 HEADER_KEYS = ("encounter", "title", "players")
+# Marks an event players may read (player_view.may_read_log_line).
+PUBLIC_KEY = "public"
 
 
 class LogJSONEncoder(json.JSONEncoder):

@@ -270,7 +270,7 @@ class WindowMixin(CombatWindowState):
 
         root_layout.addWidget(self._scroll_area, stretch=1)
 
-        # The turn column and the players' screen, one refresh however many
+        # The turn column and the players' views, one refresh however many
         # cards changed (TurnPanelMixin._refresh_views).
         self._views_timer = QTimer(self._window)
         self._views_timer.setSingleShot(True)
@@ -656,7 +656,7 @@ class WindowMixin(CombatWindowState):
         self._log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         panel_layout.addWidget(self._log_status_label)
 
-        # Logs, Statistics, Rules, Settings, Player Screen, two to a row
+        # Logs, Statistics, Rules, the players' views, Settings, two to a row
         info_grid = QGridLayout()
         info_grid.setSpacing(6)
         for index, (text, handler) in enumerate(
@@ -665,8 +665,9 @@ class WindowMixin(CombatWindowState):
                 ("Player Log", self._show_player_log),
                 ("Statistics", self._show_statistics),
                 ("Rules", self._show_rules),
-                ("Settings", self._show_settings_dialog),
                 ("Player Screen", self._toggle_player_view),
+                ("Player Link", self._show_player_link_dialog),
+                ("Settings", self._show_settings_dialog),
             ]
         ):
             btn = QPushButton(text)

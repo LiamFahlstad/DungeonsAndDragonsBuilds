@@ -11,14 +11,16 @@ from Combat.EncounterLogs import (
     ORDER_KEY,
     PLAYER_FIGHT_KEYS,
     PLAYER_FIGHT_STATE_KEY,
+    PUBLIC_KEY,
     TURN_KEY,
     LogJSONEncoder,
     event_text,
     read_log_status,
 )
 from Combat.PlayerCombatant import combatant_from_character
-from Combat.PlayerLog import has_round_events, session_label
+from Combat.PlayerLog import has_round_events, is_round_key, session_label
 
+from .player_view import may_read_log_line
 from .stats import (
     DICT_STAT_KEYS,
     STAT_KEYS,
@@ -119,12 +121,15 @@ class LoggingMixin(CombatWindowState):
         character: str | None = None,
         action=None,
         value=None,
+        public: bool = True,
     ):
         """Append an event to the encounter log. One that changes someone's
         state carries `character`, `action` and `value`, which is what the
         party's state is replayed from on the next run (see Combat/PlayerLog.py).
-        During a short rest the events are collected for its player-log entry
-        instead (RestsMixin)."""
+        Without an action, `value` isn't kept: {"condition": name} just says what
+        the line is about, for may_read_log_line. `public` False keeps a line off
+        the player link whatever it says. During a short rest the events are
+        collected for its player-log entry instead (RestsMixin)."""
         self._clear_status()
         turn_name = self._current_turn_name() if note_turn else None
         event: dict[str, object] = {
@@ -142,6 +147,13 @@ class LoggingMixin(CombatWindowState):
             # Between encounters nothing is logged (see EncountersMixin).
             print(f"Not logged (no encounter loaded): {event['text']}")
             return
+        # Before combat, nobody has perceived anyone yet.
+        if (
+            public
+            and self.phase == "COMBAT"
+            and may_read_log_line(str(event["text"]), character, value, self.characters)
+        ):
+            event[PUBLIC_KEY] = True
         data = self._read_log()
         key = f"round_{self.round_number}"
         round_log = data.setdefault(key, [])
@@ -150,6 +162,31 @@ class LoggingMixin(CombatWindowState):
         if self._open_undo_point is not None:
             self._open_undo_point.log_entries.append((key, index))
         self._write_log(data)
+        # Not every event changes a card, and the player link shows the log.
+        if self._player_server.running:
+            self._views_timer.start()
+
+    def _public_log(self) -> list[dict]:
+        """What players may read of this encounter's log, round by round, oldest
+        first. An event without PUBLIC_KEY stays private, plain text from an old
+        log too. A round's own "--- Round 2 ---" line is its heading on the page."""
+        if self.phase != "COMBAT":
+            return []
+        data = self._read_log()
+        log = []
+        for number in sorted(
+            int(k.split("_", 1)[1]) for k in filter(is_round_key, data)
+        ):
+            lines = [
+                event["text"]
+                for event in data[f"round_{number}"]
+                if isinstance(event, dict)
+                and event.get(PUBLIC_KEY)
+                and event["text"] != f"--- Round {number} ---"
+            ]
+            if lines:
+                log.append({"round": number, "lines": lines})
+        return log
 
     def _undo_last(self):
         """Take back the last operation (see undo.py): restore the combat

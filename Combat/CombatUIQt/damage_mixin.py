@@ -317,7 +317,11 @@ class DamageMixin(CombatWindowState):
         name = char["name"]
         result = f"DC {dc}, rolled {roll}" if roll is not None else f"DC {dc}"
         if kept:
-            self._log_event(f"{name} keeps concentration ({result})", character=name)
+            self._log_event(
+                f"{name} keeps concentration ({result})",
+                character=name,
+                value={"condition": "Concentrating"},
+            )
             self._rebuild_card(char)
             return
         char.pop("concentration_checks", None)

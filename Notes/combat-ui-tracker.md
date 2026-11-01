@@ -140,8 +140,10 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] It opens full screen on your second monitor or TV.
 - [ ] With one screen, it opens as a normal window.
 - [ ] The text is readable from the table. Sizes were a guess, so note it here if they're wrong.
-- [ ] Monsters show Healthy, Bloodied or Defeated, never numbers.
-- [ ] Players show their HP.
+- [ ] Everyone shows an HP bar with numbers, in the same colors as your cards, and Defeated once dead.
+- [ ] An initiative group shows a bar for each member it can see.
+- [ ] Everyone shows size and speed under their name, and monsters show their AC too.
+- [ ] A big fight still fits on the TV. Rows are taller now and the screen can't scroll, so 10+ rows or a large group may run off the bottom.
 - [ ] Invisible and Invisibility hide a monster.
 - [ ] Heavily Obscured, Darkness and Total Cover hide it too. See "Decisions to make".
 - [ ] Spell badges and custom conditions on monsters don't show.
@@ -149,6 +151,30 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] Player Screen button closes it. X closes it too, and the button then reopens it first try.
 - [ ] Closing the main window closes it and ends the app.
 - [ ] Esc closes it only if that window has keyboard focus, which it may not on a TV.
+
+### 9b. Player link
+
+The page ran in headless Chrome on this PC, but nothing has crossed a network or run on a phone yet. Do step 0 of [player-web-view-plan.md](player-web-view-plan.md) first: if a phone can't reach this PC, nothing below will work.
+
+- [ ] Player Link opens with the Wi-Fi address picked, not a VPN, WSL or VirtualBox one. If it's wrong, picking another address moves the link.
+- [ ] Copy puts the link on the clipboard.
+- [ ] Two phones and a laptop open the link, and a damage hit shows up on all three within a second or two.
+- [ ] Lock a phone during a turn and unlock it: it catches up.
+- [ ] Stop the server: the Lost connection banner appears within a few seconds. Open Player Link again: it clears.
+- [ ] Close the dialog: the phones keep updating. Player Link then shows the same link.
+- [ ] A second copy of the app says the port is in use, in the dialog.
+- [ ] End Encounter: every phone says "Waiting for the fight to start", with no rows.
+- [ ] Load Encounter: every phone drops the last fight.
+- [ ] A hidden monster doesn't show on any phone.
+- [ ] Encounter log opens on a phone, newest first, and stays open as lines arrive.
+- [ ] A hit from a hidden monster isn't in the log, and doesn't appear after it's revealed. The target's HP still drops, so players can tell something happened.
+- [ ] A custom condition on a monster isn't in the log; Prone and Bloodied are.
+- [ ] Add Combatant, during setup or a fight, isn't announced in the log.
+- [ ] Reading older lines on a phone, a new line doesn't move what you're reading.
+- [ ] Undo takes the line back off the phones.
+- [ ] Open it on both iPhone and Android, since only a real device tests their browsers.
+- [ ] iPhone: leave a quiet fight open for a minute. No banner should appear, which shows Safari handles "nothing changed" properly.
+- [ ] Put the PC to sleep and wake it, then turn its Wi-Fi off and on: do phones reconnect? If not, Stop and reopen Player Link should recover them.
 
 ### 10. Panel, menu and settings
 

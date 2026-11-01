@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Players</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 12px;
+    background: #1a1a2e;
+    color: #eaeaea;
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+  }
+  #banner {
+    position: sticky;
+    top: 0;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #8b0000;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+  }
+  #title {
+    margin: 0 0 10px;
+    color: #c9a84c;
+    font-size: 26px;
+    font-weight: bold;
+  }
+  :root { --bar: 138px; }
+  @media (min-width: 600px) { :root { --bar: 240px; } }
+  .row {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) var(--bar);
+    gap: 2px 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+  .row[data-turn="now"] { background: #3a2e00; }
+  .row[data-turn="next"] { background: #0f3460; }
+  .mark { color: #c9a84c; font-size: 14px; font-weight: bold; }
+  .name { overflow-wrap: anywhere; }
+  .details {
+    grid-column: 2;
+    overflow-wrap: anywhere;
+    color: #a0a0b0;
+    font-size: 14px;
+  }
+  .health {
+    display: grid;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    gap: 4px;
+  }
+  .row.group .health { grid-column: 2 / 4; grid-row: auto; }
+  .member { display: flex; align-items: center; gap: 8px; }
+  .who { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 15px; }
+  .bar {
+    position: relative;
+    flex: 0 0 var(--bar);
+    overflow: hidden;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    background: #8a8a9a;
+  }
+  .fill { position: absolute; top: 0; bottom: 0; left: 0; }
+  .amount {
+    position: relative;
+    padding: 3px 4px;
+    color: #1a1a2e;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .conditions {
+    grid-column: 2 / 4;
+    overflow-wrap: anywhere;
+    color: #a0c4ff;
+    font-size: 15px;
+  }
+  #log { margin-top: 14px; }
+  summary { padding: 8px 0; color: #c9a84c; font-weight: bold; cursor: pointer; }
+  .line {
+    padding: 4px 0;
+    border-top: 1px solid #0f3460;
+    overflow-wrap: anywhere;
+    font-size: 15px;
+  }
+  .heading { padding: 8px 0 4px; color: #c9a84c; font-size: 15px; font-weight: bold; }
+</style>
+</head>
+<body>
+<div id="banner" hidden>Lost connection</div>
+<div id="title">Connecting...</div>
+<div id="rows"></div>
+<details id="log" hidden>
+  <summary>Encounter log</summary>
+  <div id="lines"></div>
+</details>
+<script>
+"use strict";
+
+const POLL_MS = 1000;
+const TIMEOUT_MS = 3000;
+const FAILURES_BEFORE_BANNER = 3;
+const TURN_MARKS = { now: "NOW", next: "NEXT" };
+
+const banner = document.getElementById("banner");
+const title = document.getElementById("title");
+const rowsBox = document.getElementById("rows");
+const log = document.getElementById("log");
+const lines = document.getElementById("lines");
+
+let etag = null;
+let failures = 0;
+let polling = false;
+let nextPoll = null;
+
+function cell(className, text) {
+  const element = document.createElement("div");
+  element.className = className;
+  element.textContent = text;  // condition names can be typed by hand
+  return element;
+}
+
+function memberElement(health, inGroup) {
+  const element = cell("member", "");
+  if (inGroup) {
+    element.append(cell("who", health.name));
+  }
+  const fill = cell("fill", "");
+  fill.style.width = `${health.percent}%`;
+  fill.style.background = health.color;
+  const bar = cell("bar", "");
+  bar.append(fill, cell("amount", health.text));
+  element.append(bar);
+  return element;
+}
+
+function rowElement(row) {
+  const element = cell("row", "");
+  const inGroup = row.health.length > 1;
+  element.classList.toggle("group", inGroup);
+  element.dataset.turn = row.turn;
+  element.append(cell("mark", TURN_MARKS[row.turn] || ""), cell("name", row.name));
+  if (row.details) {
+    element.append(cell("details", row.details));
+  }
+  const health = cell("health", "");
+  health.append(...row.health.map((member) => memberElement(member, inGroup)));
+  element.append(health);
+  if (row.conditions.length) {
+    element.append(cell("conditions", row.conditions.join(", ")));
+  }
+  return element;
+}
+
+// The newest first, in the rounds and in each round, so it's there when it's opened.
+function roundElement(round) {
+  const element = cell("round", "");
+  element.append(
+    cell("heading", `Round ${round.round}`),
+    ...round.lines.map((line) => cell("line", line)).reverse()
+  );
+  return element;
+}
+
+function render(state) {
+  // New lines arrive at the top of the log, so hold still for anyone reading it.
+  const page = document.documentElement;
+  const reading = log.open && lines.getBoundingClientRect().top < 0;
+  const fromBottom = page.scrollHeight - window.scrollY;
+  title.textContent = state.title;
+  rowsBox.textContent = "";
+  rowsBox.append(...state.rows.map(rowElement));
+  log.hidden = state.log.length === 0;
+  lines.textContent = "";
+  lines.append(...state.log.map(roundElement).reverse());
+  if (reading) {
+    window.scrollTo(0, page.scrollHeight - fromBottom);
+  }
+}
+
+async function fetchState() {
+  const abort = new AbortController();
+  const timeout = setTimeout(() => abort.abort(), TIMEOUT_MS);
+  try {
+    const response = await fetch("/state", {
+      cache: "no-store",
+      headers: etag ? { "If-None-Match": etag } : {},
+      signal: abort.signal,
+    });
+    if (response.status === 304) {
+      return;
+    }
+    if (!response.ok) {
+      throw new Error(`Server said ${response.status}`);
+    }
+    const state = await response.json();
+    etag = response.headers.get("ETag");
+    render(state);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+// Each poll waits for the last one, so a slow answer can't make requests pile up.
+async function poll() {
+  if (polling) {
+    return;
+  }
+  polling = true;
+  clearTimeout(nextPoll);
+  try {
+    await fetchState();
+    failures = 0;
+    banner.hidden = true;
+  } catch (error) {
+    failures += 1;
+    banner.hidden = failures < FAILURES_BEFORE_BANNER;
+  }
+  polling = false;
+  nextPoll = setTimeout(poll, POLL_MS);
+}
+
+// A phone stops polling while it sleeps: catch up the moment it wakes.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    poll();
+  }
+});
+
+poll();
+</script>
+</body>
+</html>

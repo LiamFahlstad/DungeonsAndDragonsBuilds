@@ -400,6 +400,7 @@ class ConditionsMixin(CombatWindowState):
         self._log_event(
             f"{name} {verb} a DC {effect.dc} {ability} save{against}{rolled}{note}",
             character=name,
+            value={"condition": effect.condition},
         )
         if result.success:
             return True
@@ -877,6 +878,7 @@ class ConditionsMixin(CombatWindowState):
             self._log_event(
                 f"{self.selected_character['name']} gains {vis}",
                 character=self.selected_character["name"],
+                value={"condition": vis},
             )
             self._refresh_selected_card()
 
@@ -892,6 +894,7 @@ class ConditionsMixin(CombatWindowState):
             self._log_event(
                 f"{self.selected_character['name']} loses {vis}",
                 character=self.selected_character["name"],
+                value={"condition": vis},
             )
             self._refresh_selected_card()
 

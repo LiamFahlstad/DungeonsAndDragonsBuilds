@@ -5,6 +5,7 @@ needs no dialog. Legendary actions, recharges and per-day uses are counted in
 the combatant's public keys, so undo and a saved fight keep them."""
 
 import random
+from dataclasses import asdict
 from textwrap import shorten
 
 from PyQt6.QtCore import Qt
@@ -28,7 +29,8 @@ from .monster_actions import (
     roll_dice,
     start_of_turn_traits,
 )
-from .player_view import PlayerViewWindow, player_view_rows
+from .player_server import PLAYER_PORT
+from .player_view import PlayerViewRow, PlayerViewWindow, player_view_rows
 from .state import CombatWindowState
 from .turns_mixin import unit_label
 from .undo import undoable
@@ -108,7 +110,8 @@ class TurnPanelMixin(CombatWindowState):
         return self._turn_panel
 
     def _refresh_views(self):
-        """Bring the turn column and the players' screen up to date."""
+        """Bring the turn column, the players' screen and the player link up
+        to date."""
         if self.phase == "COMBAT" and self.initiative_order:
             self._refresh_turn_labels()
             self._refresh_action_buttons()
@@ -380,14 +383,11 @@ class TurnPanelMixin(CombatWindowState):
     def _player_view_closed(self):
         self._player_view = None
 
-    def _refresh_player_view(self):
-        view = self._player_view
-        if view is None:
-            return
+    def _player_view_content(self) -> tuple[str, list[PlayerViewRow]]:
+        """The title and rows every player view shows, the screen and the link."""
         if self.phase != "COMBAT" or not self.initiative_order:
-            view.show_rows("Waiting for the fight to start", [])
-            return
-        view.show_rows(
+            return "Waiting for the fight to start", []
+        return (
             f"Round {self.round_number}",
             player_view_rows(
                 self.initiative_order,
@@ -396,3 +396,25 @@ class TurnPanelMixin(CombatWindowState):
                 self._char_death_state,
             ),
         )
+
+    def _refresh_player_view(self):
+        view = self._player_view
+        serving = self._player_server.running
+        if view is None and not serving:
+            return
+        title, rows = self._player_view_content()
+        if view is not None:
+            view.show_rows(title, rows)
+        if serving:
+            self._publish_player_view(title, rows)
+
+    def _publish_player_view(self, title: str, rows: list[PlayerViewRow]):
+        self._player_server.feed.publish(
+            title, [asdict(row) for row in rows], self._public_log()
+        )
+
+    def _start_player_server(self, host: str):
+        """Serve the player link on `host`, with the fight on it from the first
+        poll. Raises PlayerServerError if it can't."""
+        self._publish_player_view(*self._player_view_content())
+        self._player_server.start(host, PLAYER_PORT)

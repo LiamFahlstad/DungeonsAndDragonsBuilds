@@ -113,6 +113,7 @@ class SpellsMixin(CombatWindowState):
                 f"{char['name']}'s {entry['name']} ends (concentration lost)",
                 note_turn=False,
                 character=char["name"],
+                value={"condition": entry["name"]},
             )
             self._end_spell_effects(entry)
 
@@ -158,6 +159,7 @@ class SpellsMixin(CombatWindowState):
                         f"{char['name']}'s {entry['name']} ends",
                         note_turn=False,
                         character=char["name"],
+                        value={"condition": entry["name"]},
                     )
                     self._clear_concentration_if_unused(char)
                     self._rebuild_card(char)
@@ -172,6 +174,7 @@ class SpellsMixin(CombatWindowState):
                 self._log_event(
                     f"{source['name']}'s {entry['name']} ends (concentration broken by casting {name})",
                     character=source["name"],
+                    value={"condition": entry["name"]},
                 )
                 self._end_spell_effects(entry)
             else:
@@ -215,6 +218,7 @@ class SpellsMixin(CombatWindowState):
                         f"{char['name']}'s {entry['name']} expires",
                         note_turn=False,
                         character=char["name"],
+                        value={"condition": entry["name"]},
                     )
                     if entry.get("concentration"):
                         expired_concentration = True
@@ -233,7 +237,9 @@ class SpellsMixin(CombatWindowState):
             return
         active_spells.remove(entry)
         self._log_event(
-            f"{char['name']}'s {entry['name']} ends early", character=char["name"]
+            f"{char['name']}'s {entry['name']} ends early",
+            character=char["name"],
+            value={"condition": entry["name"]},
         )
         self._end_spell_effects(entry)
         if entry.get("concentration"):

@@ -350,7 +350,8 @@ class TurnsMixin(CombatWindowState):
             "Saving Throws": {},
         }
         self.characters.append(char)
-        self._log_event(f"{name} added to the encounter", note_turn=False)
+        # Not public: the GM may be about to hide it. The rows show it if not.
+        self._log_event(f"{name} added to the encounter", note_turn=False, public=False)
         if self.phase == "COMBAT":
             self.initiative_order.append(char)
             self._rebuild_cards()

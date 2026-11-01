@@ -102,7 +102,7 @@ Stat blocks don't say how many legendary actions a monster has, so every legenda
 
 ## The players' screen
 
-**Player Screen** opens the turn order for a second monitor or TV (full screen there, a window if there's only one screen): whose turn it is, who's next, conditions, players' Hit Points, and only Healthy, Bloodied or Defeated for monsters. A monster that's Invisible (or under Invisibility), Hidden, Heavily Obscured, in Darkness or behind Total Cover isn't listed, and spell badges and custom conditions on a monster stay private. **Esc** closes it.
+**Player Screen** opens the turn order for a second monitor or TV (full screen there, a window if there's only one screen): whose turn it is, who's next, conditions, everyone's Hit Points as a bar colored like the cards (a bar for each member of an initiative group), each combatant's size and speed, and monsters' AC. A monster that's Invisible (or under Invisibility), Hidden, Heavily Obscured, in Darkness or behind Total Cover isn't listed, and spell badges and custom conditions on a monster stay private. **Esc** closes it.
 
 ## Notes
 
