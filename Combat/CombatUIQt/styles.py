@@ -134,6 +134,17 @@ QLabel#actionResultLabel {
     font-weight: bold;
     font-size: 13px;
 }
+/* The encounter log under the turn column */
+QTextEdit#logFeed {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    font-size: 11px;
+}
+QSplitter#turnSplitter::handle {
+    background-color: #0f3460;
+    height: 3px;
+}
 /* ½ Saved: gold when marked, so it reads at a glance who saved */
 QPushButton#savedToggle:checked {
     background-color: #c9a84c;

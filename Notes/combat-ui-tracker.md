@@ -101,6 +101,15 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] Leave a player's save unresolved, close the app, continue the fight: the strip comes back.
 - [ ] With the setting on, monsters roll their own saves and players' stay on the card.
 
+### Encounter log in the turn column
+
+- [ ] The log is under the Now panel from the first turn, and new lines appear as you play.
+- [ ] Scroll up: it stays put while new lines arrive. Scroll to the end: it follows again.
+- [ ] Ctrl+Z takes the line back out of the log.
+- [ ] Continue a saved fight: the log is there, at the newest line.
+- [ ] Click in the log, then press Enter: Next Combatant or Apply still fires.
+- [ ] Drag the bar above the log. A monster with many actions still fits.
+
 ### 6. Monster turns
 
 - [ ] On a monster's turn, its actions appear in the turn column with their numbers.

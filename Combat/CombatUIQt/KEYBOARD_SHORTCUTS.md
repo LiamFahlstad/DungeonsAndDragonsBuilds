@@ -96,6 +96,8 @@ Under that are the source's stat-block actions, for a monster. Click one and it 
 
 Stat blocks don't say how many legendary actions a monster has, so every legendary creature counts 3.
 
+The bottom of the column is the encounter log, always open, with the newest line last. It's the whole log, including lines the player link hides. Scroll up to read back: it stays there while new lines arrive, and follows them again once you scroll back to the end. Drag the bar above it to give the log or the actions more room.
+
 ## Initiative
 
 **Roll for Monsters** rolls everyone without a player's dice, leaving what's already typed. **Enter** in a field jumps to the next one that needs a number, and starts combat once they're all filled in.

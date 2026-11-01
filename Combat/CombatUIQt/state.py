@@ -24,6 +24,7 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
     QScrollArea,
+    QSplitter,
     QWidget,
 )
 
@@ -123,7 +124,7 @@ class CombatWindowState:
     _half_btn: QPushButton
     _more_controls: QWidget
     _more_controls_btn: QPushButton
-    _turn_panel: QScrollArea
+    _turn_panel: QSplitter
     _action_result_label: QLabel
     roll_result_label: QLabel
     damage_input: QLineEdit

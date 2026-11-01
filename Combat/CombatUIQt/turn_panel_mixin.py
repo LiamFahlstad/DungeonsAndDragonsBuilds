@@ -2,7 +2,8 @@
 up and next, what to remember as the turn starts, and the source's stat-block
 actions as buttons that roll and fill in the Damage field, so a monster's turn
 needs no dialog. Legendary actions, recharges and per-day uses are counted in
-the combatant's public keys, so undo and a saved fight keep them."""
+the combatant's public keys, so undo and a saved fight keep them. The encounter
+log fills the bottom of the column, with its own scrollbar."""
 
 import random
 from dataclasses import asdict
@@ -15,10 +16,12 @@ from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
     QScrollArea,
+    QSplitter,
     QVBoxLayout,
     QWidget,
 )
 
+from .log_feed import LogFeed
 from .monster_actions import (
     LEGENDARY_ACTIONS_PER_ROUND,
     MonsterAction,
@@ -97,17 +100,34 @@ class TurnPanelMixin(CombatWindowState):
         layout.addWidget(self._actions_box)
         layout.addStretch()
 
-        self._turn_panel = QScrollArea()
-        self._turn_panel.setObjectName("controlPanelScroll")
-        self._turn_panel.setWidget(content)
-        self._turn_panel.setWidgetResizable(True)
-        self._turn_panel.setFrameShape(QFrame.Shape.NoFrame)
-        self._turn_panel.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
+        turn_scroll = QScrollArea()
+        turn_scroll.setObjectName("controlPanelScroll")
+        turn_scroll.setWidget(content)
+        turn_scroll.setWidgetResizable(True)
+        turn_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        turn_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+
+        # A splitter, as a stat block with many actions needs more room than
+        # a fight that wants its log.
+        self._turn_panel = QSplitter(Qt.Orientation.Vertical)
+        self._turn_panel.setObjectName("turnSplitter")
+        self._turn_panel.setChildrenCollapsible(False)
+        self._turn_panel.addWidget(turn_scroll)
+        self._turn_panel.addWidget(self._build_log_box())
         self._turn_panel.setFixedWidth(_TURN_PANEL_WIDTH)
         self._turn_panel.hide()
         return self._turn_panel
+
+    def _build_log_box(self) -> QWidget:
+        box = QFrame()
+        box.setObjectName("turnPanel")
+        layout = QVBoxLayout(box)
+        layout.setContentsMargins(10, 6, 10, 10)
+        layout.setSpacing(4)
+        layout.addWidget(self._section_header("Encounter Log"))
+        self._log_feed = LogFeed()
+        layout.addWidget(self._log_feed)
+        return box
 
     def _refresh_views(self):
         """Bring the turn column, the players' screen and the player link up
@@ -116,6 +136,7 @@ class TurnPanelMixin(CombatWindowState):
             self._refresh_turn_labels()
             self._refresh_action_buttons()
             self._refresh_next_button()
+            self._log_feed.show_log(self._read_log())
         self._refresh_player_view()
 
     def _refresh_turn_labels(self):

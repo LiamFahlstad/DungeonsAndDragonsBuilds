@@ -162,9 +162,8 @@ class LoggingMixin(CombatWindowState):
         if self._open_undo_point is not None:
             self._open_undo_point.log_entries.append((key, index))
         self._write_log(data)
-        # Not every event changes a card, and the player link shows the log.
-        if self._player_server.running:
-            self._views_timer.start()
+        # Not every event changes a card, and the turn column shows the log.
+        self._views_timer.start()
 
     def _public_log(self) -> list[dict]:
         """What players may read of this encounter's log, round by round, oldest
