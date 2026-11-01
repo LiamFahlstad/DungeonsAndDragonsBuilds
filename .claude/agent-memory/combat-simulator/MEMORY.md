@@ -1,0 +1,5 @@
+2026-10-31: In tests, call QApplication.processEvents() before the action under test. _start_combat leaves _views_timer pending, so a later processEvents fires it and hides a refresh the action never made (it hid a real Load Encounter bug).
+2026-10-31: Read the Player Screen through view._rows_layout, not findChildren. show_rows uses deleteLater, so replaced rows stay children until Qt's event loop runs, and processEvents alone doesn't delete them.
+2026-10-31: `*.html` is in .gitignore. A new source .html needs a negation line there, or it's silently left out of commits. Check with git check-ignore -v.
+2026-10-31: A real browser check works here without a window: chrome.exe --headless=new --disable-gpu --no-sandbox --user-data-dir=<scratch dir> --virtual-time-budget=<ms> --dump-dom <url>. msedge.exe exits 0 and prints nothing. Chrome's headless window won't go below about 500 px, so hold a phone width with html { width: 360px } in a scratch copy of the page.
+2026-10-31: screenshot.py takes --out before the subcommand: screenshot.py --out <dir> combat.
