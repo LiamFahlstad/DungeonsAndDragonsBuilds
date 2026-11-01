@@ -13,6 +13,7 @@ Tests prove behaviour. They don't show a squashed layout, an unreadable colour o
 python .claude/skills/run-apps/screenshot.py combat [--scenario ashelm_church] [--size 1600x1000]
 python .claude/skills/run-apps/screenshot.py creator [--load-build Builds/Characters/<File>.py] [--tab Equipment]
 python .claude/skills/run-apps/screenshot.py sheet <part of build name> [--feature-tags]
+python .claude/skills/run-apps/screenshot.py --out <dir> combat   # --out goes before the subcommand
 ```
 
 - Each command prints the files it wrote, in a screenshots folder under the system temp directory (or `--out <dir>`). **Read the PNGs** to see them. For `sheet`, read the HTML, or diff it with the `snapshot-diffs` skill.

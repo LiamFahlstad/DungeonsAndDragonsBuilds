@@ -220,6 +220,16 @@ _add_ability_rows treats scores as modifiers unless one is over 10, so a Commone
 **History**
 - 2026-10-31 main-session: found
 
+### DI-033 · Monster action rolls ignore the target's Half or Three-Quarters Cover
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:299`
+
+_attack_hits compares the total with the target's bare AC, though Half Cover (+2) and Three-Quarters Cover (+5) are tracked in the target's visibility_states and SourceTexts/RulesGlossary/Combat/Attacks/Cover.md adds them to AC. Example: a monster action rolling 14 against an AC 13 target with Half Cover (effective AC 15) shows HIT and fills the Damage field; by the rules it misses. The 'vs AC' text at line 260 shows the bare AC too. Fix: one helper for a target's effective AC (first_number plus the cover bonus, the highest grade only), used here and by any other attack check.
+
+**History**
+- 2026-11-01 code-reviewer: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
