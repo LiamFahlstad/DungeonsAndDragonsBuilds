@@ -240,6 +240,16 @@ Saving throws in the Custom Effect dialog count conditions per target (saves.py 
 **History**
 - 2026-11-02 main-session: found
 
+### DI-035 · Monster Spellcasting entries have lost their spell lists: the text stops at the colon
+- **Status:** open
+- **Area:** content-scraper
+- **Where:** `Combat/monsters_raw.json`, `Combat/Tools/generate_monsters.py`
+
+109 of the 115 Spellcasting entries across the monster classes end at 'casts one of the following spells ...:' with no spell names, for example Pixie, Giant Owl and Priest Acolyte. Combat/monsters_raw.json has the same cut text, so the loss is in the scrape, not in generate_monsters.py. Monsters also have no structured spell field. The combat UI therefore can't tell which spells a monster knows. Only hand-written entries such as PriestOfTheBlackTongues list them. Fix: rescrape the lists into monsters_raw.json, then regenerate.
+
+**History**
+- 2026-11-02 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
