@@ -1,8 +1,9 @@
 """The Custom dialog as a save-or-suffer effect (saves.py,
-ConditionsMixin._apply_custom_effect): a saving throw rolled for every target,
-damage rolled once for all of them, and a condition on those who failed, all one
-undo. Expected values come from the rules: Saving-Throw and the Paralyzed,
-Petrified, Stunned, Unconscious and Restrained glossary entries."""
+ConditionsMixin._apply_custom_effect): a saving throw rolled for every target, or
+an attack roll against each one's AC, damage rolled once for all of them, and a
+condition on those who failed or were hit, all one undo. Expected values come
+from the rules: Saving-Throw, Critical-Hit and the Paralyzed, Petrified, Stunned,
+Unconscious and Restrained glossary entries."""
 
 import random
 
@@ -23,11 +24,15 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.amounts import AmountError
+from Combat.CombatUIQt.attack_rolls import AttackRoll
 from Combat.CombatUIQt.saves import (
+    ATTACK_ROLL,
     CustomEffect,
     is_immune_to,
+    known_attack_bonus,
     known_save_dc,
     read_damage,
+    roll_attack,
     roll_save,
     rolled_damage,
     save_modifier,
@@ -1228,3 +1233,456 @@ def test_a_second_combatant_of_a_name_is_numbered(fight):
     ui._add_ad_hoc_combatant("Vine")
     ui._add_ad_hoc_combatant("Vine")
     assert [c["name"] for c in ui.characters[-3:]] == ["Vine", "Vine 2", "Vine 3"]
+
+
+# ---------------------------------------------------------------------------
+# An attack roll instead of a saving throw
+
+BOLT = {"damage": [(20, FIRE)], "attack_bonus": 5}
+
+
+@pytest.fixture
+def armored(fight):
+    """The fight with both targets at AC 15, so a +5 hits on a 10 or more."""
+    _, _, tiger, bandit = fight
+    tiger["ac"] = bandit["ac"] = 15
+    return fight
+
+
+@pytest.mark.parametrize(
+    "d20, roll",
+    [
+        (12, AttackRoll(total=17)),
+        (20, AttackRoll(natural=20)),
+        (1, AttackRoll(natural=1)),
+    ],
+)
+def test_roll_attack(monkeypatch, d20, roll):
+    _d20s(monkeypatch, d20)
+    assert roll_attack(5, "Neutral") == roll
+
+
+@pytest.mark.parametrize("mode, total", [("Advantage", 17), ("Disadvantage", 4)])
+def test_an_attacks_advantage(monkeypatch, mode, total):
+    rolls = iter([4, 17])
+    monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
+    assert roll_attack(0, mode) == AttackRoll(total=total)
+
+
+def test_a_critical_rolls_the_dice_twice_and_adds_modifiers_once(monkeypatch):
+    monkeypatch.setattr(random, "randint", lambda low, high: 3)
+    assert read_damage("2d6 + 3", FIRE, critical=True) == ([(15, FIRE)], "")
+    assert read_damage("28 fi", critical=True) == ([(28, FIRE)], "")
+
+
+def test_meeting_the_ac_hits_and_a_miss_takes_nothing(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert bandit["hp"] == bandit["max_hp"]
+    assert "Pirate's attack roll of 15 hits Tiger" in _log(ui)
+    assert "Pirate's attack roll of 14 misses Bandit" in _log(ui)
+
+
+def test_a_condition_lands_only_on_a_hit(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(condition="Prone", attack_bonus=5))
+    assert "Prone" in tiger["conditions"]
+    assert "Prone" not in bandit["conditions"]
+
+
+def test_cover_counts_against_the_attack(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["visibility_states"] = ["Half Cover"]
+    _d20s(monkeypatch, 10, 10)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["hp"] == tiger["max_hp"]
+
+
+def test_a_natural_20_always_hits_and_is_critical(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = 99
+    _d20s(monkeypatch, 20, 1)
+    ui._apply_custom_effect(CustomEffect(**BOLT, critical_damage=[(25, FIRE)]))
+    assert tiger["hp"] == tiger["max_hp"] - 25
+    assert "natural 20 hits Tiger (critical hit)" in _log(ui)
+
+
+def test_a_natural_1_always_misses(armored, monkeypatch):
+    ui, _, _, bandit = armored
+    _d20s(monkeypatch, 20, 1)
+    ui._apply_custom_effect(CustomEffect(damage=[(5, FIRE)], attack_bonus=99))
+    assert bandit["hp"] == bandit["max_hp"]
+
+
+def test_a_hit_that_isnt_critical_has_the_plain_damage(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    _d20s(monkeypatch, 10, 1)
+    ui._apply_custom_effect(CustomEffect(**BOLT, critical_damage=[(25, FIRE)]))
+    assert tiger["hp"] == tiger["max_hp"] - 20
+
+
+def test_a_critical_with_no_dice_is_the_same_damage(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    _d20s(monkeypatch, 20, 1)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["hp"] == tiger["max_hp"] - 20
+
+
+def test_a_target_with_no_ac_counts_as_hit(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = None
+    _d20s(monkeypatch, 2, 2)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert "Tiger has no AC to check" in ui._status_label.text()
+
+
+@pytest.mark.parametrize("d20, taken", [(10, 20), (9, 0)])
+def test_a_mark_gives_way_to_an_attack_and_is_used_up(armored, monkeypatch, d20, taken):
+    ui, _, tiger, _ = armored
+    ui._toggle_saved(tiger)
+    _d20s(monkeypatch, d20, d20)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["hp"] == tiger["max_hp"] - taken
+    assert ui._saved_targets == []
+
+
+def test_a_typed_attack_is_used(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    _d20s(monkeypatch, 1)  # the Tiger's: the Bandit's roll is typed
+    ui._apply_custom_effect(
+        CustomEffect(**BOLT, typed_attacks={id(bandit): AttackRoll(total=15)})
+    )
+    assert tiger["hp"] == tiger["max_hp"]
+    assert bandit["hp"] == bandit["max_hp"] - 20
+
+
+def test_a_dead_target_isnt_attacked(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["hp"] = 0
+    _d20s(monkeypatch, 10)  # only the Bandit is rolled for
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert "Tiger" not in ui._status_label.text()
+
+
+def test_legendary_resistance_doesnt_stop_an_attack(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["legendary_resistances"] = 2
+    _d20s(monkeypatch, 10, 10)
+    ui._apply_custom_effect(CustomEffect(**BOLT, use_legendary_resistance=True))
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert "legendary_resistances_left" not in tiger
+
+
+def test_concentration_holds_only_who_was_hit(armored, monkeypatch):
+    ui, pirate, _, _ = armored
+    ui._select_character(pirate)
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(
+        CustomEffect(
+            name="Vine", condition="Restrained", attack_bonus=5, concentration=True
+        )
+    )
+    (spell,) = pirate["active_spells"]
+    assert spell["applied"] == [{"target": "Tiger", "condition": "Restrained"}]
+
+
+def test_an_attack_shows_the_players_what_it_showed_of_the_ac(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert tiger["ac_at_most"] == 15
+    assert bandit["ac_above"] == 14
+
+
+def test_a_hidden_attacker_shows_them_nothing(armored, monkeypatch):
+    ui, pirate, tiger, _ = armored
+    pirate["conditions"].append("Invisible")
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(**BOLT))
+    assert "ac_at_most" not in tiger
+
+
+def test_the_player_link_reads_a_hit_with_its_damage(armored, monkeypatch):
+    ui, *_ = armored
+    _d20s(monkeypatch, 12, 2)
+    ui._apply_custom_effect(
+        CustomEffect(damage=[(5, FIRE)], attack_bonus=5, name="Fire Bolt")
+    )
+    (round_log,) = ui._public_log()
+    (turn,) = round_log["turns"]
+    assert turn["lines"] == [
+        {"kind": "other", "text": "Pirate uses Fire Bolt", "amount": ""},
+        {"kind": "hit", "text": "Hits Tiger (17)", "amount": "5 Fire"},
+        {"kind": "miss", "text": "Misses Bandit (Pirate) (7)", "amount": ""},
+    ]
+
+
+def test_an_attack_is_one_undo(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(**BOLT, condition="Prone"))
+    ui._undo_last()
+    assert tiger["hp"] == tiger["max_hp"]
+    assert "Prone" not in tiger["conditions"]
+    assert "ac_at_most" not in tiger
+    assert "ac_above" not in bandit
+    assert "attack roll" not in _log(ui)
+
+
+def test_the_turn_column_and_status_sum_up_an_attack(armored, monkeypatch):
+    ui, *_ = armored
+    _d20s(monkeypatch, 10, 9)
+    ui._apply_custom_effect(CustomEffect(**BOLT, condition="Prone"))
+    assert ui._action_result_label.text() == (
+        "Attack: 1 hit, 1 missed · 20 Fire · Prone"
+    )
+    assert ui._status_label.text() == (
+        "Tiger: 15 vs AC 15, hit; Bandit (Pirate): 14 vs AC 15, miss"
+    )
+
+
+def test_known_attack_bonus():
+    assert known_attack_bonus(None) is None
+    assert known_attack_bonus({"name": "Tiger"}) is None
+    casting = "using Wisdom (spell save DC 14, +6 to hit with spell attacks):"
+    bite = "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage."
+    spellcasting = {"name": "Spellcasting", "description": casting}
+    claws = {"name": "Bite", "description": bite}
+    assert known_attack_bonus({"actions": [spellcasting]}) == 6
+    assert known_attack_bonus({"actions": [claws]}) == 7
+    assert known_attack_bonus({"actions": [claws, spellcasting]}) == 6
+    assert known_attack_bonus({"traits": [spellcasting]}) == 6
+
+
+def test_a_player_with_no_spellcasting_has_no_attack_bonus():
+    class NoCaster:
+        spell_casting_ability = None
+
+    assert known_attack_bonus({"_stat_block": NoCaster()}) is None
+
+
+def _attack_dialog(ui, monkeypatch):
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    return dlg
+
+
+def test_the_dialog_asks_for_a_bonus_instead_of_a_dc(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    dc = dlg.findChild(QSpinBox, "saveDc")
+    bonus = dlg.findChild(QSpinBox, "attackBonus")
+    ability = _combo(dlg, "saveAbility")
+
+    def labels() -> list[str]:
+        return [label.text() for label in dlg.findChildren(type(ui.selected_label))]
+
+    assert dc.isVisibleTo(dlg) and ability.isVisibleTo(dlg)
+    assert not bonus.isVisibleTo(dlg)
+    assert "Condition (on a failed save)" in labels()
+
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    assert bonus.isVisibleTo(dlg)
+    assert not dc.isVisibleTo(dlg) and not ability.isVisibleTo(dlg)
+    assert _combo(dlg, "saveMode").isEnabled()
+    assert "Condition (on a hit)" in labels()
+
+
+def test_the_save_only_ticks_go_away_for_an_attack(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    tiger["legendary_resistances"] = 3
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    boxes = [
+        dlg.findChild(QCheckBox, name)
+        for name in ("halfOnSave", "repeatSave", "useLegendaryResistance")
+    ]
+    assert all(box.isVisibleTo(dlg) for box in boxes)
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    assert not any(box.isVisibleTo(dlg) for box in boxes)
+    _combo(dlg, "rollKind").setCurrentText("Saving throw")
+    assert all(box.isVisibleTo(dlg) for box in boxes)
+
+
+def test_legendary_resistance_stays_away_with_none_left_after_an_attack(
+    fight, monkeypatch
+):
+    ui, *_ = fight
+    dlg = _attack_dialog(ui, monkeypatch)
+    _combo(dlg, "rollKind").setCurrentText("Saving throw")
+    box = dlg.findChild(QCheckBox, "useLegendaryResistance")
+    assert not box.isVisibleTo(dlg)
+
+
+def test_a_hidden_tick_doesnt_carry_over_to_an_attack(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    dlg.findChild(QCheckBox, "repeatSave").setChecked(True)
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    dlg.findChild(QSpinBox, "attackBonus").setValue(5)
+    _combo(dlg, "conditionName").setCurrentText("Prone")
+    _d20s(monkeypatch, 10, 10)
+    _apply(dlg)
+    assert "Prone" in tiger["conditions"]
+    assert "repeat_saves" not in tiger
+
+
+def test_the_dialog_applies_an_attack(armored, monkeypatch):
+    ui, _, tiger, bandit = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QSpinBox, "attackBonus").setValue(5)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    _combo(dlg, "conditionName").setCurrentText("Prone")
+    _d20s(monkeypatch, 10, 9)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert "Prone" in tiger["conditions"]
+    assert bandit["hp"] == bandit["max_hp"]
+    assert "attack roll of 15 hits Tiger" in _log(ui)
+
+
+def test_the_dialogs_attack_rolls_more_dice_on_a_critical(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("2d6 + 3 fire")
+    monkeypatch.setattr(random, "randint", lambda low, high: 20 if high == 20 else 3)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 15
+
+
+def test_an_attack_needs_nothing_else(armored, monkeypatch):
+    ui, *_ = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    _d20s(monkeypatch, 10, 9)
+    _apply(dlg)
+    assert "attack roll" in _log(ui)
+
+
+def test_the_dialog_remembers_the_attack(armored, monkeypatch):
+    ui, *_ = armored
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    ability = _combo(dlg, "saveAbility")
+    ability.setCurrentIndex(ability.findData("WIS"))
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    dlg.findChild(QSpinBox, "attackBonus").setValue(7)
+    _d20s(monkeypatch, 1, 1)
+    _apply(dlg)
+
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert _combo(dlg, "rollKind").currentText() == ATTACK_ROLL
+    assert dlg.findChild(QSpinBox, "attackBonus").value() == 7
+    assert dlg.findChild(QSpinBox, "attackBonus").isVisibleTo(dlg)
+    assert _combo(dlg, "saveAbility").currentData() == "WIS"
+
+
+def test_the_dialog_fits_the_smallest_window_for_an_attack(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = _attack_dialog(ui, monkeypatch)
+    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+
+
+def test_the_bonus_starts_at_a_monsters_attack(fight, monkeypatch):
+    ui, pirate, *_ = fight
+    ui._select_character(pirate)
+    pirate["actions"] = [
+        {"name": "Slash", "description": "Melee Attack Roll: +6, reach 5 ft."}
+    ]
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert dlg.findChild(QSpinBox, "attackBonus").value() == 6
+
+
+def test_a_negative_bonus_starts_as_it_is(fight, monkeypatch):
+    ui, pirate, *_ = fight
+    ui._select_character(pirate)
+    pirate["actions"] = [
+        {"name": "Slap", "description": "Melee Attack Roll: -1, reach 5 ft."}
+    ]
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert dlg.findChild(QSpinBox, "attackBonus").value() == -1
+
+
+def test_the_bonus_starts_at_the_casters(paladin_fight, monkeypatch):
+    ui, edmund, _ = paladin_fight
+    ui._select_character(edmund)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    expected = edmund["_stat_block"].calculate_attack_bonus()
+    assert dlg.findChild(QSpinBox, "attackBonus").value() == expected
+
+
+def test_a_player_attacking_types_a_roll_for_each_target(paladin_fight, monkeypatch):
+    ui, edmund, tiger = paladin_fight
+    tiger["ac"] = 15
+    ui._select_character(edmund)
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("2d6 fire")
+    first, second = dlg.findChildren(QLineEdit, "typedAttack")
+    assert first.isVisibleTo(dlg)
+    assert not dlg.findChild(QLineEdit, "typedTotal").isVisibleTo(dlg)
+    first.setText("1")  # Edmund's
+    second.setText("nat 20")  # the Tiger's
+    monkeypatch.setattr(random, "randint", lambda low, high: 3)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 12
+
+
+def test_any_sources_roll_can_be_typed(armored, monkeypatch):
+    """A player's summon isn't a player, but they roll for it at the table."""
+    ui, _, tiger, bandit = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    first, second = dlg.findChildren(QLineEdit, "typedAttack")
+    first.setText("15")
+    _d20s(monkeypatch, 1)  # second is blank, so the Bandit's is rolled
+    _apply(dlg)
+    assert second.text() == ""
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert bandit["hp"] == bandit["max_hp"]
+
+
+def test_a_typed_attack_is_the_total_with_the_bonus_in_it(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QSpinBox, "attackBonus").setValue(5)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    dlg.findChildren(QLineEdit, "typedAttack")[0].setText("14")
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"]
+    assert "attack roll of 14 misses Tiger" in _log(ui)
+
+
+def test_enter_in_a_typed_attack_applies(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    box = dlg.findChildren(QLineEdit, "typedAttack")[0]
+    box.setText("nat 20")
+    _d20s(monkeypatch, 1)
+    box.returnPressed.emit()
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert "natural 20 hits Tiger (critical hit)" in _log(ui)
+
+
+def test_the_typed_attacks_wait_for_an_attack_roll(armored, monkeypatch):
+    ui, *_ = armored
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    box = dlg.findChildren(QLineEdit, "typedAttack")[0]
+    assert not box.isVisibleTo(dlg)
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    assert box.isVisibleTo(dlg)
+
+
+def test_a_bad_typed_attack_says_so(paladin_fight, monkeypatch):
+    ui, edmund, tiger = paladin_fight
+    ui._select_character(edmund)
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    dlg.findChildren(QLineEdit, "typedAttack")[0].setText("abc")
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"]
+    assert ui.history == []
+    labels = [label.text() for label in dlg.findChildren(type(ui.selected_label))]
+    assert any("isn't an attack roll" in text for text in labels), labels

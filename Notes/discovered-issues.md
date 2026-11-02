@@ -230,6 +230,16 @@ _attack_hits compares the total with the target's bare AC, though Half Cover (+2
 **History**
 - 2026-11-01 code-reviewer: found
 
+### DI-034 · Attack rolls don't count conditions: Advantage/Disadvantage from Restrained, Paralyzed, Blinded, Poisoned etc., and Paralyzed/Unconscious critical hits
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/saves.py:roll_attack`, `Combat/CombatUIQt/turn_panel_mixin.py:_roll_d20_for_attack`
+
+Saving throws in the Custom Effect dialog count conditions per target (saves.py _with_conditions), but none of the three attack paths do: roll_attack (Custom Effect), the monster action buttons, and the Attack roll field. In the Custom Effect dialog one Advantage setting covers every target, so a +5 attack on a Paralyzed Tiger and a healthy Bandit can't be rolled correctly in one go. Attack rolls against Blinded, Paralyzed, Petrified, Restrained, Stunned or Unconscious creatures have Advantage; a Blinded, Poisoned, Prone or Restrained attacker has Disadvantage. Prone targets and the automatic critical hits on Paralyzed/Unconscious depend on being within 5 feet, which the UI doesn't know, so those need flagging for the GM rather than applying. Documented as not counted in KEYBOARD_SHORTCUTS.md.
+
+**History**
+- 2026-11-02 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

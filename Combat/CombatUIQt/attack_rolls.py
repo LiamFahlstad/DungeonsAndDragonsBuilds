@@ -12,6 +12,7 @@ from .amounts import parse_amount
 
 _NATURAL = re.compile(r"\s*nat(?:ural)?\s*(1|20)\s*", re.IGNORECASE)
 _ALWAYS_HITS = 20
+_ALWAYS_MISSES = 1
 # What cover adds to a target's AC. Total Cover can't be targeted at all.
 _COVER_BONUSES = {
     Visibility.HALF_COVER.value: 2,
@@ -48,6 +49,13 @@ def parse_attack_roll(text: str) -> AttackRoll | None:
         return AttackRoll(natural=int(natural[1]))
     total = parse_amount(text)
     return None if total is None else AttackRoll(total=total)
+
+
+def rolled_attack(d20: int, bonus: int) -> AttackRoll:
+    """The attack roll a d20 and the attacker's bonus make."""
+    if d20 in (_ALWAYS_HITS, _ALWAYS_MISSES):
+        return AttackRoll(natural=d20)
+    return AttackRoll(total=d20 + bonus)
 
 
 def cover_bonus(char: dict) -> int:

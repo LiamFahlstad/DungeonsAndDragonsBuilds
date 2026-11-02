@@ -88,6 +88,14 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] A player's reminder still shows when a dead monster's turn follows theirs.
 - [ ] Close the app mid-fight and continue: a player's spells, timers and repeat saves come back.
 - [ ] A ½ Saved mark with no saving throw: half damage and no condition.
+- [ ] Switch Roll to Attack roll: the bonus replaces the ability and DC, and the save-only ticks disappear.
+- [ ] The bonus starts at the source's spell attack bonus, or a monster's first attack.
+- [ ] A monster's attack on several targets: each is rolled against its own AC, and a miss takes nothing.
+- [ ] A target in Half Cover needs 2 more to hit.
+- [ ] Any source: type a roll made at the table for each target, `nat 20` included, or leave it blank to roll.
+- [ ] A natural 20 rolls the damage dice twice over, and the condition lands; a natural 1 misses.
+- [ ] The status line shows each roll against the AC, and the turn column the hits and misses.
+- [ ] On the player link, a hit shows with its damage, and the Limited view narrows the AC down.
 
 ### 5. Concentration
 

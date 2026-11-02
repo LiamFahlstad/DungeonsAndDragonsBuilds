@@ -32,6 +32,7 @@ from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData
 
+from .attack_rolls import AttackRoll
 from .player_server import PlayerServer
 from .settings import CombatSettings
 from .undo import UndoPoint
@@ -234,6 +235,11 @@ class CombatWindowState:
         saved: bool,
     ):
         raise NotImplementedError("DamageMixin._deal_damage")
+
+    def _resolve_attack_roll(
+        self, target: dict, roll: AttackRoll, source: dict | None
+    ) -> tuple[bool | None, str]:
+        raise NotImplementedError("DamageMixin._resolve_attack_roll")
 
     def _use_legendary_resistance(self, char: dict):
         raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")

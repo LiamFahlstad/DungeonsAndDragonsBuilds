@@ -5,7 +5,12 @@ import random
 from Combat.Definitions import Action
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
-from .attack_rolls import cover_bonus, note_attack_roll, parse_attack_roll
+from .attack_rolls import (
+    AttackRoll,
+    cover_bonus,
+    note_attack_roll,
+    parse_attack_roll,
+)
 from .monster_actions import first_number
 from .player_view import _can_be_seen, note_damage_defense, note_health
 from .saves import save_modifier
@@ -131,12 +136,10 @@ class DamageMixin(CombatWindowState):
         return typed
 
     def _check_attack_roll(self) -> tuple[list[dict], str] | None:
-        """Check the Attack roll field against each target's AC and cover and
-        log how it went. Returns the targets it hit, including any with no AC to
-        check, and how it went against the AC, for the status line, or None if
-        there's nothing to check, after saying why. The log doesn't say the AC,
-        as the Limited view's players read it too. They don't learn from a
-        hidden attacker's roll, which they never saw."""
+        """Check the Attack roll field against each target. Returns the targets
+        it hit, including any with no AC to check, and how it went against the
+        AC, for the status line, or None if there's nothing to check, after
+        saying why."""
         if not self.target_characters:
             self._show_status("Nothing applied: right-click a card to pick a target.")
             return None
@@ -148,31 +151,41 @@ class DamageMixin(CombatWindowState):
             return None
 
         source = self.selected_character or self._current_turn_character()
-        attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
         hit_targets = []
         results = []
         for target in self.target_characters:
-            armor = first_number(target.get("ac"))
-            cover = cover_bonus(target)
-            hit = roll.hits(None if armor is None else armor + cover)
-            if source is None or _can_be_seen(source):
-                note_attack_roll(target, roll, hit, cover)
+            hit, result = self._resolve_attack_roll(target, roll, source)
             if hit is not False:
                 hit_targets.append(target)
-            name = target["name"]
-            critical = " (critical hit)" if roll.is_critical else ""
-            self._log_event(
-                f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}",
-                character=name,
-            )
-            if armor is None:
-                results.append(f"{name} has no AC to check")
-                continue
-            faced = f"AC {armor + cover} with cover" if cover else f"AC {armor}"
-            word = "hit" if hit else "miss"
-            results.append(f"{name}: {roll.text} vs {faced}, {word}")
+            results.append(result)
         self.attack_roll_input.clear()
         return hit_targets, "; ".join(results)
+
+    def _resolve_attack_roll(
+        self, target: dict, roll: AttackRoll, source: dict | None
+    ) -> tuple[bool | None, str]:
+        """Check `roll` against target's AC and cover and log how it went.
+        Returns whether it hit, None with no AC to check, and how it went
+        against the AC, for the status line. The log doesn't say the AC, as the
+        Limited view's players read it too. They don't learn from a hidden
+        attacker's roll, which they never saw."""
+        armor = first_number(target.get("ac"))
+        cover = cover_bonus(target)
+        hit = roll.hits(None if armor is None else armor + cover)
+        if source is None or _can_be_seen(source):
+            note_attack_roll(target, roll, hit, cover)
+        name = target["name"]
+        attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
+        critical = " (critical hit)" if roll.is_critical else ""
+        self._log_event(
+            f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}",
+            character=name,
+        )
+        if armor is None:
+            return hit, f"{name} has no AC to check"
+        faced = f"AC {armor + cover} with cover" if cover else f"AC {armor}"
+        word = "hit" if hit else "miss"
+        return hit, f"{name}: {roll.text} vs {faced}, {word}"
 
     @undoable
     def _apply_attack_roll(self):

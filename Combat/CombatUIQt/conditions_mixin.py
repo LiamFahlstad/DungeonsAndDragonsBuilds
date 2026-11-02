@@ -12,21 +12,27 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QSpinBox,
     QVBoxLayout,
+    QWidget,
 )
 
 from Combat.Definitions import Action, CombatStatus
 from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from .amounts import AmountError
+from .attack_rolls import AttackRoll, parse_attack_roll
 from .monster_actions import legendary_resistances_left
 from .player_view import note_condition_immunity
 from .saves import (
     ABILITIES,
+    ATTACK_ROLL,
     ROLL_MODES,
+    SAVING_THROW,
     CustomEffect,
     is_immune_to,
+    known_attack_bonus,
     known_save_dc,
     read_damage,
+    roll_attack,
     roll_save,
     rolled_damage,
 )
@@ -63,6 +69,8 @@ CUSTOM_CONDITION_DURATIONS: list[tuple[str, dict | None]] = [
 
 _CUSTOM_DIALOG_WIDTH = 760
 MAX_SAVE_DC = 40
+MIN_ATTACK_BONUS = -10
+MAX_ATTACK_BONUS = 30
 # How long a concentration effect runs with no time on it: the longest there is
 # in general use, for the GM to end by hand or by losing concentration.
 LONGEST_CONCENTRATION = 60 * 60
@@ -266,9 +274,11 @@ class ConditionsMixin(CombatWindowState):
     @undoable
     def _apply_custom_effect(self, effect: CustomEffect):
         """Apply a Custom dialog effect to every living target: what it costs
-        the source, then with a saving throw, each one rolls, and a save halves
-        the damage (or avoids it) and avoids the condition. With no saving
-        throw, everyone takes it all, except those marked ½ Saved, who saved
+        the source, then with an attack roll, the source rolls against each
+        one's AC: a hit takes it all, a critical hit with the dice rolled twice
+        over, and a miss takes nothing. With a saving throw, each one rolls, and
+        a save halves the damage (or avoids it) and avoids the condition. With
+        neither, everyone takes it all, except those marked ½ Saved, who saved
         by hand and count the same."""
         living = [
             t for t in self.target_characters if self._char_death_state(t) != "dead"
@@ -286,18 +296,37 @@ class ConditionsMixin(CombatWindowState):
                 self._add_action_use(effect.action_cost)
             if effect.concentration:
                 self._start_concentration(caster, label)
+        if effect.attack_bonus is not None and effect.name and source is not None:
+            # The attack lines stay as the player link reads them (public_log.py).
+            self._log_event(
+                f"{source['name']} uses {effect.name}", character=source["name"]
+            )
 
         results = []
+        attacks = []
         applied = []
         for target in living:
             saved = any(target is s for s in self._saved_targets)
+            damage = effect.damage
+            if effect.attack_bonus is not None:
+                roll = effect.typed_attacks.get(id(target)) or roll_attack(
+                    effect.attack_bonus, effect.mode
+                )
+                hit, attack = self._resolve_attack_roll(target, roll, source)
+                results.append(hit is not False)
+                attacks.append(attack)
+                if hit is False:
+                    continue
+                saved = False
+                if roll.is_critical:
+                    damage = effect.critical_damage or damage
             if effect.ability is not None:
                 saved = self._roll_effect_save(target, effect)
                 results.append(saved)
             avoided = effect.ability is not None and saved and not effect.half_on_save
-            if effect.damage and not avoided:
+            if damage and not avoided:
                 self._deal_damage(
-                    target, effect.damage, source, effect.count_resistances, saved
+                    target, damage, source, effect.count_resistances, saved
                 )
             if not effect.condition or saved:
                 continue
@@ -318,6 +347,8 @@ class ConditionsMixin(CombatWindowState):
             self._rebuild_card(target)
         self._save_fight_state()
         self._show_effect_summary(effect, results)
+        if attacks:  # last, as logging clears the status line
+            self._show_status("; ".join(attacks))
 
     def _hold_concentration(
         self, caster: dict, label: str, effect: CustomEffect, applied: list[dict]
@@ -467,6 +498,9 @@ class ConditionsMixin(CombatWindowState):
     def _show_effect_summary(self, effect: CustomEffect, results: list[bool]):
         """Say how it went in the turn column; the log has each target's roll."""
         words = [effect.name] if effect.name else []
+        if effect.attack_bonus is not None:
+            hits = sum(results)
+            words.append(f"Attack: {hits} hit, {len(results) - hits} missed")
         if effect.ability is not None:
             saved = sum(results)
             words.append(
@@ -481,8 +515,8 @@ class ConditionsMixin(CombatWindowState):
 
     def _show_custom_condition_dialog(self):
         """Set up an effect on every target (see _apply_custom_effect): what
-        it costs the source, a saving throw, damage, and a condition with its
-        duration and a note."""
+        it costs the source, a saving throw or an attack roll, damage, and a
+        condition with its duration and a note."""
         if not self.target_characters:
             self._show_status("Nothing applied: right-click a card to pick a target.")
             return
@@ -520,8 +554,14 @@ class ConditionsMixin(CombatWindowState):
         columns.addLayout(effect_col, stretch=1)
         layout.addLayout(columns)
 
-        # The saving throw, and what it decides
-        save_col.addWidget(self._section_header("Saving throw"))
+        # The saving throw or attack roll, and what it decides
+        save_col.addWidget(self._section_header("Roll"))
+        roll_row = QHBoxLayout()
+        roll_combo = QComboBox()
+        roll_combo.setObjectName("rollKind")
+        roll_combo.addItems((SAVING_THROW, ATTACK_ROLL))
+        roll_combo.setCurrentText(self._custom_save["roll"])
+        roll_row.addWidget(roll_combo, stretch=1)
         ability_combo = QComboBox()
         ability_combo.setObjectName("saveAbility")
         ability_combo.addItem("No saving throw", None)
@@ -530,10 +570,12 @@ class ConditionsMixin(CombatWindowState):
         ability_combo.setCurrentIndex(
             max(ability_combo.findData(self._custom_save["ability"]), 0)
         )
-        save_col.addWidget(ability_combo)
+        roll_row.addWidget(ability_combo, stretch=1)
+        save_col.addLayout(roll_row)
 
         dc_row = QHBoxLayout()
-        dc_row.addWidget(QLabel("DC:"))
+        dc_label = QLabel("DC:")
+        dc_row.addWidget(dc_label)
         dc_input = QSpinBox()
         dc_input.setObjectName("saveDc")
         dc_input.setRange(1, MAX_SAVE_DC)
@@ -541,6 +583,17 @@ class ConditionsMixin(CombatWindowState):
         known_dc = None if same_source else known_save_dc(source)
         dc_input.setValue(known_dc or self._custom_save["dc"])
         dc_row.addWidget(dc_input)
+        bonus_label = QLabel("Bonus:")
+        dc_row.addWidget(bonus_label)
+        bonus_input = QSpinBox()
+        bonus_input.setObjectName("attackBonus")
+        bonus_input.setRange(MIN_ATTACK_BONUS, MAX_ATTACK_BONUS)
+        bonus_input.setToolTip("What the source adds to its d20")
+        known_bonus = None if same_source else known_attack_bonus(source)
+        bonus_input.setValue(
+            self._custom_save["bonus"] if known_bonus is None else known_bonus
+        )
+        dc_row.addWidget(bonus_input)
         mode_combo = QComboBox()
         mode_combo.setObjectName("saveMode")
         mode_combo.addItems(ROLL_MODES)
@@ -562,23 +615,47 @@ class ConditionsMixin(CombatWindowState):
 
         resist_box = QCheckBox("Use Legendary Resistance on a failed save")
         resist_box.setObjectName("useLegendaryResistance")
-        resist_box.setVisible(
-            any(legendary_resistances_left(t) > 0 for t in self.target_characters)
+        can_resist = any(
+            legendary_resistances_left(t) > 0 for t in self.target_characters
         )
         save_col.addWidget(resist_box)
 
+        def typed_rows(
+            chars: list[dict], object_name: str, hint: str
+        ) -> tuple[QWidget, dict[int, QLineEdit]]:
+            """A box for each of chars, for what was rolled at the table."""
+            rows = QWidget()
+            rows_layout = QVBoxLayout(rows)
+            rows_layout.setContentsMargins(0, 0, 0, 0)
+            rows_layout.setSpacing(6)
+            inputs = {}
+            for char in chars:
+                row = QHBoxLayout()
+                row.addWidget(QLabel(char["name"]), stretch=1)
+                total_input = QLineEdit()
+                total_input.setObjectName(object_name)
+                total_input.setPlaceholderText(hint)
+                row.addWidget(total_input, stretch=1)
+                rows_layout.addLayout(row)
+                inputs[id(char)] = total_input
+            save_col.addWidget(rows)
+            return rows, inputs
+
         # A player rolling their own dice types the total; the rest are rolled.
-        typed_inputs: dict[int, QLineEdit] = {}
-        players = [t for t in self.target_characters if t.get("_is_player")]
-        for player in players:
-            row = QHBoxLayout()
-            row.addWidget(QLabel(player["name"]), stretch=1)
-            total_input = QLineEdit()
-            total_input.setObjectName("typedTotal")
-            total_input.setPlaceholderText("Total, or blank to roll")
-            row.addWidget(total_input, stretch=1)
-            save_col.addLayout(row)
-            typed_inputs[id(player)] = total_input
+        # They roll a save for themselves, and an attack against each target.
+        save_rows, typed_inputs = typed_rows(
+            [t for t in self.target_characters if t.get("_is_player")],
+            "typedTotal",
+            "Total, or blank to roll",
+        )
+        attack_rows, attack_inputs = typed_rows(
+            self.target_characters, "typedAttack", "Total, or blank to roll"
+        )
+        for roll_input in attack_inputs.values():
+            roll_input.setToolTip(
+                "The total with the bonus already in it, like 17 or 12+5, or"
+                " nat 20 or nat 1. Blank rolls for the source."
+            )
 
         # What it costs the source
         save_col.addWidget(self._section_header("Source"))
@@ -634,7 +711,8 @@ class ConditionsMixin(CombatWindowState):
         resistances_box.setChecked(True)
         effect_col.addWidget(resistances_box)
 
-        effect_col.addWidget(self._section_header("Condition (on a failed save)"))
+        condition_header = self._section_header("")
+        effect_col.addWidget(condition_header)
         name_combo = QComboBox()
         name_combo.setObjectName("conditionName")
         name_combo.setEditable(True)
@@ -681,12 +759,24 @@ class ConditionsMixin(CombatWindowState):
             for widget in custom_widgets:
                 widget.setVisible(duration_combo.currentData() == "custom")
 
-        def show_save_controls():
-            has_save = ability_combo.currentData() is not None
-            for widget in (dc_input, mode_combo, half_box, repeat_box, resist_box):
+        def show_roll_controls():
+            is_attack = roll_combo.currentText() == ATTACK_ROLL
+            has_save = not is_attack and ability_combo.currentData() is not None
+            for widget in (ability_combo, dc_label, dc_input, half_box, repeat_box):
+                widget.setVisible(not is_attack)
+            for widget in (bonus_label, bonus_input):
+                widget.setVisible(is_attack)
+            resist_box.setVisible(can_resist and not is_attack)
+            save_rows.setVisible(bool(typed_inputs) and not is_attack)
+            attack_rows.setVisible(bool(attack_inputs) and is_attack)
+            mode_combo.setEnabled(has_save or is_attack)
+            for widget in (dc_input, half_box, repeat_box, resist_box):
                 widget.setEnabled(has_save)
             for total_input in typed_inputs.values():
                 total_input.setEnabled(has_save)
+            condition_header.setText(
+                "Condition (on a hit)" if is_attack else "Condition (on a failed save)"
+            )
 
         def show_typed_type(text: str):
             try:
@@ -697,10 +787,11 @@ class ConditionsMixin(CombatWindowState):
                 type_combo.setCurrentIndex(type_combo.findData(parts[0][1]))
 
         duration_combo.currentIndexChanged.connect(show_custom_row)
-        ability_combo.currentIndexChanged.connect(show_save_controls)
+        roll_combo.currentIndexChanged.connect(show_roll_controls)
+        ability_combo.currentIndexChanged.connect(show_roll_controls)
         damage_input.textChanged.connect(show_typed_type)
         show_custom_row()
-        show_save_controls()
+        show_roll_controls()
 
         problem_lbl = QLabel("")
         problem_lbl.setObjectName("statusLabel")
@@ -735,10 +826,27 @@ class ConditionsMixin(CombatWindowState):
                     return None
             return totals
 
+        def typed_attacks() -> dict[int, AttackRoll] | None:
+            """The attack rolls typed, or None having said what's wrong with one."""
+            rolls = {}
+            for key, roll_input in attack_inputs.items():
+                text = roll_input.text().strip()
+                if not text:
+                    continue
+                roll = parse_attack_roll(text)
+                if roll is None:
+                    problem_lbl.setText(
+                        f"'{text}' isn't an attack roll. Try 17, 12+5 or nat 20."
+                    )
+                    return None
+                rolls[key] = roll
+            return rolls
+
         def do_apply():
             if applied:
                 return
-            ability = ability_combo.currentData()
+            is_attack = roll_combo.currentText() == ATTACK_ROLL
+            ability = None if is_attack else ability_combo.currentData()
             typed_condition = name_combo.currentText().strip()
             # "stunned" is Stunned, so the rules see it as they should.
             condition = next(
@@ -749,11 +857,12 @@ class ConditionsMixin(CombatWindowState):
             if problem:
                 problem_lbl.setText(problem)
                 return
-            if ability is None and not damage and not condition:
+            if not is_attack and ability is None and not damage and not condition:
                 problem_lbl.setText("Add a saving throw, damage or a condition.")
                 return
             totals = typed_totals() if ability is not None else {}
-            if totals is None:
+            attacks = typed_attacks() if is_attack else {}
+            if totals is None or attacks is None:
                 return
             applied.append(True)
             duration = duration_combo.currentData()
@@ -761,11 +870,18 @@ class ConditionsMixin(CombatWindowState):
                 unit = CUSTOM_DURATION_UNITS[unit_combo.currentText()]
                 duration = {"seconds": amount_input.value() * unit}
             self._custom_save = {
-                "ability": ability,
+                "roll": roll_combo.currentText(),
+                "ability": ability_combo.currentData(),
                 "dc": dc_input.value(),
                 "half": half_box.isChecked(),
+                "bonus": bonus_input.value(),
                 "source": source,
             }
+            critical_damage = []
+            if is_attack:
+                critical_damage, _ = read_damage(
+                    damage_input.text(), type_combo.currentData(), critical=True
+                )
             self._apply_custom_effect(
                 CustomEffect(
                     name=name_input.text().strip(),
@@ -773,10 +889,13 @@ class ConditionsMixin(CombatWindowState):
                     duration=duration,
                     notes=notes_input.text(),
                     damage=damage,
+                    critical_damage=critical_damage,
                     count_resistances=resistances_box.isChecked(),
                     slot_level=slot_combo.currentData(),
                     action_cost=action_combo.currentData(),
                     concentration=concentrate_box.isChecked(),
+                    attack_bonus=bonus_input.value() if is_attack else None,
+                    typed_attacks=attacks,
                     ability=ability,
                     dc=dc_input.value(),
                     mode=mode_combo.currentText(),
@@ -793,7 +912,7 @@ class ConditionsMixin(CombatWindowState):
         notes_input.returnPressed.connect(do_apply)
         damage_input.returnPressed.connect(do_apply)
         name_input.returnPressed.connect(do_apply)
-        for total_input in typed_inputs.values():
+        for total_input in [*typed_inputs.values(), *attack_inputs.values()]:
             total_input.returnPressed.connect(do_apply)
         cancel_btn.clicked.connect(dlg.reject)
 

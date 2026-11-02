@@ -1,6 +1,6 @@
-"""Saving throws the combat UI rolls for its targets, for the Custom dialog's
-effects: what each target adds, what the rules change about the roll, and damage
-typed as dice, which is rolled once for everyone it hits."""
+"""Saving throws and attack rolls the combat UI rolls for its targets, for the
+Custom dialog's effects: what each target adds, what the rules change about the
+roll, and damage typed as dice, which is rolled once for everyone it hits."""
 
 import random
 import re
@@ -9,7 +9,8 @@ from dataclasses import dataclass, field
 from Core.Rules import ability_modifier
 
 from .amounts import AmountError, parse_damage
-from .monster_actions import ability_text, roll_dice
+from .attack_rolls import AttackRoll, rolled_attack
+from .monster_actions import ability_text, parse_action, roll_dice
 
 # The saving throws, as (the name, the short name a combatant's scores use).
 ABILITIES = (
@@ -22,6 +23,10 @@ ABILITIES = (
 )
 ROLL_MODES = ("Neutral", "Advantage", "Disadvantage")
 DEFAULT_SAVE_DC = 13
+DEFAULT_ATTACK_BONUS = 0
+# How the Custom dialog decides who an effect lands on.
+SAVING_THROW = "Saving throw"
+ATTACK_ROLL = "Attack roll"
 
 # "You automatically fail Strength and Dexterity saving throws."
 _AUTO_FAIL_CONDITIONS = ("Paralyzed", "Petrified", "Stunned", "Unconscious")
@@ -29,6 +34,7 @@ _AUTO_FAIL_ABILITIES = ("STR", "DEX")
 
 _DICE = re.compile(r"\d+d[1-9]\d*")
 _SPELL_SAVE_DC = re.compile(r"spell save DC\s+(\d+)")
+_SPELL_ATTACK = re.compile(r"([+-]\d+) to hit with spell attacks")
 
 
 @dataclass
@@ -48,15 +54,22 @@ class CustomEffect:
     notes: str = ""
     # Rolled once, for everyone: (amount, damage type) for each type.
     damage: list[tuple[int, str]] = field(default_factory=list)
+    # The same with its dice rolled twice over, for a critical hit.
+    critical_damage: list[tuple[int, str]] = field(default_factory=list)
     count_resistances: bool = True
     # What it costs the source.
     slot_level: int | None = None
     action_cost: str | None = None
     concentration: bool = False
-    # The saving throw, if there is one. Without one, everyone is affected.
+    # The attack roll, if it's one instead of a saving throw: what the source
+    # adds, and the rolls made at the table, by the combatant's id().
+    attack_bonus: int | None = None
+    typed_attacks: dict[int, AttackRoll] = field(default_factory=dict)
+    # The saving throw, if there is one. Without one or an attack roll, everyone
+    # is affected.
     ability: str | None = None
     dc: int = 0
-    mode: str = "Neutral"
+    mode: str = "Neutral"  # for the attack roll too
     half_on_save: bool = True
     use_legendary_resistance: bool = False
     # The condition ends on a save at the end of each of the target's turns.
@@ -121,6 +134,11 @@ def roll_save(
     return SaveResult(total >= dc, total, note)
 
 
+def roll_attack(bonus: int, mode: str) -> AttackRoll:
+    """An attack roll for a source that adds `bonus`."""
+    return rolled_attack(_roll_d20(mode), bonus)
+
+
 def is_immune_to(char: dict, condition: str) -> bool:
     """A monster's stat block lists its immunities, and a player's character
     knows theirs. Petrified also gives Immunity to the Poisoned condition."""
@@ -143,24 +161,47 @@ def known_save_dc(char: dict | None) -> int | None:
         if sheet.spell_casting_ability is None:
             return None
         return sheet.calculate_difficulty_class()
+    return _number_in_stat_block(char, _SPELL_SAVE_DC)
+
+
+def known_attack_bonus(char: dict | None) -> int | None:
+    """What char adds to its spell attacks, if that's known: a player's from
+    their character, a monster's from its Spellcasting text. Otherwise a
+    monster's first attack: it has no other to go on."""
+    if char is None:
+        return None
+    sheet = char.get("_stat_block")
+    if sheet is not None:
+        if sheet.spell_casting_ability is None:
+            return None
+        return sheet.calculate_attack_bonus()
+    bonus = _number_in_stat_block(char, _SPELL_ATTACK)
+    if bonus is not None:
+        return bonus
+    attacks = map(parse_action, char.get("actions") or [])
+    return next((a.to_hit for a in attacks if a.to_hit is not None), None)
+
+
+def _number_in_stat_block(char: dict, pattern: re.Pattern[str]) -> int | None:
+    """The first match of `pattern` in char's actions and traits."""
     for key in ("actions", "traits"):
         for ability in char.get(key) or []:
-            match = _SPELL_SAVE_DC.search(ability_text(ability)[1])
+            match = pattern.search(ability_text(ability)[1])
             if match:
                 return int(match.group(1))
     return None
 
 
-def rolled_damage(text: str) -> list[tuple[int, str | None]]:
+def rolled_damage(text: str, critical: bool = False) -> list[tuple[int, str | None]]:
     """The damage typed, with any dice rolled ("8d6 fire", "28 fi", "2d6 + 3 fi
-    + 1d4 co"). An effect's damage is rolled once, for everyone it hits. Raises
-    AmountError if it can't be read."""
-    rolled = _DICE.sub(lambda m: str(roll_dice(m.group(0))), text)
+    + 1d4 co"), twice over for a critical hit. An effect's damage is rolled
+    once, for everyone it hits. Raises AmountError if it can't be read."""
+    rolled = _DICE.sub(lambda m: str(roll_dice(m.group(0), critical)), text)
     return parse_damage(rolled, floor_at_zero=True)
 
 
 def read_damage(
-    text: str, chosen_type: str | None = None
+    text: str, chosen_type: str | None = None, critical: bool = False
 ) -> tuple[list[tuple[int, str]], str]:
     """Damage from the Custom dialog as (parts, what's wrong with it, if
     anything). With no type typed, it takes `chosen_type`, the dropdown's.
@@ -169,7 +210,7 @@ def read_damage(
     if not text.strip():
         return [], ""
     try:
-        parts = rolled_damage(text)
+        parts = rolled_damage(text, critical)
     except AmountError as error:
         return [], f"Damage: {error}."
     named = next((damage_type for _, damage_type in parts if damage_type), None)
