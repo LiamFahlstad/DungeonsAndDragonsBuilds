@@ -101,6 +101,11 @@ QLabel#secondary {
     font-size: 11px;
 }
 
+/* What to check about a Custom Effect pick */
+QLabel#effectNote {
+    color: #d4b26a;
+}
+
 /* Condition badge */
 QLabel#conditionBadge {
     background-color: #7a5c00;

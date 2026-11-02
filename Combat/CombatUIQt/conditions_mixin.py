@@ -1,16 +1,22 @@
 """Conditions mixin for CombatAppQt."""
 
 import re
+from html import escape
 
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QSpinBox,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -18,16 +24,20 @@ from PyQt6.QtWidgets import (
 from Combat.Definitions import Action, CombatStatus
 from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
-from .amounts import AmountError
+from .amounts import AmountError, parse_amount
 from .attack_rolls import AttackRoll, parse_attack_roll
+from .effect_options import COLLAPSED_CATEGORIES, effect_options
 from .monster_actions import legendary_resistances_left
 from .player_view import note_condition_immunity
 from .saves import (
     ABILITIES,
     ATTACK_ROLL,
+    FEATURE,
     ROLL_MODES,
     SAVING_THROW,
+    SPELL,
     CustomEffect,
+    EffectOption,
     is_immune_to,
     known_attack_bonus,
     known_save_dc,
@@ -39,6 +49,7 @@ from .saves import (
 from .stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .styles import QSS
+from .tree_filter import filter_category_tree, first_visible_item
 from .undo import undoable
 
 # Conditions that incapacitate a creature and break concentration per 2024 D&D rules
@@ -67,7 +78,12 @@ CUSTOM_CONDITION_DURATIONS: list[tuple[str, dict | None]] = [
     ("1 hour", {"seconds": 60 * 60}),
 ]
 
-_CUSTOM_DIALOG_WIDTH = 760
+_CUSTOM_DIALOG_WIDTH = 900  # the main window's minimum
+_PICKER_WIDTH = 240
+# The typed-roll rows scroll past about four targets.
+_TYPED_ROWS_MAX_HEIGHT = 140
+_NATURAL_ROLL = re.compile(r"nat(?:ural)?\s*\d+", re.IGNORECASE)
+_WHOLE_NUMBER = re.compile(r"-?\d+")
 MAX_SAVE_DC = 40
 MIN_ATTACK_BONUS = -10
 MAX_ATTACK_BONUS = 30
@@ -79,6 +95,23 @@ _DICELESS = re.compile(r"\d+d\d+")
 
 # The units a custom duration can be typed in, as seconds per unit.
 CUSTOM_DURATION_UNITS = {"rounds": SECONDS_PER_ROUND, "minutes": 60, "seconds": 1}
+MAX_DURATION_AMOUNT = 9999
+
+
+def custom_duration(seconds: int) -> tuple[int, str] | None:
+    """`seconds` as the Custom... duration's amount and unit, the biggest unit
+    that fits it exactly. None if it's longer than that can say (days)."""
+    for unit, per_unit in sorted(CUSTOM_DURATION_UNITS.items(), key=lambda u: -u[1]):
+        if seconds % per_unit == 0 and seconds // per_unit <= MAX_DURATION_AMOUNT:
+            return seconds // per_unit, unit
+    return None
+
+
+def _option_tooltip(option: EffectOption) -> str:
+    """A picker row's tooltip: what the row says, then its rules text. Rich
+    text, so Qt wraps it."""
+    text = escape(option.tooltip, quote=False).replace("\n", "<br>")
+    return f"<b>{escape(option.row_text, quote=False)}</b><br>{text}"
 
 
 class ConditionsMixin(CombatWindowState):
@@ -289,14 +322,25 @@ class ConditionsMixin(CombatWindowState):
         source = self.selected_character or self._current_turn_character()
         caster = self.selected_character
         label = effect.name or effect.condition or "the effect"
+        logged_use = False
         if caster is not None:
+            if effect.pick is not None:
+                used = self._use_pick(caster, effect)
+                if used is None:
+                    return
+                logged_use = used
             if effect.slot_level is not None:
                 self._cast_spell_slot_level(effect.slot_level)
             if effect.action_cost is not None:
                 self._add_action_use(effect.action_cost)
             if effect.concentration:
                 self._start_concentration(caster, label)
-        if effect.attack_bonus is not None and effect.name and source is not None:
+        if (
+            effect.attack_bonus is not None
+            and effect.name
+            and source is not None
+            and not logged_use
+        ):
             # The attack lines stay as the player link reads them (public_log.py).
             self._log_event(
                 f"{source['name']} uses {effect.name}", character=source["name"]
@@ -347,8 +391,66 @@ class ConditionsMixin(CombatWindowState):
             self._rebuild_card(target)
         self._save_fight_state()
         self._show_effect_summary(effect, results)
+        if logged_use and effect.pick is not None and effect.pick.monster_action:
+            self._refresh_views()  # the turn column's button shows it spent
         if attacks:  # last, as logging clears the status line
             self._show_status("; ".join(attacks))
+
+    def _use_pick(self, caster: dict, effect: CustomEffect) -> bool | None:
+        """Count what the dialog's pick was as used by caster, as Cast Spell,
+        Enable Feature and the turn column's buttons do. Returns whether that
+        logged its use, or None, having said why, if it can't be used now."""
+        option = effect.pick
+        assert option is not None  # the caller checks
+        if option.kind == SPELL:
+            self._count_spell_cast(
+                caster, option.name, option.spell_level, effect.slot_level
+            )
+            return True
+        if option.kind == FEATURE:
+            self._count_feature_use(caster, option.name, option.counts_uses)
+            return True
+        if option.monster_action is not None:
+            return self._spend_monster_action(caster, option.monster_action)
+        return False
+
+    def _effect_picker(
+        self, source: dict | None
+    ) -> tuple[QLineEdit, QTreeWidget, dict[str, QTreeWidgetItem]]:
+        """The Custom Effect dialog's search box and list of what the source
+        can use (effect_options), by category. What can't be used now is
+        greyed out."""
+        search_box = QLineEdit()
+        search_box.setObjectName("effectSearch")
+        search_box.setPlaceholderText("Search attacks, spells, features…")
+        search_box.setFixedWidth(_PICKER_WIDTH)
+        tree = QTreeWidget()
+        tree.setObjectName("effectOptions")
+        tree.setHeaderHidden(True)
+        tree.setFixedWidth(_PICKER_WIDTH)
+        category_items: dict[str, QTreeWidgetItem] = {}
+        for title, options in effect_options(source, self._all_spells()):
+            category = QTreeWidgetItem([title])
+            category.setFirstColumnSpanned(True)
+            tree.addTopLevelItem(category)
+            category_items[title] = category
+            for option in options:
+                item = QTreeWidgetItem([option.row_text])
+                item.setData(0, Qt.ItemDataRole.UserRole, option)
+                item.setToolTip(0, _option_tooltip(option))
+                category.addChild(item)
+                item.setDisabled(option.is_unavailable)
+            category.setExpanded(title not in COLLAPSED_CATEGORIES)
+
+        def apply_filter(query: str):
+            filter_category_tree(
+                category_items,
+                query.strip().lower(),
+                lambda option, typed: typed in option.name.lower(),
+            )
+
+        search_box.textChanged.connect(apply_filter)
+        return search_box, tree, category_items
 
     def _hold_concentration(
         self, caster: dict, label: str, effect: CustomEffect, applied: list[dict]
@@ -527,9 +629,19 @@ class ConditionsMixin(CombatWindowState):
         dlg.setWindowTitle("Custom Effect")
         dlg.setStyleSheet(QSS)
         dlg.setFixedWidth(_CUSTOM_DIALOG_WIDTH)
-        layout = QVBoxLayout(dlg)
-        layout.setContentsMargins(14, 14, 14, 14)
+        outer = QHBoxLayout(dlg)
+        outer.setContentsMargins(14, 14, 14, 14)
+        outer.setSpacing(14)
+        # What the source can use, on the left: a pick fills in the form.
+        search_box, tree, category_items = self._effect_picker(source)
+        picker = QVBoxLayout()
+        picker.setSpacing(6)
+        picker.addWidget(search_box)
+        picker.addWidget(tree, stretch=1)
+        outer.addLayout(picker)
+        layout = QVBoxLayout()
         layout.setSpacing(8)
+        outer.addLayout(layout, stretch=1)
 
         who = f"Targets: {', '.join(c['name'] for c in self.target_characters)}"
         if source is not None:
@@ -543,6 +655,13 @@ class ConditionsMixin(CombatWindowState):
         name_input.setObjectName("effectName")
         name_input.setPlaceholderText("Name for the log (optional), e.g. Fireball")
         layout.addWidget(name_input)
+
+        # What to check about a pick, and what a monster's action does besides.
+        note_lbl = QLabel("")
+        note_lbl.setObjectName("effectNote")
+        note_lbl.setWordWrap(True)
+        note_lbl.hide()
+        layout.addWidget(note_lbl)
 
         columns = QHBoxLayout()
         columns.setSpacing(20)
@@ -623,7 +742,8 @@ class ConditionsMixin(CombatWindowState):
         def typed_rows(
             chars: list[dict], object_name: str, hint: str
         ) -> tuple[QWidget, dict[int, QLineEdit]]:
-            """A box for each of chars, for what was rolled at the table."""
+            """A box for each of chars, for what was rolled at the table. Many
+            targets scroll, so the dialog still fits the smallest window."""
             rows = QWidget()
             rows_layout = QVBoxLayout(rows)
             rows_layout.setContentsMargins(0, 0, 0, 0)
@@ -635,19 +755,29 @@ class ConditionsMixin(CombatWindowState):
                 total_input = QLineEdit()
                 total_input.setObjectName(object_name)
                 total_input.setPlaceholderText(hint)
+                total_input.setAccessibleName(char["name"])
                 row.addWidget(total_input, stretch=1)
                 rows_layout.addLayout(row)
                 inputs[id(char)] = total_input
-            save_col.addWidget(rows)
-            return rows, inputs
+            scroll = QScrollArea()
+            scroll.setWidget(rows)
+            scroll.setWidgetResizable(True)
+            scroll.setFrameShape(QFrame.Shape.NoFrame)
+            scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            scroll.setFixedHeight(min(rows.sizeHint().height(), _TYPED_ROWS_MAX_HEIGHT))
+            save_col.addWidget(scroll)
+            return scroll, inputs
 
-        # A player rolling their own dice types the total; the rest are rolled.
-        # They roll a save for themselves, and an attack against each target.
+        # A roll made at the table is typed in; the rest are rolled. Each target
+        # rolls a save for itself, and the source an attack against each one.
         save_rows, typed_inputs = typed_rows(
-            [t for t in self.target_characters if t.get("_is_player")],
-            "typedTotal",
-            "Total, or blank to roll",
+            self.target_characters, "typedTotal", "Total, or blank to roll"
         )
+        for total_input in typed_inputs.values():
+            total_input.setToolTip(
+                "The total with the save bonus already in it, like 14 or 9+5."
+                " Blank rolls for them."
+            )
         attack_rows, attack_inputs = typed_rows(
             self.target_characters, "typedAttack", "Total, or blank to roll"
         )
@@ -812,18 +942,28 @@ class ConditionsMixin(CombatWindowState):
         applied: list[bool] = []
 
         def typed_totals() -> dict[int, int] | None:
-            """The totals typed, or None having said what's wrong with one. A
-            total can be negative: a low roll with a negative save."""
+            """The totals typed, or None having said what's wrong with one: a
+            total ("14") or a sum ("9+5"), as an attack's. A total can be
+            negative: a low roll with a negative save. A natural 20 or 1 is
+            nothing special on a save, so it's the total that's wanted."""
             totals = {}
             for key, total_input in typed_inputs.items():
                 text = total_input.text().strip()
                 if not text:
                     continue
-                try:
-                    totals[key] = int(text)
-                except ValueError:
+                if _NATURAL_ROLL.fullmatch(text):
+                    problem_lbl.setText(
+                        f"'{text}': a natural roll is nothing special on a"
+                        " save. Type the total instead."
+                    )
+                    return None
+                total = int(text) if _WHOLE_NUMBER.fullmatch(text) else None
+                if total is None:
+                    total = parse_amount(text)
+                if total is None:
                     problem_lbl.setText(f"'{text}' isn't a saving throw total.")
                     return None
+                totals[key] = total
             return totals
 
         def typed_attacks() -> dict[int, AttackRoll] | None:
@@ -857,7 +997,16 @@ class ConditionsMixin(CombatWindowState):
             if problem:
                 problem_lbl.setText(problem)
                 return
-            if not is_attack and ability is None and not damage and not condition:
+            pick: EffectOption | None = picked["option"]
+            # A pick the source spends (a feature with no numbers) is enough.
+            spends = pick is not None and pick.is_tracked and caster is not None
+            if (
+                not is_attack
+                and ability is None
+                and not damage
+                and not condition
+                and not spends
+            ):
                 problem_lbl.setText("Add a saving throw, damage or a condition.")
                 return
             totals = typed_totals() if ability is not None else {}
@@ -903,9 +1052,154 @@ class ConditionsMixin(CombatWindowState):
                     use_legendary_resistance=resist_box.isChecked(),
                     repeat_save=repeat_box.isChecked(),
                     typed_totals=totals,
+                    pick=pick,
                 )
             )
             dlg.accept()
+
+        # The pick, and the damage and search it was made with, to tell the
+        # GM's edits by.
+        picked: dict = {"option": None, "damage": "", "search": ""}
+
+        def show_duration(seconds: int | None, until: tuple[str, str] | None):
+            """Select a pick's duration: a turn, a time, or until removed. A
+            turn of a source that isn't there falls back to until removed."""
+            index = 0
+            if until is not None:
+                wanted_turn = {"until": until[0], "of": until[1]}
+                index = next(
+                    (
+                        i
+                        for i in range(duration_combo.count())
+                        if duration_combo.itemData(i) == wanted_turn
+                    ),
+                    0,
+                )
+            elif seconds:
+                wanted = {"seconds": seconds}
+                index = next(
+                    (
+                        i
+                        for i in range(duration_combo.count())
+                        if duration_combo.itemData(i) == wanted
+                    ),
+                    -1,
+                )
+                fit = custom_duration(seconds) if index < 0 else None
+                if fit is not None:
+                    amount_input.setValue(fit[0])
+                    unit_combo.setCurrentText(fit[1])
+                    index = duration_combo.findData("custom")
+            duration_combo.setCurrentIndex(max(index, 0))
+
+        def fill_from(option: EffectOption):
+            """Replace everything a pick says with what this one does, and
+            clear what it doesn't say. A None DC or bonus keeps the dialog's."""
+            picked["option"] = None  # so the slot below isn't taken for an edit
+            name_input.setText(option.name)
+            note_lbl.setText(option.note)
+            note_lbl.setVisible(bool(option.note))
+            roll_combo.setCurrentText(option.roll)
+            ability_combo.setCurrentIndex(
+                max(ability_combo.findData(option.ability), 0) if option.ability else 0
+            )
+            if option.dc is not None:
+                dc_input.setValue(option.dc)
+            if option.bonus is not None:
+                bonus_input.setValue(option.bonus)
+            half_box.setChecked(option.half_on_save)
+            repeat_box.setChecked(option.repeat_save)
+            # What the source doesn't have (no slot left, no source) is "No ...".
+            slot_index = slot_combo.findData(option.slot_level)
+            slot_combo.setCurrentIndex(max(slot_index, 0) if option.slot_level else 0)
+            action_index = action_combo.findData(option.action_cost)
+            action_combo.setCurrentIndex(
+                max(action_index, 0) if option.action_cost else 0
+            )
+            concentrate_box.setChecked(option.concentration)
+            # A type left from before would disagree with the pick's damage.
+            type_combo.setCurrentIndex(0)
+            damage = option.damage_at(slot_combo.currentData())
+            damage_input.setText(damage)
+            name_combo.setCurrentText(option.condition)
+            notes_input.clear()
+            show_duration(option.duration_seconds, option.until)
+            problem_lbl.setText("")
+            picked.update(option=option, damage=damage, search=search_box.text())
+
+        def drop_pick(name: str):
+            """Typing another name makes it the GM's own effect: nothing is
+            spent for the pick, and the slot box no longer upcasts it."""
+            option = picked["option"]
+            if option is None or name == option.name:
+                return
+            picked["option"] = None
+            tree.clearSelection()
+            note_lbl.setText("")
+            note_lbl.hide()
+
+        def upcast():
+            """A pick's damage at the slot now chosen, unless it's been edited."""
+            option = picked["option"]
+            if option is None or damage_input.text() != picked["damage"]:
+                return
+            damage = option.damage_at(slot_combo.currentData())
+            damage_input.setText(damage)
+            picked["damage"] = damage
+
+        def option_of(item: QTreeWidgetItem | None) -> EffectOption | None:
+            """What a row offers: nothing for a category or a greyed row."""
+            if item is None or item.isHidden() or item.isDisabled():
+                return None
+            return item.data(0, Qt.ItemDataRole.UserRole)
+
+        def on_selection_changed():
+            items = tree.selectedItems()
+            option = option_of(items[0]) if items else None
+            if option is not None:
+                fill_from(option)
+
+        def first_pickable() -> QTreeWidgetItem | None:
+            match = first_visible_item(category_items)
+            if match is None or not match.isDisabled():
+                return match
+            for category in category_items.values():
+                for i in range(category.childCount()):
+                    if option_of(category.child(i)) is not None:
+                        return category.child(i)
+            return None
+
+        def search_entered():
+            """Enter picks the top match, and then applies what's picked. Once
+            the search has changed since the pick, it picks the top match again."""
+            current = tree.currentItem()
+            option = option_of(current)
+            searched = search_box.text() == picked["search"]
+            if option is not None and option is picked["option"] and searched:
+                do_apply()
+                return
+            match = first_pickable()
+            if match is None:
+                return
+            again = option_of(match)
+            if match is current and again is not None:
+                fill_from(again)  # no selection change to do it
+            else:
+                tree.setCurrentItem(match)
+
+        def item_activated(item: QTreeWidgetItem):
+            option = option_of(item)
+            if option is None:
+                return
+            if picked["option"] is not option:
+                fill_from(option)
+            do_apply()
+
+        tree.itemSelectionChanged.connect(on_selection_changed)
+        tree.itemActivated.connect(item_activated)
+        search_box.returnPressed.connect(search_entered)
+        slot_combo.currentIndexChanged.connect(upcast)
+        name_input.textEdited.connect(drop_pick)
 
         apply_btn.clicked.connect(do_apply)
         name_edit.returnPressed.connect(do_apply)
@@ -916,7 +1210,7 @@ class ConditionsMixin(CombatWindowState):
             total_input.returnPressed.connect(do_apply)
         cancel_btn.clicked.connect(dlg.reject)
 
-        name_input.setFocus()
+        search_box.setFocus()
         dlg.exec()
 
     @undoable

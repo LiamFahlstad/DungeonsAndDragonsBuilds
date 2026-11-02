@@ -33,6 +33,7 @@ from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData
 
 from .attack_rolls import AttackRoll
+from .monster_actions import MonsterAction
 from .player_server import PlayerServer
 from .settings import CombatSettings
 from .undo import UndoPoint
@@ -243,6 +244,20 @@ class CombatWindowState:
 
     def _use_legendary_resistance(self, char: dict):
         raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")
+
+    def _spend_monster_action(self, char: dict, action: MonsterAction) -> bool | None:
+        raise NotImplementedError("TurnPanelMixin._spend_monster_action")
+
+    def _all_spells(self) -> list:
+        raise NotImplementedError("SpellsMixin._all_spells")
+
+    def _count_spell_cast(
+        self, caster: dict, name: str, level: int, slot_level: int | None
+    ):
+        raise NotImplementedError("SpellsMixin._count_spell_cast")
+
+    def _count_feature_use(self, source: dict, name: str, counts_uses: bool):
+        raise NotImplementedError("FeaturesMixin._count_feature_use")
 
     def _con_save_mod(self, char: dict) -> int:
         raise NotImplementedError("DamageMixin._con_save_mod")

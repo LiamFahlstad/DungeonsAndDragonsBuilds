@@ -26,6 +26,7 @@ from .monster_actions import (
     LEGENDARY_ACTIONS_PER_ROUND,
     MonsterAction,
     first_number,
+    is_spent,
     legendary_actions_left,
     legendary_resistances_left,
     monster_actions,
@@ -44,10 +45,6 @@ _RIDER_LENGTH = 130
 # Stands in for a damage type the monster chooses. It isn't one, so Enter stops
 # until the GM types over it, where a blank would take another part's type.
 _CHOOSE_A_TYPE = "type"
-
-
-def _is_spent(char: dict, action: MonsterAction) -> bool:
-    return char.get("spent_abilities", {}).get(action.name, 0) >= (action.per_day or 1)
 
 
 class TurnPanelMixin(CombatWindowState):
@@ -202,7 +199,7 @@ class TurnPanelMixin(CombatWindowState):
         layout = QHBoxLayout(row)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(4)
-        spent = _is_spent(char, action)
+        spent = is_spent(char, action)
         name = f"{action.name} (spent)" if spent else action.name
         button = QPushButton(f"{name}\n{action.summary}" if action.summary else name)
         button.setObjectName("monsterActionBtn")
@@ -223,25 +220,33 @@ class TurnPanelMixin(CombatWindowState):
     @undoable
     def _use_monster_action(self, char: dict, action: MonsterAction):
         """Count the action's use, if it's one that's counted, and roll it."""
-        if action.is_limited and _is_spent(char, action):
-            self._show_status(f"{action.name} isn't ready.")
+        if self._spend_monster_action(char, action) is None:
             return
+        self._roll_action(action)
+        self._refresh_views()
+
+    def _spend_monster_action(self, char: dict, action: MonsterAction) -> bool | None:
+        """Count a use of the action, if it's one that's counted: a recharge or
+        per-day use, or the legendary actions it costs. Shared with the Custom
+        Effect dialog. Returns whether it logged the use, or None, having said
+        why, if the action can't be used now."""
+        if action.is_limited and is_spent(char, action):
+            self._show_status(f"{action.name} isn't ready.")
+            return None
         if action.legendary_cost:
             left = legendary_actions_left(char)
             if left < action.legendary_cost:
                 self._show_status(f"{char['name']} has {left} legendary actions left.")
-                return
+                return None
             char["legendary_actions_left"] = left - action.legendary_cost
         if action.is_limited:
             spent = char.setdefault("spent_abilities", {})
             spent[action.name] = spent.get(action.name, 0) + 1
-        if action.is_limited or action.legendary_cost:
-            self._log_event(
-                f"{char['name']} uses {action.name}", character=char["name"]
-            )
-            self._rebuild_card(char)
-        self._roll_action(action)
-        self._refresh_views()
+        if not (action.is_limited or action.legendary_cost):
+            return False
+        self._log_event(f"{char['name']} uses {action.name}", character=char["name"])
+        self._rebuild_card(char)
+        return True
 
     def _roll_action(self, action: MonsterAction):
         """Roll the attack against the target, then its damage into the Damage

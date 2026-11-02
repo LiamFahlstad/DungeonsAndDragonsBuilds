@@ -4,13 +4,21 @@ roll, and damage typed as dice, which is rolled once for everyone it hits."""
 
 import random
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from Core.Rules import ability_modifier
 
 from .amounts import AmountError, parse_damage
 from .attack_rolls import AttackRoll, rolled_attack
-from .monster_actions import ability_text, parse_action, roll_dice
+from .monster_actions import (
+    DIE,
+    DamageRoll,
+    MonsterAction,
+    ability_text,
+    parse_action,
+    roll_dice,
+)
 
 # The saving throws, as (the name, the short name a combatant's scores use).
 ABILITIES = (
@@ -35,6 +43,13 @@ _AUTO_FAIL_ABILITIES = ("STR", "DEX")
 _DICE = re.compile(r"\d+d[1-9]\d*")
 _SPELL_SAVE_DC = re.compile(r"spell save DC\s+(\d+)")
 _SPELL_ATTACK = re.compile(r"([+-]\d+) to hit with spell attacks")
+
+
+# What an EffectOption is, which decides what using it counts as.
+MONSTER_ACTION = "monster action"
+WEAPON = "weapon"
+SPELL = "spell"
+FEATURE = "feature"
 
 
 @dataclass
@@ -76,6 +91,99 @@ class CustomEffect:
     repeat_save: bool = False
     # Totals rolled at the table, by the combatant's id(); the rest are rolled.
     typed_totals: dict[int, int] = field(default_factory=dict)
+    # What it was picked as in the dialog (effect_options.py), if it was: the
+    # source uses it up (a spell cast, a feature's use, a monster's recharge)
+    # along with the rest. Defined below, as effect_options needs this module.
+    pick: "EffectOption | None" = None
+
+
+@dataclass(frozen=True)
+class EffectOption:
+    """One thing the picker lists, and what picking it fills in. A None dc or
+    bonus keeps the dialog's value; anything else empty clears that field."""
+
+    name: str
+    kind: str
+    row_name: str = ""  # its name in its row, if that says more
+    summary: str = ""  # its numbers, for its row
+    tooltip: str = ""  # its rules text
+    note: str = ""  # what the GM should check
+    roll: str = SAVING_THROW
+    ability: str | None = None
+    dc: int | None = None
+    bonus: int | None = None
+    half_on_save: bool = False
+    repeat_save: bool = False
+    rolls: tuple[DamageRoll, ...] = ()
+    condition: str = ""
+    duration_seconds: int | None = None
+    # A duration that's a turn instead: ("start" or "end", "source" or
+    # "target"), as CUSTOM_CONDITION_DURATIONS has it. It comes first.
+    until: tuple[str, str] | None = None
+    slot_level: int | None = None
+    action_cost: str | None = None
+    concentration: bool = False
+    # A monster's action, which TurnPanelMixin spends, and whether it can't be
+    # used now (spent, or more legendary actions than are left).
+    monster_action: MonsterAction | None = None
+    is_unavailable: bool = False
+    # Whether using it counts against the feature's uses.
+    counts_uses: bool = False
+    # What each of `rolls` gains per slot level above spell_level, "" for none.
+    upcast: tuple[str, ...] = ()
+    spell_level: int = 0
+
+    @property
+    def row_text(self) -> str:
+        name = self.row_name or self.name
+        return f"{name}  {self.summary}" if self.summary else name
+
+    @property
+    def damage(self) -> str:
+        return self.damage_at(self.slot_level)
+
+    def damage_at(self, slot_level: int | None) -> str:
+        """The Damage box's text, with a spell cast using a slot of slot_level
+        (None: at its own level)."""
+        levels_up = max((slot_level or self.spell_level) - self.spell_level, 0)
+        if not levels_up or not self.upcast:
+            return damage_text(self.rolls)
+        return damage_text(
+            with_dice(roll, dice, levels_up) if dice else roll
+            for roll, dice in zip(self.rolls, self.upcast)
+        )
+
+    @property
+    def is_tracked(self) -> bool:
+        """Whether using it counts for something, with nothing else to apply."""
+        action = self.monster_action
+        if action is not None:
+            return action.is_limited or bool(action.legendary_cost)
+        if self.kind == FEATURE:
+            # One used, not one that's always on, like Tough or Darkvision.
+            return self.counts_uses or self.action_cost is not None
+        return self.kind == SPELL
+
+
+def damage_text(rolls: Iterable[DamageRoll]) -> str:
+    """Rolls as the Damage box reads them: "2d6 + 3 Slashing + 1d4 Fire". A
+    type to choose is left off, for the GM to give."""
+    return " + ".join(
+        f"{roll.dice} {roll.damage_type}" if roll.damage_type else roll.dice
+        for roll in rolls
+    )
+
+
+def with_dice(roll: DamageRoll, dice: str, times: int) -> DamageRoll:
+    """Roll with `times` more of dice: more of the same die, or added on."""
+    count, sides = map(int, dice.split("d"))
+    first = DIE.search(roll.dice)
+    if first is not None and int(first[2]) == sides:
+        more = int(first[1]) + count * times
+        text = f"{roll.dice[:first.start()]}{more}d{sides}{roll.dice[first.end():]}"
+    else:
+        text = f"{roll.dice} + {count * times}d{sides}"
+    return DamageRoll(text, roll.damage_type)
 
 
 def save_modifier(char: dict, ability: str) -> int:
@@ -164,10 +272,9 @@ def known_save_dc(char: dict | None) -> int | None:
     return _number_in_stat_block(char, _SPELL_SAVE_DC)
 
 
-def known_attack_bonus(char: dict | None) -> int | None:
+def known_spell_attack_bonus(char: dict | None) -> int | None:
     """What char adds to its spell attacks, if that's known: a player's from
-    their character, a monster's from its Spellcasting text. Otherwise a
-    monster's first attack: it has no other to go on."""
+    their character, a monster's from its Spellcasting text."""
     if char is None:
         return None
     sheet = char.get("_stat_block")
@@ -175,8 +282,14 @@ def known_attack_bonus(char: dict | None) -> int | None:
         if sheet.spell_casting_ability is None:
             return None
         return sheet.calculate_attack_bonus()
-    bonus = _number_in_stat_block(char, _SPELL_ATTACK)
-    if bonus is not None:
+    return _number_in_stat_block(char, _SPELL_ATTACK)
+
+
+def known_attack_bonus(char: dict | None) -> int | None:
+    """known_spell_attack_bonus, or else a monster's first attack: it has no
+    other to go on."""
+    bonus = known_spell_attack_bonus(char)
+    if bonus is not None or char is None or char.get("_stat_block") is not None:
         return bonus
     attacks = map(parse_action, char.get("actions") or [])
     return next((a.to_hit for a in attacks if a.to_hit is not None), None)

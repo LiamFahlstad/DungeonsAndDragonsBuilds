@@ -20,7 +20,7 @@ ACTION_SECTIONS = (
     ("legendary_actions", "Legendary Actions"),
 )
 
-_DAMAGE_TYPE_NAMES = {t.value.lower(): t.value for t in DamageType}
+DAMAGE_TYPE_NAMES = {t.value.lower(): t.value for t in DamageType}
 _ATTACK = re.compile(r"Attack Roll:\s*([+-]\d+)")
 _SAVE = re.compile(
     r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
@@ -28,11 +28,13 @@ _SAVE = re.compile(
 )
 _MINUS_SIGNS = "−–"
 _DICE = rf"\d+d\d+(?:\s*[+{_MINUS_SIGNS}-]\s*\d+)?"
-_DAMAGE = re.compile(
+DAMAGE = re.compile(
     rf"(?:\d+\s*\(\s*(?P<dice>{_DICE})\s*\)|(?P<bare>{_DICE})|(?P<flat>\d+))"
     r"\s+(?:(?P<type>[A-Za-z]+)(?P<or>\s+or\s+[A-Za-z]+)?\s+)?damage"
 )
-_JOINED = re.compile(r",?\s*(?:plus|and)\s+")
+JOINED = re.compile(r",?\s*(?:plus|and)\s+")
+# One kind of die in a roll: "2d6" is (2, 6).
+DIE = re.compile(r"(\d+)d(\d+)")
 _CONDITIONAL = re.compile(r"\s+(?:if|while|when|unless|until|at the|on a)\b")
 _RECHARGE = re.compile(r"\(Recharge\s+(\d)(?:\D\d)?\)")
 _PER_DAY = re.compile(r"\((\d+)/Day")
@@ -92,6 +94,11 @@ def legendary_actions_left(char: dict) -> int:
     return char.get("legendary_actions_left", LEGENDARY_ACTIONS_PER_ROUND)
 
 
+def is_spent(char: dict, action: MonsterAction) -> bool:
+    """Whether char has used up a recharge or per-day action."""
+    return char.get("spent_abilities", {}).get(action.name, 0) >= (action.per_day or 1)
+
+
 def legendary_resistances_left(char: dict) -> int:
     return char.get("legendary_resistances_left", char.get("legendary_resistances", 0))
 
@@ -143,26 +150,26 @@ def _damage_rolls(
     text = re.split(r"\b(?:Success|Failure or Success|Hit or Miss):", text)[0]
     rolls: list[DamageRoll] = []
     position = 0
-    for match in _DAMAGE.finditer(text):
+    for match in DAMAGE.finditer(text):
         between = text[position : match.start()]
         if rolls:
-            if not _JOINED.fullmatch(between) or _CONDITIONAL.match(text, match.end()):
+            if not JOINED.fullmatch(between) or _CONDITIONAL.match(text, match.end()):
                 break
         elif ". " in between:
             break  # the first sentence has none: it's an effect's, for later
         word = match["type"]
-        damage_type = _DAMAGE_TYPE_NAMES.get(word.lower()) if word else None
+        damage_type = DAMAGE_TYPE_NAMES.get(word.lower()) if word else None
         if word and damage_type is None and not match["or"]:
             break  # "1 extra damage": not a type, not a roll of its own
         if match["or"]:
             damage_type = None  # "Necrotic or Radiant": the monster's choice
         dice = match["dice"] or match["bare"] or match["flat"]
-        rolls.append(DamageRoll(_tidy_dice(dice), damage_type))
+        rolls.append(DamageRoll(tidy_dice(dice), damage_type))
         position = match.end()
     return tuple(rolls), text[position:].strip(" ,.")
 
 
-def _tidy_dice(dice: str) -> str:
+def tidy_dice(dice: str) -> str:
     dice = re.sub(f"[{_MINUS_SIGNS}]", "-", dice)
     return re.sub(r"\s*([+-])\s*", r" \1 ", dice.strip())
 
@@ -202,7 +209,7 @@ def roll_dice(dice: str, critical: bool = False) -> int:
     """Roll "2d6 + 3" or a flat "4"; a critical hit rolls the dice twice over."""
     total = 0
     position = 0
-    for match in re.finditer(r"(\d+)d(\d+)", dice):
+    for match in DIE.finditer(dice):
         count, sides = int(match.group(1)), int(match.group(2))
         total += sum(
             random.randint(1, sides) for _ in range(count * (2 if critical else 1))

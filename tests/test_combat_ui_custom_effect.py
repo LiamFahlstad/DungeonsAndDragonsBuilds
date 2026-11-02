@@ -8,14 +8,19 @@ Unconscious and Restrained glossary entries."""
 import random
 
 import pytest
+from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QApplication,
     QCheckBox,
     QComboBox,
     QDialog,
+    QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
     QSpinBox,
+    QTreeWidget,
+    QTreeWidgetItem,
 )
 
 from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
@@ -24,9 +29,11 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.amounts import AmountError
+from Combat.Definitions import Action
 from Combat.CombatUIQt.attack_rolls import AttackRoll
 from Combat.CombatUIQt.saves import (
     ATTACK_ROLL,
+    SAVING_THROW,
     CustomEffect,
     is_immune_to,
     known_attack_bonus,
@@ -531,6 +538,15 @@ def test_the_dc_starts_at_the_casters(paladin_fight, monkeypatch):
     assert dlg.findChild(QSpinBox, "saveDc").value() == expected
 
 
+def _typed_total(dlg, name: str) -> QLineEdit:
+    """The save total box of the target called `name`."""
+    return next(
+        box
+        for box in dlg.findChildren(QLineEdit, "typedTotal")
+        if box.accessibleName() == name
+    )
+
+
 def test_a_players_total_is_typed_in_the_dialog(paladin_fight, monkeypatch):
     ui, edmund, tiger = paladin_fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
@@ -538,7 +554,7 @@ def test_a_players_total_is_typed_in_the_dialog(paladin_fight, monkeypatch):
     combo.setCurrentIndex(combo.findData("WIS"))
     dlg.findChild(QSpinBox, "saveDc").setValue(15)
     dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
-    (total,) = dlg.findChildren(QLineEdit, "typedTotal")
+    total = _typed_total(dlg, "Edmund")
     total.setText("18")
     _d20s(monkeypatch, 1)  # only the Tiger rolls
     _apply(dlg)
@@ -552,7 +568,7 @@ def test_a_bad_typed_total_says_so(paladin_fight, monkeypatch):
     combo = _combo(dlg, "saveAbility")
     combo.setCurrentIndex(combo.findData("WIS"))
     dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
-    (total,) = dlg.findChildren(QLineEdit, "typedTotal")
+    total = _typed_total(dlg, "Edmund")
     total.setText("abc")
     _apply(dlg)
     assert edmund["hp"] == edmund["max_hp"]
@@ -672,7 +688,7 @@ def test_a_negative_total_can_be_typed(paladin_fight, monkeypatch):
     combo = _combo(dlg, "saveAbility")
     combo.setCurrentIndex(combo.findData("WIS"))
     dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
-    (total,) = dlg.findChildren(QLineEdit, "typedTotal")
+    total = _typed_total(dlg, "Edmund")
     total.setText("-1")
     _d20s(monkeypatch, 1)
     _apply(dlg)
@@ -1686,3 +1702,688 @@ def test_a_bad_typed_attack_says_so(paladin_fight, monkeypatch):
     assert ui.history == []
     labels = [label.text() for label in dlg.findChildren(type(ui.selected_label))]
     assert any("isn't an attack roll" in text for text in labels), labels
+
+
+# ---------------------------------------------------------------------------
+# Picking what was used (effect_options.py): it fills in the form, and Apply
+# spends it as Cast Spell, Enable Feature and the turn column's buttons do.
+
+SCIMITAR = {
+    "name": "Scimitar",
+    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+}
+BREATH = {
+    "name": "Fire Breath (Recharge 5–6)",
+    "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
+    " Failure: 14 (4d6) Fire damage. Success: Half damage.",
+}
+REND = {
+    "name": "Rend (Recharge 6)",
+    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d6 + 2) Slashing"
+    " damage, and the target can't take Reactions until the start of its next turn"
+    " while it's bleeding badly from the wound the claws leave in it.",
+}
+GAZE = {
+    "name": "Gaze (Costs 2 Actions)",
+    "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
+    " the Frightened condition, and it repeats the save at the end of each of its turns.",
+}
+
+
+def _tree(dlg) -> QTreeWidget:
+    return dlg.findChild(QTreeWidget, "effectOptions")
+
+
+def _rows(dlg) -> list[QTreeWidgetItem]:
+    tree = _tree(dlg)
+    return [
+        tree.topLevelItem(i).child(j)
+        for i in range(tree.topLevelItemCount())
+        for j in range(tree.topLevelItem(i).childCount())
+    ]
+
+
+def _row(dlg, name: str) -> QTreeWidgetItem:
+    return next(
+        row for row in _rows(dlg) if row.data(0, Qt.ItemDataRole.UserRole).name == name
+    )
+
+
+def _pick(dlg, name: str):
+    _tree(dlg).setCurrentItem(_row(dlg, name))
+
+
+def _search(dlg) -> QLineEdit:
+    return dlg.findChild(QLineEdit, "effectSearch")
+
+
+def _form(dlg) -> dict:
+    """What the form holds now."""
+    return {
+        "name": dlg.findChild(QLineEdit, "effectName").text(),
+        "roll": _combo(dlg, "rollKind").currentText(),
+        "ability": _combo(dlg, "saveAbility").currentData(),
+        "dc": dlg.findChild(QSpinBox, "saveDc").value(),
+        "bonus": dlg.findChild(QSpinBox, "attackBonus").value(),
+        "half": dlg.findChild(QCheckBox, "halfOnSave").isChecked(),
+        "repeat": dlg.findChild(QCheckBox, "repeatSave").isChecked(),
+        "damage": dlg.findChild(QLineEdit, "effectDamage").text(),
+        "type": _combo(dlg, "damageType").currentData(),
+        "condition": _combo(dlg, "conditionName").currentText(),
+        "duration": _combo(dlg, "conditionDuration").currentData(),
+        "slot": _combo(dlg, "spellSlot").currentData(),
+        "action": _combo(dlg, "actionCost").currentData(),
+        "concentrates": dlg.findChild(QCheckBox, "sourceConcentrates").isChecked(),
+        "note": dlg.findChild(QLabel, "effectNote").text(),
+    }
+
+
+@pytest.fixture
+def monster(fight):
+    """The Pirate, the source, with a stat block's actions, targeting the Tiger."""
+    ui, pirate, tiger, bandit = _source_fight(fight)
+    pirate.update(actions=[SCIMITAR, BREATH, REND], legendary_actions=[GAZE])
+    ui._select_target_character(tiger)
+    ui._refresh_views()
+    return ui, pirate, tiger
+
+
+@pytest.fixture
+def paladin(paladin_fight):
+    """Edmund, the source, targeting only the Tiger."""
+    ui, edmund, tiger = paladin_fight
+    ui._select_character(edmund)
+    ui._select_target_character(tiger)
+    return ui, edmund, tiger
+
+
+def test_the_dialog_opens_on_the_search_box(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert dlg.focusWidget() is _search(dlg)
+    assert dlg.findChild(QLabel, "effectNote").text() == ""
+
+
+def test_the_categories(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    tree = _tree(dlg)
+    categories = [tree.topLevelItem(i) for i in range(tree.topLevelItemCount())]
+    assert [c.text(0) for c in categories] == [
+        "Attacks",
+        "Edmund's Spells",
+        "Features",
+        "All spells",
+    ]
+    assert [c.isExpanded() for c in categories] == [True, True, False, False]
+
+
+def test_picking_a_monsters_attack(monster, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Scimitar")
+    form = _form(dlg)
+    assert form["name"] == "Scimitar"
+    assert form["roll"] == ATTACK_ROLL
+    assert form["bonus"] == 4
+    assert form["damage"] == "1d6 + 2 Slashing"
+    assert form["type"] == DamageType.SLASHING.value  # as typing it would set it
+
+
+def test_picking_a_monsters_save(monster, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, BREATH["name"])
+    form = _form(dlg)
+    assert (form["roll"], form["ability"], form["dc"]) == (SAVING_THROW, "DEX", 13)
+    assert form["half"]
+    assert form["damage"] == "4d6 Fire"
+
+
+def test_a_monsters_rider_is_in_the_note(monster, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, REND["name"])
+    assert "Also: " in _form(dlg)["note"]
+    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+
+
+def test_picking_a_spell(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Hold Person")
+    form = _form(dlg)
+    assert form["ability"] == "WIS"
+    assert form["dc"] == known_save_dc(edmund)
+    assert form["condition"] == "Paralyzed"
+    assert form["repeat"] and form["concentrates"]
+    assert form["duration"] == {"seconds": 60}
+    assert form["action"] == "Action"
+    assert form["damage"] == ""
+    assert "No slot of level 2" in form["note"]  # Edmund has level 1 slots only
+
+
+def test_picking_a_players_own_spell_spends_a_slot(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Bless")
+    form = _form(dlg)
+    assert form["slot"] == 1
+    assert form["condition"] == "Bless"
+    assert form["ability"] is None
+
+
+def test_picking_a_weapon(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    sheet = edmund["_stat_block"]
+    longsword = next(w for w in edmund["_weapons_objects"] if w.name == "Longsword")
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    form = _form(dlg)
+    assert form["roll"] == ATTACK_ROLL
+    assert form["bonus"] == longsword.calculate_total_attack_roll_bonus_int(sheet)
+    assert form["action"] == "Action"
+
+
+def test_a_second_pick_replaces_the_first(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {3: 2}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Fireball")
+    assert _form(dlg)["damage"] == "8d6 Fire"
+    _pick(dlg, "Hold Person")
+    form = _form(dlg)
+    assert form["damage"] == ""
+    assert form["type"] is None
+    assert not form["half"]
+    assert form["ability"] == "WIS"
+    _pick(dlg, "Bless")
+    form = _form(dlg)
+    assert form["ability"] is None
+    assert not form["repeat"]
+    assert form["duration"] == {"seconds": 60}
+
+
+def test_a_pick_clears_a_type_left_from_before(monster, monkeypatch):
+    """The dropdown starting on the source's last type would otherwise
+    disagree with the pick's damage."""
+    ui, pirate, _ = monster
+    pirate["_last_damage_type"] = DamageType.COLD.value
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, BREATH["name"])
+    assert _form(dlg)["type"] == FIRE
+
+
+def test_the_search_filters(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("bolt")
+    shown = [
+        row.data(0, Qt.ItemDataRole.UserRole).name
+        for row in _rows(dlg)
+        if not row.isHidden()
+    ]
+    assert "Guiding Bolt" in shown
+    assert all("bolt" in name.lower() for name in shown)
+
+
+def test_enter_picks_the_top_match_then_applies(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("hold person")
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["name"] == "Hold Person"
+    assert ui.history == []
+    _d20s(monkeypatch, 1)
+    _search(dlg).returnPressed.emit()
+    assert "Paralyzed" in tiger["conditions"]
+    assert len(ui.history) == 1
+
+
+def test_enter_with_no_match_does_nothing(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("zzzz")
+    _search(dlg).returnPressed.emit()
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["name"] == ""
+    assert ui.history == []
+
+
+def test_double_clicking_applies(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _tree(dlg).itemActivated.emit(_row(dlg, "Fireball"), 0)
+    assert tiger["hp"] == tiger["max_hp"] - 8  # failed: every die a 1
+    assert "Edmund casts Fireball" in _log(ui)
+
+
+def test_a_category_row_does_nothing(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _tree(dlg).setCurrentItem(_tree(dlg).topLevelItem(0))
+    _tree(dlg).itemActivated.emit(_tree(dlg).topLevelItem(0), 0)
+    assert _form(dlg)["name"] == ""
+    assert ui.history == []
+
+
+def test_a_higher_slot_upcasts(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {3: 2, 5: 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Fireball")
+    slots = _combo(dlg, "spellSlot")
+    assert slots.currentData() == 3
+    slots.setCurrentIndex(slots.findData(5))
+    assert _form(dlg)["damage"] == "10d6 Fire"
+    slots.setCurrentIndex(slots.findData(None))
+    assert _form(dlg)["damage"] == "8d6 Fire"
+
+
+def test_a_hand_edit_survives_a_slot_change(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {3: 2, 5: 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Fireball")
+    dlg.findChild(QLineEdit, "effectDamage").setText("30 fire")
+    slots = _combo(dlg, "spellSlot")
+    slots.setCurrentIndex(slots.findData(5))
+    assert _form(dlg)["damage"] == "30 fire"
+
+
+def test_every_field_stays_editable_after_a_pick(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Hold Person")
+    _combo(dlg, "conditionName").setCurrentText("Stunned")
+    dlg.findChild(QSpinBox, "saveDc").setValue(30)
+    _d20s(monkeypatch, 15)
+    _apply(dlg)
+    assert "Stunned" in tiger["conditions"]
+    assert "Paralyzed" not in tiger["conditions"]
+
+
+def test_a_greyed_action_cant_be_picked(monster, monkeypatch):
+    ui, pirate, _ = monster
+    pirate["spent_abilities"] = {BREATH["name"]: 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    row = _row(dlg, BREATH["name"])
+    assert row.isDisabled()
+    assert "(spent)" in row.text(0)
+    _tree(dlg).setCurrentItem(row)
+    _tree(dlg).itemActivated.emit(row, 0)
+    _search(dlg).setText("fire breath")  # only the greyed one
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["name"] == ""
+    assert ui.history == []
+
+
+def test_a_hand_typed_effect_still_spends_nothing_else(monster, monkeypatch):
+    ui, pirate, tiger = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    dlg.findChild(QLineEdit, "effectDamage").setText("6 fire")
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 6
+    assert "spent_abilities" not in pirate
+    assert "uses" not in _log(ui)
+
+
+# Spending
+
+
+def test_a_picked_spell_is_cast_and_undoes_in_one(paladin, monkeypatch):
+    ui, edmund, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Bless")
+    _apply(dlg)
+    assert edmund["spell_slots"] == {1: 2}
+    assert edmund["stats"]["spells_cast"] == 1
+    assert edmund["stats"]["spells_cast_by_name"] == {"Bless": 1}
+    assert edmund["action_uses"] == {"Action": 1}
+    assert "Bless" in tiger["conditions"]
+    assert "Edmund casts Bless" in _log(ui)
+    ui._undo_last()
+    assert edmund["spell_slots"] == {1: 3}
+    assert not edmund.get("stats", {}).get("spells_cast")
+    assert "Bless" not in tiger["conditions"]
+    assert ui.history == []
+
+
+def test_an_upcast_says_its_level(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {3: 2, 5: 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Fireball")
+    slots = _combo(dlg, "spellSlot")
+    slots.setCurrentIndex(slots.findData(5))
+    monkeypatch.setattr(random, "randint", lambda low, high: 20)
+    _apply(dlg)
+    assert edmund["spell_slots"] == {3: 2, 5: 0}
+    assert "Edmund casts Fireball at level 5" in _log(ui)
+
+
+def test_a_picked_feature_is_used_with_nothing_else(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Channel Divinity")
+    _apply(dlg)
+    assert edmund["feature_uses_used"] == {"Channel Divinity": 1}
+    assert edmund["stats"]["features_enabled_by_name"] == {"Channel Divinity": 1}
+    assert "Edmund uses Channel Divinity" in _log(ui)
+    ui._undo_last()
+    assert not edmund.get("feature_uses_used")
+    assert ui.history == []
+
+
+def test_a_pick_without_a_source_spends_nothing(paladin, monkeypatch):
+    ui, edmund, tiger = paladin
+    ui.selected_character = None
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Bless")
+    _apply(dlg)
+    assert "Bless" in tiger["conditions"]
+    assert edmund["spell_slots"] == {1: 3}
+    assert "casts" not in _log(ui)
+
+
+def test_a_spell_attack_is_one_line_the_player_link_reads(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    tiger["ac"] = 10
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Chill Touch")
+    monkeypatch.setattr(random, "randint", lambda low, high: 10)
+    _apply(dlg)
+    texts = [event["text"] for event in ui._read_log()["round_1"]]
+    assert [text for text in texts if "Chill Touch" in text] == [
+        "[Edmund's turn] Edmund casts Chill Touch"
+    ]
+    (round_log,) = ui._public_log()
+    lines = [line for turn in round_log["turns"] for line in turn["lines"]]
+    assert lines[0]["text"] == "Edmund casts Chill Touch"
+    hit = next(line for line in lines if line["kind"] == "hit")
+    assert hit["amount"] == f"10 {DamageType.NECROTIC.value}"
+
+
+def test_a_recharge_is_spent_and_shows_in_the_turn_column(monster, monkeypatch):
+    ui, pirate, tiger = monster
+    QApplication.processEvents()
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, BREATH["name"])
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _apply(dlg)
+    assert pirate["spent_abilities"] == {BREATH["name"]: 1}
+    assert tiger["hp"] < tiger["max_hp"]
+    buttons = [
+        b.text() for b in ui._actions_box.findChildren(QPushButton) if not b.isHidden()
+    ]
+    assert any(f"{BREATH['name']} (spent)" in text for text in buttons), buttons
+    assert _log(ui).count(f"Pirate uses {BREATH['name']}") == 1
+    ui._undo_last()
+    assert not pirate.get("spent_abilities")
+    assert tiger["hp"] == tiger["max_hp"]
+
+
+def test_a_limited_attack_is_logged_once(monster, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, REND["name"])
+    monkeypatch.setattr(random, "randint", lambda low, high: 15)
+    _apply(dlg)
+    assert _log(ui).count(f"uses {REND['name']}") == 1
+
+
+def test_a_legendary_action_is_spent(monster, monkeypatch):
+    ui, pirate, tiger = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, GAZE["name"])
+    form = _form(dlg)
+    assert (form["ability"], form["dc"], form["condition"]) == ("WIS", 14, "Frightened")
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert pirate["legendary_actions_left"] == 1
+    assert "Frightened" in tiger["conditions"]
+    ui._undo_last()
+    assert "legendary_actions_left" not in pirate
+
+
+def test_a_legendary_action_costing_more_than_is_left_is_greyed(monster, monkeypatch):
+    ui, pirate, _ = monster
+    pirate["legendary_actions_left"] = 1
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert _row(dlg, GAZE["name"]).isDisabled()
+
+
+def test_without_a_source_a_monster_spends_nothing(monster, monkeypatch):
+    ui, pirate, _ = monster
+    ui.selected_character = None
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, BREATH["name"])
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _apply(dlg)
+    assert "spent_abilities" not in pirate
+
+
+def test_a_picked_spell_is_logged_for_the_party_replay(paladin, monkeypatch):
+    """The party's state is replayed from these events (logging_mixin), as a
+    Cast Spell's are."""
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Bless")
+    _apply(dlg)
+    events = [e for e in ui._read_log()["round_1"] if e.get("character") == "Edmund"]
+    actions = [(e.get("action"), e.get("value")) for e in events if e.get("action")]
+    assert (Action.CAST_SPELL, {"spell_name": "Bless"}) in actions
+    assert (Action.REMOVE_SPELL_SLOT, 1) in actions
+
+
+def test_a_spent_recharge_survives_reloading_the_fight(monster, tmp_path, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, BREATH["name"])
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _apply(dlg)
+    fresh = make_ui(tmp_path, [])
+    fresh._load_log_from_path(str(ui.log_file))
+    pirate = next(c for c in fresh.characters if c["name"] == "Pirate")
+    assert pirate["spent_abilities"] == {BREATH["name"]: 1}
+
+
+# What review found
+
+
+PARALYZING_TOUCH = {
+    "name": "Paralyzing Touch",
+    "description": "Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage,"
+    " and the target has the Paralyzed condition until the start of the lich's next"
+    " turn.",
+}
+
+
+def test_retyping_the_name_drops_the_pick(paladin, monkeypatch):
+    """The GM picked Channel Divinity, then typed in something else: that's
+    their own effect, so Channel Divinity isn't used."""
+    ui, edmund, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Channel Divinity")
+    name = dlg.findChild(QLineEdit, "effectName")
+    name.setText("Poison Spray")
+    name.textEdited.emit("Poison Spray")
+    assert _form(dlg)["note"] == ""
+    assert not _tree(dlg).selectedItems()
+    _combo(dlg, "conditionName").setCurrentText("Poisoned")
+    _apply(dlg)
+    assert "Poisoned" in tiger["conditions"]
+    assert not edmund.get("feature_uses_used")
+    assert "Channel Divinity" not in _log(ui)
+
+
+def test_a_pick_filling_the_name_keeps_it(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Channel Divinity")
+    dlg.findChild(QLineEdit, "effectName").textEdited.emit("Channel Divinity")
+    _apply(dlg)
+    assert edmund["feature_uses_used"] == {"Channel Divinity": 1}
+
+
+def test_a_passive_feature_cant_be_applied_by_itself(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    options = [row.data(0, Qt.ItemDataRole.UserRole) for row in _rows(dlg)]
+    passive = next(o for o in options if o.kind == "feature" and not o.is_tracked)
+    _pick(dlg, passive.name)
+    _apply(dlg)
+    assert ui.history == []
+    labels = [label.text() for label in dlg.findChildren(QLabel)]
+    assert any("Add a saving throw" in text for text in labels)
+
+
+def test_a_second_weapon_attack_costs_no_action(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    assert _form(dlg)["action"] == "Action"
+    edmund["action_uses"] = {"Action": 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    assert _form(dlg)["action"] is None
+
+
+def test_a_condition_till_a_turn_gets_that_duration(monster, monkeypatch):
+    ui, pirate, _ = monster
+    pirate["actions"] = [PARALYZING_TOUCH]
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Paralyzing Touch")
+    form = _form(dlg)
+    assert form["condition"] == "Paralyzed"
+    assert form["duration"] == {"until": "start", "of": "source"}
+
+
+def test_a_spells_turn_long_condition_gets_that_duration(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Sleep")  # "until the end of its next turn"
+    assert _form(dlg)["duration"] == {"until": "end", "of": "target"}
+
+
+def test_enter_after_a_new_search_picks_again(paladin, monkeypatch):
+    """Fire Bolt picked, then "fireball" typed: Enter picks Fireball, it
+    doesn't cast Fire Bolt."""
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Fire Bolt")
+    _search(dlg).setText("fireball")
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["name"] == "Fireball"
+    assert ui.history == []
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _search(dlg).returnPressed.emit()
+    assert "Edmund casts Fireball" in _log(ui)
+    assert "Fire Bolt" not in _log(ui)
+
+
+def test_enter_on_a_new_search_with_the_same_top_match_picks_it_again(
+    paladin, monkeypatch
+):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("fireb")
+    _search(dlg).returnPressed.emit()
+    dlg.findChild(QLineEdit, "effectDamage").setText("1 fire")
+    _search(dlg).setText("firebal")
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["damage"] == "8d6 Fire"  # picked again
+    assert ui.history == []
+
+
+# A save total rolled at the table, for any target
+
+
+def _save_dialog(ui, monkeypatch, dc: int = 15):
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    combo = _combo(dlg, "saveAbility")
+    combo.setCurrentIndex(combo.findData("DEX"))
+    dlg.findChild(QSpinBox, "saveDc").setValue(dc)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    return dlg
+
+
+def test_every_target_has_a_save_total(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = _save_dialog(ui, monkeypatch)
+    boxes = dlg.findChildren(QLineEdit, "typedTotal")
+    assert sorted(box.accessibleName() for box in boxes) == ["Bandit (Pirate)", "Tiger"]
+    assert all(box.isVisibleTo(dlg) and box.isEnabled() for box in boxes)
+    assert boxes[0].placeholderText() == "Total, or blank to roll"
+    assert "save bonus" in boxes[0].toolTip()
+
+
+def test_a_monsters_typed_total_is_used(fight, monkeypatch):
+    ui, _, tiger, bandit = fight
+    dlg = _save_dialog(ui, monkeypatch)
+    _typed_total(dlg, "Tiger").setText("20")
+    _d20s(monkeypatch, 1)  # only the Bandit's die is rolled
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 10  # saved: half
+    assert bandit["hp"] == bandit["max_hp"] - 20
+    assert "rolled 20" in _log(ui)
+
+
+def test_a_typed_sum(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    dlg = _save_dialog(ui, monkeypatch)
+    _typed_total(dlg, "Tiger").setText("9+5")
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert "rolled 14" in _log(ui)
+    assert tiger["hp"] == tiger["max_hp"] - 20  # 14 misses DC 15
+
+
+def test_a_natural_roll_isnt_a_save_total(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    dlg = _save_dialog(ui, monkeypatch)
+    _typed_total(dlg, "Tiger").setText("nat 20")
+    _apply(dlg)
+    assert ui.history == []
+    assert tiger["hp"] == tiger["max_hp"]
+    labels = [label.text() for label in dlg.findChildren(QLabel)]
+    assert any("Type the total" in text for text in labels), labels
+
+
+def test_a_typed_failure_can_spend_legendary_resistance(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    tiger["legendary_resistances"] = 2
+    dlg = _save_dialog(ui, monkeypatch)
+    dlg.findChild(QCheckBox, "useLegendaryResistance").setChecked(True)
+    _typed_total(dlg, "Tiger").setText("3")
+    _d20s(monkeypatch, 20)
+    _apply(dlg)
+    assert tiger["legendary_resistances_left"] == 1
+    assert tiger["hp"] == tiger["max_hp"] - 10
+    assert "rolled 3" in _log(ui)
+
+
+def test_an_automatic_failure_beats_a_typed_total_in_the_dialog(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    tiger["conditions"].append("Stunned")
+    dlg = _save_dialog(ui, monkeypatch)
+    _typed_total(dlg, "Tiger").setText("30")
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 20
+
+
+def test_the_dialog_fits_with_eight_targets(tmp_path, monkeypatch):
+    ui = make_ui(tmp_path, [_named(Pirate(), f"Pirate {i}") for i in range(9)])
+    for i, char in enumerate(ui.characters):
+        ui._initiative_inputs[id(char)].setText(str(20 - i))
+    ui._start_combat()
+    for i, char in enumerate(ui.characters[1:]):
+        ui._select_target_character(char, ctrl=i > 0)
+    assert len(ui.target_characters) == 8
+    dlg = _save_dialog(ui, monkeypatch)
+    assert len(dlg.findChildren(QLineEdit, "typedTotal")) == 8
+    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
+    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600

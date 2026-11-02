@@ -17,29 +17,12 @@ from PyQt6.QtWidgets import (
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
 from Core.Definitions import Condition
+from .effect_options import casting_time_cost, spell_slot_choices
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
 from .undo import undoable
 from .tree_filter import filter_category_tree, first_visible_item
-
-
-def spell_slot_choices(char: dict, spell_level: int) -> list[tuple[str, int | None]]:
-    """What char can pay for a spell of spell_level with, as (label, slot
-    level), cheapest first: its slots of that level or higher that have any
-    left, then casting without one (a ritual, an item, a feature). A cantrip
-    needs no slot, and neither does a caster whose slots aren't tracked."""
-    if spell_level == 0:
-        return [("Cantrip: no slot", None)]
-    slots = char.get("spell_slots") or {}
-    if not slots:
-        return [("No slots tracked", None)]
-    paid = [
-        (f"Level {level} slot ({count} left)", level)
-        for level, count in sorted(slots.items())
-        if level >= spell_level and count > 0
-    ]
-    return paid + [("No slot (ritual, item or feature)", None)]
 
 
 class SpellsMixin(CombatWindowState):
@@ -246,6 +229,17 @@ class SpellsMixin(CombatWindowState):
             self._clear_concentration_if_unused(char)
         self._rebuild_card(char)
 
+    def _all_spells(self) -> list:
+        """Every spell in the game, by level then name, read once (Cast Spell
+        and the Custom Effect dialog's picker both list them)."""
+        if not hasattr(self, "_spells_cache"):
+            from CharacterContent.Spells.SpellFactory import SpellFactory
+
+            self._spells_cache = sorted(
+                SpellFactory.all_spells(), key=lambda s: (s.level, s.name)
+            )
+        return self._spells_cache
+
     def _show_cast_spell_dialog(self):
         """Search the spell list (like Rules), the caster's own spells first,
         and cast one on the selected combatant, choosing the slot it uses.
@@ -256,14 +250,7 @@ class SpellsMixin(CombatWindowState):
             return
         # Modal dialog: the selection can't change while it's open.
         character = self.selected_character
-
-        from CharacterContent.Spells.SpellFactory import SpellFactory
-
-        if not hasattr(self, "_spells_cache"):
-            self._spells_cache = sorted(
-                SpellFactory.all_spells(), key=lambda s: (s.level, s.name)
-            )
-        spells = self._spells_cache
+        spells = self._all_spells()
 
         dlg = QDialog(self._window)
         dlg.setWindowTitle(f"Cast Spell — {character['name']}")
@@ -472,6 +459,23 @@ class SpellsMixin(CombatWindowState):
 
         dlg.exec()
 
+    def _count_spell_cast(
+        self, caster: dict, name: str, level: int, slot_level: int | None
+    ):
+        """Count a cast of the spell `name` (of `level`, using a slot of
+        slot_level, if any) in caster's stats, and log it so the party's
+        replay counts it too. Cast Spell and the Custom Effect dialog share it."""
+        stats = caster.setdefault("stats", _default_stats())
+        stats["spells_cast"] = stats.get("spells_cast", 0) + 1
+        increment_named_stat(stats, "spells_cast_by_name", name)
+        upcast = f" at level {slot_level}" if (slot_level or 0) > level else ""
+        self._log_event(
+            f"{caster['name']} casts {name}{upcast}",
+            character=caster["name"],
+            action=Action.CAST_SPELL,
+            value={"spell_name": name},
+        )
+
     @undoable
     def _apply_cast_spell(self, spell, slot_level: int | None = None):
         """Cast a spell. The spell's own declared metadata decides what happens:
@@ -506,18 +510,7 @@ class SpellsMixin(CombatWindowState):
                 return
             recipients = self.target_characters
 
-        # Usage bookkeeping on the caster
-        source.setdefault("stats", _default_stats())
-        source["stats"]["spells_cast"] = source["stats"].get("spells_cast", 0) + 1
-        increment_named_stat(source["stats"], "spells_cast_by_name", spell.name)
-        cast_value = {"spell_name": spell.name}
-        upcast = f" at level {slot_level}" if (slot_level or 0) > spell.level else ""
-        self._log_event(
-            f"{source['name']} casts {spell.name}{upcast}",
-            character=source["name"],
-            action=Action.CAST_SPELL,
-            value=cast_value,
-        )
+        self._count_spell_cast(source, spell.name, spell.level, slot_level)
         if slot_level is not None:
             self._cast_spell_slot_level(slot_level)
 
@@ -525,12 +518,9 @@ class SpellsMixin(CombatWindowState):
             self._start_concentration(source, spell.name)
 
         # Action economy: the caster spends the action, regardless of who it affects
-        try:
-            casting_time_type = spell.casting_time_type.value
-            if casting_time_type in self.ACTION_ECONOMY_TYPES:
-                self._add_action_use(casting_time_type)
-        except ValueError:
-            pass
+        action_cost = casting_time_cost(spell)
+        if action_cost is not None:
+            self._add_action_use(action_cost)
 
         from CharacterContent.Spells.SpellFactory import Spell
 

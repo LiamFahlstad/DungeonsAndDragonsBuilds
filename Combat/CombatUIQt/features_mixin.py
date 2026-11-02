@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action
 from Presentation.FeatureCards import feature_label
+from .effect_options import feature_action_cost
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 from .state import CombatWindowState
@@ -307,6 +308,23 @@ class FeaturesMixin(CombatWindowState):
 
         dlg.exec()
 
+    def _count_feature_use(self, source: dict, name: str, counts_uses: bool):
+        """Count a use of the feature `name` in source's stats, and of its
+        uses if it has any (counts_uses), and log it so the party's replay
+        counts it too. Enable Feature and the Custom Effect dialog share it."""
+        stats = source.setdefault("stats", _default_stats())
+        stats["features_enabled"] = stats.get("features_enabled", 0) + 1
+        increment_named_stat(stats, "features_enabled_by_name", name)
+        self._log_event(
+            f"{source['name']} uses {name}",
+            character=source["name"],
+            action=Action.ENABLE_FEATURE,
+            value={"feature_name": name},
+        )
+        if counts_uses:
+            used = source.setdefault("feature_uses_used", {})
+            used[name] = used.get(name, 0) + 1
+
     @undoable
     def _apply_feature(self, feature):
         """Apply a feature. The feature's own declared metadata decides what happens:
@@ -336,33 +354,12 @@ class FeaturesMixin(CombatWindowState):
                 return
             recipients = self.target_characters
 
-        # Usage bookkeeping on the source
-        source.setdefault("stats", _default_stats())
-        source["stats"]["features_enabled"] = (
-            source["stats"].get("features_enabled", 0) + 1
-        )
-        increment_named_stat(source["stats"], "features_enabled_by_name", feature.name)
-        feature_value = {"feature_name": feature.name}
-        self._log_event(
-            f"{source['name']} uses {feature.name}",
-            character=source["name"],
-            action=Action.ENABLE_FEATURE,
-            value=feature_value,
-        )
-        if feature.uses is not None:
-            used = source.setdefault("feature_uses_used", {})
-            used[feature.name] = used.get(feature.name, 0) + 1
+        self._count_feature_use(source, feature.name, feature.uses is not None)
 
         # Action economy: the source spends the action, regardless of who it affects
-        if feature.activation and feature.activation.action_type is not None:
-            action_type_map = {
-                "action": "Action",
-                "bonus_action": "Bonus Action",
-                "reaction": "Reaction",
-            }
-            action_label = action_type_map.get(feature.activation.action_type.value)
-            if action_label:
-                self._add_action_use(action_label)
+        action_cost = feature_action_cost(feature)
+        if action_cost is not None:
+            self._add_action_use(action_cost)
 
         # Condition badge + tooltip on every recipient
         tooltip_html = self._feature_condition_tooltip(source, feature)

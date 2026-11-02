@@ -65,7 +65,7 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] A Fireball: Dexterity, `8d6 fire`, half on save, Apply: each target rolls and takes the right amount.
 - [ ] A target resistant to the damage takes half as well.
 - [ ] A Hold Person: Wisdom, condition Paralyzed, duration: only those who fail get it.
-- [ ] A player's row: type their total, or leave it blank to roll for them.
+- [ ] Any target's row: type their total, or leave it blank to roll for them.
 - [ ] A Stunned target fails a Dexterity save without rolling.
 - [ ] A Restrained target rolls Dexterity with Disadvantage.
 - [ ] A creature immune to the condition doesn't get it.
@@ -96,6 +96,31 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 - [ ] A natural 20 rolls the damage dice twice over, and the condition lands; a natural 1 misses.
 - [ ] The status line shows each roll against the AC, and the turn column the hits and misses.
 - [ ] On the player link, a hit shows with its damage, and the Limited view narrows the AC down.
+- [ ] The picker: Shift+C opens with the cursor in the search box. A monster's sections, or a player's Attacks, spells, Features and All spells, are listed, Features and All spells folded.
+- [ ] Type `fireb`, Enter: Fireball fills in (Dexterity, the DC, `8d6 Fire`, half on save, a level 3 slot, Action). Enter again applies it.
+- [ ] Pick Hold Person after Fireball: the damage, half on save and type clear; Paralyzed, repeat save, concentration and 1 minute fill in.
+- [ ] Choose a higher slot: the damage grows. Type your own damage, then change the slot: yours stays.
+- [ ] Change any field after a pick and Apply: what you changed is what's applied.
+- [ ] Double-click a row: it applies straight away.
+- [ ] A spent recharge, or a legendary action costing more than are left, is greyed and can't be picked.
+- [ ] A monster's action with a rider shows "Also: ..." under the name, and the dialog still fits.
+- [ ] Apply a picked spell: the slot, the action and "casts" are logged, the spell counts in the stats, and one Ctrl+Z takes it all back.
+- [ ] Apply a picked feature with uses (Channel Divinity): a use is spent, with nothing else needed.
+- [ ] Apply a picked recharge action: the turn column's button shows it spent at once.
+- [ ] A picked spell attack shows once on the player link, as "casts", with its hit and damage.
+- [ ] With no left-clicked source, a pick still fills the form, but Apply spends nothing.
+- [ ] Hand-typed effects with no pick work as before.
+- [ ] Pick Channel Divinity, then type another name: the note goes, and Apply spends no use.
+- [ ] Pick Fire Bolt, type `fireball` in the search, Enter: Fireball is picked, not Fire Bolt cast.
+- [ ] A second weapon attack in a turn fills "No action".
+- [ ] A Ghoul's Claw: the hit fills no Paralyzed, and the note says to apply its save separately.
+- [ ] The Lich's Paralyzing Touch: the duration is "Until the start of <the lich>'s next turn".
+- [ ] Command: no Prone filled in, and the note says Grovel.
+- [ ] Magic Missile and Cure Wounds fill no condition badge; Bless does.
+- [ ] A monster's save: its row takes a total typed in (`14`, `9+5`), and only the blank rows roll.
+- [ ] `nat 20` in a save row is refused, and the dialog stays open.
+- [ ] A typed failure on a monster with Legendary Resistance ticked becomes a save.
+- [ ] Eight targets: the save and attack rows scroll, and the dialog still fits.
 
 ### 5. Concentration
 
@@ -260,7 +285,7 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 ### Faster play
 
 - [x] **Roll monsters' saves for you.** Done as the Custom Effect dialog.
-- [ ] **Save ability on spells.** Cast Spell could open Custom Effect with the spell's ability, damage and condition filled in.
+- [x] **Save ability on spells.** Done as the Custom Effect dialog's picker: a spell, feature, weapon or monster action fills in its ability, DC, damage and condition.
 - [ ] **End the turn from the Damage field.** After a monster's last hit you need Esc, then Enter. Enter in an empty field could advance the turn, but a double press would skip a turn, so it was left out.
 - [ ] **Reset Advantage after each attack.** The dropdown stays on Advantage, which is easy to forget.
 - [ ] **Several targets for an attack.** With 2+ targets it rolls but can't call HIT or MISS. It could judge each target.
