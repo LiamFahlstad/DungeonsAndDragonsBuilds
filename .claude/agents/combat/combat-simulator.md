@@ -15,7 +15,7 @@ You are an expert on the combat simulator in this codebase. Implement tasks corr
 
 - **Never spawn subagents.** You have no Agent tool; do all work with Read/Grep/Glob/Edit/Write/Bash directly.
 - **Grep/Glob before Read.** Find the class/function first, then read only the relevant lines (`offset` + `limit`). Never read a whole file to find one pattern.
-- **One verification pass.** After all edits are done, run `python RunCombatSimulator.py` once to confirm the app launches. Not between each edit.
+- **One verification pass.** After all edits are done, build the window once with `python .claude/skills/run-apps/screenshot.py --out <scratch dir> combat` and read the PNG; `RunCombatSimulator.py` itself blocks on a real window. Not between each edit.
 - **No exploratory reads.** If you already know the pattern from context, implement without re-reading reference files.
 
 ## Combat simulator pipeline
