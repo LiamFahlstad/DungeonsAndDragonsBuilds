@@ -83,7 +83,7 @@
       "mythic_actions": [],
       "death_saves": false,
       "stats": {
-        "damage_dealt": 0,
+        "damage_dealt": 2,
         "damage_taken": 0,
         "healing_done": 0,
         "healing_received": 0,
@@ -106,7 +106,7 @@
         "damage_dealt_necrotic": 0,
         "damage_dealt_piercing": 0,
         "damage_dealt_poison": 0,
-        "damage_dealt_psychic": 0,
+        "damage_dealt_psychic": 2,
         "damage_dealt_radiant": 0,
         "damage_dealt_slashing": 0,
         "damage_dealt_thunder": 0,
@@ -136,7 +136,8 @@
         "conditions_received_by_name": {},
         "spells_cast_by_name": {},
         "features_enabled_by_name": {}
-      }
+      },
+      "action_uses": {}
     },
     {
       "name": "Goblin King",
@@ -295,7 +296,8 @@
         "conditions_received_by_name": {},
         "spells_cast_by_name": {},
         "features_enabled_by_name": {}
-      }
+      },
+      "action_uses": {}
     },
     {
       "name": "Goblin Warrior 2 (Goblin Warrior)",
@@ -418,7 +420,8 @@
         "conditions_received_by_name": {},
         "spells_cast_by_name": {},
         "features_enabled_by_name": {}
-      }
+      },
+      "action_uses": {}
     },
     {
       "name": "Goblin Boss 2 (Goblin Boss)",
@@ -428,7 +431,9 @@
       "max_hp": 21,
       "ac": 17,
       "temp_hp": 0,
-      "conditions": [],
+      "conditions": [
+        "Faerie Fire"
+      ],
       "visibility_states": [],
       "death_saves_fail": 0,
       "death_saves_success": 0,
@@ -503,7 +508,7 @@
         "temp_hp_granted": 0,
         "temp_hp_received": 0,
         "conditions_given": 0,
-        "conditions_received": 0,
+        "conditions_received": 1,
         "spell_slots_used": 0,
         "spells_cast": 0,
         "features_enabled": 0,
@@ -546,12 +551,23 @@
         "spell_slots_used_8": 0,
         "spell_slots_used_9": 0,
         "conditions_given_by_name": {},
-        "conditions_received_by_name": {},
+        "conditions_received_by_name": {
+          "Faerie Fire": 1
+        },
         "spells_cast_by_name": {},
         "features_enabled_by_name": {}
       },
       "ac_at_most": 18,
-      "ac_above": 15
+      "ac_above": 15,
+      "action_uses": {},
+      "timed_conditions": [
+        {
+          "name": "Faerie Fire",
+          "time_left": 60,
+          "duration": 60,
+          "ticks_on": "Clover"
+        }
+      ]
     },
     {
       "Ability Scores": {
@@ -954,7 +970,9 @@
       ],
       "combatant_type": "Goblin Warrior",
       "condition_immunities": [],
-      "conditions": [],
+      "conditions": [
+        "Poisoned"
+      ],
       "cr": "1/4",
       "create_name": "Goblin Warrior",
       "damage_immunities": [],
@@ -964,7 +982,7 @@
       "death_saves_fail": 0,
       "death_saves_success": 0,
       "description": "",
-      "hp": 10,
+      "hp": 0,
       "hp_formula": "3d6",
       "lair_actions": [],
       "languages": "Common, Goblin",
@@ -989,8 +1007,10 @@
       "stats": {
         "conditions_given": 0,
         "conditions_given_by_name": {},
-        "conditions_received": 0,
-        "conditions_received_by_name": {},
+        "conditions_received": 1,
+        "conditions_received_by_name": {
+          "Poisoned": 1
+        },
         "damage_dealt": 0,
         "damage_dealt_acid": 0,
         "damage_dealt_bludgeoning": 0,
@@ -1005,7 +1025,7 @@
         "damage_dealt_radiant": 0,
         "damage_dealt_slashing": 0,
         "damage_dealt_thunder": 0,
-        "damage_taken": 0,
+        "damage_taken": 10,
         "damage_taken_acid": 0,
         "damage_taken_bludgeoning": 0,
         "damage_taken_cold": 0,
@@ -1013,7 +1033,7 @@
         "damage_taken_force": 0,
         "damage_taken_lightning": 0,
         "damage_taken_necrotic": 0,
-        "damage_taken_piercing": 0,
+        "damage_taken_piercing": 10,
         "damage_taken_poison": 0,
         "damage_taken_psychic": 0,
         "damage_taken_radiant": 0,
@@ -1039,11 +1059,22 @@
         "spells_cast_by_name": {},
         "temp_hp_granted": 0,
         "temp_hp_received": 0,
-        "times_downed": 0
+        "times_downed": 1
       },
       "temp_hp": 0,
       "traits": [],
-      "visibility_states": []
+      "visibility_states": [],
+      "timed_conditions": [
+        {
+          "name": "Poisoned",
+          "until": "start",
+          "of": "Edmund",
+          "turns_left": 1,
+          "text": "Until the start of Edmund's next turn"
+        }
+      ],
+      "ac_at_most": 16,
+      "max_hp_at_most": 10
     },
     {
       "Ability Scores": {
@@ -1664,6 +1695,127 @@
       "text": "[Kivi J\u00e4tti's turn] Kivi J\u00e4tti's attack roll of 15 misses Goblin Boss 2 (Goblin Boss)",
       "character": "Goblin Boss 2 (Goblin Boss)",
       "public": true
+    },
+    {
+      "text": "[Edmund's turn] Edmund uses a Level 1 spell slot",
+      "character": "Edmund",
+      "action": "remove_spell_slot",
+      "value": 1,
+      "public": true
+    },
+    {
+      "text": "[Edmund's turn] Edmund uses Action",
+      "character": "Edmund",
+      "public": true
+    },
+    {
+      "text": "[Edmund's turn] Goblin Warrior 4 (Goblin Warrior) fails a DC 17 Wisdom save, rolled 6",
+      "character": "Goblin Warrior 4 (Goblin Warrior)",
+      "public": true
+    },
+    {
+      "text": "[Edmund's turn] Goblin Warrior 4 (Goblin Warrior) gains Poisoned from Edmund",
+      "character": "Goblin Warrior 4 (Goblin Warrior)",
+      "action": "add_condition",
+      "value": {
+        "condition": "Poisoned",
+        "source_name": "Edmund",
+        "target_name": "Goblin Warrior 4 (Goblin Warrior)"
+      },
+      "public": true
+    },
+    {
+      "text": "[Goblin Hexer's turn] Goblin Hexer's attack roll of 18 hits Kivi J\u00e4tti",
+      "character": "Kivi J\u00e4tti",
+      "public": true
+    },
+    {
+      "text": "[Goblin Hexer's turn] Kivi J\u00e4tti takes 2 Psychic damage from Goblin Hexer",
+      "character": "Kivi J\u00e4tti",
+      "action": "damage",
+      "value": {
+        "hp_delta": -2,
+        "temp_delta": 0,
+        "dmg": 2,
+        "damage_type": "Psychic",
+        "source_name": "Goblin Hexer",
+        "target_name": "Kivi J\u00e4tti",
+        "knockout": false,
+        "outcome": null
+      },
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover's attack roll of 16 hits Goblin Warrior 4 (Goblin Warrior)",
+      "character": "Goblin Warrior 4 (Goblin Warrior)",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Goblin Warrior 4 (Goblin Warrior) takes 10 Piercing damage from Clover",
+      "character": "Goblin Warrior 4 (Goblin Warrior)",
+      "action": "damage",
+      "value": {
+        "hp_delta": -10,
+        "temp_delta": 0,
+        "dmg": 10,
+        "damage_type": "Piercing",
+        "source_name": "Clover",
+        "target_name": "Goblin Warrior 4 (Goblin Warrior)",
+        "knockout": true,
+        "outcome": null
+      },
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover's attack roll of 14 misses Goblin Boss 2 (Goblin Boss)",
+      "character": "Goblin Boss 2 (Goblin Boss)",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover casts Faerie Fire",
+      "character": "Clover",
+      "action": "cast_spell",
+      "value": {
+        "spell_name": "Faerie Fire"
+      },
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover uses a Level 1 spell slot",
+      "character": "Clover",
+      "action": "remove_spell_slot",
+      "value": 1,
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover uses Action",
+      "character": "Clover",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover gains Concentrating",
+      "character": "Clover",
+      "action": "add_condition",
+      "value": {
+        "condition": "Concentrating",
+        "source_name": "Clover",
+        "target_name": "Clover"
+      },
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Goblin Boss 2 (Goblin Boss) fails a DC 14 Dexterity save against Faerie Fire, rolled 10",
+      "character": "Goblin Boss 2 (Goblin Boss)"
+    },
+    {
+      "text": "[Clover's turn] Goblin Boss 2 (Goblin Boss) gains Faerie Fire from Clover",
+      "character": "Goblin Boss 2 (Goblin Boss)",
+      "action": "add_condition",
+      "value": {
+        "condition": "Faerie Fire",
+        "source_name": "Clover",
+        "target_name": "Goblin Boss 2 (Goblin Boss)"
+      }
     }
   ],
   "initiative_order": [
@@ -1686,5 +1838,25 @@
     "Gabriel Greybeard",
     "Manifestation of Durmor"
   ],
-  "turn": "Kivi J\u00e4tti"
+  "turn": "Clover",
+  "player_fight_state": {
+    "Clover": {
+      "active_spells": [
+        {
+          "name": "Faerie Fire",
+          "time_left": 60,
+          "duration": 60,
+          "concentration": true,
+          "applied": [
+            {
+              "target": "Goblin Boss 2 (Goblin Boss)",
+              "condition": "Faerie Fire"
+            }
+          ],
+          "ticks_on": "Clover",
+          "ends_with_conditions": false
+        }
+      ]
+    }
+  }
 }
