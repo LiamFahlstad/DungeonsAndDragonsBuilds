@@ -21,6 +21,7 @@ from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, is_round_key, session_label
 
 from .player_view import may_read_log_line
+from .public_log import public_log_rounds
 from .stats import (
     DICT_STAT_KEYS,
     STAT_KEYS,
@@ -169,26 +170,10 @@ class LoggingMixin(CombatWindowState):
         return readable
 
     def _public_log(self) -> list[dict]:
-        """What players may read of this encounter's log, round by round, oldest
-        first. An event without PUBLIC_KEY stays private, plain text from an old
-        log too. A round's own "--- Round 2 ---" line is its heading on the page."""
+        """What players may read of this encounter's log (see public_log.py)."""
         if self.phase != "COMBAT":
             return []
-        data = self._read_log()
-        log = []
-        for number in sorted(
-            int(k.split("_", 1)[1]) for k in filter(is_round_key, data)
-        ):
-            lines = [
-                event["text"]
-                for event in data[f"round_{number}"]
-                if isinstance(event, dict)
-                and event.get(PUBLIC_KEY)
-                and event["text"] != f"--- Round {number} ---"
-            ]
-            if lines:
-                log.append({"round": number, "lines": lines})
-        return log
+        return public_log_rounds(self._read_log(), self.characters)
 
     def _undo_last(self):
         """Take back the last operation (see undo.py): restore the combat

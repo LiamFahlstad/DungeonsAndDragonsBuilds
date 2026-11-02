@@ -176,6 +176,8 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 - [ ] Load Encounter: every phone drops the last fight.
 - [ ] A hidden monster doesn't show on any phone.
 - [ ] Encounter log opens on a phone, newest first, and stays open as lines arrive.
+- [ ] Only the latest round is unfolded, and the one before it folds when a new round starts. A round you open or close stays that way as lines arrive.
+- [ ] An attack and its damage are one line, with the damage in the right-hand column. A knockout says "is down".
 - [ ] A hit from a hidden monster isn't in the log, and doesn't appear after it's revealed. The target's HP still drops, so players can tell something happened.
 - [ ] A custom condition on a monster isn't in the log; Prone and Bloodied are.
 - [ ] Add Combatant, during setup or a fight, isn't announced in the log.

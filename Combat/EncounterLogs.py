@@ -26,6 +26,7 @@ the time it ended; continuing it takes that back out."""
 import dataclasses
 import json
 import os
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -54,6 +55,8 @@ PLAYER_FIGHT_KEYS = (
 HEADER_KEYS = ("encounter", "title", "players")
 # Marks an event players may read (player_view.may_read_log_line).
 PUBLIC_KEY = "public"
+# The "[Goblin's turn] " an event's line starts with during a turn.
+TURN_PREFIX = re.compile(r"\[(.+?)'s turn\] (.*)", re.DOTALL)
 
 
 class LogJSONEncoder(json.JSONEncoder):

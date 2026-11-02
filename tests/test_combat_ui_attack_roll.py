@@ -441,10 +441,14 @@ def test_players_see_nothing_of_the_ac_in_the_log(fight):
     ui, *_ = fight
     _roll(ui, str(TIGER_AC))
     (round_log,) = ui._public_log()
-    assert round_log["lines"][-1] == (
-        f"[Pirate's turn] Pirate's attack roll of {TIGER_AC} hits Tiger"
-    )
-    assert not any("AC" in line for line in round_log["lines"])
+    assert round_log["turns"] == [
+        {
+            "name": "Pirate",
+            "lines": [
+                {"kind": "hit", "text": f"Hits Tiger ({TIGER_AC})", "amount": ""}
+            ],
+        }
+    ]
 
 
 def test_a_roll_at_a_hidden_monster_stays_out_of_the_players_log(fight):
@@ -452,9 +456,7 @@ def test_a_roll_at_a_hidden_monster_stays_out_of_the_players_log(fight):
     tiger["conditions"].append("Invisible")
     _roll(ui, "17")
     assert _lines(ui) == ["[Pirate's turn] Pirate's attack roll of 17 hits Tiger"]
-    assert not any(
-        "attack roll" in line for r in ui._public_log() for line in r["lines"]
-    )
+    assert ui._public_log() == []
 
 
 def test_each_member_of_a_group_has_its_own_note(tmp_path):

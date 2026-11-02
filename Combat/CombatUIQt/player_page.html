@@ -84,15 +84,49 @@
     color: #a0c4ff;
     font-size: 15px;
   }
-  #log { margin-top: 14px; }
+  #log { max-width: 640px; margin-top: 14px; }
   summary { padding: 8px 0; color: #c9a84c; font-weight: bold; cursor: pointer; }
+  .round { margin-bottom: 6px; }
+  .round > summary {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: #0f3460;
+    list-style: none;
+  }
+  .round > summary::-webkit-details-marker { display: none; }
+  .round > summary::before { content: "\25B8"; }
+  .round[open] > summary::before { content: "\25BE"; }
+  .digest {
+    flex: 1;
+    color: #a0a0b0;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: right;
+  }
+  .turn { margin-top: 8px; padding: 2px 0 2px 10px; border-left: 3px solid #0f3460; }
+  .turn-name { color: #5ac8f5; font-size: 15px; font-weight: bold; overflow-wrap: anywhere; }
   .line {
-    padding: 4px 0;
-    border-top: 1px solid #0f3460;
-    overflow-wrap: anywhere;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 2px 0;
     font-size: 15px;
   }
-  .heading { padding: 8px 0 4px; color: #c9a84c; font-size: 15px; font-weight: bold; }
+  .what { min-width: 0; overflow-wrap: anywhere; }
+  .figure { flex: none; font-weight: bold; }
+  .line[data-kind="damage"] .figure,
+  .line[data-kind="hit"] .figure,
+  .line[data-kind="crit"] .figure { color: #ff8a80; }
+  .line[data-kind="crit"] .what { color: #c9a84c; font-weight: bold; }
+  .line[data-kind="heal"] { color: #7ee2a0; }
+  .line[data-kind="condition"] { color: #a0c4ff; }
+  .line[data-kind="down"] { color: #ff8a80; font-weight: bold; }
+  .line[data-kind="miss"],
+  .line[data-kind="minor"],
+  .line[data-kind="bloodied"] { color: #a0a0b0; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -121,6 +155,7 @@ let etag = null;
 let failures = 0;
 let polling = false;
 let nextPoll = null;
+const chosenRounds = new Map();  // round number -> whether the reader left it open
 
 function cell(className, text) {
   const element = document.createElement("div");
@@ -161,13 +196,38 @@ function rowElement(row) {
   return element;
 }
 
-// The newest first, in the rounds and in each round, so it's there when it's opened.
-function roundElement(round) {
-  const element = cell("round", "");
-  element.append(
-    cell("heading", `Round ${round.round}`),
-    ...round.lines.map((line) => cell("line", line)).reverse()
-  );
+function lineElement(line) {
+  const element = cell("line", "");
+  element.dataset.kind = line.kind;
+  element.append(cell("what", line.text));
+  if (line.amount) {
+    element.append(cell("figure", line.amount));
+  }
+  return element;
+}
+
+// A turn's lines stay in the order they happened, so a hit reads before its result.
+function turnElement(turn) {
+  const element = cell("turn", "");
+  if (turn.name) {
+    element.append(cell("turn-name", turn.name));
+  }
+  element.append(...turn.lines.map(lineElement));
+  return element;
+}
+
+// The newest turn first, so it's there when it's opened. Only the newest round
+// starts open, and one the reader opened or closed stays that way.
+function roundElement(round, newest) {
+  const element = document.createElement("details");
+  element.className = "round";
+  element.open = chosenRounds.has(round.round)
+    ? chosenRounds.get(round.round)
+    : round === newest;
+  const summary = document.createElement("summary");
+  summary.append(cell("round-name", `Round ${round.round}`), cell("digest", round.digest));
+  summary.addEventListener("click", () => chosenRounds.set(round.round, !element.open));
+  element.append(summary, ...round.turns.map(turnElement).reverse());
   return element;
 }
 
@@ -180,8 +240,12 @@ function render(state) {
   rowsBox.textContent = "";
   rowsBox.append(...state.rows.map(rowElement));
   log.hidden = state.log.length === 0;
+  if (log.hidden) {
+    chosenRounds.clear();  // the next fight's rounds start from 1 again
+  }
+  const newest = state.log[state.log.length - 1];
   lines.textContent = "";
-  lines.append(...state.log.map(roundElement).reverse());
+  lines.append(...state.log.map((round) => roundElement(round, newest)).reverse());
   if (reading) {
     window.scrollTo(0, page.scrollHeight - fromBottom);
   }

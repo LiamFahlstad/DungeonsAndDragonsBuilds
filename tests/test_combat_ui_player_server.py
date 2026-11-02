@@ -60,6 +60,7 @@ from tests._combat_ui import make_ui, open_dialog, qapp
 
 PAGE = Path(player_server.__file__).with_name("player_page.html")
 WAITING = {"title": "Waiting for the fight to start", "rows": [], "log": []}
+_HIT = "Pirate | Tiger takes | 3 Slashing"  # how _hit's line reaches a phone
 
 TIGER = CombatScenario(
     name="tiger_den",
@@ -1132,11 +1133,11 @@ def test_a_hit_that_doesnt_change_the_word_leaves_the_bar_alone(limited):
 def test_the_log_is_the_same_on_limited(limited):
     ui, pirate, tiger, _ = limited
     _hit(ui, pirate, tiger)
-    assert _lines(ui) == ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"]
+    assert _lines(ui) == [_HIT]
 
     ui.settings.limited_player_view = False
     ui._refresh_views()
-    assert _lines(ui) == ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"]
+    assert _lines(ui) == [_HIT]
 
 
 def test_a_hidden_monsters_lines_stay_out_of_the_log_on_limited(limited):
@@ -1224,20 +1225,26 @@ def _gm_log(ui) -> str:
 
 
 def _lines(ui) -> list[str]:
-    return [line for round_ in _state(ui)["log"] for line in round_["lines"]]
+    """Each line a phone is sent: "<turn> | <what happened> | <amount>"."""
+    return [
+        " | ".join(filter(None, (turn["name"], line["text"], line["amount"])))
+        for round_ in _state(ui)["log"]
+        for turn in round_["turns"]
+        for line in turn["lines"]
+    ]
 
 
 def test_the_log_says_what_happened(fight):
     ui, pirate, tiger, _ = fight
     _hit(ui, pirate, tiger)
-    assert _lines(ui) == ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"]
+    assert _lines(ui) == [_HIT]
 
 
 def test_a_line_reaches_the_link_without_a_card_changing(fight):
     ui, *_ = fight
     ui._log_event("Pirate ponders", character="Pirate")
     QApplication.processEvents()
-    assert _lines(ui) == ["[Pirate's turn] Pirate ponders"]
+    assert _lines(ui) == ["Pirate | Pirate ponders"]
 
 
 def test_undo_takes_a_line_back_off_the_link(fight):
@@ -1255,9 +1262,11 @@ def test_the_rounds_stay_in_order_past_nine(fight):
     data["round_10"] = [{"text": "Tenth", "public": True}]
     ui._write_log(data)
     ui._refresh_views()
-    assert _state(ui)["log"] == [
-        {"round": 2, "lines": ["Second"]},
-        {"round": 10, "lines": ["Tenth"]},
+    assert [
+        (r["round"], r["turns"][0]["lines"][0]["text"]) for r in _state(ui)["log"]
+    ] == [
+        (2, "Second"),
+        (10, "Tenth"),
     ]
 
 
@@ -1267,15 +1276,13 @@ def test_each_round_is_a_heading_over_its_own_lines(fight):
     for _ in range(3):
         ui._advance_turn()  # into round 2, which logs its "--- Round 2 ---"
     _hit(ui, pirate, tiger)
+    turn = {
+        "name": "Pirate",
+        "lines": [{"kind": "damage", "text": "Tiger takes", "amount": "3 Slashing"}],
+    }
     assert _state(ui)["log"] == [
-        {
-            "round": 1,
-            "lines": ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"],
-        },
-        {
-            "round": 2,
-            "lines": ["[Pirate's turn] Tiger takes 3 Slashing damage from Pirate"],
-        },
+        {"round": 1, "digest": "3 damage", "turns": [turn]},
+        {"round": 2, "digest": "3 damage", "turns": [turn]},
     ]
 
 
@@ -1336,7 +1343,7 @@ def test_a_hidden_groups_turn_stays_out_of_the_prefix(tmp_path):
     two["conditions"] = []  # one they can see is enough
     ui._log_event("A tiger growls")
     QApplication.processEvents()
-    assert _lines(ui) == ["[Tigers's turn] A tiger growls"]
+    assert _lines(ui) == ["Tigers | A tiger growls"]
 
 
 def test_going_hidden_isnt_announced(fight):
@@ -1369,7 +1376,7 @@ def test_a_players_visibility_is_in_the_log(fight):
     ui.visibility_combo.setCurrentText("Invisible")
     ui._add_visibility()
     QApplication.processEvents()
-    assert _lines(ui) == ["[Pirate's turn] Pirate gains Invisible"]
+    assert _lines(ui) == ["Pirate | Pirate gains Invisible"]
 
 
 def test_a_newcomer_isnt_announced_before_it_can_be_hidden(fight):
@@ -1481,7 +1488,7 @@ def test_a_players_effect_ending_is_in_the_log(fight):
     pirate["active_spells"] = [entry]
     ui._remove_active_spell(pirate, entry)
     QApplication.processEvents()
-    assert _lines(ui) == ["[Pirate's turn] Pirate's Bless ends early"]
+    assert _lines(ui) == ["Pirate | Pirate's Bless ends early"]
 
 
 @pytest.mark.parametrize("kept", [True, False])
@@ -1500,9 +1507,7 @@ def test_a_players_concentration_is_in_the_log(fight):
     pirate["conditions"] = ["Concentrating"]
     ui._settle_concentration(pirate, 10, True, 15)
     QApplication.processEvents()
-    assert _lines(ui) == [
-        "[Pirate's turn] Pirate keeps concentration (DC 10, rolled 15)"
-    ]
+    assert _lines(ui) == ["Pirate | Pirate keeps concentration (DC 10, rolled 15)"]
 
 
 def test_a_save_against_a_private_effect_stays_out_of_the_log(fight):
@@ -1530,7 +1535,7 @@ def test_casting_is_public_but_the_badge_it_leaves_isnt(fight):
     ui._add_condition_to(tiger, "Mage Armor")
     QApplication.processEvents()
     assert "gains Mage Armor" in _gm_log(ui)
-    assert _lines(ui) == ["[Pirate's turn] Tiger casts Mage Armor"]
+    assert _lines(ui) == ["Pirate | Tiger casts Mage Armor"]
 
 
 def test_a_line_from_while_it_was_hidden_stays_private_after_the_reveal(fight):
@@ -1571,16 +1576,25 @@ def test_a_private_condition_expiring_stays_out_of_the_log(fight):
     assert _lines(ui) == []
 
 
-@pytest.mark.parametrize("condition", ["Prone", "Bloodied"])
-def test_a_monsters_visible_conditions_are_in_the_log(fight, condition):
+def test_a_monsters_visible_conditions_are_in_the_log(fight):
     ui, _, tiger, _ = fight
-    ui._add_condition_to(tiger, condition)
-    ui._remove_condition_from(tiger, condition)
+    ui._add_condition_to(tiger, "Prone")
+    ui._remove_condition_from(tiger, "Prone")
     QApplication.processEvents()
     log = _lines(ui)
     assert len(log) == 2
-    assert f"Tiger gains {condition}" in log[0]
-    assert f"Tiger loses {condition}" in log[1]
+    assert "Tiger gains Prone" in log[0]
+    assert "Tiger loses Prone" in log[1]
+
+
+def test_a_monster_gaining_bloodied_is_in_the_log_but_not_losing_it(fight):
+    ui, _, tiger, _ = fight
+    ui._add_condition_to(tiger, "Bloodied")
+    ui._remove_condition_from(tiger, "Bloodied")
+    QApplication.processEvents()
+    log = _lines(ui)
+    assert len(log) == 1
+    assert "Tiger gains Bloodied" in log[0]
 
 
 def test_a_players_own_custom_condition_is_in_the_log(fight):
@@ -2321,3 +2335,11 @@ def test_the_log_opens_by_itself_and_stays_open_through_an_update():
     assert re.search(r'<details id="log" hidden>\s*<summary>Encounter log', page)
     assert 'lines.textContent = "";' in page
     assert "log.textContent" not in page
+
+
+def test_a_round_the_reader_opened_or_closed_stays_that_way():
+    """Every update rebuilds the rounds, so the page has to remember."""
+    page = _page()
+    assert "chosenRounds.set(round.round, !element.open)" in page
+    assert "chosenRounds.has(round.round)" in page
+    assert "chosenRounds.clear()" in page

@@ -2,17 +2,15 @@
 the bottom. It shows the whole log, lines the player link hides included, and
 stays where the GM scrolled to until they scroll back down to the end."""
 
-import re
 from html import escape
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTextEdit
 
-from Combat.EncounterLogs import event_text
+from Combat.EncounterLogs import TURN_PREFIX, event_text
 from Combat.PlayerLog import is_round_key
 
 _MINIMUM_HEIGHT = 120
-_TURN_PREFIX = re.compile(r"\[(.+?)'s turn\] (.*)", re.DOTALL)
 _ROUND_STYLE = "color: #c9a84c; font-weight: bold; margin: 8px 0 0 0;"
 _TURN_STYLE = "color: #5ac8f5; font-weight: bold; margin: 5px 0 0 0;"
 _LINE_STYLE = "margin: 1px 0 0 8px;"
@@ -34,7 +32,7 @@ def log_feed_html(data: dict) -> str:
             text = event_text(event)
             if text == f"--- Round {number} ---":
                 continue
-            found = _TURN_PREFIX.fullmatch(text)
+            found = TURN_PREFIX.fullmatch(text)
             if found:
                 if found[1] != turn:
                     turn = found[1]
