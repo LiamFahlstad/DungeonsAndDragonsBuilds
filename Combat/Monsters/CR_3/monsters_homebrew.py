@@ -12,6 +12,7 @@ from Model.Creatures.MonsterAbilities import (
     MonsterAbility,
     Multiattack,
     RangedAttack,
+    SavingThrowEffect,
 )
 from Core.Definitions import Ability
 
@@ -435,6 +436,89 @@ class GoblinKingCR3(ExtendedCombatantData):
             ],
             legendary_actions=[],
             legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class MirelleTheGildedKnight(ExtendedCombatantData):
+    def __init__(self):
+        super().__init__(
+            combatant_type="Mirelle, the Gilded Knight",
+            description="A princess cursed into a towering knight of living gold, wielding a sword as tall as she is.",
+            hp=68,
+            ac=17,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 16,
+                Ability.DEXTERITY: 10,
+                Ability.CONSTITUTION: 16,
+                Ability.INTELLIGENCE: 10,
+                Ability.WISDOM: 12,
+                Ability.CHARISMA: 10,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="3",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Cursed",
+            alignment=Alignment.LAWFUL_NEUTRAL,
+            size=CreatureSize.LARGE,
+            ac_note="golden plate",
+            hp_formula="8d10 + 24",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[
+                Condition.CHARMED,
+            ],
+            senses="Passive Perception 11",
+            languages="Common",
+            traits=[
+                MonsterAbility(
+                    name="Royal Resolve (1/Day)",
+                    description="If Mirelle fails a saving throw, she can choose to succeed instead (Legendary Resistance). When she does, the gold cracks for a moment, and the princess beneath speaks a few words in her own voice before the curse takes her back.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="Mirelle",
+                    attacks_text="two Gilded Greatsword attacks",
+                    use_article=False,
+                ),
+                MeleeAttack(
+                    name="Gilded Greatsword",
+                    attack_bonus=5,
+                    reach_ft=10,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=3,
+                    damage_type=DamageType.SLASHING,
+                    additional_ruling="Once per turn, if Mirelle had Advantage on the attack roll and the target is Medium or smaller, the target also has the Prone condition.",
+                ),
+                SavingThrowEffect(
+                    name="Golden Arc (Recharge 5-6)",
+                    ability=Ability.STRENGTH,
+                    dc=12,
+                    target="each creature in a 15-foot Cone",
+                    dice_count=2,
+                    dice_type=DiceType.D8,
+                    damage_bonus=3,
+                    damage_type=DamageType.SLASHING,
+                    failure_effect="and the target has the Prone condition",
+                    success_effect="Half damage only.",
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=1,
             lair_actions=[],
             mythic_actions=[],
         )

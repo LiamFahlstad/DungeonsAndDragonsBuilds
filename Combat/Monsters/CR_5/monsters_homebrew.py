@@ -7,8 +7,11 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
+    DiceType,
     MonsterAbility,
     Multiattack,
+    RangedAttack,
+    SavingThrowEffect,
 )
 from Core.Definitions import Ability
 
@@ -98,6 +101,104 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
             reactions=[],
             legendary_actions=[],
             legendary_resistances=1,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class MiraPrincessOfTheLoop(ExtendedCombatantData):
+    def __init__(self):
+        super().__init__(
+            combatant_type="Mira, Princess of the Loop",
+            description="A princess who dabbled in power and ancient magic beyond imagination, and the reason the kingdom is trapped in a time loop. She fights beside the Warrior (Mirelle's stat block): she marks a target for its greatsword, teleports it into reach, and rewinds the blows it takes, recharging its Golden Arc. A boss exception to the 4-ability house rule: Multiattack, Eldritch Blast and Stutter Time are separate actions so the combat UI rolls each.",
+            hp=99,
+            ac=15,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 10,
+                Ability.DEXTERITY: 12,
+                Ability.CONSTITUTION: 12,
+                Ability.INTELLIGENCE: 18,
+                Ability.WISDOM: 14,
+                Ability.CHARISMA: 14,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="5",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="Wizard",
+            alignment=Alignment.CHAOTIC_EVIL,
+            size=CreatureSize.MEDIUM,
+            ac_note="a gown of frozen moments",
+            hp_formula="18d8 + 18",
+            speed_ground_ft=30,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={
+                Skill.ARCANA: 10,
+                Skill.INSIGHT: 5,
+            },
+            damage_vulnerabilities=[],
+            damage_resistances=[
+                DamageTypeEntry(
+                    damage_types=[DamageType.PSYCHIC],
+                    note="",
+                ),
+            ],
+            damage_immunities=[],
+            condition_immunities=[Condition.CHARMED],
+            senses="Passive Perception 12",
+            languages="Common and most other languages",
+            traits=[
+                MonsterAbility(
+                    name="Fractured Timeline",
+                    description="If Mira fails a saving throw, she rewinds to the moment before and succeeds instead (Legendary Resistance, 2/Day). The first time she is Bloodied, two illusory duplicates of her from other loops appear in unoccupied spaces she can see within 30 feet of her. Each has AC 15 and 1 Hit Point, and vanishes when it takes damage or when Mira dies. At the end of each of Mira's turns, each duplicate makes one Eldritch Blast attack.",
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="Mira",
+                    attacks_text="two attacks, using Eldritch Blast or Stutter Time in any combination",
+                    use_article=False,
+                ),
+                RangedAttack(
+                    name="Eldritch Blast",
+                    attack_bonus=7,
+                    range_ft=120,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.FORCE,
+                ),
+                SavingThrowEffect(
+                    name="Stutter Time",
+                    ability=Ability.WISDOM,
+                    dc=15,
+                    target="one creature Mira can see within 60 feet",
+                    dice_count=2,
+                    dice_type=DiceType.D8,
+                    damage_type=DamageType.PSYCHIC,
+                    failure_effect="and the target is slowed: its Speed is halved, it can't take Bonus Actions or Reactions, and it takes 3 (1d6) Psychic damage each time it takes an action",
+                    success_effect="No effect.",
+                    extra_ruling="A slowed target repeats the save at the end of each of its turns, ending the effect on a success, and another creature can end it early by touching it as an action.",
+                ),
+            ],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Temporal Shift",
+                    description="Mira marks one creature she can see within 120 feet until the start of her next turn; attack rolls against it have Advantage. She can then teleport herself, or one willing ally she can see within 60 feet of her, up to 30 feet to an unoccupied space she can see.",
+                ),
+            ],
+            reactions=[
+                MonsterAbility(
+                    name="Rewind (2/Day)",
+                    description="Trigger: Mira or an ally she can see within 60 feet of her takes damage. Response: Mira turns the moment back. The creature has Resistance to that damage and gains 10 Temporary Hit Points, and one of its abilities with a Recharge recharges.",
+                ),
+            ],
+            legendary_actions=[],
+            legendary_resistances=2,
             lair_actions=[],
             mythic_actions=[],
         )
