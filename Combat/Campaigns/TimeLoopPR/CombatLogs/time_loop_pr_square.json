@@ -10,121 +10,12 @@
   "round_number": 1,
   "combatants": [
     {
-      "name": "Mirelle (Vrock)",
-      "create_name": "Vrock",
-      "combatant_type": "Vrock",
-      "hp": 152,
-      "max_hp": 152,
-      "ac": 15,
-      "temp_hp": 0,
-      "conditions": [],
-      "visibility_states": [],
-      "death_saves_fail": 0,
-      "death_saves_success": 0,
-      "spell_slots": {},
-      "Ability Scores": {
-        "STR": 17,
-        "DEX": 15,
-        "CON": 18,
-        "INT": 8,
-        "WIS": 13,
-        "CHA": 8
-      },
-      "Saving Throws": {
-        "DEX": 5,
-        "WIS": 4,
-        "CHA": 2
-      },
-      "cr": "6",
-      "monster_type": "Fiend",
-      "monster_type_note": "Demon",
-      "alignment": "Chaotic Evil",
-      "size": "Large",
-      "ac_note": "",
-      "hp_formula": "16d10 + 64",
-      "speed_ground_ft": 40,
-      "speed_fly_ft": 60,
-      "speed_climb_ft": null,
-      "speed_special_rules": "",
-      "skills": {},
-      "damage_vulnerabilities": [],
-      "damage_resistances": [
-        {
-          "damage_types": [
-            "Cold"
-          ],
-          "note": ""
-        },
-        {
-          "damage_types": [
-            "Fire"
-          ],
-          "note": ""
-        },
-        {
-          "damage_types": [
-            "Lightning"
-          ],
-          "note": ""
-        }
-      ],
-      "damage_immunities": [
-        {
-          "damage_types": [
-            "Poison"
-          ],
-          "note": ""
-        }
-      ],
-      "condition_immunities": [
-        "Poisoned"
-      ],
-      "senses": "Darkvision 120 ft., Passive Perception 11",
-      "languages": "Abyssal; telepathy 120 ft",
-      "description": "",
-      "traits": [
-        {
-          "name": "Demonic Restoration",
-          "description": "If the vrock dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss."
-        },
-        {
-          "name": "Magic Resistance",
-          "description": "The vrock has Advantage on saving throws against spells and other magical effects."
-        }
-      ],
-      "actions": [
-        {
-          "name": "Multiattack",
-          "description": "The vrock makes two Shred attacks."
-        },
-        {
-          "name": "Shred",
-          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6 + 3) Piercing damage plus 10 (3d6) Poison damage."
-        },
-        {
-          "name": "Spores (Recharge 6)",
-          "description": "Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock. Failure: The target has the Poisoned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. While Poisoned, the target takes 5 (1d10) Poison damage at the start of each of its turns. Emptying a flask of Holy Water on the target ends the effect early."
-        },
-        {
-          "name": "Stunning Screech (1/Day)",
-          "description": "Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock (demons succeed automatically). Failure: 10 (3d6) Thunder damage, and the target has the Stunned condition until the end of the vrock's next turn."
-        }
-      ],
-      "bonus_actions": [],
-      "reactions": [],
-      "legendary_actions": [],
-      "legendary_resistances": 0,
-      "lair_actions": [],
-      "mythic_actions": [],
-      "death_saves": false
-    },
-    {
-      "name": "Guard Priest (Priest)",
-      "create_name": "Priest",
-      "combatant_type": "Priest",
-      "hp": 38,
-      "max_hp": 38,
-      "ac": 13,
+      "name": "Mirelle (Mirelle, the Gilded Knight)",
+      "create_name": "Mirelle, the Gilded Knight",
+      "combatant_type": "Mirelle, the Gilded Knight",
+      "hp": 68,
+      "max_hp": 68,
+      "ac": 17,
       "temp_hp": 0,
       "conditions": [],
       "visibility_states": [],
@@ -134,97 +25,21 @@
       "Ability Scores": {
         "STR": 16,
         "DEX": 10,
-        "CON": 12,
-        "INT": 13,
-        "WIS": 16,
-        "CHA": 13
-      },
-      "Saving Throws": {},
-      "cr": "2",
-      "monster_type": "Humanoid",
-      "monster_type_note": "Cleric",
-      "alignment": "Neutral",
-      "size": "Medium",
-      "ac_note": "",
-      "hp_formula": "7d8 + 7",
-      "speed_ground_ft": 30,
-      "speed_fly_ft": null,
-      "speed_climb_ft": null,
-      "speed_special_rules": "",
-      "skills": {
-        "Medicine": 7,
-        "Perception": 5,
-        "Religion": 5
-      },
-      "damage_vulnerabilities": [],
-      "damage_resistances": [],
-      "damage_immunities": [],
-      "condition_immunities": [],
-      "senses": "Passive Perception 15",
-      "languages": "Common plus one other language",
-      "description": "",
-      "traits": [],
-      "actions": [
-        {
-          "name": "Multiattack",
-          "description": "The priest makes two attacks, using Mace or Radiant Flame in any combination."
-        },
-        {
-          "name": "Mace",
-          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage plus 5 (2d4) Radiant damage."
-        },
-        {
-          "name": "Radiant Flame",
-          "description": "Ranged Attack Roll: +5, range 60 ft. Hit: 11 (2d10) Radiant damage."
-        },
-        {
-          "name": "Spellcasting",
-          "description": "The priest casts one of the following spells, using Wisdom as the spellcasting ability:"
-        }
-      ],
-      "bonus_actions": [
-        {
-          "name": "Divine Aid (3/Day)",
-          "description": "The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting."
-        }
-      ],
-      "reactions": [],
-      "legendary_actions": [],
-      "legendary_resistances": 0,
-      "lair_actions": [],
-      "mythic_actions": [],
-      "death_saves": false
-    },
-    {
-      "name": "Guard Rhinoceros (Rhinoceros)",
-      "create_name": "Rhinoceros",
-      "combatant_type": "Rhinoceros",
-      "hp": 45,
-      "max_hp": 45,
-      "ac": 13,
-      "temp_hp": 0,
-      "conditions": [],
-      "visibility_states": [],
-      "death_saves_fail": 0,
-      "death_saves_success": 0,
-      "spell_slots": {},
-      "Ability Scores": {
-        "STR": 21,
-        "DEX": 8,
-        "CON": 15,
-        "INT": 2,
+        "CON": 16,
+        "INT": 10,
         "WIS": 12,
-        "CHA": 6
+        "CHA": 10
       },
       "Saving Throws": {},
-      "cr": "2",
-      "monster_type": "Beast",
-      "monster_type_note": "",
-      "alignment": "Unaligned",
+      "hidden_from_players": true,
+      "cr": "3",
+      "monster_type": "Humanoid",
+      "monster_type_note": "Cursed",
+      "alignment": "Lawful Neutral",
       "size": "Large",
-      "ac_note": "",
-      "hp_formula": "6d10 + 12",
-      "speed_ground_ft": 40,
+      "ac_note": "golden plate",
+      "hp_formula": "8d10 + 24",
+      "speed_ground_ft": 30,
       "speed_fly_ft": null,
       "speed_climb_ft": null,
       "speed_special_rules": "",
@@ -232,15 +47,137 @@
       "damage_vulnerabilities": [],
       "damage_resistances": [],
       "damage_immunities": [],
-      "condition_immunities": [],
+      "condition_immunities": [
+        "Charmed"
+      ],
       "senses": "Passive Perception 11",
-      "languages": "None",
+      "languages": "Common",
+      "description": "A princess cursed into a towering knight of living gold, wielding a sword as tall as she is.",
+      "traits": [
+        {
+          "name": "Royal Resolve (1/Day)",
+          "description": "If Mirelle fails a saving throw, she can choose to succeed instead (Legendary Resistance). When she does, the gold cracks for a moment, and the princess beneath speaks a few words in her own voice before the curse takes her back."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "Mirelle makes two Gilded Greatsword attacks.",
+          "creature_name": "Mirelle",
+          "attacks_text": "two Gilded Greatsword attacks",
+          "extra_ruling": "",
+          "use_article": false
+        },
+        {
+          "name": "Gilded Greatsword",
+          "description": "Melee Attack Roll: +5, reach 10 ft. Hit: 10 (2d6 + 3) Slashing damage. Once per turn, if Mirelle had Advantage on the attack roll and the target is Medium or smaller, the target also has the Prone condition.",
+          "attack_bonus": 5,
+          "reach_ft": 10,
+          "dice_count": 2,
+          "dice_type": 6,
+          "damage_bonus": 3,
+          "damage_type": "Slashing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "Once per turn, if Mirelle had Advantage on the attack roll and the target is Medium or smaller, the target also has the Prone condition."
+        },
+        {
+          "name": "Golden Arc (Recharge 5-6)",
+          "description": "Strength Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 12 (2d8 + 3) Slashing damage, and the target has the Prone condition. Success: Half damage only.",
+          "ability": "Strength",
+          "dc": 12,
+          "target": "each creature in a 15-foot Cone",
+          "dice_count": 2,
+          "dice_type": 8,
+          "damage_bonus": 3,
+          "damage_type": "Slashing",
+          "failure_effect": "and the target has the Prone condition",
+          "success_effect": "Half damage only.",
+          "extra_ruling": ""
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 1,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Gilded Sentinel 1 (Animated Armor)",
+      "create_name": "Animated Armor",
+      "combatant_type": "Animated Armor",
+      "hp": 33,
+      "max_hp": 33,
+      "ac": 18,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 11,
+        "CON": 13,
+        "INT": 1,
+        "WIS": 3,
+        "CHA": 1
+      },
+      "Saving Throws": {},
+      "initiative_group": "Gilded Sentinels",
+      "cr": "1",
+      "monster_type": "Construct",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8 + 6",
+      "speed_ground_ft": 25,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        },
+        {
+          "damage_types": [
+            "Psychic"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Charmed",
+        "Deafened",
+        "Exhaustion",
+        "Frightened",
+        "Paralyzed",
+        "Petrified",
+        "Poisoned"
+      ],
+      "senses": "Blindsight 60 ft., Passive Perception 6",
+      "languages": "\u2014",
       "description": "",
       "traits": [],
       "actions": [
         {
-          "name": "Gore",
-          "description": "Melee Attack Roll: +7, reach 5 ft. Hit: 14 (2d8 + 5) Piercing damage. If target is a Large or smaller creature and the rhinoceros moved 20+ feet straight toward it immediately before the hit, the target takes an extra 9 (2d8) Piercing damage and has the Prone condition."
+          "name": "Multiattack",
+          "description": "The armor makes two Slam attacks."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Bludgeoning damage."
         }
       ],
       "bonus_actions": [],
@@ -252,12 +189,12 @@
       "death_saves": false
     },
     {
-      "name": "Guard Saber-Toothed Tiger (Saber-Toothed Tiger)",
-      "create_name": "Saber-Toothed Tiger",
-      "combatant_type": "Saber-Toothed Tiger",
-      "hp": 52,
-      "max_hp": 52,
-      "ac": 13,
+      "name": "Gilded Sentinel 2 (Animated Armor)",
+      "create_name": "Animated Armor",
+      "combatant_type": "Animated Armor",
+      "hp": 33,
+      "max_hp": 33,
+      "ac": 18,
       "temp_hp": 0,
       "conditions": [],
       "visibility_states": [],
@@ -265,31 +202,257 @@
       "death_saves_success": 0,
       "spell_slots": {},
       "Ability Scores": {
-        "STR": 18,
-        "DEX": 17,
-        "CON": 15,
+        "STR": 14,
+        "DEX": 11,
+        "CON": 13,
+        "INT": 1,
+        "WIS": 3,
+        "CHA": 1
+      },
+      "Saving Throws": {},
+      "initiative_group": "Gilded Sentinels",
+      "cr": "1",
+      "monster_type": "Construct",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8 + 6",
+      "speed_ground_ft": 25,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Poison"
+          ],
+          "note": ""
+        },
+        {
+          "damage_types": [
+            "Psychic"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Charmed",
+        "Deafened",
+        "Exhaustion",
+        "Frightened",
+        "Paralyzed",
+        "Petrified",
+        "Poisoned"
+      ],
+      "senses": "Blindsight 60 ft., Passive Perception 6",
+      "languages": "\u2014",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Multiattack",
+          "description": "The armor makes two Slam attacks."
+        },
+        {
+          "name": "Slam",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Bludgeoning damage."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Watch Officer 1 (Spy)",
+      "create_name": "Spy",
+      "combatant_type": "Spy",
+      "hp": 27,
+      "max_hp": 27,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 16
+      },
+      "Saving Throws": {},
+      "initiative_group": "Watch Officers",
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "",
+      "alignment": "Neutral",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": 30,
+      "speed_special_rules": "",
+      "skills": {
+        "Deception": 5,
+        "Insight": 4,
+        "Investigation": 5,
+        "Perception": 6,
+        "Sleight of Hand": 4,
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 16",
+      "languages": "Common plus one other language",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 7 (2d6) Poison damage."
+        },
+        {
+          "name": "Hand Crossbow",
+          "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6 + 2) Piercing damage plus 7 (2d6) Poison damage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Cunning Action",
+          "description": "The spy takes the Dash, Disengage, or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Watch Officer 2 (Spy)",
+      "create_name": "Spy",
+      "combatant_type": "Spy",
+      "hp": 27,
+      "max_hp": 27,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 10,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 12,
+        "WIS": 14,
+        "CHA": 16
+      },
+      "Saving Throws": {},
+      "initiative_group": "Watch Officers",
+      "cr": "1",
+      "monster_type": "Humanoid",
+      "monster_type_note": "",
+      "alignment": "Neutral",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "6d8",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": 30,
+      "speed_special_rules": "",
+      "skills": {
+        "Deception": 5,
+        "Insight": 4,
+        "Investigation": 5,
+        "Perception": 6,
+        "Sleight of Hand": 4,
+        "Stealth": 6
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Passive Perception 16",
+      "languages": "Common plus one other language",
+      "description": "",
+      "traits": [],
+      "actions": [
+        {
+          "name": "Shortsword",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage plus 7 (2d6) Poison damage."
+        },
+        {
+          "name": "Hand Crossbow",
+          "description": "Ranged Attack Roll: +4, range 30/120 ft. Hit: 5 (1d6 + 2) Piercing damage plus 7 (2d6) Poison damage."
+        }
+      ],
+      "bonus_actions": [
+        {
+          "name": "Cunning Action",
+          "description": "The spy takes the Dash, Disengage, or Hide action."
+        }
+      ],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Guard Dog 1 (Wolf)",
+      "create_name": "Wolf",
+      "combatant_type": "Wolf",
+      "hp": 11,
+      "max_hp": 11,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 15,
+        "CON": 12,
         "INT": 3,
         "WIS": 12,
-        "CHA": 8
+        "CHA": 6
       },
-      "Saving Throws": {
-        "STR": 6,
-        "DEX": 5
-      },
-      "cr": "2",
+      "Saving Throws": {},
+      "initiative_group": "Guard Dogs",
+      "cr": "1/4",
       "monster_type": "Beast",
       "monster_type_note": "",
       "alignment": "Unaligned",
-      "size": "Large",
+      "size": "Medium",
       "ac_note": "",
-      "hp_formula": "7d10 + 14",
+      "hp_formula": "2d8 + 2",
       "speed_ground_ft": 40,
       "speed_fly_ft": null,
       "speed_climb_ft": null,
       "speed_special_rules": "",
       "skills": {
         "Perception": 5,
-        "Stealth": 7
+        "Stealth": 4
       },
       "damage_vulnerabilities": [],
       "damage_resistances": [],
@@ -300,26 +463,104 @@
       "description": "",
       "traits": [
         {
-          "name": "Running Leap",
-          "description": "With a 10-foot running start, the tiger can Long Jump up to 25 feet."
+          "name": "Pack Tactics",
+          "description": "The wolf has Advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally doesn't have the Incapacitated condition."
         }
       ],
       "actions": [
         {
-          "name": "Multiattack",
-          "description": "The tiger makes two Rend attacks."
-        },
-        {
-          "name": "Rend",
-          "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 11 (2d6 + 4) Slashing damage."
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage. If the target is a Medium or smaller creature, it has the Prone condition.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 2,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "If the target is a Medium or smaller creature, it has the Prone condition."
         }
       ],
-      "bonus_actions": [
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
+      "name": "Guard Dog 2 (Wolf)",
+      "create_name": "Wolf",
+      "combatant_type": "Wolf",
+      "hp": 11,
+      "max_hp": 11,
+      "ac": 12,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 14,
+        "DEX": 15,
+        "CON": 12,
+        "INT": 3,
+        "WIS": 12,
+        "CHA": 6
+      },
+      "Saving Throws": {},
+      "initiative_group": "Guard Dogs",
+      "cr": "1/4",
+      "monster_type": "Beast",
+      "monster_type_note": "",
+      "alignment": "Unaligned",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "2d8 + 2",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {
+        "Perception": 5,
+        "Stealth": 4
+      },
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 15",
+      "languages": "None",
+      "description": "",
+      "traits": [
         {
-          "name": "Nimble Escape",
-          "description": "The tiger takes the Disengage or Hide action."
+          "name": "Pack Tactics",
+          "description": "The wolf has Advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally doesn't have the Incapacitated condition."
         }
       ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage. If the target is a Medium or smaller creature, it has the Prone condition.",
+          "attack_bonus": 4,
+          "reach_ft": 5,
+          "dice_count": 1,
+          "dice_type": 6,
+          "damage_bonus": 2,
+          "damage_type": "Piercing",
+          "secondary_dice_count": 0,
+          "secondary_dice_type": 4,
+          "secondary_damage_bonus": 0,
+          "secondary_damage_type": null,
+          "additional_ruling": "If the target is a Medium or smaller creature, it has the Prone condition."
+        }
+      ],
+      "bonus_actions": [],
       "reactions": [],
       "legendary_actions": [],
       "legendary_resistances": 0,
