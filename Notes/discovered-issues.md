@@ -250,6 +250,16 @@ Saving throws in the Custom Effect dialog count conditions per target (saves.py 
 **History**
 - 2026-11-02 main-session: found
 
+### DI-036 · Encounter difficulty treats 2024 XP budgets as floors, so it rates one tier too low
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterDifficulty.py:classify_difficulty`
+
+classify_difficulty uses the 2014 '>= threshold' convention: 800 XP against four level 3s (Low 600, Moderate 900) is rated Low. In the 2024 DMG the XP Budget per Character is the most XP you may spend for that difficulty, so 800 XP exceeds the Low budget and is a Moderate encounter; anything above the High budget is beyond High. Fix: classify by the lowest tier whose budget the XP does not exceed (and flag XP over the High budget), then update the --difficulty output, tests and campaign difficulty notes. Workaround used in TimeLoopPR: encounters sit exactly on a budget number, which is the same tier under both readings.
+
+**History**
+- 2026-11-02 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
