@@ -80,7 +80,7 @@ CONFIG = CampaignSpec(
 ### Monsters and allies: `CombatantSpec`
 
 Each line is one stat block, optionally several of it:
-`CombatantSpec(monster, name=None, count=1, group=None)`.
+`CombatantSpec(monster, name=None, count=1, group=None, hidden_from_players=False)`.
 
 | Field | Required | Meaning |
 |---|---|---|
@@ -88,6 +88,7 @@ Each line is one stat block, optionally several of it:
 | `name` | no | What it's called in the fight. With a `count`, they're numbered: `"Goblin Boss"` ×2 → Goblin Boss 1, Goblin Boss 2. Leave it out to use the stat block's own name. |
 | `count` | no | How many (default 1). |
 | `group` | no | Lines with the same `group` share one turn, as a GM runs a pack of the same monster: one initiative roll (with the first one's modifier), one row on the initiative screen ("Goblin Warriors (4)"), and they all take their turn together. Each keeps its own card and stat block. Monsters and allies can't share a group. |
+| `hidden_from_players` | no | `True` for one that joins the fight later: it rolls initiative and has its card like the rest, but the players' screen and link don't show it (nor its turn, nor log lines about it) until the GM reveals it. Right-click its card as the only target and uncheck **Hidden from players**; the log then says it appears. Checking it again hides one mid-fight. |
 
 To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the

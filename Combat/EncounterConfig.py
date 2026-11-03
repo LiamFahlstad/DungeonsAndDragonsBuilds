@@ -19,12 +19,15 @@ class CombatantSpec:
     """One line of an encounter's monsters or allies: `count` of the stat
     block `monster`, called `name` (numbered 1..count when there are several),
     or by their type when `name` is left out. Combatants with the same
-    `group` share one initiative roll and take one turn together."""
+    `group` share one initiative roll and take one turn together. With
+    `hidden_from_players`, they're off the players' screen until the GM
+    reveals them, for ones that join the fight later."""
 
     monster: type[BasicCombatantData]
     name: str | None = None
     count: int = 1
     group: str | None = None
+    hidden_from_players: bool = False
 
     def names(self) -> list[str | None]:
         if self.count == 1:
@@ -40,13 +43,15 @@ class CombatantSpec:
             if name:
                 combatant.set_name(name)
             combatant.initiative_group = self.group
+            combatant.hidden_from_players = self.hidden_from_players
             combatants.append(combatant)
         return combatants
 
     def summary(self) -> str:
         label = self.name or self.monster.__name__
         label = f"{self.count}× {label}" if self.count > 1 else label
-        return f"{label} (one turn: {self.group})" if self.group else label
+        label = f"{label} (one turn: {self.group})" if self.group else label
+        return f"{label} (hidden at first)" if self.hidden_from_players else label
 
 
 @dataclass

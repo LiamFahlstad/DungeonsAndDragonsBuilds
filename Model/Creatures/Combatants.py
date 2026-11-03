@@ -111,6 +111,9 @@ class BasicCombatantData:
     # Combatants with the same group share one initiative roll and one turn,
     # as a GM runs a pack of identical monsters (the encounters.py "group").
     initiative_group: Optional[str] = None
+    # Kept off the players' screen until the GM reveals it, for one that joins
+    # the fight later (the encounters.py "hidden_from_players").
+    hidden_from_players: bool = False
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:

@@ -316,6 +316,9 @@ class CombatWindowState:
     def _take_turn_reminders(self):
         raise NotImplementedError("TurnPanelMixin._take_turn_reminders")
 
+    def _toggle_hidden_from_players(self, char: dict):
+        raise NotImplementedError("ConditionsMixin._toggle_hidden_from_players")
+
     def _toggle_player_view(self):
         raise NotImplementedError("TurnPanelMixin._toggle_player_view")
 

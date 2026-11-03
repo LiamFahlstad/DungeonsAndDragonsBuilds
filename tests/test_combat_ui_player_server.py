@@ -52,7 +52,9 @@ from Combat.CombatUIQt.player_view import (
     player_view_rows,
 )
 from Combat.CombatUIQt.saves import CustomEffect
+from Combat.EncounterConfig import CombatantSpec
 from Combat.EncounterLogs import prepare_log, scenario_log_path
+from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import is_round_key
 from Combat.Scenario import CombatScenario
 from Core.Definitions import DamageType
@@ -286,6 +288,66 @@ def test_a_hidden_monster_isnt_listed_and_its_changes_change_nothing(fight):
     bandit["hp"] = 1  # one they can see does
     ui._refresh_views()
     assert _poll(ui).headers["ETag"] != before.headers["ETag"]
+
+
+def test_a_spec_hidden_from_players_starts_hidden_and_others_have_no_key():
+    hidden, shown = (
+        combatant_from_stat_block(
+            CombatantSpec(Tiger, hidden_from_players=h).build()[0]
+        )
+        for h in (True, False)
+    )
+    assert hidden["hidden_from_players"] is True
+    # So older logs stay unchanged.
+    assert "hidden_from_players" not in shown
+    spec = CombatantSpec(Tiger, "Mirelle", hidden_from_players=True)
+    assert spec.summary() == "Mirelle (hidden at first)"
+
+
+def test_a_monster_the_gm_hides_isnt_listed_until_its_revealed(fight):
+    ui, pirate, tiger, _ = fight
+    ui._toggle_hidden_from_players(tiger)
+    ui._refresh_views()
+    assert _names(_state(ui)) == ["Pirate", "Bandit (Pirate)"]
+    assert [r["turn"] for r in _state(ui)["rows"]] == ["now", "next"]
+    _hit(ui, pirate, tiger)
+    assert "Tiger" not in str(_lines(ui))
+
+    ui._toggle_hidden_from_players(tiger)
+    ui._refresh_views()
+    assert _names(_state(ui)) == ["Pirate", "Tiger", "Bandit (Pirate)"]
+    assert "hidden_from_players" not in tiger
+    lines = _lines(ui)
+    assert "Pirate | Tiger appears" in lines
+    assert not any("hidden from the players" in line for line in lines)
+    assert _HIT not in lines, "What happened while it was hidden stays the GM's"
+    assert "Tiger is hidden from the players" in _gm_log(ui)
+
+
+def test_hiding_from_players_is_one_undo_step(fight):
+    ui, _, tiger, _ = fight
+    ui._toggle_hidden_from_players(tiger)
+    ui._undo_last()
+    ui._refresh_views()
+    assert "hidden_from_players" not in tiger
+    assert "Tiger" in _names(_state(ui))
+
+
+def test_the_card_menu_hides_a_monster_but_not_a_player(fight):
+    ui, pirate, tiger, _ = fight
+    pirate["_is_player"] = True
+
+    def hide_action(char):
+        actions = ui._card_menu(char).actions()
+        return next((a for a in actions if a.text() == "Hidden from players"), None)
+
+    assert hide_action(pirate) is None
+    action = hide_action(tiger)
+    assert action is not None and not action.isChecked()
+    action.trigger()
+    assert tiger["hidden_from_players"] is True
+    action = hide_action(tiger)
+    assert action is not None and action.isChecked()
 
 
 def test_text_typed_by_hand_arrives_as_text(fight):

@@ -5,8 +5,9 @@ the GM's cards, size, AC and speed. The Limited view is the same for players,
 who can tell each other all of it anyway, but a monster's row has only
 its speed, the damage it's taken, a word for how hurt it is, what those two and
 attack rolls have shown of its maximum HP and AC, and what the log has shown of
-its resistances and immunities. In both, a monster they can't perceive isn't
-listed, and nothing else of its stat block is shown."""
+its resistances and immunities. In both, a monster they can't perceive, or
+the GM has hidden from them until it joins the fight, isn't listed, and
+nothing else of its stat block is shown."""
 
 import math
 from dataclasses import dataclass, replace
@@ -130,8 +131,12 @@ def _limited_health(char: dict, death_state: str) -> PlayerViewHealth:
 
 
 def _can_be_seen(char: dict) -> bool:
+    """A monster the GM has hidden from the players (one that joins the fight
+    later) is as unseen as an invisible one."""
+    if char.get("_is_player"):
+        return True
     states = set(char.get("conditions", [])) | set(char.get("visibility_states", []))
-    return bool(char.get("_is_player")) or not states & HIDDEN_STATES
+    return not char.get("hidden_from_players") and not states & HIDDEN_STATES
 
 
 def _highest_max_hp(lost: int, percent: int) -> int:

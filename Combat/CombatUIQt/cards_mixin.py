@@ -395,6 +395,14 @@ class CardsMixin(CombatWindowState):
             )
         menu.addSeparator()
         menu.addAction("Custom... (Shift+C)", self._show_custom_condition_dialog)
+        if not char.get("_is_player"):
+            hidden = menu.addAction("Hidden from players")
+            assert hidden is not None  # addAction with a text always makes one
+            hidden.setCheckable(True)
+            hidden.setChecked(bool(char.get("hidden_from_players")))
+            hidden.triggered.connect(
+                lambda _=False, c=char: self._toggle_hidden_from_players(c)
+            )
         return menu
 
     def _toggle_condition_on(self, char: dict, cond: str):
@@ -489,11 +497,20 @@ class CardsMixin(CombatWindowState):
 
     def _add_visibility_badges(self, layout: QVBoxLayout, char: dict):
         visibility_states = char.get("visibility_states", [])
-        if not visibility_states:
+        hidden = bool(char.get("hidden_from_players"))
+        if not visibility_states and not hidden:
             return
         vis_row = QHBoxLayout()
         vis_row.setSpacing(3)
         vis_row.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        if hidden:
+            hidden_badge = QLabel("Hidden from players")
+            hidden_badge.setStyleSheet(_badge_style(_HIDDEN_FROM_PLAYERS_COLOR))
+            hidden_badge.setToolTip(
+                "Not on the players' screen or link. Uncheck Hidden from players"
+                " in its card menu to reveal it."
+            )
+            vis_row.addWidget(hidden_badge)
         for vis in visibility_states:
             vis_badge: QWidget
             if self._visibility_rule(vis) is not None:
@@ -533,6 +550,7 @@ _DEATH_STATE_NAME_STYLES: dict[str, tuple[str, str]] = {
 }
 
 _VISIBILITY_COLOR = "#1a5c7a"
+_HIDDEN_FROM_PLAYERS_COLOR = "#5a5a6a"
 
 
 def _badge_style(color: str) -> str:

@@ -55,6 +55,9 @@ def combatant_from_stat_block(combatant: BasicCombatantData) -> dict:
     if combatant.initiative_group:
         # Shares one initiative roll and one turn with the rest of its group.
         char["initiative_group"] = combatant.initiative_group
+    if combatant.hidden_from_players:
+        # Off the players' screen until the GM reveals it (player_view.py).
+        char["hidden_from_players"] = True
     if isinstance(combatant, ExtendedCombatantData):
         char.update(
             {

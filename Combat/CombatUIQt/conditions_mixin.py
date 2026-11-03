@@ -1314,6 +1314,19 @@ class ConditionsMixin(CombatWindowState):
             )
             self._refresh_selected_card()
 
+    @undoable
+    def _toggle_hidden_from_players(self, char: dict):
+        """Take a monster off the players' screen, or reveal it there, as when
+        it joins the fight. The line is logged after the change, so hiding it
+        stays the GM's and its appearance is the players' too."""
+        if char.pop("hidden_from_players", False):
+            text = f"{char['name']} appears"
+        else:
+            char["hidden_from_players"] = True
+            text = f"{char['name']} is hidden from the players"
+        self._log_event(text, character=char["name"])
+        self._rebuild_card(char)
+
 
 def _timed_condition_entry(
     cond: str,
