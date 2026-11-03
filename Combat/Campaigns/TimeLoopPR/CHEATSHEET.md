@@ -35,13 +35,20 @@ and **Long Rest**.
 |---|---|
 | Outside the Gates (low) | `python RunCombatSimulator.py --scenario time_loop_pr_outside_the_gates --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json` |
 | The Drunk Oxe (low) | `python RunCombatSimulator.py --scenario time_loop_pr_drunk_oxe --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json` |
-| The Square (about 2.3× the High budget) | `python RunCombatSimulator.py --scenario time_loop_pr_square --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json` |
+| The Square (high; moderate without Mirelle) | `python RunCombatSimulator.py --scenario time_loop_pr_square --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json` |
+| Mira (final fight; 1.5x high) | `python RunCombatSimulator.py --scenario time_loop_pr_mira --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json` |
 
 When a log holds a fight in progress, the window asks whether to continue it or
 restart it (undoing it for the party too). Against the four level 3 players
-(`--difficulty`): Outside the Gates is 600 XP (Low starts at 600), The Drunk Oxe
-800 XP (just under Moderate's 900), and The Square 3650 XP against a High budget
-of 1600.
+(`--difficulty`): Outside the Gates and The Drunk Oxe are 600 XP each (the Low
+budget), and The Square is 1600 XP (the High budget): its guards alone are
+900 XP (Moderate), three pairs that each share one turn (two Gilded Sentinels,
+Animated Armor; two Watch Officers, Spy; two Guard Dogs, Wolf), and Mirelle,
+the Gilded Knight (homebrew CR 3, in
+`Combat/Monsters/CR_3/monsters_homebrew.py`) adds 700. Mira is 2500 XP, about
+1.5x the High budget: Mira, Princess of the Loop (homebrew CR 5, in
+`Combat/Monsters/CR_5/monsters_homebrew.py`) is 1800, and her Warrior
+(Mirelle's stat block) 700.
 
 ## Rests and stats
 
