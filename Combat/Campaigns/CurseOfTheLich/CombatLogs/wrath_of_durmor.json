@@ -1816,6 +1816,37 @@
         "source_name": "Clover",
         "target_name": "Goblin Boss 2 (Goblin Boss)"
       }
+    },
+    {
+      "text": "[Clover's turn] Clover uses Action",
+      "character": "Clover",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover uses Shortsword",
+      "character": "Clover",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Clover's attack roll of 22 hits Obmar St\u00e5lsk\u00e4gg",
+      "character": "Obmar St\u00e5lsk\u00e4gg",
+      "public": true
+    },
+    {
+      "text": "[Clover's turn] Obmar St\u00e5lsk\u00e4gg takes 7 Piercing damage from Clover",
+      "character": "Obmar St\u00e5lsk\u00e4gg",
+      "action": "damage",
+      "value": {
+        "hp_delta": -7,
+        "temp_delta": 0,
+        "dmg": 7,
+        "damage_type": "Piercing",
+        "source_name": "Clover",
+        "target_name": "Obmar St\u00e5lsk\u00e4gg",
+        "knockout": false,
+        "outcome": null
+      },
+      "public": true
     }
   ],
   "initiative_order": [
