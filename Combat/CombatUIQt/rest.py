@@ -9,9 +9,9 @@ before it is deleted; the statistics still count it.
 A short rest reuses CombatAppQt to reconstruct the party's current state
 without ever calling `.run()`, and opens a small standalone window — not the
 main combat window — to manually heal each player and regain any
-short-rest-cadence feature uses (e.g. Channel Divinity). Those events are
-recorded on the short rest's own line in the player log (no encounter log is
-written between encounters).
+short-rest-cadence feature uses (e.g. Channel Divinity) and Pact Magic slots.
+Those events are recorded on the short rest's own line in the player log (no
+encounter log is written between encounters).
 """
 
 import sys
@@ -33,6 +33,7 @@ import Combat.PlayerLog as PlayerLog
 from Combat.Campaign import Campaign
 from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
+from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
 
 from .app import CombatAppQt
@@ -92,15 +93,31 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
     app._record_short_rest(lambda: short_rest_dialog(app).exec())
 
 
+def _restore_pact_slots(app: CombatAppQt, char: dict, note: str):
+    """Give back every Pact Magic slot char has spent, one logged event each."""
+    pact_slots = char.setdefault("pact_slots", {})
+    for level, most in max_pact_slots(char).items():
+        while pact_slots.get(level, 0) < most:
+            pact_slots[level] = pact_slots.get(level, 0) + 1
+            app._log_event(
+                f"{char['name']} regains a Level {level} Pact Magic slot ({note})",
+                character=char["name"],
+                action=Action.ADD_PACT_SLOT,
+                value=level,
+            )
+
+
 def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialog:
     """A short rest for the tracked party in `app` (inside
     app._record_short_rest, which records what it logs): every
-    short-rest-cadence feature use comes back right away, and the
+    short-rest-cadence feature use and Pact Magic slot comes back right
+    away, and the
     window built here lets each player be healed a manually-entered amount
     (Hit Dice spent). Returned unopened; the caller exec()s it."""
     players = [c for c in app.characters if c.get("_is_player")]
     for char in players:
         _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
+        _restore_pact_slots(app, char, note="short rest")
 
     dlg = QDialog(parent)
     title = app.player_log_file.name if app.player_log_file else "party"

@@ -687,14 +687,22 @@ def _add_monster_counters(layout: QVBoxLayout, char: dict):
 
 
 def _add_spell_slots(layout: QVBoxLayout, char: dict):
+    """The spell slots left, and a Warlock's Pact Magic slots on a row of
+    their own."""
     slots = {k: v for k, v in (char.get("spell_slots") or {}).items() if v > 0}
-    if not slots:
+    pact = {k: v for k, v in (char.get("pact_slots") or {}).items() if v > 0}
+    if not (slots or pact):
         return
     layout.addWidget(_separator())
     layout.addWidget(_section_header("Slots:"))
-    slots_lbl = QLabel("  ".join(f"LV{lv}({cnt})" for lv, cnt in sorted(slots.items())))
-    slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
-    layout.addWidget(slots_lbl)
+    rows = [("", slots), ("Pact: ", pact)]
+    for prefix, left in rows:
+        if not left:
+            continue
+        text = "  ".join(f"LV{lv}({cnt})" for lv, cnt in sorted(left.items()))
+        slots_lbl = QLabel(prefix + text)
+        slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
+        layout.addWidget(slots_lbl)
 
 
 def _add_timed_entries(

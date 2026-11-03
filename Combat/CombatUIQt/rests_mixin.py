@@ -3,10 +3,10 @@ tracked party between encounters or before a loaded encounter is started.
 
 A rest is an entry of its own in the player log (Combat/PlayerLog.py), and
 the party's state is replayed in that order. A long rest's entry is just the
-rest; a short rest's carries its few events (heals, regained feature uses),
-since nothing between encounters has a log of its own. A loaded encounter
-that hasn't started gets its entry only once something happens in it, so a
-rest taken before it comes first."""
+rest; a short rest's carries its few events (heals, regained feature uses
+and Pact Magic slots), since nothing between encounters has a log of its
+own. A loaded encounter that hasn't started gets its entry only once
+something happens in it, so a rest taken before it comes first."""
 
 from typing import Callable
 

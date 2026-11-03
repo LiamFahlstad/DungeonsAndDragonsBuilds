@@ -1129,6 +1129,11 @@
           "word_wrap": true
          },
          {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -3970,6 +3975,11 @@
           "word_wrap": true
          },
          {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4601,6 +4611,11 @@
           "word_wrap": true
          },
          {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5118,6 +5133,11 @@
          },
          {
           "text": "<b>Spell Slots:</b> L1\u00d72  L3\u00d71",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
           "type": "QLabel",
           "word_wrap": true
          },
@@ -5745,6 +5765,11 @@
           "word_wrap": true
          },
          {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6368,6 +6393,11 @@
          },
          {
           "text": "<b>AC:</b> 12 (no Shield)",
+          "type": "QLabel",
+          "word_wrap": true
+         },
+         {
+          "text": "<b>Pact Slots:</b> L5\u00d73",
           "type": "QLabel",
           "word_wrap": true
          },

@@ -176,7 +176,10 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                         increment_named_stat(
                             source_stats, "conditions_given_by_name", cond
                         )
-                elif action == Action.REMOVE_SPELL_SLOT and character:
+                elif (
+                    action in (Action.REMOVE_SPELL_SLOT, Action.REMOVE_PACT_SLOT)
+                    and character
+                ):
                     s = stats_for(character)
                     s["spell_slots_used"] += 1
                     level = value if isinstance(value, int) else None

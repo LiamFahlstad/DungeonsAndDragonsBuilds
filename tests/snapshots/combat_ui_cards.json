@@ -604,6 +604,31 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Slots:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "Pact: LV5(3)",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
@@ -946,6 +971,31 @@
       "text": "AC: 12 (no Shield)   Speed: 30 ft.",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Slots:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "Pact: LV5(3)",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -1685,6 +1735,31 @@
       "text": "AC: 12 (no Shield)   Speed: 30 ft.",
       "type": "QLabel",
       "word_wrap": true
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Slots:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "Pact: LV5(3)",
+      "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
@@ -3773,6 +3848,31 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
+      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "text": "Slots:",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "Pact: LV5(3)",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "frame_shape": "HLine",
+      "mouse_transparent": true,
+      "size_policy": [
+       "Minimum",
+       "Fixed"
+      ],
+      "style": "color: #0f3460;",
+      "type": "QFrame"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
@@ -3924,6 +4024,13 @@
       "mouse_transparent": true,
       "style": "color: #a0c4ff; font-size: 11px;",
       "text": "LV1(2)  LV3(1)",
+      "type": "QLabel"
+     },
+     {
+      "cursor": "PointingHandCursor",
+      "mouse_transparent": true,
+      "style": "color: #a0c4ff; font-size: 11px;",
+      "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
      {

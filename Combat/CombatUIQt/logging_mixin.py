@@ -35,6 +35,14 @@ from .stats import (
 )
 from .state import CombatWindowState
 
+# The combatant key of the slots each slot action changes.
+_SLOT_POOLS = {
+    Action.ADD_SPELL_SLOT: "spell_slots",
+    Action.REMOVE_SPELL_SLOT: "spell_slots",
+    Action.ADD_PACT_SLOT: "pact_slots",
+    Action.REMOVE_PACT_SLOT: "pact_slots",
+}
+
 
 def _slots_by_level(slots: dict | None) -> dict[int, int]:
     """Spell slots with their levels as numbers, which JSON makes strings."""
@@ -225,6 +233,7 @@ class LoggingMixin(CombatWindowState):
         for char in self.characters:
             char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
             if char.get("_is_player"):
+                char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
                 for key in PLAYER_FIGHT_KEYS:
                     char.pop(key, None)
                 char.update(player_state.get(char["name"], {}))
@@ -456,10 +465,12 @@ class LoggingMixin(CombatWindowState):
             cond = value["condition"] if isinstance(value, dict) else value
             if cond in char["conditions"]:
                 char["conditions"].remove(cond)
-        elif action == Action.ADD_SPELL_SLOT:
-            char["spell_slots"][value] = char["spell_slots"].get(value, 0) + 1
-        elif action == Action.REMOVE_SPELL_SLOT:
-            char["spell_slots"][value] = max(char["spell_slots"].get(value, 0) - 1, 0)
+        elif action in (Action.ADD_SPELL_SLOT, Action.ADD_PACT_SLOT):
+            slots = char.setdefault(_SLOT_POOLS[action], {})
+            slots[value] = slots.get(value, 0) + 1
+        elif action in (Action.REMOVE_SPELL_SLOT, Action.REMOVE_PACT_SLOT):
+            slots = char.setdefault(_SLOT_POOLS[action], {})
+            slots[value] = max(slots.get(value, 0) - 1, 0)
             char.setdefault("stats", _default_stats())
             char["stats"]["spell_slots_used"] = (
                 char["stats"].get("spell_slots_used", 0) + 1

@@ -75,6 +75,7 @@ On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote on
 **History**
 - 2026-10-28 main-session: found
 - 2026-10-28 claude-main: Also seen in tests/snapshots/combat_ui_cards.json (via tests/_combat_ui.py check_golden): the races left truncated, invalid JSON, not just lost entries
+- 2026-11-03 main-session: Hit again 2026-11-03: UPDATE_SNAPSHOTS=1 pytest on test_combat_ui_cards/more_info/combatant_snapshots lost writes (combatants.json got 31 of 166 lines). -n 0 works. conftest's xdist_group only takes effect with --dist loadgroup, which pytest.ini doesn't pass.
 
 ### DI-013 · Boon effects that apply only while Bloodied are text only
 - **Status:** open
@@ -199,16 +200,6 @@ Suggested fix (character-engine-dev): have MartialArts.apply() register a Weapon
 
 **History**
 - 2026-10-28 rules-checker: found
-
-### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/PlayerCombatant.py:124`
-
-combatant_from_character loads character.spell_slots only; character.pact_magic_slots never reaches the combatant dict, so a Warlock's card shows no slots, the 1-9 keys do nothing, and the Cast Spell dialog's slot picker says 'No slots tracked' and spends none. Fixing it needs pact slots kept apart from spell slots (a multiclass has both, a Short Rest restores only pact slots) plus their card row, rests and player-log replay. No Warlock in the Curse of the Lich party right now.
-
-**History**
-- 2026-10-31 main-session: found
 
 ### DI-027 · Cards read ability scores of 10 or less as modifiers
 - **Status:** open
@@ -335,6 +326,18 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: marked in-progress; Starting: unified feature spell-grant hook in the engine
 - 2026-10-28 main-session: marked fixed; Feature.granted_spells() (Model/Spells.py FeatureSpell) is now the one way a feature grants spells; Character.spell_grants grants them with the feature, stamped like it. Boon of Revelry, Siberys and Magic School Mastery declare their spells (listed as '<boon> (<class> Level 19)'); feats, class and subclass features moved off their own grant paths. Tests in tests/test_spell_grants.py.
 - 2026-10-28 main-session: Committed in 5b7d6912
+
+### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
+- **Status:** fixed · 2026-11-03 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/PlayerCombatant.py:124`
+
+combatant_from_character loads character.spell_slots only; character.pact_magic_slots never reaches the combatant dict, so a Warlock's card shows no slots, the 1-9 keys do nothing, and the Cast Spell dialog's slot picker says 'No slots tracked' and spends none. Fixing it needs pact slots kept apart from spell slots (a multiclass has both, a Short Rest restores only pact slots) plus their card row, rests and player-log replay. No Warlock in the Curse of the Lich party right now.
+
+**History**
+- 2026-10-31 main-session: found
+- 2026-11-03 main-session: marked in-progress
+- 2026-11-03 main-session: marked fixed; Players carry pact_slots apart from spell_slots, with their own add/remove_pact_slot log actions. Shown on the card, More Info and party view; spent by the 1-9 keys (once spell slots of that level run out), Cast Spell and Custom Effect (PactSlot choices); restored by Short Rest; replayed from the player log. Tests: tests/test_combat_ui_pact_slots.py.
 
 ### DI-026 · Breaking concentration by casting another spell replays as an extra cast
 - **Status:** fixed · 2026-10-31 · 97b31819

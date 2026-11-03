@@ -19,6 +19,8 @@ _KINDS: dict[str, str] = {
     Action.REMOVE_CONDITION: "minor",
     Action.ADD_SPELL_SLOT: "minor",
     Action.REMOVE_SPELL_SLOT: "minor",
+    Action.ADD_PACT_SLOT: "minor",
+    Action.REMOVE_PACT_SLOT: "minor",
     Action.DEATH_SAVE_FAIL: "down",
     Action.DEATH_SAVE_SUCCESS: "heal",
     Action.REVIVE: "heal",

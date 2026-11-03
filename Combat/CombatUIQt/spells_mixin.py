@@ -16,8 +16,9 @@ from PyQt6.QtWidgets import (
 
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
+from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
-from .effect_options import casting_time_cost, spell_slot_choices
+from .effect_options import PactSlot, casting_time_cost, has_slots, spell_slot_choices
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
@@ -30,43 +31,57 @@ class SpellsMixin(CombatWindowState):
 
     @undoable
     def _cast_spell_slot_level(self, level: int):
-        if not self.selected_character:
+        """Spend one of the source's slots of `level`: a Pact Magic slot for a
+        PactSlot, else a spell slot, or a Pact Magic slot when no spell slot
+        of that level is left (so the 1-9 keys work for a Warlock too)."""
+        char = self.selected_character
+        if not char:
             self._show_status("Nothing spent: left-click a card to pick a source.")
             return
-        if self.selected_character["spell_slots"].get(level, 0) <= 0:
-            name = self.selected_character["name"]
-            self._show_status(f"Nothing spent: {name} has no level {level} slots left.")
+        asked_for_pact = isinstance(level, PactSlot)
+        level = int(level)
+        level_left = char.get("spell_slots", {}).get(level, 0)
+        pact_left = char.get("pact_slots", {}).get(level, 0)
+        pact = asked_for_pact or (level_left <= 0 and pact_left > 0)
+        if (pact_left if pact else level_left) <= 0:
+            kind = "Pact Magic slots" if asked_for_pact else "slots"
+            self._show_status(
+                f"Nothing spent: {char['name']} has no level {level} {kind} left."
+            )
             return
-        old = self.selected_character["spell_slots"][level]
-        self.selected_character["spell_slots"][level] = max(old - 1, 0)
-        self.selected_character.setdefault("stats", _default_stats())
-        self.selected_character["stats"]["spell_slots_used"] = (
-            self.selected_character["stats"].get("spell_slots_used", 0) + 1
-        )
+        slots = char["pact_slots" if pact else "spell_slots"]
+        slots[level] -= 1
+        char.setdefault("stats", _default_stats())
+        char["stats"]["spell_slots_used"] = char["stats"].get("spell_slots_used", 0) + 1
         level_key = spell_slots_used_key(level)
-        self.selected_character["stats"][level_key] = (
-            self.selected_character["stats"].get(level_key, 0) + 1
-        )
+        char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
+        kind = "Pact Magic slot" if pact else "spell slot"
         self._log_event(
-            f"{self.selected_character['name']} uses a Level {level} spell slot",
-            character=self.selected_character["name"],
-            action=Action.REMOVE_SPELL_SLOT,
+            f"{char['name']} uses a Level {level} {kind}",
+            character=char["name"],
+            action=Action.REMOVE_PACT_SLOT if pact else Action.REMOVE_SPELL_SLOT,
             value=level,
         )
         self._refresh_selected_card()
 
     @undoable
     def _regain_spell_slot(self):
-        if not self.selected_character:
+        """Give the source back a slot of the level picked: a Pact Magic slot
+        while it has fewer of that level than when rested, else a spell slot."""
+        char = self.selected_character
+        if not char:
             self._show_status("Nothing regained: left-click a card to pick a source.")
             return
         level = self.spell_combo.currentIndex() + 1
-        old = self.selected_character["spell_slots"].get(level, 0)
-        self.selected_character["spell_slots"][level] = old + 1
+        pact_left = char.get("pact_slots", {}).get(level, 0)
+        pact = pact_left < max_pact_slots(char).get(level, 0)
+        slots = char.setdefault("pact_slots" if pact else "spell_slots", {})
+        slots[level] = slots.get(level, 0) + 1
+        kind = "Pact Magic slot" if pact else "spell slot"
         self._log_event(
-            f"{self.selected_character['name']} regains a Level {level} spell slot",
-            character=self.selected_character["name"],
-            action=Action.ADD_SPELL_SLOT,
+            f"{char['name']} regains a Level {level} {kind}",
+            character=char["name"],
+            action=Action.ADD_PACT_SLOT if pact else Action.ADD_SPELL_SLOT,
             value=level,
         )
         self._refresh_selected_card()
@@ -373,9 +388,7 @@ class SpellsMixin(CombatWindowState):
                 slot_combo.addItem(label, level)
             slot_combo.setEnabled(len(choices) > 1)
             out_of_slots = (
-                spell.level > 0
-                and bool(character.get("spell_slots"))
-                and len(choices) == 1
+                spell.level > 0 and has_slots(character) and len(choices) == 1
             )
             cast_btn.setText("Cast without a slot" if out_of_slots else "Cast")
             slot_warning.setText(

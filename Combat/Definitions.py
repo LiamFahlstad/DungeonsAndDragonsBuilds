@@ -15,6 +15,9 @@ class Action(str, Enum):
     REMOVE_CONDITION = "remove_condition"
     ADD_SPELL_SLOT = "add_spell_slot"
     REMOVE_SPELL_SLOT = "remove_spell_slot"
+    # A Warlock's Pact Magic slots, a pool apart from the spell slots.
+    ADD_PACT_SLOT = "add_pact_slot"
+    REMOVE_PACT_SLOT = "remove_pact_slot"
     CAST_SPELL = "cast_spell"
     ENABLE_FEATURE = "enable_feature"
     DEATH_SAVE_FAIL = "death_save_fail"

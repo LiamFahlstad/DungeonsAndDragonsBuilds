@@ -409,21 +409,42 @@ def _with_cantrip_level(
     return rolls
 
 
+class PactSlot(int):
+    """A slot level paid with a Pact Magic slot (char["pact_slots"]) instead
+    of a spell slot: a Warlock's own pool, which a Short Rest restores. As an
+    int it is the slot's level, so upcasting reads it like any other slot."""
+
+    def __repr__(self) -> str:
+        return f"PactSlot({int(self)})"
+
+
+def has_slots(char: dict) -> bool:
+    """Whether char's spell slots or Pact Magic slots are tracked."""
+    return bool(char.get("spell_slots") or char.get("pact_slots"))
+
+
 def spell_slot_choices(char: dict, spell_level: int) -> list[tuple[str, int | None]]:
     """What char can pay for a spell of spell_level with, as (label, slot
-    level), cheapest first: its slots of that level or higher that have any
-    left, then casting without one (a ritual, an item, a feature). A cantrip
-    needs no slot, and neither does a caster whose slots aren't tracked."""
+    level), cheapest first: its spell slots and Pact Magic slots (a PactSlot)
+    of that level or higher that have any left, a spell slot before a Pact
+    Magic slot of the same level, then casting without one (a ritual, an
+    item, a feature). A cantrip needs no slot, and neither does a caster
+    whose slots aren't tracked."""
     if spell_level == 0:
         return [("Cantrip: no slot", None)]
-    slots = char.get("spell_slots") or {}
-    if not slots:
+    if not has_slots(char):
         return [("No slots tracked", None)]
-    paid = [
+    paid: list[tuple[str, int | None]] = [
         (f"Level {level} slot ({count} left)", level)
-        for level, count in sorted(slots.items())
+        for level, count in (char.get("spell_slots") or {}).items()
         if level >= spell_level and count > 0
     ]
+    paid += [
+        (f"Level {level} Pact Magic slot ({count} left)", PactSlot(level))
+        for level, count in (char.get("pact_slots") or {}).items()
+        if level >= spell_level and count > 0
+    ]
+    paid.sort(key=lambda choice: (choice[1], isinstance(choice[1], PactSlot)))
     return paid + [("No slot (ritual, item or feature)", None)]
 
 
@@ -519,7 +540,7 @@ def spell_option(spell, char: dict | None) -> EffectOption:
         notes.append("Add the spellcasting ability modifier to the damage.")
     if rolls and not upcast and any(map(_ANY_UPCAST.search, text.upgrades)):
         notes.append("Upcasting won't change the damage: work it out if you do.")
-    if spell.level and who.get("spell_slots") and slot is None:
+    if spell.level and has_slots(who) and slot is None:
         notes.append(f"No slot of level {spell.level} or higher left.")
     # Like Cast Spell's badge, when there's nothing else to show it happened:
     # not for damage (typed in by hand, it would leave the badge behind), nor

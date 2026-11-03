@@ -333,12 +333,10 @@ def _add_vitals(panel: _InfoPanel, char: dict):
     if char.get("conditions"):
         panel.field("Conditions", ", ".join(char["conditions"]))
 
-    if char.get("spell_slots"):
-        active = {k: v for k, v in char["spell_slots"].items() if v > 0}
+    for label, key in (("Spell Slots", "spell_slots"), ("Pact Slots", "pact_slots")):
+        active = {k: v for k, v in (char.get(key) or {}).items() if v > 0}
         if active:
-            panel.field(
-                "Spell Slots", "  ".join(f"L{k}×{v}" for k, v in active.items())
-            )
+            panel.field(label, "  ".join(f"L{k}×{v}" for k, v in active.items()))
 
 
 def _add_ability_score_table(panel: _InfoPanel, char: dict):

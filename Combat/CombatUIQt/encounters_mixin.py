@@ -283,6 +283,11 @@ class EncountersMixin(CombatWindowState):
                 line += "  ·  Slots " + " ".join(
                     f"L{level}:{left}" for level, left in sorted(slots.items())
                 )
+            pact_slots = char.get("pact_slots") or {}
+            if pact_slots:
+                line += "  ·  Pact " + " ".join(
+                    f"L{level}:{left}" for level, left in sorted(pact_slots.items())
+                )
             if char.get("conditions"):
                 line += "  ·  " + ", ".join(char["conditions"])
             label = QLabel(line)

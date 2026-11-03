@@ -125,6 +125,7 @@ def combatant_from_character(character: Character) -> dict:
         "death_saves_fail": 0,
         "death_saves_success": 0,
         "spell_slots": character.spell_slots,
+        "pact_slots": character.pact_magic_slots,
         "Ability Scores": {
             ability.short_name: character.get_ability_score(ability)
             for ability in Definitions.Ability
@@ -152,6 +153,13 @@ def combatant_from_character(character: Character) -> dict:
         "_feature_objects": list(character.features),
         "invocations": list(character.invocations),
     }
+
+
+def max_pact_slots(char: dict) -> dict[int, int]:
+    """How many Pact Magic slots of each level a player has when rested, from
+    their Character (none for a monster)."""
+    character = char.get("_stat_block")
+    return character.pact_magic_slots if isinstance(character, Character) else {}
 
 
 def _damage_entries(damage_types) -> list[dict]:

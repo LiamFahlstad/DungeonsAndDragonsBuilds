@@ -26,7 +26,11 @@ from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from .amounts import AmountError, parse_amount
 from .attack_rolls import AttackRoll, parse_attack_roll
-from .effect_options import COLLAPSED_CATEGORIES, effect_options
+from .effect_options import (
+    COLLAPSED_CATEGORIES,
+    effect_options,
+    spell_slot_choices,
+)
 from .monster_actions import legendary_resistances_left
 from .player_view import note_condition_immunity
 from .saves import (
@@ -793,10 +797,9 @@ class ConditionsMixin(CombatWindowState):
         slot_combo = QComboBox()
         slot_combo.setObjectName("spellSlot")
         slot_combo.addItem("No spell slot", None)
-        slots = (caster or {}).get("spell_slots") or {}
-        for level, count in sorted(slots.items()):
-            if count > 0:
-                slot_combo.addItem(f"Level {level} slot ({count} left)", level)
+        for label, level in spell_slot_choices(caster or {}, 1):
+            if level is not None:
+                slot_combo.addItem(label, level)
         cost_row.addWidget(slot_combo, stretch=1)
         action_combo = QComboBox()
         action_combo.setObjectName("actionCost")
@@ -1110,8 +1113,19 @@ class ConditionsMixin(CombatWindowState):
             half_box.setChecked(option.half_on_save)
             repeat_box.setChecked(option.repeat_save)
             # What the source doesn't have (no slot left, no source) is "No ...".
-            slot_index = slot_combo.findData(option.slot_level)
-            slot_combo.setCurrentIndex(max(slot_index, 0) if option.slot_level else 0)
+            # findData never finds a PactSlot, and == alone can't tell one
+            # from a spell slot of its level.
+            slot_combo.setCurrentIndex(
+                next(
+                    (
+                        index
+                        for index in range(slot_combo.count())
+                        if slot_combo.itemData(index) == option.slot_level
+                        and type(slot_combo.itemData(index)) is type(option.slot_level)
+                    ),
+                    0,
+                )
+            )
             action_index = action_combo.findData(option.action_cost)
             action_combo.setCurrentIndex(
                 max(action_index, 0) if option.action_cost else 0
