@@ -55,16 +55,6 @@ should_be_bloodied = hp > 0 and hp <= max_hp / 2. Bloodied.md: 'A creature is Bl
 **History**
 - 2026-10-28 rules-checker: found
 
-### DI-008 · Negative damage or heal input isn't rejected
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`, `Combat/CombatUIQt/damage_mixin.py:_apply_heal`
-
-Typing -5 as damage adds 5 temp HP (temp_reduction = min(temp_hp, -5)); a negative heal deals damage. Reject values below 0 in both handlers.
-
-**History**
-- 2026-10-28 rules-checker: found
-
 ### DI-010 · UPDATE_SNAPSHOTS with -n auto can lose golden updates
 - **Status:** open
 - **Area:** test-bughunter
@@ -251,6 +241,76 @@ classify_difficulty uses the 2014 '>= threshold' convention: 800 XP against four
 **History**
 - 2026-11-02 main-session: found
 
+### DI-037 · Combat UI: features that spend a Wild Shape use don't take it from Wild Shape's count
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/features_mixin.py`, `CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py`
+
+Uses are counted per feature name in char['feature_uses_used'], so Starry Form, Land's Aid, Wild Companion, Wildfire Spirit and similar features that cost 'a use of Wild Shape' count their own uses (if any) and leave Wild Shape's untouched. Scenario: a Stars Druid with 2 Wild Shape uses enables Starry Form twice, then can still Wild Shape twice (the card menu says '2 left'). Fix: let a feature declare that it spends another feature's uses, and have _count_feature_use charge that one.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-038 · Combat UI: a Wild Shape form's duration (hours = half Druid level) isn't tracked
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/WildShape.py`, `Combat/CombatUIQt/rest.py`
+
+Wild Shape: 'You stay in that form for a number of hours equal to half your Druid level'. The combat UI keeps a form until the Druid leaves it, is Incapacitated, or takes a Long Rest (the player-log replay starts after it). Scenario: a Druid 2-3 (1 hour) ends a fight as a Brown Bear, takes a Short Rest (at least 1 hour) and starts the next encounter still a Brown Bear. Fix: count Short Rests (1 hour each) in the form's state, recorded with a logged event so the replay sees them, and end the form once they reach druid_level // 2 hours.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-039 · Combat UI: merged equipment's bonuses still apply in a Wild Shape form
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/WildShape.py`
+
+Wild Shape: 'Equipment that merges with the form has no effect while you're in that form.' Combat/WildShape.py keeps everything a save or skill modifier adds beyond the ability score (character.get_saving_throw_modifier minus the ability modifier), which includes magic items, and the Druid's AC-independent item effects carry over too. Scenario: a Druid with a Cloak of Protection (+1 saves) in Brown Bear form still adds +1 to every save. Fix: separate item bonuses from proficiency and feature bonuses (the ledger's sourced values), and drop items unless the GM marks them as worn by the form.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-040 · Combat UI: a Druid's weapons are still offered while in a Wild Shape form
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/effect_options.py`, `Combat/WildShape.py`
+
+Wild Shape: 'Your ability to handle objects is determined by the form's limbs rather than your own.' effect_options() lists char['_weapons_objects'] under Attacks whatever the form, so the Custom Effect dialog offers a Brown Bear's Druid a Quarterstaff attack with the Druid's own bonuses. Fix: hide the Attacks category while current_form(char) is set (the form's attacks are already listed from char['actions']).
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-041 · Combat UI: species damage resistances carry into a Wild Shape form
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/WildShape.py`, `Combat/PlayerCombatant.py`
+
+Wild Shape keeps only creature type, HP, Hit Dice, INT/WIS/CHA, class features, languages and feats; the rest of the game statistics are the Beast's. Combat/WildShape.py adds the form's damage resistances/immunities to the Druid's own, because the combatant dict (built from character.damage_resistances()) doesn't say where each came from. Scenario: a Tiefling (Infernal Legacy) Druid in Brown Bear form still resists Fire. Fix: have PlayerCombatant record each resistance's source, and keep only class-feature and feat ones in a form.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-042 · Combat UI: damage riders on a Wild Shape form's attacks aren't applied
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py`, `CharacterContent/Features/SubClassFeatures/Druid/DruidMoonFeatures.py`, `Combat/CombatUIQt/turn_panel_mixin.py`
+
+The form's attack buttons roll the stat block's damage only. Not applied: Lunar Radiance (Improved Circle Forms, Moon 6: a form's attacks can deal Radiant instead of their type), Primal Strike (Druid 7: once per turn +1d8 Cold/Fire/Lightning/Thunder on a hit with a Beast form's attack; 2d8 from 15) and Improved Lunar Radiance (Lunar Form, Moon 10: once per turn +2d10 Radiant). The GM must remember and add them by hand. Fix: let a feature declare a rider for form attacks (type swap or extra dice, once per turn) and offer it on the turn column's buttons while current_form(char) is set.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
+### DI-043 · Combat UI: Evergreen Wild Shape and Wild Resurgence don't give back Wild Shape uses
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py`, `Combat/CombatUIQt/wild_shape_mixin.py`, `Combat/CombatUIQt/turns_mixin.py`
+
+Archdruid (Druid 20), Evergreen Wild Shape: 'Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.' Nothing does this when combat starts. Wild Resurgence (Druid 5): 'Once on each of your turns, if you have no uses of Wild Shape left, you can give yourself one use by expending a spell slot'. Enabling it counts its own use and spends no slot, and Wild Shape stays at 0 left, so _assume_wild_shape refuses. Fix: at _start_combat, regain one Wild Shape use for an Archdruid at 0; give Wild Resurgence a handler that spends a slot and logs REGAIN_FEATURE_CHARGE for Wild Shape. Related: DI-037.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -288,6 +348,18 @@ Any heal on a creature with 3 failed death saves gives it HP, resets the saves a
 - 2026-10-28 rules-checker: found
 - 2026-10-28 main-session: marked fixed; User confirmed: heal/short rest skip dead creatures; new Revive button on a dead card sets 1 HP (Action.REVIVE, replayed); downed heal logs 'regains consciousness' (uncommitted)
 - 2026-10-28 main-session: Committed in ff16d3a1
+
+### DI-008 · Negative damage or heal input isn't rejected
+- **Status:** fixed · 2026-11-03 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`, `Combat/CombatUIQt/damage_mixin.py:_apply_heal`
+
+Typing -5 as damage adds 5 temp HP (temp_reduction = min(temp_hp, -5)); a negative heal deals damage. Reject values below 0 in both handlers.
+
+**History**
+- 2026-10-28 rules-checker: found
+- 2026-11-03 main-session: marked in-progress
+- 2026-11-03 main-session: marked fixed; Already fixed by 4ad8f4ab: parse_damage/parse_amount reject a leading '-' and totals below 0, so Damage, Heal and Temp HP refuse them with a 'Nothing applied' status. Added test_negative_amount_is_refused (tests/test_combat_damage_rules.py) covering all three handlers.
 
 ### DI-009 · Summons with hp=0 stat blocks show as dead in the combat simulator
 - **Status:** fixed · 2026-10-28 · uncommitted
@@ -328,7 +400,7 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: Committed in 5b7d6912
 
 ### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
-- **Status:** fixed · 2026-11-03 · uncommitted
+- **Status:** fixed · 2026-11-03 · cbf7e0ae
 - **Area:** combat-simulator
 - **Where:** `Combat/PlayerCombatant.py:124`
 
@@ -338,6 +410,7 @@ combatant_from_character loads character.spell_slots only; character.pact_magic_
 - 2026-10-31 main-session: found
 - 2026-11-03 main-session: marked in-progress
 - 2026-11-03 main-session: marked fixed; Players carry pact_slots apart from spell_slots, with their own add/remove_pact_slot log actions. Shown on the card, More Info and party view; spent by the 1-9 keys (once spell slots of that level run out), Cast Spell and Custom Effect (PactSlot choices); restored by Short Rest; replayed from the player log. Tests: tests/test_combat_ui_pact_slots.py.
+- 2026-11-03 git-commit: marked fixed in cbf7e0ae
 
 ### DI-026 · Breaking concentration by casting another spell replays as an extra cast
 - **Status:** fixed · 2026-10-31 · 97b31819
@@ -397,6 +470,16 @@ rank_addresses keeps only 192.168/16, 10/8 and 172.16/12, but Tailscale uses 100
 - 2026-11-01 main-session: found
 - 2026-11-01 main-session: marked in-progress
 - 2026-11-01 main-session: marked fixed; rank_addresses now keeps 100.64.0.0/10, ranked last, with tests. Not tried with a real Tailscale connection.
+
+### DI-044 · Short Rest gave back every spent use of a feature that regains only one
+- **Status:** fixed
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/rest.py`
+
+_restore_feature_uses restored every spent use of each short-or-long-rest feature, ignoring FeatureUses.regain_x_on. Wild Shape, Rage, Channel Divinity (Cleric, Paladin), Second Wind, Psionic Energy and Soul Knife's energy all say to regain one use on a Short Rest. Fixed: a Short Rest now regains at most regain_x_on's count; tested in tests/test_combat_ui_wild_shape.py.
+
+**History**
+- 2026-11-04 main session (Claude Opus 5.5): found
 
 ## Won't fix
 
