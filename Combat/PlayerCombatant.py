@@ -5,7 +5,7 @@ shows and what changes during a fight (HP, conditions, ...).
 combatant_from_stat_block() builds a monster's from its stat block, which is
 also how a prepared encounter log stores its starting combatants
 (Combat/EncounterLogs.py). combatant_from_character() builds a player's from
-their Character. The
+their Character, and companions_of() the stat blocks of what they summon. The
 Character itself rides along under "_stat_block", so anything the dict doesn't
 hold is asked of it. Nothing here imports Qt, so it can be tested and
 snapshotted (tests/test_combatant_snapshots.py).
@@ -153,6 +153,22 @@ def combatant_from_character(character: Character) -> dict:
         "_feature_objects": list(character.features),
         "invocations": list(character.invocations),
     }
+
+
+def companions_of(character: Character) -> list[BasicCombatantData]:
+    """The creatures `character`'s features create or summon
+    (Feature.companion), as stat blocks for an encounter: named
+    "<character>'s Companion", hidden from the players until the GM reveals
+    them when they're summoned, as for a monster that joins the fight later."""
+    companions = []
+    for feature in character.validate().iter_features_with_extensions():
+        companion = feature.companion(character)
+        if companion is None:
+            continue
+        companion.set_name(f"{character.character_name}'s Companion")
+        companion.hidden_from_players = True
+        companions.append(companion)
+    return companions
 
 
 def max_pact_slots(char: dict) -> dict[int, int]:

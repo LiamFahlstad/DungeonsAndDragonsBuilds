@@ -32,7 +32,8 @@ def prepare_campaign(
     """(problems, [(encounter id, what happened to its log)]). Nothing is
     written when there are problems."""
     assert campaign.config is not None, f"{campaign.name} has no encounters.py"
-    party_names = [cs.character_name for cs in campaign.players()]
+    sheets = {cs.character_name: cs for cs in campaign.players()}
+    party_names = list(sheets)
     problems = validate(campaign.config, party_names)
     known = {s.name for s in campaign.scenarios}
     problems += [
@@ -46,7 +47,9 @@ def prepare_campaign(
             continue
         players = resolve_players(scenario.players, party_names)
         path = scenario_log_path(campaign.combat_log_dir, scenario.name)
-        results.append((scenario.name, prepare_log(path, scenario, players, write)))
+        results.append(
+            (scenario.name, prepare_log(path, scenario, players, write, sheets))
+        )
     return problems, results
 
 

@@ -33,6 +33,7 @@ from Combat.Campaign import Campaign
 from Combat.Combatants import Pirate
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.encounters_mixin import CONTINUE, RESTART
+from Combat.CombatUIQt.player_view import _can_be_seen
 from Combat.CombatUIQt.rest import apply_long_rest
 from Combat.EncounterConfig import (
     CampaignSpec,
@@ -61,6 +62,8 @@ from tests._snapshot_helpers import build
 SLASHING = DamageType.SLASHING.value
 EDMUND_BUILD = "Y2024_Paladin_Devotion_Edmund"
 CLOVER_BUILD = "Y2024_Bard_Valor_Clover"
+# A Reanimator Artificer: her Reanimated Companion joins her encounters.
+DESSIE_BUILD = "Y2024_Artificer_Reanimator_Dessie"
 
 PIRATES = CombatScenario(
     name="pirate_ambush",
@@ -235,6 +238,55 @@ def test_a_prepared_log_holds_the_encounter_and_who_takes_part():
     }
     (tiger,) = log["combatants"]
     assert (tiger["name"], tiger["hp"], tiger["max_hp"]) == ("Tiger", 30, 30)
+
+
+def test_a_prepared_log_holds_the_companions_of_who_takes_part_hidden():
+    sheets = {cs.character_name: cs for cs in (_sheet(DESSIE_BUILD), *_party())}
+    log = prepared_log(TIGER, ["Dessie", "Edmund"], sheets)
+    companion, tiger = log["combatants"]
+    assert tiger["name"] == "Tiger"
+    # Level 3, Intelligence 16: 5 + 5 * 3 HP, AC 10 + 3.
+    assert (
+        companion["name"],
+        companion["hp"],
+        companion["max_hp"],
+        companion["ac"],
+    ) == ("Dessie's Companion (Reanimated Companion)", 20, 20, 13)
+    # Off the players' screen until the GM reveals it when she summons it.
+    assert companion["hidden_from_players"] is True
+    assert not _can_be_seen(companion)
+    # Not when she isn't taking part, nor without the party's sheets.
+    assert [
+        c["name"] for c in prepared_log(TIGER, ["Edmund"], sheets)["combatants"]
+    ] == ["Tiger"]
+    assert [c["name"] for c in prepared_log(TIGER, ["Dessie"])["combatants"]] == [
+        "Tiger"
+    ]
+
+
+def test_preparing_a_campaign_adds_the_party_companions(tmp_path):
+    campaign = Campaign(
+        name="test",
+        folder=tmp_path,
+        players=lambda: [_sheet(DESSIE_BUILD)],
+        scenarios=[dataclasses.replace(TIGER, players=None)],
+        config=CampaignSpec(
+            name="test",
+            title="Test",
+            description="",
+            party=[],
+            encounters=[EncounterSpec(id="tiger_den", title="Tiger Den")],
+        ),
+    )
+    problems, results = prepare_campaign(campaign)
+    assert (problems, results) == ([], [("tiger_den", "prepared")])
+    data = json.loads(
+        scenario_log_path(tmp_path / "CombatLogs", "tiger_den").read_text()
+    )
+    assert [c["name"] for c in data["combatants"]] == [
+        "Dessie's Companion (Reanimated Companion)",
+        "Tiger",
+    ]
 
 
 def test_preparing_logs(tmp_path):

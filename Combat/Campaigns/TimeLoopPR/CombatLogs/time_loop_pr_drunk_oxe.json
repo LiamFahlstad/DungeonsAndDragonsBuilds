@@ -10,6 +10,98 @@
   "round_number": 1,
   "combatants": [
     {
+      "name": "Dessie's Companion (Reanimated Companion)",
+      "create_name": "Reanimated Companion",
+      "combatant_type": "Reanimated Companion",
+      "hp": 20,
+      "max_hp": 20,
+      "ac": 13,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 11,
+        "DEX": 10,
+        "CON": 16,
+        "INT": 4,
+        "WIS": 10,
+        "CHA": 6
+      },
+      "Saving Throws": {
+        "STR": 0,
+        "DEX": 0,
+        "CON": 3,
+        "INT": -3,
+        "WIS": 0,
+        "CHA": -2
+      },
+      "hidden_from_players": true,
+      "cr": "None",
+      "monster_type": "Undead",
+      "monster_type_note": "",
+      "alignment": "Neutral",
+      "size": "Medium",
+      "ac_note": "",
+      "hp_formula": "5 + five times your Artificer level; 3d8 Hit Dice",
+      "speed_ground_ft": 30,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [
+        {
+          "damage_types": [
+            "Necrotic",
+            "Poison"
+          ],
+          "note": ""
+        }
+      ],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Lightning"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [
+        "Charmed",
+        "Exhaustion",
+        "Poisoned"
+      ],
+      "senses": "Blindsight 60 ft.; Passive Perception 10",
+      "languages": "Understands the languages you know",
+      "description": "XP 0; PB equals your Proficiency Bonus (currently +2). Your Strange Modifications choices (Ferocity, Bloated, Gaunt, Moist) change this card as described in those features.",
+      "traits": [
+        {
+          "name": "Death Burst",
+          "description": "The companion explodes when it dies. Dexterity Saving Throw: DC 13, each creature in a 10-foot Emanation originating from the companion. Failure: 2d4 Necrotic damage. Success: Half damage."
+        },
+        {
+          "name": "Lightning Absorption",
+          "description": "Whenever the companion is subjected to Lightning damage, it regains a number of Hit Points equal to the Lightning damage dealt."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Dreadful Swipe",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 1d4 + 3 Necrotic damage (1d4 plus your Intelligence modifier), and the target can't take Opportunity Attacks until the start of its next turn."
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
       "name": "Bo (Bugbear Warrior)",
       "create_name": "Bugbear Warrior",
       "combatant_type": "Bugbear Warrior",

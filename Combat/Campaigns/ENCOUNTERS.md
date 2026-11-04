@@ -90,6 +90,15 @@ Each line is one stat block, optionally several of it:
 | `group` | no | Lines with the same `group` share one turn, as a GM runs a pack of the same monster: one initiative roll (with the first one's modifier), one row on the initiative screen ("Goblin Warriors (4)"), and they all take their turn together. Each keeps its own card and stat block. Monsters and allies can't share a group. |
 | `hidden_from_players` | no | `True` for one that joins the fight later: it rolls initiative and has its card like the rest, but the players' screen and link don't show it (nor its turn, nor log lines about it) until the GM reveals it. Right-click its card as the only target and uncheck **Hidden from players**; the log then says it appears. Checking it again hides one mid-fight. |
 
+### Players' companions
+
+A player whose sheet has a feature that creates or summons a creature to fight
+beside them (one that overrides `Feature.companion()`, so far the Reanimator
+Artificer's Reanimated Companion) gets it in every encounter they take part in,
+without a line in `encounters.py`: it comes first in the log, as
+"<character>'s Companion", hidden from players. Reveal it when it's summoned,
+as above.
+
 To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the
 `class ...:` line above the match, and the file is the module to import it from.
@@ -123,7 +132,7 @@ A prepared log starts as:
   "title": "Goblin Scouting Party",
   "players": ["Edmund", "Clover", "Kivi Jätti"],
   "round_number": 1,
-  "combatants": [ ...allies and monsters at full HP... ]
+  "combatants": [ ...companions, allies and monsters at full HP... ]
 }
 ```
 

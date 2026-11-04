@@ -281,6 +281,9 @@ class ReanimatedCompanion(Feature):
             StatBlock(format_reanimated_companion(character)),
         ]
 
+    def companion(self, character: CharacterView) -> ExtendedCombatantData:
+        return _build_reanimated_companion(character)
+
     def get_description(self, character: CharacterView) -> str:
         description = (
             "Using Tinker's Tools or another type of Artisan's Tools with which you have proficiency, you can take a Magic action to create a Reanimated Companion (see the stat block) through the power of necromancy and science. The companion manifests in an unoccupied space within 5 feet of you. You determine the companion's appearance; your choices don't affect the companion's game statistics.\n"

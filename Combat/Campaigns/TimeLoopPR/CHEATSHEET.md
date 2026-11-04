@@ -17,8 +17,11 @@ level 3. After changing `encounters.py`, prepare the logs:
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr
 ```
 
-Hanna's drake and Dessie's Reanimator companion have stat blocks on their
-character sheets, but the simulator doesn't add companions as combatants yet.
+Dessie's Reanimated Companion is in every encounter as "Dessie's Companion",
+hidden from the players. Give it Dessie's initiative; when she creates it (or
+if it's already out), right-click its card and uncheck **Hidden from players**,
+and the log says it appears. Hanna's drake has a stat block on her sheet, but
+the simulator doesn't add it yet.
 
 ## Between encounters
 

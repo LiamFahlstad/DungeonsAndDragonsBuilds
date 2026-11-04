@@ -7,6 +7,7 @@ from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
+from Model.Creatures.Combatants import ExtendedCombatantData
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
@@ -379,6 +380,15 @@ class Feature(Effect):
         reused anywhere it's needed instead of being re-parsed from prose.
         Return None (default) for features with no meaningful target (e.g.
         passive features or ones that affect the caster only implicitly)."""
+        return None
+
+    def companion(self, character: CharacterView) -> ExtendedCombatantData | None:
+        """Override to return the stat block of the creature this feature
+        creates or summons to fight beside the character (e.g. a Reanimated
+        Companion), so the combat simulator adds it to the character's
+        encounters, hidden from the players until the GM reveals it when it's
+        summoned (Combat/PlayerCombatant.companions_of). Return None (default)
+        for features that summon nothing."""
         return None
 
     def number_of_uses(self, character: CharacterView) -> int:

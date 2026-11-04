@@ -6,7 +6,7 @@ gets its log from `python -m Combat.Tools.prepare_encounters`, named after its
 id; nothing else writes new logs. A prepared log starts as
 
     {"encounter": <id>, "title": ..., "players": [<who takes part>],
-     "round_number": 1, "combatants": [<monsters and allies, full HP>]}
+     "round_number": 1, "combatants": [<companions, allies, monsters, full HP>]}
 
 and the combat window then adds one "round_<n>" list of events per round
 played, keeping "combatants" (HP, conditions, ...) and "round_number"
@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from Combat.PlayerCombatant import combatant_from_stat_block
+from Combat.PlayerCombatant import combatant_from_stat_block, companions_of
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
 
 # When the fight was ended, in an encounter log and in its player-log entry.
@@ -89,10 +89,16 @@ def _plain(data: dict) -> dict:
     return json.loads(json.dumps(data, cls=LogJSONEncoder))
 
 
-def prepared_log(scenario, players: list[str]) -> dict:
+def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> dict:
     """What the log of `scenario` (a CombatScenario) starts as: its header,
     round 1, and its allies and monsters at full HP. `players` are the
-    character names of the party members taking part."""
+    character names of the party members taking part. With their Characters
+    in `sheets` (by character name), each player's companions
+    (PlayerCombatant.companions_of) come first, hidden until summoned."""
+    sheets = sheets or {}
+    companions = [
+        c for name in players if name in sheets for c in companions_of(sheets[name])
+    ]
     return {
         "encounter": scenario.name,
         "title": scenario.display_title,
@@ -100,7 +106,7 @@ def prepared_log(scenario, players: list[str]) -> dict:
         "round_number": 1,
         "combatants": [
             combatant_from_stat_block(c)
-            for c in scenario.build_allies() + scenario.build_combatants()
+            for c in companions + scenario.build_allies() + scenario.build_combatants()
         ],
     }
 
@@ -115,15 +121,19 @@ def is_prepared(path: str | Path) -> bool:
 
 
 def prepare_log(
-    path: str | Path, scenario, players: list[str], write: bool = True
+    path: str | Path,
+    scenario,
+    players: list[str],
+    write: bool = True,
+    sheets: dict | None = None,
 ) -> str:
     """Write the prepared log of `scenario` at `path` (unless `write` is
-    False), and say what happened: "prepared" (new), "updated" (not started,
+    False; `sheets` as for prepared_log), and say what happened: "prepared" (new), "updated" (not started,
     but the config changed), "unchanged", or "in progress" for a fight that
     got going, which is left as it is except for a header it didn't have yet
     ("in progress, header added"; its last-played time is kept)."""
     path = Path(path)
-    fresh = _plain(prepared_log(scenario, players))
+    fresh = _plain(prepared_log(scenario, players, sheets))
     if not path.exists():
         if write:
             write_log(path, fresh)

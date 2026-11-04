@@ -122,7 +122,11 @@ class EncountersMixin(CombatWindowState):
         becomes the players the log lists."""
         scenario = self._scenario(self._scenario_name)
         if restart and scenario is not None:
-            fresh = prepared_log(scenario, self._encounter_players(scenario, path))
+            fresh = prepared_log(
+                scenario,
+                self._encounter_players(scenario, path),
+                self._party_sheets,
+            )
             session_count = len(self.player_log_data["sessions"])
             backup = restart_log(
                 path,
