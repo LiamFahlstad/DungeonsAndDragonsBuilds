@@ -94,7 +94,7 @@ Each line is one stat block, optionally several of it:
 
 A player whose sheet has a feature that creates or summons a creature to fight
 beside them (one that overrides `Feature.companion()`, so far the Reanimator
-Artificer's Reanimated Companion) gets it in every encounter they take part in,
+Artificer's Reanimated Companion and the Drakewarden Ranger's Drake Companion) gets it in every encounter they take part in,
 without a line in `encounters.py`: it comes first in the log, as
 "<character>'s Companion", hidden from players. Reveal it when it's summoned,
 as above.

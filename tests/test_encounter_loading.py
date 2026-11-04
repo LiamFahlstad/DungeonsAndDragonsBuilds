@@ -64,6 +64,8 @@ EDMUND_BUILD = "Y2024_Paladin_Devotion_Edmund"
 CLOVER_BUILD = "Y2024_Bard_Valor_Clover"
 # A Reanimator Artificer: her Reanimated Companion joins her encounters.
 DESSIE_BUILD = "Y2024_Artificer_Reanimator_Dessie"
+# A Drakewarden Ranger (Fire): her Drake Companion joins her encounters.
+HANNA_BUILD = "Y2024_Ranger_Drakewarden_Hanna"
 
 PIRATES = CombatScenario(
     name="pirate_ambush",
@@ -262,6 +264,22 @@ def test_a_prepared_log_holds_the_companions_of_who_takes_part_hidden():
     assert [c["name"] for c in prepared_log(TIGER, ["Dessie"])["combatants"]] == [
         "Tiger"
     ]
+
+
+def test_a_drakewardens_drake_joins_her_encounters_hidden():
+    hanna = _sheet(HANNA_BUILD)
+    log = prepared_log(TIGER, ["Hanna"], {hanna.character_name: hanna})
+    drake, _ = log["combatants"]
+    # Level 3, Proficiency Bonus +2: 5 + 5 * 3 HP, AC 14 + 2, no wings yet.
+    assert (drake["name"], drake["max_hp"], drake["ac"], drake["speed_fly_ft"]) == (
+        "Hanna's Companion (Drake Companion)",
+        20,
+        16,
+        None,
+    )
+    (immunity,) = drake["damage_immunities"]
+    assert immunity.damage_types == [DamageType.FIRE]
+    assert drake["hidden_from_players"] is True
 
 
 def test_preparing_a_campaign_adds_the_party_companions(tmp_path):

@@ -224,6 +224,13 @@ class DrakeCompanion(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def companion(self, character: CharacterView) -> ExtendedCombatantData:
+        return _build_drake(
+            character.get_class_level(CharacterClass.RANGER),
+            character.get_proficiency_bonus(),
+            self.damage_type,
+        )
+
 
 class BondOfFangAndScale(Feature):
     def __init__(self):

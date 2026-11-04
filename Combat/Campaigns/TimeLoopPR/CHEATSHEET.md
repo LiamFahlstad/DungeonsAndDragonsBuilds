@@ -17,11 +17,11 @@ level 3. After changing `encounters.py`, prepare the logs:
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr
 ```
 
-Dessie's Reanimated Companion is in every encounter as "Dessie's Companion",
-hidden from the players. Give it Dessie's initiative; when she creates it (or
-if it's already out), right-click its card and uncheck **Hidden from players**,
-and the log says it appears. Hanna's drake has a stat block on her sheet, but
-the simulator doesn't add it yet.
+Dessie's Reanimated Companion and Hanna's Drake Companion (Fire) are in every
+encounter as "Dessie's Companion" and "Hanna's Companion", hidden from the
+players. Give each its owner's initiative (the drake takes its turn right after
+Hanna's); when one is summoned (or if it's already out), right-click its card
+and uncheck **Hidden from players**, and the log says it appears.
 
 ## Between encounters
 
