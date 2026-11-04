@@ -22,7 +22,11 @@ from CharacterContent.Items.Weapons.MartialMelee import Scimitar, Shortsword
 from CharacterContent.Items.Weapons.Ranged import HandCrossbow
 from CharacterContent.Items.Weapons.SimpleMelee import Dagger
 from CharacterContent.Species import Dwarf
-from CharacterContent.Spells.SpellLists import DivinationLevel1Spells, WizardLevel0Spells, WizardLevel1Spells
+from CharacterContent.Spells.SpellLists import (
+    DivinationLevel1Spells,
+    WizardLevel0Spells,
+    WizardLevel1Spells,
+)
 from CharacterContent.ToolProficiencies.Proficiencies import ThievesTools
 from Core.Definitions import Ability, Skill
 from Model.AbilityScores import PointBuyAbilityScores

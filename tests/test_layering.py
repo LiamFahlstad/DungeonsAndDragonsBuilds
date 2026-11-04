@@ -133,7 +133,9 @@ _parse_cache: dict[Path, ast.AST] = {}
 
 def _parse(path: Path) -> ast.AST:
     if path not in _parse_cache:
-        _parse_cache[path] = ast.parse(path.read_text(encoding="utf-8", errors="ignore"))
+        _parse_cache[path] = ast.parse(
+            path.read_text(encoding="utf-8", errors="ignore")
+        )
     return _parse_cache[path]
 
 

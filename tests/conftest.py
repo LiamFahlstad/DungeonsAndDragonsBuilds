@@ -17,6 +17,8 @@ def pytest_collection_modifyitems(items):
     for item in items:
         if "snapshot" in item.nodeid:
             item.add_marker(marker)
+
+
 from Model.AbilityScores import StandardArrayAbilityScores
 from Model.Ledger.ArmorClass import ArmorClass
 from Model.Ledger.CarryingCapacity import CarryingCapacity
