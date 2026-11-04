@@ -138,6 +138,25 @@ def test_hit_on_a_creature_already_at_zero_changes_no_hp(fight):
     assert value["knockout"] is False
 
 
+@pytest.mark.parametrize("text", ["-5", "3-8"])
+@pytest.mark.parametrize("apply", ["_apply_damage", "_apply_heal", "_apply_temp_hp"])
+def test_negative_amount_is_refused(fight, apply, text):
+    """Negative damage would heal (it soaked into temporary HP as a gain) and
+    negative healing would hurt; the field keeps what was typed instead."""
+    ui, _, tiger = fight
+    tiger["hp"] = 20
+    field = {
+        "_apply_damage": ui.damage_input,
+        "_apply_heal": ui.heal_input,
+        "_apply_temp_hp": ui.temp_hp_input,
+    }[apply]
+    field.setText(text)
+    getattr(ui, apply)()
+    assert (tiger["hp"], tiger["temp_hp"]) == (20, 0)
+    assert field.text() == text
+    assert ui._status_label.text().startswith("Nothing applied")
+
+
 # ---------------------------------------------------------------------------
 # 2. Immunity, Resistance and Vulnerability
 
