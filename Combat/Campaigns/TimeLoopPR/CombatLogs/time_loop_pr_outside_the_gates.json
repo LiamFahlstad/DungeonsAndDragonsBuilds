@@ -102,6 +102,83 @@
       "death_saves": false
     },
     {
+      "name": "Hanna's Companion (Drake Companion)",
+      "create_name": "Drake Companion",
+      "combatant_type": "Drake Companion",
+      "hp": 20,
+      "max_hp": 20,
+      "ac": 16,
+      "temp_hp": 0,
+      "conditions": [],
+      "visibility_states": [],
+      "death_saves_fail": 0,
+      "death_saves_success": 0,
+      "spell_slots": {},
+      "Ability Scores": {
+        "STR": 16,
+        "DEX": 12,
+        "CON": 15,
+        "INT": 8,
+        "WIS": 14,
+        "CHA": 8
+      },
+      "Saving Throws": {
+        "DEX": 3,
+        "WIS": 4
+      },
+      "hidden_from_players": true,
+      "cr": "2",
+      "monster_type": "Dragon",
+      "monster_type_note": "",
+      "alignment": "Neutral",
+      "size": "Small",
+      "ac_note": "natural armor",
+      "hp_formula": "5 + five times your Ranger level (3 d10 Hit Dice)",
+      "speed_ground_ft": 40,
+      "speed_fly_ft": null,
+      "speed_climb_ft": null,
+      "speed_special_rules": "",
+      "skills": {},
+      "damage_vulnerabilities": [],
+      "damage_resistances": [],
+      "damage_immunities": [
+        {
+          "damage_types": [
+            "Fire"
+          ],
+          "note": ""
+        }
+      ],
+      "condition_immunities": [],
+      "senses": "Darkvision 60 ft., Passive Perception 12",
+      "languages": "Draconic",
+      "description": "",
+      "traits": [
+        {
+          "name": "Draconic Essence",
+          "description": "When you summon the drake, choose a damage type: Acid, Cold, Fire, Lightning, or Poison. The chosen type determines the drake's damage immunity and the damage of its Infused Strikes trait."
+        }
+      ],
+      "actions": [
+        {
+          "name": "Bite",
+          "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 1d6 + 2 Piercing damage"
+        }
+      ],
+      "bonus_actions": [],
+      "reactions": [
+        {
+          "name": "Infused Strikes",
+          "description": "When another creature within 30 feet of the drake that it can see hits a target with a weapon attack, the drake infuses the strike with its essence, causing the target to take an extra 1d6 Fire damage."
+        }
+      ],
+      "legendary_actions": [],
+      "legendary_resistances": 0,
+      "lair_actions": [],
+      "mythic_actions": [],
+      "death_saves": false
+    },
+    {
       "name": "Paladin (Goliath Paladin of Devotion)",
       "create_name": "Goliath Paladin of Devotion",
       "combatant_type": "Goliath Paladin of Devotion",
