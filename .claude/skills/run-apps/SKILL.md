@@ -17,7 +17,7 @@ python .claude/skills/run-apps/screenshot.py --out <dir> combat   # --out goes b
 ```
 
 - Each command prints the files it wrote, in a screenshots folder under the system temp directory (or `--out <dir>`). **Read the PNGs** to see them. For `sheet`, read the HTML, or diff it with the `snapshot-diffs` skill.
-- The windows are built the same way the apps build them (`CombatAppQt(...)._build_window()`, `CreatorApp()` + `load_build`), on Qt's `offscreen` platform. No event loop, no session timer. The combat log goes to a temp folder, never a campaign's `CombatLogs/`.
+- The windows are built the same way the apps build them (`CombatAppQt(...)._build_window()`, `CreatorApp()` + `load_build`), on Qt's `offscreen` platform. No event loop, no session timer. The combat log is prepared with the campaign's party (and their companions) in a temp folder, never a campaign's `CombatLogs/`.
 - A modal dialog or message box that would block is skipped and printed. A load warning (the creator can't load multiclass builds, for example) shows up there.
 - `creator` writes one PNG per tab (Basics, Level features, Equipment, Advanced) unless you pass `--tab`.
 - Combat cards squash below the default size. Change `--size` only on purpose.

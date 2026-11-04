@@ -83,6 +83,7 @@ def combat(args, out: Path) -> None:
     import Combat.Scenarios as Scenarios
     from Combat.CombatUIQt import CombatAppQt
     from Combat.CombatUIQt.styles import QSS
+    from Combat.EncounterConfig import resolve_players
     from Combat.EncounterLogs import prepare_log, scenario_log_path
 
     if args.scenario and args.scenario not in Scenarios.SCENARIOS:
@@ -95,14 +96,19 @@ def combat(args, out: Path) -> None:
     )
     scenario = Scenarios.SCENARIOS[name]
     app.setStyleSheet(QSS)
-    # The encounter's log, prepared as prepare_encounters would, in a temp
-    # folder: never the campaign's CombatLogs/.
+    # The encounter's log, prepared as prepare_encounters would (its players
+    # and their companions included), in a temp folder: never the campaign's
+    # CombatLogs/.
+    party = Scenarios.SCENARIO_CAMPAIGNS[name].players()
+    sheets = {cs.character_name: cs for cs in party}
     logs = Path(tempfile.mkdtemp(prefix="dnd-combat-logs-"))
     path = scenario_log_path(logs, name)
-    prepare_log(path, scenario, players=[])
+    prepare_log(
+        path, scenario, resolve_players(scenario.players, list(sheets)), sheets=sheets
+    )
     ui = CombatAppQt(
         combatants=[],
-        character_sheets=[],
+        character_sheets=party,
         combat_log_dir=logs,
         combatants_per_column=scenario.combatants_per_column,
         log_path=path,
