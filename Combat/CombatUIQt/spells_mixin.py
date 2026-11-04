@@ -38,6 +38,12 @@ class SpellsMixin(CombatWindowState):
         if not char:
             self._show_status("Nothing spent: left-click a card to pick a source.")
             return
+        if self._spend_slot(char, level):
+            self._refresh_selected_card()
+
+    def _spend_slot(self, char: dict, level: int) -> bool:
+        """Spend one of char's slots of `level`, as _cast_spell_slot_level
+        does; False, saying why, when there's none left."""
         asked_for_pact = isinstance(level, PactSlot)
         level = int(level)
         level_left = char.get("spell_slots", {}).get(level, 0)
@@ -48,7 +54,7 @@ class SpellsMixin(CombatWindowState):
             self._show_status(
                 f"Nothing spent: {char['name']} has no level {level} {kind} left."
             )
-            return
+            return False
         slots = char["pact_slots" if pact else "spell_slots"]
         slots[level] -= 1
         char.setdefault("stats", _default_stats())
@@ -62,7 +68,7 @@ class SpellsMixin(CombatWindowState):
             action=Action.REMOVE_PACT_SLOT if pact else Action.REMOVE_SPELL_SLOT,
             value=level,
         )
-        self._refresh_selected_card()
+        return True
 
     @undoable
     def _regain_spell_slot(self):

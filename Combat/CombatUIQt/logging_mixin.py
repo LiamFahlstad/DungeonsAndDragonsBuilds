@@ -253,6 +253,7 @@ class LoggingMixin(CombatWindowState):
         self._use_log_file(Path(path))
         self.current_turn_idx = 0
         if not has_round_events(data):
+            self._carry_companions_over(Path(path))
             self.phase = "INITIATIVE"
             self.initiative_order = []
             self._switch_to_initiative()

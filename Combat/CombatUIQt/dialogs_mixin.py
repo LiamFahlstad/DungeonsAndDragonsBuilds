@@ -731,6 +731,17 @@ class DialogsMixin(CombatWindowState):
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(8)
 
+        # A player's companion the encounter doesn't have (one prepared
+        # before it summoned anything), with its own stat block.
+        party_companions = self._missing_party_companions()
+        companion_combo = QComboBox()
+        if party_companions:
+            layout.addWidget(QLabel("From the party:"))
+            companion_combo.addItem("— none —")
+            for name, _ in party_companions:
+                companion_combo.addItem(name)
+            layout.addWidget(companion_combo)
+
         layout.addWidget(QLabel("Name:"))
         name_input = QLineEdit()
         name_input.setPlaceholderText("e.g. Wooden Door, Bandit Captain...")
@@ -758,6 +769,11 @@ class DialogsMixin(CombatWindowState):
         layout.addLayout(btn_row)
 
         def do_add():
+            picked = companion_combo.currentIndex() - 1
+            if party_companions and picked >= 0:
+                self._add_party_companion(party_companions[picked][1])
+                dlg.accept()
+                return
             name = name_input.text().strip()
             if not name:
                 return

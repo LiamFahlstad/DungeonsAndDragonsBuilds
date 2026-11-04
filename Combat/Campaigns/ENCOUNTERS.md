@@ -94,10 +94,31 @@ Each line is one stat block, optionally several of it:
 
 A player whose sheet has a feature that creates or summons a creature to fight
 beside them (one that overrides `Feature.companion()`, so far the Reanimator
-Artificer's Reanimated Companion and the Drakewarden Ranger's Drake Companion) gets it in every encounter they take part in,
-without a line in `encounters.py`: it comes first in the log, as
-"<character>'s Companion", hidden from players. Reveal it when it's summoned,
-as above.
+Artificer's Reanimated Companion and the Drakewarden Ranger's Drake Companion)
+gets it in every encounter they take part in, without a line in
+`encounters.py`: it comes first in the log, as "<character>'s Companion",
+hidden from players (Combat/Companions.py has the details).
+
+- **Initiative:** it has no row of its own. It takes its turn right after its
+  owner's.
+- **Summoning:** the owner's **Enable Feature** (Drake Companion, Reanimated
+  Companion), or **Summon ...** in its card's or its owner's right-click menu,
+  which also offers the choice made each time (the drake's Draconic Essence:
+  Acid, Cold, Fire, Lightning or Poison). It spends the feature's use and its
+  Action, or the owner's lowest spell slot once the use is gone, and brings it
+  out at full Hit Points for the players to see. Summoning a drake again
+  replaces it; a Reanimated Companion can't be made while one is out.
+  Unchecking **Hidden from players** shows one that's already out without
+  spending anything.
+- **Its owner dies:** it drops to 0 Hit Points (a Reanimated Companion's Death
+  Burst goes off).
+- **The next encounter:** one that's out stays out, with the Hit Points,
+  conditions and choice the last encounter left it (conditions ending on a
+  timer or a save don't carry). One that died is gone until it's summoned
+  again. A long rest ends a Reanimated Companion; a drake stays out, rested
+  to full (`Feature.companion_rules`).
+- **A fight prepared without it** (before its owner had it): **Add Combatant**
+  lists the party's missing companions under "From the party".
 
 To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the

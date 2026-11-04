@@ -114,6 +114,9 @@ class BasicCombatantData:
     # Kept off the players' screen until the GM reveals it, for one that joins
     # the fight later (the encounters.py "hidden_from_players").
     hidden_from_players: bool = False
+    # The character name of the player whose feature summons it (a Drake
+    # Companion's Ranger), for a player's companion (Combat/Companions.py).
+    companion_of: Optional[str] = None
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:

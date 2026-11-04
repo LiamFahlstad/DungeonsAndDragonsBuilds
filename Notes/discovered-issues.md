@@ -481,6 +481,55 @@ _restore_feature_uses restored every spent use of each short-or-long-rest featur
 **History**
 - 2026-11-04 main session (Claude Opus 5.5): found
 
+### DI-045 · Combat UI: player companions roll their own initiative instead of acting on their owner's turn
+- **Status:** fixed · 2026-11-04 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/turns_mixin.py:432`, `Combat/PlayerCombatant.py`
+
+Companions from Feature.companion() (Dessie's Reanimated Companion, Hanna's Drake Companion in Time Loop PR) get their own row on the initiative screen. Roll for Monsters and Roll for All roll them a fresh d20 like any monster (they aren't _is_player), so the drake can end up acting before Hanna or rounds away from her. Rules: the drake 'shares your initiative count, but it takes its turn immediately after yours'; the Reanimated Companion 'acts during your turn'. Today the GM has to type the owner's number by hand, and with equal initiative a stable sort puts the companion after every tied player, not right after its owner. Fix: companions_of() records the owner (e.g. char['companion_of'] = 'Hanna'); the initiative screen gives companions no row of their own, and _start_combat puts each one directly after its owner in initiative_order (or makes it part of its owner's turn).
+
+**History**
+- 2026-11-04 main-session: found
+- 2026-11-04 main-session: marked in-progress
+- 2026-11-04 main-session: marked fixed
+
+### DI-046 · Combat UI: a player's companion comes back fresh in every encounter (HP, death, summon use not carried over)
+- **Status:** fixed · 2026-11-04 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterLogs.py:92`, `CharacterContent/Features/SubClassFeatures/Artificer/ArtificerReanimatorFeatures.py:241`, `CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py:170`
+
+prepared_log puts each companion in at full HP, hidden, in every encounter's log, and nothing links one encounter's companion to the next. Example: Hanna's drake drops to 5/20 HP in The Drunk Oxe, and The Square starts it at 20/20; a drake killed in one fight is back in the next one, although Drake Companion says it remains 'until it is reduced to 0 hit points' and can be summoned again only once per long rest (or with a spell slot). The Reanimated Companion lasts until a long rest, and if Dessie dies it drops to 0 HP and dies, triggering Death Burst, which isn't automated either. Neither feature has FeatureUses, so revealing (summoning) one spends nothing. Add Combatant only makes a free-text name/HP/AC combatant, so a fight started before a companion was in its log can't get the real stat block. Suggested fix: replay companion HP/death from the player log like player state, spend a summon use (or a slot) when the GM reveals it, and let Add Combatant offer the party's companions.
+
+**History**
+- 2026-11-04 main-session: found
+- 2026-11-04 main-session: marked in-progress
+- 2026-11-04 main-session: marked fixed
+- 2026-11-04 main-session: Fixed per feature (Feature.companion_rules): a Reanimated Companion can't be re-made while out and ends at a long rest; a drake is replaced by a new summon and stays out past a long rest until 0 HP. Summon spends the use, else the lowest slot (no slot-level choice for the GM).
+
+### DI-047 · Combat UI: Drake Companion's Draconic Essence type is fixed by the build, not chosen per summon
+- **Status:** fixed · 2026-11-04 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py:228`
+
+Drake Companion: 'Whenever you summon the drake, choose a damage type listed in its Draconic Essence trait' (Acid, Cold, Fire, Lightning or Poison). The companion card in the combat log is built once from the build's damage_type (Hanna: Fire), so its damage immunity and Infused Strikes always say Fire. If Hanna picks Cold against a fire monster, the drake still resists Fire and is hit by Cold for full damage, and damage applied through the UI is wrong. Fix: let the GM pick the essence when revealing the drake (rebuild immunity and Infused Strikes text), or at least note on the card that the type can change.
+
+**History**
+- 2026-11-04 main-session: found
+- 2026-11-04 main-session: marked in-progress
+- 2026-11-04 main-session: marked fixed
+
+### DI-048 · run-apps screenshot.py combat prepares logs without the party, so players and companions never show
+- **Status:** fixed · 2026-11-04 · uncommitted
+- **Area:** main-session
+- **Where:** `.claude/skills/run-apps/screenshot.py:102`
+
+The combat screenshot prepares the encounter log with players=[] and passes character_sheets=[] to CombatAppQt, so a screenshot of e.g. time_loop_pr_mira shows only Mira and the Warrior: no party, and none of the companions prepared_log adds from the party's sheets. Checking the companion change needed a scratch script instead. Fix: build the scenario's campaign party (campaign.players()), resolve_players for the encounter, and pass sheets= to prepare_log and the sheets to CombatAppQt.
+
+**History**
+- 2026-11-04 main-session: found
+- 2026-11-04 main-session: marked in-progress
+- 2026-11-04 main-session: marked fixed
+
 ## Won't fix
 
 ### DI-015 · UPDATE_SNAPSHOTS=1 under xdist corrupts shared golden JSON files

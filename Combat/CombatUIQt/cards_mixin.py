@@ -399,6 +399,7 @@ class CardsMixin(CombatWindowState):
         if wild_shape is not None:
             menu.addSeparator()
             menu.addMenu(wild_shape)
+        self._add_summon_actions(menu, char)
         if not char.get("_is_player"):
             hidden = menu.addAction("Hidden from players")
             assert hidden is not None  # addAction with a text always makes one

@@ -58,6 +58,9 @@ def combatant_from_stat_block(combatant: BasicCombatantData) -> dict:
     if combatant.hidden_from_players:
         # Off the players' screen until the GM reveals it (player_view.py).
         char["hidden_from_players"] = True
+    if combatant.companion_of:
+        # A player's companion, which acts after them (Combat/Companions.py).
+        char["companion_of"] = combatant.companion_of
     if isinstance(combatant, ExtendedCombatantData):
         char.update(
             {
@@ -158,8 +161,9 @@ def combatant_from_character(character: Character) -> dict:
 def companions_of(character: Character) -> list[BasicCombatantData]:
     """The creatures `character`'s features create or summon
     (Feature.companion), as stat blocks for an encounter: named
-    "<character>'s Companion", hidden from the players until the GM reveals
-    them when they're summoned, as for a monster that joins the fight later."""
+    "<character>'s Companion", hidden from the players until they're
+    summoned (Combat/Companions.py), as for a monster that joins the fight
+    later."""
     companions = []
     for feature in character.validate().iter_features_with_extensions():
         companion = feature.companion(character)
@@ -167,6 +171,7 @@ def companions_of(character: Character) -> list[BasicCombatantData]:
             continue
         companion.set_name(f"{character.character_name}'s Companion")
         companion.hidden_from_players = True
+        companion.companion_of = character.character_name
         companions.append(companion)
     return companions
 

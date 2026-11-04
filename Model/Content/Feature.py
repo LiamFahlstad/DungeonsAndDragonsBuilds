@@ -13,6 +13,19 @@ from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 
 
+@dataclass(frozen=True)
+class CompanionRules:
+    """How long a feature's companion (Feature.companion) lasts, and what
+    summoning it again does."""
+
+    # Summoning it again while it's out replaces it (a drake); without this
+    # it can't be made while it's present (a Reanimated Companion).
+    summon_again_replaces: bool = False
+    # It's gone when its owner finishes a Long Rest; without this it stays
+    # out until it drops to 0 Hit Points.
+    ends_on_long_rest: bool = True
+
+
 @dataclass
 class FeatureUses:
     """Limited-use tracking for a feature, rendered as checkbox slots on its card.
@@ -382,14 +395,28 @@ class Feature(Effect):
         passive features or ones that affect the caster only implicitly)."""
         return None
 
-    def companion(self, character: CharacterView) -> ExtendedCombatantData | None:
+    def companion(
+        self, character: CharacterView, choice: str | None = None
+    ) -> ExtendedCombatantData | None:
         """Override to return the stat block of the creature this feature
         creates or summons to fight beside the character (e.g. a Reanimated
         Companion), so the combat simulator adds it to the character's
-        encounters, hidden from the players until the GM reveals it when it's
-        summoned (Combat/PlayerCombatant.companions_of). Return None (default)
+        encounters, hidden from the players until it's summoned
+        (Combat/Companions.py). `choice` is one of companion_choices(), made
+        when it's summoned; None is the build's own. Return None (default)
         for features that summon nothing."""
         return None
+
+    def companion_rules(self, character: CharacterView) -> CompanionRules:
+        """Override when the companion lasts past a Long Rest or summoning it
+        again replaces it (see CompanionRules)."""
+        return CompanionRules()
+
+    def companion_choices(self, character: CharacterView) -> list[str]:
+        """Override to list what's chosen each time the companion is summoned
+        (e.g. a drake's Draconic Essence), each one a `choice` companion()
+        takes. Return [] (default) when there's nothing to choose."""
+        return []
 
     def number_of_uses(self, character: CharacterView) -> int:
         """Override to return this feature's actual current number of uses,

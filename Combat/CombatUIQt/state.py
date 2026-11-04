@@ -31,6 +31,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
+from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import BasicCombatantData
 
 from .attack_rolls import AttackRoll
@@ -262,6 +263,39 @@ class CombatWindowState:
 
     def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
         raise NotImplementedError("DamageMixin._give_temp_hp")
+
+    def _companion_owner(self, char: dict) -> dict | None:
+        raise NotImplementedError("CompanionsMixin._companion_owner")
+
+    def _add_summon_actions(self, menu: QMenu, char: dict):
+        raise NotImplementedError("CompanionsMixin._add_summon_actions")
+
+    def _pick_companion_summon(self, owner: dict, feature: Feature):
+        raise NotImplementedError("CompanionsMixin._pick_companion_summon")
+
+    def _companions_die_with(self, owner: dict):
+        raise NotImplementedError("CompanionsMixin._companions_die_with")
+
+    def _carry_companions_over(self, log_path: Path):
+        raise NotImplementedError("CompanionsMixin._carry_companions_over")
+
+    def _missing_party_companions(self) -> list[tuple[str, BasicCombatantData]]:
+        raise NotImplementedError("CompanionsMixin._missing_party_companions")
+
+    def _add_party_companion(self, stat_block: BasicCombatantData):
+        raise NotImplementedError("CompanionsMixin._add_party_companion")
+
+    def _spend_slot(self, char: dict, level: int) -> bool:
+        raise NotImplementedError("SpellsMixin._spend_slot")
+
+    def _add_initiative_row(self, unit: list[dict]):
+        raise NotImplementedError("TurnsMixin._add_initiative_row")
+
+    def _check_start_button(self):
+        raise NotImplementedError("TurnsMixin._check_start_button")
+
+    def _turn_span(self, idx: int) -> tuple[int, int]:
+        raise NotImplementedError("TurnsMixin._turn_span")
 
     def _wild_shape_menu(self, char: dict) -> QMenu | None:
         raise NotImplementedError("WildShapeMixin._wild_shape_menu")

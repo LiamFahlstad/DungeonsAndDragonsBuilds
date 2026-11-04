@@ -3,6 +3,7 @@ from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 
 from Model.Content.Feature import (
     ActionType,
+    CompanionRules,
     Feature,
     FeatureActivation,
     FeatureTarget,
@@ -22,6 +23,15 @@ from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, StatBlock, dc_formula
+
+# The damage types a drake's Draconic Essence can be.
+DRACONIC_ESSENCE_TYPES = (
+    DamageType.ACID,
+    DamageType.COLD,
+    DamageType.FIRE,
+    DamageType.LIGHTNING,
+    DamageType.POISON,
+)
 
 
 def _build_drake(
@@ -176,8 +186,13 @@ class DrakeCompanion(Feature):
                 action_type=ActionType.ACTION, range="30 Feet"
             ),
             usage_tags=["utility", "summon"],
+            # Again before a long rest only by expending a spell slot.
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
         self.damage_type = damage_type
+
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -224,12 +239,23 @@ class DrakeCompanion(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def companion(self, character: CharacterView) -> ExtendedCombatantData:
+    def companion(
+        self, character: CharacterView, choice: str | None = None
+    ) -> ExtendedCombatantData:
+        # The choice is the Draconic Essence, made each time it's summoned.
         return _build_drake(
             character.get_class_level(CharacterClass.RANGER),
             character.get_proficiency_bonus(),
-            self.damage_type,
+            DamageType(choice) if choice is not None else self.damage_type,
         )
+
+    def companion_choices(self, character: CharacterView) -> list[str]:
+        return [damage_type.value for damage_type in DRACONIC_ESSENCE_TYPES]
+
+    def companion_rules(self, character: CharacterView) -> CompanionRules:
+        # "The drake remains until it is reduced to 0 hit points, until you use
+        # this feature to summon the drake again, or until you die."
+        return CompanionRules(summon_again_replaces=True, ends_on_long_rest=False)
 
 
 class BondOfFangAndScale(Feature):

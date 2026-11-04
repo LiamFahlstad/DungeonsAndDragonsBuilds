@@ -17,11 +17,15 @@ level 3. After changing `encounters.py`, prepare the logs:
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr
 ```
 
-Dessie's Reanimated Companion and Hanna's Drake Companion (Fire) are in every
+Dessie's Reanimated Companion and Hanna's Drake Companion are in every
 encounter as "Dessie's Companion" and "Hanna's Companion", hidden from the
-players. Give each its owner's initiative (the drake takes its turn right after
-Hanna's); when one is summoned (or if it's already out), right-click its card
-and uncheck **Hidden from players**, and the log says it appears.
+players. They roll no initiative: each takes its turn right after its owner's.
+When one is summoned, select Dessie or Hanna and use **Enable Feature**, or
+right-click the companion's card (or its owner's) and pick **Summon ...**; for
+the drake, pick its Draconic Essence there. That spends the feature's use (then
+a spell slot) and brings it out at full HP. One that's out stays out into the
+next encounter until a long rest, and if its owner dies it drops to 0 HP.
+See "Players' companions" in [../ENCOUNTERS.md](../ENCOUNTERS.md).
 
 ## Between encounters
 

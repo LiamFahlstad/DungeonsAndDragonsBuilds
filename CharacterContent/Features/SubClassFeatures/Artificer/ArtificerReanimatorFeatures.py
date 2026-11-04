@@ -249,7 +249,12 @@ class ReanimatedCompanion(Feature):
                 range="5 Feet",
             ),
             usage_tags=["summon"],
+            # Again before a Long Rest only by expending a spell slot.
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
+
+    def regained_on(self, character: CharacterView) -> "RegainedOn | None":
+        return RegainedOn.LONG_REST
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -281,7 +286,9 @@ class ReanimatedCompanion(Feature):
             StatBlock(format_reanimated_companion(character)),
         ]
 
-    def companion(self, character: CharacterView) -> ExtendedCombatantData:
+    def companion(
+        self, character: CharacterView, choice: str | None = None
+    ) -> ExtendedCombatantData:
         return _build_reanimated_companion(character)
 
     def get_description(self, character: CharacterView) -> str:

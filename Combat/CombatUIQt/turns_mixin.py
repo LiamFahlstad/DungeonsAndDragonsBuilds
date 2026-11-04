@@ -18,6 +18,8 @@ from PyQt6.QtWidgets import (
 
 from Combat.PlayerLog import has_round_events
 
+from Combat.Companions import place_after_owners
+
 from .stats import _default_stats
 from .styles import QSS
 from Core.Rules import ability_modifier
@@ -315,6 +317,15 @@ class TurnsMixin(CombatWindowState):
         for member in unit:
             self._initiative_inputs[id(member)] = init_input
 
+    def _initiative_row_units(self) -> list[list[dict]]:
+        """The turns that roll initiative: all but players' companions, which
+        go right after their owner (Combat/Companions.py)."""
+        return [
+            unit
+            for unit in initiative_units(self.characters)
+            if self._companion_owner(unit[0]) is None
+        ]
+
     def _unique_name(self, name: str) -> str:
         """name, numbered if it's taken: effects find their targets by name."""
         taken = {c["name"] for c in self.characters}
@@ -381,7 +392,7 @@ class TurnsMixin(CombatWindowState):
         self._initiative_rows_layout.setSpacing(8)
         outer.addLayout(self._initiative_rows_layout)
 
-        for unit in initiative_units(self.characters):
+        for unit in self._initiative_row_units():
             self._add_initiative_row(unit)
 
         outer.addWidget(self._make_divider())
@@ -393,7 +404,7 @@ class TurnsMixin(CombatWindowState):
         )
 
         def _roll_all():
-            for unit in initiative_units(self.characters):
+            for unit in self._initiative_row_units():
                 self._roll_initiative(unit)
             self._check_start_button()
 
@@ -432,7 +443,7 @@ class TurnsMixin(CombatWindowState):
 
     def _roll_monster_initiative(self):
         """Roll for everyone but the players, who roll their own dice."""
-        for unit in initiative_units(self.characters):
+        for unit in self._initiative_row_units():
             if not (
                 unit[0].get("_is_player")
                 or self._initiative_inputs[id(unit[0])].text().strip()
@@ -508,7 +519,7 @@ class TurnsMixin(CombatWindowState):
         # An initiative group is sorted (and tie-broken) as one, so its
         # members stay together and take one turn.
         order_with_initiative: list[tuple[int, list[dict]]] = []
-        for unit in initiative_units(self.characters):
+        for unit in self._initiative_row_units():
             inp = self._initiative_inputs[id(unit[0])]
             try:
                 value = int(inp.text())
@@ -544,6 +555,9 @@ class TurnsMixin(CombatWindowState):
             )
 
         sorted_chars = [c for _, unit in order_with_initiative for c in unit]
+        # Players' companions take their turn right after their owner's.
+        companions = [c for c in self.characters if self._companion_owner(c)]
+        sorted_chars = place_after_owners(sorted_chars, companions)
 
         # Re-order self.characters in-place to match initiative order
         self.characters[:] = sorted_chars

@@ -12,6 +12,7 @@ from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
 
 from .cards_mixin import CardsMixin
+from .companions_mixin import CompanionsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
@@ -39,6 +40,7 @@ class CombatAppQt(
     SpellsMixin,
     FeaturesMixin,
     WildShapeMixin,
+    CompanionsMixin,
     TurnsMixin,
     TurnPanelMixin,
     CardsMixin,
