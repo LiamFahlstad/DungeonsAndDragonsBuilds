@@ -10,6 +10,10 @@ from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
+# The source of the spells Circle of the Moon Spells grants, which a Druid
+# can still cast in a Wild Shape form (Combat/WildShape.py).
+MOON_SPELLS_SOURCE = "Circle of the Moon Spells table"
+
 
 class CircleForms(Feature):
     def __init__(self):

@@ -25,6 +25,10 @@ class Action(str, Enum):
     ADD_TEMP_HP = "add_temp_hp"
     REGAIN_FEATURE_CHARGE = "regain_feature_charge"
     REVIVE = "revive"
+    # A Druid taking on a Wild Shape form ({"form": "Brown Bear"}) or
+    # leaving it (Combat/WildShape.py).
+    WILD_SHAPE = "wild_shape"
+    LEAVE_WILD_SHAPE = "leave_wild_shape"
 
 
 class CombatStatus(str, Enum):

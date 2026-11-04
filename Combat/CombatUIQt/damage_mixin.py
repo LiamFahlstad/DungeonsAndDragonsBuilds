@@ -600,43 +600,47 @@ class DamageMixin(CombatWindowState):
             return
 
         source = self.selected_character or self._current_turn_character()
-        source_name = source["name"] if source is not None else None
-
         for target in list(self.target_characters):
-            old = target.get("temp_hp", 0)
-            # Temporary Hit Points don't stack: keep the higher amount.
-            target["temp_hp"] = max(old, amount)
+            self._give_temp_hp(target, amount, source)
 
-            target.setdefault("stats", _default_stats())
-            target["stats"]["temp_hp_received"] = (
-                target["stats"].get("temp_hp_received", 0) + amount
+    def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
+        """Give target `amount` temporary Hit Points from source, counted in
+        both their stats and logged. Temp HP and Wild Shape share it."""
+        source_name = source["name"] if source is not None else None
+        old = target.get("temp_hp", 0)
+        # Temporary Hit Points don't stack: keep the higher amount.
+        target["temp_hp"] = max(old, amount)
+
+        target.setdefault("stats", _default_stats())
+        target["stats"]["temp_hp_received"] = (
+            target["stats"].get("temp_hp_received", 0) + amount
+        )
+        if source is not None:
+            source.setdefault("stats", _default_stats())
+            source["stats"]["temp_hp_granted"] = (
+                source["stats"].get("temp_hp_granted", 0) + amount
             )
-            if source is not None:
-                source.setdefault("stats", _default_stats())
-                source["stats"]["temp_hp_granted"] = (
-                    source["stats"].get("temp_hp_granted", 0) + amount
-                )
 
-            temp_hp_value = {
-                "amount": amount,
-                "source_name": source_name,
-                "target_name": target["name"],
-            }
+        temp_hp_value = {
+            "amount": amount,
+            "source_name": source_name,
+            "target_name": target["name"],
+        }
 
-            source_suffix = f" from {source_name}" if source_name else ""
-            if amount > old:
-                text = f"{target['name']} gains {amount} temp HP{source_suffix}"
-                if old:
-                    text += f" (replacing {old})"
-            else:
-                text = (
-                    f"{target['name']} keeps {old} temp HP instead of "
-                    f"{amount}{source_suffix} (they don't stack)"
-                )
-            self._log_event(
-                text,
-                character=target["name"],
-                action=Action.ADD_TEMP_HP,
-                value=temp_hp_value,
+        source_suffix = f" from {source_name}" if source_name else ""
+        if amount > old:
+            text = f"{target['name']} gains {amount} temp HP{source_suffix}"
+            if old:
+                text += f" (replacing {old})"
+        else:
+            text = (
+                f"{target['name']} keeps {old} temp HP instead of "
+                f"{amount}{source_suffix} (they don't stack)"
             )
-            self._rebuild_card(target)
+        self._log_event(
+            text,
+            character=target["name"],
+            action=Action.ADD_TEMP_HP,
+            value=temp_hp_value,
+        )
+        self._rebuild_card(target)

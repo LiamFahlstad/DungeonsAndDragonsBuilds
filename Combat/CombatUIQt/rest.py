@@ -64,7 +64,13 @@ def _restore_feature_uses(app: CombatAppQt, char: dict, cadences: set, note: str
             continue
         if feature.regained_on(stat_block) not in cadences:
             continue
-        for _ in range(used.get(feature.name, 0)):
+        regained = used.get(feature.name, 0)
+        # Some regain only a few uses on a Short Rest and the rest on a Long
+        # one (Wild Shape, Channel Divinity: "regain one expended use").
+        partial = feature.uses.regain_x_on
+        if partial is not None and partial[1] == note:
+            regained = min(regained, partial[0])
+        for _ in range(regained):
             used[feature.name] = max(used.get(feature.name, 0) - 1, 0)
             app._log_event(
                 f"{char['name']} regains a use of {feature.name} ({note})",

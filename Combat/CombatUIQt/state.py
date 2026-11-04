@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMainWindow,
+    QMenu,
     QPushButton,
     QScrollArea,
     QSplitter,
@@ -142,7 +143,7 @@ class CombatWindowState:
 
     # ── Methods one mixin calls on another ──────────────────────────────────
 
-    def _add_action_use(self, action_type: str):
+    def _add_action_use(self, action_type: str, char: dict | None = None):
         raise NotImplementedError("ConditionsMixin._add_action_use")
 
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
@@ -258,6 +259,21 @@ class CombatWindowState:
 
     def _count_feature_use(self, source: dict, name: str, counts_uses: bool):
         raise NotImplementedError("FeaturesMixin._count_feature_use")
+
+    def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
+        raise NotImplementedError("DamageMixin._give_temp_hp")
+
+    def _wild_shape_menu(self, char: dict) -> QMenu | None:
+        raise NotImplementedError("WildShapeMixin._wild_shape_menu")
+
+    def _pick_wild_shape_form(self, char: dict):
+        raise NotImplementedError("WildShapeMixin._pick_wild_shape_form")
+
+    def _leave_wild_shape(self, char: dict, reason: str | None = None):
+        raise NotImplementedError("WildShapeMixin._leave_wild_shape")
+
+    def _can_cast_or_say(self, caster: dict, spell_name: str) -> bool:
+        raise NotImplementedError("WildShapeMixin._can_cast_or_say")
 
     def _con_save_mod(self, char: dict) -> int:
         raise NotImplementedError("DamageMixin._con_save_mod")

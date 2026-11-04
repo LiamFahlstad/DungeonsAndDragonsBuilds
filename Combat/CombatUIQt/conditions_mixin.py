@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action, CombatStatus
+from Combat.WildShape import current_form, form_badge
 from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from .amounts import AmountError, parse_amount
@@ -161,6 +162,9 @@ class ConditionsMixin(CombatWindowState):
                 and "Concentrating" in char.get("conditions", [])
             ):
                 self._remove_condition_from(char, "Concentrating", source=char)
+            # So does a Wild Shape form (which a knock-out's Unconscious ends too).
+            if cond in INCAPACITATING_CONDITIONS and current_form(char):
+                self._leave_wild_shape(char, reason=cond)
 
     @undoable
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
@@ -197,6 +201,10 @@ class ConditionsMixin(CombatWindowState):
             if cond == CombatStatus.CONCENTRATING.value:
                 char.pop("concentration_checks", None)
                 self._end_concentration_spells(char)
+            # Taking the Wild Shape badge off is leaving the form early.
+            form = current_form(char)
+            if form is not None and cond == form_badge(form):
+                self._leave_wild_shape(char)
             self._rebuild_card(char)
 
     @undoable
@@ -407,6 +415,8 @@ class ConditionsMixin(CombatWindowState):
         option = effect.pick
         assert option is not None  # the caller checks
         if option.kind == SPELL:
+            if not self._can_cast_or_say(caster, option.name):
+                return None
             self._count_spell_cast(
                 caster, option.name, option.spell_level, effect.slot_level
             )
@@ -1263,19 +1273,18 @@ class ConditionsMixin(CombatWindowState):
                 self._remove_condition_from(target, cond)
 
     @undoable
-    def _add_action_use(self, action_type: str):
-        """Log a use of Action/Bonus Action/Reaction for the source, this round.
-        Tallies reset when it becomes that combatant's turn again (see _advance_turn).
+    def _add_action_use(self, action_type: str, char: dict | None = None):
+        """Log a use of Action/Bonus Action/Reaction for char (the source if
+        None), this round. Tallies reset when it becomes that combatant's turn
+        again (see _advance_turn).
         """
-        if not self.selected_character:
+        char = char or self.selected_character
+        if not char:
             self._show_status("Nothing logged: left-click a card to pick a source.")
             return
-        counts = self.selected_character.setdefault("action_uses", {})
+        counts = char.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1
-        self._log_event(
-            f"{self.selected_character['name']} uses {action_type}",
-            character=self.selected_character["name"],
-        )
+        self._log_event(f"{char['name']} uses {action_type}", character=char["name"])
         self._refresh_selected_card()
 
     @undoable

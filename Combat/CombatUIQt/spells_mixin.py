@@ -509,6 +509,8 @@ class SpellsMixin(CombatWindowState):
         if source is None:
             self._show_status("No spell cast: left-click a card to pick a source.")
             return
+        if not self._can_cast_or_say(source, spell.name):
+            return
 
         if spell.target is None or spell.target == FeatureTarget.SELF:
             recipients = [source]

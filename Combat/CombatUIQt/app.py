@@ -29,6 +29,7 @@ from .styles import QSS
 from .timer_mixin import TimerMixin
 from .turn_panel_mixin import TurnPanelMixin
 from .turns_mixin import TurnsMixin
+from .wild_shape_mixin import WildShapeMixin
 from .window_mixin import WindowMixin
 
 
@@ -37,6 +38,7 @@ class CombatAppQt(
     ConditionsMixin,
     SpellsMixin,
     FeaturesMixin,
+    WildShapeMixin,
     TurnsMixin,
     TurnPanelMixin,
     CardsMixin,

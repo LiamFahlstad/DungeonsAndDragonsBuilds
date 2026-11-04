@@ -13,6 +13,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
+from CharacterContent.Features.ClassFeatures.Druid.DruidFeatures import WildShape
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action
 from Presentation.FeatureCards import feature_label
@@ -338,6 +339,9 @@ class FeaturesMixin(CombatWindowState):
         source = self.selected_character
         if source is None:
             self._show_status("No feature used: left-click a card to pick a source.")
+            return
+        if isinstance(feature, WildShape):
+            self._pick_wild_shape_form(source)
             return
 
         sb = source.get("_stat_block")

@@ -30,13 +30,13 @@ class DruidMoonLevel3(ClassBuilder.SubclassLevel3):
         data.add_feature(DruidMoonFeatures.CircleForms())
         data.add_feature(DruidMoonFeatures.CircleOfTheMoonSpells())
         data.add_spell(
-            DruidLevel0Spells.STARRY_WISP, source="Circle of the Moon Spells table"
+            DruidLevel0Spells.STARRY_WISP, source=DruidMoonFeatures.MOON_SPELLS_SOURCE
         )
         data.add_spell(
-            DruidLevel1Spells.CURE_WOUNDS, source="Circle of the Moon Spells table"
+            DruidLevel1Spells.CURE_WOUNDS, source=DruidMoonFeatures.MOON_SPELLS_SOURCE
         )
         data.add_spell(
-            DruidLevel2Spells.MOONBEAM, source="Circle of the Moon Spells table"
+            DruidLevel2Spells.MOONBEAM, source=DruidMoonFeatures.MOON_SPELLS_SOURCE
         )
 
 
@@ -48,7 +48,8 @@ class DruidMoonLevel5(ClassBuilder.SubclassLevel5):
         data: Grants,
     ) -> None:
         data.add_spell(
-            DruidLevel3Spells.CONJURE_ANIMALS, source="Circle of the Moon Spells table"
+            DruidLevel3Spells.CONJURE_ANIMALS,
+            source=DruidMoonFeatures.MOON_SPELLS_SOURCE,
         )
 
 
@@ -74,7 +75,7 @@ class DruidMoonLevel7(ClassBuilder.SubclassLevel7):
     ) -> None:
         data.add_spell(
             DruidLevel4Spells.FOUNT_OF_MOONLIGHT,
-            source="Circle of the Moon Spells table",
+            source=DruidMoonFeatures.MOON_SPELLS_SOURCE,
         )
 
 
@@ -86,7 +87,8 @@ class DruidMoonLevel9(ClassBuilder.SubclassLevel9):
         data: Grants,
     ) -> None:
         data.add_spell(
-            DruidLevel5Spells.MASS_CURE_WOUNDS, source="Circle of the Moon Spells table"
+            DruidLevel5Spells.MASS_CURE_WOUNDS,
+            source=DruidMoonFeatures.MOON_SPELLS_SOURCE,
         )
 
 

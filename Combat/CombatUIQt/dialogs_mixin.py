@@ -29,6 +29,7 @@ from Core.Definitions import DamageType
 from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_text
 from Combat.Rules import Rule, group_by_category, load_rules
 from Combat.PlayerCombatant import weapon_summary
+from Combat.WildShape import current_form
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
@@ -383,7 +384,9 @@ def _add_ability_score_table(panel: _InfoPanel, char: dict):
 def _add_player_details(panel: _InfoPanel, char: dict):
     sb = char.get("_stat_block")
     _add_player_summary(panel, char)
-    if sb:
+    # In a Wild Shape form, the form's skills (Combat/WildShape.py) are shown
+    # with its stat block instead.
+    if sb and current_form(char) is None:
         _add_player_skill_table(panel, sb)
         _add_spellcasting_numbers(panel, char, sb)
     _add_player_spells(panel, char)

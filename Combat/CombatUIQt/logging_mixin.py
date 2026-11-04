@@ -19,6 +19,7 @@ from Combat.EncounterLogs import (
 )
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, is_round_key, session_label
+from Combat.WildShape import assume_form, leave_form
 
 from .player_view import may_read_log_line
 from .public_log import public_log_rounds
@@ -533,6 +534,13 @@ class LoggingMixin(CombatWindowState):
         elif action == Action.REGAIN_FEATURE_CHARGE:
             used = char.setdefault("feature_uses_used", {})
             used[value] = max(used.get(value, 0) - 1, 0)
+        elif action == Action.WILD_SHAPE:
+            try:
+                assume_form(char, value["form"])
+            except KeyError:
+                pass  # a form their character sheet no longer has
+        elif action == Action.LEAVE_WILD_SHAPE:
+            leave_form(char)
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         """Aggregate lifetime stats per character name: the sessions archived
