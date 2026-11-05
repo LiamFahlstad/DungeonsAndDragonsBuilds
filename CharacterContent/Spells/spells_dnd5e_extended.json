@@ -418,7 +418,8 @@
     "usage_tags": [
       "buff",
       "control",
-      "utility"
+      "utility",
+      "summon"
     ],
     "target": "object"
   },

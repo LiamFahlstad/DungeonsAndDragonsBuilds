@@ -1023,7 +1023,8 @@
   },
   "Find Steed": {
     "usage_tags": [
-      "control"
+      "control",
+      "summon"
     ],
     "target": "ally"
   },
@@ -1901,7 +1902,8 @@
   },
   "Phantom Steed": {
     "usage_tags": [
-      "utility"
+      "utility",
+      "summon"
     ],
     "target": "ally"
   },
@@ -2269,7 +2271,8 @@
   },
   "Simulacrum": {
     "usage_tags": [
-      "heal"
+      "heal",
+      "summon"
     ],
     "target": "ally"
   },
@@ -2662,7 +2665,8 @@
   },
   "True Polymorph": {
     "usage_tags": [
-      "heal"
+      "heal",
+      "summon"
     ],
     "target": "creature"
   },

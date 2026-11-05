@@ -3,8 +3,11 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 import Core.Definitions as Definitions
+from CharacterContent.Summons.SpellSummons import SPELL_SUMMONS
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Option
+from Model.Content.Summons import SummonSpec
+from Model.View import CharacterView
 from .Enums import CastingTimeType, School
 
 # The Option an improved description puts a spell's upcasting rules in,
@@ -155,6 +158,18 @@ class Spell(ABC):
             for block in blocks
             if not (isinstance(block, Option) and block.name in UPCAST_OPTION_NAMES)
         ]
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        """The creatures casting this spell summons (Model/Content/Summons.py),
+        for the combat simulator, as Feature.summons is for a feature: the
+        spell's entry in CharacterContent/Summons/SpellSummons.py, made with
+        the ability this spell is cast with, or [] for a spell with no entry
+        (most spells, and summon spells whose summon is an effect rather than
+        a creature)."""
+        factory = SPELL_SUMMONS.get(self.name)
+        if factory is None:
+            return []
+        return [factory(self.spell_casting_ability)]
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #
 
