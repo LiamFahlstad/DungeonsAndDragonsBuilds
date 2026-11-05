@@ -37,8 +37,11 @@ from Combat.PlayerLog import is_round_key
 from Combat.Scenario import CombatScenario
 from Combat.Summons import (
     CHOICE_KEY,
+    ON_ZERO_HP_KEY,
     SOURCE_KEY,
+    SPEC_KEY,
     SUMMON_OF_KEY,
+    VANISHED_REASON,
     SummonOption,
     SummonPayment,
     carried_state,
@@ -53,7 +56,13 @@ from Combat.Summons import (
     upgrade_keys,
 )
 from Core.Definitions import DamageType
-from Model.Content.Summons import SummonContext, SummonCost, SummonSpec, SummonTurn
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonCost,
+    SummonSpec,
+    SummonTurn,
+)
 from tests._combat_ui import qapp
 from tests._snapshot_helpers import build
 
@@ -1139,7 +1148,8 @@ def test_one_owner_can_have_two_summons_out(tmp_path, owl, monkeypatch):
     assert hanna["feature_uses_used"] == {"Drake Companion": 1}
     # Each one is summoned from the owner's card; each card dismisses its own.
     texts = _menu_texts(ui, hanna)
-    assert "Summon Alert (free)" in texts
+    # Labelled by what it summons, not by the feature (Alert).
+    assert "Summon Owl Familiar (free)" in texts
     assert "Summon Drake Companion (a level 1 slot)" in texts
     # Summoning the drake again replaces only the drake.
     _summon(ui, "Hanna", "Fire")
@@ -1236,3 +1246,209 @@ def test_an_own_initiative_summon_goes_last_when_no_roll_is_known(
     _d20(monkeypatch, 11)  # 12 would go before the Tiger's 10
     ui._summon(_char(ui, "Hanna"), alert, spec, None)
     assert _order(ui) == ["Hanna", "Tiger", "Dessie", OWL]
+
+
+# ---------------------------------------------------------------------------
+# 0 Hit Points: a drake vanishes, a Reanimated Companion's body stays
+
+
+def _vanished(ui) -> list[dict]:
+    """The encounter log's Action.DISMISS events for summons that vanished."""
+    return [
+        e
+        for e in _events(ui, Action.DISMISS)
+        if e["value"].get("reason") == VANISHED_REASON
+    ]
+
+
+def test_a_drake_at_0_hp_vanishes_and_thats_logged_on_its_owner(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    drake = _char(ui, DRAKE)
+    assert drake[ON_ZERO_HP_KEY] == "vanishes"
+    _hit(ui, _char(ui, "Tiger"), drake, 30)
+    assert DRAKE not in _names(ui) and DRAKE not in _order(ui)
+    assert ui.target_characters == []
+    assert id(drake) not in ui._card_widgets
+    (event,) = _vanished(ui)
+    assert event["character"] == "Hanna"
+    assert event["value"]["names"] == [DRAKE]
+    assert event["text"].endswith(f"{DRAKE} drops to 0 HP and vanishes")
+    # It doesn't fall Unconscious first, and the log's combatants don't hold it.
+    assert "Unconscious" not in _log_text(ui)
+    saved = json.loads(_log_text(ui))
+    assert DRAKE not in [c["name"] for c in saved["combatants"]]
+
+
+def test_undo_brings_a_vanished_summon_back(tmp_path):
+    ui = _in_fight(tmp_path)
+    ui._pass_turn()  # the Tiger's turn
+    _summon(ui, "Hanna", "Cold")
+    _hit(ui, _char(ui, "Tiger"), _char(ui, DRAKE), 30)
+    assert DRAKE not in _names(ui)
+    ui._undo_last()
+    assert _order(ui) == ["Hanna", DRAKE, "Tiger", "Dessie"]
+    assert _char(ui, DRAKE)["hp"] == 20
+    assert _turn(ui) == "Tiger"
+    assert _vanished(ui) == [] and "and vanishes" not in _log_text(ui)
+
+
+def test_a_summon_vanishing_on_its_own_turn_passes_the_turn_on(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    ui._pass_turn()
+    assert _turn(ui) == DRAKE
+    _hit(ui, _char(ui, "Tiger"), _char(ui, DRAKE), 30)
+    assert _turn(ui) == "Tiger"
+
+
+def test_a_reanimated_companion_at_0_hp_stays_dead(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Dessie")
+    reanimated = _char(ui, REANIMATED)
+    assert reanimated[ON_ZERO_HP_KEY] == "dies"
+    _hit(ui, _char(ui, "Tiger"), reanimated, 30)
+    assert REANIMATED in _names(ui) and REANIMATED in _order(ui)
+    assert reanimated["hp"] == 0 and ui._char_death_state(reanimated) == "dead"
+    assert _events(ui, Action.DISMISS) == []
+
+
+def test_a_drake_vanishes_when_its_owner_dies(tmp_path):
+    ui = _in_fight(tmp_path)
+    hanna = _char(ui, "Hanna")
+    _summon(ui, "Hanna", "Cold")
+    _hit(ui, _char(ui, "Tiger"), hanna, hanna["hp"])
+    for _ in range(3):
+        ui._apply_failed_death_save(hanna)
+    assert DRAKE not in _names(ui)
+    assert f"{DRAKE} drops to 0 HP: Hanna died" in _log_text(ui)
+    assert [e["value"]["names"] for e in _vanished(ui)] == [[DRAKE]]
+
+
+def test_a_vanished_summon_stays_gone_when_the_log_is_continued(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    _hit(ui, _char(ui, "Tiger"), _char(ui, DRAKE), 30)
+    ui._load_encounter(DEN, restart=False)
+    assert DRAKE not in _names(ui)
+    # The player log's replay doesn't spend the use twice either.
+    assert _char(ui, "Hanna")["feature_uses_used"]["Drake Companion"] == 1
+
+
+def test_a_summon_that_vanished_isnt_brought_back_from_an_earlier_encounter(
+    tmp_path,
+):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    # Out at the end of the Den: the Lair carries it over...
+    ui._load_encounter(LAIR, restart=False)
+    assert DRAKE in _names(ui)
+    _start(ui, Hanna=15, Dessie=5)
+    _hit(ui, _char(ui, "Tiger"), _char(ui, DRAKE), 30)
+    assert DRAKE not in _names(ui)
+    # ...and it vanished there, so the Cave doesn't bring back the Den's.
+    ui._load_encounter(CAVE, restart=False)
+    assert DRAKE not in _names(ui)
+    # Summoned again, it's a drake of its own, unnumbered.
+    _start(ui, Hanna=15, Dessie=5)
+    _summon(ui, "Hanna", "Fire")
+    assert _char(ui, DRAKE)["hp"] == 20
+
+
+def test_a_damage_effect_skips_its_condition_on_a_summon_that_vanished(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    drake = _char(ui, DRAKE)
+    drake["hp"] = 1
+    ui._deal_damage(drake, [(5, "Slashing")], _char(ui, "Tiger"), False, False)
+    assert DRAKE not in _names(ui)
+    assert "Unconscious" not in drake["conditions"]
+
+
+# ---------------------------------------------------------------------------
+# A source with two specs: entries labelled by the spec
+
+FAMILIAR = "Hanna's Owl Familiar"
+SCOUT = "Hanna's Owl Scout"
+
+
+@pytest.fixture
+def two_owls(monkeypatch):
+    """Hanna's Alert feat summons two kinds of owl, with the same stat block:
+    a familiar that vanishes at 0 HP and a scout whose body stays."""
+    hanna = _sheet(HANNA_BUILD)
+    alert = next(f for f in hanna.iter_features_with_extensions() if f.name == "Alert")
+    familiar = SummonSpec(name="Owl Familiar", build=lambda sheet, ctx: Owl())
+    scout = SummonSpec(
+        name="Owl Scout", build=lambda sheet, ctx: Owl(), on_zero_hp=OnZeroHp.DIES
+    )
+    monkeypatch.setattr(alert, "summons", lambda sheet: [familiar, scout])
+    return alert, familiar, scout
+
+
+def _summon_texts(ui, char) -> list[str]:
+    return [t for t in _menu_texts(ui, char) if t.startswith("Summon")]
+
+
+def test_a_source_with_two_specs_gets_an_entry_for_each(tmp_path, two_owls):
+    alert, familiar, scout = two_owls
+    ui = _in_fight(tmp_path)
+    hanna = _char(ui, "Hanna")
+    texts = _summon_texts(ui, hanna)
+    assert "Summon Owl Familiar (free)" in texts
+    assert "Summon Owl Scout (free)" in texts
+    assert not any("Alert" in t for t in texts)
+    ui._summon(hanna, alert, familiar, None)
+    ui._summon(hanna, alert, scout, None)
+    assert {c["name"] for c in ui._owner_summons(hanna)} == {FAMILIAR, SCOUT}
+    assert (_char(ui, FAMILIAR)[SPEC_KEY], _char(ui, SCOUT)[SPEC_KEY]) == (
+        "Owl Familiar",
+        "Owl Scout",
+    )
+    # Each summon finds its own spec, though both have one source and type.
+    found_scout = ui._summon_source(_char(ui, SCOUT))
+    found_familiar = ui._summon_source(_char(ui, FAMILIAR))
+    assert found_scout is not None and found_scout[3] is scout
+    assert found_familiar is not None and found_familiar[3] is familiar
+    # Each summon's card offers its own spec only.
+    assert _summon_texts(ui, _char(ui, SCOUT)) == ["Summon Owl Scout (free)"]
+    assert _summon_texts(ui, _char(ui, FAMILIAR)) == ["Summon Owl Familiar (free)"]
+    # Summoning the familiar again replaces only the familiar.
+    first = _char(ui, FAMILIAR)
+    ui._summon(hanna, alert, familiar, None)
+    assert {c["name"] for c in ui._owner_summons(hanna)} == {FAMILIAR, SCOUT}
+    assert _char(ui, FAMILIAR) is not first
+    # Each follows its own spec's rule at 0 HP.
+    tiger = _char(ui, "Tiger")
+    _hit(ui, tiger, _char(ui, SCOUT), 5)
+    _hit(ui, tiger, _char(ui, FAMILIAR), 5)
+    assert [c["name"] for c in ui._owner_summons(hanna)] == [SCOUT]
+    assert _char(ui, SCOUT)["hp"] == 0
+
+
+def test_the_menu_labels_a_summon_by_its_spec_not_its_feature(tmp_path, monkeypatch):
+    """DI-050: no "Summon Summon Wildfire Spirit", and a feature named for
+    something else (Animating Performance) says what it summons."""
+    hanna = _sheet(HANNA_BUILD)
+    alert = next(f for f in hanna.iter_features_with_extensions() if f.name == "Alert")
+    item = SummonSpec(name="Dancing Item", build=lambda sheet, ctx: Owl())
+    monkeypatch.setattr(alert, "summons", lambda sheet: [item])
+    ui = _in_fight(tmp_path)
+    assert "Summon Dancing Item (free)" in _summon_texts(ui, _char(ui, "Hanna"))
+
+
+# ---------------------------------------------------------------------------
+# DI-051: an Invisible player's summon is seen as its owner is
+
+
+def test_an_invisible_players_summons_attack_roll_shows_the_targets_ac(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    drake = _char(ui, DRAKE)
+    drake["conditions"].append("Invisible")
+    tiger = _char(ui, "Tiger")
+    ui._select_character(drake)
+    ui._select_target_character(tiger)
+    ui.attack_roll_input.setText("5")
+    ui._apply_attack_roll()
+    assert tiger.get("ac_above") == 5

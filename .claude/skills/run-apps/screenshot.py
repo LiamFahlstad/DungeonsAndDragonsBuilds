@@ -4,6 +4,8 @@ sheet rendered to a throwaway folder.
 Usage (from the repo root):
     python .claude/skills/run-apps/screenshot.py combat                               # default campaign's first scenario
     python .claude/skills/run-apps/screenshot.py combat --scenario ashelm_church --size 1800x1100
+    python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --choice Cold --start
+    python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --player-screen [--limited]
     python .claude/skills/run-apps/screenshot.py creator                              # every tab of the Character Creator
     python .claude/skills/run-apps/screenshot.py creator --load-build Builds/Characters/Y2024_Fighter_BardValor_Clover.py --tab Equipment
     python .claude/skills/run-apps/screenshot.py sheet Obmar                          # render a registered build's sheet pages
@@ -67,11 +69,17 @@ def size_of(text: str) -> tuple[int, int]:
 
 
 def grab(app, widget, path: Path, size) -> None:
+    from PyQt6.QtCore import QCoreApplication, QEvent
+
     if size:
         widget.resize(*size)
     widget.show()
     for _ in range(3):
         app.processEvents()
+    # Rebuilt cards and rows go with deleteLater, which processEvents alone
+    # leaves alive: they'd overlap their replacements in the shot.
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete.value)
+    app.processEvents()
     path.parent.mkdir(parents=True, exist_ok=True)
     if not widget.grab().save(str(path)):
         sys.exit(f"Could not save {path}")
@@ -117,7 +125,70 @@ def combat(args, out: Path) -> None:
     )
     ui._build_window()
     ui._open_encounter_log(path, restart=False)
-    grab(app, ui._window, out / f"combat_{name}.png", args.size)
+    wanted = [find_summon(ui, label) for label in args.summon or []]
+    if args.start or args.player_screen:
+        start_fight(ui, first=wanted[0][0] if wanted else None)
+    for owner, feature, spec in wanted:
+        choices = spec.choices(owner["_stat_block"])
+        if args.choice and args.choice not in choices:
+            sys.exit(f"{spec.name} has no choice {args.choice!r}. Choices: {choices}")
+        before = ui._owner_summons(owner)
+        ui._summon(owner, feature, spec, args.choice)
+        made = [
+            c["name"]
+            for c in ui._owner_summons(owner)
+            if not any(c is b for b in before)
+        ]
+        if not made:
+            sys.exit(ui._status_label.text() or f"{spec.name} wasn't summoned")
+        print(f"  summoned {', '.join(made)}")
+    if not args.player_screen:
+        grab(app, ui._window, out / f"combat_{name}.png", args.size)
+        return
+    from Combat.CombatUIQt.player_view import PlayerViewWindow
+
+    ui.settings.limited_player_view = args.limited
+    view = PlayerViewWindow(on_close=lambda: None)
+    view.show_rows(*ui._player_view_content())
+    kind = "limited" if args.limited else "informative"
+    grab(app, view, out / f"combat_{name}_players_{kind}.png", args.size)
+
+
+def find_summon(ui, label: str):
+    """(owner, feature, spec) of the first player in the window whose card
+    menu has a "Summon <spec>" entry matching `label` ("Drake Companion" or
+    "Summon Drake Companion", any case)."""
+    from Combat.CombatUIQt.summons_mixin import _summon_label
+    from Combat.Summons import feature_summons
+    from Model.Character import Character
+
+    wanted = label.strip().lower().removeprefix("summon ").strip()
+    known = []
+    for char in ui.characters:
+        sheet = char.get("_stat_block")
+        if not char.get("_is_player") or not isinstance(sheet, Character):
+            continue
+        for feature, spec in feature_summons(sheet):
+            known.append(f"{char['name']}: {_summon_label(spec)}")
+            if spec.name.lower() == wanted:
+                return char, feature, spec
+    sys.exit(
+        f"No player here can {label!r}. Their summons: {', '.join(known) or 'none'}"
+    )
+
+
+def start_fight(ui, first: dict | None) -> None:
+    """Start the fight with distinct initiatives (equal ones would open the tie
+    dialog, which is skipped, and the fight would never start): `first` (a
+    summoner, so the Player Screen shows its summon's stat block) goes first,
+    then the window's order."""
+    units = list(ui._initiative_row_units())
+    units.sort(key=lambda unit: not any(c is first for c in unit))
+    for value, unit in enumerate(units):
+        ui._initiative_inputs[id(unit[0])].setText(str(30 - value))
+    ui._start_combat()
+    if ui.phase != "COMBAT":
+        sys.exit(f"The fight didn't start: {ui._status_label.text()}")
 
 
 def creator(args, out: Path) -> None:
@@ -202,6 +273,34 @@ def main() -> None:
         type=size_of,
         default=(1600, 1000),
         help="window size, WxH (default 1600x1000)",
+    )
+    p.add_argument(
+        "--summon",
+        action="append",
+        metavar="LABEL",
+        help='summon by its card-menu label ("Summon Drake Companion" or "Drake'
+        ' Companion"), paid the cheapest way, before the shot; repeatable',
+    )
+    p.add_argument(
+        "--choice",
+        help="the choice each --summon is made with (a drake's Draconic Essence,"
+        " e.g. Cold); default: the build's own",
+    )
+    p.add_argument(
+        "--start",
+        action="store_true",
+        help="start the fight first (distinct initiatives, the first --summon's"
+        " owner first)",
+    )
+    p.add_argument(
+        "--player-screen",
+        action="store_true",
+        help="shoot the Player Screen window instead of the GM's (implies --start)",
+    )
+    p.add_argument(
+        "--limited",
+        action="store_true",
+        help="with --player-screen: the Limited view, not the Informative one",
     )
 
     p = sub.add_parser(

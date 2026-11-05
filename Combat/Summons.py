@@ -18,9 +18,11 @@ feature's summon can be paid for now (its SummonSpec's costs), cost_options.
 One that's out stays out as long as its spec's lifetime says (a Reanimated
 Companion until a long rest, a drake until it drops to 0 Hit Points): the next
 encounter re-creates it as the last one left it (carried_state, last_seen).
-Summoning and dismissing are logged as Action.SUMMON and Action.DISMISS
-(summon_event), so one dismissed in a later encounter isn't brought back from
-an earlier one (dismissed).
+One that vanishes at 0 Hit Points (vanishes_at_zero_hp: a drake, not a
+Reanimated Companion, whose body stays) leaves the fight then. Summoning,
+dismissing and vanishing are logged as Action.SUMMON and Action.DISMISS
+(summon_event), so one dismissed or vanished in a later encounter isn't
+brought back from an earlier one (dismissed).
 
 Older logs call the owner key "companion_of" and the choice key
 "companion_choice" (upgrade_keys reads them), name a summon
@@ -38,11 +40,19 @@ from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import is_round_key
 from Model.Character import Character
 from Model.Content.Feature import Feature
-from Model.Content.Summons import SummonContext, SummonSpec, SummonTurn, WhenFull
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonSpec,
+    SummonTurn,
+    WhenFull,
+)
 
 SUMMON_OF_KEY = "summon_of"
 # "feature:<feature name>" (later "spell:<spell name>").
 SOURCE_KEY = "summon_source"
+# The SummonSpec's name: a source can have several specs.
+SPEC_KEY = "summon_spec"
 # The SummonContext it was made with.
 CHOICE_KEY = "summon_choice"
 SLOT_KEY = "summon_slot"
@@ -50,6 +60,8 @@ SLOT_KEY = "summon_slot"
 LIFETIME_KEY = "summon_lifetime"
 TURN_KEY = "summon_turn"
 ON_ZERO_HP_KEY = "summon_on_zero_hp"
+# An Action.DISMISS event's "reason" for one that vanished at 0 Hit Points.
+VANISHED_REASON = "0 hp"
 # The keys older logs used for SUMMON_OF_KEY and CHOICE_KEY.
 OLD_KEYS = {"companion_of": SUMMON_OF_KEY, "companion_choice": CHOICE_KEY}
 # What a summon keeps from one encounter to the next.
@@ -61,6 +73,7 @@ _NOT_CARD_KEYS = (
     "create_name",
     SUMMON_OF_KEY,
     SOURCE_KEY,
+    SPEC_KEY,
     CHOICE_KEY,
     SLOT_KEY,
     LIFETIME_KEY,
@@ -171,19 +184,29 @@ def follows_owner(char: dict) -> bool:
     return char.get(TURN_KEY) != SummonTurn.OWN_INITIATIVE.value
 
 
+def vanishes_at_zero_hp(char: dict) -> bool:
+    """Whether the summon `char` leaves the fight when it drops to 0 Hit
+    Points (OnZeroHp.VANISHES) rather than staying, dead. Read from its dict,
+    so a saved log replays without the sheet; an older log's summon without
+    the key stays."""
+    return char.get(ON_ZERO_HP_KEY) == OnZeroHp.VANISHES.value
+
+
 def summon_event(
     summons: list[dict],
     *,
     before_combat: bool = False,
     replaced: bool = False,
+    reason: str | None = None,
     initiative: dict[str, int] | None = None,
 ) -> dict[str, object]:
     """The value of an Action.SUMMON or Action.DISMISS event about `summons`
     (all of one source): where they came from, with which choice and slot
     (SummonContext: for a feature's, the slot that paid for it), and their
     names; "before_combat" for ones that join already summoned,
-    "replaced" for ones another summon replaced, and the "initiative" each
-    one that rolls its own rolled, by name."""
+    "replaced" for ones another summon replaced, the "reason" one left the
+    fight on its own ("0 hp": it vanished), and the "initiative" each one
+    that rolls its own rolled, by name."""
     first = summons[0] if summons else {}
     value: dict[str, object] = {
         "source": first.get(SOURCE_KEY),
@@ -195,6 +218,8 @@ def summon_event(
         value["before_combat"] = True
     if replaced:
         value["replaced"] = True
+    if reason is not None:
+        value["reason"] = reason
     if initiative:
         value["initiative"] = initiative
     return value
@@ -257,12 +282,16 @@ def feature_summons(sheet: Character) -> list[tuple[Feature, SummonSpec]]:
 
 def source_for(sheet: Character, summon: dict) -> tuple[Feature, SummonSpec] | None:
     """The feature of `sheet` (the owner's character) that summons `summon`,
-    and its SummonSpec: by SOURCE_KEY, or in an older log without it by the
-    stat block's type."""
+    and its SummonSpec: by SOURCE_KEY and SPEC_KEY (a feature can have
+    several specs), or in an older log without them by the stat block's
+    type."""
     source = summon.get(SOURCE_KEY)
+    spec_name = summon.get(SPEC_KEY)
     found = []
     for feature, spec in feature_summons(sheet):
         if source is not None and feature_source(feature) != source:
+            continue
+        if spec_name is not None and spec.name != spec_name:
             continue
         found.append((feature, spec))
     if source is not None and len(found) == 1:
@@ -351,6 +380,7 @@ def mark(char: dict, sheet: Character, feature: Feature, spec: SummonSpec):
     upgrade_keys(char)
     char[SUMMON_OF_KEY] = sheet.character_name
     char[SOURCE_KEY] = feature_source(feature)
+    char[SPEC_KEY] = spec.name
     char[LIFETIME_KEY] = spec.lifetime.value
     char[TURN_KEY] = spec.turn.value
     char[ON_ZERO_HP_KEY] = spec.on_zero_hp.value

@@ -13,13 +13,17 @@ in the turn order, or, rolling its own initiative (SummonTurn.OWN_INITIATIVE),
 where its roll puts it (a row of its own on the initiative screen, rolled with
 the monsters). With as many out as its feature allows, summoning another
 replaces the oldest (a drake) or isn't possible (a Reanimated Companion:
-greyed out). The summon's card menu also dismisses it.
+greyed out). The summon's card menu also dismisses it. Its menu entries
+are labelled by its SummonSpec ("Summon Dancing Item"), one for each spec of a
+source that has several. One that vanishes at 0 Hit Points (a drake) leaves
+the fight then (_vanish_at_zero_hp); one that dies (a Reanimated Companion)
+stays, dead.
 
 The feature's use and the slot are logged with their own actions, so the
 player log's replay spends them for the rest of the day too; the summon
 itself is logged as Action.SUMMON, and dismissing or replacing one as
-Action.DISMISS, which the next encounter's carry-over reads: one dismissed
-isn't brought back. A summon carried over keeps the card it was built with
+Action.DISMISS (with "reason": "0 hp" for one that vanished), which the next
+encounter's carry-over reads: one dismissed or vanished isn't brought back. A summon carried over keeps the card it was built with
 (only summoning it again rebuilds it from the owner's sheet).
 
 Add Combatant's "Already summoned..." adds one made before the fight (any of
@@ -36,6 +40,7 @@ import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Combat.Summons import (
     CHOICE_KEY,
+    VANISHED_REASON,
     SummonOption,
     SummonPayment,
     carried_state,
@@ -56,6 +61,7 @@ from Combat.Summons import (
     source_for,
     summon_event,
     summon_name,
+    vanishes_at_zero_hp,
 )
 from Model.Character import Character
 from Model.Content.Feature import Feature
@@ -177,18 +183,18 @@ class SummonsMixin(CombatWindowState):
         greyed = None
         payments = self._payments(owner, feature, spec)
         if self._room_for(owner, feature, spec, SummonContext()) is None:
-            greyed = f"{_summon_label(feature)} (one is already out)"
+            greyed = f"{_summon_label(spec)} (one is already out)"
         elif not payments:
-            greyed = f"{_summon_label(feature)} ({_unpaid_text(feature, spec)})"
+            greyed = f"{_summon_label(spec)} ({_unpaid_text(feature, spec)})"
         if greyed is not None:
             action = menu.addAction(greyed)
             assert action is not None  # addAction with a text always makes one
             action.setEnabled(False)
             return
-        label = f"{_summon_label(feature)} ({payments[0].text})"
+        label = f"{_summon_label(spec)} ({payments[0].text})"
         self._add_summon_entry(menu, label, owner, sheet, feature, spec, current, None)
         if len(payments) > 1:
-            other = menu.addMenu(f"{_summon_label(feature)} using…")
+            other = menu.addMenu(f"{_summon_label(spec)} using…")
             assert other is not None  # addMenu with a title always makes one
             other.setStyleSheet(QSS)
             for payment in payments[1:]:
@@ -454,7 +460,34 @@ class SummonsMixin(CombatWindowState):
                 + (" (its Death Burst goes off)" if burst else ""),
                 character=summon["name"],
             )
-            self._rebuild_card(summon)
+            if not self._vanish_at_zero_hp(summon):
+                self._rebuild_card(summon)
+
+    def _vanish_at_zero_hp(self, summon: dict) -> bool:
+        """summon has just dropped to 0 Hit Points: one that vanishes then
+        (its spec's OnZeroHp, as its dict holds it) leaves the fight, logged
+        as Action.DISMISS on its owner with "reason": "0 hp" (so the next
+        encounter doesn't bring it back from an earlier one). One that dies
+        stays, dead. Returns whether it vanished. Its caller is @undoable."""
+        if summon.get("hp", 0) > 0 or not vanishes_at_zero_hp(summon):
+            return False
+        if not any(c is summon for c in self.characters):
+            return False
+        owner = owner_name(summon)
+        # Logged while it's still there, so players read it if they saw it.
+        self._log_event(
+            f"{summon['name']} drops to 0 HP and vanishes",
+            character=owner or summon["name"],
+            action=Action.DISMISS,
+            value=summon_event([summon], reason=VANISHED_REASON),
+        )
+        self._remove_from_fight(summon)
+        self._save_fight_state()
+        self._rebuild_cards()
+        if self.phase == "COMBAT":
+            self._refresh_turn()
+        self._refresh_views()
+        return True
 
     def _carry_summons_over(self, log_path: Path):
         """Start the encounter log at `log_path` (one not started yet) with
@@ -603,12 +636,12 @@ def _rolled(rolls: dict[str, int]) -> str:
     return " (initiative " + ", ".join(f"{n} {v}" for n, v in rolls.items()) + ")"
 
 
-def _summon_label(feature: Feature) -> str:
-    """The menu's verb and name for summoning with feature: "Summon Drake
-    Companion", but "Summon Wildfire Spirit" for a feature already named so."""
-    if feature.name.startswith("Summon "):
-        return feature.name
-    return f"Summon {feature.name}"
+def _summon_label(spec: SummonSpec) -> str:
+    """The menu's verb and name for summoning spec, by what it summons, not
+    the feature: "Summon Drake Companion", "Summon Wildfire Spirit" (from
+    Summon Wildfire Spirit), "Summon Dancing Item" (from Animating
+    Performance). A source with several specs gets one entry for each."""
+    return f"Summon {spec.name}"
 
 
 def _unpaid_text(feature: Feature, spec: SummonSpec) -> str:

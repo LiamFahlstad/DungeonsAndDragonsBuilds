@@ -277,6 +277,9 @@ class CombatWindowState:
     def _summons_die_with(self, owner: dict):
         raise NotImplementedError("SummonsMixin._summons_die_with")
 
+    def _vanish_at_zero_hp(self, summon: dict) -> bool:
+        raise NotImplementedError("SummonsMixin._vanish_at_zero_hp")
+
     def _carry_summons_over(self, log_path: Path):
         raise NotImplementedError("SummonsMixin._carry_summons_over")
 

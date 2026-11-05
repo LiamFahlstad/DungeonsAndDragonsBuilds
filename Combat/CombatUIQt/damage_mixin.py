@@ -3,6 +3,7 @@
 import random
 
 from Combat.Definitions import Action
+from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
 from .attack_rolls import (
@@ -12,7 +13,7 @@ from .attack_rolls import (
     parse_attack_roll,
 )
 from .monster_actions import first_number
-from .player_view import _can_be_seen, note_damage_defense, note_health
+from .player_view import _player_names, _seen, note_damage_defense, note_health
 from .saves import save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
@@ -172,7 +173,8 @@ class DamageMixin(CombatWindowState):
         armor = first_number(target.get("ac"))
         cover = cover_bonus(target)
         hit = roll.hits(None if armor is None else armor + cover)
-        if source is None or _can_be_seen(source):
+        # A player's summon is seen as its owner is, even while Invisible.
+        if source is None or _seen(source, _player_names(self.characters)):
             note_attack_roll(target, roll, hit, cover)
         name = target["name"]
         attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
@@ -257,10 +259,13 @@ class DamageMixin(CombatWindowState):
             taken += dmg
             knockout = knockout or downed
         self._note_health(target)
+        # A summon whose spec says so vanishes at 0 HP (a drake), once
+        # what it was concentrating on has ended.
+        vanishes = knockout and vanishes_at_zero_hp(target)
 
         # A creature that makes Death Saving Throws falls Unconscious at
         # 0 HP (which also ends its Concentration); any other one dies.
-        if knockout and self._char_death_state(target) != "dead":
+        if knockout and not vanishes and self._char_death_state(target) != "dead":
             self._add_condition_to(target, Condition.UNCONSCIOUS.value)
 
         if "Concentrating" in target.get("conditions", []):
@@ -270,6 +275,8 @@ class DamageMixin(CombatWindowState):
                 # Only damage taken forces a save (damage soaked by
                 # temporary HP still counts); 0 after immunity doesn't.
                 self._ask_concentration_save(target, taken)
+        if vanishes:
+            self._vanish_at_zero_hp(target)
 
     def _note_health(self, char: dict):
         """Note what the change of HP that's just over showed the players. The

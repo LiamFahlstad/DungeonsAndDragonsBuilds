@@ -11,6 +11,8 @@ Tests prove behaviour. They don't show a squashed layout, an unreadable colour o
 
 ```bash
 python .claude/skills/run-apps/screenshot.py combat [--scenario ashelm_church] [--size 1600x1000]
+python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" [--choice Cold] [--start]
+python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --player-screen [--limited]
 python .claude/skills/run-apps/screenshot.py creator [--load-build Builds/Characters/<File>.py] [--tab Equipment]
 python .claude/skills/run-apps/screenshot.py sheet <part of build name> [--feature-tags]
 python .claude/skills/run-apps/screenshot.py --out <dir> combat   # --out goes before the subcommand
@@ -21,6 +23,8 @@ python .claude/skills/run-apps/screenshot.py --out <dir> combat   # --out goes b
 - A modal dialog or message box that would block is skipped and printed. A load warning (the creator can't load multiclass builds, for example) shows up there.
 - `creator` writes one PNG per tab (Basics, Level features, Equipment, Advanced) unless you pass `--tab`.
 - Combat cards squash below the default size. Change `--size` only on purpose.
+- Summons are made on demand, so a plain `combat` shot has none. `--summon "<label>"` summons one before the shot, by its card-menu label (`"Summon Drake Companion"`, or just `"Drake Companion"`), for the first player in the encounter who has it, paid the cheapest way; repeat it for more. `--choice` is the choice each is made with (a drake's Draconic Essence); without it, the build's own. An unknown label exits listing the party's summons.
+- `--start` starts the fight first (distinct initiatives, the first `--summon`'s owner first), so the turn order and the summon's place in it show. `--player-screen` (implies `--start`) shoots the Player Screen window instead of the GM's, the Informative view, or the Limited one with `--limited`; the owner's turn is on, so the summon's stat block shows (it only shows on its turn and the one before). Pass `--size 1920x1080` to check it fits a TV.
 
 Gotchas the script already handles, which matter if you write your own Qt probe:
 

@@ -384,6 +384,8 @@ class ConditionsMixin(CombatWindowState):
                 self._deal_damage(
                     target, damage, source, effect.count_resistances, saved
                 )
+                if not any(c is target for c in self.characters):
+                    continue  # a summon that vanished at 0 HP
             if not effect.condition or saved:
                 continue
             row = {"target": target["name"], "condition": effect.condition}
